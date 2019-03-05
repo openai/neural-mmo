@@ -1,4 +1,4 @@
-from forge.blade.systems.import Skill
+from forge.blade.systems import Skill
 from forge.blade.item import Item
 
 class RawMeat(Item.Item):

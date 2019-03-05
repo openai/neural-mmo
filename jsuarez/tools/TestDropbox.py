@@ -21,7 +21,7 @@ class Server:
       MPIUtils.print(MPIUtils.ALL, 'Server Send')
       for worker in self.clients:
          MPIUtils.print(MPIUtils.ALL, 'Server Send')
-         for pack in packets()
+         for pack in packets():
             MPIUtils.isend(pack, worker, tag=worker)
 
    def reduce(self):

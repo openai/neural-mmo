@@ -1,16 +1,16 @@
-         ann, rets = self.anns[0], []
-         for entID, ent, stim in ents:
-            annID = hash(entID) % self.nANN
-            unpacked = unpackStim(ent, stim)
-            self.anns[annID].recv(unpacked, ent, stim, entID)
-
-         #Ret order matters
-         for logits, val, ent, stim, atn, entID in ann.send():
-            action, args = self.actionArgs(stim, ent, atn.item())
-            rets.append((action, args, float(val)))
-            if ent.alive and not self.args.test:
-               self.collectStep(entID, (logits, val, atn))
-         return rets
+#         ann, rets = self.anns[0], []
+#         for entID, ent, stim in ents:
+#            annID = hash(entID) % self.nANN
+#            unpacked = unpackStim(ent, stim)
+#            self.anns[annID].recv(unpacked, ent, stim, entID)
+#
+#         #Ret order matters
+#         for logits, val, ent, stim, atn, entID in ann.send():
+#            action, args = self.actionArgs(stim, ent, atn.item())
+#            rets.append((action, args, float(val)))
+#            if ent.alive and not self.args.test:
+#               self.collectStep(entID, (logits, val, atn))
+#         return rets
 
 class CosineNet(nn.Module):
    def __init__(self, xdim, h, ydim):

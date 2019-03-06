@@ -25,6 +25,7 @@ cd ..
 
 git clone https://github.com/openai/neural-mmo
 cd neural-mmo
+bash scripts/setup/setup.sh
 python setup.py
 ```
 

@@ -31,7 +31,7 @@ python setup.py
 
 This will download both the OpenAI environment and the independent client, which is required for rendering. Some setups may require you fix the symlink to the client (e.g. ln -s ../../neural-mmo-client/ embyr from forge/embyr). We assume you have Anaconda setup -- the setup file will only install the python dependencies not included in Anaconda. The environment is framework independently, but our experiment code does depend on PyTorch -- set this up separately.
 
-Run the following, then navigate to http://localhost:8080/forge/ in Firefox (Chrome may not work) to pull up the renderer. Click to start and give it a few seconds to load assets and stabilize fps. For troubleshooting, see the [Client Repo](https://github.com/jsuarez5341/neural-mmo-client).
+Run the following, then navigate to http://localhost:8080/forge/embyr/ in Firefox (Chrome may not work) to pull up the renderer. Click to start and give it a few seconds to load assets and stabilize fps. For troubleshooting, see the [Client Repo](https://github.com/jsuarez5341/neural-mmo-client).
 ```
 python Forge.py --render #Run the environment with rendering on
 ```

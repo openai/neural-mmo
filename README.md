@@ -87,7 +87,7 @@ python Forge.py --nRealm 2 --api vecenv #Run 2 environments with vecenv API
 ```
 
 ### ![][air] Ethyr
-Ethyr is the "contrib" or this project. It contains useful research tools for interacting with the project. I've seeded it with the helper classes for our experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
+Ethyr is the "contrib" for this project. It contains useful research tools for interacting with the project. I've seeded it with the helper classes for our experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
 
 ### ![][earth] Blade
 Blade is the core environment, including game state and control flow. Researchers should not need to touch this, outside perhaps importing core configurations and enums.

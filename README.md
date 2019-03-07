@@ -29,7 +29,7 @@ bash scripts/setup/setup.sh
 python setup.py
 ```
 
-This will download both the OpenAI environment and the independent client, which is required for rendering. Some setups may require you fix the symlink to the client (e.g. ln -s ../../neural-mmo-client/ embyr from forge/embyr). We assume you have Anaconda setup -- the setup file will only install the python dependencies not included in Anaconda. The environment is framework independently, but our experiment code does depend on PyTorch -- set this up separately.
+This will download both the OpenAI environment and the independent client, which is required for rendering. Some setups may require you fix the symlink to the client (e.g. `ln -s ../../neural-mmo-client/ embyr` from `forge/embyr`). We assume you have Anaconda setup -- the setup file will only install the python dependencies not included in Anaconda. The environment is framework independently, but our experiment code does depend on PyTorch -- set this up separately.
 
 Run the following, then navigate to http://localhost:8080/forge/embyr/ in Firefox (Chrome may not work) to pull up the renderer. Click to start and give it a few seconds to load assets and stabilize fps. For troubleshooting, see the [Client Repo](https://github.com/jsuarez5341/neural-mmo-client).
 ```
@@ -154,16 +154,16 @@ While our environment is nowhere near the level of complexity of a real MMO yet,
     * **/forge/blade/action/action.py** - Class stubs for each action
     * **/forge/blade/action/tree.py** - Tree structure for assembling actions (e.g. action -> sub-action -> args)
     * **_/forge/blade/action/v2.py_** - Actions that entities can select, instantiate, and .call() to directly modify world state
-  * **/forge/blade/core** — Contains ~500 lines of state and game loop code.  
+  * **/forge/blade/core** — Contains ~500 lines of state and game loop code.
     * **_/forge/blade/core/config.py_** - Defines specifications for each test environment, including entity statistics, the map, and spawn locations.
     * **_/forge/blade/core/tile.py_** - Defines an individual game tile
     * **_/forge/blade/core/map.py_** - Defines a map of game tiles
-    * **_/forge/blade/core/env.py_** - Wraps the full game state  
+    * **_/forge/blade/core/env.py_** - Wraps the full game state
     * **_/forge/blade/core/realm.py_** - Defines the game loop updating the environment and agents.
   * **/forge/blade/entity** - Defines agents, both neural and scripted
-    * **_/forge/blade/entity/player.py_** — Defines "player" state  
+    * **_/forge/blade/entity/player.py_** — Defines "player" state
     * **/forge/blade/entity/npc/**
-      * **/forge/blade/entity/npc/npc.py** — This defines client state (e.g. wraps the neural net making decisions)  
+      * **/forge/blade/entity/npc/npc.py** — This defines client state (e.g. wraps the neural net making decisions)
       * **/forge/blade/entity/npc/mobs.py** - Defines scripted npcs
   * **/forge/blade/hook** - Defines startup scripts that preassemble references
   * **/forge/blade/item** - Defines all items in the game, including equipment

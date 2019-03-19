@@ -12,6 +12,7 @@ This environment is the first neural MMO; it attempts to create agents that scal
 ![][env]
 
 ## ![][ags] Quickstart
+Recommended python version: v3.6+
 
 ```
 # Recommended Setup:

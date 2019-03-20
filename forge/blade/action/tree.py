@@ -1,24 +1,19 @@
+from pdb import set_trace as T
+
 class ActionNode:
+   def __init__(self):
+      pass
+ 
    def edges(self, world, entity):
       pass
 
-class ActionLeaf(ActionNode):
-   def __call__(self, world, entity, *args):
-      if type(args) == EmptyArgs:
-         args = []
+class ArgumentNode:
+   pass
 
-class Args:
-   isEmpty = False
-   isSet = False
-   isDiscrete = False
-   def __init__(self, value=None):
-      self.value = value
+class ConstDiscrete(ArgumentNode):
+   pass
 
-class Arg(Args): pass
-
-class SetArgs(Args):
-   isSet = True
-
+class VariableDiscrete(ArgumentNode):
    def __init__(self):
       self.setValue = set()
 
@@ -32,16 +27,11 @@ class SetArgs(Args):
    def empty(self):
       return len(self.toList()) == 0
 
-class DiscreteArgs(SetArgs):
-   isDiscrete = True
-
-class EmptyArgs(Args):
-   isEmpty = True
-
 class ActionTree:
    def __init__(self, world, entity, rootVersion):
       self.world, self.entity = world, entity
       self.root, self.args = rootVersion(), None
+      self.stack = [self.root]
 
    @property
    def n(self):
@@ -55,7 +45,18 @@ class ActionTree:
       return rets
 
    def actions(self):
-      return self.root.edges(None, None)
+      return self.root.edges
+
+   def next(self):
+      if len(self.stack) == 0:
+         return None
+      atn = self.stack.pop()
+      if atn.edges is not None:
+         for edge in atn.edges:
+            self.stack.append(edge)
+      if atn.argType is None:
+         return self.next()
+      return atn
 
    def rand(self):
       nodes = self.flat()
@@ -67,4 +68,13 @@ class ActionTree:
       if type(self.args) not in (list, tuple):
          self.args = [self.args]
       return type(self.action), self.args
+
+class Arg:
+   def __init__(self, val, discrete=True, set=False, min=-1, max=1):
+      self.val = val
+      self.discrete = discrete
+      self.continuous = not discrete
+      self.min = min
+      self.max = max
+      self.n = self.max - self.min + 1
 

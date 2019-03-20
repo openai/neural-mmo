@@ -6,8 +6,10 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
+from forge.blade.action import tree
 from forge.blade.action.tree import ActionTree
-from forge.blade.action.v2 import ActionV2
+from forge.blade.action import action
+from forge.blade.action.action import ActionRoot
 from forge.blade.lib.enums import Neon
 from forge.blade.lib import enums
 from forge.ethyr import torch as torchlib
@@ -20,11 +22,81 @@ def classify(logits):
    atn = distribution.sample()
    return atn
 
+class NetTree(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.modules = {}
+      self.config = config
+      self.h = config.HIDDEN
+
+   def add(self, cls):
+      if cls.argType is tree.ConstDiscrete:
+         n = cls.n
+         self.modules[cls] = EnvConstDiscrete(self.config, self.h, n)
+      elif cls.argType is tree.VariableDiscrete:
+         self.modules[cls] = EnvVariableDiscrete(self.config, self.h)
+
+   def module(self, cls):
+      if cls not in self.modules:
+         cls = self.map(cls)
+         self.add(cls)
+      return self.modules[cls]
+
+   #Force shared networks across particular nodes
+   def map(self, cls):
+      if cls in (action.Melee, action.Range, action.Mage):
+         cls = action.Melee
+      return cls
+
+   def forward(self, env, ent, stim):
+      rets = {}
+      actionTree = ActionTree(env, ent, ActionRoot)
+      atn = actionTree.next()
+      while atn is not None:
+         module = self.module(atn)
+         rets[atn] = module(env, ent, atn, stim)
+         atn = actionTree.next()
+      return rets
+
+class EnvConstDiscrete(nn.Module):
+   def __init__(self, config, h, ydim):
+      super().__init__()
+      self.envNet = Env(config)
+      self.constDiscrete = ConstDiscrete(config, h, ydim)
+
+   def forward(self, env, ent, action, stim):
+      stim = self.envNet(stim.conv, stim.flat, stim.ents) 
+      action, atn, atnIdx = self.constDiscrete(env, ent, action, stim)
+      return action, (atn, atnIdx)
+
+class EnvVariableDiscrete(nn.Module):
+   def __init__(self, config, h):
+      super().__init__()
+      self.envNet = Env(config)
+      self.variableDiscrete = VariableDiscrete(config, 2*h, h)
+      self.config = config
+
+      entDim = 11
+      self.targEmbed  = Ent(entDim, h)
+
+   def forward(self, env, ent, action, stim):
+      stim = self.envNet(stim.conv, stim.flat, stim.ents) 
+      #action, atn, atnIdx = self.variableDiscrete(env, ent, action, stim)
+
+      #Embed targets
+      targets = action.args(env, ent, self.config)
+      targets = torch.tensor([e.stim for e in targets]).float()
+      targets = self.targEmbed(targets).unsqueeze(0)
+
+      action, atn, atnIdx = self.variableDiscrete(
+            env, ent, action, stim, targets)
+      return action, (atn, atnIdx)
+ 
 ####### Network Modules
 class ConstDiscrete(nn.Module):
-   def __init__(self, config, h, nattn):
+   def __init__(self, config, h, ydim):
       super().__init__()
-      self.fc1 = torch.nn.Linear(h, nattn)
+      self.fc1 = torch.nn.Linear(h, ydim)
       self.config = config
 
    def forward(self, env, ent, action, stim):
@@ -198,6 +270,7 @@ class ANN(nn.Module):
       self.valNet = ValNet(config)
 
       self.config = config
+      self.actionNet  = NetTree(config)
       self.moveNet    = MoveNet(config)
       self.attackNet  = (StyleAttackNet(config) if 
             config.AUTO_TARGET else AttackNet(config))
@@ -206,19 +279,34 @@ class ANN(nn.Module):
       s = torchlib.Stim(ent, env, self.config)
       val  = self.valNet(s.conv, s.flat, s.ents)
 
-      actions = ActionTree(env, ent, ActionV2).actions()
-      _, move, attk = actions
+      actions = self.actionNet(env, ent, s)
+      move   = actions[action.Move]
+      attack = actions[action.Attack]
+      target = actions[action.Melee]
 
+      moveArg, moveOuts = move
+      attkArg, attkOuts = attack
+      targArg, targOuts = target
+
+      actions = (action.Move, attkArg)
+      arguments = (moveArg, [targArg])
+      outs = (moveOuts, attkOuts, targOuts)
+      
+      '''
       #Actions
+      actions = ActionTree(env, ent, ActionRoot).actions()
+      move, attk = actions
+
       moveArg, moveOuts = self.moveNet(
             env, ent, move, s)
       attk, attkArg, attkOuts = self.attackNet(
             env, ent, attk, s)
-
-      action    = (move, attk)
+      actions    = (move, attk)
       arguments = (moveArg, attkArg)
       outs      = (moveOuts, *attkOuts)
-      return action, arguments, outs, val
+      '''
+
+      return actions, arguments, outs, val
 
    #Messy hooks for visualizers
    def visDeps(self):

@@ -7,28 +7,52 @@ class staticproperty(property):
     def __get__(self, cls, owner):
         return self.fget.__get__(None, owner)()
 
-class ActionRoot:
-   @staticproperty
+#Traverses all edges without and decisions
+class StaticNode:
    def argType():
       return None
 
    @staticproperty
    def edges():
-      return [Move, Attack]
+      return []
 
-class Move(ActionRoot):
+#Picks an edge to follow
+class SelectionNode:
    @staticproperty
    def argType():
       return tree.ConstDiscrete
 
    @staticproperty
-   def n():
-      return 5
-
-   @staticproperty
-   def edges():
+   def args(stim, entity, config):
       return None
 
+#Proposes an argument to execute
+class VariableNode:
+   @staticproperty
+   def argType():
+      return tree.VariableDiscrete
+
+   @staticproperty
+   def args(stim, entity, config):
+      return None
+
+#Proposes an argument to execute
+class ConstantNode:
+   @staticproperty
+   def argType():
+      return tree.VariableDiscrete
+
+   @staticproperty
+   def args(stim, entity, config):
+      return None
+
+
+class ActionRoot(StaticNode):
+   @staticproperty
+   def edges():
+      return [Move, Attack, Exchange, Skill]
+
+class Move(SelectionNode):
    priority = 1
    def call(world, entity, rDelta, cDelta):
       r, c = entity.pos
@@ -49,19 +73,34 @@ class Move(ActionRoot):
       r, c = entity.pos
       world.env.tiles[r, c].addEnt(entID, entity)
 
+   @staticproperty
+   def edges():
+      return [Pass, North, South, East, West]
+
    def args(stim, entity, config):
-      rets = []
-      for delta in ((0, 0), (0, 1), (1, 0), (0, -1), (-1, 0)):
-         r, c = delta
-         #r, c = Arg(r), Arg(c)
-         rets.append((r, c))
-      return rets
+      return Move.edges
 
-   @property
-   def nArgs():
-      return len(Move.args(None, None))
+class Pass(ConstantNode, Move):
+   def call(world, entity):
+      Move.call(world, entity, 0, 0)
 
-class Attack(ActionRoot):
+class North(ConstantNode, Move):
+   def call(world, entity):
+      Move.call(world, entity, -1, 0)
+
+class South(ConstantNode, Move):
+   def call(world, entity):
+      Move.call(world, entity, 1, 0)
+
+class East(ConstantNode, Move):
+   def call(world, entity):
+      Move.call(world, entity, 0, 1)
+
+class West(ConstantNode, Move):
+   def call(world, entity):
+      Move.call(world, entity, 0, -1)
+
+class Attack(SelectionNode):
    @staticproperty
    def argType():
       return tree.ConstDiscrete
@@ -109,7 +148,7 @@ class Attack(ActionRoot):
       return [Melee, Range, Mage]
       #return Melee.args(stim, entity, config) + Range.args(stim, entity, config) + Mage.args(stim, entity, config)
 
-class Melee(Attack):
+class Melee(ConstantNode, Attack):
    @staticproperty
    def argType():
       return tree.VariableDiscrete
@@ -126,7 +165,7 @@ class Melee(Attack):
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.MELEERANGE)
 
-class Range(Attack):
+class Range(ConstantNode, Attack):
    @staticproperty
    def argType():
       return tree.VariableDiscrete
@@ -143,7 +182,7 @@ class Range(Attack):
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.RANGERANGE)
 
-class Mage(Attack):
+class Mage(ConstantNode, Attack):
    @staticproperty
    def argType():
       return tree.VariableDiscrete
@@ -160,54 +199,60 @@ class Mage(Attack):
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.MAGERANGE)
 
-class Pass(Move):
-   priority = 0
-
-   @staticmethod
-   def call(world, entity):
-      return
-
-   def args(stim, entity, config):
-      return [()]
-
-   @property
-   def nArgs():
-      return 1
-
 class Reproduce:
    pass
 
-class Skill:
+class Skill(SelectionNode):
+   @staticproperty
+   def edges():
+      return [Harvest, Process]
+
+   def args(stim, entity, config):
+      return Skill.edges
+
+class Harvest(SelectionNode):
+   @staticproperty
+   def edges():
+      return [Fish, Mine]
+
+   def args(stim, entity, config):
+      return Harvest.edges
+
+class Fish(ConstantNode, Harvest):
    pass
 
-class Harvest:
+class Mine(ConstantNode, Harvest):
    pass
 
-class Fish:
+class Process(SelectionNode):
+   @staticproperty
+   def edges():
+      return [Cook, Smith]
+
+   def args(stim, entity, config):
+      return Process.edges
+
+class Cook(ConstantNode, Process):
    pass
 
-class Mine:
+class Smith(ConstantNode, Process):
    pass
 
-class Process:
+class Exchange(SelectionNode):
+   @staticproperty
+   def edges():
+      return [Buy, Sell, CancelOffer, Pass]
+
+   def args(stim, entity, config):
+      return Exchange.edges
+
+class Buy(ConstantNode, Exchange):
    pass
 
-class Cook:
+class Sell(ConstantNode, Exchange):
    pass
 
-class Smith:
-   pass
-
-class Exchange:
-   pass
-
-class Buy:
-   pass
-
-class Sell:
-   pass
-
-class CancelOffer:
+class CancelOffer(ConstantNode, Exchange):
    pass
 
 class Message:

@@ -1,4 +1,5 @@
 from pdb import set_trace as T
+from forge.blade.action import action
 
 class ActionNode:
    def __init__(self):
@@ -30,8 +31,11 @@ class VariableDiscrete(ArgumentNode):
 class ActionTree:
    def __init__(self, world, entity, rootVersion):
       self.world, self.entity = world, entity
-      self.root, self.args = rootVersion(), None
+      self.root, self.args = rootVersion, None
       self.stack = [self.root]
+      self.atn = None
+      self.atns = {}
+      self.outs = {}
 
    @property
    def n(self):
@@ -47,15 +51,41 @@ class ActionTree:
    def actions(self):
       return self.root.edges
 
-   def next(self):
-      if len(self.stack) == 0:
+   def unpackActions(self):
+      return self.atns, self.outs
+      atns = []
+      outs = []
+      for atn, args in self.decisions.items():
+         nxtAtn, args = args[0]
+         atns.append(nxtAction)
+         outs.append(args)
+      return atns, outs
+
+   def decide(self, atn, nxtAtn, args, outs):
+      if issubclass(nxtAtn, action.ConstantNode):
+         self.atns[nxtAtn] = args
+      self.outs[atn] = outs
+
+   #DFS for the next action
+   def next(self, atn=None, args=None, outs=None):
+      T()
+      if atn is None and len(self.stack) == 0:
          return None
-      atn = self.stack.pop()
-      if atn.edges is not None:
-         for edge in atn.edges:
-            self.stack.append(edge)
-      if atn.argType is None:
-         return self.next()
+      elif atn is None:
+         atn = self.stack.pop()
+      else:
+         self.decide(self.atn, atn, args, outs)
+
+      if issubclass(atn, action.ConstantNode) and len(self.stack) == 0:
+         return None
+      elif issubclass(atn, action.ConstantNode):
+         atn = self.stack.pop()
+
+      self.atn = atn
+      if (not issubclass(atn, action.ConstantNode) and 
+               issubclass(atn, action.StaticNode)):
+         self.stack += atn.edges
+         atn = self.next()
       return atn
 
    def rand(self):

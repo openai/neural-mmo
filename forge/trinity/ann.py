@@ -31,7 +31,7 @@ class NetTree(nn.Module):
 
    def add(self, cls):
       if cls.argType is tree.ConstDiscrete:
-         n = cls.n
+         n = len(cls.edges)
          self.modules[cls] = EnvConstDiscrete(self.config, self.h, n)
       elif cls.argType is tree.VariableDiscrete:
          self.modules[cls] = EnvVariableDiscrete(self.config, self.h)
@@ -49,14 +49,25 @@ class NetTree(nn.Module):
       return cls
 
    def forward(self, env, ent, stim):
-      rets = {}
       actionTree = ActionTree(env, ent, ActionRoot)
       atn = actionTree.next()
       while atn is not None:
          module = self.module(atn)
-         rets[atn] = module(env, ent, atn, stim)
-         atn = actionTree.next()
-      return rets
+         #Here's your issue: you funamentally have not handled arguments.
+         #"args" is just "outs" -- you need to handle ACTUAL arguments for
+         #variable discrete.
+         assert atn.argType in (tree.ConstDiscrete, tree.VariableDiscrete)
+         if atn.argType is tree.ConstDiscrete:
+            nxtAtn, outs = module(env, ent, atn, stim)
+            atn = actionTree.next(nxtAtn, outs=outs)
+         elif atn.argType is tree.VariableDiscrete:
+            argument, outs = module(env, ent, atn, stim)
+            T()
+            atn = actionTree.next(atn, argument, outs)
+      
+      atns, outs = actionTree.unpackActions()
+      T()
+      return atns, outs
 
 class EnvConstDiscrete(nn.Module):
    def __init__(self, config, h, ydim):
@@ -88,9 +99,9 @@ class EnvVariableDiscrete(nn.Module):
       targets = torch.tensor([e.stim for e in targets]).float()
       targets = self.targEmbed(targets).unsqueeze(0)
 
-      action, atn, atnIdx = self.variableDiscrete(
+      argument, arg, argIdx = self.variableDiscrete(
             env, ent, action, stim, targets)
-      return action, (atn, atnIdx)
+      return argument, (arg, argIdx)
  
 ####### Network Modules
 class ConstDiscrete(nn.Module):
@@ -103,7 +114,10 @@ class ConstDiscrete(nn.Module):
       leaves = action.args(env, ent, self.config)
       x = self.fc1(stim)
       xIdx = classify(x)
-      leaf = leaves[int(xIdx)]
+      try:
+         leaf = leaves[int(xIdx)]
+      except:
+         T()
       return leaf, x, xIdx
 
 class VariableDiscrete(nn.Module):
@@ -279,7 +293,8 @@ class ANN(nn.Module):
       s = torchlib.Stim(ent, env, self.config)
       val  = self.valNet(s.conv, s.flat, s.ents)
 
-      actions = self.actionNet(env, ent, s)
+      atns, outs = self.actionNet(env, ent, s)
+      T()
       move   = actions[action.Move]
       attack = actions[action.Attack]
       target = actions[action.Melee]

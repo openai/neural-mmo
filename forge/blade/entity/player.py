@@ -76,7 +76,10 @@ class Player:
       data = {}
       for key in Player.public:
          val = getattr(self, key)
-         data[key] = val 
+         if key == 'pos':
+            data[key] = (val[0] - 1, val[1] - 1)
+         else:
+            data[key] = val
          if hasattr(val, 'packet'):
             data[key] = val.packet()
       if self.attack is not None:  

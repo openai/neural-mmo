@@ -78,8 +78,8 @@ class Sword:
 
    def decide(self, ent, stim):
       reward, entID, annID = 0, ent.entID, ent.annID
-      action, arguments, atnArgs, val = self.anns[annID](ent, stim)
-      self.collectStep(entID, atnArgs, val, reward)
+      actions, outs, val = self.anns[annID](ent, stim)
+      self.collectStep(entID, outs, val, reward)
       self.updates[entID].feather.scrawl(
             stim, ent, val, reward)
-      return action, arguments, float(val)
+      return actions, float(val)

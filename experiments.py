@@ -7,13 +7,13 @@ import os
 USER = 'your-username'
 if USER == 'your-username':
    #Thousandth
-   prefix = 'test'
+   prefix = 'new-auto-tree'
    remote = False
    local  = not remote
 
-   test = True#local
-   best = True#local
-   load = True#local
+   test = True
+   best = True
+   load = True
 
    sample = not test
    singles = True

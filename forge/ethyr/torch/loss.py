@@ -19,7 +19,18 @@ def valueLoss(v, returns):
    return (0.5 * (v - returns) **2).mean()
 
 def entropyLoss(prob, logProb):
-   return (prob * logProb).sum(1).mean()
+   #logProb = logProb * (logProb != -float('inf')).float()
+   loss = (prob * logProb)
+   loss[torch.isnan(loss)] = 0
+   #loss = loss[:, 0:1]
+   #mask = ~torch.isnan(loss)
+   #loss = torch.where(mask, loss, torch.zeros_like(loss))
+   #loss = loss[mask]
+   return loss.sum(1).mean()
+   loss = loss.sum(1)
+   loss = loss[loss!=0]
+   loss = loss.mean()
+   return loss
 
 def pad(seq):
    seq = [e.view(-1) for e in seq]
@@ -34,9 +45,13 @@ def pad(seq):
 
    return seq
 
+#Assumes pi is already -inf padded
 def PG(pi, atn, val, returns):
-   prob = pad([F.softmax(e, dim=1) for e in pi])
-   logProb = pad([F.log_softmax(e, dim=1) for e in pi])
+   prob = [F.softmax(e, dim=-1) for e in pi]
+   logProb = [F.log_softmax(e, dim=-1) for e in pi]
+
+   prob = torch.nn.utils.rnn.pad_sequence(prob, batch_first=True)
+   logProb = torch.nn.utils.rnn.pad_sequence(logProb, batch_first=True)
 
    adv = advantage(returns, val)
    polLoss = policyLoss(logProb, atn, adv)

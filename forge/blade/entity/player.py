@@ -1,6 +1,7 @@
 import numpy as np
 from forge.blade.systems import ai
 from forge.blade.lib.enums import Material, Neon
+from forge.blade.action import action
 from pdb import set_trace as T
 
 class Stat:
@@ -59,8 +60,8 @@ class Player:
       self._index = 1
       self._immuneTicks = 15
 
-      self.move   = None
-      self.attack = None
+      self._actions = None
+      self._attack  = None
 
    def __getattribute__(self, name):
       if name in Player.public:
@@ -79,10 +80,10 @@ class Player:
          data[key] = val 
          if hasattr(val, 'packet'):
             data[key] = val.packet()
-      if self.attack is not None:  
+      if self._attack is not None:  
          data['attack'] = {
-               'style': self.attack.action.__name__,
-               'target': self.attack.args.entID}
+               'style': self._attack.action.__name__,
+               'target': self._attack.args.entID}
       return data
 
    #PCs interact with the world only through stimuli
@@ -125,8 +126,8 @@ class Player:
       world.env.tiles[r, c].counts[self._colorInd] += 1
 
    def mapAttack(self):
-      if self.attack is not None:
-         attack = self.attack
+      if self._attack is not None:
+         attack = self._attack
          name = attack.action.__name__
          if name == 'Melee':
             attackInd = 0
@@ -154,14 +155,22 @@ class Player:
       self._timeAlive += 1
       self.updateImmune()
 
-   def act(self, world, actions, arguments, val):
+   def act(self, world, actions, val):
       if not self.alive: return
+
+      self._actions = actions
+      self._attack  = actions[action.Attack]
       self.mapAttack()
       
       self.val = val
       self._lastPos = self._pos
-      for action, args in zip(actions, arguments):
-         action.call(world, self, *args)
+      for meta, atnArgs in actions.items():
+         atn, args = atnArgs.action, atnArgs.args
+         if args is None:
+            atn.call(world, self)
+         else:
+            atn.call(world, self, args)
+         #atn.call(world, self, *args)
 
    @property
    def alive(self):

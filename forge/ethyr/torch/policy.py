@@ -1,51 +1,163 @@
-#Previous networks tried. Fully connected nets are much
-#easier to get working than conv nets.
-
 from pdb import set_trace as T
+import numpy as np
+
 import torch
 from torch import nn
 from torch.nn import functional as F
-from forge.ethyr.torch import utils as tu
+from torch.distributions import Categorical
 
-class Attention(nn.Module):
-   def __init__(self, xDim, yDim):
+from forge.blade.action.tree import ActionTree
+from forge.blade.action import action
+from forge.blade.action.action import ActionRoot, NodeType
+
+def classify(logits):
+   if len(logits.shape) == 1:
+      logits = logits.view(1, -1)
+   distribution = Categorical(1e-3+F.softmax(logits, dim=1))
+   atn = distribution.sample()
+   return atn
+
+class NetTree(nn.Module):
+   def __init__(self, config):
       super().__init__()
-      self.fc = torch.nn.Linear(2*xDim, yDim)
+      self.net = nn.ModuleDict()
+      self.config = config
+      self.h = config.HIDDEN
 
-   #Compute all normalized scores
-   def score(args, x, normalize=True, scale=False):
+      for atn in ActionTree.flat(ActionRoot):
+         self.add(atn)
 
-      scores = torch.matmul(args, x.transpose(0, 1))
+   def add(self, cls):
+      cls = self.map(cls)
+      if cls is action.AttackStyle:
+         self.net[cls.__name__] = AttackNet(self.config, self.h, self.net['Attack'].envNet)
+      elif cls.nodeType in (NodeType.SELECTION, NodeType.CONSTANT):
+         n = len(cls.edges)
+         self.net[cls.__name__] = EnvConstDiscreteAction(self.config, self.h, n)
+      elif cls.nodeType is NodeType.VARIABLE:
+         self.net[cls.__name__] = EnvVariableDiscreteAction(self.config, self.h)
 
-      if scale:
-         scores = scores / (32**0.5)
+   def module(self, cls):
+      cls = self.map(cls)
+      return self.net[cls.__name__]
 
-      if normalize:
-         scores = Attention.normalize(scores)
-      return scores.view(1, -1)
+   #Force shared networks across particular nodes
+   def map(self, cls):
+      if cls in (action.Melee, action.Range, action.Mage):
+         cls = action.AttackStyle
+      return cls
 
-   #Normalize exp
-   def normalize(x):
-      b = x.max()
-      y = torch.exp(x - b)
-      return y / y.sum()
+   def forward(self, env, ent, stim):
+      actionTree = ActionTree(env, ent, ActionRoot)
+      atn = actionTree.next(actionTree.root)
+      while atn is not None:
+         module = self.module(atn)
 
-   def attend(self, args, scores):
-      attn = args * scores
-      return torch.sum(attn, dim=0).view(1, -1)
+         assert atn.nodeType in (
+               NodeType.SELECTION, NodeType.CONSTANT, NodeType.VARIABLE)
 
-   def forward(self, args, x, normalize=True):
-      scores = Attention.score(args, x, normalize)
-      scores = self.attend(args, scores)
-      scores = torch.cat((scores, x), dim=1)
-      scores = torch.nn.functional.tanh(self.fc(scores))
-      return scores
+         if atn.nodeType in (NodeType.SELECTION, NodeType.CONSTANT):
+            nxtAtn, outs = module(env, ent, atn, stim)
+            atn = actionTree.next(nxtAtn, outs=outs)
+         elif atn.nodeType is NodeType.VARIABLE:
+            argument, outs = module(env, ent, atn, stim)
+            atn = actionTree.next(atn, argument, outs)
+
+      atns, outs = actionTree.unpackActions()
+      return atns, outs
+
+class Action(nn.Module):
+   def __init__(self, net, config):
+      super().__init__()
+      self.net = net
+      self.config = config
+
+   def forward(self, env, ent, action, stim, targs=None):
+      if targs is None:
+         atn, atnIdx = self.net(stim)
+      else:
+         atn, atnIdx = self.net(stim, targs)
+      leaves = action.args(env, ent, self.config)
+      action = leaves[int(atnIdx)]
+      return action, (atn.squeeze(0), atnIdx)
+
+class AttackNet(Action):
+   def __init__(self, config, h, envNet):
+      net    = VariableDiscrete(3*h, h)
+      super().__init__(net, config)
+      self.envNet = envNet
+
+      entDim = 11
+      self.h = h
+
+      self.styleEmbed = torch.nn.Embedding(3, h)
+      self.targEmbed  = EntEmbed(entDim, h)
+
+   def forward(self, env, ent, action, stim):
+      targs = action.args(env, ent, self.config)
+      targs = self.targEmbed(targs)
+
+      atnIdx = torch.tensor(action.index)
+      atns  = self.styleEmbed(atnIdx).expand(len(targs), self.h)
+      targs = torch.cat((atns, targs), 1)
+
+      stim = self.envNet(stim.conv, stim.flat, stim.ents)
+      return super().forward(env, ent, action, stim, targs)
+
+class ConstDiscreteAction(Action):
+   def __init__(self, config, h, ydim):
+      super().__init__(ConstDiscrete(h, ydim), config)
+
+class VariableDiscreteAction(Action):
+   def __init__(self, config, xdim, h):
+      super().__init__(VariableDiscrete(xdim, h), config)
+
+class EnvConstDiscreteAction(ConstDiscreteAction):
+   def __init__(self, config, h, ydim):
+      super().__init__(config, h, ydim)
+      self.envNet = Env(config)
+
+   def forward(self, env, ent, action, stim):
+      stim = self.envNet(stim.conv, stim.flat, stim.ents)
+      return super().forward(env, ent, action, stim)
+
+class EnvVariableDiscreteAction(VariableDiscreteAction):
+   def __init__(self, config, xdim, h):
+      super().__init__(config, xdim, h)
+      self.envNet = Env(config)
+
+   def forward(self, env, ent, action, stim, targs):
+      stim = self.envNet(stim.conv, stim.flat, stim.ents)
+      return super().forward(env, ent, action, stim, targs)
+
+####### Network Modules
+class ConstDiscrete(nn.Module):
+   def __init__(self, h, ydim):
+      super().__init__()
+      self.fc1 = torch.nn.Linear(h, ydim)
+
+   def forward(self, x):
+      x = self.fc1(x)
+      xIdx = classify(x)
+      return x, xIdx
+
+class VariableDiscrete(nn.Module):
+   def __init__(self, xdim, h):
+      super().__init__()
+      self.attn = AttnCat(xdim, h)
+
+   #Arguments: stim, action/argument embedding
+   def forward(self, key, vals):
+      x = self.attn(key, vals)
+      xIdx = classify(x)
+      return x, xIdx
 
 class AttnCat(nn.Module):
-   def __init__(self, h):
+   def __init__(self, xdim, h):
       super().__init__()
-      self.fc1 = torch.nn.Linear(2*h, h)
-      self.fc2 = torch.nn.Linear(h, 1)
+      #self.fc1 = torch.nn.Linear(xdim, h)
+      #self.fc2 = torch.nn.Linear(h, 1)
+      self.fc = torch.nn.Linear(xdim, 1)
       self.h = h
 
    def forward(self, x, args):
@@ -53,221 +165,70 @@ class AttnCat(nn.Module):
       x = x.expand(n, self.h)
       xargs = torch.cat((x, args), dim=1)
 
-      x = F.relu(self.fc1(xargs))
-      x = self.fc2(x)
+      x = self.fc(xargs)
+      #x = F.relu(self.fc1(xargs))
+      #x = self.fc2(x)
       return x.view(1, -1)
+####### End network modules
 
-class AtnNet(nn.Module):
-   def __init__(self, h, nattn):
+class ValNet(nn.Module):
+   def __init__(self, config):
       super().__init__()
-      self.fc1 = torch.nn.Linear(h, nattn)
+      self.fc = torch.nn.Linear(config.HIDDEN, 1)
+      self.envNet = Env(config)
 
-   def forward(self, stim, args):
-      atn = self.fc1(stim)
-      return atn
+   def forward(self, conv, flat, ent):
+      stim = self.envNet(conv, flat, ent)
+      x = self.fc(stim)
+      x = x.view(-1)
+      return x
 
-class ArgNet(nn.Module):
-   def __init__(self, h):
+class Ent(nn.Module):
+   def __init__(self, entDim, h):
       super().__init__()
-      self.attn = AttnCat(h)
+      self.ent = torch.nn.Linear(entDim, h)
 
-   #Arguments: stim, action/argument embedding
-   def forward(self, key, atn, args):
-      atn = atn.expand_as(args)
-      vals = torch.cat((atn, args), 1)
-      arg = self.attn(key, vals)
-      argIdx = classify(arg)
-      return argIdx, argd
+   def forward(self, ents):
+      ents = self.ent(ents)
+      ents, _ = torch.max(ents, 0)
+      return ents
+
+class EntEmbed(nn.Module):
+   def __init__(self, entDim, h):
+      super().__init__()
+      self.ent = torch.nn.Linear(entDim, h)
+
+   def forward(self, ents):
+      ents = torch.tensor([e.stim for e in ents]).float()
+      return self.ent(ents)
+
 
 class Env(nn.Module):
-   def __init__(self,  config):
+   def __init__(self, config):
       super().__init__()
       h = config.HIDDEN
-      entDim = 12 + 255
-      self.fc1  = torch.nn.Linear(entDim+1800+2*h, h)
+      entDim = 11 # + 225
+
+      self.fc1  = torch.nn.Linear(3*h, h)
       self.embed = torch.nn.Embedding(7, 7)
-      self.ent1 = torch.nn.Linear(entDim, 2*h)
+
+      self.conv = torch.nn.Linear(1800, h)
+      self.flat = torch.nn.Linear(entDim, h)
+      self.ents = Ent(entDim, h)
 
    def forward(self, conv, flat, ents):
       tiles, nents = conv[0], conv[1]
-      tiles = self.embed(tiles.view(-1).long()).view(-1)
       nents = nents.view(-1)
-      conv = torch.cat((tiles, nents)) 
-      ents = self.ent1(ents)
-      ents, _ = torch.max(ents, 0)
-      x = torch.cat((conv.view(-1), flat, ents)).view(1, -1)
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x
 
-class Full(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.conv1 = tu.Conv2d(8, int(h/2), 3, stride=2)
-      self.conv2 = tu.Conv2d(int(h/2), h, 3, stride=2)
-      self.fc1 = torch.nn.Linear(6+4*4*h + h, h)
-      #self.fc1 = torch.nn.Linear(5+4*4*h, h)
-      self.ent1 = torch.nn.Linear(6, h)
-
-   def forward(self, conv, flat, ents):
-      if len(conv.shape) == 3:
-         conv = conv.view(1, *conv.shape)
-         flat = flat.view(1, *flat.shape)
-
-      x, batch = conv, conv.shape[0]
-      x = torch.nn.functional.relu(self.conv1(x))
-      x = torch.nn.functional.relu(self.conv2(x))
-      x = x.view(batch, -1)
-
-      ents = self.ent1(ents)
-      ents, _ = torch.max(ents, 0)
-      ents = ents.view(batch, -1)
-
-      #x = torch.cat((x, flat), dim=1)
-      x = torch.cat((x, flat, ents), dim=1)
-
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x
-
-class FC1(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      #h = config.HIDDEN
-      self.fc1 = torch.nn.Linear(12+1800, h)
-
-   def forward(self, conv, flat, ents):
-      x = torch.cat((conv.view(-1), flat)).view(1, -1)
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x
-
-class FC2(nn.Module):
-   def __init__(self,  config):
-      super().__init__()
-      h = config.HIDDEN
-      self.fc1  = torch.nn.Linear(12+1800+2*h, h)
-      self.ent1 = torch.nn.Linear(12, 2*h)
-      self.embed = torch.nn.Embedding(7, 7)
-
-   def forward(self, conv, flat, ents):
-      tiles, nents = conv[0], conv[1]
       tiles = self.embed(tiles.view(-1).long()).view(-1)
-      nents = nents.view(-1)
-      conv = torch.cat((tiles, nents)) 
-      ents = self.ent1(ents)
-      ents, _ = torch.max(ents, 0)
-      x = torch.cat((conv.view(-1), flat, ents)).view(1, -1)
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x
+      conv = torch.cat((tiles, nents))
 
-#Use this one. Nice embedding property.
-#They all work pretty well
-class FC3(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.conv1 = tu.Conv2d(8, 8, 1)
-      self.fc1   = tu.FCRelu(5+1800, h)
+      conv = self.conv(conv)
+      ents = self.ents(ents)
+      flat = self.flat(flat)
 
-   def forward(self, conv, flat, ents):
-      conv = conv.view(1, *conv.shape)
-      x = self.conv1(conv)
-      x = torch.cat((x.view(-1), flat)).view(1, -1)
+      x = torch.cat((conv, flat, ents)).view(1, -1)
       x = self.fc1(x)
+      #Removed relu (easier training, lower policy cap)
+      #x = torch.nn.functional.relu(self.fc1(x))
       return x
-
-class FC4(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.conv1 = tu.Conv2d(8, 4, 1)
-      self.fc1   = tu.FCRelu(5+900, h)
-
-   def forward(self, conv, flat, ents):
-      conv = conv.view(1, *conv.shape)
-      x = self.conv1(conv)
-      x = torch.cat((x.view(-1), flat)).view(1, -1)
-      x = self.fc1(x)
-      return x
-
-class FCEnt(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.fc1 = torch.nn.Linear(5+1800+h, h)
-      self.ent1 = torch.nn.Linear(5, h)
-
-   def forward(self, conv, flat, ents):
-      ents = self.ent1(ents)
-      ents, _ = torch.max(ents, 0)
-      ents = ents.view(-1)
-
-      x = torch.cat((conv.view(-1), flat, ents)).view(1, -1)
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x
-
-class FCAttention(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.fc1 = torch.nn.Linear(5+1800+h, h)
-      self.ent1 = torch.nn.Linear(5, h)
-      self.attn = Attention(h, h)
-
-   def forward(self, conv, flat, ents):
-      ents = self.ent1(ents)
-      T()
-      ents = self.attn(ents)
-      ents = ents.view(-1)
-
-      x = torch.cat((conv.view(-1), flat, ents)).view(1, -1)
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x
-
-
-class CNN1(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.conv1 = tu.Conv2d(8, h, 5, stride=3)
-      self.conv2 = tu.Conv2d(h, h, 5, stride=3)
-      self.fc1 = torch.nn.Linear(4*h+5, h)
-
-   def forward(self, conv, flat, ents):
-      x = conv.view(1, *conv.shape)
-      x = torch.nn.functional.relu(self.conv1(x))
-      x = torch.nn.functional.relu(self.conv2(x))
-      x = x.view(-1)
-
-      x = torch.cat((x, flat))
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x.view(1, -1)
-
-class CNN2(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.conv1 = tu.Conv2d(8, h, 3, stride=2)
-      self.conv2 = tu.Conv2d(h, h, 3, stride=2)
-      self.fc1 = torch.nn.Linear(16*h+5, h)
-
-   def forward(self, conv, flat, ents):
-      x = conv.view(1, *conv.shape)
-      x = torch.nn.functional.relu(self.conv1(x))
-      x = torch.nn.functional.relu(self.conv2(x))
-      x = x.view(-1)
-
-      x = torch.cat((x, flat))
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x.view(1, -1)
-
-class CNN3(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.conv1 = tu.ConvReluPool(8, h, 5)
-      self.conv2 = tu.ConvReluPool(h, h//2, 5)
-      self.fc1 = torch.nn.Linear(h//2*7*7+5, h)
-
-   def forward(self, conv, flat, ents):
-      x = conv.view(1, *conv.shape)
-      x = torch.nn.functional.relu(self.conv1(x))
-      x = torch.nn.functional.relu(self.conv2(x))
-      x = x.view(-1)
-
-      x = torch.cat((x, flat))
-      x = torch.nn.functional.relu(self.fc1(x))
-      return x.view(1, -1)
-
-

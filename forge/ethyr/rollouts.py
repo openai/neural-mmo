@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 from itertools import chain 
+from collections import defaultdict
 import numpy as np
 
 from forge.blade.lib.log import Blob
@@ -16,16 +17,25 @@ def sumReturn(rewards):
    return [sum(rewards) for e in rewards]
 
 def mergeRollouts(rollouts):
-   atnArgs = [rollout.atnArgs for rollout in rollouts]
-   vals    = [rollout.vals for rollout in rollouts]
-   rets    = [rollout.returns for rollout in rollouts]
+   outs = {'value': [], 'return': [], 
+         'action': defaultdict(lambda: defaultdict(list))}
+   for rollout in rollouts:
+      for idx in range(rollout.time):
+         aarg = rollout.atnArgs[idx]
+         val  = rollout.vals[idx]
+         ret  = rollout.returns[idx]
 
-   atnArgs = list(chain(*atnArgs))
-   atnArgs = list(zip(*atnArgs))
-   vals    = list(chain(*vals))
-   rets    = list(chain(*rets))
+         outs['value'].append(val)
+         outs['return'].append(ret)
 
-   return atnArgs, vals, rets
+         for k, out in aarg.items():
+            atn, idx = out
+            outk = outs['action'][k]
+            outk['atns'].append(atn) 
+            outk['idxs'].append(idx)
+            outk['vals'].append(val)
+            outk['rets'].append(ret)
+   return outs
 
 class Rollout:
    def __init__(self, returnf=discountRewards):
@@ -35,11 +45,13 @@ class Rollout:
       self.pop_rewards = []
       self.returnf = returnf
       self.feather = Feather()
+      self.time = 0
 
    def step(self, atnArgs, val, reward):
       self.atnArgs.append(atnArgs)
       self.vals.append(val)
       self.rewards.append(reward)
+      self.time += 1
 
    def finish(self):
       self.rewards[-1] = -1

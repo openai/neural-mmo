@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 from forge.blade.action import action
+from forge.blade.action.action import NodeType, staticproperty
 
 class ActionNode:
    def __init__(self):
@@ -32,7 +33,7 @@ class ActionTree:
    def __init__(self, world, entity, rootVersion):
       self.world, self.entity = world, entity
       self.root, self.args = rootVersion, None
-      self.stack = [self.root]
+      self.stack = []
       self.atn = None
       self.atns = {}
       self.outs = {}
@@ -40,13 +41,6 @@ class ActionTree:
    @property
    def n(self):
       return sum([a.nArgs() for a in self.action.edges()])
-
-   def flat(self):
-      rets = []
-      for action in self.root.edges(None, None):
-         for args in action.args(None, None):
-            rets.append((action, args))
-      return rets
 
    def actions(self):
       return self.root.edges
@@ -62,30 +56,56 @@ class ActionTree:
       return atns, outs
 
    def decide(self, atn, nxtAtn, args, outs):
-      if issubclass(nxtAtn, action.ConstantNode):
-         self.atns[nxtAtn] = args
+      if nxtAtn.nodeType in (NodeType.ACTION, NodeType.CONSTANT, NodeType.VARIABLE):
+         #self.atns[nxtAtn] = args
+         self.atns[atn] = (nxtAtn, args)
       self.outs[atn] = outs
 
-   #DFS for the next action
-   def next(self, atn=None, args=None, outs=None):
-      T()
-      if atn is None and len(self.stack) == 0:
-         return None
-      elif atn is None:
-         atn = self.stack.pop()
-      else:
-         self.decide(self.atn, atn, args, outs)
+   @staticmethod
+   def flat(root, rets=[]):
+      if root.nodeType is NodeType.STATIC:
+         for edge in root.edges:
+            rets = ActionTree.flat(edge, rets)
+      elif root.nodeType is NodeType.SELECTION:
+         rets.append(root)
+         rets += root.edges
+      return rets
 
-      if issubclass(atn, action.ConstantNode) and len(self.stack) == 0:
-         return None
-      elif issubclass(atn, action.ConstantNode):
-         atn = self.stack.pop()
+   def pop(self):
+      if len(self.stack) > 0:
+         return self.stack.pop()
+      return None
+
+   #DFS for the next action -- core and tricky function
+   def next(self, atn=None, args=None, outs=None):
+      if atn is None:
+         atn = self.root
+
+      #Traverse all edges
+      if atn.nodeType is NodeType.STATIC:
+         self.stack += atn.edges
+         atn = self.pop()
+         self.atn = atn
+         return self.next(atn)
+      #Select an edge or argument
+      elif atn.nodeType is NodeType.SELECTION:
+         self.outs[self.atn] = outs
+      #Register no-argument action
+      elif atn.nodeType is NodeType.ACTION:
+         self.outs[self.atn] = outs
+         self.atns[self.atn] = action.ActionArgs(atn, None)
+         atn = self.pop()
+      #Must pick an argument
+      elif args is None:
+         self.outs[self.atn] = outs
+         return atn
+      #Register action with argument
+      else:
+         self.outs[atn] = outs
+         self.atns[self.atn] = action.ActionArgs(atn, args)
+         atn = self.pop()
 
       self.atn = atn
-      if (not issubclass(atn, action.ConstantNode) and 
-               issubclass(atn, action.StaticNode)):
-         self.stack += atn.edges
-         atn = self.next()
       return atn
 
    def rand(self):

@@ -9,11 +9,6 @@ from forge.blade import entity, core
 from itertools import chain
 from copy import deepcopy
 
-class ActionArgs:
-   def __init__(self, action, args):
-      self.action = action
-      self.args = args
-
 class Realm:
    def __init__(self, config, args, idx):
       #Random samples
@@ -67,13 +62,6 @@ class Realm:
       self.world.env.step()
       self.env = self.world.env.np()
 
-   def stepEnt(self, ent, action, arguments):
-      move, attack         = action
-      moveArgs, attackArgs = arguments
-
-      ent.move   = ActionArgs(move, moveArgs)
-      ent.attack = ActionArgs(attack, attackArgs[0])
-
    def getStim(self, ent):
       return self.world.env.stim(ent.pos, self.config.STIM)
 
@@ -94,10 +82,9 @@ class NativeRealm(Realm):
             continue
 
          stim = self.getStim(ent)
-         action, arguments, val = self.sword.decide(ent, stim)
-         ent.act(self.world, action, arguments, val)
-
-         self.stepEnt(ent, action, arguments)
+         actions, val = self.sword.decide(ent, stim)
+         ent.act(self.world, actions, val)
+         #self.stepEnt(ent, actions)
 
       self.cullDead(dead)
 

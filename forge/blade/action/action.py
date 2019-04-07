@@ -2,58 +2,55 @@ from pdb import set_trace as T
 from forge.blade.action import tree
 from forge.blade.lib import utils, enums
 import numpy as np
+from enum import Enum, auto
 
 class staticproperty(property):
     def __get__(self, cls, owner):
         return self.fget.__get__(None, owner)()
 
-#Traverses all edges without and decisions
-class StaticNode:
-   def argType():
-      return None
+class ActionArgs:
+   def __init__(self, action, args):
+      self.action = action
+      self.args = args
 
+class NodeType(Enum):
+   #Tree edges
+   STATIC = auto()    #Traverses all edges without decisions 
+   SELECTION = auto() #Picks an edge to follow
+
+   #Executable actions
+   ACTION    = auto() #No arguments
+   CONSTANT  = auto() #Constant argument
+   VARIABLE  = auto() #Variable argument
+
+class Node:
    @staticproperty
    def edges():
       return []
 
-#Picks an edge to follow
-class SelectionNode:
+   #Fill these in
    @staticproperty
-   def argType():
-      return tree.ConstDiscrete
+   def priority():
+      return None
+
+   @staticproperty
+   def type():
+      return None
 
    @staticproperty
    def args(stim, entity, config):
       return None
 
-#Proposes an argument to execute
-class VariableNode:
-   @staticproperty
-   def argType():
-      return tree.VariableDiscrete
-
-   @staticproperty
-   def args(stim, entity, config):
-      return None
-
-#Proposes an argument to execute
-class ConstantNode:
-   @staticproperty
-   def argType():
-      return tree.VariableDiscrete
-
-   @staticproperty
-   def args(stim, entity, config):
-      return None
-
-
-class ActionRoot(StaticNode):
+class ActionRoot(Node):
+   nodeType = NodeType.STATIC
    @staticproperty
    def edges():
-      return [Move, Attack, Exchange, Skill]
+      return [Move, Attack]
+      #return [Move, Attack, Exchange, Skill]
 
-class Move(SelectionNode):
+class Move(Node):
    priority = 1
+   nodeType = NodeType.SELECTION
    def call(world, entity, rDelta, cDelta):
       r, c = entity.pos
       rNew, cNew = r+rDelta, c+cDelta
@@ -80,31 +77,33 @@ class Move(SelectionNode):
    def args(stim, entity, config):
       return Move.edges
 
-class Pass(ConstantNode, Move):
+class Pass(Node):
+   nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, 0)
 
-class North(ConstantNode, Move):
+class North(Node):
+   nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, -1, 0)
 
-class South(ConstantNode, Move):
+class South(Node):
+   nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 1, 0)
 
-class East(ConstantNode, Move):
+class East(Node):
+   nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, 1)
 
-class West(ConstantNode, Move):
+class West(Node):
+   nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, -1)
 
-class Attack(SelectionNode):
-   @staticproperty
-   def argType():
-      return tree.ConstDiscrete
-
+class Attack(Node):
+   nodeType = NodeType.SELECTION
    @staticproperty
    def n():
       return 3
@@ -148,11 +147,12 @@ class Attack(SelectionNode):
       return [Melee, Range, Mage]
       #return Melee.args(stim, entity, config) + Range.args(stim, entity, config) + Mage.args(stim, entity, config)
 
-class Melee(ConstantNode, Attack):
-   @staticproperty
-   def argType():
-      return tree.VariableDiscrete
+class AttackStyle(Node):
+   pass
 
+class Melee(Node):
+   nodeType = NodeType.VARIABLE
+   index = 0
    @staticproperty
    def edges():
       return None
@@ -165,11 +165,9 @@ class Melee(ConstantNode, Attack):
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.MELEERANGE)
 
-class Range(ConstantNode, Attack):
-   @staticproperty
-   def argType():
-      return tree.VariableDiscrete
-
+class Range(Node):
+   nodeType = NodeType.VARIABLE
+   index = 1
    @staticproperty
    def edges():
       return None
@@ -182,11 +180,9 @@ class Range(ConstantNode, Attack):
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.RANGERANGE)
 
-class Mage(ConstantNode, Attack):
-   @staticproperty
-   def argType():
-      return tree.VariableDiscrete
-
+class Mage(Node):
+   nodeType = NodeType.VARIABLE
+   index = 2
    @staticproperty
    def edges():
       return None
@@ -202,7 +198,8 @@ class Mage(ConstantNode, Attack):
 class Reproduce:
    pass
 
-class Skill(SelectionNode):
+class Skill(Node):
+   nodeType = NodeType.SELECTION
    @staticproperty
    def edges():
       return [Harvest, Process]
@@ -210,7 +207,8 @@ class Skill(SelectionNode):
    def args(stim, entity, config):
       return Skill.edges
 
-class Harvest(SelectionNode):
+class Harvest(Node):
+   nodeType = NodeType.SELECTION
    @staticproperty
    def edges():
       return [Fish, Mine]
@@ -218,13 +216,14 @@ class Harvest(SelectionNode):
    def args(stim, entity, config):
       return Harvest.edges
 
-class Fish(ConstantNode, Harvest):
-   pass
+class Fish(Node):
+   nodeType = NodeType.ACTION
 
-class Mine(ConstantNode, Harvest):
-   pass
+class Mine(Node):
+   nodeType = NodeType.ACTION
 
-class Process(SelectionNode):
+class Process(Node):
+   nodeType = NodeType.SELECTION
    @staticproperty
    def edges():
       return [Cook, Smith]
@@ -232,13 +231,14 @@ class Process(SelectionNode):
    def args(stim, entity, config):
       return Process.edges
 
-class Cook(ConstantNode, Process):
-   pass
+class Cook(Node):
+   nodeType = NodeType.ACTION
 
-class Smith(ConstantNode, Process):
-   pass
+class Smith(Node):
+   nodeType = NodeType.ACTION
 
-class Exchange(SelectionNode):
+class Exchange(Node):
+   nodeType = NodeType.SELECTION
    @staticproperty
    def edges():
       return [Buy, Sell, CancelOffer, Pass]
@@ -246,14 +246,14 @@ class Exchange(SelectionNode):
    def args(stim, entity, config):
       return Exchange.edges
 
-class Buy(ConstantNode, Exchange):
-   pass
+class Buy(Node):
+   nodeType = NodeType.ACTION
 
-class Sell(ConstantNode, Exchange):
-   pass
+class Sell(Node):
+   nodeType = NodeType.ACTION
 
-class CancelOffer(ConstantNode, Exchange):
-   pass
+class CancelOffer(Node):
+   nodeType = NodeType.ACTION
 
 class Message:
    pass

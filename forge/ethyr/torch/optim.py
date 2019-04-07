@@ -21,23 +21,25 @@ class ManualSGD(optim.SGD):
       super().step()
 
 def backward(rolls, anns, valWeight=0.5, entWeight=0):
-   atns, vals, rets = rollouts.mergeRollouts(rolls.values())
-   returns = torch.tensor(rets).view(-1, 1).float()
-   vals = torch.cat(vals)
+   outs = rollouts.mergeRollouts(rolls.values())
    pg, entropy, attackentropy = 0, 0, 0
-   for i, atnList in enumerate(atns):
-      aArg, aArgIdx = list(zip(*atnList))
-      aArgIdx = torch.stack(aArgIdx)
-      l, e = loss.PG(aArg, aArgIdx, vals, returns)
+   for k, out in outs['action'].items():
+      atns = out['atns']
+      vals = torch.stack(out['vals'])
+      idxs = torch.stack(out['idxs'])
+      rets = torch.tensor(out['rets']).view(-1, 1)
+      l, e = loss.PG(atns, idxs, vals, rets)
       pg += l
       entropy += e
 
-   valLoss = loss.valueLoss(vals, returns)
+   returns = torch.stack(outs['value'])
+   values  = torch.tensor(outs['return']).view(-1, 1)
+   valLoss = loss.valueLoss(values, returns)
    totLoss = pg + valWeight*valLoss + entWeight*entropy
 
    totLoss.backward()
    grads = [param.getGrads(ann) for ann in anns]
-   reward = np.mean(rets)
+   reward = np.mean(outs['return'])
 
    return reward, vals.mean(), grads, pg, valLoss, entropy
 

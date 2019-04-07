@@ -59,7 +59,7 @@ class NativeExample:
 if __name__ == '__main__':
    args = parseArgs()
    assert args.api in ('native', 'vecenv')
-   config = experiments.exps['testchaos128']
+   config = experiments.exps['new-auto-treechaos128']
 
    if args.api == 'native':
       example = NativeExample(config, args)

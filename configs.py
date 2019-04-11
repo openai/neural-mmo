@@ -7,7 +7,8 @@ class Experiment(Config):
    def defaults(self):
       super().defaults()
       self.MODELDIR='resource/logs/'
-      self.HIDDEN = 32
+      self.EMBED   = 32
+      self.HIDDEN  = 64
       self.TEST = False
       self.LOAD = False
       self.BEST = False

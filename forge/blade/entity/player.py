@@ -15,9 +15,6 @@ class Stat:
    def decrement(self, amt=1):
       self._val = max(0, self.val - amt)
 
-   def center(self):
-      return (self.val - self.max/2.0) / self.max
-
    @property
    def val(self):
       return self._val 

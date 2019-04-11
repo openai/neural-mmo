@@ -216,6 +216,24 @@ class Env(nn.Module):
       self.flat = torch.nn.Linear(entDim, h)
       self.ents = Ent(entDim, h)
 
+      stim = static.stim(config)
+
+   def init(self, config, stim):
+      net = nn.ModuleDict()
+      T()
+      
+      n = 0
+      for key, node in stim.items():
+         #if not issubclass(node, static.Node):
+         #   net[node] = self.init(config, node)
+
+         n += node.n
+         if issubclass(val, static.Discrete):
+            net[key] = torch.nn.Embedding(node.val, config.HIDDEN)
+      T()
+      net[stim] = torch.nn.Linear(n, config.HIDDEN)
+      
+
    def forward(self, conv, flat, ents):
       tiles, nents = conv[0], conv[1]
       nents = nents.view(-1)

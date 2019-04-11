@@ -10,6 +10,7 @@ from forge.blade.action import action
 from forge.blade.action.action import ActionRoot, NodeType
 from forge.blade.lib.enums import Neon
 from forge.blade.lib import enums
+from forge.ethyr.stim.dynamic import Dynamic
 from forge.ethyr import torch as torchlib
 from forge.ethyr.torch import policy, newpolicy
 from forge.blade import entity
@@ -90,15 +91,15 @@ class AttackNet(nn.Module):
 class ANN(nn.Module):
    def __init__(self, config):
       super().__init__()
+      self.net = newpolicy.Net(config)
+      self.val = newpolicy.Val(config)
       self.config = config
 
-      self.actionNet  = newpolicy.NetTree(config)
-      self.valNet = self.actionNet.val
-
-   def forward(self, ent, env):
-      stim = torchlib.Stim(ent, env, self.config)
-      actions, outs, val = self.actionNet(env, ent, stim)
-      return actions, outs, val
+   def forward(self, env, ent):
+      stim = Dynamic(env, ent, self.config).flat
+      atns, outs = self.net(env, ent, stim)
+      val        = self.val(env, ent, stim)
+      return atns, outs, val
 
    #Messy hooks for visualizers
    def visDeps(self):

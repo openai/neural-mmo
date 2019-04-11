@@ -6,8 +6,8 @@ from pdb import set_trace as T
 class Stim:
    def __init__(self, ent, env, config):
       sz = config.STIM
-      flat = stim.entity(ent, ent, config)
       conv, ents = stim.environment(env, ent, sz, config)
+      flat = stim.entity(ent, ent, config)
 
       self.flat = tu.var(flat)
       self.conv = tu.var(conv)

@@ -7,13 +7,13 @@ import os
 USER = 'your-username'
 if USER == 'your-username':
    #Thousandth
-   prefix = 'new-auto-tree'
+   prefix = 'nxt-auto-tree'
    remote = False
    local  = not remote
 
-   test = True
-   best = True
-   load = True
+   test = False
+   best = False
+   load = False
 
    sample = not test
    singles = True

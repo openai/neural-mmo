@@ -39,6 +39,6 @@ def getGrads(ann):
       try:
          ret += e.grad.data.view(-1).numpy().tolist()
       except:
-         print('Gradient dimension mismatch. This usually means you have either (1) loaded a model with a different architecture or (2) have a layer for which gradients are not available (e.g. not differentiable or more commonly not being used)')
+         print('Gradient dimension mismatch: ' + str(param) + '. This usually means you have either (1) loaded a model with a different architecture or (2) have a layer for which gradients are not available (e.g. not differentiable or more commonly not being used)')
    return ret
 

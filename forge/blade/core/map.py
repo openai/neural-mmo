@@ -4,7 +4,7 @@ import numpy as np
 from forge.blade import core
 from forge.blade.lib import enums, utils
 
-def loadTiled(fPath, tiles, nCounts):
+def loadTiled(config, fPath, tiles, nCounts):
     import pytmx
     tm = pytmx.TiledMap(fPath)
     assert len(tm.layers) == 1
@@ -14,12 +14,13 @@ def loadTiled(fPath, tiles, nCounts):
     for w, h, dat in layer.tiles():
        f = dat[0]
        tex = f.split('/')[-1].split('.')[0]
-       tilemap[h, w] = core.Tile(tiles[tex], h, w, nCounts, tex)
+       tilemap[h, w] = core.Tile(config, tiles[tex], h, w, nCounts, tex)
     return tilemap
 
 class Map:
    def __init__(self, config, idx):
       self.updateList = set()
+      self.config = config
       self.nCounts = config.NPOP
       self.genEnv(config.ROOT + str(idx) + config.SUFFIX)
 
@@ -64,6 +65,6 @@ class Map:
      
    def genEnv(self, fName):
       tiles = dict((mat.value.tex, mat.value) for mat in enums.Material)
-      self.tiles = loadTiled(fName, tiles, self.nCounts)
+      self.tiles = loadTiled(self.config, fName, tiles, self.nCounts)
       self.shape = self.tiles.shape
        

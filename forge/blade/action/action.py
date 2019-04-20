@@ -1,17 +1,11 @@
 from pdb import set_trace as T
+import numpy as np
+
 from forge.blade.action import tree
 from forge.blade.lib import utils, enums
-import numpy as np
+from forge.blade.lib.utils import staticproperty, classproperty
+
 from enum import Enum, auto
-
-class staticproperty(property):
-    def __get__(self, cls, owner):
-        return self.fget.__get__(None, owner)()
-
-class ActionArgs:
-   def __init__(self, action, args):
-      self.action = action
-      self.args = args
 
 class NodeType(Enum):
    #Tree edges
@@ -139,7 +133,7 @@ class Attack(Node):
       damage = damageF(entity, targ)
       assert type(damage) == int
       if freeze and damage > 0:
-         targ._freeze = 3
+         targ._freeze.update(3)
       return
       #return damage
 

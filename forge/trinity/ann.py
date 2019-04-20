@@ -10,10 +10,11 @@ from forge.blade.action import action
 from forge.blade.action.action import ActionRoot, NodeType
 from forge.blade.lib.enums import Neon
 from forge.blade.lib import enums
-from forge.ethyr.stim.dynamic import Dynamic
 from forge.ethyr import torch as torchlib
 from forge.ethyr.torch import policy, newpolicy
 from forge.blade import entity
+
+from forge.ethyr.torch.netgen.stim import Env
 
 class MoveNet(nn.Module):
    def __init__(self, config):
@@ -92,13 +93,10 @@ class ANN(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.net = newpolicy.Net(config)
-      self.val = newpolicy.Val(config)
       self.config = config
 
    def forward(self, env, ent):
-      stim = Dynamic(env, ent, self.config).flat
-      atns, outs = self.net(env, ent, stim)
-      val        = self.val(env, ent, stim)
+      atns, outs, val = self.net(env, ent)
       return atns, outs, val
 
    #Messy hooks for visualizers

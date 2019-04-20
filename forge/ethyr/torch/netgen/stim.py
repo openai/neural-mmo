@@ -10,9 +10,7 @@ from forge.blade.action.tree import ActionTree
 from forge.blade.action import action
 from forge.blade.action.action import ActionRoot, NodeType
 
-from forge.ethyr.stim import node
-from forge.ethyr.stim.static import Static
-
+from forge.ethyr import node
 from collections import defaultdict
 
 class Embedding(nn.Module):
@@ -25,18 +23,18 @@ class Embedding(nn.Module):
       return self.embed(x - self.min)
 
 class Input(nn.Module):
-   def __init__(self, val, config):
+   def __init__(self, cls, config):
       super().__init__()
-      self.cls = type(val)
-      if self.cls is node.Discrete:
-         self.embed = Embedding(val, config.EMBED)
-      elif self.cls is node.Continuous:
+      self.cls = cls
+      if issubclass(cls, node.Discrete):
+         self.embed = Embedding(cls, config.EMBED)
+      elif issubclass(cls, node.Continuous):
          self.embed = torch.nn.Linear(1, config.EMBED)
 
    def forward(self, x):
-      if self.cls is node.Discrete:
+      if issubclass(self.cls, node.Discrete):
          x = x.long()
-      elif self.cls is node.Continuous:
+      elif issubclass(self.cls, node.Continuous):
          x = x.float().view(-1, 1)
       x = self.embed(x)
       return x
@@ -46,17 +44,17 @@ class Env(nn.Module):
       super().__init__()
       h = config.HIDDEN
       self.embeddings = {}
+      self.config = config
 
-      stim = Static(config).flat
-      self.emb, self.proj  = self.init(config, stim)
+      self.emb, self.proj  = self.init(config)
 
-   def init(self, config, stim, name=None):
+   def init(self, config, name=None):
       emb  = nn.ModuleDict()
       proj = nn.ModuleDict()
-      for name, subnet in stim.items():
+      for name, subnet in config.static:
          n = 0
          emb[name] = nn.ModuleDict()
-         for param, val in subnet.items():
+         for param, val in subnet:
             n += config.EMBED
             emb[name][param] = Input(val, config)
          proj[name] = torch.nn.Linear(n, config.HIDDEN)
@@ -69,9 +67,9 @@ class Env(nn.Module):
             ret[k] += [v]
       return ret
 
-   def forward(self, env, ent, stim):
-      project, embed = {}, {}
-      #add some player keys
+   def forward(self, env, ent):
+      stim = self.config.dynamic(env, ent)
+      features, embed = {}, {}
       for name, subnet in stim.items():
          merged = self.merge(subnet)
          feats = []
@@ -79,8 +77,8 @@ class Env(nn.Module):
             val = torch.Tensor(val)
             feats.append(self.emb[name][param](val))
          feats = torch.cat(feats, 1)
-         proj = self.proj[name](feats)
-         project[name] = proj
-         zipped = dict(zip(subnet.keys(), proj.split(1)))
+         feats = self.proj[name](feats)
+         features[name] = feats
+         zipped = dict(zip(subnet.keys(), feats.split(1)))
          embed = {**embed, **zipped}
-      return project, embed
+      return features, embed

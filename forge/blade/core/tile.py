@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Tile:
-   def __init__(self, mat, r, c, nCounts, tex):
+   def __init__(self, config, mat, r, c, nCounts, tex):
       self.r, self.c = r, c
       self.mat = mat()
       self.ents = {}
@@ -12,9 +12,16 @@ class Tile:
       self.counts = np.zeros(nCounts)
       self.tex = tex
 
-   @property
-   def nEnts(self):
-      return len(self.ents)
+      self.inputs(config)
+
+   def inputs(self, config):
+      for name, cls in config.static.Tile:
+         name = name[0].lower() + name[1:]
+         setattr(self, name, cls())
+
+   #@property
+   #def nEnts(self):
+   #   return len(self.ents)
 
    def addEnt(self, entID, ent):
       assert entID not in self.ents

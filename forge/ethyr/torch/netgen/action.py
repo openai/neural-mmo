@@ -10,9 +10,6 @@ from forge.blade.action.tree import ActionTree
 from forge.blade.action import action
 from forge.blade.action.action import ActionRoot, NodeType
 
-from forge.ethyr.stim import node
-from forge.ethyr.stim.static import Static
-
 from collections import defaultdict
 
 class NetTree(nn.Module):
@@ -37,7 +34,6 @@ class NetTree(nn.Module):
       return self.net[cls.__name__]
 
    def forward(self, env, ent, stim):
-
       actionTree = ActionTree(env, ent, ActionRoot)
       atn = actionTree.next(actionTree.root)
       while atn is not None:
@@ -102,11 +98,11 @@ class VariableDiscrete(nn.Module):
    def __init__(self, xdim, h):
       super().__init__()
       self.attn  = AttnCat(h)
-      self.embed = nn.Linear(xdim, h) 
+      #self.embed = nn.Linear(xdim, h) 
 
    #Arguments: stim, action/argument embedding
    def forward(self, key, vals):
-      vals = self.embed(vals)
+      #vals = self.embed(vals)
       x = self.attn(key, vals)
       xIdx = classify(x)
       return x, xIdx

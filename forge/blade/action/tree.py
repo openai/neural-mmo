@@ -2,6 +2,11 @@ from pdb import set_trace as T
 from forge.blade.action import action
 from forge.blade.action.action import NodeType, staticproperty
 
+class ActionArgs:
+   def __init__(self, action, args):
+      self.action = action
+      self.args = args
+
 class ActionNode:
    def __init__(self):
       pass
@@ -93,7 +98,7 @@ class ActionTree:
       #Register no-argument action
       elif atn.nodeType is NodeType.ACTION:
          self.outs[self.atn] = outs
-         self.atns[self.atn] = action.ActionArgs(atn, None)
+         self.atns[self.atn] = ActionArgs(atn, None)
          atn = self.pop()
       #Must pick an argument
       elif args is None:
@@ -102,7 +107,7 @@ class ActionTree:
       #Register action with argument
       else:
          self.outs[atn] = outs
-         self.atns[self.atn] = action.ActionArgs(atn, args)
+         self.atns[self.atn] = ActionArgs(atn, args)
          atn = self.pop()
 
       self.atn = atn

@@ -1,39 +1,9 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.action import tree
 from forge.blade.lib import utils, enums
-from forge.blade.lib.utils import staticproperty, classproperty
-
-from enum import Enum, auto
-
-class NodeType(Enum):
-   #Tree edges
-   STATIC = auto()    #Traverses all edges without decisions 
-   SELECTION = auto() #Picks an edge to follow
-
-   #Executable actions
-   ACTION    = auto() #No arguments
-   CONSTANT  = auto() #Constant argument
-   VARIABLE  = auto() #Variable argument
-
-class Node:
-   @staticproperty
-   def edges():
-      return []
-
-   #Fill these in
-   @staticproperty
-   def priority():
-      return None
-
-   @staticproperty
-   def type():
-      return None
-
-   @staticproperty
-   def args(stim, entity, config):
-      return None
+from forge.blade.lib.utils import staticproperty
+from forge.blade.io.action.node import Node, NodeType
 
 class ActionRoot(Node):
    nodeType = NodeType.STATIC

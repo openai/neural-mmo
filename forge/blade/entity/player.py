@@ -1,8 +1,10 @@
 import numpy as np
+from pdb import set_trace as T
+
 from forge.blade.systems import ai
 from forge.blade.lib.enums import Material, Neon
-from forge.blade.action import action
-from pdb import set_trace as T
+
+from forge.blade.io.action import static
 
 class Player:
    def __init__(self, entID, color, config):
@@ -133,7 +135,7 @@ class Player:
       if not self.alive: return
 
       self._actions = actions
-      self._attack  = actions[action.Attack]
+      self._attack  = actions[static.Attack]
       self.mapAttack()
       
       self.val = val

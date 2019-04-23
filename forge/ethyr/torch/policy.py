@@ -6,9 +6,8 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.action.tree import ActionTree
-from forge.blade.action import action
-from forge.blade.action.action import ActionRoot, NodeType
+from forge.blade.io.action import dynamic 
+from forge.blade.io.action.dynamic import ActionTree, ActionRoot, NodeType
 
 def classify(logits):
    if len(logits.shape) == 1:
@@ -24,7 +23,7 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      for atn in ActionTree.flat(ActionRoot):
+      for atn in ActionTree.flat():
          self.add(atn)
 
    def add(self, cls):

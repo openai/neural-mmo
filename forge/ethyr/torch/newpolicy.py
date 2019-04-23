@@ -8,11 +8,11 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.action.tree import ActionTree
-from forge.blade.action import action
-from forge.blade.action.action import ActionRoot, NodeType
+from forge.blade.io.action import static
+from forge.blade.io.action.static import ActionRoot, NodeType
+from forge.blade.io.action.dynamic import ActionTree
 
-from forge.ethyr import node
+from forge.blade.io.stim import node
 from forge.ethyr.torch.netgen.action import NetTree
 from forge.ethyr.torch.netgen.stim import Env
 

@@ -6,9 +6,9 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.action.tree import ActionTree
-from forge.blade.action import action
-from forge.blade.action.action import ActionRoot, NodeType
+from forge.blade.io.action.dynamic import ActionTree
+from forge.blade.io.action import static
+from forge.blade.io.action.static import ActionRoot, NodeType
 
 from collections import defaultdict
 

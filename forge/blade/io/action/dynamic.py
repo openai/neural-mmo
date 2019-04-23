@@ -1,38 +1,12 @@
 from pdb import set_trace as T
-from forge.blade.action import action
-from forge.blade.action.action import NodeType, staticproperty
+
+from forge.blade.io.action.node import NodeType
+from forge.blade.io.action.static import ActionRoot
 
 class ActionArgs:
    def __init__(self, action, args):
       self.action = action
       self.args = args
-
-class ActionNode:
-   def __init__(self):
-      pass
- 
-   def edges(self, world, entity):
-      pass
-
-class ArgumentNode:
-   pass
-
-class ConstDiscrete(ArgumentNode):
-   pass
-
-class VariableDiscrete(ArgumentNode):
-   def __init__(self):
-      self.setValue = set()
-
-   def add(self, value):
-      self.setValue.add(value)
-
-   def toList(self):
-      return list(self.setValue)
-
-   @property
-   def empty(self):
-      return len(self.toList()) == 0
 
 class ActionTree:
    def __init__(self, world, entity, rootVersion):
@@ -67,7 +41,7 @@ class ActionTree:
       self.outs[atn] = outs
 
    @staticmethod
-   def flat(root, rets=[]):
+   def flat(root=ActionRoot, rets=[]):
       if root.nodeType is NodeType.STATIC:
          for edge in root.edges:
             rets = ActionTree.flat(edge, rets)

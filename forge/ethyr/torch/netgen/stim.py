@@ -1,17 +1,17 @@
 from pdb import set_trace as T
 import numpy as np
 
+from collections import defaultdict
+
 import torch
 from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.action.tree import ActionTree
-from forge.blade.action import action
-from forge.blade.action.action import ActionRoot, NodeType
+from forge.blade.io.action.dynamic import ActionTree
 
-from forge.ethyr import node
-from collections import defaultdict
+from forge.blade.io.stim import static, node
+from forge.blade.io.action.static import ActionRoot, NodeType
 
 class Embedding(nn.Module):
    def __init__(self, var, dim):

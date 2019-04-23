@@ -8,13 +8,9 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.io.action import static
-from forge.blade.io.action.static import ActionRoot, NodeType
-from forge.blade.io.action.dynamic import ActionTree
-
-from forge.blade.io.stim import node
-from forge.ethyr.torch.netgen.action import NetTree
+from forge.blade.io import stimulus, action
 from forge.ethyr.torch.netgen.stim import Env
+from forge.ethyr.torch.netgen.action import NetTree
 
 class SelfAttention(nn.Module):
    def __init__(self, xdim, h):

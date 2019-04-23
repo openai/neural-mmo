@@ -17,7 +17,11 @@ class Config:
    WINDOW = 2*STIM + 1
 
    NENT = 256
+   NTILE = 6 #Add this to tile static
+
    RESOURCE = 32
+   HEALTH = 10
+   IMMUNE = 15
 
    #Attack ranges
    MELEERANGE = 1
@@ -29,11 +33,10 @@ class Config:
    MAGEDAMAGE  = 1
 
    def __init__(self, remote=False, **kwargs):
-      from forge.blade.io.stim.static import Static
-      from forge.blade.io.stim.dynamic import Dynamic
+      from forge.blade.io import stimulus
 
-      self.static = Static
-      self.dynamic = Dynamic()
+      self.static = stimulus.Static
+      self.dynamic = stimulus.Dynamic()
       for k, v in kwargs.items():
          setattr(self, k, v)
 

@@ -1,12 +1,9 @@
 from pdb import set_trace as T
 import numpy as np
-import inspect
 
 from collections import defaultdict
-from itertools import chain
 
-from forge.blade.io.stim import node
-from forge.blade.io.stim.static import Static
+from forge.blade.io.stimulus import Static
 
 class Dynamic:
    def __call__(self, env, ent, flat=False):

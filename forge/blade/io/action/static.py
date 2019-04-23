@@ -5,7 +5,8 @@ from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
 
-class ActionRoot(Node):
+#ActionRoot
+class Static(Node):
    nodeType = NodeType.STATIC
    @staticproperty
    def edges():

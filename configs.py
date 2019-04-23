@@ -4,39 +4,26 @@ from forge.blade.lib import utils
 import numpy as np
 
 class Experiment(Config):
-   def defaults(self):
-      super().defaults()
-      self.MODELDIR='resource/logs/'
-      self.EMBED   = 32
-      self.HIDDEN  = 64
-      self.TEST = False
-      self.LOAD = False
-      self.BEST = False
-      self.SAMPLE = False
-      self.NATTN = 2
-      self.NPOP = 1
-      self.SHAREINIT = False
-      self.ENTROPY = 0.01
-      self.VAMPYR = 1
-      self.AUTO_TARGET = False
+   MODELDIR='resource/logs/'
+   EMBED   = 32
+   HIDDEN  = 64
+   TEST = False
+   LOAD = False
+   BEST = False
+   SAMPLE = False
+   NATTN = 2
+   NPOP = 1
+   SHAREINIT = False
+   ENTROPY = 0.01
+   VAMPYR = 1
+   AUTO_TARGET = False
 
 #Foraging only
 class Law(Experiment):
-   def defaults(self):
-      super().defaults()
-
-   #Damage 
-   def MELEEDAMAGE(self, ent, targ): return 0
-   def RANGEDAMAGE(self, ent, targ): return 0
-   def MAGEDAMAGE(self, ent, targ): return 0
+   pass
 
 #Foraging + Combat
 class Chaos(Experiment):
-   def defaults(self):
-      super().defaults()
-      self.RANGERANGE = 2
-      self.MAGERANGE  = 3
-
    def vamp(self, ent, targ, frac, dmg):
       dmg = int(frac * dmg)
       targ.food.decrement(amt=dmg)

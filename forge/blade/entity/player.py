@@ -4,7 +4,7 @@ from pdb import set_trace as T
 from forge.blade.systems import ai
 from forge.blade.lib.enums import Material, Neon
 
-from forge.blade.io.action import static
+from forge.blade.io import action
 
 class Player:
    def __init__(self, entID, color, config):
@@ -42,8 +42,7 @@ class Player:
 
    def inputs(self, config):
       for name, cls in config.static.Entity:
-         name = '_' + name[0].lower() + name[1:]
-         setattr(self, name, cls())
+         setattr(self, '_'+cls.name, cls(config))
 
    def packet(self):
       data = {}
@@ -135,7 +134,7 @@ class Player:
       if not self.alive: return
 
       self._actions = actions
-      self._attack  = actions[static.Attack]
+      self._attack  = actions[action.static.Attack]
       self.mapAttack()
       
       self.val = val

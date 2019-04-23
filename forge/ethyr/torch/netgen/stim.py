@@ -8,10 +8,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.io.action.dynamic import ActionTree
-
-from forge.blade.io.stim import static, node
-from forge.blade.io.action.static import ActionRoot, NodeType
+from forge.blade.io import stimulus, action
 
 class Embedding(nn.Module):
    def __init__(self, var, dim):
@@ -26,15 +23,15 @@ class Input(nn.Module):
    def __init__(self, cls, config):
       super().__init__()
       self.cls = cls
-      if issubclass(cls, node.Discrete):
+      if isinstance(cls, stimulus.node.Discrete):
          self.embed = Embedding(cls, config.EMBED)
-      elif issubclass(cls, node.Continuous):
+      elif isinstance(cls, stimulus.node.Continuous):
          self.embed = torch.nn.Linear(1, config.EMBED)
 
    def forward(self, x):
-      if issubclass(self.cls, node.Discrete):
+      if isinstance(self.cls, stimulus.node.Discrete):
          x = x.long()
-      elif issubclass(self.cls, node.Continuous):
+      elif isinstance(self.cls, stimulus.node.Continuous):
          x = x.float().view(-1, 1)
       x = self.embed(x)
       return x
@@ -56,7 +53,7 @@ class Env(nn.Module):
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
             n += config.EMBED
-            emb[name][param] = Input(val, config)
+            emb[name][param] = Input(val(config), config)
          proj[name] = torch.nn.Linear(n, config.HIDDEN)
       return emb, proj
 

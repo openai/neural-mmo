@@ -1,14 +1,14 @@
 from pdb import set_trace as T
 
-from forge.blade.io.action.node import NodeType
-from forge.blade.io.action.static import ActionRoot
+from forge.blade.io import action
 
 class ActionArgs:
    def __init__(self, action, args):
       self.action = action
       self.args = args
 
-class ActionTree:
+#ActionTree
+class Dynamic:
    def __init__(self, world, entity, rootVersion):
       self.world, self.entity = world, entity
       self.root, self.args = rootVersion, None
@@ -41,11 +41,11 @@ class ActionTree:
       self.outs[atn] = outs
 
    @staticmethod
-   def flat(root=ActionRoot, rets=[]):
-      if root.nodeType is NodeType.STATIC:
+   def flat(root=action.Static, rets=[]):
+      if root.nodeType is action.NodeType.STATIC:
          for edge in root.edges:
-            rets = ActionTree.flat(edge, rets)
-      elif root.nodeType is NodeType.SELECTION:
+            rets = action.Dynamic.flat(edge, rets)
+      elif root.nodeType is action.NodeType.SELECTION:
          rets.append(root)
          rets += root.edges
       return rets
@@ -61,16 +61,16 @@ class ActionTree:
          atn = self.root
 
       #Traverse all edges
-      if atn.nodeType is NodeType.STATIC:
+      if atn.nodeType is action.NodeType.STATIC:
          self.stack += atn.edges
          atn = self.pop()
          self.atn = atn
          return self.next(atn)
       #Select an edge or argument
-      elif atn.nodeType is NodeType.SELECTION:
+      elif atn.nodeType is action.NodeType.SELECTION:
          self.outs[self.atn] = outs
       #Register no-argument action
-      elif atn.nodeType is NodeType.ACTION:
+      elif atn.nodeType is action.NodeType.ACTION:
          self.outs[self.atn] = outs
          self.atns[self.atn] = ActionArgs(atn, None)
          atn = self.pop()

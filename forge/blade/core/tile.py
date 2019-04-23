@@ -16,8 +16,7 @@ class Tile:
 
    def inputs(self, config):
       for name, cls in config.static.Tile:
-         name = name[0].lower() + name[1:]
-         setattr(self, name, cls())
+         setattr(self, cls.name, cls(config))
 
    #@property
    #def nEnts(self):

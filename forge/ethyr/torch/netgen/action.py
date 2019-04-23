@@ -1,16 +1,14 @@
 from pdb import set_trace as T
 import numpy as np
 
+from collections import defaultdict
+
 import torch
 from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.io.action.dynamic import ActionTree
-from forge.blade.io.action import static
-from forge.blade.io.action.static import ActionRoot, NodeType
-
-from collections import defaultdict
+from forge.blade.io import action
 
 class NetTree(nn.Module):
    def __init__(self, config):
@@ -20,32 +18,32 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      for atn in ActionTree.flat(ActionRoot):
+      for atn in action.Dynamic.flat(action.Static):
          self.add(atn)
 
    def add(self, cls):
-      if cls.nodeType in (NodeType.SELECTION, NodeType.CONSTANT):
+      if cls.nodeType in (action.NodeType.SELECTION, action.NodeType.CONSTANT):
          n = len(cls.edges)
          self.net[cls.__name__] = ConstDiscreteAction(self.config, self.h, n)
-      elif cls.nodeType is NodeType.VARIABLE:
+      elif cls.nodeType is action.NodeType.VARIABLE:
          self.net[cls.__name__] = VariableDiscreteAction(self.config, self.h, self.h)
 
    def module(self, cls):
       return self.net[cls.__name__]
 
    def forward(self, env, ent, stim):
-      actionTree = ActionTree(env, ent, ActionRoot)
+      actionTree = action.Dynamic(env, ent, action.Static)
       atn = actionTree.next(actionTree.root)
       while atn is not None:
          module = self.module(atn)
 
          assert atn.nodeType in (
-               NodeType.SELECTION, NodeType.CONSTANT, NodeType.VARIABLE)
+               action.NodeType.SELECTION, action.NodeType.CONSTANT, action.NodeType.VARIABLE)
 
-         if atn.nodeType in (NodeType.SELECTION, NodeType.CONSTANT):
+         if atn.nodeType in (action.NodeType.SELECTION, action.NodeType.CONSTANT):
             nxtAtn, outs = module(env, ent, atn, stim)
             atn = actionTree.next(nxtAtn, outs=outs)
-         elif atn.nodeType is NodeType.VARIABLE:
+         elif atn.nodeType is action.NodeType.VARIABLE:
             argument, outs = module(env, ent, atn, stim)
             atn = actionTree.next(atn, argument, outs)
 

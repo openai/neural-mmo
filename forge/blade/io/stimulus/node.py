@@ -1,17 +1,24 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.lib.utils import staticproperty, classproperty
+from forge.blade.lib.utils import classproperty
 
 class Stim:
+   default = 0
    max = float('inf')
    min = 0
 
-   default = 0
-   def __init__(self):
+   def __init__(self, config):
       cls = self.__class__
-      assert cls.max > cls.min
-      self._val = cls.default
+      self.min = cls.min
+      self.max = cls.max
+      self.default = cls.default
+
+      self.init(config)
+      self._val = self.default
+
+   def init(self, config):
+      pass
 
    @classproperty
    def name(self):
@@ -62,11 +69,10 @@ class Stim:
    def __ge__(self, other):
       return self.val >= other
 
-
 class Discrete(Stim):
-   @classproperty
-   def range(cls):
-      return cls.max - cls.min + 1
+   @property
+   def range(self):
+      return self.max - self.min + 1
 
    def oneHot(self):
       ary = np.zeros(self.range)
@@ -79,9 +85,9 @@ class Discrete(Stim):
       return int(val)
 
 class Continuous(Stim):
-   @classproperty
-   def range(cls):
-      return cls.max - cls.min
+   @property
+   def range(self):
+      return self.max - self.min
 
    def norm(self, val):
       assert val >= self.min and val <= self.max
@@ -91,6 +97,4 @@ class Continuous(Stim):
 
    def scaled(self, val):
       return self.scale * val
-
-
 

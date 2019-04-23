@@ -6,8 +6,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Categorical
 
-from forge.blade.io.action import dynamic 
-from forge.blade.io.action.dynamic import ActionTree, ActionRoot, NodeType
+from forge.blade.io import action
 
 def classify(logits):
    if len(logits.shape) == 1:

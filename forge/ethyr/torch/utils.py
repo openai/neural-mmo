@@ -3,6 +3,17 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
+from torch.nn import functional as F
+from torch.distributions import Categorical
+
+def classify(logits):
+   if len(logits.shape) == 1:
+      logits = logits.view(1, -1)
+   distribution = Categorical(1e-3+F.softmax(logits, dim=1))
+   atn = distribution.sample()
+   return atn
+
+
 #Print model size
 def modelSize(net):
    params = 0

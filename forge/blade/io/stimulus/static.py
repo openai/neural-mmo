@@ -49,28 +49,29 @@ class Static(Config):
             self.default = config.IMMUNE
             self.max     = config.IMMUNE
 
-      class SameColor(node.Discrete):
+      class Population(node.Discrete):
          def init(self, config):
-            self.max = 1
+            self.default = None
+            self.max = config.NPOP
 
       class R(node.Discrete):
          def init(self, config):
-            self.max = config.R
+            self.min = -config.STIM
+            self.max = config.STIM
 
+         def get(self, ref):
+            val = self.val - ref.r.val
+            return self.asserts(val)
+ 
       class C(node.Discrete):
          def init(self, config):
-            self.max = config.C
-
-      class RDelta(node.Discrete):
-         def init(self, config):
             self.min = -config.STIM
             self.max = config.STIM
 
-      class CDelta(node.Discrete):
-         def init(self, config):
-            self.min = -config.STIM
-            self.max = config.STIM
-
+         def get(self, ref):
+            val = self.val - ref.c.val
+            return self.asserts(val)
+ 
    class Tile(Config):
       class Index(node.Discrete):
          def init(self, config):
@@ -90,6 +91,13 @@ class Static(Config):
          def init(self, config):
             self.max = config.WINDOW
 
+         def get(self, tile, r, c):
+            return r
+ 
       class C(node.Continuous):
          def init(self, config):
             self.max = config.WINDOW
+
+         def get(self, tile, r, c):
+            return c
+ 

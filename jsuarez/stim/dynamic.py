@@ -5,8 +5,9 @@ from collections import defaultdict
 from itertools import chain
 
 class Dynamic:
-   def __init__(self, env, ent, config):
+   def __init__(self, env, ent, static, config):
       self.config = config
+      self.static = static
 
       self.data = {}
       self.environment(env, ent)
@@ -16,28 +17,29 @@ class Dynamic:
       return self.data
 
    def environment(self, env, ent):
-      tiles = env.ravel()
-      entities = list(chain.from_iterable(
-            [t.ents.values() for t in tiles]))
-
       self.data['tile']   = defaultdict(list)
       self.data['entity'] = defaultdict(list)
 
-      for tile in tiles:
-         self.data['tile'][tile] = self.tile(tile)
-      
+      R, C = env.shape
+      for r in range(R):
+         for c in range(C):
+            tile = env[r, c]
+            self.data['tile'][tile] = self.tile(tile, r, c)
+
+      entities = list(chain.from_iterable(
+            [t.ents.values() for t in env.ravel()]))
       for e in entities:
          self.data['entity'][e] = self.entity(ent, e)
          
-   def tile(self, tile):
+   def tile(self, tile, r, c):
       stim = {} 
 
       stim['index'] = tile.state.index
       stim['nEnts'] = tile.nEnts
 
       #Need to use offsets, not abs coord
-      stim['r'] = tile.r
-      stim['c'] = tile.c
+      stim['r'] = r
+      stim['c'] = c
 
       return stim
 

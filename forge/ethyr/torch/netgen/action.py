@@ -5,9 +5,8 @@ from collections import defaultdict
 
 import torch
 from torch import nn
-from torch.nn import functional as F
-from torch.distributions import Categorical
 
+from forge.ethyr.torch.utils import classify
 from forge.blade.io import action
 
 class NetTree(nn.Module):
@@ -22,11 +21,14 @@ class NetTree(nn.Module):
          self.add(atn)
 
    def add(self, cls):
-      if cls.nodeType in (action.NodeType.SELECTION, action.NodeType.CONSTANT):
-         n = len(cls.edges)
-         self.net[cls.__name__] = ConstDiscreteAction(self.config, self.h, n)
+      if cls.nodeType in (
+            action.NodeType.SELECTION, 
+            action.NodeType.CONSTANT):
+         self.net[cls.__name__] = ConstDiscreteAction(
+               self.config, self.h, len(cls.edges))
       elif cls.nodeType is action.NodeType.VARIABLE:
-         self.net[cls.__name__] = VariableDiscreteAction(self.config, self.h, self.h)
+         self.net[cls.__name__] = VariableDiscreteAction(
+               self.config, self.h, self.h)
 
    def module(self, cls):
       return self.net[cls.__name__]
@@ -38,11 +40,16 @@ class NetTree(nn.Module):
          module = self.module(atn)
 
          assert atn.nodeType in (
-               action.NodeType.SELECTION, action.NodeType.CONSTANT, action.NodeType.VARIABLE)
+               action.NodeType.SELECTION, 
+               action.NodeType.CONSTANT, 
+               action.NodeType.VARIABLE)
 
-         if atn.nodeType in (action.NodeType.SELECTION, action.NodeType.CONSTANT):
+         if atn.nodeType in (
+               action.NodeType.SELECTION, 
+               action.NodeType.CONSTANT):
             nxtAtn, outs = module(env, ent, atn, stim)
             atn = actionTree.next(nxtAtn, outs=outs)
+
          elif atn.nodeType is action.NodeType.VARIABLE:
             argument, outs = module(env, ent, atn, stim)
             atn = actionTree.next(atn, argument, outs)
@@ -127,11 +134,5 @@ class AttnPool(nn.Module):
       x, _ = torch.max(x, 0)
       return x
 
-def classify(logits):
-   if len(logits.shape) == 1:
-      logits = logits.view(1, -1)
-   distribution = Categorical(1e-3+F.softmax(logits, dim=1))
-   atn = distribution.sample()
-   return atn
 ####### End network modules
 

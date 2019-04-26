@@ -17,6 +17,7 @@ class Config:
    WINDOW = 2*STIM + 1
 
    NENT = 256
+   NPOP = 8
    NTILE = 6 #Add this to tile static
 
    RESOURCE = 32

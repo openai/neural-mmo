@@ -26,7 +26,8 @@ class Move(Node):
       if entity.freeze > 0:
          return
 
-      entity._pos = rNew, cNew
+      entity._r.update(rNew)
+      entity._c.update(cNew)
       entID = entity.entID
       
       r, c = entity.lastPos

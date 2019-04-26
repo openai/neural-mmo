@@ -12,39 +12,18 @@ from forge.blade.io import stimulus, action
 from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.netgen.action import NetTree
 
-class SelfAttention(nn.Module):
-   def __init__(self, xdim, h):
-      super().__init__()
-      self.Q = nn.Linear(xdim, h)
-      self.K = nn.Linear(xdim, h)
-      self.V = nn.Linear(xdim, h)
-      self.scale = np.sqrt(h)
-      self.h = h
-
-   def forward(self, x):
-      Q = self.Q(x)
-      K = self.K(x)
-      V = self.V(x)
-
-      Kt = torch.transpose(K, 0, 1)
-      QK = torch.matmul(Q, Kt)
-      QK = torch.softmax(QK / self.scale, 0)
-      QKV = torch.matmul(QK, V)
-      return torch.mean(QKV, 0)
-
 class Hidden(nn.Module):
    def __init__(self, config, ydim):
       super().__init__()
       self.config = config
       h = config.HIDDEN
 
-      self.tileAttn = SelfAttention(h, h)
-      self.entAttn  = SelfAttention(h, h)
-      self.fc = torch.nn.Linear(2*h, ydim)
+      self.net = torch.nn.Linear(2*h, ydim)
 
    def forward(self, stim):
-      tile = self.tileAttn(stim['Tile'])
-      ent  = self.entAttn(stim['Entity'])
+      stim = list(stim.values())
+      stim = torch.cat(stim, 1)
+      return self.net(stim)
       
       #tile = self.tile(tile).view(-1)
       #tile, _ = torch.max(stim['tile'], 0)
@@ -56,15 +35,17 @@ class Hidden(nn.Module):
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.env    = Env(config)
-      self.net    = Hidden(config, config.HIDDEN)
-      self.val    = Hidden(config, 1)
+      self.env    = Env(config, project=True)
+      #self.net    = Hidden(config, config.HIDDEN)
+      #self.val    = Hidden(config, 1)
+      self.val    = nn.Linear(config.HIDDEN, 1)
       self.action = NetTree(config)
       self.config = config
 
    def forward(self, env, ent):
       stim, embed = self.env(env, ent) 
-      x           = self.net(stim)
+      #x           = self.net(stim)
+      x           = stim
       val         = self.val(stim) 
       atns, outs  = self.action(env, ent, (x, embed))
       return atns, outs, val

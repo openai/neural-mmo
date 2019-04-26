@@ -44,7 +44,7 @@ class Realm:
 
       r, c = ent.pos
       self.world.env.tiles[r, c].addEnt(entID, ent)
-      self.world.env.tiles[r, c].counts[ent.colorInd] += 1
+      self.world.env.tiles[r, c].counts[ent.population.val] += 1
 
    def cullDead(self, dead):
       for entID in dead:

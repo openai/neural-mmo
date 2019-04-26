@@ -59,7 +59,7 @@ class Map:
       return ret
 
    def np(self):
-      env   = np.array([e.state.index for e in 
+      env = np.array([e.state.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)
       return env
      

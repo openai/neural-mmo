@@ -31,17 +31,22 @@ class Stim:
          return 0
       return self._val
 
-   def update(self, val):
-      if self._val is not None:
+   def asserts(self, val):
+      if val is not None:
          assert val >= self.min and val <= self.max
+      return val
+ 
+   def update(self, val):
       self._val = val
       return self #for convenience
 
    def packet(self):
-      return {'val': self.val, 'max': self.max}
+      return {
+            'val': self.val, 
+            'max': self.max if self.max != float('inf') else None}
 
    def get(self, *args):
-      return self.val
+      return self.asserts(self.val)
 
    def increment(self, amt=1):
       self._val = min(self.max, self.val + amt)

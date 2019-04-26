@@ -26,7 +26,7 @@ class ANN(nn.Module):
    def visDeps(self):
       from forge.blade.core import realm
       from forge.blade.core.tile import Tile
-      colorInd = int(12*np.random.rand())
+      colorInd = int(self.config.NPOP*np.random.rand())
       color    = Neon.color12()[colorInd]
       color    = (colorInd, color)
       ent = realm.Desciple(-1, self.config, color).server
@@ -45,9 +45,8 @@ class ANN(nn.Module):
          for c in range(sz):
             ent.pos  = (r, c)
             tiles[r, c].addEnt(1, ent)
-            s = torchlib.Stim(ent, tiles, self.config)
-            conv, flat, ents = s.conv, s.flat, s.ents
-            val  = self.valNet(conv, s.flat, s.ents)
+            #_, _, val = self.net(tiles, ent)
+            val = np.random.rand()
             vals.append(float(val))
             tiles[r, c].delEnt(1)
             posList.append((r, c))
@@ -60,12 +59,12 @@ class ANN(nn.Module):
       R, C = self.world.shape
       for r in range(self.config.BORDER, R-self.config.BORDER):
           for c in range(self.config.BORDER, C-self.config.BORDER):
-            colorInd = int(12*np.random.rand())
+            colorInd = int(self.config.NPOP*np.random.rand())
             color    = Neon.color12()[colorInd]
             color    = (colorInd, color)
             ent = entity.Player(-1, color, self.config)
-            ent._pos = (r, c)
-
+            ent._r.update(r)
+            ent._c.update(c)
             if food != 'max':
                ent._food = food
             if water != 'max':
@@ -74,8 +73,8 @@ class ANN(nn.Module):
 
             self.world.env.tiles[r, c].addEnt(ent.entID, ent)
             stim = self.world.env.stim(ent.pos, self.config.STIM)
-            s = torchlib.Stim(ent, stim, self.config)
-            val = self.valNet(s.conv, s.flat, s.ents).detach()
+            #_, _, val = self.net(stim, ent)
+            val = np.random.rand()
             self.world.env.tiles[r, c].delEnt(ent.entID)
             vals.append(float(val))
 

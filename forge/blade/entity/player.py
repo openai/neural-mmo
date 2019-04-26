@@ -7,7 +7,7 @@ from forge.blade.lib.enums import Material, Neon
 from forge.blade.io import action
 
 class Player:
-   def __init__(self, entID, color, config):
+   def __init__(self, entID, pop, config):
       self._config = config
       self.inputs(config)
 
@@ -21,13 +21,14 @@ class Player:
       self._name = 'Neural_' + str(self._entID)
       self._kill = False
 
-      self._annID, self._color = color
-      self._colorInd = self._annID
+      self._annID, self._color = pop
       self._attackMap = np.zeros((7, 7, 3)).tolist()
 
       self._index = 1
       self._actions = None
       self._attack  = None
+
+      self._population.update(self._annID)
 
    def __getattribute__(self, name):
       try:
@@ -44,13 +45,16 @@ class Player:
       for name, cls in config.static.Entity:
          setattr(self, '_'+cls.name, cls(config))
 
-   def packet(self):
+   def outputs(self, config):
       data = {}
-      for key in Player.public:
-         val = getattr(self, key)
-         data[key] = val 
-         if hasattr(val, 'packet'):
-            data[key] = val.packet()
+      for name, cls in config.static.Entity:
+         data[name] = getattr(self, '_'+cls.name).packet()
+      return data
+ 
+   def packet(self):
+      data = self.outputs(self.config)
+      data['color'] = self._color.packet()
+      data['name']  = self._name
       if self._attack is not None:  
          data['attack'] = {
                'style': self._attack.action.__name__,
@@ -98,7 +102,7 @@ class Player:
 
    def updateCounts(self, world):
       r, c = self.pos
-      world.env.tiles[r, c].counts[self._colorInd] += 1
+      world.env.tiles[r, c].counts[self.population.val] += 1
 
    def mapAttack(self):
       if self._attack is not None:

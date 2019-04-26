@@ -6,9 +6,9 @@ from collections import defaultdict
 import torch
 from torch import nn
 from torch.nn import functional as F
-from torch.distributions import Categorical
 
 from forge.blade.io import stimulus, action
+from forge.ethyr.torch.modules import Transformer
 
 class Embedding(nn.Module):
    def __init__(self, var, dim):
@@ -37,26 +37,33 @@ class Input(nn.Module):
       return x
 
 class Env(nn.Module):
-   def __init__(self, config):
+   def __init__(self, config, project=True):
       super().__init__()
       h = config.HIDDEN
       self.embeddings = {}
       self.config = config
+      self.project = project
 
-      self.emb, self.proj  = self.init(config)
+      self.emb, self.proj1, self.proj2  = self.init(config)
 
    def init(self, config, name=None):
       emb  = nn.ModuleDict()
-      proj = nn.ModuleDict()
+      proj1 = nn.ModuleDict()
+      proj2 = nn.ModuleDict()
       for name, subnet in config.static:
          n = 0
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
             n += config.EMBED
             emb[name][param] = Input(val(config), config)
-         proj[name] = torch.nn.Linear(n, config.HIDDEN)
-      return emb, proj
+         if self.project:
+            proj1[name] = Transformer(config.HIDDEN, config.NHEAD)
+            #proj2[name] = Transformer(config.HIDDEN, config.NHEAD)
+      if self.project:
+         proj2 = Transformer(config.HIDDEN, config.NHEAD)
+      return emb, proj1, proj2
 
+   #Don't need this much anymore -- built into dynamic stimulus
    def merge(self, dicts):
       ret = defaultdict(list)
       for name, d in dicts.items(): 
@@ -65,17 +72,28 @@ class Env(nn.Module):
       return ret
 
    def forward(self, env, ent):
-      stim = self.config.dynamic(env, ent)
-      features, embed = {}, {}
-      for name, subnet in stim.items():
-         merged = self.merge(subnet)
+      stims = self.config.dynamic(env, ent, flat=True)
+      features, embed = [], {}
+      for group, stim in stims.items():
+         names, subnet = stim
          feats = []
-         for param, val in merged.items():
+         for param, val in subnet.items():
             val = torch.Tensor(val)
-            feats.append(self.emb[name][param](val))
-         feats = torch.cat(feats, 1)
-         feats = self.proj[name](feats)
-         features[name] = feats
-         zipped = dict(zip(subnet.keys(), feats.split(1)))
-         embed = {**embed, **zipped}
+            emb = self.emb[group][param](val)
+            feats.append(emb.split(1))
+         emb = np.array(feats).T.tolist()
+         emb = [torch.cat(e) for e in emb]
+
+         #feats = torch.cat([torch.cat(e) for e in feats], 1)
+         feats = self.proj1[group](torch.stack(emb))
+         embed = {**embed, **dict(zip(names, feats.split(1)))}
+         features.append(feats)
+
+         #shape = (1, *(feats.shape))
+         #features[group] = self.proj2[group](feats.view(shape))
+
+      
+      features = torch.cat(features).unsqueeze(0)
+      features = self.proj2(features)
+
       return features, embed

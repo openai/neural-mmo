@@ -41,10 +41,10 @@ class Static:
       config, stim = self.config, {}
 
       stim['index'] = node.Discrete(config.NPOP)
-      stim['nEnts'] = node.Discrete(config.NENT)
+      stim['nEnts'] = node.Continuous()
 
-      stim['r'] = node.Discrete(config.R + config.BORDER)
-      stim['c'] = node.Discrete(config.C + config.BORDER)
+      stim['r'] = node.Discrete(config.WINDOW)
+      stim['c'] = node.Discrete(config.WINDOW)
 
       return stim
 

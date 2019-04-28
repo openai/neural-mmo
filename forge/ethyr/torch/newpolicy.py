@@ -12,6 +12,8 @@ from forge.blade.io import stimulus, action
 from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.netgen.action import NetTree
 
+from forge.ethyr.torch.modules import Transformer
+
 class Hidden(nn.Module):
    def __init__(self, config, ydim):
       super().__init__()
@@ -35,7 +37,8 @@ class Hidden(nn.Module):
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.env    = Env(config, project=True)
+      net = Transformer(config.HIDDEN, config.NHEAD)
+      self.env    = Env(net, config)
       #self.net    = Hidden(config, config.HIDDEN)
       #self.val    = Hidden(config, 1)
       self.val    = nn.Linear(config.HIDDEN, 1)
@@ -44,8 +47,6 @@ class Net(nn.Module):
 
    def forward(self, env, ent):
       stim, embed = self.env(env, ent) 
-      #x           = self.net(stim)
-      x           = stim
       val         = self.val(stim) 
-      atns, outs  = self.action(env, ent, (x, embed))
+      atns, outs  = self.action(env, ent, (stim, embed))
       return atns, outs, val

@@ -37,43 +37,25 @@ class Input(nn.Module):
       return x
 
 class Env(nn.Module):
-   def __init__(self, config, project=True):
+   def __init__(self, net, config):
       super().__init__()
       h = config.HIDDEN
-      self.embeddings = {}
       self.config = config
-      self.project = project
 
-      self.emb, self.proj1, self.proj2  = self.init(config)
+      self.net = net
+      self.init(config)
 
    def init(self, config, name=None):
       emb  = nn.ModuleDict()
-      proj1 = nn.ModuleDict()
-      proj2 = nn.ModuleDict()
       for name, subnet in config.static:
-         n = 0
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
-            n += config.EMBED
             emb[name][param] = Input(val(config), config)
-         if self.project:
-            proj1[name] = Transformer(config.HIDDEN, config.NHEAD)
-            #proj2[name] = Transformer(config.HIDDEN, config.NHEAD)
-      if self.project:
-         proj2 = Transformer(config.HIDDEN, config.NHEAD)
-      return emb, proj1, proj2
-
-   #Don't need this much anymore -- built into dynamic stimulus
-   def merge(self, dicts):
-      ret = defaultdict(list)
-      for name, d in dicts.items(): 
-         for k, v in d.items():
-            ret[k] += [v]
-      return ret
+      self.emb = emb
 
    def forward(self, env, ent):
       stims = self.config.dynamic(env, ent, flat=True)
-      features, embed = [], {}
+      features, embed = {}, {}
       for group, stim in stims.items():
          names, subnet = stim
          feats = []
@@ -84,16 +66,10 @@ class Env(nn.Module):
          emb = np.array(feats).T.tolist()
          emb = [torch.cat(e) for e in emb]
 
-         #feats = torch.cat([torch.cat(e) for e in feats], 1)
-         feats = self.proj1[group](torch.stack(emb))
-         embed = {**embed, **dict(zip(names, feats.split(1)))}
-         features.append(feats)
+         feats = torch.stack(emb)
+         emb = self.net(torch.stack(emb)).split(1)
+         embed = {**embed, **dict(zip(names, emb))}
 
-         #shape = (1, *(feats.shape))
-         #features[group] = self.proj2[group](feats.view(shape))
-
-      
-      features = torch.cat(features).unsqueeze(0)
-      features = self.proj2(features)
-
+      features = torch.stack(list(embed.values()), 1)
+      features = self.net(features)
       return features, embed

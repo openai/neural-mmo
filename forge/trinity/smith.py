@@ -72,6 +72,20 @@ class VecEnv(Blacksmith):
    def reset(self):
       return self.env.reset()
 
+def mems():
+   import torch, gc
+   import numpy as np
+   size = 0
+   for obj in gc.get_objects():
+       try:
+           if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
+               #print(type(obj), obj.size())
+               size += obj.nelement()*obj.element_size()
+       except:
+           pass
+   print('Tensor Size: ', size)
+
+
 #Example runner using the (faster) native api
 #Use the /forge/trinity/ spec for model code
 class Native(Blacksmith):
@@ -92,6 +106,7 @@ class Native(Blacksmith):
       recvs = self.env.run(self.pantheon.model)
       self.pantheon.step(recvs)
       self.rayBuffers()
+      mems()
 
    #Only for render -- steps are run per core
    def step(self):
@@ -101,6 +116,7 @@ class Native(Blacksmith):
    #an issue. It is possible this has been patched.
    def rayBuffers(self):
       self.idx += 1
+      # If not local...
       if self.idx % 32 == 0:
          lib.ray.clearbuffers()
 

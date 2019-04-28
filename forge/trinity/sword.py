@@ -7,6 +7,19 @@ from forge.ethyr.torch.param import setParameters, zeroGrads
 from forge.ethyr.torch import optim
 from forge.ethyr.rollouts import Rollout
 
+def mems():
+   import torch, gc
+   import numpy as np
+   size = 0
+   for obj in gc.get_objects():
+       try:
+           if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
+               #print(type(obj), obj.size())
+               size += obj.nelement()*obj.element_size()
+       except:
+           pass
+   print('Tensor Size: ', size)
+
 class Sword:
    def __init__(self, config, args):
       self.config, self.args = config, args
@@ -14,10 +27,10 @@ class Sword:
       self.anns  = [trinity.ANN(config)
             for i in range(self.nANN)]
 
-      self.init, self.nRollouts = True, 32
+      self.init, self.batch = True, config.BATCH
       self.networksUsed = set()
       self.updates, self.rollouts = defaultdict(Rollout), {}
-      self.ents, self.rewards, self.grads = {}, [], None
+      self.grads = None
       self.nGrads = 0
 
    def backward(self):
@@ -73,7 +86,7 @@ class Sword:
 
       #Two options: fixed number of gradients or rollouts
       #if len(self.rollouts) >= self.nRollouts:
-      if self.nGrads >= 100*32:
+      if self.nGrads >= self.batch:
          self.backward()
 
    def decide(self, env, ent):

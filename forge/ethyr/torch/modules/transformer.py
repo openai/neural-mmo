@@ -48,6 +48,7 @@ class MultiHeadAttention(nn.Module):
       dst  = (batch, seq, headDim*nHead)
 
       attn = self.attention(q, k, v)
+      #attn = q+k+v
       attn = self.reperm(attn, src, perm, dst)
 
       return attn
@@ -56,6 +57,8 @@ class Block(nn.Module):
    def __init__(self, h, nHeads, norm=False):
       super().__init__()
       self.attn = MultiHeadAttention(h, nHeads)
+      #self.attn = ScaledDotProductAttention(h)
+
       self.fc   = nn.Linear(h, h)
 
       self.normalize = norm
@@ -63,6 +66,7 @@ class Block(nn.Module):
          self.norm = nn.LayerNorm(h)
 
    def forward(self, x):
+      #x = self.attn(x, x, x) + x
       x = self.attn(x) + x
       if self.normalize:
          x = self.norm(x)
@@ -89,3 +93,11 @@ class Transformer(nn.Module):
 
       return x
 
+'''
+class Transformer(nn.Module):
+   def __init__(self, h, nHeads, nLayers=1, flat=True):
+      super().__init__()
+
+   def forward(self, x):
+      return x.mean(1)
+'''

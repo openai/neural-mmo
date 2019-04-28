@@ -37,9 +37,10 @@ def getParameters(ann):
 def getGrads(ann):
    ret = []
    for param, e in ann.named_parameters():
-      try:
+      if e.grad is None:
+         print(str(param), ': GRADIENT NOT FOUND. Possible causes: (1) you have loaded a model with a different architecture. (2) This layer is not differentiable or not in use.')
+         ret += np.zeros(e.shape).ravel().tolist()
+      else:
          ret += e.grad.data.view(-1).numpy().tolist()
-      except:
-         print('Gradient dimension mismatch: ' + str(param) + '. This usually means you have either (1) loaded a model with a different architecture or (2) have a layer for which gradients are not available (e.g. not differentiable or more commonly not being used)')
    return ret
 

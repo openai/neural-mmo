@@ -6,6 +6,7 @@ from forge import trinity
 from forge.ethyr.torch.param import setParameters, zeroGrads
 from forge.ethyr.torch import optim
 from forge.ethyr.rollouts import Rollout
+from forge.ethyr.torch import param
 
 def mems():
    import torch, gc
@@ -27,26 +28,26 @@ class Sword:
       self.anns  = [trinity.ANN(config)
             for i in range(self.nANN)]
 
-      self.init, self.batch = True, config.BATCH
-      self.networksUsed = set()
+      self.init, self.networksUsed = True, set()
+      self.nRollouts, self.updateFreq = config.NROLLOUTS, config.UPDATEFREQ
       self.updates, self.rollouts = defaultdict(Rollout), {}
-      self.grads = None
-      self.nGrads = 0
+      self.grads, self.nGrads = None, 0
+      self.blobs = []
+      self.nUpdates = 0
 
    def backward(self):
       ents = self.rollouts.keys()
       anns = [self.anns[idx] for idx in self.networksUsed]
 
-      reward, val, grads, pg, valLoss, entropy = optim.backward(
-            self.rollouts, anns, valWeight=0.25, 
+      reward, val, pg, valLoss, entropy = optim.backward(
+            self.rollouts, valWeight=0.25, 
             entWeight=self.config.ENTROPY)
-      self.grads = dict((idx, grad) for idx, grad in
-            zip(self.networksUsed, grads))
 
-      self.blobs = [r.feather.blob for r in self.rollouts.values()]
+      self.blobs += [r.feather.blob for r in self.rollouts.values()]
       self.rollouts = {}
       self.nGrads = 0
       self.networksUsed = set()
+      self.nUpdates += 1
 
    def sendGradUpdate(self):
       grads = self.grads
@@ -85,9 +86,14 @@ class Sword:
       self.networksUsed.add(ent.annID)
 
       #Two options: fixed number of gradients or rollouts
-      #if len(self.rollouts) >= self.nRollouts:
-      if self.nGrads >= self.batch:
+      #if self.nGrads >= self.batch:
+      if len(self.rollouts) >= self.nRollouts:
          self.backward()
+         if self.nUpdates >= self.updateFreq:
+            self.nUpdates = 0
+            self.grads = dict((idx, param.getGrads(ann, warn=False)) 
+                  for idx, ann in enumerate(self.anns))
+
 
    def decide(self, env, ent):
       reward, entID, annID = 0, ent.entID, ent.annID

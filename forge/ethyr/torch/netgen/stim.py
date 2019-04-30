@@ -71,5 +71,6 @@ class Env(nn.Module):
          embed = {**embed, **dict(zip(names, emb))}
 
       features = torch.stack(list(embed.values()), 1)
-      features = self.net(features)
+      ent = embed[ent].unsqueeze(1)
+      features = self.net(ent, features)
       return features, embed

@@ -6,7 +6,6 @@ from pdb import set_trace as T
 
 from forge.ethyr import rollouts
 from forge.ethyr.torch import loss
-from forge.ethyr.torch import param
 
 class ManualAdam(optim.Adam):
    def step(self, grads):
@@ -20,7 +19,7 @@ class ManualSGD(optim.SGD):
       self.param_groups[0]['params'][0].grad = grads
       super().step()
 
-def backward(rolls, anns, valWeight=0.5, entWeight=0):
+def backward(rolls, valWeight=0.5, entWeight=0):
    outs = rollouts.mergeRollouts(rolls.values())
    pg, entropy, attackentropy = 0, 0, 0
    for k, out in outs['action'].items():
@@ -38,8 +37,7 @@ def backward(rolls, anns, valWeight=0.5, entWeight=0):
    totLoss = pg + valWeight*valLoss + entWeight*entropy
 
    totLoss.backward()
-   grads = [param.getGrads(ann) for ann in anns]
    reward = np.mean(outs['return'])
 
-   return reward, vals.mean(), grads, pg, valLoss, entropy
+   return reward, vals.mean(), pg, valLoss, entropy
 

@@ -5,8 +5,11 @@ import numpy as np
 
 class Experiment(Config):
    MODELDIR='resource/logs/'
-   EMBED   = 32
-   HIDDEN  = 64
+   EMBED   = 128
+   HIDDEN  = 128
+   NHEAD   = 8
+   NROLLOUTS = 1
+   UPDATEFREQ = 100 / NROLLOUTS
    TEST = False
    LOAD = False
    BEST = False

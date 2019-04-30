@@ -34,13 +34,18 @@ def getParameters(ann):
       ret += e.data.view(-1).numpy().tolist()
    return ret
 
-def getGrads(ann):
+def getGrads(ann, warn=True):
    ret = []
    for param, e in ann.named_parameters():
       if e.grad is None:
-         print(str(param), ': GRADIENT NOT FOUND. Possible causes: (1) you have loaded a model with a different architecture. (2) This layer is not differentiable or not in use.')
+         if warn:
+            print(str(param), ': GRADIENT NOT FOUND. Possible causes: (1) you have loaded a model with a different architecture. (2) This layer is not differentiable or not in use.')
          ret += np.zeros(e.shape).ravel().tolist()
       else:
-         ret += e.grad.data.view(-1).numpy().tolist()
+         #nan = torch.sum(e.grad != e.grad) > 0:
+         dat = e.grad.data.view(-1).numpy().tolist()
+         if sum(np.isnan(dat))> 0 : 
+            T()
+         ret += dat
    return ret
 

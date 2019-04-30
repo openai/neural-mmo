@@ -5,9 +5,12 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+#One issue with doing .backward here is you don't
+#get to mean and std norm
 def advantage(returns, val):
    A = returns - val
-   adv = (A - A.mean()) / (1e-4 + A.std())
+   adv = A
+   #adv = (A - A.mean()) / (1e-4 + A.std())
    adv = adv.detach()
    return adv
 

@@ -16,6 +16,10 @@ class ScaledDotProductAttention(nn.Module):
       QKV = torch.matmul(QK, V)
       return QKV
 
+class Iden(nn.Module):
+   def forward(self, x):
+      return x
+
 class MultiHeadAttention(nn.Module):
    def __init__(self, h, nHeads):
       super().__init__()
@@ -31,24 +35,33 @@ class MultiHeadAttention(nn.Module):
    def reperm(self, x, src, perm, dst):
       return  x.view(*src).permute(*perm).reshape(*dst)
 
-   def forward(self, x):
-      batch, seq, _ = x.size()
-      headDim, nHead = self.headDim, self.nHeads
+   def forward(self, q, kv=None):
+      if kv is None:
+         k = v = q
+      else:
+         k = v = kv
 
       perm = (2, 0, 1, 3)
+      headDim, nHead = self.headDim, self.nHeads
+
+      batch, seq, _ = k.size()
       src  = (batch, seq, nHead, headDim)
       dst  = (batch*nHead, seq, headDim)
 
-      q = self.reperm(self.Q(x), src, perm, dst)
-      k = self.reperm(self.K(x), src, perm, dst)
-      v = self.reperm(self.V(x), src, perm, dst)
+      k = self.reperm(self.K(k), src, perm, dst)
+      v = self.reperm(self.V(v), src, perm, dst)
+
+      batch, seq, _ = q.size()
+      src  = (batch, seq, nHead, headDim)
+      dst  = (batch*nHead, seq, headDim)
+
+      q = self.reperm(self.Q(q), src, perm, dst)
 
       perm = (1, 2, 0, 3)
       src  = (nHead, batch, seq, headDim)
       dst  = (batch, seq, headDim*nHead)
 
       attn = self.attention(q, k, v)
-      #attn = q+k+v
       attn = self.reperm(attn, src, perm, dst)
 
       return attn
@@ -93,11 +106,14 @@ class Transformer(nn.Module):
 
       return x
 
-'''
 class Transformer(nn.Module):
    def __init__(self, h, nHeads, nLayers=1, flat=True):
       super().__init__()
+      self.attn = MultiHeadAttention(h, nHeads)
 
-   def forward(self, x):
+   def forward(self, x, k=None):
+      if k is None:
+         x = self.attn(x)
+      else:
+         x = self.attn(x, k)
       return x.mean(1)
-'''

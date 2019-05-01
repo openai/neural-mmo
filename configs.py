@@ -10,9 +10,9 @@ class Experiment(Config):
    NHEAD   = 8
    NROLLOUTS = 1
    UPDATEFREQ = 100 / NROLLOUTS
-   TEST = False
-   LOAD = False
-   BEST = False
+   TEST = True
+   LOAD = True
+   BEST = True
    SAMPLE = False
    NATTN = 2
    NPOP = 1

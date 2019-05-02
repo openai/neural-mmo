@@ -134,14 +134,13 @@ class Player:
       self._timeAlive += 1
       self.updateImmune()
 
-   def act(self, world, actions, val):
+   def act(self, world, actions):
       if not self.alive: return
 
       self._actions = actions
       self._attack  = actions[action.static.Attack]
       self.mapAttack()
       
-      self.val = val
       self._lastPos = self.pos
       for meta, atnArgs in actions.items():
          atn, args = atnArgs.action, atnArgs.args

@@ -4,23 +4,39 @@ import torch
 
 from torch import nn
 
+from forge import trinity
+
 from forge.blade.lib.enums import Neon
 from forge.blade.lib import enums
 from forge.ethyr import torch as torchlib
-from forge.ethyr.torch import policy, newpolicy
+from forge.ethyr.torch import policy
 from forge.blade import entity
 
 from forge.ethyr.torch.netgen.stim import Env
+from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
+from forge.ethyr.torch import param
+
 
 class ANN(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.net = newpolicy.Net(config)
       self.config = config
+      self.net = nn.ModuleList([policy.Net(config) 
+            for i in range(config.NPOP)])
 
-   def forward(self, env, ent):
-      atns, outs, val = self.net(env, ent)
+   def forward(self, annID, env, ent):
+      atns, outs, val = self.net[annID](env, ent)
       return atns, outs, val
+
+   def recvUpdate(self, update):
+      setParameters(self.net, update)
+      zeroGrads(self.net)
+
+   def grads(self):
+      return param.getGrads(self)
+
+   def params(self):
+      return param.getParameters(self)
 
    #Messy hooks for visualizers
    def visDeps(self):

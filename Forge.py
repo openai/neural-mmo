@@ -56,15 +56,22 @@ class NativeExample:
       while True:
          self.env.run()
 
+class NewExample:
+   def __init__(self, config, args):
+      Trinity(Pantheon, God, Sword).init(config, args).run()
+
 if __name__ == '__main__':
    args = parseArgs()
    assert args.api in ('native', 'vecenv')
    config = experiments.exps['nxt-auto-treechaos128']
 
+   NewExample(config, args)
+   '''
    if args.api == 'native':
       example = NativeExample(config, args)
    elif args.api == 'vecenv':
       example = GymExample(config, args)
+   '''
 
    #Rendering by necessity snags control flow
    #This will automatically set local mode with 1 core

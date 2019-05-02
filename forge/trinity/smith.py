@@ -57,6 +57,25 @@ class Blacksmith:
       from forge.embyr.twistedserver import Application
       Application(self.env, self.renderStep)
 
+#Example base runner class
+class Blacksmith:
+   def __init__(self, trinity, config, args):
+      if args.render:
+         print('Enabling local test mode for render')
+         args.ray  = 'local'
+         args.nRealm = 1
+
+      lib.ray.init(args.ray)
+
+      self.pantheon = trinity.pantheon(config, args)
+      
+   def render(self):
+      from forge.embyr.twistedserver import Application
+      Application(self.env, self.renderStep)
+
+   def step(self):
+      self.pantheon.step()
+   
 #Example runner using the (slower) vecenv api
 #The actual vecenv spec was not designed for
 #multiagent, so this is a best-effort facsimile
@@ -71,20 +90,6 @@ class VecEnv(Blacksmith):
 
    def reset(self):
       return self.env.reset()
-
-def mems():
-   import torch, gc
-   import numpy as np
-   size = 0
-   for obj in gc.get_objects():
-       try:
-           if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
-               #print(type(obj), obj.size())
-               size += obj.nelement()*obj.element_size()
-       except:
-           pass
-   print('Tensor Size: ', size)
-
 
 #Example runner using the (faster) native api
 #Use the /forge/trinity/ spec for model code
@@ -106,7 +111,6 @@ class Native(Blacksmith):
       recvs = self.env.run(self.pantheon.model)
       self.pantheon.step(recvs)
       self.rayBuffers()
-      mems()
 
    #Only for render -- steps are run per core
    def step(self):

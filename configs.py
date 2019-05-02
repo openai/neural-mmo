@@ -8,8 +8,10 @@ class Experiment(Config):
    EMBED   = 128
    HIDDEN  = 128
    NHEAD   = 8
-   NROLLOUTS = 1
-   UPDATEFREQ = 100 / NROLLOUTS
+   NGOD = 1
+   NSWORD = 1
+   NROLLOUTS = NGOD * 10 #Rollouts per gradient step
+   SYNCUPDATES = 250 #Number of data to sync
    TEST = True
    LOAD = True
    BEST = True

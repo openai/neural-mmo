@@ -5,6 +5,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge import trinity as Trinity
+from forge.trinity.spawn import Spawn
 from forge.blade import entity, core
 from itertools import chain
 from copy import deepcopy
@@ -65,13 +66,10 @@ class Realm:
    def getStim(self, ent):
       return self.world.env.stim(ent.pos, self.config.STIM)
 
-@ray.remote
 class NativeRealm(Realm):
    def __init__(self, trinity, config, args, idx):
       super().__init__(config, args, idx)
-      self.god = trinity.god(config, args)
-      self.sword = trinity.sword(config, args)
-      self.sword.anns[0].world = self.world
+      self.god = Spawn(config, args)
  
    def stepEnts(self):
       dead = []
@@ -82,8 +80,8 @@ class NativeRealm(Realm):
             continue
 
          stim = self.getStim(ent)
-         actions, val = self.sword.decide(stim, ent)
-         ent.act(self.world, actions, val)
+         actions = self.sword.decide(stim, ent)
+         ent.act(self.world, actions)
          #self.stepEnt(ent, actions)
 
       self.cullDead(dead)
@@ -112,34 +110,23 @@ class NativeRealm(Realm):
          updates, logs = self.sword.sendUpdate()
       return updates, logs
 
-   def recvSwordUpdate(self, update):
-      if update is None:
-         return
-      self.sword.recvUpdate(update)
-
-   def recvGodUpdate(self, update):
-      self.god.recv(update)
-
-@ray.remote
 class VecEnvRealm(Realm):
    #Use the default God behind the scenes for spawning
    def __init__(self, config, args, idx):
       super().__init__(config, args, idx)
-      self.god = Trinity.God(config, args)
+      self.god = Spawn(config, args)
 
    def stepEnts(self, decisions):
-      dead = []
+      self.dead = []
       for tup in decisions:
-         entID, action, arguments, val = tup
+         entID, actions = tup
          ent = self.desciples[entID]
          ent.step(self.world)
 
-         if self.postmortem(ent, dead):
+         if self.postmortem(ent, self.dead):
             continue
 
-         ent.act(self.world, action, arguments, val)
-         self.stepEnt(ent, action, arguments)
-      self.cullDead(dead)
+         ent.act(self.world, actions)
 
    def postmortem(self, ent, dead):
       entID = ent.entID
@@ -149,7 +136,6 @@ class VecEnvRealm(Realm):
       return False
 
    def step(self, decisions):
-      decisions = pickle.loads(decisions)
       self.stepEnts(decisions)
       self.stepWorld()
       self.spawn()
@@ -158,13 +144,13 @@ class VecEnvRealm(Realm):
       stims, rews, dones = [], [], []
       for entID, ent in self.desciples.items():
          stim = self.getStim(ent)
-         stims.append((ent, self.getStim(ent)))
+         stims.append((self.getStim(ent), ent))
          rews.append(1)
-      return pickle.dumps((stims, rews, None, None))
+
+      self.cullDead(self.dead)
+      return stims, rews, None, None
 
    def reset(self):
-      self.spawn()
-      self.stepEnv()
-      return [(e, self.getStim(e)) for e in self.desciples.values()]
+      return []
 
 

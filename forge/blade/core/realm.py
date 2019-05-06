@@ -4,14 +4,16 @@ import numpy as np
 from pdb import set_trace as T
 import numpy as np
 
-from forge import trinity as Trinity
 from forge.trinity.spawn import Spawn
 from forge.blade import entity, core
 from itertools import chain
 from copy import deepcopy
 
-class Realm:
+from forge.trinity.timed import timed, Timed
+
+class Realm(Timed):
    def __init__(self, config, args, idx):
+      super().__init__()
       #Random samples
       if config.SAMPLE:
          config = deepcopy(config)
@@ -117,16 +119,21 @@ class VecEnvRealm(Realm):
       self.god = Spawn(config, args)
 
    def stepEnts(self, decisions):
-      self.dead = []
+      rewards = []
+      dead = []
       for tup in decisions:
          entID, actions = tup
          ent = self.desciples[entID]
          ent.step(self.world)
 
-         if self.postmortem(ent, self.dead):
+         if self.postmortem(ent, dead):
+            rewards.append(-1)
             continue
-
+         rewards.append(0)
          ent.act(self.world, actions)
+
+      self.cullDead(dead)
+      return rewards
 
    def postmortem(self, ent, dead):
       entID = ent.entID
@@ -135,20 +142,20 @@ class VecEnvRealm(Realm):
          return True
       return False
 
+   @timed
    def step(self, decisions):
-      self.stepEnts(decisions)
+      rewards = self.stepEnts(decisions)
       self.stepWorld()
       self.spawn()
       self.stepEnv()
 
-      stims, rews, dones = [], [], []
+      stims = []
       for entID, ent in self.desciples.items():
+         tile = self.world.env.tiles[ent.r.val, ent.c.val].tex
          stim = self.getStim(ent)
          stims.append((self.getStim(ent), ent))
-         rews.append(1)
 
-      self.cullDead(self.dead)
-      return stims, rews, None, None
+      return stims, rewards, None, None
 
    def reset(self):
       return []

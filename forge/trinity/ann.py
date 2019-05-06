@@ -18,10 +18,10 @@ from forge.ethyr.torch import param
 
 
 class ANN(nn.Module):
-   def __init__(self, config):
+   def __init__(self, config, device='cpu'):
       super().__init__()
       self.config = config
-      self.net = nn.ModuleList([policy.Net(config) 
+      self.net = nn.ModuleList([policy.Net(config, device) 
             for i in range(config.NPOP)])
 
    def forward(self, annID, env, ent):

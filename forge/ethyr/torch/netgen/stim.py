@@ -37,10 +37,11 @@ class Input(nn.Module):
       return x
 
 class Env(nn.Module):
-   def __init__(self, net, config):
+   def __init__(self, net, config, device):
       super().__init__()
       h = config.HIDDEN
       self.config = config
+      self.device = device
 
       self.net = net
       self.init(config)
@@ -60,7 +61,7 @@ class Env(nn.Module):
          names, subnet = stim
          feats = []
          for param, val in subnet.items():
-            val = torch.Tensor(val)
+            val = torch.Tensor(val).to(self.device)
             emb = self.emb[group][param](val)
             feats.append(emb.split(1))
          emb = np.array(feats).T.tolist()

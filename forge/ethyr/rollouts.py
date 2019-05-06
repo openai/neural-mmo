@@ -54,7 +54,7 @@ class Rollout:
       self.time += 1
 
    def finish(self):
-      self.rewards[-1] = -1
+      assert self.rewards[-1] == -1
       self.returns = self.returnf(self.rewards)
       self.lifespan = len(self.rewards)
       self.feather.finish()
@@ -88,8 +88,10 @@ class Feather:
       tile = type(tile.state)
       if pos not in self.expMap:
          self.expMap.add(pos)
-         self.blob.unique[tile] += 1
-      self.blob.counts[tile] += 1
+         if tile in self.blob.unique:
+            self.blob.unique[tile] += 1
+      if tile in self.blob.counts:
+         self.blob.counts[tile] += 1
 
    def stats(self, value, reward):
       self.blob.reward.append(reward)

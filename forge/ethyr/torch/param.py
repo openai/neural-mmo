@@ -17,7 +17,8 @@ def setParameters(ann, meanVec):
    for e in ann.parameters():
       shape = e.size()
       nParams = np.prod(shape)
-      e.data = torch.Tensor(np.array(meanVec[ind:ind+nParams]).reshape(*shape))
+      data = np.array(meanVec[ind:ind+nParams]).reshape(*shape)
+      e.data = torch.Tensor(data).to(e.device)
       ind += nParams
 
 def setGrads(ann, grads):
@@ -43,7 +44,7 @@ def getGrads(ann, warn=True):
          ret += np.zeros(e.shape).ravel().tolist()
       else:
          #nan = torch.sum(e.grad != e.grad) > 0:
-         dat = e.grad.data.view(-1).numpy().tolist()
+         dat = e.grad.data.cpu().view(-1).numpy().tolist()
          if sum(np.isnan(dat))> 0 : 
             T()
          ret += dat

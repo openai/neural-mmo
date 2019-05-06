@@ -9,7 +9,7 @@ class Experiment(Config):
    HIDDEN  = 128
    NHEAD   = 8
    NGOD = 1
-   NSWORD = 1
+   #NSWORD = 2
    NROLLOUTS = NGOD * 10 #Rollouts per gradient step
    SYNCUPDATES = 250 #Number of data to sync
    TEST = True

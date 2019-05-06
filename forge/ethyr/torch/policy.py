@@ -35,10 +35,10 @@ class Hidden(nn.Module):
       return x
 
 class Net(nn.Module):
-   def __init__(self, config):
+   def __init__(self, config, device):
       super().__init__()
       net = Transformer(config.HIDDEN, config.NHEAD)
-      self.env    = Env(net, config)
+      self.env    = Env(net, config, device)
       #self.net    = Hidden(config, config.HIDDEN)
       #self.val    = Hidden(config, 1)
       self.val    = nn.Linear(config.HIDDEN, 1)

@@ -95,9 +95,7 @@ class Pantheon(Base.Pantheon):
 
       return self.model
 
-   def run(self):
-      model = self.model
-      while True:
-         recvs = self.step(model)
-         model = self.processRecvs(recvs)
+   def step(self):
+      recvs = super().step(self.model)
+      self.processRecvs(recvs)
          

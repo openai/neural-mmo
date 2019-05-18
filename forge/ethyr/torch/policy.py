@@ -14,39 +14,46 @@ from forge.ethyr.torch.netgen.action import NetTree
 
 from forge.ethyr.torch.modules import Transformer
 
-class Hidden(nn.Module):
-   def __init__(self, config, ydim):
+class Val(nn.Module):
+   def __init__(self, config):
       super().__init__()
       self.config = config
-      h = config.HIDDEN
-
-      self.net = torch.nn.Linear(2*h, ydim)
+      self.net = torch.nn.Linear(config.HIDDEN, 1)
 
    def forward(self, stim):
-      stim = list(stim.values())
-      stim = torch.cat(stim, 1)
       return self.net(stim)
-      
-      #tile = self.tile(tile).view(-1)
-      #tile, _ = torch.max(stim['tile'], 0)
-      #ent, _  = torch.max(stim['entity'], 0)
-      x = torch.cat((tile, ent))
-      x = self.fc(x)
-      return x
+
+class Hidden(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.net = Transformer(config.HIDDEN, config.NHEAD) 
+      self.val = Val(config) 
+
+   def forward(self, stim):
+      ret = self.net(stim)
+      val = self.val(stim)
+      return ret, val
 
 class Net(nn.Module):
    def __init__(self, config, device):
       super().__init__()
-      net = Transformer(config.HIDDEN, config.NHEAD)
-      self.env    = Env(net, config, device)
-      #self.net    = Hidden(config, config.HIDDEN)
-      #self.val    = Hidden(config, 1)
-      self.val    = nn.Linear(config.HIDDEN, 1)
-      self.action = NetTree(config)
       self.config = config
 
-   def forward(self, env, ent):
-      stim, embed = self.env(env, ent) 
-      val         = self.val(stim) 
-      atns, outs  = self.action(env, ent, (stim, embed))
+      self.net = nn.ModuleList([Hidden(config) 
+            for _ in range(config.NPOP)])
+      self.env    = Env(config, device)
+      self.action = NetTree(config)
+
+   def forward(self, obs):
+      #TODO: Need to select net index
+      stim, embed = self.env(self.net[0].net, obs) 
+      val         = self.net[0].val(stim) 
+
+      rets = []
+      for ob, s in zip(obs, stim):
+         env, ent = ob
+         atns, outs  = self.action(env, ent, (s, embed))
+         rets.append((atns, outs))
+
+      atns, outs = zip(*rets)
       return atns, outs, val

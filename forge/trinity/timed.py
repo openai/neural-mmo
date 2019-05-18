@@ -4,36 +4,49 @@ import time
 from collections import defaultdict
 import ray
 
-def timed(func):
+def waittime(func):
    def decorated(self, *args):
       t = time.time()
       ret = func(self, *args)
       t = time.time() - t
-      self.log_time += t
+      self.wait_time += t
       return ret
 
    return decorated
 
+def runtime(func):
+   def decorated(self, *args):
+      t = time.time()
+      ret = func(self, *args)
+      t = time.time() - t
+      self.run_time += t
+      return ret
+
+   return decorated
+
+
 class Timed:
    def __init__(self):
-      self.log_time = 0
+      self.run_time  = 0
+      self.wait_time = 0
 
    @property
    def time(self):
-      time = self.log_time
-      self.log_time = 0
-      return time
+      run = self.run_time
+      self.run_time = 0
 
-   @timed
-   def distrib(self, *args):
-      return self.step(*args)
+      wait = self.wait_time
+      self.wait_time = 0
+
+      return run, wait
 
    @property
    def name(self):
       return self.__class__.__name__
 
    def logs(self):
-      ret = Log(self.name, self.time)
+      run, wait = self.time
+      ret = Log(self.name, run, wait)
       if hasattr(self, 'disciples'):
          for e in self.disciples:
             try:
@@ -44,26 +57,43 @@ class Timed:
       return ret
 
 class Log:
-   def __init__(self, cls, time):
-      self.cls = cls
-      self.time = time
+   def __init__(self, cls, runTime, waitTime):
+      self.cls  = cls
+      self.run  = runTime
+      self.wait = waitTime
       self.disciples = []
 
 class Summary:
-   def __init__(self, log):
-      self.total    = log['Total']
-      self.pantheon = log['Pantheon']
-      self.god      = log['God']
-      self.sword    = log['Sword']
-      self.realm    = log['VecEnvRealm']
+   def __init__(self, log, total):
+      self.log   = log
+      self.total = total
 
    def __str__(self):
-      total    = 'Total: {0:.2f}, '.format(self.total)
-      pantheon = 'Pantheon: {0:.2f}, '.format(self.pantheon)
-      god      = 'God: {0:.2f}, '.format(self.god)
-      sword    = 'Sword: {0:.2f}, '.format(self.sword)
-      realm    = 'Realm: {0:.2f}'.format(self.realm)
-      return total + pantheon + god + sword + realm
+      ret = ''
+      keys = 'Pantheon God Sword Realm'.split()
+      for key in keys:
+         ret += '{0:<17}'.format(key)
+      ret = '        ' + ret + '\n'
+
+      for stat, log in self.log.items():
+         line = '{0:<5}:: '.format(stat)
+         for key, val in log.items():
+            if key == 'Trinity':
+               continue
+
+            percent = 100 * val / self.total
+
+            percent = '{0:.2f}%'.format(percent)
+            val     = '({0:.2f}s)'.format(val)
+
+            percent = '{0:<7}'.format(percent)
+            val     = '{0:<10}'.format(val)
+
+            line += percent + val
+
+         line = line.strip()
+         ret += line + '\n'
+      return ret
 
 class TimeLog:
    def flatten(log):
@@ -74,33 +104,59 @@ class TimeLog:
 
    #Todo: log class for merging. Basic + detailed breakdown.
    def flat(timedList):
-      ret = defaultdict(list)
+      ret = defaultdict(lambda: defaultdict(list))
       timedList = TimeLog.flatten(timedList)
       for e in timedList:
-         ret[e.cls].append(e.time)
+         ret['run'][e.cls].append(e.run)
+         ret['wait'][e.cls].append(e.wait)
+         ret['idle'][e.cls].append(e.idle)
       return ret
 
-   def merge(log):
-      t = [0]
+   #This function goes down and then back up
+   #First applies max over subnodes. Then fills
+   #each subnode with the parent node value.
+   #This is to counteract the effect of the 
+   #downwards pass pulling data up a layer.
+   def merge(log, total, cache=(-1, -1)):
+      run, wait = [0], [0]
       for d in log.disciples:
-         t.append(d.time)
-      log.time -= max(t)
+         run.append(d.run)
+         wait.append(d.wait)
+
+      run  = max(run)
+      wait = max(wait)
+
+      cacheRun, cacheWait = cache
+
+      #Run time of the current layer
+      log.run  = cacheRun - cacheWait
+
+      #Time spent waiting for next layer to sync
+      log.wait = cacheWait #- wait
+
+      #Time spend idle while previous layer launches jobs
+      log.idle = total - log.run - log.wait
 
       for d in log.disciples:
-         TimeLog.merge(d)
- 
+         TimeLog.merge(d, total, (run, wait))
+
+
    def log(timedList, mode='basic'):
-      ret = {}
-      ret['Total'] = timedList.time
-      TimeLog.merge(timedList)
+      ret = defaultdict(dict)
+      total = timedList.run
+      TimeLog.merge(timedList, total)
       logs = TimeLog.flat(timedList)
-      for k, v in logs.items():
-         if mode == 'basic':
-            ret[k] = max(v)
-         elif mode == 'advanced':
-            ret[k] = {'min': min(v), 'max': max(v), 'avg': sum(v)/len(v)}
+      for stat, log in logs.items():
+         for k, v in log.items():
+            if mode == 'basic':
+               ret[stat][k] = max(v)
+            elif mode == 'advanced':
+               ret[stat][k] = {
+                     'min': min(v), 
+                     'max': max(v), 
+                     'avg': sum(v)/len(v)}
 
-      summary = Summary(ret)
+      summary = Summary(ret, total)
       print(str(summary))
       return ret
 

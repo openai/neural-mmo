@@ -18,6 +18,7 @@ class Move(Node):
    nodeType = NodeType.SELECTION
    def call(world, entity, rDelta, cDelta):
       r, c = entity.pos
+      entity._lastPos = entity.pos
       rNew, cNew = r+rDelta, c+cDelta
       if world.env.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
          return

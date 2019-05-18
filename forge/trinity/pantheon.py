@@ -12,6 +12,7 @@ from forge.ethyr.torch.param import getParameters
 from forge.blade.lib.log import Quill
 from forge import trinity
 from forge.trinity import Base
+from forge.trinity.timed import runtime
 
 class Model:
    def __init__(self, config, args):
@@ -95,6 +96,7 @@ class Pantheon(Base.Pantheon):
 
       return self.model
 
+   @runtime
    def step(self):
       recvs = super().step(self.model)
       self.processRecvs(recvs)

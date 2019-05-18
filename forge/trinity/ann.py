@@ -21,11 +21,14 @@ class ANN(nn.Module):
    def __init__(self, config, device='cpu'):
       super().__init__()
       self.config = config
-      self.net = nn.ModuleList([policy.Net(config, device) 
-            for i in range(config.NPOP)])
+      self.net = policy.Net(config, device)
 
-   def forward(self, annID, env, ent):
-      atns, outs, val = self.net[annID](env, ent)
+   def forward(self, obs):
+      #Need to select somewhere
+      annID = 0
+      if type(obs) != list:
+         obs = [obs] 
+      atns, outs, val = self.net(obs)
       return atns, outs, val
 
    def recvUpdate(self, update):

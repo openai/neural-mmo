@@ -9,19 +9,25 @@ class Data:
    def __init__(self, flat=False):
       self.flat = flat
       self.keys = []
+      self.key = None
    
       if flat:
          self.data = defaultdict(list)
       else:
          self.data = defaultdict(lambda: defaultdict(list))
 
-   def add(self, static, obj, *args):
+   def add(self, static, obj, *args, key):
       for name, attr in static:
          val = getattr(obj, attr.name).get(*args)
          if self.flat:
-            self.data[name].append(val)
+            if key != self.key:
+               self.data[name].append([])
+            self.data[name][-1].append(val)
          else:
+            if key != self.key:
+               self.data[obj][name].append([])
             self.data[obj][name] = val
+      self.key = key
       self.keys.append(obj)
 
    @property
@@ -29,24 +35,30 @@ class Data:
       return self.keys, self.data
 
 class Dynamic:
-   def __call__(self, env, ent, flat=False):
+   def __call__(self, stims, flat=False):
       data, static, self.flat = {}, dict(Static), flat
-      data['Entity'] = self.entity(env, ent, static['Entity'])
-      data['Tile']   = self.tile(env, static['Tile'])
+      data['Entity'] = self.batched(self.entity, stims, static['Entity'])
+      data['Tile']   = self.batched(self.tile, stims, static['Tile'])
+      #data['Entity'] = self.entity(env, ent, static['Entity'])
+      #data['Tile']   = self.tile(env, ent, static['Tile'])
       return data
- 
-   def tile(self, env, static):
+
+   def batched(self, f, stims, static):
       data = Data(self.flat)
+      for env, ent in stims:
+         f(env, ent, static, data)
+      return data.ret
+
+   def merge(self, stims):
+      T()
+      pass
+
+   def tile(self, env, ent, static, data):
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
-            data.add(static, tile, tile, r, c)
-      return data.ret
+            data.add(static, tile, tile, r, c, key=ent)
 
-   def entity(self, env, ent, static):
-      data = Data(self.flat)
+   def entity(self, env, ent, static, data):
       for tile in env.ravel():
          for e in tile.ents.values():
-            data.add(static, e, ent)
-      return data.ret
-
-
+            data.add(static, e, ent, key=ent)

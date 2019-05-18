@@ -7,7 +7,7 @@ from forge.blade.lib.enums import Material, Neon
 from forge.blade.io import action
 
 class Player:
-   def __init__(self, entID, pop, config):
+   def __init__(self, config, name, pop, color=None):
       self._config = config
       self.inputs(config)
 
@@ -17,11 +17,13 @@ class Player:
 
       self._lastPos = self.pos
 
-      self._entID = entID
-      self._name = 'Neural_' + str(self._entID)
+      self._entID = name
+      self._name = name
       self._kill = False
 
-      self._annID, self._color = pop
+      self._color = color
+      self._annID = pop
+      
       self._attackMap = np.zeros((7, 7, 3)).tolist()
 
       self._index = 1
@@ -58,7 +60,7 @@ class Player:
       if self._attack is not None:  
          data['attack'] = {
                'style': self._attack.action.__name__,
-               'target': self._attack.args.entID}
+               'target': self._attack.args.name}
       return data
    
    @property
@@ -121,7 +123,7 @@ class Player:
          if abs(dr)<=3 and abs(dc)<=3:
             self._attackMap[3+dr][3+dc][attackInd] += 1
 
-   def step(self, world):
+   def step(self, world, actions):
       if not self.alive: return
       self._freeze.decrement()
       self.updateCounts(world)
@@ -134,21 +136,18 @@ class Player:
       self._timeAlive += 1
       self.updateImmune()
 
-   def act(self, world, actions):
-      if not self.alive: return
-
       self._actions = actions
       self._attack  = actions[action.static.Attack]
       self.mapAttack()
-      
-      self._lastPos = self.pos
-      for meta, atnArgs in actions.items():
-         atn, args = atnArgs.action, atnArgs.args
-         if args is None:
-            atn.call(world, self)
-         else:
-            atn.call(world, self, args)
-         #atn.call(world, self, *args)
+ 
+   def act(self, world, atnArgs):
+      #Right now we only support one arg. So *args for future update
+      atn, args = atnArgs.action, atnArgs.args
+      if args is None:
+         atn.call(world, self)
+      else:
+         atn.call(world, self, args)
+      #atn.call(world, self, *args)
 
    @property
    def alive(self):

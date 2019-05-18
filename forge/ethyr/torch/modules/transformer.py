@@ -41,25 +41,27 @@ class MultiHeadAttention(nn.Module):
       else:
          k = v = kv
 
-      perm = (2, 0, 1, 3)
+      assert k.shape == v.shape
+
+      perm = (3, 0, 1, 2, 4)
       headDim, nHead = self.headDim, self.nHeads
 
-      batch, seq, _ = k.size()
-      src  = (batch, seq, nHead, headDim)
-      dst  = (batch*nHead, seq, headDim)
+      batch1, batch2, seq, _ = k.size()
+      src  = (batch1, batch2, seq, nHead, headDim)
+      dst  = (batch1*batch2*nHead, seq, headDim)
 
       k = self.reperm(self.K(k), src, perm, dst)
       v = self.reperm(self.V(v), src, perm, dst)
 
-      batch, seq, _ = q.size()
-      src  = (batch, seq, nHead, headDim)
-      dst  = (batch*nHead, seq, headDim)
+      batch1, batch2, seq, _ = q.size()
+      src  = (batch1, batch2, seq, nHead, headDim)
+      dst  = (batch1*batch2*nHead, seq, headDim)
 
       q = self.reperm(self.Q(q), src, perm, dst)
 
       perm = (1, 2, 0, 3)
-      src  = (nHead, batch, seq, headDim)
-      dst  = (batch, seq, headDim*nHead)
+      src  = (nHead, batch1*batch2, seq, headDim)
+      dst  = (batch1, batch2, seq, headDim*nHead)
 
       attn = self.attention(q, k, v)
       attn = self.reperm(attn, src, perm, dst)
@@ -110,10 +112,13 @@ class Transformer(nn.Module):
    def __init__(self, h, nHeads, nLayers=1, flat=True):
       super().__init__()
       self.attn = MultiHeadAttention(h, nHeads)
+      #self.fc = nn.Linear(h, h)
 
    def forward(self, x, k=None):
       if k is None:
          x = self.attn(x)
       else:
          x = self.attn(x, k)
-      return x.mean(1)
+      #x = self.fc(x)
+      x = x.mean(-2)
+      return x

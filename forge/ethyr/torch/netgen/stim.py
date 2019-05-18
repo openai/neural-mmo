@@ -6,9 +6,11 @@ from collections import defaultdict
 import torch
 from torch import nn
 from torch.nn import functional as F
+from itertools import chain
 
 from forge.blade.io import stimulus, action
 from forge.ethyr.torch.modules import Transformer
+from forge.ethyr.torch import utils
 
 class Embedding(nn.Module):
    def __init__(self, var, dim):
@@ -32,18 +34,17 @@ class Input(nn.Module):
       if isinstance(self.cls, stimulus.node.Discrete):
          x = x.long()
       elif isinstance(self.cls, stimulus.node.Continuous):
-         x = x.float().view(-1, 1)
+         x = x.float().unsqueeze(2)
       x = self.embed(x)
       return x
 
 class Env(nn.Module):
-   def __init__(self, net, config, device):
+   def __init__(self, config, device):
       super().__init__()
       h = config.HIDDEN
       self.config = config
       self.device = device
 
-      self.net = net
       self.init(config)
 
    def init(self, config, name=None):
@@ -54,24 +55,47 @@ class Env(nn.Module):
             emb[name][param] = Input(val(config), config)
       self.emb = emb
 
-   def forward(self, env, ent):
-      stims = self.config.dynamic(env, ent, flat=True)
+   #Todo: check gpu usage
+   def forward(self, net, obs):
+      stims = self.config.dynamic(obs, flat=True)
       features, embed = {}, {}
+
+      #Pack entities of each observation set
       for group, stim in stims.items():
+         #Names here are flat
          names, subnet = stim
          feats = []
+
+         #Pack attributes of each entity
          for param, val in subnet.items():
-            val = torch.Tensor(val).to(self.device)
+            val, lens = utils.pack(val)
+            val = val.to(self.device)
+
             emb = self.emb[group][param](val)
-            feats.append(emb.split(1))
-         emb = np.array(feats).T.tolist()
-         emb = [torch.cat(e) for e in emb]
+            feats.append(emb)
 
-         feats = torch.stack(emb)
-         emb = self.net(torch.stack(emb)).split(1)
-         embed = {**embed, **dict(zip(names, emb))}
+         emb = torch.stack(feats, 2)
+         emb = net(emb)
 
-      features = torch.stack(list(embed.values()), 1)
-      ent = embed[ent].unsqueeze(1)
-      features = self.net(ent, features)
+         features[group] = emb.unsqueeze(0)
+
+         #Flatten for embed
+         vals = []
+         emb = utils.unpack(emb, lens)
+         for e in emb:
+            vals += e.split(1, dim=0)
+      
+         #Store embeddings for action selection later
+         embed = {**embed, **dict(zip(names, vals))}
+
+      #Concat feature block
+      features = list(features.values())
+      features = torch.cat(features, -2)
+   
+      #Key by ent
+      ent = [embed[ob[1]] for ob in obs]
+      ent = torch.cat(ent, -2)
+      ent = ent.unsqueeze(1).unsqueeze(0)
+
+      features = net(features, ent).squeeze(0)
       return features, embed

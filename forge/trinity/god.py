@@ -121,7 +121,7 @@ class God(Base.God):
 
    def rollout(self, packets, recv=None):
       packets = super().distrib(recv)
-      self.processReplay()
+      #self.processReplay()
       packets = super().sync(packets)
 
       self.replay.collect(packets)

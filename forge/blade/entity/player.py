@@ -65,7 +65,7 @@ class Player:
 
    @property
    def serial(self):
-      return self.entID, self.annID
+      return self.annID, self.entID
    
    @property
    def pos(self):

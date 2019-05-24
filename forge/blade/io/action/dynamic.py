@@ -1,6 +1,7 @@
 from pdb import set_trace as T
+import numpy as np
 
-from forge.blade.io import action
+from forge.blade.io import action, utils
 
 class ActionArgs:
    def __init__(self, action=None, args=None):
@@ -18,6 +19,30 @@ class Dynamic:
       self.nxt = None
       self.ret = ActionArgs()
 
+   #Dimension packing: batch, atnList, atn (may be an action itself)
+   def batch(actionLists):
+      atnTensor = []
+      idxTensor = []
+      lenTensor = []
+      for actionList in actionLists:
+         atns, idxs = [], []
+         for atn in actionList:
+            atn, idx = atn
+
+            atns.append(np.array(atn))
+            idxs.append(idx)
+         
+         atns, lens = utils.pack(atns)
+         atnTensor.append(atns)
+         idxTensor.append(np.array(idxs))
+         lenTensor.append(lens)
+
+      idxTensor = utils.pack(idxTensor)
+      atnTensor = utils.pack(atnTensor)
+      lenTensor = utils.pack(lenTensor)
+
+      return atnTensor, idxTensor, lenTensor
+      
    def next(self, env, ent, atn, outs=None):
       done = False
       if outs is not None:

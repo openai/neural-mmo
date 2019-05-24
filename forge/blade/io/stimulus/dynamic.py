@@ -4,6 +4,7 @@ import numpy as np
 from collections import defaultdict
 
 from forge.blade.io.stimulus import Static
+from forge.blade.io import utils
 
 class Data:
    def __init__(self, flat=False):
@@ -42,16 +43,30 @@ class Dynamic:
       data['Tile']   = self.tile(env, ent, static['Tile'])
       return data
 
-   def merge(stims):
+   def batch(stims):
       retKeys = defaultdict(list)
-      retVals = defaultdict(lambda: defaultdict(list))
+      retVals = defaultdict(list)
 
+      #Key of main ent, stim
       for stim in stims:
          for stat, stimSet in stim.items():
+            #Key by sub ents
             keys, vals = stimSet
-            retKeys[stat] += keys
-            for name, attr in vals.items():
-               retVals[stat][name] += attr
+            keys = np.array(keys)
+            retKeys[stat].append(keys)
+
+            #Remove an extra dim
+            attrs = vals.values()
+            attrs = [e[0] for e in attrs]
+            attrs = np.array(attrs)
+            retVals[stat].append(attrs)
+
+      for group, stat in retKeys.items():
+         retKeys[group] = utils.pack(stat)
+
+      for group, stat in retVals.items():
+         retVals[group] = utils.pack(stat)
+
       return retKeys, retVals
 
    def tile(self, env, ent, static):

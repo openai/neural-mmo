@@ -47,25 +47,39 @@ class Move(Node):
    def args(stim, entity, config):
       return Move.edges
 
+#Todo: kill args on these.
 class North(Node):
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, -1, 0)
+
+   def args(stim, entity, config):
+      return []
 
 class South(Node):
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 1, 0)
 
+   def args(stim, entity, config):
+      return []
+
 class East(Node):
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, 1)
 
+   def args(stim, entity, config):
+      return []
+
 class West(Node):
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, -1)
+
+   def args(stim, entity, config):
+      return []
+
 
 class Attack(Node):
    nodeType = NodeType.SELECTION

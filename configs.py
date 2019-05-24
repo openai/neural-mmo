@@ -10,8 +10,8 @@ class Experiment(Config):
    NHEAD   = 8
    NGOD = 1
    #NSWORD = 2
-   NROLLOUTS = NGOD * 400 #Rollouts per gradient step
-   SYNCUPDATES = 1024 #Number of data to sync
+   NROLLOUTS = NGOD * 10#400 #Rollouts per gradient step
+   SYNCUPDATES = 100#1024 #Number of data to sync
    BATCH = 32
    TEST = True
    LOAD = True

@@ -75,8 +75,8 @@ class God(Timed):
       #around, would be easier...
       #Another approach would be to decouple action index selection from action
       #processing. Doing this in a dynamic action graph is hard though...
-      rets = [pickle.loads(e) for e in rets]
       return rets
+      rets = [pickle.loads(e) for e in rets]
    
 #Agent logic
 class Sword(Timed):

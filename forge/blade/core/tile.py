@@ -18,9 +18,9 @@ class Tile:
       for name, cls in config.static.Tile:
          setattr(self, cls.name, cls(config))
 
-   #@property
-   #def nEnts(self):
-   #   return len(self.ents)
+   @property
+   def serial(self):
+      return self.r, self.c
 
    def addEnt(self, entID, ent):
       assert entID not in self.ents

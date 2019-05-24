@@ -27,7 +27,7 @@ if USER == 'your-username':
    confs = (Law, Chaos)
 
    def makeExp(name, conf, sz, test=False):
-      NENT, NPOP = sz, sz//16
+      NENT, NPOP = sz, 1#sz//16
       ROOT = 'resource/exps/' + name + '/'
       try:
          os.mkdir(ROOT)

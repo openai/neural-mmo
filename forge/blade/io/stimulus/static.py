@@ -49,6 +49,15 @@ class Static(Config):
             self.default = config.IMMUNE
             self.max     = config.IMMUNE
 
+      class Self(node.Discrete):
+         def init(self, config):
+            self.default = 0
+            self.max = 1
+
+         def get(self, ent, ref):
+            val = int(ent is ref)
+            return self.asserts(val)
+ 
       class Population(node.Discrete):
          def init(self, config):
             self.default = None
@@ -59,7 +68,7 @@ class Static(Config):
             self.min = -config.STIM
             self.max = config.STIM
 
-         def get(self, ref):
+         def get(self, ent, ref):
             val = self.val - ref.r.val
             return self.asserts(val)
  
@@ -68,7 +77,7 @@ class Static(Config):
             self.min = -config.STIM
             self.max = config.STIM
 
-         def get(self, ref):
+         def get(self, ent, ref):
             val = self.val - ref.c.val
             return self.asserts(val)
  
@@ -87,14 +96,14 @@ class Static(Config):
          def get(self, tile, r, c):
             return len(tile.ents)
  
-      class R(node.Continuous):
+      class RRel(node.Continuous):
          def init(self, config):
             self.max = config.WINDOW
 
          def get(self, tile, r, c):
             return r
  
-      class C(node.Continuous):
+      class CRel(node.Continuous):
          def init(self, config):
             self.max = config.WINDOW
 

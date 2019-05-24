@@ -18,17 +18,13 @@ from forge.ethyr.torch import param
 
 
 class ANN(nn.Module):
-   def __init__(self, config, device='cpu'):
+   def __init__(self, config, device='cpu', mapActions=True):
       super().__init__()
       self.config = config
-      self.net = policy.Net(config, device)
+      self.net = policy.Net(config, device, mapActions=mapActions)
 
-   def forward(self, obs):
-      #Need to select somewhere
-      annID = 0
-      if type(obs) != list:
-         obs = [obs] 
-      atns, outs, val = self.net(obs)
+   def forward(self, stim, *args, buffered=False):
+      atns, outs, val = self.net(stim, *args, buffered=buffered)
       return atns, outs, val
 
    def recvUpdate(self, update):

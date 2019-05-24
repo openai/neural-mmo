@@ -35,30 +35,35 @@ class Data:
       return self.keys, self.data
 
 class Dynamic:
-   def __call__(self, stims, flat=False):
+   def __call__(self, stim, flat=False):
+      env, ent = stim
       data, static, self.flat = {}, dict(Static), flat
-      data['Entity'] = self.batched(self.entity, stims, static['Entity'])
-      data['Tile']   = self.batched(self.tile, stims, static['Tile'])
-      #data['Entity'] = self.entity(env, ent, static['Entity'])
-      #data['Tile']   = self.tile(env, ent, static['Tile'])
+      data['Entity'] = self.entity(env, ent, static['Entity'])
+      data['Tile']   = self.tile(env, ent, static['Tile'])
       return data
 
-   def batched(self, f, stims, static):
+   def merge(stims):
+      retKeys = defaultdict(list)
+      retVals = defaultdict(lambda: defaultdict(list))
+
+      for stim in stims:
+         for stat, stimSet in stim.items():
+            keys, vals = stimSet
+            retKeys[stat] += keys
+            for name, attr in vals.items():
+               retVals[stat][name] += attr
+      return retKeys, retVals
+
+   def tile(self, env, ent, static):
       data = Data(self.flat)
-      for env, ent in stims:
-         f(env, ent, static, data)
-      return data.ret
-
-   def merge(self, stims):
-      T()
-      pass
-
-   def tile(self, env, ent, static, data):
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             data.add(static, tile, tile, r, c, key=ent)
+      return data.ret
 
-   def entity(self, env, ent, static, data):
+   def entity(self, env, ent, static):
+      data = Data(self.flat)
       for tile in env.ravel():
          for e in tile.ents.values():
-            data.add(static, e, ent, key=ent)
+            data.add(static, e, ent, e, key=ent)
+      return data.ret

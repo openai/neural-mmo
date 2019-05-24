@@ -3,100 +3,62 @@ from pdb import set_trace as T
 from forge.blade.io import action
 
 class ActionArgs:
-   def __init__(self, action, args):
+   def __init__(self, action=None, args=None):
       self.action = action
       self.args = args
 
 #ActionTree
 class Dynamic:
-   def __init__(self, world, entity, rootVersion):
+   def __init__(self, world, entity, rootVersion, config):
       self.world, self.entity = world, entity
-      self.root, self.args = rootVersion, None
-      self.stack = []
-      self.atn = None
-      self.atns = {}
-      self.outs = {}
+      self.config = config
+
+      self.root = rootVersion
+      self.out = {}
+      self.nxt = None
+      self.ret = ActionArgs()
+
+   def next(self, env, ent, atn, outs=None):
+      done = False
+      if outs is not None:
+         self.out[atn] = outs
+
+      if self.nxt is not None:
+         args = []
+         if len(self.nxt) == 0:
+            done = True
+            return args, done 
+
+         args = self.nxt[0]
+         self.ret.args = args #Only one arg support for now
+         self.nxt = self.nxt[1:]
+
+         return [args], done
+ 
+      args = atn.args(env, ent, self.config)
+      if atn.nodeType is action.NodeType.ACTION:
+         self.ret.action = atn
+         self.nxt = args
+         done = len(args) == 0
+
+        
+      return args, done
 
    @property
-   def n(self):
-      return sum([a.nArgs() for a in self.action.edges()])
+   def atnArgs(self):
+      return self.ret
 
-   def actions(self):
-      return self.root.edges
-
-   def unpackActions(self):
-      return self.atns, self.outs
-      atns = []
-      outs = []
-      for atn, args in self.decisions.items():
-         nxtAtn, args = args[0]
-         atns.append(nxtAction)
-         outs.append(args)
-      return atns, outs
-
-   def decide(self, atn, nxtAtn, args, outs):
-      if nxtAtn.nodeType in (NodeType.ACTION, NodeType.CONSTANT, NodeType.VARIABLE):
-         #self.atns[nxtAtn] = args
-         self.atns[atn] = (nxtAtn, args)
-      self.outs[atn] = outs
+   @property
+   def outs(self):
+      return self.out
 
    @staticmethod
-   def flat(root=action.Static, rets=[]):
-      if root.nodeType is action.NodeType.STATIC:
+   def flat(root=action.Static):
+      rets = [root]
+      if root.nodeType is action.NodeType.SELECTION:
          for edge in root.edges:
-            rets = action.Dynamic.flat(edge, rets)
-      elif root.nodeType is action.NodeType.SELECTION:
-         rets.append(root)
-         rets += root.edges
+            rets += action.Dynamic.flat(edge)
       return rets
-
-   def pop(self):
-      if len(self.stack) > 0:
-         return self.stack.pop()
-      return None
-
-   #DFS for the next action -- core and tricky function
-   def next(self, atn=None, args=None, outs=None):
-      if atn is None:
-         atn = self.root
-
-      #Traverse all edges
-      if atn.nodeType is action.NodeType.STATIC:
-         self.stack += atn.edges
-         atn = self.pop()
-         self.atn = atn
-         return self.next(atn)
-      #Select an edge or argument
-      elif atn.nodeType is action.NodeType.SELECTION:
-         self.outs[self.atn] = outs
-      #Register no-argument action
-      elif atn.nodeType is action.NodeType.ACTION:
-         self.outs[self.atn] = outs
-         self.atns[self.atn] = ActionArgs(atn, None)
-         atn = self.pop()
-      #Must pick an argument
-      elif args is None:
-         self.outs[self.atn] = outs
-         return atn
-      #Register action with argument
-      else:
-         self.outs[atn] = outs
-         self.atns[self.atn] = ActionArgs(atn, args)
-         atn = self.pop()
-
-      self.atn = atn
-      return atn
-
-   def rand(self):
-      nodes = self.flat()
-      ind = np.random.randint(0, len(nodes))
-      return nodes[ind]
-
-   def actionArgPair(self):
-      assert self.action is not None and self.args is not None
-      if type(self.args) not in (list, tuple):
-         self.args = [self.args]
-      return type(self.action), self.args
 
 class Arg:
    def __init__(self, val, discrete=True, set=False, min=-1, max=1):

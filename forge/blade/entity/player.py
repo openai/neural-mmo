@@ -7,7 +7,7 @@ from forge.blade.lib.enums import Material, Neon
 from forge.blade.io import action
 
 class Player:
-   def __init__(self, config, name, pop, color=None):
+   def __init__(self, config, iden, pop, name='', color=None):
       self._config = config
       self.inputs(config)
 
@@ -17,8 +17,8 @@ class Player:
 
       self._lastPos = self.pos
 
-      self._entID = name
-      self._name = name
+      self._entID = iden 
+      self._name = name + str(iden)
       self._kill = False
 
       self._color = color
@@ -62,6 +62,10 @@ class Player:
                'style': self._attack.action.__name__,
                'target': self._attack.args.name}
       return data
+
+   @property
+   def serial(self):
+      return self.entID, self.annID
    
    @property
    def pos(self):
@@ -137,8 +141,11 @@ class Player:
       self.updateImmune()
 
       self._actions = actions
-      self._attack  = actions[action.static.Attack]
-      self.mapAttack()
+      
+      key = action.static.Attack
+      if key in actions:
+         self._attack = actions[key]
+         self.mapAttack()
  
    def act(self, world, atnArgs):
       #Right now we only support one arg. So *args for future update

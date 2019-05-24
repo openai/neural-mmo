@@ -11,27 +11,35 @@ from forge.trinity import Base
 from forge.trinity.timed import runtime
 
 from forge.ethyr.torch import optim
+from forge.ethyr.torch.serial import Serial
 from forge.ethyr.rollouts import Rollout
 
 class ExperienceBuffer:
-   def __init__(self):
+   def __init__(self, config):
       self.data = defaultdict(list)
       self.rollouts = {}
       self.nRollouts = 0
+      self.serial = Serial(config)
 
    def __len__(self):
       return self.nRollouts
 
    def collect(self, packets):
-      for sword, packetList in enumerate(packets):
-         for packet in packetList:
-            obs, actions, reward = packet
-            env, ent = obs
+      for sword, data in enumerate(packets):
+         for key, stim, action, reward in zip(*data):
+            #obs, actions, reward = packet
+            #env, ent = obs
 
-            entID, time = ent.entID, ent.timeAlive
-            key = (sword, entID)
+            #entID, time = ent.entID, ent.timeAlive
+            #key = (sword, entID)
 
-            assert len(self.data[key]) == time.val
+            #assert len(self.data[key]) == time.val
+            #key, stim, action, argument, reward = self.serial.deserialize( 
+            #      key, stim, action, argument, reward)
+
+            world, tick, entID, annID = key
+            key = (world, entID, annID)
+            packet = (stim, action, reward)
             self.data[key].append(packet)
 
             if reward == -1:
@@ -46,15 +54,15 @@ class ExperienceBuffer:
       return rollouts
 
    def flat(self, rollouts):
-      keys, obs, actions, rewards = [], [], [], []
+      keys, stims, actions, rewards = [], [], [], []
       for key, rollout in rollouts:
          for val in rollout:
-            ob, atns, reward = val
+            stim, action, reward = val
             keys.append(key)
-            obs.append(ob)
-            actions.append(atns)
+            stims.append(stim)
+            actions.append(action)
             rewards.append(reward)
-      return keys, obs, actions, rewards
+      return keys, stims, actions, rewards
 
    def batch(self, sz):
       data = []
@@ -73,22 +81,25 @@ class God(Base.God):
       super().__init__(trin, config, args)
       self.config, self.args = config, args
       self.device = 'cuda:0'
-      self.net = trinity.ANN(config, self.device).to(self.device)
+      self.net = trinity.ANN(config, self.device, mapActions=False).to(self.device)
 
-      self.replay = ExperienceBuffer()
+      self.replay = ExperienceBuffer(config)
       self.blobs  = []
 
    #Something is fucked here. Step through logic
-   def forward(self, keys, obs, actions, rewards):
+   def forward(self, keys, stims, actions, rewards):
       rollouts = defaultdict(Rollout)
-      _, outs, vals = self.net(obs)
 
-      rets = zip(keys, obs, actions, rewards, outs, vals)
-      for key, ob, action, reward, out, val in rets:
-         env, ent = ob
+      outs, vals = [], []
+      for stim, action in zip(stims, actions):
+         _, out, val = self.net(stim, action, buffered=True)
+         outs.append(out)
+         vals.append(val[0])
+
+      rets = zip(keys, outs, vals, rewards)
+      for key, out, val, reward in rets:
          rollout = rollouts[key]
          rollout.step(out, val, reward)
-         rollout.feather.scrawl(env, ent, val, reward)
 
       for key, rollout in rollouts.items():
          rollout.finish()

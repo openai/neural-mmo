@@ -10,9 +10,11 @@ from forge import trinity
 from forge.trinity import Base 
 from forge.trinity.timed import runtime
 
-from forge.ethyr.torch.param import setParameters, zeroGrads
-from forge.ethyr.torch import optim
 from forge.ethyr.rollouts import Rollout
+
+from forge.ethyr.torch.param import setParameters, zeroGrads
+from forge.ethyr.torch.serial import Serial
+from forge.ethyr.torch import optim
 from forge.ethyr.torch import param
 
 from forge.blade.core import realm
@@ -23,8 +25,8 @@ class Sword(Base.Sword):
    def __init__(self, trin, config, args, idx):
       super().__init__(trin, config, args, idx)
       self.config, self.args = config, args
+      self.updates = Serial(self.config)
       self.net = trinity.ANN(config)
-      self.updates = []
       ##################################
       #MAKE SURE TO ADD IN ENV SAMPLING#
       ##################################
@@ -33,15 +35,9 @@ class Sword(Base.Sword):
       self.nPop = config.NPOP
       self.ent = 0
 
-   def collectSteps(self, obs, actions, rewards):
-      packets = list((zip(*(obs, actions, rewards))))
-      self.updates += packets
-
    def collectUpdates(self):
-      updates = self.updates
-      self.updates = []
-      dat = pickle.dumps(updates, protocol=pickle.HIGHEST_PROTOCOL)
-      return dat
+      updates = self.updates.finish()
+      return updates
 
    @runtime
    def step(self, packet=None):
@@ -55,19 +51,25 @@ class Sword(Base.Sword):
       atns = []
       for ob in obs:
          env, ent = ob
+         stim = self.config.dynamic(ob, flat=True)
+
+         iden = (self.env.worldIdx, self.env.tick)
          entID, annID = ent.entID, ent.annID
-         actions, outs, val = self.net(ob)
-         actions, outs = actions[0], outs[0]
+         actions, outs, val = self.net(stim, env, ent)
+
          if actions is not None:
             atns.append((entID, actions))
+
+         self.updates.serialize(env, ent, stim, outs, iden)
+
       obs = deepcopy(obs)
       nxtObs, rewards, done, info = super().step(atns)
-      self.collectSteps(obs, atns, rewards)
+      self.updates.rewards(rewards)
       return nxtObs
 
    def spawn(self):
-      ent = str(self.ent)
-      pop = hash(ent) % self.nPop
+      ent = self.ent
+      pop = hash(str(ent)) % self.nPop
       self.ent += 1
-      return 'Neural_' + ent, pop
+      return ent, pop, 'Neural_'
       

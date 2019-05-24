@@ -114,11 +114,8 @@ class Transformer(nn.Module):
       self.attn = MultiHeadAttention(h, nHeads)
       #self.fc = nn.Linear(h, h)
 
-   def forward(self, x, k=None):
-      if k is None:
-         x = self.attn(x)
-      else:
-         x = self.attn(x, k)
+   def forward(self, x):
+      x = self.attn(x)
       #x = self.fc(x)
       x = x.mean(-2)
       return x

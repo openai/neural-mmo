@@ -7,11 +7,14 @@ from forge.blade.io.action.node import Node, NodeType
 
 #ActionRoot
 class Static(Node):
-   nodeType = NodeType.STATIC
+   nodeType = NodeType.SELECTION
    @staticproperty
    def edges():
-      return [Move, Attack]
       #return [Move, Attack, Exchange, Skill]
+      return [Move, Attack]
+
+   def args(stim, entity, config):
+      return Static.edges
 
 class Move(Node):
    priority = 1
@@ -39,15 +42,10 @@ class Move(Node):
 
    @staticproperty
    def edges():
-      return [Pass, North, South, East, West]
+      return [North, South, East, West]
 
    def args(stim, entity, config):
       return Move.edges
-
-class Pass(Node):
-   nodeType = NodeType.ACTION
-   def call(world, entity):
-      Move.call(world, entity, 0, 0)
 
 class North(Node):
    nodeType = NodeType.ACTION
@@ -118,7 +116,7 @@ class AttackStyle(Node):
    pass
 
 class Melee(Node):
-   nodeType = NodeType.VARIABLE
+   nodeType = NodeType.ACTION
    index = 0
    @staticproperty
    def edges():
@@ -133,7 +131,7 @@ class Melee(Node):
       return Attack.inRange(entity, stim, config.MELEERANGE)
 
 class Range(Node):
-   nodeType = NodeType.VARIABLE
+   nodeType = NodeType.ACTION
    index = 1
    @staticproperty
    def edges():
@@ -148,7 +146,7 @@ class Range(Node):
       return Attack.inRange(entity, stim, config.RANGERANGE)
 
 class Mage(Node):
-   nodeType = NodeType.VARIABLE
+   nodeType = NodeType.ACTION
    index = 2
    @staticproperty
    def edges():
@@ -208,7 +206,7 @@ class Exchange(Node):
    nodeType = NodeType.SELECTION
    @staticproperty
    def edges():
-      return [Buy, Sell, CancelOffer, Pass]
+      return [Buy, Sell, CancelOffer]
 
    def args(stim, entity, config):
       return Exchange.edges

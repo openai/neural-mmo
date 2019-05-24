@@ -39,13 +39,28 @@ class Input(nn.Module):
       return x
 
 class Env(nn.Module):
-   def __init__(self, config, device):
+   def __init__(self, config, device, mapActions):
       super().__init__()
       h = config.HIDDEN
+      self.h = h
+
       self.config = config
       self.device = device
 
       self.init(config)
+      self.initAction(mapActions)
+
+   def initAction(self, mapActions):
+      self.mapActions = mapActions
+      actions = action.Dynamic.flat()
+      nAtn = len(actions)
+      if mapActions:
+         self.atnIdx = dict((atn, idx) for idx, atn in enumerate(actions))
+      else:
+         self.atnIdx = dict((idx, idx) for idx, atn in enumerate(actions))
+
+      assert len(self.atnIdx) == nAtn
+      self.action = nn.Embedding(nAtn, self.h)
 
    def init(self, config, name=None):
       emb  = nn.ModuleDict()
@@ -56,9 +71,11 @@ class Env(nn.Module):
       self.emb = emb
 
    #Todo: check gpu usage
-   def forward(self, net, obs):
-      stims = self.config.dynamic(obs, flat=True)
+   def forward(self, net, stims):
       features, embed = {}, {}
+      for atn, idx in self.atnIdx.items():
+         idx = torch.Tensor([idx]).long().to(self.device)
+         embed[atn] = self.action(idx)
 
       #Pack entities of each observation set
       for group, stim in stims.items():
@@ -92,10 +109,5 @@ class Env(nn.Module):
       features = list(features.values())
       features = torch.cat(features, -2)
    
-      #Key by ent
-      ent = [embed[ob[1]] for ob in obs]
-      ent = torch.cat(ent, -2)
-      ent = ent.unsqueeze(1).unsqueeze(0)
-
-      features = net(features, ent).squeeze(0)
+      features = net(features).squeeze(0)
       return features, embed

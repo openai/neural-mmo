@@ -12,50 +12,59 @@ from forge.blade.io import action
 class NetTree(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.net = nn.ModuleDict()
-
       self.config = config
       self.h = config.HIDDEN
 
-      for atn in action.Dynamic.flat(action.Static):
-         self.add(atn)
-
-   def add(self, cls):
-      if cls.nodeType in (
-            action.NodeType.SELECTION, 
-            action.NodeType.CONSTANT):
-         self.net[cls.__name__] = ConstDiscreteAction(
-               self.config, self.h, len(cls.edges))
-      elif cls.nodeType is action.NodeType.VARIABLE:
-         self.net[cls.__name__] = VariableDiscreteAction(
+      self.net = VariableDiscreteAction(
                self.config, self.h, self.h)
 
-   def module(self, cls):
-      return self.net[cls.__name__]
+   def buffered(self, stim, embed, action):
+      #Deserialize action and argument
+      #Just fake a key for now
+      key = 0
+      outs = {}
+      for atn in action:
+         args, idx = atn
+         idx = torch.Tensor([idx]).long()
+         out, _    = self.net(stim, embed, args)#?
+         outs[key] = [out[0], idx]
+         key += 1
 
-   def forward(self, env, ent, stim):
-      actionTree = action.Dynamic(env, ent, action.Static)
-      atn = actionTree.next(actionTree.root)
-      while atn is not None:
-         module = self.module(atn)
+      return outs
 
-         assert atn.nodeType in (
-               action.NodeType.SELECTION, 
-               action.NodeType.CONSTANT, 
-               action.NodeType.VARIABLE)
+   def standard(self, stim, embed, env, ent):
+      actionTree = action.Dynamic(env, ent, action.Static, self.config)
+      atn = actionTree.root
 
-         if atn.nodeType in (
-               action.NodeType.SELECTION, 
-               action.NodeType.CONSTANT):
-            nxtAtn, outs = module(env, ent, atn, stim)
-            atn = actionTree.next(nxtAtn, outs=outs)
+      args, done = actionTree.next(env, ent, atn)
+      atnArgs = action.ActionArgs(atn, None)
 
-         elif atn.nodeType is action.NodeType.VARIABLE:
-            argument, outs = module(env, ent, atn, stim)
-            atn = actionTree.next(atn, argument, outs)
+      while not done:
+         out, idx =  self.net(stim, embed, args)
+         atn = args[int(idx)]
 
-      atns, outs = actionTree.unpackActions()
+         args, done = actionTree.next(env, ent, atn, (args, idx))
+
+      outs = actionTree.outs
+      atn  = actionTree.atnArgs
+
+      return atn, outs
+
+   def forward(self, stim, embed, *args, buffered=False):
+      n = 2
+      atns, outs = [], {}
+      if buffered: #Provide env action buffers
+         for arg in args:
+            out = self.buffered(stim, embed, arg) 
+            outs = {**outs, **out}
+      else: #Need access to env
+         env, ent = args
+         for _ in range(n):
+            atn, out = self.standard(stim, embed, env, ent)
+            atns.append(atn)
+            outs = {**outs, **out}
       return atns, outs
+         
 
 class Action(nn.Module):
    def __init__(self, net, config):
@@ -63,30 +72,24 @@ class Action(nn.Module):
       self.net = net
       self.config = config
 
-   def forward(self, env, ent, action, stim, variable):
-      stim, embed = stim
-      leaves = action.args(env, ent, self.config)
-      if variable:
-         targs = torch.cat([embed[e] for e in leaves])
-         atn, atnIdx = self.net(stim, targs)
-      else:
-         atn, atnIdx = self.net(stim)
-      action = leaves[int(atnIdx)]
-      return action, (atn.squeeze(0), atnIdx)
+   def forward(self, stim, embed, args, variable):
+      targs = torch.cat([embed[e] for e in args])
+      out, idx = self.net(stim, targs)
+      return out, idx 
 
 class ConstDiscreteAction(Action):
    def __init__(self, config, h, ydim):
       super().__init__(ConstDiscrete(h, ydim), config)
 
-   def forward(self, env, ent, action, stim):
-      return super().forward(env, ent, action, stim, variable=False)
+   def forward(self, stim, embed, args):
+      return super().forward(stim, embed, args, variable=False)
 
 class VariableDiscreteAction(Action):
    def __init__(self, config, xdim, h):
       super().__init__(VariableDiscrete(xdim, h), config)
 
-   def forward(self, env, ent, action, stim):
-      return super().forward(env, ent, action, stim, variable=True)
+   def forward(self, stim, embed, args):
+      return super().forward(stim, embed, args, variable=True)
 
 ####### Network Modules
 class ConstDiscrete(nn.Module):

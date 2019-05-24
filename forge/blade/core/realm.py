@@ -24,7 +24,7 @@ class Spawner:
       self.pops = defaultdict(int)
       self.palette = Palette(self.nPop)
 
-   def spawn(self, realm, name, pop):
+   def spawn(self, realm, iden, pop, name):
       assert self.pops[pop] <= self.popSz
       assert self.ents      <= self.nEnt
 
@@ -38,12 +38,12 @@ class Spawner:
       self.pops[pop] += 1
       self.ents += 1
 
-      ent = entity.Player(self.config, name, pop)
+      ent = entity.Player(self.config, iden, pop, name)
       assert ent not in realm.desciples
 
       r, c = ent.pos
       realm.desciples[ent.entID] = ent
-      realm.world.env.tiles[r, c].addEnt(name, ent)
+      realm.world.env.tiles[r, c].addEnt(iden, ent)
       realm.world.env.tiles[r, c].counts[ent.population.val] += 1
 
    def cull(self, pop):
@@ -67,8 +67,11 @@ class Realm(Timed):
 
       self.spawner = Spawner(config, args)
       self.world, self.desciples = core.Env(config, idx), {}
-      self.config, self.args, self.tick = config, args, 0
+      self.config, self.args = config, args
       self.npop = config.NPOP
+
+      self.worldIdx = idx
+      self.tick = 0
 
       self.env = self.world.env
       self.values = None
@@ -114,7 +117,7 @@ class Realm(Timed):
       actions = defaultdict(list)
       for tup in decisions:
          entID, atns = tup
-         for atnArgs in atns.values():
+         for atnArgs in atns:
             priority = atnArgs.action.priority
             actions[priority].append((entID, atnArgs))
 
@@ -156,11 +159,13 @@ class Realm(Timed):
 
    @runtime
    def step(self, decisions):
+      self.tick += 1
+
       rewards = self.stepEnts(decisions)
       self.stepWorld()
 
-      name, pop = self.spawn()
-      self.spawner.spawn(self, name, pop)
+      iden, pop, name = self.spawn()
+      self.spawner.spawn(self, iden, pop, name)
 
       self.stepEnv()
       return self.getStims(rewards)

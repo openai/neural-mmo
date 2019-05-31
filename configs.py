@@ -1,3 +1,6 @@
+#trinity/god/126: zerod out atn idx
+#ethyr/torch/netgen/action/39: zeroed out embed
+
 from pdb import set_trace as T
 from forge.blade.core.config import Config
 from forge.blade.lib import utils
@@ -10,8 +13,8 @@ class Experiment(Config):
    NHEAD   = 8
    NGOD = 1
    #NSWORD = 2
-   NROLLOUTS = NGOD * 10#400 #Rollouts per gradient step
-   SYNCUPDATES = 100#1024 #Number of data to sync
+   NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
+   SYNCUPDATES = 1024#100 #Number of data to sync
    BATCH = 32
    TEST = True
    LOAD = True

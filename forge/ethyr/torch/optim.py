@@ -25,7 +25,7 @@ def backward(rolls, valWeight=0.5, entWeight=0, device='cpu'):
    for k, out in outs['action'].items():
       atns = out['atns']
       vals = torch.stack(out['vals']).to(device)
-      idxs = torch.stack(out['idxs']).to(device)
+      idxs = torch.tensor(out['idxs']).to(device)
       rets = torch.tensor(out['rets']).to(device).view(-1, 1)
       l, e = loss.PG(atns, idxs, vals, rets)
       pg += l

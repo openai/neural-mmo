@@ -6,6 +6,8 @@ import ray
 import pickle
 from collections import defaultdict
 
+from forge.blade.io import stimulus, action, utils
+
 from forge import trinity
 from forge.trinity import Base
 from forge.trinity.timed import runtime
@@ -26,20 +28,32 @@ class ExperienceBuffer:
 
    def collect(self, packets):
       for sword, data in enumerate(packets):
-         for key, stim, action, reward in zip(*data):
-            #obs, actions, reward = packet
-            #env, ent = obs
+         keys, stims, actions, rewards = data
 
-            #entID, time = ent.entID, ent.timeAlive
-            #key = (sword, entID)
+         #Entity ids per example
+         keys, keyLens = keys
 
-            #assert len(self.data[key]) == time.val
-            #key, stim, action, argument, reward = self.serial.deserialize( 
-            #      key, stim, action, argument, reward)
+         #Dict mapping ent ids to tile/entity stims
+         stimIDs, stimVals = stims
+         stims = stimulus.Dynamic.unbatch(stimIDs, stimVals)
+         
+         atnTensor, idxTensor, lenTensor = actions
+         actions = action.Dynamic.unbatch(atnTensor, idxTensor, lenTensor)
+         assert np.all(idxTensor[1] == atnTensor[1]) 
+         assert np.all(idxTensor[1] == lenTensor[1]) 
 
-            world, tick, entID, annID = key
-            key = (world, entID, annID)
-            packet = (stim, action, reward)
+         #lens = lenTensor[1]
+         #atnTensor = atnTensor[0].astype(np.int)
+         #idxTensor = idxTensor[0].astype(np.int)
+
+         #check = [e[:l] for e, l in zip(atnTensor, lens)]
+         #atns = atnTensor[idxTensor]
+        
+         for key, stim, atn, reward in zip(keys, stims, actions, rewards):
+            key = key.numpy().astype(np.int).tolist()
+            world, tick, annID, entID = key
+            key = (world, annID, entID)
+            packet = (stim, atn, reward)
             self.data[key].append(packet)
 
             if reward == -1:
@@ -80,7 +94,8 @@ class God(Base.God):
    def __init__(self, trin, config, args):
       super().__init__(trin, config, args)
       self.config, self.args = config, args
-      self.device = 'cuda:0'
+      #self.device = 'cpu:0' 
+      self.device = 'cuda:0' 
       self.net = trinity.ANN(config, self.device, mapActions=False).to(self.device)
 
       self.replay = ExperienceBuffer(config)
@@ -90,16 +105,38 @@ class God(Base.God):
    def forward(self, keys, stims, actions, rewards):
       rollouts = defaultdict(Rollout)
 
+      rawActions = actions
+
+      stims   = stimulus.Dynamic.batch(stims)
+      actions = action.Dynamic.batch(actions)
+      atns    = actions[1][0]
+      _, outs, vals = self.net(stims, actions, buffered=True)
+
+      atnTensor, idxTensor, lenTensor = actions
+      _, lenTensor = lenTensor
+
+      outs = utils.unpack(outs, lenTensor, dim=1)
+      #outs, idxs = outs
+      #idxs, lens = idxs
+
+      #outs = utils.unpack(outs, lens)
+      #atns = utils.unpack(idxs, lens)
+
+      '''
       outs, vals = [], []
       for stim, action in zip(stims, actions):
          _, out, val = self.net(stim, action, buffered=True)
          outs.append(out)
          vals.append(val[0])
+      '''
 
-      rets = zip(keys, outs, vals, rewards)
-      for key, out, val, reward in rets:
+      rets = zip(keys, outs, rawActions, vals, rewards)
+      for key, out, atn, val, reward in rets:
+         lens, atn = list(zip(*[(len(e), idx) for e, idx in atn]))
+         atn = np.array(atn) #* 0 #Actions are not being correctly indexed 
+         out = utils.unpack(out, lens)
          rollout = rollouts[key]
-         rollout.step(out, val, reward)
+         rollout.step(key, out, atn, val, reward)
 
       for key, rollout in rollouts.items():
          rollout.finish()
@@ -121,7 +158,7 @@ class God(Base.God):
 
    def rollout(self, packets, recv=None):
       packets = super().distrib(recv)
-      #self.processReplay()
+      self.processReplay()
       packets = super().sync(packets)
 
       self.replay.collect(packets)

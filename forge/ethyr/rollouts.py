@@ -21,25 +21,26 @@ def mergeRollouts(rollouts):
          'action': defaultdict(lambda: defaultdict(list))}
    for rollout in rollouts:
       for idx in range(rollout.time):
-         aarg = rollout.atnArgs[idx]
-         val  = rollout.vals[idx]
-         ret  = rollout.returns[idx]
+         out = rollout.outs[idx]
+         atn = rollout.atns[idx]
+         val = rollout.vals[idx]
+         ret = rollout.returns[idx]
 
          outs['value'].append(val)
          outs['return'].append(ret)
 
-         for k, out in aarg.items():
-            atn, idx = out
-            outk = outs['action'][k]
-            outk['atns'].append(atn) 
-            outk['idxs'].append(idx)
+         for o, a in zip(out, atn):
+            outk = outs['action'][a]
+            outk['atns'].append(o) 
+            outk['idxs'].append(a)
             outk['vals'].append(val)
             outk['rets'].append(ret)
    return outs
 
 class Rollout:
    def __init__(self, returnf=discountRewards):
-      self.atnArgs = []
+      self.outs = []
+      self.atns = []
       self.vals = []
       self.rewards = []
       self.pop_rewards = []
@@ -47,11 +48,14 @@ class Rollout:
       self.feather = Feather()
       self.time = 0
 
-   def step(self, atnArgs, val, reward):
-      self.atnArgs.append(atnArgs)
+   def step(self, iden, out, atn, val, reward):
+      self.outs.append(out)
+      self.atns.append(atn)
       self.vals.append(val)
       self.rewards.append(reward)
       self.time += 1
+
+      self.feather.scrawl(iden, atn, val, reward)
 
    def finish(self):
       assert self.rewards[-1] == -1
@@ -65,10 +69,14 @@ class Feather:
       self.expMap = set()
       self.blob = Blob()
 
-   def scrawl(self, stim, ent, val, reward):
-      self.blob.annID = ent.annID
-      tile = self.tile(stim)
-      self.move(tile, ent.pos)
+   def scrawl(self, iden, atn, val, reward):
+      world, annID, entID = iden
+      self.blob.entID = entID
+      self.blob.annID = annID
+      self.blob.world = world
+      
+      #tile = self.tile(stim)
+      #self.move(tile, ent.pos)
       #self.action(arguments, atnArgs)
       self.stats(val, reward)
 

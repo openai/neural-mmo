@@ -47,11 +47,13 @@ class Net(nn.Module):
    def input(self, stim):
       #TODO: Need to select net index
       stim, embed = self.env(self.net[0].net, stim) 
-      val         = self.net[0].val(stim) 
+      val                  = self.net[0].val(stim) 
       return stim, embed, val
 
    def forward(self, stim, *args, buffered=False): 
+      #Add in action processing to input? Or maybe output embed?
       stim, embed, val = self.input(stim)
+      stim = stim[0]
       atns, outs = self.action(stim, embed, *args, buffered=buffered)
       return atns, outs, val
 

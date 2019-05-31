@@ -19,16 +19,28 @@ class NetTree(nn.Module):
                self.config, self.h, self.h)
 
    def buffered(self, stim, embed, action):
+      atnTensor, idxTensor, lenTensor = action
+      atnTensor, atnLens = atnTensor
+      nameMap, embed = embed
+      #idxTensor, idxLens = idxTensor
+      #lenTensor, lenLens = lenTensor
+
       #Deserialize action and argument
       #Just fake a key for now
       key = 0
       outs = {}
-      for atn in action:
-         args, idx = atn
-         idx = torch.Tensor([idx]).long()
-         out, _    = self.net(stim, embed, args)#?
-         outs[key] = [out[0], idx]
-         key += 1
+      #for atn in action:
+      atnTensor = torch.LongTensor(atnTensor).to('cuda:0')
+      
+      #for emb, atn in zip(embed, atnTensor):
+      #   pass
+      #Embed of atn
+
+      #Zeroed out embed for bounds. This is an issue.
+      targs = embed[atnTensor]
+      #targs = torch.stack([emb[atn] for emb, atn in zip(embed, atnTensor)])
+      #[targ[:, idx] for idx in range(len(targs))]
+      outs, _ = self.net(stim, targs)
 
       return outs
 
@@ -39,8 +51,14 @@ class NetTree(nn.Module):
       args, done = actionTree.next(env, ent, atn)
       atnArgs = action.ActionArgs(atn, None)
 
+      nameMap, embed = embed
+
       while not done:
-         out, idx =  self.net(stim, embed, args)
+         targs = [nameMap[e] for e in args]
+         targs = [embed[targ] for targ in targs]
+         targs = torch.stack(targs)
+      
+         out, idx =  self.net(stim, targs)
          atn = args[int(idx)]
 
          args, done = actionTree.next(env, ent, atn, (args, idx))
@@ -54,9 +72,7 @@ class NetTree(nn.Module):
       n = 2
       atns, outs = [], {}
       if buffered: #Provide env action buffers
-         for arg in args:
-            out = self.buffered(stim, embed, arg) 
-            outs = {**outs, **out}
+         outs = self.buffered(stim, embed, *args) 
       else: #Need access to env
          env, ent = args
          for _ in range(n):
@@ -71,9 +87,8 @@ class Action(nn.Module):
       super().__init__()
       self.net = net
       self.config = config
-
-   def forward(self, stim, embed, args, variable):
-      targs = torch.cat([embed[e] for e in args])
+      
+   def forward(self, stim, targs, variable):
       out, idx = self.net(stim, targs)
       return out, idx 
 
@@ -81,15 +96,15 @@ class ConstDiscreteAction(Action):
    def __init__(self, config, h, ydim):
       super().__init__(ConstDiscrete(h, ydim), config)
 
-   def forward(self, stim, embed, args):
-      return super().forward(stim, embed, args, variable=False)
+   def forward(self, stim, args):
+      return super().forward(stim, args, variable=False)
 
 class VariableDiscreteAction(Action):
    def __init__(self, config, xdim, h):
       super().__init__(VariableDiscrete(xdim, h), config)
 
-   def forward(self, stim, embed, args):
-      return super().forward(stim, embed, args, variable=True)
+   def forward(self, stim, args):
+      return super().forward(stim, args, variable=True)
 
 ####### Network Modules
 class ConstDiscrete(nn.Module):
@@ -122,10 +137,13 @@ class AttnCat(nn.Module):
       self.h = h
 
    def forward(self, key, vals):
-      key = key.expand(len(vals), self.h)
-      x = torch.cat((key, vals), dim=1)
-      x = self.fc(x)
-      return x.view(1, -1)
+      #key = key.expand(len(vals), self.h)
+      key = key.expand_as(vals)
+      #x = torch.cat((key, vals), dim=1)
+      x = torch.cat((key, vals), dim=-1)
+      x = self.fc(x).squeeze(-1)
+      return x
+      #return x.view(1, -1)
 
 class AttnPool(nn.Module):
    def __init__(self, xdim, h):

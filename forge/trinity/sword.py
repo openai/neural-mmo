@@ -13,11 +13,13 @@ from forge.trinity.timed import runtime
 from forge.ethyr.rollouts import Rollout
 
 from forge.ethyr.torch.param import setParameters, zeroGrads
-from forge.ethyr.torch.serial import Serial
+from forge.ethyr.torch.serial import Serial, Stim
 from forge.ethyr.torch import optim
 from forge.ethyr.torch import param
 
 from forge.blade.core import realm
+from forge.blade.io import stimulus
+
 from copy import deepcopy
 
 @ray.remote
@@ -25,7 +27,6 @@ class Sword(Base.Sword):
    def __init__(self, trin, config, args, idx):
       super().__init__(trin, config, args, idx)
       self.config, self.args = config, args
-      self.updates = Serial(self.config)
       self.net = trinity.ANN(config)
       ##################################
       #MAKE SURE TO ADD IN ENV SAMPLING#
@@ -43,6 +44,7 @@ class Sword(Base.Sword):
    def step(self, packet=None):
       if packet is not None:
          self.net.recvUpdate(packet)
+      self.updates = Serial(self.config)
       while len(self.updates) < self.config.SYNCUPDATES:
          self.obs = self.decide(self.obs)
       return self.collectUpdates()
@@ -52,15 +54,19 @@ class Sword(Base.Sword):
       for ob in obs:
          env, ent = ob
          stim = self.config.dynamic(ob, flat=True)
+         obby = stim
 
          iden = (self.env.worldIdx, self.env.tick)
          entID, annID = ent.entID, ent.annID
+
+         stim  = stimulus.Dynamic.batch([stim])
+         
          actions, outs, val = self.net(stim, env, ent)
 
          if actions is not None:
             atns.append((entID, actions))
 
-         self.updates.serialize(env, ent, stim, outs, iden)
+         self.updates.serialize(env, ent, obby, outs, iden)
 
       obs = deepcopy(obs)
       nxtObs, rewards, done, info = super().step(atns)

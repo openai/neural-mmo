@@ -38,37 +38,64 @@ class Data:
 class Dynamic:
    def __call__(self, stim, flat=False):
       env, ent = stim
-      data, static, self.flat = {}, dict(Static), flat
-      data['Entity'] = self.entity(env, ent, static['Entity'])
-      data['Tile']   = self.tile(env, ent, static['Tile'])
+      static, self.flat = dict(Static), flat
+
+      keys      = 'Entity Tile'.split()
+      functions = [self.entity, self.tile]
+      
+      data = {}
+      for key, f in zip(keys, functions):
+         data[key]  = f(env, ent, static[key])
       return data
 
    def batch(stims):
       retKeys = defaultdict(list)
-      retVals = defaultdict(list)
+      retVals = defaultdict(lambda: defaultdict(list))
 
       #Key of main ent, stim
       for stim in stims:
          for stat, stimSet in stim.items():
             #Key by sub ents
-            keys, vals = stimSet
-            keys = np.array(keys)
+            try:
+               keys, vals = stimSet
+            except:
+               T()
+            #keys = np.array(keys)
             retKeys[stat].append(keys)
 
-            #Remove an extra dim
-            attrs = vals.values()
-            attrs = [e[0] for e in attrs]
-            attrs = np.array(attrs)
-            retVals[stat].append(attrs)
+            for attr, val in vals.items():
+               #Remove an extra dim
+               val = np.array(val).reshape(-1)
+               retVals[stat][attr].append(val)
 
-      for group, stat in retKeys.items():
-         retKeys[group] = utils.pack(stat)
+      #Separate this shit into serial
+      #for group, stat in retKeys.items():
+      #   retKeys[group] = utils.pack(stat)
 
       for group, stat in retVals.items():
-         retVals[group] = utils.pack(stat)
+         for attr, vals in stat.items():
+            vals, keys = utils.pack(vals)
+            retVals[group][attr] = vals
 
       return retKeys, retVals
 
+   def unbatch(retKeys, retVals):
+      n = len(retKeys['Entity'])
+      stims = [defaultdict(list) for _ in range(n)]
+
+      for group, stat in retKeys.items():
+         for idx, keys in enumerate(stat):
+            stims[idx][group] = [keys, defaultdict(list)]
+
+      for group, stat in retVals.items():
+         for attr, vals in stat.items():
+            keys = retKeys[group]
+            lens = [len(e) for e in keys]
+            vals = utils.unpack(vals, lens)
+            for idx, val in enumerate(vals):
+               stims[idx][group][1][attr] = val
+      return stims
+            
    def tile(self, env, ent, static):
       data = Data(self.flat)
       for r, row in enumerate(env):

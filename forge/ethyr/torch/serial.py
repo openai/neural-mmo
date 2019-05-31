@@ -68,6 +68,10 @@ class Serial:
    def __len__(self):
       return len(self.keys)
 
+   def uniqueKey(self, globalKey, localKey):
+      pass
+      
+
    def serialize(self, env, ent, stim, actions, iden):
       self.stim.serialize(stim, iden)
       self.action.serialize(actions, iden)

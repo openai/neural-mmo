@@ -16,15 +16,26 @@ from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
+from forge.ethyr.torch.policy import Net 
+from forge.ethyr.torch.netgen.stim import Env
+from forge.ethyr.torch.netgen.action import NetTree
 
 class ANN(nn.Module):
-   def __init__(self, config, device='cpu', mapActions=True):
+   def __init__(self, config, mapActions=True):
       super().__init__()
       self.config = config
-      self.net = policy.Net(config, device, mapActions=mapActions)
+      self.net = nn.ModuleList([Net(config)
+            for _ in range(config.NPOP)])
+      self.env    = Env(config, mapActions)
+      self.action = NetTree(config)
 
-   def forward(self, stim, *args, buffered=False):
-      atns, outs, val = self.net(stim, *args, buffered=buffered)
+   #TODO: Need to select net index
+   def forward(self, stim, obs=None, actions=None):
+      #Add in action processing to input? Or maybe output embed?
+      stim, embed = self.env(self.net[0].net, stim)
+      val                  = self.net[0].val(stim)
+
+      atns, outs = self.action(stim, embed, obs, actions)
       return atns, outs, val
 
    def recvUpdate(self, update):

@@ -1,5 +1,4 @@
-#trinity/god/126: zerod out atn idx
-#ethyr/torch/netgen/action/39: zeroed out embed
+#Impose action priority system on action lists
 
 from pdb import set_trace as T
 from forge.blade.core.config import Config
@@ -13,8 +12,21 @@ class Experiment(Config):
    NHEAD   = 8
    NGOD = 1
    #NSWORD = 2
+
    NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
    SYNCUPDATES = 1024#100 #Number of data to sync
+   DEVICE = 'cuda:0'
+
+   #CPU Debug mode
+   DEVICE = 'cpu:0'
+ 
+   #CPU Dev mode
+   '''
+   NROLLOUTS = NGOD * 10
+   SYNCUPDATES = 100
+   DEVICE = 'cpu:0'
+   '''
+ 
    BATCH = 32
    TEST = True
    LOAD = True

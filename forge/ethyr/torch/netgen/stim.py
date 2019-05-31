@@ -39,13 +39,11 @@ class Input(nn.Module):
       return x
 
 class Env(nn.Module):
-   def __init__(self, config, device, mapActions):
+   def __init__(self, config, mapActions):
       super().__init__()
+      self.config = config
       h = config.HIDDEN
       self.h = h
-
-      self.config = config
-      self.device = device
 
       self.init(config)
       self.initAction(mapActions)
@@ -73,16 +71,18 @@ class Env(nn.Module):
    #Todo: check gpu usage
    def forward(self, net, stims):
       features, lookup = {}, Lookup()
+
+      #Embed actions
       for atn, idx in self.atnIdx.items():
-         idx = torch.Tensor([idx]).long().to(self.device)
+         idx = torch.Tensor([idx]).long().to(self.config.DEVICE)
          emb = self.action(idx)
          lookup.add([atn], [emb])
 
-      stimKeys, stimVals = stims
+
       #Pack entities of each observation set
-      items = stimVals.items()
-      for group, stim in items:
-         #stimVals.items():
+      stimKeys, stimVals = stims
+      for group, stim in stimVals.items():
+
          #Names here are flat
          names = stimKeys[group]
          subnet = stim
@@ -90,7 +90,7 @@ class Env(nn.Module):
 
          #Pack attributes of each entity
          for param, val in subnet.items():
-            val = torch.Tensor(val).to(self.device)
+            val = torch.Tensor(val).to(self.config.DEVICE)
             emb = self.emb[group][param](val)
             feats.append(emb)
 
@@ -105,10 +105,6 @@ class Env(nn.Module):
             vals = e.split(1, dim=0)[:len(n)]
             lookup.add(n, vals)
    
-         #names = list(chain(*names))
-         #if len(names) > 250:
-         #   T()
-
       #Concat feature block
       features = list(features.values())
       features = torch.cat(features, -2)
@@ -117,10 +113,6 @@ class Env(nn.Module):
       embed = lookup.table()
       names, vals = embed
 
-      assert len(names) == len(vals)
-
-      #assert len(embed) == 1
-      #embed = embed[0]
       return features, embed
 
 def reverse(f):
@@ -136,8 +128,6 @@ class Lookup:
       self.data  += data
 
    def table(self):
-      #assert len(self.names) == len(self.data)
-
       names, data = self.names, self.data
       dat = dict(zip(names, data))
       names = set(self.names)
@@ -148,6 +138,8 @@ class Lookup:
          data.append(dat[name])
 
       data = torch.cat(data)
+
+      assert len(idxs) == len(data)
       return idxs, data
       
          

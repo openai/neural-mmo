@@ -56,11 +56,7 @@ class Dynamic:
       for stim in stims:
          for stat, stimSet in stim.items():
             #Key by sub ents
-            try:
-               keys, vals = stimSet
-            except:
-               T()
-            #keys = np.array(keys)
+            keys, vals = stimSet
             retKeys[stat].append(keys)
 
             for attr, val in vals.items():

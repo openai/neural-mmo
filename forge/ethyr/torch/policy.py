@@ -23,7 +23,7 @@ class Val(nn.Module):
    def forward(self, stim):
       return self.net(stim)
 
-class Hidden(nn.Module):
+class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.net = Transformer(config.HIDDEN, config.NHEAD) 
@@ -33,28 +33,4 @@ class Hidden(nn.Module):
       ret = self.net(stim)
       val = self.val(stim)
       return ret, val
-
-class Net(nn.Module):
-   def __init__(self, config, device, mapActions=True):
-      super().__init__()
-      self.config = config
-
-      self.net = nn.ModuleList([Hidden(config) 
-            for _ in range(config.NPOP)])
-      self.env    = Env(config, device, mapActions)
-      self.action = NetTree(config)
-
-   def input(self, stim):
-      #TODO: Need to select net index
-      stim, embed = self.env(self.net[0].net, stim) 
-      val                  = self.net[0].val(stim) 
-      return stim, embed, val
-
-   def forward(self, stim, *args, buffered=False): 
-      #Add in action processing to input? Or maybe output embed?
-      stim, embed, val = self.input(stim)
-      stim = stim[0]
-      atns, outs = self.action(stim, embed, *args, buffered=buffered)
-      return atns, outs, val
-
 

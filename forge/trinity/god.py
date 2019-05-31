@@ -29,31 +29,17 @@ class ExperienceBuffer:
    def collect(self, packets):
       for sword, data in enumerate(packets):
          keys, stims, actions, rewards = data
-
-         #Entity ids per example
          keys, keyLens = keys
 
-         #Dict mapping ent ids to tile/entity stims
-         stimIDs, stimVals = stims
-         stims = stimulus.Dynamic.unbatch(stimIDs, stimVals)
-         
-         atnTensor, idxTensor, lenTensor = actions
-         actions = action.Dynamic.unbatch(atnTensor, idxTensor, lenTensor)
-         assert np.all(idxTensor[1] == atnTensor[1]) 
-         assert np.all(idxTensor[1] == lenTensor[1]) 
+         stims = stimulus.Dynamic.unbatch(*stims)
+         actions = action.Dynamic.unbatch(*actions)
 
-         #lens = lenTensor[1]
-         #atnTensor = atnTensor[0].astype(np.int)
-         #idxTensor = idxTensor[0].astype(np.int)
-
-         #check = [e[:l] for e, l in zip(atnTensor, lens)]
-         #atns = atnTensor[idxTensor]
-        
          for key, stim, atn, reward in zip(keys, stims, actions, rewards):
             key = key.numpy().astype(np.int).tolist()
             world, tick, annID, entID = key
             key = (world, annID, entID)
             packet = (stim, atn, reward)
+
             self.data[key].append(packet)
 
             if reward == -1:
@@ -81,7 +67,6 @@ class ExperienceBuffer:
    def batch(self, sz):
       data = []
       rollouts = list(self.gather().items())
-      print('Num rollouts: ', len(rollouts))
       while len(rollouts) > 0:
          dat = rollouts[:sz]
          rollouts = rollouts[sz:]
@@ -94,14 +79,13 @@ class God(Base.God):
    def __init__(self, trin, config, args):
       super().__init__(trin, config, args)
       self.config, self.args = config, args
-      #self.device = 'cpu:0' 
-      self.device = 'cuda:0' 
-      self.net = trinity.ANN(config, self.device, mapActions=False).to(self.device)
+
+      self.net = trinity.ANN(config,
+            mapActions=False).to(self.config.DEVICE)
 
       self.replay = ExperienceBuffer(config)
       self.blobs  = []
 
-   #Something is fucked here. Step through logic
    def forward(self, keys, stims, actions, rewards):
       rollouts = defaultdict(Rollout)
 
@@ -110,30 +94,18 @@ class God(Base.God):
       stims   = stimulus.Dynamic.batch(stims)
       actions = action.Dynamic.batch(actions)
       atns    = actions[1][0]
-      _, outs, vals = self.net(stims, actions, buffered=True)
+
+      _, outs, vals = self.net(stims, actions=actions)
 
       atnTensor, idxTensor, lenTensor = actions
       _, lenTensor = lenTensor
 
       outs = utils.unpack(outs, lenTensor, dim=1)
-      #outs, idxs = outs
-      #idxs, lens = idxs
-
-      #outs = utils.unpack(outs, lens)
-      #atns = utils.unpack(idxs, lens)
-
-      '''
-      outs, vals = [], []
-      for stim, action in zip(stims, actions):
-         _, out, val = self.net(stim, action, buffered=True)
-         outs.append(out)
-         vals.append(val[0])
-      '''
 
       rets = zip(keys, outs, rawActions, vals, rewards)
       for key, out, atn, val, reward in rets:
          lens, atn = list(zip(*[(len(e), idx) for e, idx in atn]))
-         atn = np.array(atn) #* 0 #Actions are not being correctly indexed 
+         atn = np.array(atn)
          out = utils.unpack(out, lens)
          rollout = rollouts[key]
          rollout.step(key, out, atn, val, reward)
@@ -146,7 +118,7 @@ class God(Base.God):
    def backward(self, rollouts):
       reward, val, pg, valLoss, entropy = optim.backward(
             rollouts, valWeight=0.25,
-            entWeight=self.config.ENTROPY, device=self.device)
+            entWeight=self.config.ENTROPY, device=self.config.DEVICE)
 
       self.blobs += [r.feather.blob for r in rollouts.values()]
 

@@ -27,9 +27,7 @@ class Dynamic:
 
       for actionList in actionLists:
          atns, idxs = [], []
-         for atn in actionList:
-            atn, idx = atn
-
+         for atn, idx in actionList:
             atns.append(np.array(atn))
             idxs.append(idx)
          
@@ -38,31 +36,23 @@ class Dynamic:
          idxTensor.append(np.array(idxs))
          lenTensor.append(lens)
 
-      idxTensor = utils.pack(idxTensor)
-      atnTensor = utils.pack(atnTensor)
-      lenTensor = utils.pack(lenTensor)
+      idxTensor, _ = utils.pack(idxTensor)
+      atnTensor, _ = utils.pack(atnTensor)
+      lenTensor    = utils.pack(lenTensor)
+
 
       return atnTensor, idxTensor, lenTensor
 
    def unbatch(atnTensor, idxTensor, lenTensor):
-      atnTensor, atnLens = atnTensor
-      idxTensor, idxLens = idxTensor
       lenTensor, lenLens = lenTensor
 
       #Careful with unpack dim here
-      atnTensor = utils.unpack(atnTensor, atnLens, dim=1)
-      idxTensor = utils.unpack(idxTensor, idxLens, dim=1)
+      atnTensor = utils.unpack(atnTensor, lenLens, dim=1)
+      idxTensor = utils.unpack(idxTensor, lenLens, dim=1)
       lenTensor = utils.unpack(lenTensor, lenLens, dim=1)
 
       actionLists = []
       for atns, idxs, lens in zip(atnTensor, idxTensor, lenTensor):
-         #fix this before here
-         atns = atns.astype(np.int)
-         idxs = idxs.astype(np.int)
-         lens = lens.astype(np.int) 
-         for i, l in zip(idxs, lens):
-            assert i < l
-      
          atns = utils.unpack(atns, lens)
          actions = list(zip(atns, idxs))
          actionLists.append(actions)

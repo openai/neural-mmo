@@ -18,30 +18,16 @@ class NetTree(nn.Module):
       self.net = VariableDiscreteAction(
                self.config, self.h, self.h)
 
-   def buffered(self, stim, embed, action):
-      atnTensor, idxTensor, lenTensor = action
-      atnTensor, atnLens = atnTensor
+   def buffered(self, stim, embed, actions):
+      atnTensor, idxTensor, lenTensor = actions 
+      lenTensor, atnLens = lenTensor
       nameMap, embed = embed
-      #idxTensor, idxLens = idxTensor
-      #lenTensor, lenLens = lenTensor
 
-      #Deserialize action and argument
-      #Just fake a key for now
-      key = 0
-      outs = {}
-      #for atn in action:
-      atnTensor = torch.LongTensor(atnTensor).to('cuda:0')
+      atnTensor = torch.LongTensor(atnTensor).to(self.config.DEVICE)
       
-      #for emb, atn in zip(embed, atnTensor):
-      #   pass
-      #Embed of atn
-
-      #Zeroed out embed for bounds. This is an issue.
       targs = embed[atnTensor]
-      #targs = torch.stack([emb[atn] for emb, atn in zip(embed, atnTensor)])
-      #[targ[:, idx] for idx in range(len(targs))]
+      stim = stim.unsqueeze(1).unsqueeze(1)
       outs, _ = self.net(stim, targs)
-
       return outs
 
    def standard(self, stim, embed, env, ent):
@@ -68,19 +54,26 @@ class NetTree(nn.Module):
 
       return atn, outs
 
-   def forward(self, stim, embed, *args, buffered=False):
+   def forward(self, stims, embed, obs=None, actions=None):
       n = 2
-      atns, outs = [], {}
-      if buffered: #Provide env action buffers
-         outs = self.buffered(stim, embed, *args) 
-      else: #Need access to env
-         env, ent = args
-         for _ in range(n):
-            atn, out = self.standard(stim, embed, env, ent)
-            atns.append(atn)
-            outs = {**outs, **out}
-      return atns, outs
-         
+      assert obs is None or actions is None
+      outList, atnList = [], []
+      #Provide final action buffers; do not need access to env
+      if obs is None:
+         outList = self.buffered(stims, embed, actions)
+      #No buffers; need access to environment
+      elif actions is None:
+         for idx, ob in enumerate(obs):
+            env, ent = ob
+            stim = stims[idx]
+            atns, outs = [], {}
+            for _ in range(n):
+               atn, out = self.standard(stim, embed, env, ent)
+               atns.append(atn)
+               outs = {**outs, **out}
+            outList.append(outs)
+            atnList.append(atns)
+      return atnList, outList
 
 class Action(nn.Module):
    def __init__(self, net, config):

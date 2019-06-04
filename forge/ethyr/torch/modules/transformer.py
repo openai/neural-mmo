@@ -111,11 +111,11 @@ class Transformer(nn.Module):
 class Transformer(nn.Module):
    def __init__(self, h, nHeads, nLayers=1, flat=True):
       super().__init__()
-      self.attn = MultiHeadAttention(h, nHeads)
+      #self.attn = MultiHeadAttention(h, nHeads)
       #self.fc = nn.Linear(h, h)
 
    def forward(self, x):
-      x = self.attn(x)
+      #x = self.attn(x)
       #x = self.fc(x)
       x = x.mean(-2)
       return x

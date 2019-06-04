@@ -7,27 +7,18 @@ from forge.blade.io.stimulus import Static
 from forge.blade.io import utils
 
 class Data:
-   def __init__(self, flat=False):
-      self.flat = flat
+   def __init__(self):
       self.keys = []
       self.key = None
    
-      if flat:
-         self.data = defaultdict(list)
-      else:
-         self.data = defaultdict(lambda: defaultdict(list))
+      self.data = defaultdict(list)
 
    def add(self, static, obj, *args, key):
       for name, attr in static:
          val = getattr(obj, attr.name).get(*args)
-         if self.flat:
-            if key != self.key:
-               self.data[name].append([])
-            self.data[name][-1].append(val)
-         else:
-            if key != self.key:
-               self.data[obj][name].append([])
-            self.data[obj][name] = val
+         if key != self.key:
+            self.data[name].append([])
+         self.data[name][-1].append(val)
       self.key = key
       self.keys.append(obj)
 
@@ -36,72 +27,86 @@ class Data:
       return self.keys, self.data
 
 class Dynamic:
-   def __call__(self, stim, flat=False):
-      env, ent = stim
-      static, self.flat = dict(Static), flat
-
+   def __call__(self, stim):
       keys      = 'Entity Tile'.split()
       functions = [self.entity, self.tile]
-      
-      data = {}
+      return self.makeSets(stim, keys, functions)
+
+   def makeSets(self, stim, keys, functions):
+      env, ent = stim
+      data, static = {}, dict(Static)
       for key, f in zip(keys, functions):
          data[key]  = f(env, ent, static[key])
       return data
 
+   def serialize(stim, iden):
+      rets = {}
+      for group, data in stim.items():
+         names, data = data
+         names = [(iden + e.serial) for e in names]
+         rets[group] = (names, data)
+      return rets
+
    def batch(stims):
-      retKeys = defaultdict(list)
-      retVals = defaultdict(lambda: defaultdict(list))
+      batch = {}
 
-      #Key of main ent, stim
+      #Process into set of sets
       for stim in stims:
+         #Outer set
          for stat, stimSet in stim.items():
-            #Key by sub ents
+            if stat not in batch:
+               batch[stat] = [[], defaultdict(list)]
+
+            #Inner set
             keys, vals = stimSet
-            retKeys[stat].append(keys)
-
+            batch[stat][0].append(keys)
             for attr, val in vals.items():
-               #Remove an extra dim
                val = np.array(val).reshape(-1)
-               retVals[stat][attr].append(val)
+               batch[stat][1][attr].append(val)
 
-      #Separate this shit into serial
-      #for group, stat in retKeys.items():
-      #   retKeys[group] = utils.pack(stat)
-
-      for group, stat in retVals.items():
+      #Pack values
+      for group, stat in batch.items():
+         keys, stat = stat
          for attr, vals in stat.items():
-            vals, keys = utils.pack(vals)
-            retVals[group][attr] = vals
+            vals, _ = utils.pack(vals)
+            batch[group][1][attr] = vals
 
-      return retKeys, retVals
+      return batch
 
-   def unbatch(retKeys, retVals):
-      n = len(retKeys['Entity'])
-      stims = [defaultdict(list) for _ in range(n)]
+   def unbatch(batch):
+      stims = []
+      for group, stat in batch.items():
+         keys, values = stat
 
-      for group, stat in retKeys.items():
-         for idx, keys in enumerate(stat):
-            stims[idx][group] = [keys, defaultdict(list)]
+         #Assign keys
+         for idx, key in enumerate(keys):
+            if idx == len(stims):
+               stims.append(defaultdict(list))
+            stims[idx][group] = [key, defaultdict(list)]
 
-      for group, stat in retVals.items():
-         for attr, vals in stat.items():
-            keys = retKeys[group]
+         #Assign values
+         for attr, vals in values.items():
             lens = [len(e) for e in keys]
             vals = utils.unpack(vals, lens)
             for idx, val in enumerate(vals):
                stims[idx][group][1][attr] = val
+
       return stims
             
    def tile(self, env, ent, static):
-      data = Data(self.flat)
+      data = Data()
+      env = env[6:9, 6:9]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             data.add(static, tile, tile, r, c, key=ent)
       return data.ret
 
    def entity(self, env, ent, static):
-      data = Data(self.flat)
+      data = Data()
+      data.add(static, ent, ent, ent, key=ent)
+      '''
       for tile in env.ravel():
          for e in tile.ents.values():
             data.add(static, e, ent, e, key=ent)
+      '''
       return data.ret

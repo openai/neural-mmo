@@ -27,5 +27,9 @@ class Node:
    def type():
       return None
 
+   @staticproperty
+   def leaf():
+      return False
+
    def args(stim, entity, config):
       return []

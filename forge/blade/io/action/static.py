@@ -8,16 +8,40 @@ from forge.blade.io.action.node import Node, NodeType
 #ActionRoot
 class Static(Node):
    nodeType = NodeType.SELECTION
+
    @staticproperty
    def edges():
       #return [Move, Attack, Exchange, Skill]
       return [Move, Attack]
 
+   @staticproperty
+   def n():
+      return len(Static.actions)
+
    def args(stim, entity, config):
       return Static.edges
 
+   #Called upon module import (see bottom of file)
+   #Sets up serialization domain
+   def hook():
+      actions = Static.flat()
+      Static.actions = actions
+
+      for idx, atn in enumerate(actions):
+         atn.serial = idx
+         
+   def flat(root=None):
+      if root is None:
+         root = Static
+
+      rets = [root]
+      if root.nodeType is NodeType.SELECTION:
+         for edge in root.edges:
+            rets += Static.flat(edge)
+
+      return rets
+
 class Move(Node):
-   priority = 1
    nodeType = NodeType.SELECTION
    def call(world, entity, rDelta, cDelta):
       r, c = entity.pos
@@ -47,8 +71,13 @@ class Move(Node):
    def args(stim, entity, config):
       return Move.edges
 
+   @staticproperty
+   def leaf():
+      return True
+
 #Todo: kill args on these.
 class North(Node):
+   priority = 0
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, -1, 0)
@@ -57,6 +86,7 @@ class North(Node):
       return []
 
 class South(Node):
+   priority = 0
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 1, 0)
@@ -65,6 +95,7 @@ class South(Node):
       return []
 
 class East(Node):
+   priority = 0
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, 1)
@@ -73,6 +104,7 @@ class East(Node):
       return []
 
 class West(Node):
+   priority = 0
    nodeType = NodeType.ACTION
    def call(world, entity):
       Move.call(world, entity, 0, -1)
@@ -90,6 +122,10 @@ class Attack(Node):
    @staticproperty
    def edges():
       return [Melee, Range, Mage]
+
+   @staticproperty
+   def leaf():
+      return True
 
    def inRange(entity, stim, N):
       R, C = stim.shape
@@ -130,13 +166,13 @@ class AttackStyle(Node):
    pass
 
 class Melee(Node):
+   priority = 1
    nodeType = NodeType.ACTION
    index = 0
    @staticproperty
    def edges():
       return None
 
-   priority = 2
    def call(world, entity, targ):
       damageF = world.config.MELEEDAMAGE
       Attack.call(world, entity, targ, damageF)
@@ -145,13 +181,13 @@ class Melee(Node):
       return Attack.inRange(entity, stim, config.MELEERANGE)
 
 class Range(Node):
+   priority = 1
    nodeType = NodeType.ACTION
    index = 1
    @staticproperty
    def edges():
       return None
 
-   priority = 2
    def call(world, entity, targ):
       damageF = world.config.RANGEDAMAGE
       Attack.call(world, entity, targ, damageF)
@@ -160,13 +196,13 @@ class Range(Node):
       return Attack.inRange(entity, stim, config.RANGERANGE)
 
 class Mage(Node):
+   priority = 1
    nodeType = NodeType.ACTION
    index = 2
    @staticproperty
    def edges():
       return None
 
-   priority = 2
    def call(world, entity, targ):
       damageF = world.config.MAGEDAMAGE
       dmg = Attack.call(world, entity, targ, damageF, freeze=True)
@@ -236,3 +272,5 @@ class CancelOffer(Node):
 
 class Message:
    pass
+
+Static.hook()

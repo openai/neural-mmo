@@ -12,6 +12,7 @@ from copy import deepcopy
 
 from forge.blade.lib.enums import Palette
 from forge.trinity.timed import runtime, Timed
+from forge.blade.io.action import Static
 
 class Spawner:
    def __init__(self, config, args):
@@ -38,7 +39,8 @@ class Spawner:
       self.pops[pop] += 1
       self.ents += 1
 
-      ent = entity.Player(self.config, iden, pop, name)
+      color = self.palette.colors[pop]
+      ent   = entity.Player(self.config, iden, pop, name, color)
       assert ent not in realm.desciples
 
       r, c = ent.pos
@@ -77,8 +79,9 @@ class Realm(Timed):
       self.values = None
 
    def clientData(self):
-      if self.values is None and hasattr(self, 'sword'):
-         self.values = self.sword.anns[0].visVals()
+      if self.values is None:# and hasattr(self, 'sword'):
+         #self.values = self.sword.anns[0].visVals()
+         self.values = []
 
       ret = {
             'environment': self.world.env,
@@ -106,6 +109,23 @@ class Realm(Timed):
    def getStim(self, ent):
       return self.world.env.stim(ent.pos, self.config.STIM)
 
+   #Only saves the first action of each priority
+   def prioritize(self, decisions):
+      actions = defaultdict(dict)
+      for tup in decisions:
+         entID, atns = tup
+         for atnArgs in reversed(atns):
+            priority = atnArgs.action.priority
+            actions[priority][entID] = atnArgs
+      return actions
+
+   #Take actions
+   def act(self, actions):
+      for priority, tups in actions.items():
+         for entID, atnArgs in tups.items():
+            ent = self.desciples[entID]
+            ent.act(self.world, atnArgs)
+
    def stepEnts(self, decisions):
       #Step all ents first
       for tup in decisions:
@@ -113,18 +133,8 @@ class Realm(Timed):
          ent = self.desciples[entID]
          ent.step(self.world, actions)
 
-      #Now do actions by priority
-      actions = defaultdict(list)
-      for tup in decisions:
-         entID, atns = tup
-         for atnArgs in atns:
-            priority = atnArgs.action.priority
-            actions[priority].append((entID, atnArgs))
-
-      for priority, tup in actions.items():
-         for entID, atnArgs in tup:
-            ent = self.desciples[entID]
-            ent.act(self.world, atnArgs)
+      actions = self.prioritize(decisions)
+      self.act(actions)
 
       #Finally cull dead. This will enable MAD melee
       rewards, dead = [], []

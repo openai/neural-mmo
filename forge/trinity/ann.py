@@ -21,19 +21,19 @@ from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.netgen.action import NetTree
 
 class ANN(nn.Module):
-   def __init__(self, config, mapActions=True):
+   def __init__(self, config):
       super().__init__()
       self.config = config
       self.net = nn.ModuleList([Net(config)
             for _ in range(config.NPOP)])
-      self.env    = Env(config, mapActions)
+      self.env    = Env(config)
       self.action = NetTree(config)
 
    #TODO: Need to select net index
    def forward(self, stim, obs=None, actions=None):
       #Add in action processing to input? Or maybe output embed?
       stim, embed = self.env(self.net[0].net, stim)
-      val                  = self.net[0].val(stim)
+      val         = self.net[0].val(stim)
 
       atns, outs = self.action(stim, embed, obs, actions)
       return atns, outs, val

@@ -1,4 +1,18 @@
-#Impose action priority system on action lists
+# forge/blade/io/ - action, stimulus x static, dynamic
+# forge/ethyr/torch/netgen - stim, action
+# forge/ethyr/torch/modules/transformer 
+# forge/ethyr/torch/ - loss, optim 
+# forge/trinity - god, sword, ann
+
+# Potential bugs:
+# Bad architecture
+# Bad indexing in action selection
+# Bad rollout assembly
+# 1 population
+# 
+
+#streamline static actions
+#streamline dynamic action next
 
 from pdb import set_trace as T
 from forge.blade.core.config import Config
@@ -11,26 +25,28 @@ class Experiment(Config):
    HIDDEN  = 128
    NHEAD   = 8
    NGOD = 1
+   NATN = 1
    #NSWORD = 2
 
+   '''
    NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
    SYNCUPDATES = 1024#100 #Number of data to sync
    DEVICE = 'cuda:0'
+   '''
 
    #CPU Debug mode
-   DEVICE = 'cpu:0'
+   #DEVICE = 'cpu:0'
  
    #CPU Dev mode
-   '''
    NROLLOUTS = NGOD * 10
    SYNCUPDATES = 100
    DEVICE = 'cpu:0'
-   '''
  
-   BATCH = 32
-   TEST = True
-   LOAD = True
-   BEST = True
+   BATCH = 64
+   TEST = False
+   LOAD = False
+   BEST = False
+
    SAMPLE = False
    NATTN = 2
    NPOP = 1

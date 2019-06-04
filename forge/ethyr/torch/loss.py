@@ -10,7 +10,8 @@ from torch.nn import functional as F
 def advantage(returns, val):
    A = returns - val
    adv = A
-   #adv = (A - A.mean()) / (1e-4 + A.std())
+   #Potentially problematic line
+   adv = (A - A.mean()) / (1e-4 + A.std())
    adv = adv.detach()
    return adv
 

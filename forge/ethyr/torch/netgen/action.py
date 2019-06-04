@@ -18,6 +18,45 @@ class NetTree(nn.Module):
       self.net = VariableDiscreteAction(
                self.config, self.h, self.h)
 
+   def embed(self, embed, nameMap, args):
+      return torch.stack([embed[nameMap[e]] for e in args])
+
+   def leaves(self, stim, embed, env, ent):
+      #roots = action.Dynamic.leaves()
+      roots = [action.static.Move]
+      return self.select(stim, embed, roots, env, ent)
+
+   def root(self, stim, embed, env, ent):
+      roots = [action.Static for _ in 
+            range(self.config.NATN)]
+      return self.select(stim, embed, roots, env, ent)
+
+   def select(self, stim, embed, roots, env, ent):
+      atns, outs = [], {}
+      for atn in roots:
+         atn, out = self.tree(
+               stim, embed, env, ent, atn)
+         atns.append(atn)
+         outs = {**outs, **out}
+
+      return atns, outs
+
+   def tree(self, stim, embed, env, ent, atn=action.Static):
+      actionTree = action.Dynamic(env, ent, self.config)
+      args, done = actionTree.next(env, ent, atn)
+      nameMap, embed = embed
+
+      while not done:
+         targs = self.embed(embed, nameMap, args)
+         out, idx =  self.net(stim, targs)
+
+         atn = args[int(idx)]
+         args, done = actionTree.next(env, ent, atn, (args, idx))
+
+      outs = actionTree.outs
+      atn  = actionTree.atnArgs
+      return atn, outs
+
    def buffered(self, stim, embed, actions):
       atnTensor, idxTensor, lenTensor = actions 
       lenTensor, atnLens = lenTensor
@@ -30,49 +69,24 @@ class NetTree(nn.Module):
       outs, _ = self.net(stim, targs)
       return outs
 
-   def standard(self, stim, embed, env, ent):
-      actionTree = action.Dynamic(env, ent, action.Static, self.config)
-      atn = actionTree.root
-
-      args, done = actionTree.next(env, ent, atn)
-      atnArgs = action.ActionArgs(atn, None)
-
-      nameMap, embed = embed
-
-      while not done:
-         targs = [nameMap[e] for e in args]
-         targs = [embed[targ] for targ in targs]
-         targs = torch.stack(targs)
-      
-         out, idx =  self.net(stim, targs)
-         atn = args[int(idx)]
-
-         args, done = actionTree.next(env, ent, atn, (args, idx))
-
-      outs = actionTree.outs
-      atn  = actionTree.atnArgs
-
-      return atn, outs
-
    def forward(self, stims, embed, obs=None, actions=None):
-      n = 2
       assert obs is None or actions is None
-      outList, atnList = [], []
+      atnList, outList = [], []
+
       #Provide final action buffers; do not need access to env
       if obs is None:
          outList = self.buffered(stims, embed, actions)
+
       #No buffers; need access to environment
       elif actions is None:
+         atnList, outList = [], []
          for idx, ob in enumerate(obs):
             env, ent = ob
             stim = stims[idx]
-            atns, outs = [], {}
-            for _ in range(n):
-               atn, out = self.standard(stim, embed, env, ent)
-               atns.append(atn)
-               outs = {**outs, **out}
-            outList.append(outs)
+            atns, outs = self.leaves(stim, embed, env, ent)
             atnList.append(atns)
+            outList.append(outs)
+
       return atnList, outList
 
 class Action(nn.Module):
@@ -114,11 +128,9 @@ class VariableDiscrete(nn.Module):
    def __init__(self, xdim, h):
       super().__init__()
       self.attn  = AttnCat(h)
-      #self.embed = nn.Linear(xdim, h) 
 
    #Arguments: stim, action/argument embedding
    def forward(self, key, vals):
-      #vals = self.embed(vals)
       x = self.attn(key, vals)
       xIdx = classify(x)
       return x, xIdx
@@ -130,13 +142,10 @@ class AttnCat(nn.Module):
       self.h = h
 
    def forward(self, key, vals):
-      #key = key.expand(len(vals), self.h)
       key = key.expand_as(vals)
-      #x = torch.cat((key, vals), dim=1)
       x = torch.cat((key, vals), dim=-1)
       x = self.fc(x).squeeze(-1)
       return x
-      #return x.view(1, -1)
 
 class AttnPool(nn.Module):
    def __init__(self, xdim, h):

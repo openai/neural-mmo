@@ -86,6 +86,9 @@ class Sword(Timed):
       self.env = self.disciples[0]
       self.env.spawn = self.spawn
 
+   def getEnv(self):
+      return self.env
+
    @runtime
    def step(self, atns):
       rets = self.sync(atns)

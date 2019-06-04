@@ -19,6 +19,13 @@ def parseArgs():
          help='Render env')
    return parser.parse_args()
 
+def render(trin, config, args):
+   from forge.embyr.twistedserver import Application
+   sword = trin.sword.remote(trin, config, args, idx=0)
+   env = sword.getEnv.remote()
+   Application(env, sword.thunk.remote)
+  
+
 if __name__ == '__main__':
    args = parseArgs()
    assert args.api in ('native', 'vecenv')
@@ -26,16 +33,15 @@ if __name__ == '__main__':
 
    lib.ray.init(args.ray)
    trin = Trinity(Pantheon, God, Sword)
+
+   #Rendering by necessity snags control flow
+   #This will automatically set local mode with 1 core
+   if args.render:
+      render(trin, config, args)
+
    trin.init(config, args)
 
    while True:
       time = trin.step()
       logs = trin.logs()
       logs = TimeLog.log(logs)
-
-   #Rendering by necessity snags control flow
-   #This will automatically set local mode with 1 core
-   if args.render:
-      example.env.render()
-   
-   example.run()

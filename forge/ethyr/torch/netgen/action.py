@@ -15,8 +15,10 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      self.net = VariableDiscreteAction(
-               self.config, self.h, self.h)
+      self.net = ConstDiscreteAction(
+            self.config, self.h, 4)
+      #self.net = VariableDiscreteAction(
+      #         self.config, self.h, self.h)
 
    def embed(self, embed, nameMap, args):
       return torch.stack([embed[nameMap[e]] for e in args])
@@ -58,13 +60,13 @@ class NetTree(nn.Module):
       return atn, outs
 
    def buffered(self, stim, embed, actions):
-      atnTensor, idxTensor, lenTensor = actions 
+      atnTensor, idxTensor, keyTensor, lenTensor = actions 
       lenTensor, atnLens = lenTensor
       nameMap, embed = embed
 
       atnTensor = torch.LongTensor(atnTensor).to(self.config.DEVICE)
-      
       targs = embed[atnTensor]
+      
       stim = stim.unsqueeze(1).unsqueeze(1)
       outs, _ = self.net(stim, targs)
       return outs
@@ -119,8 +121,10 @@ class ConstDiscrete(nn.Module):
       super().__init__()
       self.fc1 = torch.nn.Linear(h, ydim)
 
-   def forward(self, x):
+   def forward(self, x, _):
       x = self.fc1(x)
+      if len(x.shape) > 1:
+         x = x.squeeze(-2)
       xIdx = classify(x)
       return x, xIdx
 

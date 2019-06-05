@@ -45,8 +45,7 @@ def getGrads(ann, warn=True):
       else:
          #nan = torch.sum(e.grad != e.grad) > 0:
          dat = e.grad.data.cpu().view(-1).numpy().tolist()
-         if sum(np.isnan(dat))> 0 : 
-            T()
+         assert sum(np.isnan(dat)) == 0
          ret += dat
    return ret
 

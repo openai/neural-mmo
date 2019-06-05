@@ -10,6 +10,14 @@
 # Bad rollout assembly
 # 1 population
 # 
+#Value of always North policy is 20-25
+#Build a mini pipeline that trains, keep expanding until something breaks it
+
+#You removed advantage estimateion
+#Check key in action/dynamic serialize
+#ConstDiscrete gives 25 lifetime in 25 steps
+#VariableDiscrete gives 15 tops. Figure out why
+#Stillusing only three tiles / 1 entity
 
 #streamline static actions
 #streamline dynamic action next
@@ -28,23 +36,23 @@ class Experiment(Config):
    NATN = 1
    #NSWORD = 2
 
-   '''
    NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
    SYNCUPDATES = 1024#100 #Number of data to sync
    DEVICE = 'cuda:0'
-   '''
 
    #CPU Debug mode
    #DEVICE = 'cpu:0'
  
+   '''
    #CPU Dev mode
    NROLLOUTS = NGOD * 10
    SYNCUPDATES = 100
    DEVICE = 'cpu:0'
+   '''
  
-   BATCH = 64
-   TEST = False
-   LOAD = False
+   BATCH = 16
+   TEST = True
+   LOAD = True
    BEST = False
 
    SAMPLE = False

@@ -83,16 +83,16 @@ class Block(nn.Module):
    def forward(self, x):
       #x = self.attn(x, x, x) + x
       x = self.attn(x) + x
-      if self.normalize:
-         x = self.norm(x)
+      #if self.normalize:
+      #   x = self.norm(x)
 
       x = self.fc(x) + x
-      if self.normalize:
-         x = self.norm(x)
+      #if self.normalize:
+      #   x = self.norm(x)
 
       return x
 
-class Transformer(nn.Module):
+class Transform(nn.Module):
    def __init__(self, h, nHeads, nLayers=1, flat=True):
       super().__init__()
       modules = [Block(h, nHeads) for i in range(nLayers)]
@@ -104,18 +104,19 @@ class Transformer(nn.Module):
          x = attn(x)
 
       if self.flat:
-         x = x.mean(1)
+         x = x.mean(-2)
 
       return x
 
 class Transformer(nn.Module):
    def __init__(self, h, nHeads, nLayers=1, flat=True):
       super().__init__()
+      self.attn = Transform(h, nHeads)
       #self.attn = MultiHeadAttention(h, nHeads)
       #self.fc = nn.Linear(h, h)
 
    def forward(self, x):
-      #x = self.attn(x)
+      x = self.attn(x)
       #x = self.fc(x)
-      x = x.mean(-2)
+      #x = x.mean(-2)
       return x

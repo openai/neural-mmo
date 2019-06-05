@@ -37,6 +37,7 @@ class Sword(Base.Sword):
       self.ent = 0
 
       self.updates = Serial(self.config)
+      self.first = True
 
    def spawn(self):
       ent = self.ent
@@ -52,7 +53,8 @@ class Sword(Base.Sword):
       while len(self.updates) < self.config.SYNCUPDATES:
          self._step()
 
-      return self.updates.finish()
+      updates = self.updates.finish()
+      return updates
 
    def _step(self):
       atns     = self.decide(self.obs)
@@ -68,8 +70,16 @@ class Sword(Base.Sword):
       if len(obs) == 0:
          return atns
 
-      obbys = [self.config.dynamic(ob) for ob in obs]
+      stims = [self.config.dynamic(ob) for ob in obs]
+      obbys = deepcopy(stims)
       stims = stimulus.Dynamic.batch(obbys)
+      if self.first:
+         self.first = False
+         iden = (self.env.worldIdx, self.env.tick)
+         serial = stims['Entity'][0][0][0].serial
+         #print('Key: ', iden + serial)
+         #print(stims)
+         #print()
 
       #Make decisions
       actions, outList, vals = self.net(stims, obs=obs)

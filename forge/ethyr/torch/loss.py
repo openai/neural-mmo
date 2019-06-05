@@ -5,12 +5,11 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-#One issue with doing .backward here is you don't
-#get to mean and std norm
+#Errors here usually mean too small
+#of a batch for good advantage estimation
 def advantage(returns, val):
    A = returns - val
    adv = A
-   #Potentially problematic line
    adv = (A - A.mean()) / (1e-4 + A.std())
    adv = adv.detach()
    return adv
@@ -23,34 +22,13 @@ def valueLoss(v, returns):
    return (0.5 * (v - returns) **2).mean()
 
 def entropyLoss(prob, logProb):
-   #logProb = logProb * (logProb != -float('inf')).float()
    loss = (prob * logProb)
    loss[torch.isnan(loss)] = 0
-   #loss = loss[:, 0:1]
-   #mask = ~torch.isnan(loss)
-   #loss = torch.where(mask, loss, torch.zeros_like(loss))
-   #loss = loss[mask]
    return loss.sum(1).mean()
-   loss = loss.sum(1)
-   loss = loss[loss!=0]
-   loss = loss.mean()
-   return loss
-
-def pad(seq):
-   seq = [e.view(-1) for e in seq]
-   lens = [(len(e), idx) for idx, e in enumerate(seq)]
-   lens, idx = zip(*sorted(lens, reverse=True))
-   seq = np.array(seq)[np.array(idx)]
-
-   seq = torch.nn.utils.rnn.pad_sequence(seq, batch_first=True)
-   #seq = seq.squeeze(dim=1)
-   idx = torch.tensor(idx).view(-1, 1).expand_as(seq)
-   seq = seq.gather(0, idx)
-
-   return seq
 
 #Assumes pi is already -inf padded
 def PG(pi, atn, val, returns):
+   #Atns are wrong
    prob = [F.softmax(e, dim=-1) for e in pi]
    logProb = [F.log_softmax(e, dim=-1) for e in pi]
 

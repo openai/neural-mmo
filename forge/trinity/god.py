@@ -70,23 +70,27 @@ class God(Base.God):
       rollouts, rawActions = defaultdict(Rollout), actions
 
       #Reconstruct activations/outputs
+      #kk = [e['Entity'][0] for e in stims]
+      #print(kk)
+
       stims   = stimulus.Dynamic.batch(stims)
       actions = action.Dynamic.batch(actions)
       _, outs, vals = self.net(stims, actions=actions)
 
       #Unpack outputs
-      atnTensor, idxTensor, lenTensor = actions
-      _, lenTensor = lenTensor
+      atnTensor, idxTensor, atnKeyTensor, lenTensor = actions
+      lens, lenTensor = lenTensor
       outs = utils.unpack(outs, lenTensor, dim=1)
 
       #Collect rollouts
       rets = zip(keys, outs, rawActions, vals, rewards)
       for key, out, atn, val, reward in rets:
-         lens, atn = list(zip(*[(len(e), idx) for e, idx in atn]))
+         atnKey, lens, atn = list(zip(*[(k, len(e), idx) for k, e, idx in atn]))
          atn = np.array(atn)
          out = utils.unpack(out, lens)
+
          rollout = rollouts[key]
-         rollout.step(key, out, atn, val, reward)
+         rollout.step(key, atnKey, out, atn, val, reward)
 
       for key, rollout in rollouts.items():
          rollout.finish()

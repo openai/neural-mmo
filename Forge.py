@@ -23,7 +23,7 @@ def render(trin, config, args):
    from forge.embyr.twistedserver import Application
    sword = trin.sword.remote(trin, config, args, idx=0)
    env = sword.getEnv.remote()
-   Application(env, sword.thunk.remote)
+   Application(env, sword._step.remote)
   
 
 if __name__ == '__main__':

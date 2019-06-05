@@ -21,6 +21,7 @@ def mergeRollouts(rollouts):
          'action': defaultdict(lambda: defaultdict(list))}
    for rollout in rollouts:
       for idx in range(rollout.time):
+         key = rollout.keys[idx]
          out = rollout.outs[idx]
          atn = rollout.atns[idx]
          val = rollout.vals[idx]
@@ -29,8 +30,8 @@ def mergeRollouts(rollouts):
          outs['value'].append(val)
          outs['return'].append(ret)
 
-         for o, a in zip(out, atn):
-            outk = outs['action'][a]
+         for k, o, a in zip(key, out, atn):
+            outk = outs['action'][k]
             outk['atns'].append(o) 
             outk['idxs'].append(a)
             outk['vals'].append(val)
@@ -39,6 +40,7 @@ def mergeRollouts(rollouts):
 
 class Rollout:
    def __init__(self, returnf=discountRewards):
+      self.keys = []
       self.outs = []
       self.atns = []
       self.vals = []
@@ -48,7 +50,8 @@ class Rollout:
       self.feather = Feather()
       self.time = 0
 
-   def step(self, iden, out, atn, val, reward):
+   def step(self, iden, key, out, atn, val, reward):
+      self.keys.append(key)
       self.outs.append(out)
       self.atns.append(atn)
       self.vals.append(val)

@@ -20,6 +20,7 @@ class Dynamic:
       self.out = {}
       self.nxt = None
       self.ret = ActionArgs()
+      self.prev = None
 
    @property
    def atnArgs(self):
@@ -31,9 +32,13 @@ class Dynamic:
     
    def next(self, env, ent, atn, outs=None):
       done = False
-      if outs is not None:
-         self.out[atn] = outs
 
+      #Record action
+      if outs is not None:
+         self.out[self.prev] = outs
+      self.prev = atn
+
+      #Return argument
       if self.nxt is not None:
          args = []
          if len(self.nxt) == 0:
@@ -80,54 +85,62 @@ class Dynamic:
 
    def serialize(outs, iden):
       ret = []
-      for _, out in outs.items():
+      #Check key
+      for key, out in outs.items():
          arguments, idx = out
          args, idx = [], int(out[1])
          for e in arguments:
             #May need e.serial[-1]
             #to form a unique key
             args.append(e.serial)
-         ret.append([args, idx])
+         ret.append([key.serial, args, idx])
       return ret
 
    #Dimension packing: batch, atnList, atn (may be an action itself)
    def batch(actionLists):
-      atnTensor, idxTensor, lenTensor = [], [], []
+      atnTensor, idxTensor = [], []
+      keyTensor, lenTensor = [], []
 
       #Pack inner set
       for actionList in actionLists:
-         atns, idxs = [], []
-         for atn, idx in actionList:
+         keys, atns, idxs = [], [], []
+         for key, atn, idx in actionList:
             atns.append(np.array(atn))
             idxs.append(idx)
+            keys.append(key)
          
          idxs = np.array(idxs)
+         keys = np.array(keys)
          atns, lens = utils.pack(atns)
 
          atnTensor.append(atns)
          idxTensor.append(idxs)
+         keyTensor.append(keys)
          lenTensor.append(lens)
 
       #Pack outer set
       idxTensor, _ = utils.pack(idxTensor)
       atnTensor, _ = utils.pack(atnTensor)
+      keyTensor, _ = utils.pack(keyTensor)
       lenTensor    = utils.pack(lenTensor)
 
-      return atnTensor, idxTensor, lenTensor
+      return atnTensor, idxTensor, keyTensor, lenTensor
 
-   def unbatch(atnTensor, idxTensor, lenTensor):
+   def unbatch(atnTensor, idxTensor, keyTensor, lenTensor):
       lenTensor, lenLens = lenTensor
       actions = []
 
       #Unpack outer set (careful with unpack dim)
       atnTensor = utils.unpack(atnTensor, lenLens, dim=1)
       idxTensor = utils.unpack(idxTensor, lenLens, dim=1)
+      keyTensor = utils.unpack(keyTensor, lenLens, dim=1)
       lenTensor = utils.unpack(lenTensor, lenLens, dim=1)
 
       #Unpack inner set
-      for atns, idxs, lens in zip(atnTensor, idxTensor, lenTensor):
+      for atns, idxs, keys, lens in zip(
+               atnTensor, idxTensor, keyTensor, lenTensor):
          atns = utils.unpack(atns, lens)
-         actions.append(list(zip(atns, idxs)))
+         actions.append(list(zip(keys, atns, idxs)))
 
       return actions
  

@@ -104,9 +104,9 @@ class Dynamic:
    def entity(self, env, ent, static):
       data = Data()
       data.add(static, ent, ent, ent, key=ent)
-      '''
+      '''      
       for tile in env.ravel():
          for e in tile.ents.values():
             data.add(static, e, ent, e, key=ent)
-      '''
+      '''      
       return data.ret

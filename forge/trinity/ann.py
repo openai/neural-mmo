@@ -39,8 +39,8 @@ class ANN(nn.Module):
       return atns, outs, val
 
    def recvUpdate(self, update):
-      setParameters(self.net, update)
-      zeroGrads(self.net)
+      setParameters(self, update)
+      zeroGrads(self)
 
    def grads(self):
       return param.getGrads(self)

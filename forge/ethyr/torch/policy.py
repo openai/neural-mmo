@@ -26,7 +26,7 @@ class Val(nn.Module):
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.net = Transformer(config.HIDDEN, config.NHEAD) 
+      self.net = Transformer(config.HIDDEN, config.NHEAD, nLayers=1) 
       self.val = Val(config) 
 
    def forward(self, stim):

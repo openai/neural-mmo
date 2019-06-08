@@ -70,8 +70,10 @@ class Sword(Base.Sword):
       if len(obs) == 0:
          return atns
 
-      stims = [self.config.dynamic(ob) for ob in obs]
-      obbys = deepcopy(stims)
+      #stims = 
+      obbys = [self.config.dynamic(ob) for ob in obs]
+      #Is this one needed?
+      #obbys = deepcopy(stims)
       stims = stimulus.Dynamic.batch(obbys)
       if self.first:
          self.first = False
@@ -82,17 +84,16 @@ class Sword(Base.Sword):
          #print()
 
       #Make decisions
-      actions, outList, vals = self.net(stims, obs=obs)
+      atnArgs, outputs, values = self.net(stims, obs=obs)
 
       #Update experience buffer
-      for obs, obby, action, outs, val in zip(
-            obs, obbys, actions, outList, vals):
-
+      for obs, obby, atnArg, out, val in zip(
+            obs, obbys, atnArgs, outputs, values):
          env, ent = obs
          entID, annID = ent.entID, ent.annID
-         atns.append((entID, action))
+         atns.append((entID, atnArg))
 
          iden = (self.env.worldIdx, self.env.tick)
-         self.updates.serialize(env, ent, obby, outs, iden)
+         self.updates.serialize(env, ent, obby, out, iden)
 
       return atns

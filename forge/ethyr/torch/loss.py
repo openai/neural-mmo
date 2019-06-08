@@ -5,12 +5,14 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-#Errors here usually mean too small
+#NaN grad errors here usually mean too small
 #of a batch for good advantage estimation
+#(or dummy fixed action selection)
 def advantage(returns, val):
    A = returns - val
    adv = A
-   adv = (A - A.mean()) / (1e-4 + A.std())
+   adv = (A - A.mean())
+   #adv = (A - A.mean()) / (1e-4 + A.std())
    adv = adv.detach()
    return adv
 

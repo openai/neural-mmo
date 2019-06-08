@@ -6,6 +6,7 @@ from collections import defaultdict
 import torch
 from torch import nn
 
+from forge.ethyr.torch.modules.transformer import Transformer
 from forge.ethyr.torch.utils import classify
 from forge.blade.io import action
 
@@ -15,10 +16,8 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      self.net = ConstDiscreteAction(
-            self.config, self.h, 4)
-      #self.net = VariableDiscreteAction(
-      #         self.config, self.h, self.h)
+      self.net = VariableDiscreteAction(
+               self.config, self.h, self.h)
 
    def embed(self, embed, nameMap, args):
       return torch.stack([embed[nameMap[e]] for e in args])
@@ -34,14 +33,14 @@ class NetTree(nn.Module):
       return self.select(stim, embed, roots, env, ent)
 
    def select(self, stim, embed, roots, env, ent):
-      atns, outs = [], {}
+      atnArgs, outs = [], {}
       for atn in roots:
          atn, out = self.tree(
                stim, embed, env, ent, atn)
-         atns.append(atn)
+         atnArgs.append(atn)
          outs = {**outs, **out}
 
-      return atns, outs
+      return atnArgs, outs
 
    def tree(self, stim, embed, env, ent, atn=action.Static):
       actionTree = action.Dynamic(env, ent, self.config)
@@ -59,7 +58,23 @@ class NetTree(nn.Module):
       atn  = actionTree.atnArgs
       return atn, outs
 
-   def buffered(self, stim, embed, actions):
+   def blockEmbed(self, embed, nameMap, args):
+      shape = (*(args.shape[:3]), self.h)
+      ret   = torch.zeros(shape).to(self.config.DEVICE)
+      for x, xx in enumerate(args):
+         for y, yy in enumerate(xx):
+            for z, zz in enumerate(yy):
+               #You have a key error here
+               key = tuple(zz)
+               if key == (0, 0, 0, 0, 0):
+                  continue
+               key = nameMap[key]
+               key = embed[key]
+               ret[x, y, z] = key
+      return ret
+
+
+   def _actions(self, stim, embed, actions):
       atnTensor, idxTensor, keyTensor, lenTensor = actions 
       lenTensor, atnLens = lenTensor
       nameMap, embed = embed
@@ -71,9 +86,25 @@ class NetTree(nn.Module):
       outs, _ = self.net(stim, targs)
       return outs
 
+   def _arguments(self, stim, embed, actions):
+      atnTensor, idxTensor, keyTensor, lenTensor = actions 
+      lenTensor, atnLens = lenTensor
+      nameMap, embed = embed
+
+      targs = self.blockEmbed(embed, nameMap, atnTensor)
+      
+      stim = stim.unsqueeze(1).unsqueeze(1)
+      outs, _ = self.net(stim, targs)
+      return outs
+
+
+   def buffered(self, stim, embed, atnArgs):
+      actions   = self._arguments(stim, embed, atnArgs)
+      return actions
+
    def forward(self, stims, embed, obs=None, actions=None):
       assert obs is None or actions is None
-      atnList, outList = [], []
+      atnArgList, outList = [], []
 
       #Provide final action buffers; do not need access to env
       if obs is None:
@@ -81,15 +112,14 @@ class NetTree(nn.Module):
 
       #No buffers; need access to environment
       elif actions is None:
-         atnList, outList = [], []
          for idx, ob in enumerate(obs):
             env, ent = ob
             stim = stims[idx]
-            atns, outs = self.leaves(stim, embed, env, ent)
-            atnList.append(atns)
+            atnArgs, outs = self.leaves(stim, embed, env, ent)
+            atnArgList.append(atnArgs)
             outList.append(outs)
 
-      return atnList, outList
+      return atnArgList, outList
 
 class Action(nn.Module):
    def __init__(self, net, config):
@@ -142,14 +172,19 @@ class VariableDiscrete(nn.Module):
 class AttnCat(nn.Module):
    def __init__(self, h):
       super().__init__()
-      self.fc = torch.nn.Linear(2*h, 1)
+      self.attn = Transformer(h, 8, flat=False)
       self.h = h
 
    def forward(self, key, vals):
-      key = key.expand_as(vals)
-      x = torch.cat((key, vals), dim=-1)
-      x = self.fc(x).squeeze(-1)
-      return x
+      K, V = key, vals
+      if len(K.shape) == 1:
+         K = K.unsqueeze(0).unsqueeze(0).unsqueeze(0)
+         V = V.unsqueeze(0).unsqueeze(0)
+      
+      K = K.expand_as(V)
+      attn = self.attn(V, K).mean(-1)
+      attn = attn.squeeze(0).squeeze(0)
+      return attn
 
 class AttnPool(nn.Module):
    def __init__(self, xdim, h):

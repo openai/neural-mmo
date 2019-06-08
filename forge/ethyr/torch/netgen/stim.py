@@ -9,8 +9,8 @@ from torch.nn import functional as F
 from itertools import chain
 
 from forge.blade.io import stimulus, action
-from forge.ethyr.torch.modules import Transformer
 from forge.blade.io import utils
+from forge.blade.io.serial import Serial
 
 def reverse(f):
     return f.__class__(map(reversed, f.items()))
@@ -35,7 +35,6 @@ class Lookup:
          data.append(dat[name])
 
       data = torch.cat(data)
-
       assert len(idxs) == len(data)
       return idxs, data
  
@@ -89,11 +88,17 @@ class Env(nn.Module):
    #Embed actions
    def actions(self, lookup):
       for atn in action.Static.actions:
-         idx = torch.Tensor([atn.serial])
+         #Brackets on atn.serial?
+         idx = torch.Tensor([atn.idx])
          idx = idx.long().to(self.config.DEVICE)
 
          emb = self.action(idx)
+         #Dirty hack -- remove duplicates
          lookup.add([atn], [emb])
+
+         key = Serial.key(atn, tuple([]))
+         #What to replace serial with here
+         lookup.add([key], [emb])
 
    #Pack attributes of each entity
    def attrs(self, group, net, subnet):

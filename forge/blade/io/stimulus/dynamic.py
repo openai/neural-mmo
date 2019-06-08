@@ -6,6 +6,7 @@ from collections import defaultdict
 from forge.blade.io.stimulus import Static
 from forge.blade.io import utils
 
+
 class Data:
    def __init__(self):
       self.keys = []
@@ -40,10 +41,11 @@ class Dynamic:
       return data
 
    def serialize(stim, iden):
+      from forge.blade.io.serial import Serial
       rets = {}
       for group, data in stim.items():
          names, data = data
-         names = [(iden + e.serial) for e in names]
+         names = [Serial.key(e, iden) for e in names]
          rets[group] = (names, data)
       return rets
 
@@ -103,10 +105,9 @@ class Dynamic:
 
    def entity(self, env, ent, static):
       data = Data()
-      data.add(static, ent, ent, ent, key=ent)
-      '''      
+      #data.add(static, ent, ent, ent, key=ent)
+      #Cant comment this wtih attack on -- breaks embed
       for tile in env.ravel():
          for e in tile.ents.values():
             data.add(static, e, ent, e, key=ent)
-      '''      
       return data.ret

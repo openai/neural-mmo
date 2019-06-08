@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge.blade.io import action, utils
+from forge.blade.io.serial import Serial
 
 def reverse(f):
     return f.__class__(map(reversed, f.items()))
@@ -17,10 +18,11 @@ class Dynamic:
       self.world, self.entity = world, entity
       self.config = config
 
-      self.out = {}
       self.nxt = None
       self.ret = ActionArgs()
       self.prev = None
+
+      self.out = {}
 
    @property
    def atnArgs(self):
@@ -29,7 +31,7 @@ class Dynamic:
    @property
    def outs(self):
       return self.out
-    
+   
    def next(self, env, ent, atn, outs=None):
       done = False
 
@@ -85,18 +87,21 @@ class Dynamic:
 
    def serialize(outs, iden):
       ret = []
-      #Check key
       for key, out in outs.items():
+         key = Serial.key(key, iden)
+
          arguments, idx = out
          args, idx = [], int(out[1])
          for e in arguments:
             #May need e.serial[-1]
             #to form a unique key
-            args.append(e.serial)
-         ret.append([key.serial, args, idx])
+            k = Serial.key(e, iden)
+            args.append(k)
+        
+         ret.append([key, args, idx])
       return ret
 
-   #Dimension packing: batch, atnList, atn (may be an action itself)
+   #Dimension packing: batch, atnList, atn (may be an action itself), serial key
    def batch(actionLists):
       atnTensor, idxTensor = [], []
       keyTensor, lenTensor = [], []
@@ -139,7 +144,7 @@ class Dynamic:
       #Unpack inner set
       for atns, idxs, keys, lens in zip(
                atnTensor, idxTensor, keyTensor, lenTensor):
-         atns = utils.unpack(atns, lens)
+         atns = utils.unpack(atns, lens, dim=-2)
          actions.append(list(zip(keys, atns, idxs)))
 
       return actions

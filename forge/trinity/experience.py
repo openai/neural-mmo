@@ -19,13 +19,15 @@ class ExperienceBuffer:
          keys, stims, actions, rewards = data
          keys, keyLens = keys
 
-         stims = stimulus.Dynamic.unbatch(stims)
+         stims   = stimulus.Dynamic.unbatch(stims)
          actions = action.Dynamic.unbatch(*actions)
 
-         for key, stim, atn, reward in zip(keys, stims, actions, rewards):
+         for key, stim, atn, reward in zip(
+                  keys, stims, actions, rewards):
             key = key.numpy().astype(np.int).tolist()
-            world, tick, annID, entID = key
+            world, tick, annID, entID, serialIdx = key
             key = (world, annID, entID)
+            key = tuple(key)
             packet = (stim, atn, reward)
 
             self.data[key].append(packet)

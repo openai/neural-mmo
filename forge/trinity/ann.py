@@ -30,13 +30,13 @@ class ANN(nn.Module):
       self.action = NetTree(config)
 
    #TODO: Need to select net index
-   def forward(self, stim, obs=None, actions=None):
+   def forward(self, stim, obs=None, atnArgs=None):
       #Add in action processing to input? Or maybe output embed?
       stim, embed = self.env(self.net[0].net, stim)
       val         = self.net[0].val(stim)
 
-      atns, outs = self.action(stim, embed, obs, actions)
-      return atns, outs, val
+      atnArgs, outs = self.action(stim, embed, obs, atnArgs)
+      return atnArgs, outs, val
 
    def recvUpdate(self, update):
       setParameters(self, update)

@@ -22,6 +22,14 @@
 #streamline static actions
 #streamline dynamic action next
 
+#ensure there is an all 0 pad action
+
+#You found out:
+#Variable works without hard coding the keys
+#Training deeper (2 layers) works but takes >200+ epochs to get 20+ consistent
+#Attk does not crash but makes training go to 10
+#Advantage subtract mean works, but divide by std crashes single atn choices
+
 from pdb import set_trace as T
 from forge.blade.core.config import Config
 from forge.blade.lib import utils
@@ -35,6 +43,7 @@ class Experiment(Config):
    NGOD = 1
    NATN = 1
    #NSWORD = 2
+   KEYLEN = 4
 
    NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
    SYNCUPDATES = 1024#100 #Number of data to sync
@@ -51,10 +60,6 @@ class Experiment(Config):
    '''
  
    BATCH = 16
-   TEST = True
-   LOAD = True
-   BEST = False
-
    SAMPLE = False
    NATTN = 2
    NPOP = 1

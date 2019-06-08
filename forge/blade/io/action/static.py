@@ -28,8 +28,9 @@ class Static(Node):
       Static.actions = actions
 
       for idx, atn in enumerate(actions):
-         atn.serial = idx
-         
+         atn.serial = tuple([idx])
+         atn.idx = idx 
+
    def flat(root=None):
       if root is None:
          root = Static

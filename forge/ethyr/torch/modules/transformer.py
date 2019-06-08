@@ -10,7 +10,7 @@ class ScaledDotProductAttention(nn.Module):
       self.scale = np.sqrt(h)
 
    def forward(self, Q, K, V):
-      Kt = K.transpose(1, 2)
+      Kt = K.transpose(-2, -1)
       QK = torch.matmul(Q, Kt)
       QK = torch.softmax(QK / self.scale, 2)
       QKV = torch.matmul(QK, V)
@@ -72,51 +72,37 @@ class Block(nn.Module):
    def __init__(self, h, nHeads, norm=False):
       super().__init__()
       self.attn = MultiHeadAttention(h, nHeads)
-      #self.attn = ScaledDotProductAttention(h)
-
       self.fc   = nn.Linear(h, h)
 
       self.normalize = norm
       if norm:
          self.norm = nn.LayerNorm(h)
 
-   def forward(self, x):
-      #x = self.attn(x, x, x) + x
-      x = self.attn(x) + x
-      #if self.normalize:
-      #   x = self.norm(x)
+   def forward(self, x, kv=None):
+      x = self.attn(x, kv) + x
+      if self.normalize:
+         x = self.norm(x)
 
       x = self.fc(x) + x
-      #if self.normalize:
-      #   x = self.norm(x)
-
-      return x
-
-class Transform(nn.Module):
-   def __init__(self, h, nHeads, nLayers=1, flat=True):
-      super().__init__()
-      modules = [Block(h, nHeads) for i in range(nLayers)]
-      self.attns = nn.ModuleList(modules)
-      self.flat = True
-
-   def forward(self, x):
-      for attn in self.attns:
-         x = attn(x)
-
-      if self.flat:
-         x = x.mean(-2)
+      if self.normalize:
+         x = self.norm(x)
 
       return x
 
 class Transformer(nn.Module):
    def __init__(self, h, nHeads, nLayers=1, flat=True):
       super().__init__()
-      self.attn = Transform(h, nHeads)
-      #self.attn = MultiHeadAttention(h, nHeads)
-      #self.fc = nn.Linear(h, h)
+      modules = [Block(h, nHeads) for i in range(nLayers)]
+      self.attns = nn.ModuleList(modules)
+      self.flat = flat
 
-   def forward(self, x):
-      x = self.attn(x)
-      #x = self.fc(x)
-      #x = x.mean(-2)
+   def forward(self, x, kv=None):
+      for attn in self.attns:
+         x = attn(x, kv)
+
+      if self.flat:
+         x = x.mean(-2)
+
       return x
+
+

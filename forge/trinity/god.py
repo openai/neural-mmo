@@ -75,12 +75,12 @@ class God(Base.God):
 
       stims   = stimulus.Dynamic.batch(stims)
       actions = action.Dynamic.batch(actions)
-      _, outs, vals = self.net(stims, actions=actions)
+      _, outs, vals = self.net(stims, atnArgs=actions)
 
       #Unpack outputs
       atnTensor, idxTensor, atnKeyTensor, lenTensor = actions
       lens, lenTensor = lenTensor
-      outs = utils.unpack(outs, lenTensor, dim=1)
+      atnOuts = utils.unpack(outs, lenTensor, dim=1)
 
       #Collect rollouts
       rets = zip(keys, outs, rawActions, vals, rewards)

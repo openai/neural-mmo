@@ -6,7 +6,7 @@ from collections import defaultdict
 import torch
 from torch import nn
 
-from forge.ethyr.torch.modules.transformer import Transformer
+from forge.ethyr.torch.modules.transformer import Transform
 from forge.ethyr.torch.utils import classify
 from forge.blade.io import action
 
@@ -16,6 +16,8 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
+      #self.net = ConstDiscreteAction(
+      #         self.config, self.h, 4)
       self.net = VariableDiscreteAction(
                self.config, self.h, self.h)
 
@@ -166,13 +168,16 @@ class VariableDiscrete(nn.Module):
    #Arguments: stim, action/argument embedding
    def forward(self, key, vals):
       x = self.attn(key, vals)
+      #if len(x.shape) > 1:
+      #   x = x.squeeze(-2)
       xIdx = classify(x)
       return x, xIdx
 
 class AttnCat(nn.Module):
    def __init__(self, h):
       super().__init__()
-      self.attn = Transformer(h, 8, flat=False)
+      self.attn = Transform(h, 8, flat=False)
+      self.fc   = nn.Linear(h, 1)
       self.h = h
 
    def forward(self, key, vals):
@@ -181,8 +186,14 @@ class AttnCat(nn.Module):
          K = K.unsqueeze(0).unsqueeze(0).unsqueeze(0)
          V = V.unsqueeze(0).unsqueeze(0)
       
-      K = K.expand_as(V)
-      attn = self.attn(V, K).mean(-1)
+      #K = K.expand_as(V)
+      #Yes, V, K. Otherwise all keys are equiv
+      attn = self.attn(V, K)
+      attn = self.fc(attn)
+      attn = attn.squeeze(-1)
+      #attn = self.attn(K, V).mean(-1)
+
+      #attn = self.attn(K, V).mean(-1)
       attn = attn.squeeze(0).squeeze(0)
       return attn
 

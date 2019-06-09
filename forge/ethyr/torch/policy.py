@@ -34,3 +34,20 @@ class Net(nn.Module):
       val = self.val(stim)
       return ret, val
 
+class FCNet(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.fc1 = nn.Linear(h, h)
+      self.fc2 = nn.Linear(10*h, h)
+ 
+class Net(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.net = FCNet(config.HIDDEN)
+      self.val = Val(config) 
+
+   def forward(self, stim):
+      ret = self.net(stim)
+      val = self.val(stim)
+      return ret, val
+

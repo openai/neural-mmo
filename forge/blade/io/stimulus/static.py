@@ -80,8 +80,24 @@ class Static(Config):
          def get(self, ent, ref):
             val = self.val - ref.c.val
             return self.asserts(val)
+
+      class Thunk(node.Discrete):
+         def init(self, config):
+            self.max = 10
+
+         def get(self, ent, ref):
+            return np.random.randint(10)
  
    class Tile(Config):
+      '''
+      class Thunk(node.Discrete):
+         def init(self, config):
+            self.max = 10
+
+         def get(self, tile, r, c):
+            return np.random.randint(10)
+      '''
+ 
       class Index(node.Discrete):
          def init(self, config):
             self.max = config.NTILE
@@ -89,12 +105,20 @@ class Static(Config):
          def get(self, tile, r, c):
             return tile.state.index
    
+      '''
       class NEnts(node.Continuous):
          def init(self, config):
             self.max = config.NENT
 
          def get(self, tile, r, c):
             return len(tile.ents)
+
+      class CRel(node.Continuous):
+         def init(self, config):
+            self.max = config.WINDOW
+
+         def get(self, tile, r, c):
+            return c
  
       class RRel(node.Continuous):
          def init(self, config):
@@ -110,3 +134,4 @@ class Static(Config):
          def get(self, tile, r, c):
             return c
  
+      '''

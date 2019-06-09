@@ -104,12 +104,15 @@ class Env(nn.Module):
    def attrs(self, group, net, subnet):
       feats = []
       for param, val in subnet.items():
+         if param not in 'Thunk Index'.split():
+            continue
          val = torch.Tensor(val).to(self.config.DEVICE)
          emb = self.emb[group][param](val)
          feats.append(emb)
 
       emb = torch.stack(feats, -2)
-      emb = net(emb)
+      emb = net.fc1(emb).squeeze(-2)
+      #emb = net(emb)
       return emb
 
    #Todo: check gpu usage
@@ -133,7 +136,13 @@ class Env(nn.Module):
       #Concat feature block
       features = list(features.values())
       features = torch.cat(features, -2)
-      features = net(features).squeeze(0)
+
+      #For linear
+      features = torch.split(features, 1, dim=-2)
+      features = torch.cat(features, -1)
+      features = net.fc2(features).squeeze(-2).squeeze(0)
+
+      #features = net(features).squeeze(0)
 
       embed = lookup.table()
       return features, embed

@@ -12,7 +12,9 @@ class ScaledDotProductAttention(nn.Module):
    def forward(self, Q, K, V):
       Kt = K.transpose(-2, -1)
       QK = torch.matmul(Q, Kt)
-      QK = torch.softmax(QK / self.scale, 2)
+      #QK = torch.softmax(QK / self.scale, -1)
+      QK = QK / self.scale
+      #QK = torch.nn.functional.softmax(QK, dim=-2)
       QKV = torch.matmul(QK, V)
       return QKV
 
@@ -104,5 +106,45 @@ class Transformer(nn.Module):
          x = x.mean(-2)
 
       return x
+
+
+class Transform(nn.Module):
+   def __init__(self, h, nHeads, nLayers=1, flat=True):
+      super().__init__()
+      modules = [Block(h, nHeads) for i in range(nLayers)]
+      self.attns = nn.ModuleList(modules)
+      #self.attn = ScaledDotProductAttention(h)
+      self.fc   = nn.Linear(h, 1)
+      self.fc2   = nn.Linear(h, h)
+      self.flat = flat
+
+   def forward(self, x, kv=None):
+      x = self.fc2(x * kv)
+      #for attn in self.attns:
+      #   x = attn(x, kv)
+
+      if self.flat:
+         x = x.mean(-2)
+
+      return x
+
+
+      #x = self.attn(x, kv, kv)
+      #x = x * kv
+
+      #x = self.attn(x, kv, kv)
+
+      #QK = torch.matmul(Q, Kt)
+
+      #QK = torch.softmax(QK / self.scale, -1)
+      #QKV = torch.matmul(QK, V)
+ 
+
+      #x = self.fc(x)
+
+      #x = x.mean(-2)
+
+      #x = self.fc(x)
+
 
 

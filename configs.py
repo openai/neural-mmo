@@ -30,6 +30,20 @@
 #Attk does not crash but makes training go to 10
 #Advantage subtract mean works, but divide by std crashes single atn choices
 
+#Transformer does not work at all. Linear does.
+#You also disabled multiple ents. Issue for attack
+#You enabled variable discrete
+#Attack might actually work -- variable issue could be the transformer
+
+#Training epochs has gone up to ~50
+#Linear env transformer out works
+#The softmax causes issues. Removed for now
+#Env stim only works with linear
+#With linear stim:
+#Multiply x*kv is a good baseline (40 lifetime in 30 epochs). Still does not work with env
+#Adding an fc layer doesnt really help
+#kv alone (no key) gets sub 30ish in 50 epochs
+
 from pdb import set_trace as T
 from forge.blade.core.config import Config
 from forge.blade.lib import utils

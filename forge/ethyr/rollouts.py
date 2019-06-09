@@ -31,6 +31,7 @@ def mergeRollouts(rollouts):
          outs['return'].append(ret)
 
          for k, o, a in zip(key, out, atn):
+            k = tuple(k)
             outk = outs['action'][k]
             outk['atns'].append(o) 
             outk['idxs'].append(a)

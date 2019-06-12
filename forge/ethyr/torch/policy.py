@@ -13,6 +13,7 @@ from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.netgen.action import NetTree
 
 from forge.ethyr.torch.modules import Transformer
+from forge.ethyr.torch.modules.transformer import MiniAttend, ScaledDotProductAttention
 
 class Val(nn.Module):
    def __init__(self, config):
@@ -35,16 +36,23 @@ class Net(nn.Module):
       return ret, val
 
 class FCNet(nn.Module):
-   def __init__(self, h):
+   def __init__(self, config):
       super().__init__()
-      self.fc1 = nn.Linear(h, h)
-      self.fc2 = nn.Linear(10*h, h)
+      h = config.HIDDEN
+      self.flat   = nn.Linear(10*h, h)
+      self.attn1 = MiniAttend(h, config.NHEAD, nLayers=1) 
+      self.attn2 = MiniAttend(h, config.NHEAD, nLayers=1) 
+
+      self.scaled = ScaledDotProductAttention(h)
+      self.fc1    = nn.Linear(h, h)
+      self.fc2    = nn.Linear(h, h)
+      self.fc3    = nn.Linear(h, h)
  
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.net = FCNet(config.HIDDEN)
-      self.val = Val(config) 
+      self.net  = FCNet(config)
+      self.val  = Val(config) 
 
    def forward(self, stim):
       ret = self.net(stim)

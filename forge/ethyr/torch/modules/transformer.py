@@ -12,8 +12,8 @@ class ScaledDotProductAttention(nn.Module):
    def forward(self, Q, K, V):
       Kt = K.transpose(-2, -1)
       QK = torch.matmul(Q, Kt)
-      #QK = torch.softmax(QK / self.scale, -1)
       QK = QK / self.scale
+      #QK = torch.softmax(QK / self.scale, -1)
       #QK = torch.nn.functional.softmax(QK, dim=-2)
       QKV = torch.matmul(QK, V)
       return QKV
@@ -98,9 +98,15 @@ class Transformer(nn.Module):
       self.attns = nn.ModuleList(modules)
       self.flat = flat
 
+      self.fc2   = nn.Linear(h, h)
+      self.attn = ScaledDotProductAttention(h)
+
    def forward(self, x, kv=None):
-      for attn in self.attns:
-         x = attn(x, kv)
+      #for attn in self.attns:
+      #   x = attn(x, kv)
+
+      #x = self.attn(x, x, x)
+      x = self.fc2(x)
 
       if self.flat:
          x = x.mean(-2)
@@ -114,12 +120,13 @@ class Transform(nn.Module):
       modules = [Block(h, nHeads) for i in range(nLayers)]
       self.attns = nn.ModuleList(modules)
       #self.attn = ScaledDotProductAttention(h)
-      self.fc   = nn.Linear(h, 1)
-      self.fc2   = nn.Linear(h, h)
+      #self.fc   = nn.Linear(h, 1)
+      #self.fc2   = nn.Linear(h, h)
       self.flat = flat
 
    def forward(self, x, kv=None):
-      x = self.fc2(x * kv)
+      x = x * kv
+
       #for attn in self.attns:
       #   x = attn(x, kv)
 
@@ -145,6 +152,25 @@ class Transform(nn.Module):
       #x = x.mean(-2)
 
       #x = self.fc(x)
+
+class MiniAttend(nn.Module):
+   def __init__(self, h, nHeads, nLayers=1, flat=True):
+      super().__init__()
+      self.fc   = nn.Linear(h, h)
+      self.flat = flat
+
+   def forward(self, x, kv=None):
+      if kv is not None:
+         x = x * kv
+   
+      x = self.fc(x)
+
+      if self.flat:
+         x = x.mean(-2)
+
+      return x
+
+
 
 
 

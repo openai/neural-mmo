@@ -73,7 +73,7 @@ class Experiment(Config):
    DEVICE = 'cpu:0'
    '''
  
-   BATCH = 16
+   BATCH = 64
    SAMPLE = False
    NATTN = 2
    NPOP = 1

@@ -81,31 +81,27 @@ class Static(Config):
             val = self.val - ref.c.val
             return self.asserts(val)
 
+      '''
       class Thunk(node.Discrete):
          def init(self, config):
             self.max = 10
 
          def get(self, ent, ref):
             return np.random.randint(10)
+      '''
  
    class Tile(Config):
-      '''
-      class Thunk(node.Discrete):
+
+      
+      #A multiplicative interaction between pos and index
+      #is required at small training scale
+      class PosIndex(node.Discrete):
          def init(self, config):
-            self.max = 10
+            self.max = config.NTILE*9
 
          def get(self, tile, r, c):
-            return np.random.randint(10)
-      '''
- 
-      class Index(node.Discrete):
-         def init(self, config):
-            self.max = config.NTILE
-
-         def get(self, tile, r, c):
-            return tile.state.index
-   
-      '''
+            return (r*3+c)*tile.state.index
+     
       class NEnts(node.Continuous):
          def init(self, config):
             self.max = config.NENT
@@ -113,25 +109,40 @@ class Static(Config):
          def get(self, tile, r, c):
             return len(tile.ents)
 
-      class CRel(node.Continuous):
+      '''
+      class Index(node.Discrete):
          def init(self, config):
-            self.max = config.WINDOW
+            self.max = config.NTILE
 
          def get(self, tile, r, c):
-            return c
+            return tile.state.index
+
+      class Position(node.Discrete):
+         def init(self, config):
+            self.max = 9
+
+         def get(self, tile, r, c):
+            return r*3+c
  
-      class RRel(node.Continuous):
+      class RRel(node.Discrete):
          def init(self, config):
             self.max = config.WINDOW
 
          def get(self, tile, r, c):
             return r
  
-      class CRel(node.Continuous):
+      class CRel(node.Discrete):
          def init(self, config):
             self.max = config.WINDOW
 
          def get(self, tile, r, c):
             return c
+
+      class Thunk(node.Discrete):
+         def init(self, config):
+            self.max = 10
+
+         def get(self, tile, r, c):
+            return np.random.randint(10)
  
       '''

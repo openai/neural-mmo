@@ -6,7 +6,7 @@ from collections import defaultdict
 import torch
 from torch import nn
 
-from forge.ethyr.torch.modules.transformer import Transform
+from forge.ethyr.torch.modules.transformer import MiniAttend
 from forge.ethyr.torch.utils import classify
 from forge.blade.io import action
 
@@ -176,7 +176,7 @@ class VariableDiscrete(nn.Module):
 class AttnCat(nn.Module):
    def __init__(self, h):
       super().__init__()
-      self.attn = Transform(h, 8, flat=False)
+      self.attn = MiniAttend(h, 8, flat=False)
       self.fc   = nn.Linear(h, 1)
       self.h = h
 

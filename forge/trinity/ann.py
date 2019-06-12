@@ -16,9 +16,19 @@ from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
-from forge.ethyr.torch.policy import Net 
 from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.netgen.action import NetTree
+from forge.ethyr.torch.policy.attention import MiniAttend
+
+#Unshared network
+class Net(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+
+      h = config.HIDDEN
+      self.attn1 = MiniAttend(h)
+      self.attn2 = MiniAttend(h)
+      self.val  = torch.nn.Linear(h, 1)
 
 class ANN(nn.Module):
    def __init__(self, config):
@@ -26,14 +36,16 @@ class ANN(nn.Module):
       self.config = config
       self.net = nn.ModuleList([Net(config)
             for _ in range(config.NPOP)])
+
+      #Shared environment/action maps
       self.env    = Env(config)
       self.action = NetTree(config)
 
    #TODO: Need to select net index
    def forward(self, stim, obs=None, atnArgs=None):
-      #Add in action processing to input? Or maybe output embed?
-      stim, embed = self.env(self.net[0].net, stim)
-      val         = self.net[0].val(stim)
+      net = self.net[0]
+      stim, embed = self.env(net, stim)
+      val         = net.val(stim)
 
       atnArgs, outs = self.action(stim, embed, obs, atnArgs)
       return atnArgs, outs, val

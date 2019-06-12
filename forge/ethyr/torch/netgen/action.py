@@ -6,7 +6,7 @@ from collections import defaultdict
 import torch
 from torch import nn
 
-from forge.ethyr.torch.modules.transformer import MiniAttend
+from forge.ethyr.torch.policy.attention import MiniAttend
 from forge.ethyr.torch.utils import classify
 from forge.blade.io import action
 
@@ -16,8 +16,6 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      #self.net = ConstDiscreteAction(
-      #         self.config, self.h, 4)
       self.net = VariableDiscreteAction(
                self.config, self.h, self.h)
 
@@ -66,7 +64,6 @@ class NetTree(nn.Module):
       for x, xx in enumerate(args):
          for y, yy in enumerate(xx):
             for z, zz in enumerate(yy):
-               #You have a key error here
                key = tuple(zz)
                if key == (0, 0, 0, 0, 0):
                   continue
@@ -176,7 +173,7 @@ class VariableDiscrete(nn.Module):
 class AttnCat(nn.Module):
    def __init__(self, h):
       super().__init__()
-      self.attn = MiniAttend(h, 8, flat=False)
+      self.attn = MiniAttend(h, flat=False)
       self.fc   = nn.Linear(h, 1)
       self.h = h
 

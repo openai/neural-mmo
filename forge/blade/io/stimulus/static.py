@@ -81,15 +81,6 @@ class Static(Config):
             val = self.val - ref.c.val
             return self.asserts(val)
 
-      '''
-      class Thunk(node.Discrete):
-         def init(self, config):
-            self.max = 10
-
-         def get(self, ent, ref):
-            return np.random.randint(10)
-      '''
- 
    class Tile(Config):
 
       
@@ -97,7 +88,7 @@ class Static(Config):
       #is required at small training scale
       class PosIndex(node.Discrete):
          def init(self, config):
-            self.max = config.NTILE*9
+            self.max = config.NTILE*3*3
 
          def get(self, tile, r, c):
             return (r*3+c)*tile.state.index
@@ -138,11 +129,4 @@ class Static(Config):
          def get(self, tile, r, c):
             return c
 
-      class Thunk(node.Discrete):
-         def init(self, config):
-            self.max = 10
-
-         def get(self, tile, r, c):
-            return np.random.randint(10)
- 
       '''

@@ -72,7 +72,7 @@ class Experiment(Config):
    SYNCUPDATES = 100
    DEVICE = 'cpu:0'
    '''
- 
+
    BATCH = 64
    SAMPLE = False
    NATTN = 2

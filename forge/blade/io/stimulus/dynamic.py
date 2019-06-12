@@ -97,7 +97,8 @@ class Dynamic:
             
    def tile(self, env, ent, static):
       data = Data()
-      env = env[6:9, 6:9]
+      #env = env[6:9, 6:9]
+      #env = env[5:10, 5:10]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             data.add(static, tile, tile, r, c, key=ent)

@@ -88,10 +88,10 @@ class Static(Config):
       #is required at small training scale
       class PosIndex(node.Discrete):
          def init(self, config):
-            self.max = config.NTILE*3*3
+            self.max = config.NTILE*15*15
 
          def get(self, tile, r, c):
-            return (r*3+c)*tile.state.index
+            return (r*15+c)*tile.state.index
      
       class NEnts(node.Continuous):
          def init(self, config):

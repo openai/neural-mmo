@@ -69,11 +69,8 @@ class God(Base.God):
    def forward(self, keys, stims, actions, rewards):
       rollouts, rawActions = defaultdict(Rollout), actions
 
-      #Reconstruct activations/outputs
-      #kk = [e['Entity'][0] for e in stims]
-      #print(kk)
-
       stims   = stimulus.Dynamic.batch(stims)
+      T()
       actions = action.Dynamic.batch(actions)
       _, outs, vals = self.net(stims, atnArgs=actions)
 

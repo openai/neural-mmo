@@ -5,6 +5,10 @@
 [air]: resource/docs/air_thumbnail.png
 [env]: resource/docs/env.jpg
 
+# Note:
+
+This is the dev branch. It's the "cowboy" dev branch because I regularly make extremely aggressive and heavy handed changes to the code base. This allows me to dev (very!) fast, but it also means that you should NOT expect the dev branch to function as a bleeding edge build.
+
 # Neural MMO
 
 This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, and ad-hoc high stakes single and team based conflict.

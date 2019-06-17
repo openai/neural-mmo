@@ -1,89 +1,75 @@
 import numpy as np
-from forge.blade.systems import ai
-from forge.blade.lib.enums import Material, Neon
 from pdb import set_trace as T
 
-class Stat:
-   def __init__(self, val, maxVal):
-      self._val = val
-      self._max = maxVal
+from forge.blade.systems import ai
+from forge.blade.lib.enums import Material, Neon
 
-   def increment(self, amt=1):
-      self._val = min(self.max, self.val + amt)
-
-   def decrement(self, amt=1):
-      self._val = max(0, self.val - amt)
-
-   def center(self):
-      return (self.val - self.max/2.0) / self.max
-
-   @property
-   def val(self):
-      return self._val 
-
-   @property
-   def max(self):
-      return self._max
-
-   def packet(self):
-      return {'val': self.val, 'max': self.max}
+from forge.blade.io import action
 
 class Player:
-   public = set(
-         'pos lastPos R C food water health entID annID name colorInd color timeAlive kill attackMap damage freeze immune'.split())
-
-   def __init__(self, entID, color, config):
+   def __init__(self, config, iden, pop, name='', color=None):
       self._config = config
+      self.inputs(config)
 
-      self._R, self._C = config.R, config.C
-      self._pos = config.SPAWN()
+      r, c = config.SPAWN()
+      self.r.update(r)
+      self.c.update(c)
+
       self._lastPos = self.pos
 
-      self._food   = Stat(config.FOOD, config.FOOD)
-      self._water  = Stat(config.WATER, config.WATER)
-      self._health = Stat(config.HEALTH, config.HEALTH)
-
-      self._entID = entID
-      self._name = 'Neural_' + str(self._entID)
-      self._timeAlive = 0
-
-      self._damage = None
-      self._freeze = 0
-      self._immune = True
+      self._entID = iden 
+      self._name = name + str(iden)
       self._kill = False
 
-      self._annID, self._color = color
-      self._colorInd = self._annID
+      self._color = color
+      self._annID = pop
+      
       self._attackMap = np.zeros((7, 7, 3)).tolist()
 
       self._index = 1
-      self._immuneTicks = 15
+      self._actions = None
+      self._attack  = None
 
-      self.move   = None
-      self.attack = None
+      self._population.update(self._annID)
 
    def __getattribute__(self, name):
-      if name in Player.public:
-         return getattr(self, '_' + name)
-      return super().__getattribute__(name)
+      try:
+         return super().__getattribute__('_' + name)
+      except AttributeError:
+         return super().__getattribute__(name)
 
    def __setattr__(self, name, value):
-      if name in Player.public:
-         raise AttributeError('Property \"' + name + '\" is read only: agents cannot modify their server-side data')
+      if hasattr(self, '_' + name):
+         raise AttributeError('Property \"' + name + '\" is read only')
       return super().__setattr__(name, value)
 
-   def packet(self):
+   def inputs(self, config):
+      for name, cls in config.static.Entity:
+         setattr(self, '_'+cls.name, cls(config))
+
+   def outputs(self, config):
       data = {}
-      for key in Player.public:
-         val = getattr(self, key)
-         data[key] = val 
-         if hasattr(val, 'packet'):
-            data[key] = val.packet()
-      if self.attack is not None:  
-         data['attack'] = {
-               'style': self.attack.action.__name__,
-               'target': self.attack.args.entID}
+      for name, cls in config.static.Entity:
+         data[name] = getattr(self, '_'+cls.name).packet()
       return data
+ 
+   def packet(self):
+      data = self.outputs(self.config)
+      data['color'] = self._color.packet()
+      data['name']  = self._name
+      if self._attack is not None:  
+         data['attack'] = {
+               'style': self._attack.action.__name__,
+               'target': self._attack.args.name}
+      return data
+
+   @property
+   def serial(self):
+      return self.annID, self.entID
+   
+   @property
+   def pos(self):
+      return self._r.val, self._c.val
 
    #PCs interact with the world only through stimuli
    #to prevent cheating 
@@ -92,17 +78,17 @@ class Player:
       return action, args
 
    def forage(self, world):
-      r, c = self._pos
+      r, c = self.pos
       isForest = type(world.env.tiles[r, c].mat) in [Material.FOREST.value]
       if isForest and world.env.harvest(r, c):
          self.food.increment(5)
 
-      isWater = Material.WATER.value in ai.adjacentMats(world.env, self._pos)
+      isWater = Material.WATER.value in ai.adjacentMats(world.env, self.pos)
       if isWater:
          self.water.increment(5)
 
    def lavaKill(self, world):
-      r, c = self._pos
+      r, c = self.pos
       if type(world.env.tiles[r, c].mat) == Material.LAVA.value:
          self._kill = True
       return self._kill
@@ -121,12 +107,12 @@ class Player:
          self._health.decrement()
 
    def updateCounts(self, world):
-      r, c = self._pos
-      world.env.tiles[r, c].counts[self._colorInd] += 1
+      r, c = self.pos
+      world.env.tiles[r, c].counts[self.population.val] += 1
 
    def mapAttack(self):
-      if self.attack is not None:
-         attack = self.attack
+      if self._attack is not None:
+         attack = self._attack
          name = attack.action.__name__
          if name == 'Melee':
             attackInd = 0
@@ -135,41 +121,47 @@ class Player:
          elif name == 'Mage':
             attackInd = 2
          rt, ct = attack.args.pos
-         rs, cs = self._pos
+         rs, cs = self.pos
          dr = rt - rs
          dc = ct - cs
          if abs(dr)<=3 and abs(dc)<=3:
             self._attackMap[3+dr][3+dc][attackInd] += 1
 
-   def step(self, world):
+   def step(self, world, actions):
       if not self.alive: return
-      self._freeze = max(0, self._freeze-1)
+      self._freeze.decrement()
       self.updateCounts(world)
 
       if self.lavaKill(world): return
       self.forage(world)
       self.updateStats()
 
-      self._damage = None
+      self._damage.update(None)
       self._timeAlive += 1
       self.updateImmune()
 
-   def act(self, world, actions, arguments, val):
-      if not self.alive: return
-      self.mapAttack()
+      self._actions = actions
       
-      self.val = val
-      self._lastPos = self._pos
-      for action, args in zip(actions, arguments):
-         action.call(world, self, *args)
+      key = action.static.Attack
+      if key in actions:
+         self._attack = actions[key]
+         self.mapAttack()
+ 
+   def act(self, world, atnArgs):
+      #Right now we only support one arg. So *args for future update
+      atn, args = atnArgs.action, atnArgs.args
+      if args is None:
+         atn.call(world, self)
+      else:
+         atn.call(world, self, args)
+      #atn.call(world, self, *args)
 
    @property
    def alive(self):
       return self._health.val > 0
 
    def updateImmune(self):
-      if self._timeAlive >= self._immuneTicks:
-         self._immune = False
+      self.immune.decrement()
 
    #Note: does not stack damage, but still applies to health
    def applyDamage(self, damage):

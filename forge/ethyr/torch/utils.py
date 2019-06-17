@@ -3,6 +3,16 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
+from torch.nn import functional as F
+from torch.distributions import Categorical
+
+def classify(logits):
+   if len(logits.shape) == 1:
+      logits = logits.view(1, -1)
+   distribution = Categorical(1e-3+F.softmax(logits, dim=1))
+   atn = distribution.sample()
+   return atn
+
 #Print model size
 def modelSize(net):
    params = 0
@@ -69,4 +79,36 @@ def initWeights(net, scheme='orthogonal'):
          init.normal(e, std=1e-2)
       elif scheme == 'xavier':
          init.xavier_normal(e)
+
+#r1 = torch.Tensor([1])
+#r2 = torch.Tensor([0, 1, 2])
+#r3 = torch.Tensor([1, 2])
+#r4 = torch.Tensor([4, 3, 2, 1])
+#r  = [r1, r2, r3, r4]
+
+#vals, lens = utils.pack(r)
+#ret = utils.unpack(vals, lens)
+
+def pack(val):
+   seq_lens   = torch.LongTensor(list(map(len, val)))
+   seq_tensor = torch.zeros((len(val), seq_lens.max()))
+   for idx, (seq, seqlen) in enumerate(zip(val, seq_lens)):
+      seq_tensor[idx, :seqlen] = torch.Tensor(seq)
+
+   #Todo: reintroduce sort
+   #seq_lens, perm_idx = seq_lens.sort(0, descending=True)
+   #seq_tensor = seq_tensor[perm_idx]
+
+   return seq_tensor, seq_lens
+
+#Be sure to unsort these
+def unpack(vals, lens):
+   ret = []
+   for idx, l in enumerate(lens):
+      e = vals[idx, :l]
+      ret.append(e)
+   return ret
+
+   
+
 

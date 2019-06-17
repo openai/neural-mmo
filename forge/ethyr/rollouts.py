@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 from itertools import chain 
+from collections import defaultdict
 import numpy as np
 
 from forge.blade.lib.log import Blob
@@ -16,33 +17,52 @@ def sumReturn(rewards):
    return [sum(rewards) for e in rewards]
 
 def mergeRollouts(rollouts):
-   atnArgs = [rollout.atnArgs for rollout in rollouts]
-   vals    = [rollout.vals for rollout in rollouts]
-   rets    = [rollout.returns for rollout in rollouts]
+   outs = {'value': [], 'return': [], 
+         'action': defaultdict(lambda: defaultdict(list))}
+   for rollout in rollouts:
+      for idx in range(rollout.time):
+         key = rollout.keys[idx]
+         out = rollout.outs[idx]
+         atn = rollout.atns[idx]
+         val = rollout.vals[idx]
+         ret = rollout.returns[idx]
 
-   atnArgs = list(chain(*atnArgs))
-   atnArgs = list(zip(*atnArgs))
-   vals    = list(chain(*vals))
-   rets    = list(chain(*rets))
+         outs['value'].append(val)
+         outs['return'].append(ret)
 
-   return atnArgs, vals, rets
+         for k, o, a in zip(key, out, atn):
+            k = tuple(k)
+            outk = outs['action'][k]
+            outk['atns'].append(o) 
+            outk['idxs'].append(a)
+            outk['vals'].append(val)
+            outk['rets'].append(ret)
+   return outs
 
 class Rollout:
    def __init__(self, returnf=discountRewards):
-      self.atnArgs = []
+      self.keys = []
+      self.outs = []
+      self.atns = []
       self.vals = []
       self.rewards = []
       self.pop_rewards = []
       self.returnf = returnf
       self.feather = Feather()
+      self.time = 0
 
-   def step(self, atnArgs, val, reward):
-      self.atnArgs.append(atnArgs)
+   def step(self, iden, key, out, atn, val, reward):
+      self.keys.append(key)
+      self.outs.append(out)
+      self.atns.append(atn)
       self.vals.append(val)
       self.rewards.append(reward)
+      self.time += 1
+
+      self.feather.scrawl(iden, atn, val, reward)
 
    def finish(self):
-      self.rewards[-1] = -1
+      assert self.rewards[-1] == -1
       self.returns = self.returnf(self.rewards)
       self.lifespan = len(self.rewards)
       self.feather.finish()
@@ -53,10 +73,14 @@ class Feather:
       self.expMap = set()
       self.blob = Blob()
 
-   def scrawl(self, stim, ent, val, reward):
-      self.blob.annID = ent.annID
-      tile = self.tile(stim)
-      self.move(tile, ent.pos)
+   def scrawl(self, iden, atn, val, reward):
+      world, annID, entID = iden
+      self.blob.entID = entID
+      self.blob.annID = annID
+      self.blob.world = world
+      
+      #tile = self.tile(stim)
+      #self.move(tile, ent.pos)
       #self.action(arguments, atnArgs)
       self.stats(val, reward)
 
@@ -76,8 +100,10 @@ class Feather:
       tile = type(tile.state)
       if pos not in self.expMap:
          self.expMap.add(pos)
-         self.blob.unique[tile] += 1
-      self.blob.counts[tile] += 1
+         if tile in self.blob.unique:
+            self.blob.unique[tile] += 1
+      if tile in self.blob.counts:
+         self.blob.counts[tile] += 1
 
    def stats(self, value, reward):
       self.blob.reward.append(reward)

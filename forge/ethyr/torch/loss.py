@@ -5,9 +5,14 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+#NaN grad errors here usually mean too small
+#of a batch for good advantage estimation
+#(or dummy fixed action selection)
 def advantage(returns, val):
    A = returns - val
-   adv = (A - A.mean()) / (1e-4 + A.std())
+   adv = A
+   adv = (A - A.mean())
+   #adv = (A - A.mean()) / (1e-4 + A.std())
    adv = adv.detach()
    return adv
 
@@ -19,24 +24,18 @@ def valueLoss(v, returns):
    return (0.5 * (v - returns) **2).mean()
 
 def entropyLoss(prob, logProb):
-   return (prob * logProb).sum(1).mean()
+   loss = (prob * logProb)
+   loss[torch.isnan(loss)] = 0
+   return loss.sum(1).mean()
 
-def pad(seq):
-   seq = [e.view(-1) for e in seq]
-   lens = [(len(e), idx) for idx, e in enumerate(seq)]
-   lens, idx = zip(*sorted(lens, reverse=True))
-   seq = np.array(seq)[np.array(idx)]
-
-   seq = torch.nn.utils.rnn.pad_sequence(seq, batch_first=True)
-   #seq = seq.squeeze(dim=1)
-   idx = torch.tensor(idx).view(-1, 1).expand_as(seq)
-   seq = seq.gather(0, idx)
-
-   return seq
-
+#Assumes pi is already -inf padded
 def PG(pi, atn, val, returns):
-   prob = pad([F.softmax(e, dim=1) for e in pi])
-   logProb = pad([F.log_softmax(e, dim=1) for e in pi])
+   #Atns are wrong
+   prob = [F.softmax(e, dim=-1) for e in pi]
+   logProb = [F.log_softmax(e, dim=-1) for e in pi]
+
+   prob = torch.nn.utils.rnn.pad_sequence(prob, batch_first=True)
+   logProb = torch.nn.utils.rnn.pad_sequence(logProb, batch_first=True)
 
    adv = advantage(returns, val)
    polLoss = policyLoss(logProb, atn, adv)

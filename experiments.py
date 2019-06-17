@@ -7,13 +7,13 @@ import os
 USER = 'your-username'
 if USER == 'your-username':
    #Thousandth
-   prefix = 'test'
+   prefix = 'nxt-auto-tree'
    remote = False
    local  = not remote
 
-   test = True#local
-   best = True#local
-   load = True#local
+   test = False
+   best = False
+   load = False
 
    sample = not test
    singles = True
@@ -27,8 +27,9 @@ if USER == 'your-username':
    confs = (Law, Chaos)
 
    def makeExp(name, conf, sz, test=False):
-      NENT, NPOP = sz, sz//16
-      ROOT = 'resource/exps/' + name + '/'
+      NENT, NPOP = sz, 1#sz//16
+      ROOT = os.path.dirname(__file__)
+      ROOT += '/resource/exps/' + name + '/'
       try:
          os.mkdir(ROOT)
          os.mkdir(ROOT + 'model')

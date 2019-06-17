@@ -2,84 +2,98 @@ from pdb import set_trace as T
 from collections import defaultdict
 import numpy as np
 
+import sys
+import ray
+import pickle
+
 from forge import trinity
-from forge.ethyr.torch.param import setParameters, zeroGrads
-from forge.ethyr.torch import optim
+from forge.trinity import Base 
+from forge.trinity.timed import runtime
+
 from forge.ethyr.rollouts import Rollout
 
-class Sword:
-   def __init__(self, config, args):
-      self.config, self.args = config, args
-      self.nANN, self.h = config.NPOP, config.HIDDEN
-      self.anns  = [trinity.ANN(config)
-            for i in range(self.nANN)]
+from forge.ethyr.torch.param import setParameters, zeroGrads
+from forge.ethyr.torch import optim
+from forge.ethyr.torch import param
 
-      self.init, self.nRollouts = True, 32
-      self.networksUsed = set()
-      self.updates, self.rollouts = defaultdict(Rollout), {}
-      self.ents, self.rewards, self.grads = {}, [], None
-      self.nGrads = 0
+from forge.blade.core import realm
+from forge.blade.io import stimulus
+from forge.blade.io.serial import Serial
 
-   def backward(self):
-      ents = self.rollouts.keys()
-      anns = [self.anns[idx] for idx in self.networksUsed]
+from copy import deepcopy
 
-      reward, val, grads, pg, valLoss, entropy = optim.backward(
-            self.rollouts, anns, valWeight=0.25, 
-            entWeight=self.config.ENTROPY)
-      self.grads = dict((idx, grad) for idx, grad in
-            zip(self.networksUsed, grads))
+@ray.remote
+class Sword(Base.Sword):
+   def __init__(self, trin, config, args, idx):
+      super().__init__(trin, config, args, idx)
+      config        = deepcopy(config)
+      config.DEVICE = 'cpu:0'
 
-      self.blobs = [r.feather.blob for r in self.rollouts.values()]
-      self.rollouts = {}
-      self.nGrads = 0
-      self.networksUsed = set()
+      self.config   = config
+      self.args     = args
 
-   def sendGradUpdate(self):
-      grads = self.grads
-      self.grads = None
-      return grads
+      self.net = trinity.ANN(config)
+      self.obs = self.env.reset()
+      self.ent = 0
+
+      self.updates = Serial(self.config)
+      self.first = True
+
+   def spawn(self):
+      ent = self.ent
+      pop = hash(str(ent)) % self.config.NPOP
+      self.ent += 1
+      return ent, pop, 'Neural_'
  
-   def sendLogUpdate(self):
-      blobs = self.blobs
-      self.blobs = []
-      return blobs
+   @runtime
+   def step(self, packet=None):
+      if packet is not None:
+         self.net.recvUpdate(packet)
 
-   def sendUpdate(self):
-      if self.grads is None:
-          return None, None
-      return self.sendGradUpdate(), self.sendLogUpdate()
+      while len(self.updates) < self.config.SYNCUPDATES:
+         self._step()
 
-   def recvUpdate(self, update):
-      for idx, paramVec in enumerate(update):
-         setParameters(self.anns[idx], paramVec)
-         zeroGrads(self.anns[idx])
+      updates = self.updates.finish()
+      return updates
 
-   def collectStep(self, entID, atnArgs, val, reward):
-      if self.config.TEST:
-          return
-      self.updates[entID].step(atnArgs, val, reward)
+   def _step(self):
+      atns     = self.decide(self.obs)
+      self.obs = self.stepEnv(atns)
 
-   def collectRollout(self, entID, ent):
-      assert entID not in self.rollouts
-      rollout = self.updates[entID]
-      rollout.finish()
-      self.nGrads += rollout.lifespan
-      self.rollouts[entID] = rollout
-      del self.updates[entID]
+   def stepEnv(self, atns):
+      nxtObs, rewards, done, info = super().step(atns)
+      self.updates.rewards(rewards)
+      return nxtObs
 
-      # assert ent.annID == (hash(entID) % self.nANN)
-      self.networksUsed.add(ent.annID)
+   def decide(self, obs):
+      atns = []
+      if len(obs) == 0:
+         return atns
 
-      #Two options: fixed number of gradients or rollouts
-      #if len(self.rollouts) >= self.nRollouts:
-      if self.nGrads >= 100*32:
-         self.backward()
+      #stims = 
+      obbys = [self.config.dynamic(ob) for ob in obs]
+      #Is this one needed?
+      #obbys = deepcopy(stims)
+      stims = stimulus.Dynamic.batch(obbys)
+      if self.first:
+         self.first = False
+         iden = (self.env.worldIdx, self.env.tick)
+         serial = stims['Entity'][0][0][0].serial
+         #print('Key: ', iden + serial)
+         #print(stims)
+         #print()
 
-   def decide(self, ent, stim):
-      reward, entID, annID = 0, ent.entID, ent.annID
-      action, arguments, atnArgs, val = self.anns[annID](ent, stim)
-      self.collectStep(entID, atnArgs, val, reward)
-      self.updates[entID].feather.scrawl(
-            stim, ent, val, reward)
-      return action, arguments, float(val)
+      #Make decisions
+      atnArgs, outputs, values = self.net(stims, obs=obs)
+
+      #Update experience buffer
+      for obs, obby, atnArg, out, val in zip(
+            obs, obbys, atnArgs, outputs, values):
+         env, ent = obs
+         entID, annID = ent.entID, ent.annID
+         atns.append((entID, atnArg))
+
+         iden = (self.env.worldIdx, self.env.tick)
+         self.updates.serialize(env, ent, obby, out, iden)
+
+      return atns

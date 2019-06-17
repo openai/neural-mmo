@@ -1,0 +1,179 @@
+v0.1.39
++ Stop using Changelog. See `git log`
+
+v0.1.38
++ implement parallel
++ implement asyncEach
++ implement asyncMap
++ implement nextTick
+
+v0.1.37
++ implemented waitFor
++ implemented rand
++ other improvements
+
+v0.1.35
++ Better touch detection
+
+v0.1.34
++ Better Promises
++ Small fix in time.js
+
+v0.1.33
++ extend now uses copy instead of create
+
+v0.1.32
++ implement blockFunction.addBlock
+
+v0.1.31
++ Beefed up proto.js
+
+v0.1.30
++ Improved throttle
+
+v0.1.29
++ import base64
++ Many other changes...
+
+v0.1.28
++ implement repeat
++ implement deepEqual
++ implement proto
++ improved client detection in client.js
+
+v0.1.27
++ make client a proper class, and add the beginnins to OS user-agent parsing
++ improve url.js - enable getting and setting the hash/query params
++ implement merge
++ Add client.isMobile
+
+v0.1.26
++ add client.name and client.is[IPhone, IPad, IPod]
+
+v0.1.25
++ fix cookie.remove
++ implement create
++ implement arrayToObject
++ implement defineGetter
+
+v0.1.24
++ implement cookie
++ move dom/* into ui library ui.js
++ implement Animation
++ add json, from JSON2 https://github.com/douglascrockford/JSON-js
++ xhr improvements
++ implement url
++ implement trim
++ implement isArguments
++ use native isArray if available
++ add @kaleb to contributors
+
+v0.1.23
++ rename class _init to init
++ add support for mixins
++ implement Promise
++ implement invokeWith
++ implement recall
++ implement Publisher mixin
++ implement dom
++ implement client
++ implement popup
+
+v0.1.22
++ implement ui/Component#_off
++ implement ui/Component#_makeDraggable - publishes 'drag' and 'drop' events, both with a data object describing the drag
++ implement throttle
++ change implementation of delay to actually delay, rather than throttle
++ Improved ui/Component event normalization (notably mousewheel)
++ Implement browser
++ Implement math.round
+
+v0.1.21
++ start implementing std/time
++ implement copy - shallow object/array copying, with a flag for deep copying
++ implement keys
++ implement flatten
++ clean up xhr code
++ fix xhr bug where callback would not get called for empty responses
+
+
+v0.1.20
++ ui/Component API cleanup
++ implement ui/Component display, hide and show
++ fix ui/Component addClass/hasClass/removeClass/toggleClass
++ better xhr error checking and xhr object cleanup
++ implement invoke
++ rename pick to filter. deprecate pick, but keep it around for now
++ give Logger alert email functionality
++ Fix delay
++ fix ui/Input defaultValue class name mixup
+
+v0.1.19
++ Add xhr option not to encode values
++ Rename ui/Component#_dom to dom
++ Fix xhr get requests without a ? in the URL
++ fix context bug in delay
+
+v0.1.18
++ implement delay
++ implement Logger
++ implement ui/Component
++ implement ui/Select
++ implement ui/Input
+
+v0.1.16
++ Allow for passing in a context to each and map
+
+v0.1.15
++ JSON.stringify xhr query parameters
++ Use JSON.parse rather than eval to parse responses. Much safer :)
+
+v0.1.14
++ implement xhr
++ implement Publisher
+
+v0.1.12
++ enable e.g. require('std/curry')
+
+v0.1.11
++ add MIT license
++ implement curry
+
+v0.1.10
++ implement slice
+
+v0.1.9
++ implement strip, for stripping off the whitespace of strings
++ implement pick, for picking items out of an array
+
+v0.1.8
++ fix stupid mistake
+
+v0.1.7
++ import pack, unpack, crc32 and utf8_encode functions from phpjs
++ move function files into lib
+
+v0.1.6
++ extend now returns the first argument, or a new object if first argument is null
+
+v0.1.5
++ fix bind when second argument is a string
+
+v0.1.4
++ implement extend
+
+v0.1.3
++ call class initializer functions _init rather than initialize
+
+v0.1.2
++ implement Class
+
+v0.1.1
++ implement isArray
++ implement each
++ implement map
+
+v0.1.0
++ Implement bind
++ Publish on npm as std
+

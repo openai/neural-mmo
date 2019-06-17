@@ -6,7 +6,6 @@ from pdb import set_trace as T
 
 from forge.ethyr import rollouts
 from forge.ethyr.torch import loss
-from forge.ethyr.torch import param
 
 class ManualAdam(optim.Adam):
    def step(self, grads):
@@ -20,24 +19,25 @@ class ManualSGD(optim.SGD):
       self.param_groups[0]['params'][0].grad = grads
       super().step()
 
-def backward(rolls, anns, valWeight=0.5, entWeight=0):
-   atns, vals, rets = rollouts.mergeRollouts(rolls.values())
-   returns = torch.tensor(rets).view(-1, 1).float()
-   vals = torch.cat(vals)
+def backward(rolls, valWeight=0.5, entWeight=0, device='cpu'):
+   outs = rollouts.mergeRollouts(rolls.values())
    pg, entropy, attackentropy = 0, 0, 0
-   for i, atnList in enumerate(atns):
-      aArg, aArgIdx = list(zip(*atnList))
-      aArgIdx = torch.stack(aArgIdx)
-      l, e = loss.PG(aArg, aArgIdx, vals, returns)
+   for k, out in outs['action'].items():
+      atns = out['atns']
+      vals = torch.stack(out['vals']).to(device)
+      idxs = torch.tensor(out['idxs']).to(device)
+      rets = torch.tensor(out['rets']).to(device).view(-1, 1)
+      l, e = loss.PG(atns, idxs, vals, rets)
       pg += l
       entropy += e
 
-   valLoss = loss.valueLoss(vals, returns)
+   returns = torch.stack(outs['value']).to(device)
+   values  = torch.tensor(outs['return']).to(device).view(-1, 1)
+   valLoss = loss.valueLoss(values, returns)
    totLoss = pg + valWeight*valLoss + entWeight*entropy
 
    totLoss.backward()
-   grads = [param.getGrads(ann) for ann in anns]
-   reward = np.mean(rets)
+   reward = np.mean(outs['return'])
 
-   return reward, vals.mean(), grads, pg, valLoss, entropy
+   return reward, vals.mean(), pg, valLoss, entropy
 

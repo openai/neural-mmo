@@ -1,6 +1,5 @@
 import numpy as np
 
-from forge.blade.action import action
 from forge.blade.systems import skill, droptable
 
 class Entity():

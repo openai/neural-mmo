@@ -1,3 +1,4 @@
+from pdb import set_trace as T
 import numpy as np
 import torch
 
@@ -16,7 +17,8 @@ def setParameters(ann, meanVec):
    for e in ann.parameters():
       shape = e.size()
       nParams = np.prod(shape)
-      e.data = torch.Tensor(np.array(meanVec[ind:ind+nParams]).reshape(*shape))
+      data = np.array(meanVec[ind:ind+nParams]).reshape(*shape)
+      e.data = torch.Tensor(data).to(e.device)
       ind += nParams
 
 def setGrads(ann, grads):
@@ -33,12 +35,17 @@ def getParameters(ann):
       ret += e.data.view(-1).numpy().tolist()
    return ret
 
-def getGrads(ann):
+def getGrads(ann, warn=True):
    ret = []
    for param, e in ann.named_parameters():
-      try:
-         ret += e.grad.data.view(-1).numpy().tolist()
-      except:
-         print('Gradient dimension mismatch. This usually means you have either (1) loaded a model with a different architecture or (2) have a layer for which gradients are not available (e.g. not differentiable or more commonly not being used)')
+      if e.grad is None:
+         if warn:
+            print(str(param), ': GRADIENT NOT FOUND. Possible causes: (1) you have loaded a model with a different architecture. (2) This layer is not differentiable or not in use.')
+         ret += np.zeros(e.shape).ravel().tolist()
+      else:
+         #nan = torch.sum(e.grad != e.grad) > 0:
+         dat = e.grad.data.cpu().view(-1).numpy().tolist()
+         assert sum(np.isnan(dat)) == 0
+         ret += dat
    return ret
 

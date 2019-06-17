@@ -1,38 +1,110 @@
 from pdb import set_trace as T
-from forge.blade.lib.enums import Palette
 import numpy as np
 
-class God:
-   def __init__(self, config, args):
+import time
+import ray
+import pickle
+from collections import defaultdict
+
+from forge.blade.io import stimulus, action, utils
+
+from forge import trinity
+from forge.trinity import Base
+from forge.trinity.experience import ExperienceBuffer
+from forge.trinity.timed import runtime
+
+from forge.ethyr.torch import optim
+from forge.ethyr.rollouts import Rollout
+
+@ray.remote(num_gpus=1)
+class God(Base.God):
+   def __init__(self, trin, config, args):
+      super().__init__(trin, config, args)
       self.config, self.args = config, args
-      self.nEnt, self.nANN = config.NENT, config.NPOP
-      self.popSz = self.nEnt // self.nANN
-      self.popCounts = np.zeros(self.nANN)
-      self.palette = Palette(config.NPOP)
-      self.entID = 0
 
-   #Returns IDs for spawning
-   def spawn(self):
-      entID = str(self.entID)
-      annID = hash(entID) % self.nANN
-      self.entID += 1
+      self.net = trinity.ANN(
+            config).to(self.config.DEVICE)
 
-      assert self.popCounts[annID] <= self.popSz
-      if self.popCounts[annID] == self.popSz:
-         return self.spawn()
+      self.replay = ExperienceBuffer(config)
+      self.blobs  = []
 
-      self.popCounts[annID] += 1
-      color = self.palette.color(annID)
+   @runtime
+   def step(self, recv):
+      self.net.recvUpdate(recv)
+      self.collectGrads(recv)
+      return self.send()
 
-      return entID, (annID, color)
+   def collectGrads(self, recv):
+      self.replay.gather() #Zero this
+      packets = super().step(recv)
+      self.replay.collect(packets)
+      self.nRollouts = len(self.replay)
 
-   def cull(self, annID):
-      self.popCounts[annID] -= 1
-      assert self.popCounts[annID] >= 0
+      done = False
+      while not done:
+         packets = self.rollout(packets)
+         done = self.nRollouts >= self.config.NROLLOUTS
+
+   def rollout(self, packets, recv=None):
+      packets = super().distrib(recv)
+      self.processReplay()
+      packets = super().sync(packets)
+
+      self.replay.collect(packets)
+      self.nRollouts += len(self.replay)
+      return packets
+
+   def processReplay(self):
+      batches = self.replay.batch(self.config.BATCH)
+      for batch in batches:
+         rollouts = self.forward(*batch)
+         self.backward(rollouts)
 
    def send(self):
-      return
+      grads = self.net.grads()
+      blobs = self.blobs
+      self.blobs = []
+      return grads, blobs
 
-   def recv(self, pantheonUpdates):
-      return
+   def forward(self, keys, stims, actions, rewards):
+      rollouts, rawActions = defaultdict(Rollout), actions
 
+      stims   = stimulus.Dynamic.batch(stims)
+      actions = action.Dynamic.batch(actions)
+      _, outs, vals = self.net(stims, atnArgs=actions)
+
+      #Unpack outputs
+      atnTensor, idxTensor, atnKeyTensor, lenTensor = actions
+      lens, lenTensor = lenTensor
+      atnOuts = utils.unpack(outs, lenTensor, dim=1)
+
+      #Collect rollouts
+      rets = zip(keys, outs, rawActions, vals, rewards)
+      for key, out, atn, val, reward in rets:
+         atnKey, lens, atn = list(zip(*[(k, len(e), idx) for k, e, idx in atn]))
+         atn = np.array(atn)
+         out = utils.unpack(out, lens)
+
+         rollout = rollouts[key]
+         rollout.step(key, atnKey, out, atn, val, reward)
+
+      for key, rollout in rollouts.items():
+         rollout.finish()
+
+      return rollouts
+
+   def backward(self, rollouts):
+      reward, val, pg, valLoss, entropy = optim.backward(
+            rollouts, valWeight=0.25,
+            entWeight=self.config.ENTROPY, device=self.config.DEVICE)
+
+      '''
+      print('Reward : ', float(reward))
+      print('Value  : ', float(val))
+      print('PolLoss: ', float(pg))
+      print('ValLoss: ', float(valLoss))
+      print('Entropy: ', float(entropy))
+      '''
+      self.blobs += [r.feather.blob for r in rollouts.values()]
+
+    

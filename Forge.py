@@ -1,3 +1,9 @@
+"""
+Forge
+====================================
+Initial docstring test
+"""
+
 #Main file. Hooks into high level world/render updates
 from pdb import set_trace as T
 import argparse
@@ -20,11 +26,21 @@ def parseArgs():
    return parser.parse_args()
 
 def render(trin, config, args):
+   """
+   Runs the environment in render mode
+
+   Parameters
+   ---------
+   trin 
+      A Trinity object to create the envionment
+   config
+      A Configuration to use
+
+   """
    from forge.embyr.twistedserver import Application
    sword = trin.sword.remote(trin, config, args, idx=0)
    env = sword.getEnv.remote()
    Application(env, sword._step.remote)
-  
 
 if __name__ == '__main__':
    args = parseArgs()

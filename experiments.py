@@ -28,7 +28,8 @@ if USER == 'your-username':
 
    def makeExp(name, conf, sz, test=False):
       NENT, NPOP = sz, 1#sz//16
-      ROOT = 'resource/exps/' + name + '/'
+      ROOT = os.path.dirname(__file__)
+      ROOT += '/resource/exps/' + name + '/'
       try:
          os.mkdir(ROOT)
          os.mkdir(ROOT + 'model')

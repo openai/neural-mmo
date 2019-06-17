@@ -156,17 +156,23 @@ class Transform(nn.Module):
 class MiniAttend(nn.Module):
    def __init__(self, h, flat=True):
       super().__init__()
-      self.fc   = nn.Linear(h, h)
+      self.fc1   = nn.Linear(h, h)
+      self.fc2   = nn.Linear(h, h)
       self.flat = flat
 
    def forward(self, x, kv=None):
       if kv is not None:
          x = x * kv
    
-      x = self.fc(x)
+      x = self.fc1(x)
+
+      #New test
+      x = torch.relu(x)
+      x = self.fc2(x)
 
       if self.flat:
-         x = x.mean(-2)
+         #x = x.mean(-2)
+         x, _ = torch.max(x, dim=-2)
 
       return x
 

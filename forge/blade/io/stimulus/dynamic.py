@@ -106,11 +106,9 @@ class Dynamic:
 
    def entity(self, env, ent, static):
       data = Data()
-      data.add(static, ent, ent, ent, key=ent)
+      #data.add(static, ent, ent, ent, key=ent)
       #Cant comment this wtih attack on -- breaks embed
-      '''
       for tile in env.ravel():
          for e in tile.ents.values():
             data.add(static, e, ent, e, key=ent)
-      '''
       return data.ret

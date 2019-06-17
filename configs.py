@@ -44,6 +44,13 @@
 #Adding an fc layer doesnt really help
 #kv alone (no key) gets sub 30ish in 50 epochs
 
+#Current config worked over 2-3 days with 53 best, 50 avg
+
+#Replaced mean with max. This is a small test vs dota model.
+#The next step will be to add type embeddings (as opposed to value embeddings)
+#To all input stat and action types
+#This is to get around concat, which may or may not be possible
+
 from pdb import set_trace as T
 from forge.blade.core.config import Config
 from forge.blade.lib import utils

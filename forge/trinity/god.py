@@ -70,7 +70,6 @@ class God(Base.God):
       rollouts, rawActions = defaultdict(Rollout), actions
 
       stims   = stimulus.Dynamic.batch(stims)
-      T()
       actions = action.Dynamic.batch(actions)
       _, outs, vals = self.net(stims, atnArgs=actions)
 

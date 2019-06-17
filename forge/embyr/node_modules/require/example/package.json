@@ -1,0 +1,16 @@
+{
+  "author": "",
+  "name": "testApp",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "directories": {
+    "lib": "."
+  },
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -14,6 +14,7 @@ from forge.trinity.timed import TimeLog
 from forge.blade import lib
 
 def parseArgs():
+   '''Processes command line arguments'''
    parser = argparse.ArgumentParser('Projekt Godsword')
    parser.add_argument('--nRealm', type=int, default='1', 
          help='Number of environments (1 per core)')
@@ -26,17 +27,20 @@ def parseArgs():
    return parser.parse_args()
 
 def render(trin, config, args):
-   """
-   Runs the environment in render mode
+   """Runs the environment in render mode
 
-   Parameters
-   ---------
-   trin 
-      A Trinity object to create the envionment
-   config
-      A Configuration to use
+   Args:
+      trin : A Trinity object to create the envionment
+      config : A Configuration to use
+
+   Returns:
+      Nada
+
+   Raises:
+       KeyError: None
 
    """
+
    from forge.embyr.twistedserver import Application
    sword = trin.sword.remote(trin, config, args, idx=0)
    env = sword.getEnv.remote()

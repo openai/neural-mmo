@@ -9,6 +9,12 @@ Welcome to Neural MMO's documentation!
 .. automodule:: Forge
    :members:
 
+.. autoclass:: forge.blade.core.realm.Realm
+   :members:
+
+   .. automethod:: __init__
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

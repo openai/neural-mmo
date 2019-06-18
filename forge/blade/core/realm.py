@@ -59,7 +59,19 @@ class Spawner:
          del self.pops[pop]
 
 class Realm(Timed):
+   '''Neural MMO Environment'''
+
+  
    def __init__(self, config, args, idx):
+      '''Initializer
+      
+      Args:
+         config: A Configuration object
+         args: Hook for command line arguments
+         idx: Index of the world file to load
+
+      '''
+ 
       super().__init__()
       #Random samples
       if config.SAMPLE:
@@ -79,6 +91,8 @@ class Realm(Timed):
       self.values = None
 
    def clientData(self):
+      '''Data packet used by the renderer'''
+ 
       if self.values is None:# and hasattr(self, 'sword'):
          #self.values = self.sword.anns[0].visVals()
          self.values = []
@@ -169,6 +183,15 @@ class Realm(Timed):
 
    @runtime
    def step(self, decisions):
+      '''Take actions for all agents and return new observations
+
+      Args:
+         List of decisions
+
+      Returns:
+         observations, rewards, None, None
+      '''
+
       self.tick += 1
 
       rewards = self.stepEnts(decisions)
@@ -181,6 +204,8 @@ class Realm(Timed):
       return self.getStims(rewards)
 
    def reset(self):
+      '''Stub for conformity with Gym that returns an empty list'''
+
       return []
 
 

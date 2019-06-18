@@ -3,22 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Neural MMO's documentation!
-======================================
+Neural MMO
+##########
 
-.. automodule:: Forge
-   :members:
+Note:
+=====
 
-.. autoclass:: forge.blade.core.realm.Realm
-   :members:
-
-   .. automethod:: __init__
+This is the dev branch. It's the "cowboy" dev branch because I regularly make extremely aggressive and heavy handed changes to the code base. This allows me to dev (very!) fast, but it also means that you should NOT expect the dev branch to function as a bleeding edge build.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 6
    :caption: Contents:
-
+   
+   contents
+   autodoc/modules
 
 Indices and tables
 ==================

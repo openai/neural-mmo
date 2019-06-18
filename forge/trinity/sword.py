@@ -1,3 +1,5 @@
+'''Module level sword'''
+
 from pdb import set_trace as T
 from collections import defaultdict
 import numpy as np
@@ -24,7 +26,14 @@ from copy import deepcopy
 
 @ray.remote
 class Sword(Base.Sword):
+   '''Core level agent module'''
    def __init__(self, trin, config, args, idx):
+      '''Core level agent initializer
+
+      Args:
+         trin: trinity
+
+      '''
       super().__init__(trin, config, args, idx)
       config        = deepcopy(config)
       config.DEVICE = 'cpu:0'
@@ -47,6 +56,7 @@ class Sword(Base.Sword):
  
    @runtime
    def step(self, packet=None):
+      '''Accept upstream packet and return updates'''
       if packet is not None:
          self.net.recvUpdate(packet)
 

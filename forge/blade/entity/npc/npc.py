@@ -1,7 +1,7 @@
-from sim.entity.Entity import Entity
-from sim.lib import Enums, AI
-from sim.modules import DropTable
-
+from forge.blade.entity import Entity
+from forge.blade.lib import Enums
+from forrge.blade.systems import ai
+from forge.blade.system.droptable import DropTable
 
 #NPC
 class NPC(Entity):
@@ -48,5 +48,3 @@ class PassiveAgressive(NPC):
    def registerHit(self, attacker, dmg):
       super(PassiveAgressive, self).registerHit(attacker, dmg)
       self.rageClock = AI.RageClock(self.rageTime)
-
-

@@ -40,7 +40,15 @@ def mergeRollouts(rollouts):
    return outs
 
 class Rollout:
+   '''Rollout class'''
    def __init__(self, returnf=discountRewards):
+      '''Rollout object
+        
+      Args:
+         return function hook
+
+      '''         
+
       self.keys = []
       self.outs = []
       self.atns = []

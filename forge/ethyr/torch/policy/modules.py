@@ -35,3 +35,27 @@ class Input(nn.Module):
       x = self.embed(x)
       return x
 
+class TaggedInput(nn.Module):
+   def __init__(self, cls, config):
+      super().__init__()
+      self.config = config
+      h           = config.EMBED
+
+      self.embed  = Input(cls, config)
+      self.tag    = torch.nn.Embedding(1, h)
+
+      self.proj = torch.nn.Linear(2*h, h)
+
+   def forward(self, x):
+      embed = self.embed(x)
+
+      tag = torch.LongTensor([0])
+      tag = tag.to(self.config.DEVICE)
+      tag = self.tag(tag)
+      tag = tag.expand_as(embed)
+
+      x = torch.cat((embed, tag), dim=-1)
+      x = self.proj(x)
+      return x
+
+

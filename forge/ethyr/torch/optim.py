@@ -20,7 +20,7 @@ class ManualSGD(optim.SGD):
       super().step()
 
 def backward(rolls, valWeight=0.5, entWeight=0, device='cpu'):
-   outs = rollouts.mergeRollouts(rolls.values())
+   outs = rolls.merge()
    pg, entropy, attackentropy = 0, 0, 0
    for k, out in outs['action'].items():
       atns = out['atns']

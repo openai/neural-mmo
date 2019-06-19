@@ -60,6 +60,8 @@ class ExperienceBuffer:
       while len(rollouts) > 0:
          dat = rollouts[:sz]
          rollouts = rollouts[sz:]
-         dat = self.flat(dat)
-         data.append(dat)
+         keys, stims, rawActions, rewards = self.flat(dat)
+         stims   = stimulus.Dynamic.batch(stims)
+         actions = action.Dynamic.batch(rawActions)
+         data.append((keys, stims, rawActions, actions, rewards))
       return data

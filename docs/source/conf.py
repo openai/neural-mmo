@@ -34,7 +34,6 @@ author = 'Joseph Suarez'
 # The full version, including alpha/beta/rc tags
 release = '1.1'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be

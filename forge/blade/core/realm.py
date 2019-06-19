@@ -59,21 +59,16 @@ class Spawner:
          del self.pops[pop]
 
 class Realm(Timed):
-   '''Neural MMO Environment'''
-
-  
    def __init__(self, config, args, idx):
-      '''Initializer
+      '''Neural MMO Environment
       
       Args:
-         config: A Configuration object
+         config: A Config specification object
          args: Hook for command line arguments
-         idx: Index of the world file to load
-
+         idx: Index of the map file to load
       '''
- 
       super().__init__()
-      #Random samples
+      #Randomly samples a maximum population size
       if config.SAMPLE:
          config = deepcopy(config)
          nent = np.random.randint(0, config.NENT)
@@ -204,8 +199,14 @@ class Realm(Timed):
       return self.getStims(rewards)
 
    def reset(self):
-      '''Stub for conformity with Gym that returns an empty list'''
+      '''Stub for conformity with Gym. Calls step([]).
 
-      return []
+      The environment is persistent. Reset it only
+      once upon initialization to obtain initial
+      observations. If you must experiment with
+      short lived environment instances, instantiate
+      a new Realm instead of calling reset.'''
+      assert self.tick == 0
+      return self.step([])
 
 

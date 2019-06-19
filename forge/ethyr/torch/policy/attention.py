@@ -98,15 +98,9 @@ class Transformer(nn.Module):
       self.attns = nn.ModuleList(modules)
       self.flat = flat
 
-      self.fc2   = nn.Linear(h, h)
-      self.attn = ScaledDotProductAttention(h)
-
    def forward(self, x, kv=None):
-      #for attn in self.attns:
-      #   x = attn(x, kv)
-
-      #x = self.attn(x, x, x)
-      x = self.fc2(x)
+      for attn in self.attns:
+         x = attn(x, kv)
 
       if self.flat:
          x = x.mean(-2)

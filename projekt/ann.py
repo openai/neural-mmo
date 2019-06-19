@@ -1,3 +1,4 @@
+'''Demo agent class'''
 from pdb import set_trace as T
 import numpy as np
 import torch
@@ -9,25 +10,26 @@ from forge import trinity
 from forge.blade.lib.enums import Neon
 from forge.blade.lib import enums
 from forge.ethyr import torch as torchlib
+
 from forge.ethyr.torch import policy
 from forge.blade import entity
 
-from forge.ethyr.torch.netgen.stim import Env
 from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
-from forge.ethyr.torch.netgen.stim import Env
-from forge.ethyr.torch.netgen.action import NetTree
-from forge.ethyr.torch.policy.attention import MiniAttend
+from forge.ethyr.torch.io.stim import Env
+from forge.ethyr.torch.io.action import NetTree
+from forge.ethyr.torch.policy.attention import MiniAttend, Transformer
 
-#Unshared network
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
 
       h = config.HIDDEN
-      self.attn1 = MiniAttend(h)
-      self.attn2 = MiniAttend(h)
+      #self.attn1 = MiniAttend(h)
+      #self.attn2 = MiniAttend(h)
+      self.attn1 = Transformer(h, config.NHEAD)
+      self.attn2 = Transformer(h, config.NHEAD)
       self.val  = torch.nn.Linear(h, 1)
 
 class ANN(nn.Module):
@@ -51,6 +53,9 @@ class ANN(nn.Module):
       return atnArgs, outs, val
 
    def recvUpdate(self, update):
+      if update is None:
+         return
+
       setParameters(self, update)
       zeroGrads(self)
 

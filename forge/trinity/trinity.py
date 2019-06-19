@@ -1,13 +1,39 @@
 from pdb import set_trace as T
 import ray
-import pickle
-import time
 
-from forge.blade.core.realm import Realm
 from forge.trinity.timed import Timed, runtime, waittime
 
 class Trinity(Timed):
-   '''Cluster-Server-Core level wrapper'''
+   '''Pantheon-God-Sword (Cluster-Server-Core) wrapper
+
+   Trinity is a featherweight wrapper around the
+   excellent Ray API that provides a simple interface
+   for generic, persistent, and asynchronous computation
+   at the Cluster, Server, and Core levels. It also 
+   provides builtin performance logging and does not 
+   interfere with pdb breakpoint debugging.
+  
+   To use Trinity, override Pantheon, God, and Sword to
+   specify Cluster, Server, and Core level execution.
+   Overriding the step() function allows you to perform
+   arbitrary computation and return arbitrary data to
+   the previous layer. Calling super.step() allows you
+   to send arbitrary data and receive computation results 
+   from the next layer.
+
+   Args:
+      pantheon: A subclassed Pantheon object
+      god: A subclassed God object
+      Sword: A subclassed Sword object
+
+   Notes:
+      Trinity is not a single computation model. It is an
+      interface for creating computation models. By
+      example, our demo project adopts a computation
+      model similar to OpenAI Rapid. But trinity makes it
+      possible to move any piece of the execution among 
+      hardware layers with relatively little code and testing.
+   ''' 
    def __init__(self, pantheon, god, sword):
       super().__init__()
       self.pantheon = pantheon
@@ -15,96 +41,20 @@ class Trinity(Timed):
       self.sword    = sword
 
    def init(self, config, args):
+      '''
+      Instantiates a Pantheon object to make
+      Trinity runnable. Separated from __init__
+      to make Trinity usable as a stuct to hold
+      Pantheon, God, and Sword subclass references
+
+      Args:
+         config: A forge.blade.core.Config object
+         args: Hook for additional user arguments.
+      '''
       self.base = self.pantheon(self, config, args)
       self.disciples = [self.base]
 
    @runtime
    def step(self):
+      '''Wraps Pantheon step'''
       return self.base.step()
-
-   @waittime
-   def sync(self, rets):
-      return ray.get(rets)
-
-#Cluster/Master logic
-class Pantheon(Timed):
-   '''Cluster level execution'''
-   def __init__(self, trinity, config, args):
-      super().__init__()
-      self.disciples = [trinity.god.remote(trinity, config, args) 
-            for _ in range(config.NGOD)]
-
-   def distrib(self, packet):
-      rets = []
-      for god in self.disciples:
-         rets.append(god.step.remote(packet))
-      return rets
-
-   def step(self, packet=None):
-      rets = self.distrib(packet)
-      rets = self.sync(rets)
-      return rets
-
-   @waittime
-   def sync(self, rets):
-      return ray.get(rets)
-
-#Environment logic
-class God(Timed):
-   '''Server level execution'''
-   def __init__(self, trinity, config, args):
-      super().__init__()
-      self.disciples = [trinity.sword.remote(trinity, config, args, idx) 
-            for idx in range(args.nRealm)]
-
-   def distrib(self, packet=None):
-      rets = []
-      for sword in self.disciples:
-         ret  = sword.step.remote(packet)
-         rets.append(ret)
-      return rets
-
-   def step(self, packet=None):
-      rets = self.distrib(packet)
-      rets = self.sync(rets)
-      return rets
-
-   @waittime
-   def sync(self, rets):
-      rets = ray.get(rets)
-      #Bottleneck is here. All of it. Register custom serial?
-      #Maybe, maybe not. Need to look into how Rapid does it.
-      #If we can just send large blocks of (numpy) activations or gradients
-      #around, would be easier...
-      #Another approach would be to decouple action index selection from action
-      #processing. Doing this in a dynamic action graph is hard though...
-      return rets
-      rets = [pickle.loads(e) for e in rets]
-   
-#Agent logic
-class Sword(Timed):
-   '''Core level execution'''
-   def __init__(self, trinity, config, args, idx):
-      super().__init__()
-      self.disciples = [Realm(config, args, idx)]
-      self.env = self.disciples[0]
-      self.env.spawn = self.spawn
-
-   def getEnv(self):
-      return self.env
-
-   @runtime
-   def step(self, atns):
-      rets = self.sync(atns)
-      return rets
-
-   @waittime
-   def sync(self, atns):
-      rets = self.env.step(atns)
-      return rets
-
-   def sendUpdate(self): pass
-   def recvUpdate(self, update): pass
-   def collectRollout(self, entID, ent): pass
-   def decide(self, entID, ent, stim): pass
-

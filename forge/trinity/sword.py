@@ -1,109 +1,77 @@
-'''Module level sword'''
-
 from pdb import set_trace as T
-from collections import defaultdict
-import numpy as np
-
-import sys
 import ray
 import pickle
+import time
 
-from forge import trinity
-from forge.trinity import Base 
-from forge.trinity.timed import runtime
+from forge.blade.core.realm import Realm
+from forge.trinity.timed import Timed, runtime, waittime
 
-from forge.ethyr.rollouts import Rollout
+#Agent logic
+class Sword(Timed):
+   '''A simple Core level interface for generic, 
+   persistent, and asynchronous computation over
+   a colocated Neural MMO environment (Realm)
 
-from forge.ethyr.torch.param import setParameters, zeroGrads
-from forge.ethyr.torch import optim
-from forge.ethyr.torch import param
+   Args:
+      trinity: A Trinity object
+      config: A forge.blade.core.Config object
+      args: Hook for additional user arguments
+      idx: An index specifying a game map file
+   '''
+   def __init__(self, trinity, config, args, idx):
+      super().__init__()
+      self.env = Realm(config, args, idx)
+      self.env.spawn = self.spawn
 
-from forge.blade.core import realm
-from forge.blade.io import stimulus
-from forge.blade.io.serial import Serial
-
-from copy import deepcopy
-
-@ray.remote
-class Sword(Base.Sword):
-   '''Core level agent module'''
-   def __init__(self, trin, config, args, idx):
-      '''Core level agent initializer
-
-      Args:
-         trin: trinity
-
-      '''
-      super().__init__(trin, config, args, idx)
-      config        = deepcopy(config)
-      config.DEVICE = 'cpu:0'
-
-      self.config   = config
-      self.args     = args
-
-      self.net = trinity.ANN(config)
-      self.obs = self.env.reset()
-      self.ent = 0
-
-      self.updates = Serial(self.config)
-      self.first = True
+      self.ent, self.nPop = 0, config.NPOP
+      self.disciples = [self.env]
 
    def spawn(self):
-      ent = self.ent
-      pop = hash(str(ent)) % self.config.NPOP
+      '''Specifies how the environment adds players
+
+      Returns:
+         entID (int), popID (int), name (str): 
+         unique IDs for the entity and population, 
+         as well as a name prefix for the agent 
+         (the ID is appended automatically).
+
+      Notes:
+         This is useful for population based research,
+         as it allows one to specify per-agent or
+         per-population policies'''
+
+      pop = hash(str(self.ent)) % self.nPop
       self.ent += 1
-      return ent, pop, 'Neural_'
- 
+      return self.ent, pop, 'Neural_'
+
+   def getEnv(self):
+      '''Returns the environment. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env
+
    @runtime
-   def step(self, packet=None):
-      '''Accept upstream packet and return updates'''
-      if packet is not None:
-         self.net.recvUpdate(packet)
+   def step(self, atns):
+      '''Synchronously steps the environment (Realm)
 
-      while len(self.updates) < self.config.SYNCUPDATES:
-         self._step()
+      Args:
+         packet: List of actions to step
+         the environment (Realm)
 
-      updates = self.updates.finish()
-      return updates
+      Returns:
+         observations: a list of observations for each agent
+         rewards: the reward obtained by each agent (0 if the
+         agent is still alive, -1 if it has died)
+         done: None. Provided for conformity to the Gym API
+         info: None. Provided for conformity to the Gym API
 
-   def _step(self):
-      atns     = self.decide(self.obs)
-      self.obs = self.stepEnv(atns)
+      Notes:
+         This is the lowest hardware layer: there is
+         currently no need for an asynchronous variant
+      '''
+      return self._step(atns)
 
-   def stepEnv(self, atns):
-      nxtObs, rewards, done, info = super().step(atns)
-      self.updates.rewards(rewards)
-      return nxtObs
-
-   def decide(self, obs):
-      atns = []
-      if len(obs) == 0:
-         return atns
-
-      #stims = 
-      obbys = [self.config.dynamic(ob) for ob in obs]
-      #Is this one needed?
-      #obbys = deepcopy(stims)
-      stims = stimulus.Dynamic.batch(obbys)
-      if self.first:
-         self.first = False
-         iden = (self.env.worldIdx, self.env.tick)
-         serial = stims['Entity'][0][0][0].serial
-         #print('Key: ', iden + serial)
-         #print(stims)
-         #print()
-
-      #Make decisions
-      atnArgs, outputs, values = self.net(stims, obs=obs)
-
-      #Update experience buffer
-      for obs, obby, atnArg, out, val in zip(
-            obs, obbys, atnArgs, outputs, values):
-         env, ent = obs
-         entID, annID = ent.entID, ent.annID
-         atns.append((entID, atnArg))
-
-         iden = (self.env.worldIdx, self.env.tick)
-         self.updates.serialize(env, ent, obby, out, iden)
-
-      return atns
+   #This is an internal function only
+   #used to separate timer decorators
+   @waittime
+   def _step(self, atns):
+      return self.env.step(atns)

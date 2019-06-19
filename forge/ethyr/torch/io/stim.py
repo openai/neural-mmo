@@ -12,7 +12,7 @@ from forge.blade.io import stimulus, action
 from forge.blade.io import utils
 from forge.blade.io.serial import Serial
 
-from forge.ethyr.torch.policy.modules import Input, Embedding
+from forge.ethyr.torch.policy.modules import Input, TaggedInput, Embedding
 
 class Lookup:
    def __init__(self):
@@ -52,7 +52,7 @@ class Env(nn.Module):
       for name, subnet in config.static:
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
-            emb[name][param] = Input(val(config), config)
+            emb[name][param] = TaggedInput(val(config), config)
       self.emb = emb
 
    #Embed actions

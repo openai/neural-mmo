@@ -39,8 +39,6 @@ class Serial:
 
       pad = Serial.KEYLEN - len(ret)
       ret = tuple(pad*[-1]) + ret
-      if len(ret) != Serial.KEYLEN:
-         T()
       return ret
       #action: 2
       #tile: 1
@@ -49,7 +47,8 @@ class Serial:
    def unkey(self):
       pass
  
-   def serialize(self, env, ent, stim, outs, iden):
+   def serialize(self, realm, env, ent, stim, outs):
+      iden = realm.worldIdx, realm.tick
       self.stim.append(stimulus.Dynamic.serialize(stim, iden))
       self.action.append(action.Dynamic.serialize(outs, iden))
       self.keys.append(Serial.key(ent, iden))

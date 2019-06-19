@@ -16,28 +16,43 @@ def discountRewards(rewards, gamma=0.99):
 def sumReturn(rewards):
    return [sum(rewards) for e in rewards]
 
-def mergeRollouts(rollouts):
-   outs = {'value': [], 'return': [], 
-         'action': defaultdict(lambda: defaultdict(list))}
-   for rollout in rollouts:
-      for idx in range(rollout.time):
-         key = rollout.keys[idx]
-         out = rollout.outs[idx]
-         atn = rollout.atns[idx]
-         val = rollout.vals[idx]
-         ret = rollout.returns[idx]
+class RolloutManager:
+   def __init__(self):
+      self.rollouts = defaultdict(Rollout)
 
-         outs['value'].append(val)
-         outs['return'].append(ret)
+   def finish(self):
+      for key, rollout in self.rollouts.items():
+         rollout.finish()
 
-         for k, o, a in zip(key, out, atn):
-            k = tuple(k)
-            outk = outs['action'][k]
-            outk['atns'].append(o) 
-            outk['idxs'].append(a)
-            outk['vals'].append(val)
-            outk['rets'].append(ret)
-   return outs
+   def __getitem__(self, idx):
+      return self.rollouts[idx]
+
+   def logs(self):
+      return [r.feather.blob for r in self.rollouts.values()]
+
+   def merge(self):
+      outs = {'value': [], 'return': [], 
+            'action': defaultdict(lambda: defaultdict(list))}
+      for rollout in self.rollouts.values():
+         for idx in range(rollout.time):
+            key = rollout.keys[idx]
+            out = rollout.outs[idx]
+            atn = rollout.atns[idx]
+            val = rollout.vals[idx]
+            ret = rollout.returns[idx]
+
+            outs['value'].append(val)
+            outs['return'].append(ret)
+
+            for k, o, a in zip(key, out, atn):
+               k = tuple(k)
+               outk = outs['action'][k]
+               outk['atns'].append(o) 
+               outk['idxs'].append(a)
+               outk['vals'].append(val)
+               outk['rets'].append(ret)
+      return outs
+
 
 class Rollout:
    '''Rollout class'''

@@ -1,15 +1,12 @@
-"""
-Forge
-====================================
-Initial docstring test
-"""
+"""Demo main file"""
 
 #Main file. Hooks into high level world/render updates
 from pdb import set_trace as T
 import argparse
 
 import experiments
-from forge.trinity import smith, Trinity, Pantheon, God, Sword
+from forge.trinity import smith, Trinity
+from projekt import Pantheon, God, Sword
 from forge.trinity.timed import TimeLog
 from forge.blade import lib
 
@@ -29,38 +26,41 @@ def parseArgs():
 def render(trin, config, args):
    """Runs the environment in render mode
 
+   Connect to localhost:8080 to view the client.
+
    Args:
-      trin : A Trinity object to create the envionment
-      config : A Configuration to use
+      trin   : A Trinity object as shown in __main__
+      config : A Config object as shown in __main__
 
-   Returns:
-      Nada
-
-   Raises:
-       KeyError: None
-
+   Notes:
+      Blocks execution. This is an unavoidable side
+      effect of running a persistent server with
+      a fixed tick rate
    """
 
    from forge.embyr.twistedserver import Application
    sword = trin.sword.remote(trin, config, args, idx=0)
    env = sword.getEnv.remote()
-   Application(env, sword._step.remote)
+   Application(env, sword.step.remote)
 
 if __name__ == '__main__':
    args = parseArgs()
    assert args.api in ('native', 'vecenv')
    config = experiments.exps['nxt-auto-treechaos128']
 
+   #Initialize ray
    lib.ray.init(args.ray)
+
+   #Create a Trinity object specifying
+   #Cluster, Server, and Core level execution
    trin = Trinity(Pantheon, God, Sword)
 
-   #Rendering by necessity snags control flow
-   #This will automatically set local mode with 1 core
    if args.render:
       render(trin, config, args)
 
    trin.init(config, args)
 
+   #Run and print logs
    while True:
       time = trin.step()
       logs = trin.logs()

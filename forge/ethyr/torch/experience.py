@@ -6,6 +6,8 @@ from collections import defaultdict
 from forge.blade.io import stimulus, action, utils
 
 class ExperienceBuffer:
+   '''Groups experience into rollouts and
+   assembles them into batches'''
    def __init__(self, config):
       self.data = defaultdict(list)
       self.rollouts = {}
@@ -15,6 +17,10 @@ class ExperienceBuffer:
       return self.nRollouts
 
    def collect(self, packets):
+      '''Processes a list of serialized experience packets
+      
+      Args: a list of serialized experience packets
+      '''
       for sword, data in enumerate(packets):
          keys, stims, actions, rewards = data
          keys, keyLens = keys
@@ -38,12 +44,19 @@ class ExperienceBuffer:
                self.nRollouts += 1
 
    def gather(self):
+      '''Return rollouts and clear the experience buffer'''
       rollouts = self.rollouts
       self.nRollouts = 0
       self.rollouts = {}
       return rollouts
 
    def flat(self, rollouts):
+      '''Flattens rollouts by removing the time index.
+      Useful for batching non recurrent policies
+
+      Args:
+         rollouts: A list of rollouts to flatten
+      '''
       keys, stims, actions, rewards = [], [], [], []
       for key, rollout in rollouts:
          for val in rollout:
@@ -55,6 +68,15 @@ class ExperienceBuffer:
       return keys, stims, actions, rewards
 
    def batch(self, sz):
+      '''Wrapper around gather and flat that returns
+      flat experience in batches of the specified size
+
+      Args:
+         sz: batch size
+
+      Notes:
+         The last batch may be smaller than the specified sz
+      '''
       data = []
       rollouts = list(self.gather().items())
       while len(rollouts) > 0:

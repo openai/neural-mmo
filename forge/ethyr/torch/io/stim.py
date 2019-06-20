@@ -15,11 +15,14 @@ from forge.blade.io.serial import Serial
 from forge.ethyr.torch.policy.modules import Input, TaggedInput, Embedding
 
 class Lookup:
+   '''Lookup utility for indexing 
+   (name, data) pairs'''
    def __init__(self):
       self.names = []
       self.data  = []
 
    def add(self, names, data):
+      '''Add entries to the table'''
       self.names += names
       self.data  += data
 
@@ -38,6 +41,11 @@ class Lookup:
       return idxs, data
  
 class Env(nn.Module):
+   '''Network responsible for processing observations
+
+   Args:
+      config: A Config object
+   '''
    def __init__(self, config):
       super().__init__()
       self.config = config
@@ -48,6 +56,7 @@ class Env(nn.Module):
       self.action = nn.Embedding(action.Static.n, self.h)
 
    def initSubnets(self, config, name=None):
+      '''Initialize embedding networks'''
       emb  = nn.ModuleDict()
       for name, subnet in config.static:
          emb[name] = nn.ModuleDict()
@@ -55,8 +64,8 @@ class Env(nn.Module):
             emb[name][param] = TaggedInput(val(config), config)
       self.emb = emb
 
-   #Embed actions
    def actions(self, lookup):
+      '''Embed actions'''
       for atn in action.Static.actions:
          #Brackets on atn.serial?
          idx = torch.Tensor([atn.idx])
@@ -70,8 +79,8 @@ class Env(nn.Module):
          #What to replace serial with here
          lookup.add([key], [emb])
 
-   #Pack attributes of each entity
    def attrs(self, group, net, subnet):
+      '''Embed and pack attributes of each entity'''
       feats = []
       for param, val in subnet.items():
          val = torch.Tensor(val).to(self.config.DEVICE)
@@ -83,7 +92,6 @@ class Env(nn.Module):
 
       return emb
 
-   #Todo: check gpu usage
    def forward(self, net, stims):
       features, lookup = {}, Lookup()
       self.actions(lookup)
@@ -108,5 +116,4 @@ class Env(nn.Module):
       
       embed = lookup.table()
       return features, embed
-
 

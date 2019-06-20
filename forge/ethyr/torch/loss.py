@@ -9,6 +9,16 @@ from torch.nn import functional as F
 #of a batch for good advantage estimation
 #(or dummy fixed action selection)
 def advantage(returns, val):
+   '''Computes a mean centered advantage function
+   using a value function baseline.
+
+   Args:
+      returns: Tensor of trajectory returns
+      vals: Tensor of value function outpus
+
+   Returns:
+      Advantage estimate tensor
+   '''
    A = returns - val
    adv = A
    adv = (A - A.mean())
@@ -17,19 +27,58 @@ def advantage(returns, val):
    return adv
 
 def policyLoss(logProb, atn, adv):
+   '''Policy gradient loss
+   
+   Args:
+      logProb: Log probability tensor
+      atn: Action index tensor
+      adv: Advantage estimate tensor
+
+   Returns:
+      Mean policy gradient loss
+   '''
    pgLoss = -logProb.gather(1, atn.view(-1, 1))
    return (pgLoss * adv).mean()
 
-def valueLoss(v, returns):
-   return (0.5 * (v - returns) **2).mean()
+def valueLoss(val, returns):
+   '''Value function loss
+
+   Args:
+      val: Value tensor
+      returns: Return tensor
+
+   Returns:
+      Mean value loss
+   '''
+   return (0.5 * (val - returns) **2).mean()
 
 def entropyLoss(prob, logProb):
+   '''Entropy computation
+   
+   Args:
+      prob: Probability tensor
+      logProb: Log probability tensor
+   
+   Returns:
+      Mean entropy 
+   '''
    loss = (prob * logProb)
    loss[torch.isnan(loss)] = 0
    return loss.sum(1).mean()
 
 #Assumes pi is already -inf padded
 def PG(pi, atn, val, returns):
+   '''Computes losses for the policy gradient algorithm
+   
+   Args:
+      pi: Logit tensor (network outputs, pre softmax)
+      atn: Index tensor of selected actions
+      val: Value tensor
+      return: Return tensor 
+   
+   Returns:
+      polLoss, entLoss: Policy and entropy losses 
+   '''
    #Atns are wrong
    prob = [F.softmax(e, dim=-1) for e in pi]
    logProb = [F.log_softmax(e, dim=-1) for e in pi]

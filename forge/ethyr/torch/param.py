@@ -3,6 +3,11 @@ import numpy as np
 import torch
 
 def zeroGrads(ann):
+   '''Zeros out gradients
+
+   Args:
+      ann: a model
+   '''
    ind = 0
    for e in ann.parameters():
       if e.grad is None:
@@ -13,6 +18,11 @@ def zeroGrads(ann):
       ind += nParams
 
 def setParameters(ann, meanVec):
+   '''Sets the parameters of the ann
+
+   Args:
+      meanVec: A list of parameters
+   '''
    ind = 0
    for e in ann.parameters():
       shape = e.size()
@@ -22,6 +32,11 @@ def setParameters(ann, meanVec):
       ind += nParams
 
 def setGrads(ann, grads):
+   '''Sets the gradients of the ann
+      
+   Args:
+      grads: A list of gradients
+   '''
    ind = 0
    for e in ann.parameters():
       shape = e.size()
@@ -30,12 +45,31 @@ def setGrads(ann, grads):
       ind += nParams
 
 def getParameters(ann):
+   '''Get the parameters of the ann
+
+   Args:
+      ann: The model to get parameters from
+
+   Returns:
+      ret: A list of parameters
+   '''
    ret = []
    for e in ann.parameters():
       ret += e.data.view(-1).numpy().tolist()
    return ret
 
 def getGrads(ann, warn=True):
+   '''Get the gradients of the ann
+
+   Args:
+      ann: The model to get gradients from
+      warn (bool): Whether to warn when gradients are None.
+         This is a common red flag that there is something
+         wrong with the network or training
+
+   Returns:
+      ret: A list of gradients
+   '''
    ret = []
    for param, e in ann.named_parameters():
       if e.grad is None:

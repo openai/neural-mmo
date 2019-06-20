@@ -5,22 +5,33 @@ import numpy as np
 
 from forge.blade.lib.log import Blob
 
-#Untested function
 def discountRewards(rewards, gamma=0.99):
+   '''Applies standard discounting to the given trajectory
+   
+   Args:
+      rewards: List of rewards
+      gamma: Discount factor
+
+   Returns:
+      Discounted list of rewards
+   '''
    rets, N = [], len(rewards)
    discounts = np.array([gamma**i for i in range(N)])
    rewards = np.array(rewards)
-   for idx in range(N): rets.append(sum(rewards[idx:]*discounts[:N-idx]))
+   for idx in range(N):
+      rets.append(sum(rewards[idx:]*discounts[:N-idx]))
    return rets
 
-def sumReturn(rewards):
-   return [sum(rewards) for e in rewards]
-
 class RolloutManager:
+   '''Manager class collecting and aggregating rollouts
+
+   Access via self.rollouts, a defaultdict of Rollout'''
+   
    def __init__(self):
       self.rollouts = defaultdict(Rollout)
 
    def finish(self):
+      '''Call once all rollouts are collected'''
       for key, rollout in self.rollouts.items():
          rollout.finish()
 
@@ -28,9 +39,13 @@ class RolloutManager:
       return self.rollouts[idx]
 
    def logs(self):
+      '''Returns log objects of all rollouts'''
       return [r.feather.blob for r in self.rollouts.values()]
 
    def merge(self):
+      '''Merges all collected rollouts for batched
+      compatibility with optim.backward'''
+      
       outs = {'value': [], 'return': [], 
             'action': defaultdict(lambda: defaultdict(list))}
       for rollout in self.rollouts.values():
@@ -53,17 +68,13 @@ class RolloutManager:
                outk['rets'].append(ret)
       return outs
 
-
 class Rollout:
-   '''Rollout class'''
+   '''Rollout object
+
+   Args:
+      returnf: reward trajectory post processing function
+   '''
    def __init__(self, returnf=discountRewards):
-      '''Rollout object
-        
-      Args:
-         return function hook
-
-      '''         
-
       self.keys = []
       self.outs = []
       self.atns = []
@@ -75,6 +86,16 @@ class Rollout:
       self.time = 0
 
    def step(self, iden, key, out, atn, val, reward):
+      '''Update rollout with one timestep of experience
+
+      Args:
+         iden: The unique ID used in serialization
+         key: The ID corresponding to the selected action
+         out: the output logits of the network
+         atn: the action chosen by the network
+         val: the value function output of the network
+         reward: the reward obtained from taking the chosen action
+      '''
       self.keys.append(key)
       self.outs.append(out)
       self.atns.append(atn)
@@ -85,18 +106,27 @@ class Rollout:
       self.feather.scrawl(iden, atn, val, reward)
 
    def finish(self):
+      '''Call once the full rollout has been collected'''
       assert self.rewards[-1] == -1
       self.returns = self.returnf(self.rewards)
       self.lifespan = len(self.rewards)
       self.feather.finish()
 
-#Rollout logger
 class Feather:
+   '''Internal logger used by Rollout'''
    def __init__(self):
       self.expMap = set()
       self.blob = Blob()
 
    def scrawl(self, iden, atn, val, reward):
+      '''Write logs from one time step
+
+      Args:
+         iden: The unique ID used in serialization
+         atn: the actions chosen by the network
+         val: the value function output of the network
+         reward: the reward obtained from taking the chosen action
+      '''
       world, annID, entID = iden
       self.blob.entID = entID
       self.blob.annID = annID

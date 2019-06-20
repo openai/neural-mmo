@@ -8,18 +8,47 @@ from forge.ethyr import rollouts
 from forge.ethyr.torch import loss
 
 class ManualAdam(optim.Adam):
+   '''Adam wrapper that accepts gradient lists'''
    def step(self, grads):
+      '''Takes an Adam step on the parameters using
+      the user provided gradient list provided.
+   
+      Args:
+         grads: A list of gradients
+      '''
       grads = Variable(torch.Tensor(np.array(grads)))
       self.param_groups[0]['params'][0].grad = grads
       super().step()
 
 class ManualSGD(optim.SGD):
+   '''SGD wrapper that accepts gradient lists'''
    def step(self, grads):
+      '''Takes an SGD step on the parameters using
+      the user provided gradient list provided.
+   
+      Args:
+         grads: A list of gradients
+      '''
       grads = Variable(torch.Tensor(np.array(grads)))
       self.param_groups[0]['params'][0].grad = grads
       super().step()
 
 def backward(rolls, valWeight=0.5, entWeight=0, device='cpu'):
+   '''Computes gradients from a list of rollouts
+
+   Args:
+      rolls: A list of rollouts
+      valWeight (float): Scale to apply to the value loss
+      entWeight (float): Scale to apply to the entropy bonus
+      device (str): Hardware to run backward on
+
+   Returns:
+      reward: Mean reward achieved across rollouts
+      val: Mean value function estimate across rollouts
+      pg: Policy gradient loss
+      valLoss: Value loss
+      entropy: Entropy bonus      
+   '''
    outs = rolls.merge()
    pg, entropy, attackentropy = 0, 0, 0
    for k, out in outs['action'].items():

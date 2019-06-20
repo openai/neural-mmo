@@ -58,4 +58,38 @@ class TaggedInput(nn.Module):
       x = self.proj(x)
       return x
 
+#Same padded (odd k)
+def Conv2d(fIn, fOut, k, stride=1):
+   pad = int((k-1)/2)
+   return torch.nn.Conv2d(fIn, fOut, k, stride=stride, padding=pad)
 
+def Pool(k, stride=1, pad=0):
+   #pad = int((k-1)/2)
+   return torch.nn.MaxPool2d(k, stride=stride, padding=pad)
+
+def Relu():
+   return torch.nn.ReLU()
+
+class FCRelu(nn.Module):
+   def __init__(self, xdim, ydim):
+      super().__init__()
+      self.fc = torch.nn.Linear(xdim, ydim)
+      self.relu = Relu()
+
+   def forward(self, x):
+      x = self.fc(x)
+      x = self.relu(x)
+      return x
+
+class ConvReluPool(nn.Module):
+   def __init__(self, fIn, fOut, k, stride=1, pool=2):
+      super().__init__()
+      self.conv = Conv2d(fIn, fOut, k, stride)
+      self.relu = Relu()
+      self.pool = Pool(k)
+
+   def forward(self, x):
+      x = self.conv(x)
+      x = self.relu(x)
+      x = self.pool(x)
+      return x

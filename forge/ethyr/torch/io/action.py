@@ -11,6 +11,11 @@ from forge.ethyr.torch.utils import classify
 from forge.blade.io import action
 
 class NetTree(nn.Module):
+   '''Network responsible for selecting actions
+
+   Args:
+      config: A Config object
+   '''
    def __init__(self, config):
       super().__init__()
       self.config = config
@@ -33,6 +38,7 @@ class NetTree(nn.Module):
       return self.select(stim, embed, roots, env, ent)
 
    def select(self, stim, embed, roots, env, ent):
+      '''Select actions'''
       atnArgs, outs = [], {}
       for atn in roots:
          atn, out = self.tree(
@@ -43,6 +49,7 @@ class NetTree(nn.Module):
       return atnArgs, outs
 
    def tree(self, stim, embed, env, ent, atn=action.Static):
+      '''Select a single action'''
       actionTree = action.Dynamic(env, ent, self.config)
       args, done = actionTree.next(env, ent, atn)
       nameMap, embed = embed
@@ -72,7 +79,6 @@ class NetTree(nn.Module):
                ret[x, y, z] = key
       return ret
 
-
    def _actions(self, stim, embed, actions):
       atnTensor, idxTensor, keyTensor, lenTensor = actions 
       lenTensor, atnLens = lenTensor
@@ -95,7 +101,6 @@ class NetTree(nn.Module):
       stim = stim.unsqueeze(1).unsqueeze(1)
       outs, _ = self.net(stim, targs)
       return outs
-
 
    def buffered(self, stim, embed, atnArgs):
       actions   = self._arguments(stim, embed, atnArgs)
@@ -121,6 +126,7 @@ class NetTree(nn.Module):
       return atnArgList, outList
 
 class Action(nn.Module):
+   '''Head for selecting an action'''
    def __init__(self, net, config):
       super().__init__()
       self.net = net
@@ -131,6 +137,8 @@ class Action(nn.Module):
       return out, idx 
 
 class ConstDiscreteAction(Action):
+   '''Head for making a discrete selection from
+   a constant number of candidate actions'''
    def __init__(self, config, h, ydim):
       super().__init__(ConstDiscrete(h, ydim), config)
 
@@ -138,6 +146,8 @@ class ConstDiscreteAction(Action):
       return super().forward(stim, args, variable=False)
 
 class VariableDiscreteAction(Action):
+   '''Head for making a discrete selection from
+   a variable number of candidate actions'''
    def __init__(self, config, xdim, h):
       super().__init__(VariableDiscrete(xdim, h), config)
 
@@ -146,6 +156,7 @@ class VariableDiscreteAction(Action):
 
 ####### Network Modules
 class ConstDiscrete(nn.Module):
+   '''Outputs a constant number of logits'''
    def __init__(self, h, ydim):
       super().__init__()
       self.fc1 = torch.nn.Linear(h, ydim)
@@ -158,6 +169,7 @@ class ConstDiscrete(nn.Module):
       return x, xIdx
 
 class VariableDiscrete(nn.Module):
+   '''Outputs a variable number of logits'''
    def __init__(self, xdim, h):
       super().__init__()
       self.attn  = AttnCat(h)
@@ -203,6 +215,3 @@ class AttnPool(nn.Module):
       x = self.fc(x)
       x, _ = torch.max(x, 0)
       return x
-
-####### End network modules
-

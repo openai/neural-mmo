@@ -7,58 +7,24 @@ from torch.nn import functional as F
 from torch.distributions import Categorical
 
 def classify(logits):
+   '''Sample an action from logits'''
    if len(logits.shape) == 1:
       logits = logits.view(1, -1)
    distribution = Categorical(1e-3+F.softmax(logits, dim=1))
    atn = distribution.sample()
    return atn
 
-#Print model size
 def modelSize(net):
+   '''Print model size'''
    params = 0
    for e in net.parameters():
       params += np.prod(e.size())
    params = int(params/1000)
    print("Network has ", params, "K params")
 
-#Same padded (odd k)
-def Conv2d(fIn, fOut, k, stride=1):
-   pad = int((k-1)/2)
-   return torch.nn.Conv2d(fIn, fOut, k, stride=stride, padding=pad)
-
-def Pool(k, stride=1, pad=0):
-   #pad = int((k-1)/2)
-   return torch.nn.MaxPool2d(k, stride=stride, padding=pad)
-
-def Relu():
-   return torch.nn.ReLU()
-
-class FCRelu(nn.Module):
-   def __init__(self, xdim, ydim):
-      super().__init__()
-      self.fc = torch.nn.Linear(xdim, ydim)
-      self.relu = Relu()
-
-   def forward(self, x):
-      x = self.fc(x)
-      x = self.relu(x)
-      return x
-
-class ConvReluPool(nn.Module):
-   def __init__(self, fIn, fOut, k, stride=1, pool=2):
-      super().__init__()
-      self.conv = Conv2d(fIn, fOut, k, stride)
-      self.relu = Relu()
-      self.pool = Pool(k)
-
-   def forward(self, x):
-      x = self.conv(x)
-      x = self.relu(x)
-      x = self.pool(x)
-      return x
-
 #ModuleList wrapper
 def moduleList(module, *args, n=1):
+   '''Repeat module n times'''
    return nn.ModuleList([module(*args) for i in range(n)])
 
 #Variable wrapper
@@ -70,6 +36,12 @@ def var(xNp, volatile=False, cuda=False):
 
 #Full-network initialization wrapper
 def initWeights(net, scheme='orthogonal'):
+   '''Provides multiple weight initialization schemes
+
+   Args:
+      net: network to initialize
+      scheme: otrhogonal, normal, or xavier
+   '''
    print('Initializing weights. Warning: may overwrite sensitive bias parameters (e.g. batchnorm)')
    for e in net.parameters():
       if scheme == 'orthogonal':
@@ -80,16 +52,8 @@ def initWeights(net, scheme='orthogonal'):
       elif scheme == 'xavier':
          init.xavier_normal(e)
 
-#r1 = torch.Tensor([1])
-#r2 = torch.Tensor([0, 1, 2])
-#r3 = torch.Tensor([1, 2])
-#r4 = torch.Tensor([4, 3, 2, 1])
-#r  = [r1, r2, r3, r4]
-
-#vals, lens = utils.pack(r)
-#ret = utils.unpack(vals, lens)
-
 def pack(val):
+   '''Pack values to tensor'''
    seq_lens   = torch.LongTensor(list(map(len, val)))
    seq_tensor = torch.zeros((len(val), seq_lens.max()))
    for idx, (seq, seqlen) in enumerate(zip(val, seq_lens)):
@@ -103,12 +67,10 @@ def pack(val):
 
 #Be sure to unsort these
 def unpack(vals, lens):
+   '''Unpack value tensor using provided lens'''
    ret = []
    for idx, l in enumerate(lens):
       e = vals[idx, :l]
       ret.append(e)
    return ret
-
-   
-
 

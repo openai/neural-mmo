@@ -6,8 +6,6 @@ forge.ethyr.torch.io package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

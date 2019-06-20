@@ -6,15 +6,11 @@ forge.blade.entity package
     :inherited-members:
     :show-inheritance:
 
-Subpackages
------------
 
 .. toctree::
 
     forge.blade.entity.npc
 
-Submodules
-----------
 
 .. toctree::
 

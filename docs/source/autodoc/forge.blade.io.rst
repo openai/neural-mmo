@@ -6,16 +6,12 @@ forge.blade.io package
     :inherited-members:
     :show-inheritance:
 
-Subpackages
------------
 
 .. toctree::
 
     forge.blade.io.action
     forge.blade.io.stimulus
 
-Submodules
-----------
 
 .. toctree::
 

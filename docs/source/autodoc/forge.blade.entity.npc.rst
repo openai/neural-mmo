@@ -6,8 +6,6 @@ forge.blade.entity.npc package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

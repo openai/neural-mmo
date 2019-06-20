@@ -1,14 +1,14 @@
 .. include:: macros.rst
 
-|ags| Neural MMO
-################
+|ags| Overview
+##############
 
 This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, and ad-hoc high stakes single and team based conflict.
 
 |env|
 
 |ags| Quickstart
-----------------
+================
 
 .. code-block:: python
 
@@ -53,7 +53,7 @@ The objective is to create agents that scale to the complexity and robustness of
 |earth| |fire| Engineering: Env that scales to real world complexity
 
 |water| Trinity
----------------
+===============
 Trinity is the native API for researchers (the naming is simply flavor -- see "Namesake" below). It consists of three base classes, Pantheon, God, and Sword, which you can override to execute code at the Cluster, Server, and Agent levels, respectively.
 
 .. code-block:: python
@@ -94,19 +94,39 @@ You can try these both out with:
    python Forge.py --nRealm 2 --api vecenv #Run 2 environments with vecenv API
 
 |air| Ethyr
------------
+===========
 Ethyr is the "contrib" for this project. It contains useful research tools for interacting with the project. I've seeded it with the helper classes for our experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
 
 |earth| Blade
--------------
+=============
 Blade is the core environment, including game state and control flow. Researchers should not need to touch this, outside perhaps importing core configurations and enums.
 
 |fire| Embyr
--------------
-Embyr is the independent THREE.js web client. This is downloaded from a separate repository in the setup above and symlinked to the OpenAI repository. You may have to fix the symbolic link if you get forge/embyr import errors. Again, researchers should not have to edit this. In order to run it, run Forge.py with --render enabled, then navigate to localhost:8080/forge/embyr in Firefox. It will take a couple seconds to initialize and load assets. You will need to refresh the page whenever you reboot the server (Forge.py). Chrome and Safari might work, but we do not currently offer official support.
+============
+`Embyr <https://docs.google.com/document/d/1_76rytptpyssh2_cffz3mfso-9vl3_tf5ziaiz8qms8/edit?usp=sharing>`_ is an independent repository containing THREE.js web client. It's written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. As of v1.1, it is a submodule of the main repository and does not require independent setup. In order to run it, run Forge.py with --render enabled, then navigate to localhost:8080/forge/embyr in Firefox or Chrome. It will take a couple seconds to initialize and load assets. You will need to refresh the page whenever you reboot the server (Forge.py).
+
+Performance is around 50-60 FPS with ~3s load on a high-end desktop, 30 FPS with ~10s load on my Razer laptop. It runs better on Chrome than Firefox. Other browsers may work but are not officially supported.
+
+I personally plan on continuing development on both the main environment and the client. The environment repo is quite clean, but the client could use some restructureing. I intend to refactor it for v1.2. Environment updates will most likely be released in larger chunks, potentially coupled to future publications. On the other hand, the client is under active and rapid development. You can expect most features, at least in so far as they are applicable to the current environment build, to be released as soon as they are stable. Feel free to contact me with ideas and feature requests.
+
+Please note: this is my personal agenda, and I do not speak for OpenAI.
+
+|ags| Known Limitations
+-----------------------
+
+The client has been tested with Firefox on Ubuntu. Don't use Chrome. It should work on other Linux distros and on Macs -- if you run into issues, let me know.
+
+Use Nvidia drivers if your hardware setup allows. The only real requirement is support for more that 16 textures per shader. This is only required for the Counts visualizer -- you'll know your setup is wrong if the terrain map vanishes when switching overlays.
+
+This is because the research overlays are written as raw glsl shaders, which you probably don't want to try to edit. In particular, the counts exploration visualizer hard codes eight textures corresponding to exploration maps. This exceeds the number of allowable textures. I will look into fixing this into future if there is significant demand. If you happen to be a shader wizard with spare time, feel free to submit a PR.
+
+|ags| Authorship and License
+----------------------------
+
+This client is a collaboration between myself (Joseph Suarez) and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is available under the MIT License
 
 |ags| Failure Modes
--------------------
+===================
 Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.
 
 We are currently aware of three failure cases for the project:

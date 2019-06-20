@@ -6,8 +6,6 @@ forge.ethyr.torch.policy package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

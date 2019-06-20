@@ -1,8 +1,6 @@
 forge.embyr.deprecated namespace
 ================================
 
-Submodules
-----------
 
 .. toctree::
 

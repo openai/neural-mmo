@@ -6,15 +6,11 @@ forge.embyr package
     :inherited-members:
     :show-inheritance:
 
-Subpackages
------------
 
 .. toctree::
 
     forge.embyr.deprecated
 
-Submodules
-----------
 
 .. toctree::
 

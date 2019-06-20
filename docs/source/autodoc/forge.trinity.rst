@@ -6,8 +6,6 @@ forge.trinity package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

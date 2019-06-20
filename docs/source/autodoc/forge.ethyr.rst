@@ -6,15 +6,11 @@ forge.ethyr package
     :inherited-members:
     :show-inheritance:
 
-Subpackages
------------
 
 .. toctree::
 
     forge.ethyr.torch
 
-Submodules
-----------
 
 .. toctree::
 

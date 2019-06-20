@@ -6,8 +6,6 @@ forge.blade.hook package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

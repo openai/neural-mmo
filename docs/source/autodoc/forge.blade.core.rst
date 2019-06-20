@@ -6,8 +6,6 @@ forge.blade.core package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

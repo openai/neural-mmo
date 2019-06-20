@@ -6,8 +6,6 @@ forge.blade.io.action package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

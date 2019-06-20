@@ -6,8 +6,6 @@ forge.blade.io.stimulus package
     :inherited-members:
     :show-inheritance:
 
-Submodules
-----------
 
 .. toctree::
 

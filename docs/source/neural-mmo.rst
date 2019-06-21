@@ -153,8 +153,10 @@ The most complex class of games considered to date is MOBAs (Massive Online Batt
 
 While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.
 
-|ags| File Structure (Somewhat outdated -- Important information has been ported to the `official documentation <https://github.com/jsuarez5341>`_ ).
+|ags| File Structure
 ####################
+
+(Somewhat outdated -- Important information has been ported to the `official documentation <https://github.com/jsuarez5341>`_ ).
 
 |water| **/forge/trinity** ~350 lines
    * **/forge/trinity/ann.py** - Defines architectures

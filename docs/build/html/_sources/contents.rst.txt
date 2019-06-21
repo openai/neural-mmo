@@ -1,5 +1,0 @@
-Overview
-########
-
-.. toctree::
-   neural-mmo

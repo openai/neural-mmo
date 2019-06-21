@@ -8,7 +8,7 @@
 .. include:: overview
 
 |ags| Quickstart
-================
+################
 
 .. code-block:: python
 
@@ -34,8 +34,8 @@ Run the following, then navigate to http://localhost:8080/forge/embyr/ in Firefo
 
    python Forge.py --render #Run the environment with rendering on
 
-|ags| Overview
-==============
+|ags| Projekt 
+#############
 
 The project is divided into four modules:
 
@@ -120,13 +120,8 @@ Use Nvidia drivers if your hardware setup allows. The only real requirement is s
 
 This is because the research overlays are written as raw glsl shaders, which you probably don't want to try to edit. In particular, the counts exploration visualizer hard codes eight textures corresponding to exploration maps. This exceeds the number of allowable textures. I will look into fixing this into future if there is significant demand. If you happen to be a shader wizard with spare time, feel free to submit a PR.
 
-|ags| Authorship and License
-----------------------------
-
-This client is a collaboration between myself (Joseph Suarez) and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is available under the MIT License
-
 |ags| Failure Modes
-===================
+###################
 Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.
 
 We are currently aware of three failure cases for the project:
@@ -167,7 +162,7 @@ The most complex class of games considered to date is MOBAs (Massive Online Batt
 While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.
 
 |ags| File Structure
-====================
+####################
 
 |water| **/forge/trinity** ~350 lines
    * **/forge/trinity/ann.py** - Defines architectures
@@ -210,36 +205,3 @@ While our environment is nowhere near the level of complexity of a real MMO yet,
 
 |fire| **/forge/embyr** Renderer
   * See `Client Repo <https://github.com/jsuarez5341/Godsword-Client>`_
-
-|ags| Namesake
-==============
-In formal publications, we refer to our project as simply a "Neural MMO." Internally and informally, we call it "Projekt: Godsword." The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called god swords. The latter is a particularly good model for AI environments; the former is more of a soft flavor inspiration.
-
-|ags| Authorship
-================
-I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the author of the core code base. Yilun Du assisted with running experiments and particularly in setting up tournaments. Phillip Isola and Igor Mordatch have been invaluable collaborators and advisers throughout the project. The client was developed independently as a collaboration between myself and Clare Zhu.
-
-|ags| License & Assets
-======================
-The OpenAI repository is open sourced under the MIT License. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment -- the initial commit here represents the latest pre-employment timestep.
-
-Some assets used in this project belong to `Jagex <https://www.jagex.com/en-GB/>`_, the creators of Runescape, such as
-
-|ags| |earth| |water| |fire| |air|
-
-We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research -- however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents.
-
-.. image:: resource/neuralRED.png
-.. image:: resource/neuralBLUE.png
-.. image:: resource/neuralGREEN.png
-.. image:: resource/neuralFUCHSIA.png
-.. image:: resource/neuralORANGE.png
-.. image:: resource/neuralMINT.png
-.. image:: resource/neuralPURPLE.png
-.. image:: resource/neuralSPRING.png
-.. image:: resource/neuralYELLOW.png
-.. image:: resource/neuralCYAN.png
-.. image:: resource/neuralMAGENTA.png
-.. image:: resource/neuralSKY.png
-
-

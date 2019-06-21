@@ -1,1 +1,1 @@
-firefox index.html
+firefox build/html/index.html

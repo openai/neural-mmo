@@ -6,14 +6,21 @@
 .. |fire| image:: docs/source/resource/fire_thumbnail.png
 .. |water| image:: docs/source/resource/water_thumbnail.png
 
-|ags| Quickstart and Documentation
-##################################
-
-All of the information available here and much more is available `here <https://github.com/jsuarez5341>`_ .
-
-Our discord is: <Fill this in>. This is the best way to contact me.
-
 |env|
+
+|ags| Welcome to the Platform!
+##############################
+
+1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ .
+
+2. Skim the Pantheon/God/Sword API Reference in forge.trinity
+
+3. Head over to the `source code <https://github.com/jsuarez5341/neural-mmo>`_ and familiarize yourself with the end-to-end pipeline in /projekt. This is my personal research code on the platform.
+
+4. Join our `Discord <https://discord.gg/BkMmFUC>`_ for help and discussion!
+
+This is an open source project. Contributions are encouraged. I actively revie
+w issues and PRs.
 
 |ags| Overview
 ##############

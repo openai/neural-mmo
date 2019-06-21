@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; Neural MMO 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="autodoc/modules.html" />
+    <link rel="prev" title="Quickstart:" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Neural MMO
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#id1"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#water-trinity"> Trinity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#air-ethyr"> Ethyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#earth-blade"> Blade</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#fire-embyr"> Embyr</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ags-known-limitations"> Known Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ags-authorship-and-license"> Authorship and License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-failure-modes"> Failure Modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-file-structure"> File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-authorship"> Authorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-license-assets"> License &amp; Assets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/modules.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Neural MMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li> Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/neural-mmo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ags-overview">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> Overview<a class="headerlink" href="#ags-overview" title="Permalink to this headline">¶</a></h1>
+<p>This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, and ad-hoc high stakes single and team based conflict.</p>
+<p><img alt="env" src="../../../resource/docs/env.jpg" /></p>
+</div>
+<div class="section" id="ags-quickstart">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> Quickstart<a class="headerlink" href="#ags-quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recommended Setup:</span>
+<span class="n">mkdir</span> <span class="n">projekt</span>
+<span class="n">cd</span> <span class="n">projekt</span>
+
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
+<span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
+<span class="n">bash</span> <span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">cd</span> <span class="o">..</span>
+
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">openai</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This will download both the OpenAI environment and the independent client, which is required for rendering. Some setups may require you fix the symlink to the client (e.g. <cite>ln -s ../../neural-mmo-client/ embyr</cite> from <cite>forge/embyr</cite>). The setup file will only install _external_ dependencies – we assume you have already setup <strong>Anaconda with Python 3.6+</strong>. The environment is framework independently, but our experiment code does depend on PyTorch – set this up separately.</p>
+<p>Run the following, then navigate to <a class="reference external" href="http://localhost:8080/forge/embyr/">http://localhost:8080/forge/embyr/</a> in Firefox or Chrome to pull up the renderer. Click to start and give it a few seconds to load assets and stabilize fps. For troubleshooting, see the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">Client Repo</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">render</span> <span class="c1">#Run the environment with rendering on</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> Overview<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>The project is divided into four modules:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Engineering</p></th>
+<th class="head"><p>Research</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="earth" src="../../../resource/docs/earth_thumbnail.png" /> Blade: Env</p></td>
+<td><p><img alt="water" src="../../../resource/docs/water_thumbnail.png" /> Trinity: API</p></td>
+</tr>
+<tr class="row-odd"><td><p><img alt="fire" src="../../../resource/docs/fire_thumbnail.png" />  Embyr: Render</p></td>
+<td><p><img alt="air" src="../../../resource/docs/air_thumbnail.png" /> Ethyr: Neural</p></td>
+</tr>
+</tbody>
+</table>
+<p>The objective is to create agents that scale to the complexity and robustness of the real world. This is a variant phrasing of “artificial life.” A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into “agents that scale to their environment” and “environments that scale to the real world.” These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. For a more thorough overview of the project approach and objective, see this <a class="reference external" href="https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing">Two Pager</a>.</p>
+<p><img alt="water" src="../../../resource/docs/water_thumbnail.png" /> <img alt="air" src="../../../resource/docs/air_thumbnail.png" /> Research: Agents that scale to env complexity</p>
+<p><img alt="earth" src="../../../resource/docs/earth_thumbnail.png" /> <img alt="fire" src="../../../resource/docs/fire_thumbnail.png" /> Engineering: Env that scales to real world complexity</p>
+</div>
+<div class="section" id="water-trinity">
+<h1><img alt="water" src="../../../resource/docs/water_thumbnail.png" /> Trinity<a class="headerlink" href="#water-trinity" title="Permalink to this headline">¶</a></h1>
+<p>Trinity is the native API for researchers (the naming is simply flavor – see “Namesake” below). It consists of three base classes, Pantheon, God, and Sword, which you can override to execute code at the Cluster, Server, and Agent levels, respectively.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span>
+<span class="kn">from</span> <span class="nn">forge.trinity</span> <span class="kn">import</span> <span class="n">smith</span><span class="p">,</span> <span class="n">Trinity</span><span class="p">,</span> <span class="n">Pantheon</span><span class="p">,</span> <span class="n">God</span><span class="p">,</span> <span class="n">Sword</span>
+<span class="n">trinity</span> <span class="o">=</span> <span class="n">Trinity</span><span class="p">(</span><span class="n">Pantheon</span><span class="p">,</span> <span class="n">God</span><span class="p">,</span> <span class="n">Sword</span><span class="p">)</span>
+<span class="n">envs</span> <span class="o">=</span> <span class="n">smith</span><span class="o">.</span><span class="n">Native</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">trinity</span><span class="p">)</span>
+<span class="n">envs</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That’s it – all communications are handled internally. The provided Pantheon class includes sample gradient aggregation, optimization, and model saving code. The provided God class is mainly a stub to enable future work incorporating population level training algorithms. The provided Sword class contains our simple fully connected model. The full API is defined in forge/trinity/trinity.py.</p>
+<p>The VecEnv/Gym computation model not well suited to this setting and performs 10-1000x more interprocess communication than is required. The native API is simpler, more efficient, and requires much less code. However, we do provide a canonical Gym API minimally modified to support a variable number of agents. Forge.py contains a complete forward pass example for a single population. Basic usage is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.trinity</span> <span class="kn">import</span> <span class="n">smith</span>
+<span class="n">envs</span> <span class="o">=</span> <span class="n">smith</span><span class="o">.</span><span class="n">VecEnv</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+
+<span class="c1">#The environment is persistent: call reset only upon initialization</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">envs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="c1">#Observations contain entity and stimulus</span>
+<span class="c1">#for each agent in each environment.</span>
+<span class="n">actions</span> <span class="o">=</span> <span class="n">your_algorithm_here</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+
+<span class="c1">#The environment is persistent: &quot;dones&quot; is always None</span>
+<span class="c1">#If an observation is missing, that agent has died</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">envs</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can try these both out with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run Options:</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">nRealm</span> <span class="mi">2</span> <span class="o">--</span><span class="n">api</span> <span class="n">native</span> <span class="c1">#Run 2 environments with native API</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">nRealm</span> <span class="mi">2</span> <span class="o">--</span><span class="n">api</span> <span class="n">vecenv</span> <span class="c1">#Run 2 environments with vecenv API</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="air-ethyr">
+<h1><img alt="air" src="../../../resource/docs/air_thumbnail.png" /> Ethyr<a class="headerlink" href="#air-ethyr" title="Permalink to this headline">¶</a></h1>
+<p>Ethyr is the “contrib” for this project. It contains useful research tools for interacting with the project. I’ve seeded it with the helper classes for our experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.</p>
+</div>
+<div class="section" id="earth-blade">
+<h1><img alt="earth" src="../../../resource/docs/earth_thumbnail.png" /> Blade<a class="headerlink" href="#earth-blade" title="Permalink to this headline">¶</a></h1>
+<p>Blade is the core environment, including game state and control flow. Researchers should not need to touch this, outside perhaps importing core configurations and enums.</p>
+</div>
+<div class="section" id="fire-embyr">
+<h1><img alt="fire" src="../../../resource/docs/fire_thumbnail.png" /> Embyr<a class="headerlink" href="#fire-embyr" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://docs.google.com/document/d/1_76rytptpyssh2_cffz3mfso-9vl3_tf5ziaiz8qms8/edit?usp=sharing">Embyr</a> is an independent repository containing THREE.js web client. It’s written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. As of v1.1, it is a submodule of the main repository and does not require independent setup. In order to run it, run Forge.py with –render enabled, then navigate to localhost:8080/forge/embyr in Firefox or Chrome. It will take a couple seconds to initialize and load assets. You will need to refresh the page whenever you reboot the server (Forge.py).</p>
+<p>Performance is around 50-60 FPS with ~3s load on a high-end desktop, 30 FPS with ~10s load on my Razer laptop. It runs better on Chrome than Firefox. Other browsers may work but are not officially supported.</p>
+<p>I personally plan on continuing development on both the main environment and the client. The environment repo is quite clean, but the client could use some restructureing. I intend to refactor it for v1.2. Environment updates will most likely be released in larger chunks, potentially coupled to future publications. On the other hand, the client is under active and rapid development. You can expect most features, at least in so far as they are applicable to the current environment build, to be released as soon as they are stable. Feel free to contact me with ideas and feature requests.</p>
+<p>Please note: this is my personal agenda, and I do not speak for OpenAI.</p>
+<div class="section" id="ags-known-limitations">
+<h2><img alt="ags" src="../../../resource/docs/ags.png" /> Known Limitations<a class="headerlink" href="#ags-known-limitations" title="Permalink to this headline">¶</a></h2>
+<p>The client has been tested with Firefox on Ubuntu. Don’t use Chrome. It should work on other Linux distros and on Macs – if you run into issues, let me know.</p>
+<p>Use Nvidia drivers if your hardware setup allows. The only real requirement is support for more that 16 textures per shader. This is only required for the Counts visualizer – you’ll know your setup is wrong if the terrain map vanishes when switching overlays.</p>
+<p>This is because the research overlays are written as raw glsl shaders, which you probably don’t want to try to edit. In particular, the counts exploration visualizer hard codes eight textures corresponding to exploration maps. This exceeds the number of allowable textures. I will look into fixing this into future if there is significant demand. If you happen to be a shader wizard with spare time, feel free to submit a PR.</p>
+</div>
+<div class="section" id="ags-authorship-and-license">
+<h2><img alt="ags" src="../../../resource/docs/ags.png" /> Authorship and License<a class="headerlink" href="#ags-authorship-and-license" title="Permalink to this headline">¶</a></h2>
+<p>This client is a collaboration between myself (Joseph Suarez) and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is available under the MIT License</p>
+</div>
+</div>
+<div class="section" id="ags-failure-modes">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> Failure Modes<a class="headerlink" href="#ags-failure-modes" title="Permalink to this headline">¶</a></h1>
+<p>Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.</p>
+<dl class="simple">
+<dt>We are currently aware of three failure cases for the project:</dt><dd><ul class="simple">
+<li><p>Computational infeasibility</p></li>
+<li><p>“Agents that scale to their environment” is too hard</p></li>
+<li><p>“Environments that scale to the real world” is too hard</p></li>
+</ul>
+</dd>
+</dl>
+<p>The first failure case is a serious risk, but is shared among all areas of the field. This project is not uniquely compute intensive – in fact, it is one of few environments where it is straightforward to train reasonable policies on a single CPU. If scale is the main issue here, it is likely shared among most if not all other approaches.</p>
+<dl class="simple">
+<dt>The second problem is probably most familiar to researchers as exploration. Given a cold start, how can agents bootstrap both to better policies and to better exploration strategies? This is a hard problem, but it is unlikely to kill the project because:</dt><dd><ul class="simple">
+<li><p>This is independently an important problem that many researchers are already working on already</p></li>
+<li><p>The environment of this project is designed collaboratively to assist agents early on in learning, rather than adversarially as a hard benchmark</p></li>
+<li><p><a class="reference external" href="https://blog.openai.com/openai-five/">Recent</a> <cite>projects &lt;https://blog.openai.com/learning-dexterity/&gt;_</cite> have demonstrated success at scale.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:</p>
+<img alt="Quest Map" src="../../../resource/docs/quests.png" />
+<p><a class="reference external" href="https://www.reddit.com/user/Gamez_X">Source</a></p>
+<p>Actually, it’s a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:</p>
+<img alt="Skills" src="../../../resource/docs/skills.png" />
+<img alt="Equipment" src="../../../resource/docs/equipment.png" />
+<p><a class="reference external" href="https://www.jagex.com/en-GB/">Source</a></p>
+<p>In a massive open world:</p>
+<img alt="GameMap" src="../../../resource/docs/map.png" />
+<p><a class="reference external" href="https://www.jagex.com/en-GB/">Source</a></p>
+<p>The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy–especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.</p>
+<p>While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.</p>
+</div>
+<div class="section" id="ags-file-structure">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> File Structure<a class="headerlink" href="#ags-file-structure" title="Permalink to this headline">¶</a></h1>
+<dl>
+<dt><img alt="water" src="../../../resource/docs/water_thumbnail.png" /> <strong>/forge/trinity</strong> ~350 lines</dt><dd><ul class="simple">
+<li><p><strong>/forge/trinity/ann.py</strong> - Defines architectures</p></li>
+<li><p><strong>/forge/trinity/god.py</strong> - Defines server level code (e.g. entity tagging)</p></li>
+<li><p><strong>/forge/trinity/pantheon.py</strong> - Defines cluster level code (e.g. gradient averaging)</p></li>
+<li><p><strong>/forge/trinity/sword.py</strong> - Defines core level code (e.g. running networks, collecting rollouts, computing gradients)</p></li>
+<li><p><strong>/forge/trinity/trinity.py</strong> - Wraps a pantheon, god, and sword</p></li>
+<li><p><strong>/forge/trinity/smith.py</strong> - Defines the Native and VecEnv / Gym APIs</p></li>
+</ul>
+</dd>
+<dt><img alt="air" src="../../../resource/docs/air_thumbnail.png" /> <strong>/forge/ethyr</strong> ~250 lines</dt><dd><ul class="simple">
+<li><p><strong>/forge/ethyr/rollouts.py</strong> - Collects and merges rollouts</p></li>
+<li><p><strong>/forge/ethyr/stim.py</strong> - Produces a stimulus from local game state</p></li>
+<li><p><strong>/forge/ethyr/torch</strong> - pytorch specific neural utilities
+* <strong>/forge/ethyr/torch/loss.py</strong> - Defines policy/value loss and advantage
+* <strong>/forge/ethyr/torch/optim.py</strong> - Defines optimization and gradient computation
+* <strong>/forge/ethyr/torch/param.py</strong> - Network surgery useful for serialization
+* <strong>/forge/ethyr/torch/stim.py</strong> - Wraps the generic stimulus library with pytorch tensors
+* <strong>/forge/ethyr/torch/utils.py</strong> - Generic pytorch tools</p></li>
+</ul>
+</dd>
+<dt><img alt="earth" src="../../../resource/docs/earth_thumbnail.png" /> <strong>/forge/blade</strong> ~2k lines, of which &gt;1k are for future expansion. Only italicized files are relevant.</dt><dd><ul>
+<li><p><strong>/forge/blade/action</strong> - Defines what entities can do, what occurs when they do it, and provides structure for reasoning over actions.
+* <strong>/forge/blade/action/action.py</strong> - Class stubs for each action
+* <strong>/forge/blade/action/tree.py</strong> - Tree structure for assembling actions (e.g. action -&gt; sub-action -&gt; args)
+* <strong>_/forge/blade/action/v2.py_</strong> - Actions that entities can select, instantiate, and .call() to directly modify world state</p></li>
+<li><p><strong>/forge/blade/core</strong> — Contains ~500 lines of state and game loop code.
+* <strong>_/forge/blade/core/config.py_</strong> - Defines specifications for each test environment, including entity statistics, the map, and spawn locations.
+* <strong>_/forge/blade/core/tile.py_</strong> - Defines an individual game tile
+* <strong>_/forge/blade/core/map.py_</strong> - Defines a map of game tiles
+* <strong>_/forge/blade/core/env.py_</strong> - Wraps the full game state
+* <strong>_/forge/blade/core/realm.py_</strong> - Defines the game loop updating the environment and agents.</p></li>
+<li><p><strong>/forge/blade/entity</strong> - Defines agents, both neural and scripted
+* <strong>_/forge/blade/entity/player.py_</strong> — Defines “player” state
+* <strong>/forge/blade/entity/npc/</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>/forge/blade/entity/npc/npc.py</strong> — This defines client state (e.g. wraps the neural net making decisions)</p></li>
+<li><p><strong>/forge/blade/entity/npc/mobs.py</strong> - Defines scripted npcs</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>/forge/blade/hook</strong> - Defines startup scripts that preassemble references</p></li>
+<li><p><strong>/forge/blade/item</strong> - Defines all items in the game, including equipment</p></li>
+<li><p><strong>/forge/blade/lib</strong> - Defines generic utilities that either do not have clean python implementations or require specific changes for the project</p></li>
+<li><p><strong>/forge/blade/systems</strong> - Defines game content</p></li>
+</ul>
+</dd>
+<dt><img alt="fire" src="../../../resource/docs/fire_thumbnail.png" /> <strong>/forge/embyr</strong> Renderer</dt><dd><ul class="simple">
+<li><p>See <a class="reference external" href="https://github.com/jsuarez5341/Godsword-Client">Client Repo</a></p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="ags-namesake">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> Namesake<a class="headerlink" href="#ags-namesake" title="Permalink to this headline">¶</a></h1>
+<p>In formal publications, we refer to our project as simply a “Neural MMO.” Internally and informally, we call it “Projekt: Godsword.” The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called god swords. The latter is a particularly good model for AI environments; the former is more of a soft flavor inspiration.</p>
+</div>
+<div class="section" id="ags-authorship">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> Authorship<a class="headerlink" href="#ags-authorship" title="Permalink to this headline">¶</a></h1>
+<p>I, <a class="reference external" href="https://github.com/jsuarez5341">Joseph Suarez</a>, am the author of the core code base. Yilun Du assisted with running experiments and particularly in setting up tournaments. Phillip Isola and Igor Mordatch have been invaluable collaborators and advisers throughout the project. The client was developed independently as a collaboration between myself and Clare Zhu.</p>
+</div>
+<div class="section" id="ags-license-assets">
+<h1><img alt="ags" src="../../../resource/docs/ags.png" /> License &amp; Assets<a class="headerlink" href="#ags-license-assets" title="Permalink to this headline">¶</a></h1>
+<p>The OpenAI repository is open sourced under the MIT License. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment – the initial commit here represents the latest pre-employment timestep.</p>
+<p>Some assets used in this project belong to <a class="reference external" href="https://www.jagex.com/en-GB/">Jagex</a>, the creators of Runescape, such as</p>
+<p><img alt="ags" src="../../../resource/docs/ags.png" /> <img alt="earth" src="../../../resource/docs/earth_thumbnail.png" /> <img alt="water" src="../../../resource/docs/water_thumbnail.png" /> <img alt="fire" src="../../../resource/docs/fire_thumbnail.png" /> <img alt="air" src="../../../resource/docs/air_thumbnail.png" /></p>
+<p>We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research – however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents.</p>
+<img alt="../../../resource/docs/neuralRED.png" src="../../../resource/docs/neuralRED.png" />
+<img alt="../../../resource/docs/neuralBLUE.png" src="../../../resource/docs/neuralBLUE.png" />
+<img alt="../../../resource/docs/neuralGREEN.png" src="../../../resource/docs/neuralGREEN.png" />
+<img alt="../../../resource/docs/neuralFUCHSIA.png" src="../../../resource/docs/neuralFUCHSIA.png" />
+<img alt="../../../resource/docs/neuralORANGE.png" src="../../../resource/docs/neuralORANGE.png" />
+<img alt="../../../resource/docs/neuralMINT.png" src="../../../resource/docs/neuralMINT.png" />
+<img alt="../../../resource/docs/neuralPURPLE.png" src="../../../resource/docs/neuralPURPLE.png" />
+<img alt="../../../resource/docs/neuralSPRING.png" src="../../../resource/docs/neuralSPRING.png" />
+<img alt="../../../resource/docs/neuralYELLOW.png" src="../../../resource/docs/neuralYELLOW.png" />
+<img alt="../../../resource/docs/neuralCYAN.png" src="../../../resource/docs/neuralCYAN.png" />
+<img alt="../../../resource/docs/neuralMAGENTA.png" src="../../../resource/docs/neuralMAGENTA.png" />
+<img alt="../../../resource/docs/neuralSKY.png" src="../../../resource/docs/neuralSKY.png" />
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="autodoc/modules.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Quickstart:" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #001010;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #001818;
+    }
+    .wy-nav-content {
+      background: #002020;
+    }
+    .wy-nav-content-wrap {
+      background: #001818;
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: #00ffff;
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: #001818;
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: #002020;
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: lime;
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: lime;
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: lime;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: lime;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: #003030;
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: #002020;
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: #00ff00;
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: #00ff00;
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: #00ff00;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: #00ff00;
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: #002020;
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: #003030;
+      color: #008888;
+      border-top: solid 6px #001818;
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: #00ff00;
+      border: #00ff00;
+    }
+
+    .highlight {
+      background: #003030;
+      color: #00fafa;
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: #008888 !important;
+      color: #003030 !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px #00000;
+      background: #003030;
+      color: #008888;
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: #002020;
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: #002020;
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: #00aaaa;
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color:#00aaaa;
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #008888;
+    }
+
+    footer {
+      color: teal;
+    }
+
+    p {
+      color: #00aaaa;
+    }
+    h1 {
+      color: lime;
+    }
+    h2 {
+      color: aqua;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: blue; /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: teal;
+    }
+
+    /* visited link */
+    a:visited {
+      color: lime;
+    }
+
+  </style>
+
+
+</body>
+</html>

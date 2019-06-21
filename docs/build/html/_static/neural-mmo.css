@@ -1,0 +1,7 @@
+@import url("alabaster.css");
+
+blockquote{
+  background: black;
+  color: white;
+  display: block;
+}

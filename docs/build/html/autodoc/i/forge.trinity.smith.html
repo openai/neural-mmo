@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>forge.trinity.smith module &mdash; Neural MMO 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Neural MMO
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#id1"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#water-trinity"> Trinity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#air-ethyr"> Ethyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#earth-blade"> Blade</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#fire-embyr"> Embyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#ags-failure-modes"> Failure Modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#ags-file-structure"> File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#ags-authorship"> Authorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../neural-mmo.html#ags-license-assets"> License &amp; Assets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Neural MMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>forge.trinity.smith module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/autodoc/i/forge.trinity.smith.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-forge.trinity.smith">
+<span id="forge-trinity-smith-module"></span><h1>forge.trinity.smith module<a class="headerlink" href="#module-forge.trinity.smith" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #001010;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #001818;
+    }
+    .wy-nav-content {
+      background: #002020;
+    }
+    .wy-nav-content-wrap {
+      background: #001818;
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: #00ffff;
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: #001818;
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: #002020;
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: lime;
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: lime;
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: lime;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: lime;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: #003030;
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: #002020;
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: #00ff00;
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: #00ff00;
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: #00ff00;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: #00ff00;
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: #002020;
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: #003030;
+      color: #008888;
+      border-top: solid 6px #001818;
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: #00ff00;
+      border: #00ff00;
+    }
+
+    .highlight {
+      background: #003030;
+      color: #00fafa;
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: #008888 !important;
+      color: #003030 !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px #00000;
+      background: #003030;
+      color: #008888;
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: #002020;
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: #002020;
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: #00aaaa;
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color:#00aaaa;
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #008888;
+    }
+
+    footer {
+      color: teal;
+    }
+
+    p {
+      color: #00aaaa;
+    }
+    h1 {
+      color: lime;
+    }
+    h2 {
+      color: aqua;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: blue; /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: teal;
+    }
+
+    /* visited link */
+    a:visited {
+      color: lime;
+    }
+
+  </style>
+
+
+</body>
+</html>

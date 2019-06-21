@@ -3,14 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Quickstart:
-===========
-Check out the overview documents, skim through the Pantheon/God/Sword documentation in forge.trinity, and finally get familiar with the demo code in projekt, which is an end to end working training and inference pipeline on Neural MMO.
+Getting Started:
+================
 
-Note:
-=====
+Welcome to the platform!
 
-You should almost always build from master. The dev branch is not a traditional dev branch. It's called the cowboy dev branch because I regularly make extremely aggressive and heavy handed changes to the code base. This allows me to dev (very!) fast, but it also means that you should NOT expect the dev branch to function as a bleeding edge build.
+1. Check out the overview guide
+
+2. Skim the Pantheon/God/Sword API Reference in forge.trinity
+
+3. Head over to the `source code <https://github.com/jsuarez5341/neural-mmo>`_ and familiarize yourself with the end-to-end pipeline in /projekt. This is my personal research code on the platform.
+
+4. Join our Discord for help and discussion!
 
 .. toctree::
    :maxdepth: 8

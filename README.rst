@@ -6,12 +6,19 @@
 .. |fire| image:: docs/source/resource/fire_thumbnail.png
 .. |water| image:: docs/source/resource/water_thumbnail.png
 
+|ags| Quickstart and Documentation
+##################################
+
+All of the information available here and much more is available `here <https://github.com/jsuarez5341>`_ .
+
+Our discord is: <Fill this in>. This is the best way to contact me.
+
+|env|
+
 |ags| Overview
 ##############
 
 This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, and ad-hoc high stakes single and team based conflict.
-
-|env|
 
 |ags| Namesake
 ##############
@@ -28,7 +35,7 @@ The client was developed independently as a collaboration between myself and Cla
 |ags| License & Assets
 ######################
 
-The OpenAI repository is open sourced under the MIT License. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment -- the initial commit here represents the latest pre-employment timestep.
+The OpenAI repository is open sourced under the MIT License. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment -- the initial commit of the OpenAI neural-mmo repository represents the latest pre-employment timestep.
 
 Some assets used in this project belong to `Jagex <https://www.jagex.com/en-GB/>`_, the creators of Runescape, such as
 
@@ -49,3 +56,9 @@ We currently use them for flavor as an homage to the game that inspired the proj
 .. image:: docs/source/resource/neuralMAGENTA.png
 .. image:: docs/source/resource/neuralSKY.png
 
+|ags| Disclaimer
+################
+
+I originally began this problem independently. I continued working on it and released v1.0 during a 6 month internship and collaboration with OpenAI. The client was a collaboration between myself and Clare Zhu. The environment has since been my main project. I plan to continue developing it as an EECS PhD candidate at MIT under Phillip Isola until someone convinces me that there is a better way to solve AGI.
+
+Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, or Phillip.

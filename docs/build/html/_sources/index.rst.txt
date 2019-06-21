@@ -3,6 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+Neural MMO v1.1
+###############
+
 .. toctree::
    :maxdepth: 8
    :caption: User Guide:

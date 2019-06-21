@@ -1,5 +1,5 @@
-.. |ags| image:: resource/ags.png
-.. |env| image:: resource/env.jpg
+.. |ags| image:: doc_resource/ags.png
+.. |env| image:: doc_resource/env.jpg
 
 |ags| Overview
 ==============

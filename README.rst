@@ -1,1 +1,1 @@
-docs/source/overview.rst
+.. include:: docs/source/overview

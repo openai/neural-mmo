@@ -1,1 +1,1 @@
-../../README.rst
+autodoc/README.rst

@@ -17,6 +17,8 @@ sed -i '1s;^;\n;' source/autodoc/modules.rst
 sed -i '1s;^;#############\n;' source/autodoc/modules.rst
 sed -i '1s;^;API Reference\n;' source/autodoc/modules.rst
 
+cp ../README.rst source/autodoc/
+
 make html
 
 #Working on fixing namespaces

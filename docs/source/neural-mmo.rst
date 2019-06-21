@@ -21,6 +21,8 @@
    bash setup.sh
    cd ..
 
+   #Note: Don't clone cowboy. It's an aggressive dev
+   #branch for contributors, not a bleeding edge build
    git clone https://github.com/openai/neural-mmo
    cd neural-mmo
    bash scripts/setup/setup.sh

@@ -1,10 +1,10 @@
 .. |ags| image:: docs/source/resource/ags.png
 .. |env| image:: docs/source/resource/env.jpg
 
-.. |air| image:: resource/air_thumbnail.png
-.. |earth| image:: resource/earth_thumbnail.png
-.. |fire| image:: resource/fire_thumbnail.png
-.. |water| image:: resource/water_thumbnail.png
+.. |air| image:: docs/source/resource/air_thumbnail.png
+.. |earth| image:: docs/source/resource/earth_thumbnail.png
+.. |fire| image:: docs/source/resource/fire_thumbnail.png
+.. |water| image:: docs/source/resource/water_thumbnail.png
 
 |ags| Overview
 ##############

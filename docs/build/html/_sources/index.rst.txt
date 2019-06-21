@@ -16,6 +16,7 @@ You should almost always build from master. The dev branch is not a traditional 
    :maxdepth: 8
    :caption: User Guide:
 
+   overview
    neural-mmo
 
 .. toctree::

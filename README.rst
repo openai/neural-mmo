@@ -13,9 +13,9 @@
 
 1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ .
 
-2. Skim the Pantheon/God/Sword API Reference in forge.trinity
+2. Skim the `Trinity <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ documentation for Pantheon/God/Sword.
 
-3. Head over to the `source code <https://github.com/jsuarez5341/neural-mmo>`_ and familiarize yourself with the end-to-end pipeline in /projekt. This is my personal research code on the platform.
+3. Head over to the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ in the source and familiarize yourself with the end-to-end "demo". This is my personal research code on the platform.
 
 4. Join our `Discord <https://discord.gg/BkMmFUC>`_ for help and discussion!
 

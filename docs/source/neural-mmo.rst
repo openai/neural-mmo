@@ -1,4 +1,11 @@
-.. include:: macros.rst
+.. |ags| image:: resource/ags.png
+
+.. |air| image:: resource/air_thumbnail.png
+.. |earth| image:: resource/earth_thumbnail.png
+.. |fire| image:: resource/fire_thumbnail.png
+.. |water| image:: resource/water_thumbnail.png
+
+.. |env| image:: resource/env.jpg
 
 |ags| Overview
 ==============
@@ -143,22 +150,22 @@ The second problem is probably most familiar to researchers as exploration. Give
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 
-.. image:: ../../../resource/docs/quests.png
+.. image:: resource/quests.png
   :alt: Quest Map
 `Source <https://www.reddit.com/user/Gamez_X>`_
 
 Actually, it's a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:
 
-.. image:: ../../../resource/docs/skills.png
+.. image:: resource/skills.png
   :alt: Skills
 
-.. image:: ../../../resource/docs/equipment.png
+.. image:: resource/equipment.png
   :alt: Equipment
 `Source <https://www.jagex.com/en-GB/>`_
 
 In a massive open world:
 
-.. image:: ../../../resource/docs/map.png
+.. image:: resource/map.png
   :alt: GameMap
 `Source <https://www.jagex.com/en-GB/>`_
 
@@ -229,17 +236,17 @@ Some assets used in this project belong to `Jagex <https://www.jagex.com/en-GB/>
 
 We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research -- however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents.
 
-.. image:: ../../../resource/docs/neuralRED.png
-.. image:: ../../../resource/docs/neuralBLUE.png
-.. image:: ../../../resource/docs/neuralGREEN.png
-.. image:: ../../../resource/docs/neuralFUCHSIA.png
-.. image:: ../../../resource/docs/neuralORANGE.png
-.. image:: ../../../resource/docs/neuralMINT.png
-.. image:: ../../../resource/docs/neuralPURPLE.png
-.. image:: ../../../resource/docs/neuralSPRING.png
-.. image:: ../../../resource/docs/neuralYELLOW.png
-.. image:: ../../../resource/docs/neuralCYAN.png
-.. image:: ../../../resource/docs/neuralMAGENTA.png
-.. image:: ../../../resource/docs/neuralSKY.png
+.. image:: resource/neuralRED.png
+.. image:: resource/neuralBLUE.png
+.. image:: resource/neuralGREEN.png
+.. image:: resource/neuralFUCHSIA.png
+.. image:: resource/neuralORANGE.png
+.. image:: resource/neuralMINT.png
+.. image:: resource/neuralPURPLE.png
+.. image:: resource/neuralSPRING.png
+.. image:: resource/neuralYELLOW.png
+.. image:: resource/neuralCYAN.png
+.. image:: resource/neuralMAGENTA.png
+.. image:: resource/neuralSKY.png
 
 

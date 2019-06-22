@@ -1,5 +1,5 @@
 .. |ags| image:: resource/ags.png
-.. |env| image:: resource/env.png
+.. |env| image:: resource/banner.png
 
 .. |air| image:: resource/air_thumbnail.png
 .. |earth| image:: resource/earth_thumbnail.png
@@ -26,7 +26,6 @@ The master branch will always contain the latest stable version. Note that maste
 To render, run: 
 
 .. code-block:: python
-
    python Forge.py --render #Run the environment with rendering on
 
 Then navigate to http://localhost:8080/forge/embyr/ in Firefox or Chrome to pull up the Embyr client (`source <https://github.com/jsuarez5341/neural-mmo-client>`_ `source <https://github.com/jsuarez5341/neural-mmo-client>`_ )

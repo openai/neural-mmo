@@ -6,8 +6,6 @@
 .. |fire| image:: resource/fire_thumbnail.png
 .. |water| image:: resource/water_thumbnail.png
 
-.. include:: overview
-
 |env|
 
 |ags| Quickstart
@@ -16,6 +14,7 @@
 The master branch will always contain the latest stable version. Note that master cannot be renamed to the current version because of a limitation in Github Pages. **Don't clone cowboy-dev.** It's an extremely aggressive dev branch for contributors, not a bleeding edge build.
 
 .. code-block:: python
+
    #Install OpenAI environment, the Embyr client, and THREE.js. ~1 GB
    #Will only install the environment without --recurse-submodules
    git clone https://github.com/jsuarez5341/neural-mmo --recurse-submodules
@@ -26,12 +25,13 @@ The master branch will always contain the latest stable version. Note that maste
 To render, run: 
 
 .. code-block:: python
+
    python Forge.py --render #Run the environment with rendering on
 
-Then navigate to http://localhost:8080/forge/embyr/ in Firefox or Chrome to pull up the Embyr client (`source <https://github.com/jsuarez5341/neural-mmo-client>`_ `source <https://github.com/jsuarez5341/neural-mmo-client>`_ )
+Then navigate to http://localhost:8080/forge/embyr/ in Firefox or Chrome to pull up the Embyr client (`source <https://github.com/jsuarez5341/neural-mmo-client>`_)
 
 |ags| Projekt 
-#############
+=============
 
 The project is divided into four modules:
 
@@ -49,7 +49,7 @@ The objective is to create agents that scale to the complexity and robustness of
 |earth| |fire| Engineering: Env that scales to real world complexity
 
 |water| Trinity
-===============
+---------------
 
 Trinity is the native API for researchers (the naming is simply flavor -- see "Namesake" below). It consists of three base classes, Pantheon, God, and Sword, which you can override to execute code at the Cluster, Server, and Core levels, respectively.
 
@@ -86,23 +86,23 @@ You can train locally on multiple cores with:
    python Forge.py --nRealm 4 #Rapid style training across 4 environments
 
 |air| Ethyr
-===========
+-----------
 Ethyr is the "contrib" for this project. It contains useful research tools for interacting with the project. I've seeded it with the helper classes from my personal experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
 
 |earth| Blade
-=============
+-------------
 Blade is the core environment, including game state and control flow. Researchers should not need to touch this, outside perhaps importing core configurations, i/o tools, and enums.
 
 |fire| Embyr
-============
-`Embyr <https://docs.google.com/document/d/1_76rytptpyssh2_cffz3mfso-9vl3_tf5ziaiz8qms8/edit?usp=sharing>`_ is an independent repository containing THREE.js web client. It's written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. As of v1.1, it is a submodule of the main repository and does not require independent setup. In order to run it, run Forge.py with --render enabled, then navigate to localhost:8080/forge/embyr in Firefox or Chrome. It will take a couple seconds to initialize and load assets. You will need to refresh the page whenever you reboot the server (Forge.py).
+------------
+`Embyr <https://github.com/jsuarez5341/neural-mmo-client>`_ is an independent repository containing THREE.js web client. It's written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. You will need to refresh the page whenever you reboot the server (Forge.py).
 
 Performance is around 50-60 FPS with ~3s load on a high-end desktop, 30 FPS with ~10s load on my Razer laptop. It runs better on Chrome than Firefox. Other browsers may work but are not officially supported.
 
 I personally plan on continuing development on both the main environment and the client. The environment repo is quite clean, but the client could use some restructuring. I intend to refactor it for v1.2. Environment updates will most likely be released in larger chunks, potentially coupled to future publications. On the other hand, the client is under active and rapid development. You can expect most features, at least in so far as they are applicable to the current environment build, to be released as soon as they are stable. Feel free to contact me with ideas and feature requests.
 
 |ags| Known Limitations
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 The client has been tested with Firefox on Ubuntu. Don't use Chrome. It should work on other Linux distros and on Macs -- if you run into issues, let me know.
 
@@ -111,7 +111,7 @@ Use Nvidia drivers if your hardware setup allows. The only real requirement is s
 This is because the research overlays are written as raw glsl shaders, which you probably don't want to try to edit. In particular, the counts exploration visualizer hard codes eight textures corresponding to exploration maps. This exceeds the number of allowable textures. I will look into fixing this into future if there is significant demand. If you happen to be a shader wizard with spare time, feel free to submit a PR.
 
 |ags| Failure Modes
-###################
+===================
 
 Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.
 
@@ -153,7 +153,7 @@ The most complex class of games considered to date is MOBAs (Massive Online Batt
 While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.
 
 |ags| File Structure
-####################
+====================
 
 (Somewhat outdated -- Important information has been ported to the `official documentation <https://github.com/jsuarez5341>`_ ).
 

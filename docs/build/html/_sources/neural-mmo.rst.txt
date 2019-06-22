@@ -1,4 +1,5 @@
 .. |ags| image:: resource/ags.png
+.. |env| image:: resource/env.png
 
 .. |air| image:: resource/air_thumbnail.png
 .. |earth| image:: resource/earth_thumbnail.png
@@ -6,6 +7,8 @@
 .. |water| image:: resource/water_thumbnail.png
 
 .. include:: overview
+
+|env|
 
 |ags| Quickstart
 ################

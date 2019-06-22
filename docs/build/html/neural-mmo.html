@@ -171,21 +171,13 @@
             
   <div class="section" id="ags-quickstart">
 <h1><img alt="ags" src="_images/ags.png" /> Quickstart<a class="headerlink" href="#ags-quickstart" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Recommended Setup. This is the latest stable version</span>
-<span class="c1">#Don&#39;t clone cowboy-dev. It&#39;s an extremely aggressive</span>
-<span class="c1">#dev branch for contributors, not a bleeding edge build</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
-<span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
-<span class="n">bash</span> <span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
-</pre></div>
-</div>
-<p>This will download both the OpenAI environment, the independent client, and THREE.js. The latter two are required for rendering.</p>
-<p>The setup file will only install _external_ dependencies – we assume you have already setup <strong>Anaconda with Python 3.7+</strong>. The environment is framework independently, but our experiment code (the demo) depends on PyTorch.</p>
+<p>The master branch will always contain the latest stable version. Note that master cannot be renamed to the current version because of a limitation in Github Pages. <strong>Don’t clone cowboy-dev.</strong> It’s an extremely aggressive dev branch for contributors, not a bleeding edge build.</p>
+<p><strong>We assume you already have an Anaconda setup with Python 3.7+.</strong>. The environment is framework independent, but our experiment code (the demo) uses PyTorch.</p>
 <p>To render, run:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">render</span> <span class="c1">#Run the environment with rendering on</span>
 </pre></div>
 </div>
-<p>Then navigate to <a class="reference external" href="http://localhost:8080/forge/embyr/">http://localhost:8080/forge/embyr/</a> in Firefox or Chrome to pull up Embyr (the renderer). Give it a few seconds to load assets and stabilize fps. Read the Embyr documentation if you are having issues. You can also view the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">client source</a> if you are interested.</p>
+<p>Then navigate to <a class="reference external" href="http://localhost:8080/forge/embyr/">http://localhost:8080/forge/embyr/</a> in Firefox or Chrome to pull up the Embyr client (<a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">source</a> <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">source</a> )</p>
 </div>
 <div class="section" id="ags-projekt">
 <h1><img alt="ags" src="_images/ags.png" /> Projekt<a class="headerlink" href="#ags-projekt" title="Permalink to this headline">¶</a></h1>

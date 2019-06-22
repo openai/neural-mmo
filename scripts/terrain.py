@@ -133,6 +133,7 @@ scale = int(sz / 5)
 root = 'resource/maps/'
 tex = textures()
 
+print('Generating {} game maps. This may take a few minutes'.format(nMaps))
 for i, seed in enumerate(seeds):
    print('Generating map ' + str(i))
    path = root + 'procedural/map' + str(i) + '/'
@@ -145,4 +146,5 @@ for i, seed in enumerate(seeds):
    fractal(terrain, path+'fractal.png')
    render(tiles, path+'map.png')
    index(tiles, path)
+
 

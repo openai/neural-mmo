@@ -1,4 +1,5 @@
 rm source/autodoc/*
+make clean
 
 #Don't use: 
 #  undoc-members (pollutes with garbage internals)

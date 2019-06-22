@@ -158,8 +158,454 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="forge-embyr-deprecated-raw-module">
-<h1>forge.embyr.deprecated.raw module<a class="headerlink" href="#forge-embyr-deprecated-raw-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-forge.embyr.deprecated.raw">
+<span id="forge-embyr-deprecated-raw-module"></span><h1>forge.embyr.deprecated.raw module<a class="headerlink" href="#module-forge.embyr.deprecated.raw" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol">
+<em class="property">class </em><code class="descclassname">forge.embyr.deprecated.raw.</code><code class="descname">MyServerProtocol</code><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.twisted.websocket.WebSocketServerProtocol</span></code></p>
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.beginMessage">
+<code class="descname">beginMessage</code><span class="sig-paren">(</span><em>isBinary=False</em>, <em>doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.beginMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.beginMessageFrame">
+<code class="descname">beginMessageFrame</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.beginMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.connectionLost">
+<code class="descname">connectionLost</code><span class="sig-paren">(</span><em>reason</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection is shut down.</p>
+<p>Clear any circular references here, and any external references
+to this Protocol.  The connection has been closed.</p>
+<p>&#64;type reason: L{twisted.python.failure.Failure}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.connectionMade">
+<code class="descname">connectionMade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.connectionMade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when a connection is made.</p>
+<p>This may be considered the initializer of the protocol, because
+it is called when the connection is completed.  For clients,
+this is called once the connection to the server has been
+established; for servers, this is called after an accept() call
+stops blocking and a socket has been received.  If you need to
+send any greeting or initial message, do it here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.consumeData">
+<code class="descname">consumeData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.consumeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume buffered (incoming) data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.dataReceived">
+<code class="descname">dataReceived</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.dataReceived" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called whenever data is received.</p>
+<p>Use this method to translate to a higher-level message.  Usually, some
+callback will be made upon the receipt of each complete protocol
+message.</p>
+<dl class="simple">
+<dt>&#64;param data: a string of indeterminate length.  Please keep in mind</dt><dd><p>that you will probably need to buffer some data, as partial
+(or multiple) protocol messages may be received!  I recommend
+that unit tests for protocols call through to this method with
+differing chunk sizes, down to one byte at a time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.dropConnection">
+<code class="descname">dropConnection</code><span class="sig-paren">(</span><em>abort=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.dropConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop the underlying TCP connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.endMessage">
+<code class="descname">endMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.endMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.endMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.failHandshake">
+<code class="descname">failHandshake</code><span class="sig-paren">(</span><em>reason</em>, <em>code=400</em>, <em>responseHeaders=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.failHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>During opening handshake the client request was invalid, we send a HTTP
+error response and then drop the connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.get_channel_id">
+<code class="descname">get_channel_id</code><span class="sig-paren">(</span><em>channel_id_type='tls-unique'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.get_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.wamp.interfaces.ITransport.get_channel_id()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.logPrefix">
+<code class="descname">logPrefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.logPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a prefix matching the class name, to identify log messages
+related to this protocol instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.logRxFrame">
+<code class="descname">logRxFrame</code><span class="sig-paren">(</span><em>frameHeader</em>, <em>payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.logRxFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after WebSocket frame has been received and decoded,
+but only when self.logFrames == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.logRxOctets">
+<code class="descname">logRxOctets</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.logRxOctets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after raw octets have been received, but only when
+self.logOctets == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.logTxFrame">
+<code class="descname">logTxFrame</code><span class="sig-paren">(</span><em>frameHeader</em>, <em>payload</em>, <em>repeatLength</em>, <em>chopsize</em>, <em>sync</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.logTxFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after WebSocket frame has been encoded and sent, but
+only when self.logFrames == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.logTxOctets">
+<code class="descname">logTxOctets</code><span class="sig-paren">(</span><em>data</em>, <em>sync</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.logTxOctets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after raw octets have been sent, but only when
+self.logOctets == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.makeConnection">
+<code class="descname">makeConnection</code><span class="sig-paren">(</span><em>transport</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.makeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a connection to a transport and a server.</p>
+<p>This sets the ‘transport’ attribute of this Protocol, and calls the
+connectionMade() callback.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onAutoPingTimeout">
+<code class="descname">onAutoPingTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onAutoPingTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>When doing automatic ping/pongs to detect broken connection, the peer
+did not reply in time to our ping. We drop the connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onClose">
+<code class="descname">onClose</code><span class="sig-paren">(</span><em>wasClean</em>, <em>code</em>, <em>reason</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onClose()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onCloseFrame">
+<code class="descname">onCloseFrame</code><span class="sig-paren">(</span><em>code</em>, <em>reasonRaw</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onCloseFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback when a Close frame was received. The default implementation answers by
+sending a Close when no Close was sent before. Otherwise it drops
+the TCP connection either immediately (when we are a server) or after a timeout
+(when we are a client and expect the server to drop the TCP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<em>int</em>) – Close status code, if there was one (<code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProtocol</span></code>.CLOSE_STATUS_CODE_*).</p></li>
+<li><p><strong>reasonRaw</strong> (<em>bytes</em>) – Close reason (when present, a status code MUST have been also be present).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onCloseHandshakeTimeout">
+<code class="descname">onCloseHandshakeTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onCloseHandshakeTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We expected the peer to respond to us initiating a close handshake. It didn’t
+respond (in time self.closeHandshakeTimeout) with a close response frame though.
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onConnect">
+<code class="descname">onConnect</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback fired during WebSocket opening handshake when new WebSocket client
+connection is about to be established.</p>
+<p>When you want to accept the connection, return the accepted protocol
+from list of WebSocket (sub)protocols provided by client or <cite>None</cite> to
+speak no specific one or when the client protocol list was empty.</p>
+<p>You may also return a pair of <cite>(protocol, headers)</cite> to send additional
+HTTP headers, with <cite>headers</cite> being a dictionary of key-values.</p>
+<p>Throw <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.types.ConnectionDeny</span></code> when you don’t want
+to accept the WebSocket connection request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onFrameBegin">
+<code class="descname">onFrameBegin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onFrameBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin of receive new frame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onFrameData">
+<code class="descname">onFrameData</code><span class="sig-paren">(</span><em>payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>New data received within frame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onFrameEnd">
+<code class="descname">onFrameEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onFrameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>End of frame received.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessage">
+<code class="descname">onMessage</code><span class="sig-paren">(</span><em>payload</em>, <em>isBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessageBegin">
+<code class="descname">onMessageBegin</code><span class="sig-paren">(</span><em>isBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessageBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageBegin()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessageEnd">
+<code class="descname">onMessageEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessageEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageEnd()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrame">
+<code class="descname">onMessageFrame</code><span class="sig-paren">(</span><em>payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrameBegin">
+<code class="descname">onMessageFrameBegin</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrameBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameBegin()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrameData">
+<code class="descname">onMessageFrameData</code><span class="sig-paren">(</span><em>payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameData()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrameEnd">
+<code class="descname">onMessageFrameEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onMessageFrameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameEnd()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onOpen">
+<code class="descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onOpen()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onOpenHandshakeTimeout">
+<code class="descname">onOpenHandshakeTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onOpenHandshakeTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We expected the peer to complete the opening handshake with to us.
+It didn’t do so (in time self.openHandshakeTimeout).
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onPing">
+<code class="descname">onPing</code><span class="sig-paren">(</span><em>payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onPing()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onPong">
+<code class="descname">onPong</code><span class="sig-paren">(</span><em>payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onPong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onPong()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.onServerConnectionDropTimeout">
+<code class="descname">onServerConnectionDropTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.onServerConnectionDropTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We (a client) expected the peer (a server) to drop the connection,
+but it didn’t (in time self.serverConnectionDropTimeout).
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.processControlFrame">
+<code class="descname">processControlFrame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.processControlFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a completely received control frame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.processData">
+<code class="descname">processData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.processData" title="Permalink to this definition">¶</a></dt>
+<dd><p>After WebSocket handshake has been completed, this procedure will do
+all subsequent processing of incoming bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.processHandshake">
+<code class="descname">processHandshake</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.processHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process WebSocket opening handshake request from client.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.processProxyConnect">
+<code class="descname">processProxyConnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.processProxyConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process proxy connect.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.registerProducer">
+<code class="descname">registerProducer</code><span class="sig-paren">(</span><em>producer</em>, <em>streaming</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.registerProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a Twisted producer with this protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>producer</strong> (<em>object</em>) – A Twisted push or pull producer.</p></li>
+<li><p><strong>streaming</strong> (<em>bool</em>) – Producer type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendClose">
+<code class="descname">sendClose</code><span class="sig-paren">(</span><em>code=None</em>, <em>reason=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendClose()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendCloseFrame">
+<code class="descname">sendCloseFrame</code><span class="sig-paren">(</span><em>code=None</em>, <em>reasonUtf8=None</em>, <em>isReply=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendCloseFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a close frame and update protocol state. Note, that this is
+an internal method which deliberately allows not send close
+frame with invalid payload.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendData">
+<code class="descname">sendData</code><span class="sig-paren">(</span><em>data</em>, <em>sync=False</em>, <em>chopsize=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for self.transport.write which allows to give a chopsize.
+When asked to chop up writing to TCP stream, we write only chopsize
+octets and then give up control to select() in underlying reactor so
+that bytes get onto wire immediately. Note that this is different from
+and unrelated to WebSocket data message fragmentation. Note that this
+is also different from the TcpNoDelay option which can be set on the
+socket.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendFrame">
+<code class="descname">sendFrame</code><span class="sig-paren">(</span><em>opcode</em>, <em>payload=b''</em>, <em>fin=True</em>, <em>rsv=0</em>, <em>mask=None</em>, <em>payload_len=None</em>, <em>chopsize=None</em>, <em>sync=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send out frame. Normally only used internally via sendMessage(),
+sendPing(), sendPong() and sendClose().</p>
+<p>This method deliberately allows to send invalid frames (that is frames
+invalid per-se, or frames invalid because of protocol state). Other
+than in fuzzing servers, calling methods will ensure that no invalid
+frames are sent.</p>
+<p>In addition, this method supports explicit specification of payload
+length. When payload_len is given, it will always write that many
+octets to the stream. It’ll wrap within payload, resending parts of
+that when more octets were requested The use case is again for fuzzing
+server which want to sent increasing amounts of payload data to peers
+without having to construct potentially large messages themselves.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendHtml">
+<code class="descname">sendHtml</code><span class="sig-paren">(</span><em>html</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendHtml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send HTML page HTTP response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendHttpErrorResponse">
+<code class="descname">sendHttpErrorResponse</code><span class="sig-paren">(</span><em>code</em>, <em>reason</em>, <em>responseHeaders=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendHttpErrorResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send out HTTP error response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendMessage">
+<code class="descname">sendMessage</code><span class="sig-paren">(</span><em>payload</em>, <em>isBinary=False</em>, <em>fragmentSize=None</em>, <em>sync=False</em>, <em>doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendMessageFrame">
+<code class="descname">sendMessageFrame</code><span class="sig-paren">(</span><em>payload</em>, <em>sync=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendMessageFrameData">
+<code class="descname">sendMessageFrameData</code><span class="sig-paren">(</span><em>payload</em>, <em>sync=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendMessageFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessageFrameData()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendPing">
+<code class="descname">sendPing</code><span class="sig-paren">(</span><em>payload=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPing()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendPong">
+<code class="descname">sendPong</code><span class="sig-paren">(</span><em>payload=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendPong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPong()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendPreparedMessage">
+<code class="descname">sendPreparedMessage</code><span class="sig-paren">(</span><em>preparedMsg</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendPreparedMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPreparedMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendRedirect">
+<code class="descname">sendRedirect</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendRedirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send HTTP Redirect (303) response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.sendServerStatus">
+<code class="descname">sendServerStatus</code><span class="sig-paren">(</span><em>redirectUrl=None</em>, <em>redirectAfter=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.sendServerStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to send out server status/version upon receiving a HTTP/GET without
+upgrade to WebSocket header (and option serverStatus is True).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.setTrackTimings">
+<code class="descname">setTrackTimings</code><span class="sig-paren">(</span><em>enable</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.setTrackTimings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable tracking of detailed timings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – Turn time tracking on/off.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.succeedHandshake">
+<code class="descname">succeedHandshake</code><span class="sig-paren">(</span><em>res</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.succeedHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback after onConnect() returns successfully. Generates the response for the handshake.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.deprecated.raw.MyServerProtocol.unregisterProducer">
+<code class="descname">unregisterProducer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.deprecated.raw.MyServerProtocol.unregisterProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregister Twisted producer with this protocol.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

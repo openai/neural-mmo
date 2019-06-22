@@ -1,10 +1,5 @@
-forge.embyr package
-===================
-
-.. automodule:: forge.embyr
-    :members:
-    :inherited-members:
-    :show-inheritance:
+forge.embyr namespace
+=====================
 
 
 .. toctree::

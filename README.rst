@@ -1,5 +1,5 @@
 .. |ags| image:: docs/source/resource/ags.png
-.. |env| image:: docs/source/resource/ags.png
+.. |env| image:: docs/source/resource/env.png
 
 .. |air| image:: docs/source/resource/air_thumbnail.png
 .. |earth| image:: docs/source/resource/earth_thumbnail.png

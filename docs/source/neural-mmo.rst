@@ -10,7 +10,7 @@
 |ags| Quickstart
 ################
 
-The default branch will always contain the latest stable version. Don't clone cowboy-dev. It's an extremely aggressive dev branch for contributors, not a bleeding edge build.
+The master branch will always contain the latest stable version. Note that master cannot be renamed to the current version because of a limitation in Github Pages. **Don't clone cowboy-dev.** It's an extremely aggressive dev branch for contributors, not a bleeding edge build.
 
 .. code-block:: python
    #Install OpenAI environment, the Embyr client, and THREE.js. ~1 GB

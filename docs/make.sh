@@ -1,4 +1,4 @@
-rm source/autodoc/*
+rm -r source/autodoc/*
 make clean
 
 #Don't use: 

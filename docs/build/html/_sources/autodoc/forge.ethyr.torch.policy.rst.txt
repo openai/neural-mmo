@@ -10,5 +10,9 @@ forge.ethyr.torch.policy package
 .. toctree::
 
    forge.ethyr.torch.policy.attention
-   forge.ethyr.torch.policy.modules
+   forge.ethyr.torch.policy.conv
+   forge.ethyr.torch.policy.embed
+   forge.ethyr.torch.policy.functional
+   forge.ethyr.torch.policy.linear
+   forge.ethyr.torch.policy.transformer
 

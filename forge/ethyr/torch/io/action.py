@@ -6,8 +6,8 @@ from collections import defaultdict
 import torch
 from torch import nn
 
-from forge.ethyr.torch.policy.attention import MiniAttend
-from forge.ethyr.torch.utils import classify
+from forge.ethyr.torch.policy import attention
+from forge.ethyr.torch.policy import functional
 from forge.blade.io import action
 
 class NetTree(nn.Module):
@@ -127,91 +127,42 @@ class NetTree(nn.Module):
 
 class Action(nn.Module):
    '''Head for selecting an action'''
-   def __init__(self, net, config):
-      super().__init__()
-      self.net = net
-      self.config = config
-      
-   def forward(self, stim, targs, variable):
-      out, idx = self.net(stim, targs)
-      return out, idx 
+   def forward(self, x):
+      xIdx = functional.classify(x)
+      return x, xIdx
 
 class ConstDiscreteAction(Action):
    '''Head for making a discrete selection from
    a constant number of candidate actions'''
    def __init__(self, config, h, ydim):
-      super().__init__(ConstDiscrete(h, ydim), config)
+      super().__init__()
+      self.net = torch.nn.Linear(h, ydim)
 
-   def forward(self, stim, args):
-      return super().forward(stim, args, variable=False)
+   def forward(self, stim):
+      x = self.net(x)
+      if len(x.shape) > 1:
+         x = x.squeeze(-2)
+      return super().forward(x)
 
 class VariableDiscreteAction(Action):
    '''Head for making a discrete selection from
    a variable number of candidate actions'''
    def __init__(self, config, xdim, h):
-      super().__init__(VariableDiscrete(xdim, h), config)
+      super().__init__()
+      #self.net = attention.AttnCat(h)
+      self.net = attention.DotReluBlock(h)
 
    def forward(self, stim, args):
-      return super().forward(stim, args, variable=True)
-
-####### Network Modules
-class ConstDiscrete(nn.Module):
-   '''Outputs a constant number of logits'''
-   def __init__(self, h, ydim):
-      super().__init__()
-      self.fc1 = torch.nn.Linear(h, ydim)
-
-   def forward(self, x, _):
-      x = self.fc1(x)
-      if len(x.shape) > 1:
-         x = x.squeeze(-2)
-      xIdx = classify(x)
-      return x, xIdx
-
-class VariableDiscrete(nn.Module):
-   '''Outputs a variable number of logits'''
-   def __init__(self, xdim, h):
-      super().__init__()
-      self.attn  = AttnCat(h)
-
-   #Arguments: stim, action/argument embedding
-   def forward(self, key, vals):
-      x = self.attn(key, vals)
-      #if len(x.shape) > 1:
-      #   x = x.squeeze(-2)
-      xIdx = classify(x)
-      return x, xIdx
-
-class AttnCat(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.attn = MiniAttend(h, flat=False)
-      self.fc   = nn.Linear(h, 1)
-      self.h = h
-
-   def forward(self, key, vals):
-      K, V = key, vals
+      #Fix this mess
+      K, V = stim, args 
       if len(K.shape) == 1:
          K = K.unsqueeze(0).unsqueeze(0).unsqueeze(0)
          V = V.unsqueeze(0).unsqueeze(0)
-      
-      #K = K.expand_as(V)
-      #Yes, V, K. Otherwise all keys are equiv
-      attn = self.attn(V, K)
-      attn = self.fc(attn)
-      attn = attn.squeeze(-1)
-      #attn = self.attn(K, V).mean(-1)
 
-      #attn = self.attn(K, V).mean(-1)
-      attn = attn.squeeze(0).squeeze(0)
-      return attn
+      x = self.net(K, V)
+      x = x.squeeze(0).squeeze(0)
 
-class AttnPool(nn.Module):
-   def __init__(self, xdim, h):
-      super().__init__()
-      self.fc = torch.nn.Linear(xdim, h)
+      return super().forward(x)
 
-   def forward(self, x):
-      x = self.fc(x)
-      x, _ = torch.max(x, 0)
-      return x
+
+

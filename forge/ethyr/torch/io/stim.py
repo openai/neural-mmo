@@ -12,7 +12,7 @@ from forge.blade.io import stimulus, action
 from forge.blade.io import utils
 from forge.blade.io.serial import Serial
 
-from forge.ethyr.torch.policy.modules import Input, TaggedInput, Embedding
+from forge.ethyr.torch.policy.embed import Input, TaggedInput, Embedding
 
 class Lookup:
    '''Lookup utility for indexing 

@@ -15,7 +15,7 @@
 |ags| Welcome to the Platform!
 ##############################
 
-1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_.
+1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ and `update slide deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_.
 
 2. Skim the `Trinity <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ documentation for Pantheon/God/Sword.
 

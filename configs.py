@@ -66,7 +66,6 @@ class Experiment(Config):
    #NSWORD = 2
    KEYLEN = 4
 
-   '''
    NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
    SYNCUPDATES = 1024#100 #Number of data to sync
    DEVICE = 'cuda:0'
@@ -79,6 +78,7 @@ class Experiment(Config):
    NROLLOUTS = NGOD * 10
    SYNCUPDATES = 100
    DEVICE = 'cpu:0'
+   '''
 
    BATCH = 32
    SAMPLE = False

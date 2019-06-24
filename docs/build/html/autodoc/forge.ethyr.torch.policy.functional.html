@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.policy.attention module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.ethyr.torch.policy.functional module &mdash; Neural MMO 1.1 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.ethyr.torch.policy.conv module" href="forge.ethyr.torch.policy.conv.html" />
-    <link rel="prev" title="forge.ethyr.torch.policy package" href="forge.ethyr.torch.policy.html" /> 
+    <link rel="next" title="forge.ethyr.torch.policy.linear module" href="forge.ethyr.torch.policy.linear.html" />
+    <link rel="prev" title="forge.ethyr.torch.policy.embed module" href="forge.ethyr.torch.policy.embed.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -156,13 +156,13 @@
         
           <li><a href="forge.ethyr.torch.policy.html">forge.ethyr.torch.policy package</a> &raquo;</li>
         
-      <li>forge.ethyr.torch.policy.attention module</li>
+      <li>forge.ethyr.torch.policy.functional module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/autodoc/forge.ethyr.torch.policy.attention.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/autodoc/forge.ethyr.torch.policy.functional.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -175,8 +175,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-forge.ethyr.torch.policy.attention">
-<span id="forge-ethyr-torch-policy-attention-module"></span><h1>forge.ethyr.torch.policy.attention module<a class="headerlink" href="#module-forge.ethyr.torch.policy.attention" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-forge.ethyr.torch.policy.functional">
+<span id="forge-ethyr-torch-policy-functional-module"></span><h1>forge.ethyr.torch.policy.functional module<a class="headerlink" href="#module-forge.ethyr.torch.policy.functional" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="forge.ethyr.torch.policy.functional.classify">
+<code class="descclassname">forge.ethyr.torch.policy.functional.</code><code class="descname">classify</code><span class="sig-paren">(</span><em>logits</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.policy.functional.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample an action from logits</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.ethyr.torch.policy.functional.dot">
+<code class="descclassname">forge.ethyr.torch.policy.functional.</code><code class="descname">dot</code><span class="sig-paren">(</span><em>k</em>, <em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.policy.functional.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute v*kT (transpose on last two dims)</p>
+</dd></dl>
+
 </div>
 
 
@@ -187,10 +199,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.ethyr.torch.policy.conv.html" class="btn btn-neutral float-right" title="forge.ethyr.torch.policy.conv module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.ethyr.torch.policy.linear.html" class="btn btn-neutral float-right" title="forge.ethyr.torch.policy.linear module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="forge.ethyr.torch.policy.html" class="btn btn-neutral float-left" title="forge.ethyr.torch.policy package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.ethyr.torch.policy.embed.html" class="btn btn-neutral float-left" title="forge.ethyr.torch.policy.embed module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

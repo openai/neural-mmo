@@ -53,12 +53,12 @@ if __name__ == '__main__':
 
    #Create a Trinity object specifying
    #Cluster, Server, and Core level execution
-   trin = Trinity(Pantheon, God, Sword)
+   trinity = Trinity(Pantheon, God, Sword)
 
    if args.render:
-      render(trin, config, args)
+      render(trinity, config, args)
 
-   trin.init(config, args)
+   trinity.init(config, args)
 
    #Run and print logs
    while True:

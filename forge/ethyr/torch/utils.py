@@ -1,18 +1,9 @@
+from pdb import set_trace as T
 import numpy as np
+
 import torch
 from torch import nn
-from torch.autograd import Variable
 
-from torch.nn import functional as F
-from torch.distributions import Categorical
-
-def classify(logits):
-   '''Sample an action from logits'''
-   if len(logits.shape) == 1:
-      logits = logits.view(1, -1)
-   distribution = Categorical(1e-3+F.softmax(logits, dim=1))
-   atn = distribution.sample()
-   return atn
 
 def modelSize(net):
    '''Print model size'''
@@ -22,17 +13,9 @@ def modelSize(net):
    params = int(params/1000)
    print("Network has ", params, "K params")
 
-#ModuleList wrapper
-def moduleList(module, *args, n=1):
+def ModuleList(module, *args, n=1):
    '''Repeat module n times'''
    return nn.ModuleList([module(*args) for i in range(n)])
-
-#Variable wrapper
-def var(xNp, volatile=False, cuda=False):
-   x = Variable(torch.from_numpy(xNp), volatile=volatile).float()
-   if cuda:
-      x = x.cuda()
-   return x
 
 #Full-network initialization wrapper
 def initWeights(net, scheme='orthogonal'):

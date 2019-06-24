@@ -95,7 +95,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ags-failure-modes"> Failure Modes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ags-file-structure"> File Structure</a></li>
 </ul>
 </li>
 </ul>
@@ -209,34 +208,33 @@
 <p><img alt="earth" src="_images/earth_thumbnail.png" /> <img alt="fire" src="_images/fire_thumbnail.png" /> Engineering: Env that scales to real world complexity</p>
 <div class="section" id="water-trinity">
 <h3><img alt="water" src="_images/water_thumbnail.png" /> Trinity<a class="headerlink" href="#water-trinity" title="Permalink to this headline">¶</a></h3>
-<p>Trinity is the native API for researchers (the naming is simply flavor – see “Namesake” below). It consists of three base classes, Pantheon, God, and Sword, which you can override to execute code at the Cluster, Server, and Core levels, respectively.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span>
-<span class="kn">from</span> <span class="nn">forge.trinity</span> <span class="kn">import</span> <span class="n">smith</span><span class="p">,</span> <span class="n">Trinity</span><span class="p">,</span> <span class="n">Pantheon</span><span class="p">,</span> <span class="n">God</span><span class="p">,</span> <span class="n">Sword</span>
-<span class="n">trinity</span> <span class="o">=</span> <span class="n">Trinity</span><span class="p">(</span><span class="n">Pantheon</span><span class="p">,</span> <span class="n">God</span><span class="p">,</span> <span class="n">Sword</span><span class="p">)</span>
-<span class="n">envs</span> <span class="o">=</span> <span class="n">smith</span><span class="o">.</span><span class="n">Native</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">trinity</span><span class="p">)</span>
-<span class="n">envs</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<p>The environment itself follows the OpenAI Gym API almost identically.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.blade.core.realm</span> <span class="kn">import</span> <span class="n">Realm</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+
+<span class="c1">#The environment is persistent: call reset only upon initialization</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="c1">#Observations contain entity and stimulus</span>
+<span class="c1">#for each agent in each environment.</span>
+<span class="n">actions</span> <span class="o">=</span> <span class="n">your_algorithm_here</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+
+<span class="c1">#The environment is persistent: &quot;dones&quot; is always None</span>
+<span class="c1">#If an observation is missing, that agent has died</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>That’s it – all communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code.</p>
-<p>The environment API is almost identical to OpenAI Gym.
-.. code-block:: python</p>
-<blockquote>
-<div><p>from forge.trinity import smith
-envs = smith.Realm(config, args, self.step)</p>
-<p>#The environment is persistent: call reset only upon initialization
-obs = envs.reset()</p>
-<p>#Observations contain entity and stimulus
-#for each agent in each environment.
-actions = your_algorithm_here(obs)</p>
-<p>#The environment is persistent: “dones” is always None
-#If an observation is missing, that agent has died
-obs, rewards, dones, infos = envs.step(actions)</p>
-</div></blockquote>
-<p>You can train locally on multiple cores with:
-.. code-block:: python</p>
-<blockquote>
-<div><p>python Forge.py –nRealm 4 #Rapid style training across 4 environments</p>
-</div></blockquote>
+<p>The Trinity API consists of three base classes — Pantheon, God, and Sword (see Namesake if that sounds odd) – that implement framwork agnostic distributed infrastrure on top of the environment. Basic functionality is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create a Trinity object specifying</span>
+<span class="c1">#Cluster, Server, and Core level execution</span>
+<span class="n">trinity</span> <span class="o">=</span> <span class="n">Trinity</span><span class="p">(</span><span class="n">Pantheon</span><span class="p">,</span> <span class="n">God</span><span class="p">,</span> <span class="n">Sword</span><span class="p">)</span>
+<span class="n">trinity</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code. You can train locally on multiple cores with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">nRealm</span> <span class="mi">4</span> <span class="c1">#Rapid style training across 4 environments</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="air-ethyr">
 <h3><img alt="air" src="_images/air_thumbnail.png" /> Ethyr<a class="headerlink" href="#air-ethyr" title="Permalink to this headline">¶</a></h3>
@@ -291,63 +289,6 @@ obs, rewards, dones, infos = envs.step(actions)</p>
 <p><a class="reference external" href="https://www.jagex.com/en-GB/">Source</a></p>
 <p>The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy–especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.</p>
 <p>While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.</p>
-</div>
-<div class="section" id="ags-file-structure">
-<h2><img alt="ags" src="_images/ags.png" /> File Structure<a class="headerlink" href="#ags-file-structure" title="Permalink to this headline">¶</a></h2>
-<p>(Somewhat outdated – Important information has been ported to the <a class="reference external" href="https://github.com/jsuarez5341">official documentation</a> ).</p>
-<dl>
-<dt><img alt="water" src="_images/water_thumbnail.png" /> <strong>/forge/trinity</strong> ~350 lines</dt><dd><ul class="simple">
-<li><p><strong>/forge/trinity/ann.py</strong> - Defines architectures</p></li>
-<li><p><strong>/forge/trinity/god.py</strong> - Defines server level code (e.g. entity tagging)</p></li>
-<li><p><strong>/forge/trinity/pantheon.py</strong> - Defines cluster level code (e.g. gradient averaging)</p></li>
-<li><p><strong>/forge/trinity/sword.py</strong> - Defines core level code (e.g. running networks, collecting rollouts, computing gradients)</p></li>
-<li><p><strong>/forge/trinity/trinity.py</strong> - Wraps a pantheon, god, and sword</p></li>
-<li><p><strong>/forge/trinity/smith.py</strong> - Defines the Native and VecEnv / Gym APIs</p></li>
-</ul>
-</dd>
-<dt><img alt="air" src="_images/air_thumbnail.png" /> <strong>/forge/ethyr</strong> ~250 lines</dt><dd><ul class="simple">
-<li><p><strong>/forge/ethyr/rollouts.py</strong> - Collects and merges rollouts</p></li>
-<li><p><strong>/forge/ethyr/stim.py</strong> - Produces a stimulus from local game state</p></li>
-<li><p><strong>/forge/ethyr/torch</strong> - pytorch specific neural utilities
-* <strong>/forge/ethyr/torch/loss.py</strong> - Defines policy/value loss and advantage
-* <strong>/forge/ethyr/torch/optim.py</strong> - Defines optimization and gradient computation
-* <strong>/forge/ethyr/torch/param.py</strong> - Network surgery useful for serialization
-* <strong>/forge/ethyr/torch/stim.py</strong> - Wraps the generic stimulus library with pytorch tensors
-* <strong>/forge/ethyr/torch/utils.py</strong> - Generic pytorch tools</p></li>
-</ul>
-</dd>
-<dt><img alt="earth" src="_images/earth_thumbnail.png" /> <strong>/forge/blade</strong> ~2k lines, of which &gt;1k are for future expansion. Only italicized files are relevant.</dt><dd><ul>
-<li><p><strong>/forge/blade/action</strong> - Defines what entities can do, what occurs when they do it, and provides structure for reasoning over actions.
-* <strong>/forge/blade/action/action.py</strong> - Class stubs for each action
-* <strong>/forge/blade/action/tree.py</strong> - Tree structure for assembling actions (e.g. action -&gt; sub-action -&gt; args)
-* <strong>_/forge/blade/action/v2.py_</strong> - Actions that entities can select, instantiate, and .call() to directly modify world state</p></li>
-<li><p><strong>/forge/blade/core</strong> — Contains ~500 lines of state and game loop code.
-* <strong>_/forge/blade/core/config.py_</strong> - Defines specifications for each test environment, including entity statistics, the map, and spawn locations.
-* <strong>_/forge/blade/core/tile.py_</strong> - Defines an individual game tile
-* <strong>_/forge/blade/core/map.py_</strong> - Defines a map of game tiles
-* <strong>_/forge/blade/core/env.py_</strong> - Wraps the full game state
-* <strong>_/forge/blade/core/realm.py_</strong> - Defines the game loop updating the environment and agents.</p></li>
-<li><p><strong>/forge/blade/entity</strong> - Defines agents, both neural and scripted
-* <strong>_/forge/blade/entity/player.py_</strong> — Defines “player” state
-* <strong>/forge/blade/entity/npc/</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>/forge/blade/entity/npc/npc.py</strong> — This defines client state (e.g. wraps the neural net making decisions)</p></li>
-<li><p><strong>/forge/blade/entity/npc/mobs.py</strong> - Defines scripted npcs</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p><strong>/forge/blade/hook</strong> - Defines startup scripts that preassemble references</p></li>
-<li><p><strong>/forge/blade/item</strong> - Defines all items in the game, including equipment</p></li>
-<li><p><strong>/forge/blade/lib</strong> - Defines generic utilities that either do not have clean python implementations or require specific changes for the project</p></li>
-<li><p><strong>/forge/blade/systems</strong> - Defines game content</p></li>
-</ul>
-</dd>
-<dt><img alt="fire" src="_images/fire_thumbnail.png" /> <strong>/forge/embyr</strong> Renderer</dt><dd><ul class="simple">
-<li><p>See <a class="reference external" href="https://github.com/jsuarez5341/Godsword-Client">Client Repo</a></p></li>
-</ul>
-</dd>
-</dl>
 </div>
 </div>
 

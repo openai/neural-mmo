@@ -51,26 +51,15 @@ The objective is to create agents that scale to the complexity and robustness of
 |water| Trinity
 ---------------
 
-Trinity is the native API for researchers (the naming is simply flavor -- see "Namesake" below). It consists of three base classes, Pantheon, God, and Sword, which you can override to execute code at the Cluster, Server, and Core levels, respectively.
+The environment itself follows the OpenAI Gym API almost identically.
 
 .. code-block:: python
 
-   python
-   from forge.trinity import smith, Trinity, Pantheon, God, Sword
-   trinity = Trinity(Pantheon, God, Sword)
-   envs = smith.Native(config, args, trinity)
-   envs.run()
-
-That's it -- all communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code.
-
-The environment API is almost identical to OpenAI Gym. 
-.. code-block:: python
-
-   from forge.trinity import smith
-   envs = smith.Realm(config, args, self.step)
+   from forge.blade.core.realm import Realm
+   env = Realm(config, args, self.step)
 
    #The environment is persistent: call reset only upon initialization
-   obs = envs.reset()
+   obs = env.reset()
 
    #Observations contain entity and stimulus
    #for each agent in each environment.
@@ -78,11 +67,21 @@ The environment API is almost identical to OpenAI Gym.
 
    #The environment is persistent: "dones" is always None
    #If an observation is missing, that agent has died
-   obs, rewards, dones, infos = envs.step(actions)
+   obs, rewards, dones, infos = env.step(actions)
 
+The Trinity API consists of three base classes --- Pantheon, God, and Sword (see Namesake if that sounds odd) -- that implement framwork agnostic distributed infrastrure on top of the environment. Basic functionality is:
 
-You can train locally on multiple cores with:
 .. code-block:: python
+
+   #Create a Trinity object specifying
+   #Cluster, Server, and Core level execution
+   trinity = Trinity(Pantheon, God, Sword)
+   trinity.init(config, args)
+
+You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code. You can train locally on multiple cores with:
+
+.. code-block:: python
+
    python Forge.py --nRealm 4 #Rapid style training across 4 environments
 
 |air| Ethyr
@@ -152,49 +151,3 @@ The most complex class of games considered to date is MOBAs (Massive Online Batt
 
 While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.
 
-|ags| File Structure
-====================
-
-(Somewhat outdated -- Important information has been ported to the `official documentation <https://github.com/jsuarez5341>`_ ).
-
-|water| **/forge/trinity** ~350 lines
-   * **/forge/trinity/ann.py** - Defines architectures
-   * **/forge/trinity/god.py** - Defines server level code (e.g. entity tagging)
-   * **/forge/trinity/pantheon.py** - Defines cluster level code (e.g. gradient averaging)
-   * **/forge/trinity/sword.py** - Defines core level code (e.g. running networks, collecting rollouts, computing gradients)
-   * **/forge/trinity/trinity.py** - Wraps a pantheon, god, and sword
-   * **/forge/trinity/smith.py** - Defines the Native and VecEnv / Gym APIs
-
-|air| **/forge/ethyr** ~250 lines
-   * **/forge/ethyr/rollouts.py** - Collects and merges rollouts
-   * **/forge/ethyr/stim.py** - Produces a stimulus from local game state
-   * **/forge/ethyr/torch** - pytorch specific neural utilities
-     * **/forge/ethyr/torch/loss.py** - Defines policy/value loss and advantage
-     * **/forge/ethyr/torch/optim.py** - Defines optimization and gradient computation
-     * **/forge/ethyr/torch/param.py** - Network surgery useful for serialization
-     * **/forge/ethyr/torch/stim.py** - Wraps the generic stimulus library with pytorch tensors
-     * **/forge/ethyr/torch/utils.py** - Generic pytorch tools
-
-|earth| **/forge/blade** ~2k lines, of which >1k are for future expansion. Only italicized files are relevant.
-  * **/forge/blade/action** - Defines what entities can do, what occurs when they do it, and provides structure for reasoning over actions.
-    * **/forge/blade/action/action.py** - Class stubs for each action
-    * **/forge/blade/action/tree.py** - Tree structure for assembling actions (e.g. action -> sub-action -> args)
-    * **_/forge/blade/action/v2.py_** - Actions that entities can select, instantiate, and .call() to directly modify world state
-  * **/forge/blade/core** — Contains ~500 lines of state and game loop code.
-    * **_/forge/blade/core/config.py_** - Defines specifications for each test environment, including entity statistics, the map, and spawn locations.
-    * **_/forge/blade/core/tile.py_** - Defines an individual game tile
-    * **_/forge/blade/core/map.py_** - Defines a map of game tiles
-    * **_/forge/blade/core/env.py_** - Wraps the full game state
-    * **_/forge/blade/core/realm.py_** - Defines the game loop updating the environment and agents.
-  * **/forge/blade/entity** - Defines agents, both neural and scripted
-    * **_/forge/blade/entity/player.py_** — Defines "player" state
-    * **/forge/blade/entity/npc/**
-      * **/forge/blade/entity/npc/npc.py** — This defines client state (e.g. wraps the neural net making decisions)
-      * **/forge/blade/entity/npc/mobs.py** - Defines scripted npcs
-  * **/forge/blade/hook** - Defines startup scripts that preassemble references
-  * **/forge/blade/item** - Defines all items in the game, including equipment
-  * **/forge/blade/lib** - Defines generic utilities that either do not have clean python implementations or require specific changes for the project
-  * **/forge/blade/systems** - Defines game content
-
-|fire| **/forge/embyr** Renderer
-  * See `Client Repo <https://github.com/jsuarez5341/Godsword-Client>`_

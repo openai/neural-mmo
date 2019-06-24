@@ -19,17 +19,17 @@ from forge.ethyr.torch import param
 
 from forge.ethyr.torch.io.stim import Env
 from forge.ethyr.torch.io.action import NetTree
-from forge.ethyr.torch.policy.attention import MiniAttend, Transformer
+from forge.ethyr.torch.policy import attention
 
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
 
       h = config.HIDDEN
-      #self.attn1 = MiniAttend(h)
-      #self.attn2 = MiniAttend(h)
-      self.attn1 = Transformer(h, config.NHEAD)
-      self.attn2 = Transformer(h, config.NHEAD)
+      #net = attention.MiniAttend
+      net = attention.MaxReluBlock
+      self.attn1 = net(h)
+      self.attn2 = net(h)
       self.val  = torch.nn.Linear(h, 1)
 
 class ANN(nn.Module):

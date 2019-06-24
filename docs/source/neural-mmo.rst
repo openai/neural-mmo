@@ -124,7 +124,7 @@ The first failure case is a serious risk, but is shared among all areas of the f
 The second problem is probably most familiar to researchers as exploration. Given a cold start, how can agents bootstrap both to better policies and to better exploration strategies? This is a hard problem, but it is unlikely to kill the project because:
   * This is independently an important problem that many researchers are already working on already
   * The environment of this project is designed collaboratively to assist agents early on in learning, rather than adversarially as a hard benchmark
-  * `Recent <https://blog.openai.com/openai-five/>`_ `projects <https://blog.openai.com/learning-dexterity/>_` have demonstrated success at scale.
+  * `Recent <https://blog.openai.com/openai-five/>`_ `projects <https://blog.openai.com/learning-dexterity/>`_ have demonstrated success at scale.
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 

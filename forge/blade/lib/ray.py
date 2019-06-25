@@ -12,7 +12,7 @@ def init(mode):
    if mode == 'local':
       ray.init(local_mode=ray.PYTHON_MODE)
    elif mode == 'default':
-      ray.init(num_gpus=1)
+      ray.init()
    elif mode == 'remote':
       print('Set up HOSTNAME')
       ray.init(redis_address=os.environ['HOSTNAME'] + ':6379')

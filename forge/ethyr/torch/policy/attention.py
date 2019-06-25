@@ -70,15 +70,28 @@ class AttnCat(nn.Module):
          V = V.unsqueeze(0).unsqueeze(0)
 
       #K = K.expand_as(V)
-      attn = functional.dot(K, V)
+      #attn = functional.dot(K, V)
 
       #Yes, V, K. Otherwise all keys are equiv
-      #attn = self.attn(V, K)
-      #attn = self.fc(attn)
-      #attn = attn.squeeze(-1)
+      attn = self.attn(V, K)
+      attn = self.fc(attn)
+      attn = attn.squeeze(-1)
 
       #attn = self.attn(K, V).mean(-1)
       attn = attn.squeeze(0).squeeze(0)
+      return attn
+
+class BareMetal(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.h = h
+
+   def forward(self, key, vals):
+      K, V = key, vals
+      if len(K.shape) == 1:
+         K = K.unsqueeze(0)
+
+      attn = (K*V).mean(-1)
       return attn
 
 

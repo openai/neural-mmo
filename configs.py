@@ -61,13 +61,16 @@ class Experiment(Config):
    EMBED   = 128
    HIDDEN  = 128
    NHEAD   = 8
-   NGOD = 1
+   NGOD = 2
+   NSWORD = 2
    NATN = 1
-   #NSWORD = 2
    KEYLEN = 4
 
-   NROLLOUTS = NGOD * 400#10 #Rollouts per gradient step
-   SYNCUPDATES = 1024#100 #Number of data to sync
+   NROLLOUTS = 400 / NGOD #10 #Rollouts per gradient step
+
+   #This is per core. Going too high (frac of nRollout steps)
+   #will clobber parallelization
+   SYNCUPDATES = 256 #100 #Number of data to sync
    DEVICE = 'cuda:0'
 
    #CPU Debug mode
@@ -80,7 +83,7 @@ class Experiment(Config):
    DEVICE = 'cpu:0'
    '''
 
-   BATCH = 32
+   BATCH = 32 
    SAMPLE = False
    NATTN = 2
    NPOP = 1

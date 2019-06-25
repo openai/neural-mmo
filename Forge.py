@@ -62,6 +62,6 @@ if __name__ == '__main__':
 
    #Run and print logs
    while True:
-      time = trin.step()
-      logs = trin.logs()
+      time = trinity.step()
+      logs = trinity.logs()
       logs = TimeLog.log(logs)

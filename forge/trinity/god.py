@@ -15,11 +15,12 @@ class God(Timed):
       trinity: A Trinity object
       config: A forge.blade.core.Config object
       args: Hook for additional user arguments
+      idx: An index specifying the current server
    '''
-   def __init__(self, trinity, config, args):
+   def __init__(self, trinity, config, args, idx):
       super().__init__()
       self.disciples = [trinity.sword.remote(trinity, config, args, idx) 
-            for idx in range(args.nRealm)]
+            for idx in range(config.NSWORD)]
 
    def distrib(self, packet=None):
       '''Asynchronous wrapper around the step 

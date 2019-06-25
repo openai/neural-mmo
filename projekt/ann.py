@@ -26,8 +26,8 @@ class Net(nn.Module):
       super().__init__()
 
       h = config.HIDDEN
-      #net = attention.MiniAttend
-      net = attention.MaxReluBlock
+      net = attention.MiniAttend
+      #net = attention.MaxReluBlock
       self.attn1 = net(h)
       self.attn2 = net(h)
       self.val  = torch.nn.Linear(h, 1)
@@ -46,6 +46,7 @@ class ANN(nn.Module):
    #TODO: Need to select net index
    def forward(self, stim, obs=None, atnArgs=None):
       net = self.net[0]
+
       stim, embed = self.env(net, stim)
       val         = net.val(stim)
 

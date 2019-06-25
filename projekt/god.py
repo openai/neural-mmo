@@ -16,6 +16,8 @@ from forge.ethyr.torch import optim
 from forge.ethyr.torch.experience import ExperienceBuffer
 from forge.ethyr.rollouts import RolloutManager
 
+import torch
+
 @ray.remote(num_gpus=1)
 class God(trinity.God):
    '''Server level God API demo
@@ -33,15 +35,16 @@ class God(trinity.God):
    This demo builds up the ExperienceBuffer utility, 
    which handles rollout batching.'''
 
-   def __init__(self, trin, config, args):
+   def __init__(self, trin, config, args, idx):
       '''Initializes a model and relevent utilities'''
-      super().__init__(trin, config, args)
+      super().__init__(trin, config, args, idx)
       self.config, self.args = config, args
 
       self.blobs = []
       self.replay = ExperienceBuffer(config)
+
       self.net = projekt.ANN(
-            config).to(self.config.DEVICE)
+               config).to(self.config.DEVICE)
 
    @runtime
    def step(self, recv):
@@ -78,6 +81,14 @@ class God(trinity.God):
          rollouts = self.forward(*batch)
          self.backward(rollouts)
 
+   #We have two issue here.
+   #First, computation time is increasing on Server with more client nodes,
+   #despite ingesting the same amount of data. This may be a logging bug
+   #Second, even very small networks have a long execution time due to 
+   #a large number of operations. We aren't leveraging the GPU and getting
+   #good speedups. Ideal is that with nrealm=1, we get x time on GPU and 
+   #10X time on CPU. Then we use 10 cpus to saturate the GPU with the same
+   #amount of data per block in 1/10 time
    def forward(self, keys, stims, rawActions, actions, rewards):
       '''Recompute forward pass and assemble rollout objects'''
       _, outs, vals = self.net(stims, atnArgs=actions)

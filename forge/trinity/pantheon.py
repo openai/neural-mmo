@@ -18,8 +18,8 @@ class Pantheon(Timed):
    '''
    def __init__(self, trinity, config, args):
       super().__init__()
-      self.disciples = [trinity.god.remote(trinity, config, args) 
-            for _ in range(config.NGOD)]
+      self.disciples = [trinity.god.remote(trinity, config, args, idx) 
+            for idx in range(config.NGOD)]
 
    def distrib(self, packet):
       '''Asynchronous wrapper around the step function

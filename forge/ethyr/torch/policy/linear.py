@@ -12,7 +12,7 @@ class ReluBlock(nn.Module):
       self.postRelu = postRelu
 
       self.layers = utils.ModuleList(
-         nn.Linear, h, h)
+         nn.Linear, h, h, n=layers)
 
    def forward(self, x):
       for idx, fc in enumerate(self.layers):

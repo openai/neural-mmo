@@ -10,7 +10,7 @@ class MaxReluBlock(nn.Module):
    def __init__(self, h, layers=2):
       super().__init__()
       self.net = linear.ReluBlock(
-         h, layers, postRelu=True)
+         h, layers, postRelu=False)
  
    def forward(self, x):
       x    = self.net(x)

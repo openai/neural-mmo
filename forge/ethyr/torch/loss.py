@@ -23,6 +23,7 @@ def advantage(returns, val):
    adv = A
    adv = (A - A.mean())
    #adv = (A - A.mean()) / (1e-4 + A.std())
+   #adv = (A - A.mean()) / (1e-8 + A.std())
    adv = adv.detach()
    return adv
 

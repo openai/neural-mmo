@@ -10,7 +10,8 @@ from forge.trinity.timed import runtime
 
 from forge.blade.core import realm
 from forge.blade.io import stimulus
-from forge.blade.io.serial import Serial
+
+from forge.ethyr.buffer import RolloutManager
 
 from copy import deepcopy
 
@@ -37,7 +38,6 @@ class Sword(trinity.Sword):
 
       self.net          = projekt.ANN(config)
       self.obs, _, _, _ = self.env.reset()
-      self.updates      = Serial(self.config)
 
    @runtime
    def step(self, packet=None):
@@ -45,10 +45,11 @@ class Sword(trinity.Sword):
       collects a fixed amount of experience.'''
       self.net.recvUpdate(packet)
 
-      while len(self.updates) < self.config.SYNCUPDATES:
+      self.manager = RolloutManager()
+      while self.manager.nUpdates < self.config.SYNCUPDATES:
          self.tick()
 
-      return self.updates.finish()
+      return self.manager.send()
 
    def tick(self):
       '''Steps the agent and environment
@@ -59,26 +60,20 @@ class Sword(trinity.Sword):
       communication to an upstream optimizer node.'''
  
       #Batch observations and make decisions
-      stims = [self.config.dynamic(ob) for ob in self.obs]
+      stims   = [self.config.dynamic(ob) for ob in self.obs]
       batched = stimulus.Dynamic.batch(stims)
-      atnArgs, outputs, values = self.net(batched, obs=self.obs)
 
-      #Update experience buffer
-      atns = []
-      for ob, stim, atnArg, out, val in zip(
-            self.obs, stims, atnArgs, outputs, values):
-         env, ent = ob
-         entID    = ent.entID
-         annID    = ent.annID
-
-         atns.append((entID, atnArg))
-         self.updates.serialize(
-            self.env, #only used for serialization keys
-            env, ent, #raw observation, also for keys 
-            stim,     #processed observation (obs)
-            out)      #selected actions (action)  
+      #Run the policy
+      actions, outs, _ = self.net(batched, obs=self.obs)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.
-      self.obs, rewards, done, info = super().step(atns)
-      self.updates.rewards(rewards) #Injects rewards into the triplet
+      actions = dict(((o[1].entID, a) for o, a in zip(self.obs, actions)))
+      nxtObs, rewards, dones, info = super().step(actions)
+
+      #Update the experience buffer
+      #The envrionment is used to generate serialization keys
+      self.manager.collect(
+         self.env, self.obs, stims, outs, rewards, dones)
+      self.obs = nxtObs
+

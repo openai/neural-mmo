@@ -94,7 +94,8 @@ class Realm(Timed):
 
       ret = {
             'environment': self.world.env,
-            'entities': dict((k, v.packet()) for k, v in self.desciples.items()),
+            'entities': dict((k, v.packet()) 
+               for k, v in self.desciples.items()),
             'values': self.values
             }
       return pickle.dumps(ret)
@@ -121,8 +122,7 @@ class Realm(Timed):
    #Only saves the first action of each priority
    def prioritize(self, decisions):
       actions = defaultdict(dict)
-      for tup in decisions:
-         entID, atns = tup
+      for entID, atns in decisions.items():
          for atnArgs in reversed(atns):
             priority = atnArgs.action.priority
             actions[priority][entID] = atnArgs
@@ -137,8 +137,7 @@ class Realm(Timed):
 
    def stepEnts(self, decisions):
       #Step all ents first
-      for tup in decisions:
-         entID, actions = tup
+      for entID, actions in decisions.items():
          ent = self.desciples[entID]
          ent.step(self.world, actions)
 
@@ -146,19 +145,19 @@ class Realm(Timed):
       self.act(actions)
 
       #Finally cull dead. This will enable MAD melee
-      rewards, dead = [], []
-      for tup in decisions:
-         entID, actions = tup
+      rewards, dones, dead = [], [], []
+      for entID, actions in decisions.items():
          ent = self.desciples[entID]
 
          if self.postmortem(ent, dead):
             rewards.append(-1)
-            continue
-
-         rewards.append(0)
+            dones.append(True)
+         else:
+            rewards.append(0)
+            dones.append(False)
 
       self.cullDead(dead)
-      return rewards
+      return rewards, dones
 
    def postmortem(self, ent, dead):
       entID = ent.entID
@@ -167,14 +166,13 @@ class Realm(Timed):
          return True
       return False
 
-   def getStims(self, rewards):
+   def getStims(self):
       stims = []
       for entID, ent in self.desciples.items():
          tile = self.world.env.tiles[ent.r.val, ent.c.val].tex
          stim = self.getStim(ent)
          stims.append((self.getStim(ent), ent))
-
-      return stims, rewards, None, None
+      return stims
 
    @runtime
    def step(self, decisions):
@@ -189,14 +187,16 @@ class Realm(Timed):
 
       self.tick += 1
 
-      rewards = self.stepEnts(decisions)
+      rewards, dones = self.stepEnts(decisions)
       self.stepWorld()
 
       iden, pop, name = self.spawn()
       self.spawner.spawn(self, iden, pop, name)
 
       self.stepEnv()
-      return self.getStims(rewards)
+      stims = self.getStims()
+
+      return stims, rewards, dones, None
 
    def reset(self):
       '''Stub for conformity with Gym. Calls step([]).
@@ -207,6 +207,6 @@ class Realm(Timed):
       short lived environment instances, instantiate
       a new Realm instead of calling reset.'''
       assert self.tick == 0
-      return self.step([])
+      return self.step({})
 
 

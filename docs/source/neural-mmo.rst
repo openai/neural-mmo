@@ -18,7 +18,8 @@ The master branch will always contain the latest stable version. Note that maste
    #Install OpenAI environment, the Embyr client, and THREE.js. ~1 GB
    #Will only install the environment without --recurse-submodules
    git clone https://github.com/jsuarez5341/neural-mmo --recurse-submodules
-   bash scripts/setup.sh
+   cd neural-mmo
+   python scripts/setup.py
 
 **We assume you already have an Anaconda setup with Python 3.7+.**. The environment is framework independent, but our experiment code (the demo) uses PyTorch.
 

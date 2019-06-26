@@ -13,8 +13,7 @@ from forge import trinity
 from forge.trinity.timed import runtime
 
 from forge.ethyr.torch import optim
-from forge.ethyr.torch.experience import ExperienceBuffer
-from forge.ethyr.rollouts import RolloutManager
+from forge.ethyr.buffer import RolloutManager
 
 import torch
 
@@ -40,8 +39,7 @@ class God(trinity.God):
       super().__init__(trin, config, args, idx)
       self.config, self.args = config, args
 
-      self.blobs = []
-      self.replay = ExperienceBuffer(config)
+      self.manager = RolloutManager()
 
       self.net = projekt.ANN(
                config).to(self.config.DEVICE)
@@ -54,10 +52,9 @@ class God(trinity.God):
       self.rollouts(recv)
 
       #Send update
-      grads      = self.net.grads()
-      blobs      = self.blobs
-      self.blobs = []
-      return grads, blobs
+      grads = self.net.grads()
+      logs  = self.manager.logs()
+      return grads, logs 
 
    def rollouts(self, recv):
       '''Runs rollout workers while asynchronously
@@ -67,30 +64,21 @@ class God(trinity.God):
          packets = super().distrib(recv) #async rollout workers
          self.processRollouts()          #intermediate gradient computatation
          packets = super().sync(packets) #sync next batches of experience
-         self.replay.collect(packets)
+         self.manager.recv(packets)
 
-         self.nRollouts += len(self.replay)
-         done = self.nRollouts >= self.config.NROLLOUTS
+         done = self.manager.nRollouts >= self.config.NROLLOUTS
       self.processRollouts() #Last batch of gradients
 
    def processRollouts(self):
       '''Runs minibatch forwards/backwards
-      over all available expereince'''
-      batches = self.replay.batch(self.config.BATCH)
-      for batch in batches:
+      over all available experience'''
+      for batch in self.manager.batched(self.config.BATCH):
          rollouts = self.forward(*batch)
          self.backward(rollouts)
 
-   #We have two issue here.
-   #First, computation time is increasing on Server with more client nodes,
-   #despite ingesting the same amount of data. This may be a logging bug
-   #Second, even very small networks have a long execution time due to 
-   #a large number of operations. We aren't leveraging the GPU and getting
-   #good speedups. Ideal is that with nrealm=1, we get x time on GPU and 
-   #10X time on CPU. Then we use 10 cpus to saturate the GPU with the same
-   #amount of data per block in 1/10 time
-   def forward(self, keys, stims, rawActions, actions, rewards):
+   def forward(self, rollouts, data):
       '''Recompute forward pass and assemble rollout objects'''
+      keys, stims, rawActions, actions, rewards, dones = data
       _, outs, vals = self.net(stims, atnArgs=actions)
 
       #Unpack outputs
@@ -99,16 +87,17 @@ class God(trinity.God):
       atnOuts = utils.unpack(outs, lenTensor, dim=1)
 
       #Collect rollouts
-      rollouts = RolloutManager()
-      for key, out, atn, val, reward in zip(
-            keys, outs, rawActions, vals, rewards):
-         atnKey, lens, atn = list(zip(*[(k, len(e), idx) for k, e, idx in atn]))
+      for key, out, atn, val, reward, done in zip(
+            keys, outs, rawActions, vals, rewards, dones):
+
+         atnKey, lens, atn = list(zip(*[(k, len(e), idx) 
+            for k, e, idx in atn]))
+
          atn = np.array(atn)
          out = utils.unpack(out, lens)
 
-         rollouts[key].step(key, atnKey, out, atn, val, reward)
+         self.manager.fill(key, (atnKey, atn, out), val, done)
 
-      rollouts.finish()
       return rollouts
 
    def backward(self, rollouts):
@@ -116,6 +105,5 @@ class God(trinity.God):
       reward, val, pg, valLoss, entropy = optim.backward(
             rollouts, valWeight=0.25,
             entWeight=self.config.ENTROPY, device=self.config.DEVICE)
-      self.blobs += rollouts.logs()
 
     

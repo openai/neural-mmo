@@ -4,6 +4,8 @@ from torch import optim
 from torch.autograd import Variable
 from pdb import set_trace as T
 
+from collections import defaultdict
+
 from forge.ethyr import rollouts
 from forge.ethyr.torch import loss
 
@@ -33,7 +35,41 @@ class ManualSGD(optim.SGD):
       self.param_groups[0]['params'][0].grad = grads
       super().step()
 
-def backward(rolls, valWeight=0.5, entWeight=0, device='cpu'):
+def merge(rollouts):
+   '''Merges all collected rollouts for batched
+   compatibility with optim.backward'''
+
+   outs = {'value': [], 'return': [],
+         'action': defaultdict(lambda: defaultdict(list))}
+   for rollout in rollouts.values():
+      for idx in range(rollout.time):
+         try:
+            key, atn, out = rollout.outs[idx]
+         except:
+            print(rollout.time)
+            print(len(rollout))
+            print(len(rollout.returns))
+            print(len(rollout.outs))
+            print('----')
+            T()
+           
+         val = rollout.vals[idx]
+         ret = rollout.returns[idx]
+
+         outs['value'].append(val)
+         outs['return'].append(ret)
+
+         for k, o, a in zip(key, out, atn):
+            k = tuple(k)
+            outk = outs['action'][k]
+            outk['atns'].append(o)
+            outk['idxs'].append(a)
+            outk['vals'].append(val)
+            outk['rets'].append(ret)
+   return outs
+
+
+def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
    '''Computes gradients from a list of rollouts
 
    Args:
@@ -49,7 +85,7 @@ def backward(rolls, valWeight=0.5, entWeight=0, device='cpu'):
       valLoss: Value loss
       entropy: Entropy bonus      
    '''
-   outs = rolls.merge()
+   outs = merge(rollouts)
    pg, entropy, attackentropy = 0, 0, 0
    for k, out in outs['action'].items():
       atns = out['atns']

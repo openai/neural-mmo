@@ -188,9 +188,9 @@ class VariableDiscreteAction(Action):
    a variable number of candidate actions'''
    def __init__(self, config, xdim, h):
       super().__init__()
-      self.net = attention.AttnCat(h)
+      #self.net = attention.AttnCat(h)
       #self.net = attention.BareMetal(h)
-      #self.net = attention.DotReluBlock(h)
+      self.net = attention.DotReluBlock(h)
       #self.net = functional.dot
       #self.net = torch.nn.Linear(h, 4)
 

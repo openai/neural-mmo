@@ -97,8 +97,6 @@ class Dynamic:
             
    def tile(self, env, ent, static):
       data = Data()
-      #env = env[6:9, 6:9]
-      #env = env[5:10, 5:10]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             data.add(static, tile, tile, r, c, key=ent)
@@ -106,8 +104,6 @@ class Dynamic:
 
    def entity(self, env, ent, static):
       data = Data()
-      #data.add(static, ent, ent, ent, key=ent)
-      #Cant comment this wtih attack on -- breaks embed
       for tile in env.ravel():
          for e in tile.ents.values():
             data.add(static, e, ent, e, key=ent)

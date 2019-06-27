@@ -97,7 +97,7 @@ class Realm(Timed):
                for k, v in self.desciples.items()),
             'values': self.values
             }
-      return pickle.dumps(ret)
+      return ret
 
    def cullDead(self, dead):
       for entID in dead:

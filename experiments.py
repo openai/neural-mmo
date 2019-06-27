@@ -11,9 +11,9 @@ if USER == 'your-username':
    remote = False
    local  = not remote
 
-   test = False
+   test = True
    best = False
-   load = False
+   load = True
 
    sample = not test
    singles = True

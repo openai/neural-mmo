@@ -15,7 +15,6 @@ forge.ethyr.torch package
 
 .. toctree::
 
-   forge.ethyr.torch.experience
    forge.ethyr.torch.loss
    forge.ethyr.torch.model
    forge.ethyr.torch.optim

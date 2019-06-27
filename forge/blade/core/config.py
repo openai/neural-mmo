@@ -34,10 +34,6 @@ class Config:
    MAGEDAMAGE  = 1
 
    def __init__(self, remote=False, **kwargs):
-      from forge.blade.io import stimulus
-
-      self.static = stimulus.Static
-      self.dynamic = stimulus.Dynamic()
       for k, v in kwargs.items():
          setattr(self, k, v)
 

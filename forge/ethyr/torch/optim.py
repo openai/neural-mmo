@@ -5,8 +5,6 @@ from torch.autograd import Variable
 from pdb import set_trace as T
 
 from collections import defaultdict
-
-from forge.ethyr import rollouts
 from forge.ethyr.torch import loss
 
 class ManualAdam(optim.Adam):

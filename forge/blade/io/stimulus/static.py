@@ -15,7 +15,7 @@ class InnerClassIterable(type):
 class Config(metaclass=InnerClassIterable):
    pass
 
-class Static(Config):
+class Stimulus(Config):
    class Entity(Config):
       class Food(node.Continuous):
          def init(self, config):

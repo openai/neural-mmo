@@ -33,9 +33,23 @@ This environment is the first neural MMO; it attempts to create agents that scal
 |ags| Version History
 =====================
 
-1.1: Infrastructure and API rework, official documentation and Discord
+v1.1: Infrastructure and API rework, official documentation and Discord
+   - Blade: Merge Native and VecEnv environment API. New API is closer to Gym
+   - Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.
+   - Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.
+   - Official github.io documentation and API reference
+   - Official Discord
+   - End to end training source and a pretrained model
 
-1.0: Initial OpenAI environment release
+v1.0: Initial OpenAI environment release
+   - Blade: Base environment with foraging and combat
+   - Embyr: THREE.js web client
+   - Trinity: CPU based distributed training infrastructure
+   - Ethyr: Contrib library of research utilities
+   - Basic project-level documentation
+   - End to end training source and a pretrained model
+
+Note: This is an open source project, but it's a young one. For as long as I'm still running it solo, every minor version should be considered a "soft release" -- bits of documentation will be missing and not all APIs will throw polished error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.
 
 |ags| Namesake
 ==============

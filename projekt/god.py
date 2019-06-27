@@ -7,13 +7,14 @@ import pickle
 from collections import defaultdict
 
 import projekt
-from forge.blade.io import stimulus, action, utils
+
 
 from forge import trinity
 from forge.trinity.timed import runtime
 
+from forge.ethyr.io import Stimulus, Action, utils
 from forge.ethyr.torch import optim
-from forge.ethyr.buffer import RolloutManager
+from forge.ethyr.experience import RolloutManager
 
 import torch
 
@@ -78,7 +79,7 @@ class God(trinity.God):
 
    def forward(self, rollouts, data):
       '''Recompute forward pass and assemble rollout objects'''
-      keys, stims, rawActions, actions, rewards, dones = data
+      keys, _, stims, rawActions, actions, rewards, dones = data
       _, outs, vals = self.net(stims, atnArgs=actions)
 
       #Unpack outputs

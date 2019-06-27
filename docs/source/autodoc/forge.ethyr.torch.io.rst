@@ -10,5 +10,5 @@ forge.ethyr.torch.io package
 .. toctree::
 
    forge.ethyr.torch.io.action
-   forge.ethyr.torch.io.stim
+   forge.ethyr.torch.io.stimulus
 

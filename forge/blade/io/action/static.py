@@ -6,7 +6,7 @@ from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
 
 #ActionRoot
-class Static(Node):
+class Action(Node):
    nodeType = NodeType.SELECTION
 
    @staticproperty
@@ -16,7 +16,7 @@ class Static(Node):
 
    @staticproperty
    def n():
-      return len(Static.actions)
+      return len(Action.actions)
 
    def args(stim, entity, config):
       return Static.edges
@@ -24,8 +24,8 @@ class Static(Node):
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
    def hook():
-      actions = Static.flat()
-      Static.actions = actions
+      actions = Action.flat()
+      Action.actions = actions
 
       for idx, atn in enumerate(actions):
          atn.serial = tuple([idx])
@@ -33,12 +33,12 @@ class Static(Node):
 
    def flat(root=None):
       if root is None:
-         root = Static
+         root = Action
 
       rets = [root]
       if root.nodeType is NodeType.SELECTION:
          for edge in root.edges:
-            rets += Static.flat(edge)
+            rets += Action.flat(edge)
 
       return rets
 
@@ -274,4 +274,4 @@ class CancelOffer(Node):
 class Message:
    pass
 
-Static.hook()
+Action.hook()

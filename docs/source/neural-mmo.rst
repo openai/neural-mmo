@@ -23,13 +23,23 @@ The master branch will always contain the latest stable version. Note that maste
 
 **We assume you already have an Anaconda setup with Python 3.7+.**. The environment is framework independent, but our experiment code (the demo) uses PyTorch.
 
-To render, run: 
+To run the environment:
 
 .. code-block:: python
 
-   python Forge.py --render #Run the environment with rendering on
+   #Run the environment with rendering on
+   python Forge.py --render
 
-Then navigate to http://localhost:8080/forge/embyr/ in Firefox or Chrome to pull up the Embyr client (`source <https://github.com/jsuarez5341/neural-mmo-client>`_)
+   #Train with 2 GPUs, 2 environments per GPU (editable in config.py)
+   #You may need to tweak CUDA_VISIBLE_DEVICES per your machine
+   bash Forge.sh
+
+   #You can also tell Ray to execute locally.
+   #This is useful for debugging and works with pdb
+   python Forge.py --ray local 
+
+
+With rendering enabled, navigate to http://localhost:8080/forge/embyr/ in Firefox or Chrome to pull up the Embyr client (`source <https://github.com/jsuarez5341/neural-mmo-client>`_)
 
 |ags| Projekt 
 =============
@@ -79,11 +89,7 @@ The Trinity API consists of three base classes --- Pantheon, God, and Sword (see
    trinity = Trinity(Pantheon, God, Sword)
    trinity.init(config, args)
 
-You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code. You can train locally on multiple cores with:
-
-.. code-block:: python
-
-   python Forge.py --nRealm 4 #Rapid style training across 4 environments
+You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code. 
 
 |air| Ethyr
 -----------

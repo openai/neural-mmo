@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
+from forge.blade.io import Stimulus
 
 class Tile:
    def __init__(self, config, mat, r, c, nCounts, tex):
@@ -15,7 +16,7 @@ class Tile:
       self.inputs(config)
 
    def inputs(self, config):
-      for name, cls in config.static.Tile:
+      for name, cls in Stimulus.Tile:
          setattr(self, cls.name, cls(config))
 
    @property

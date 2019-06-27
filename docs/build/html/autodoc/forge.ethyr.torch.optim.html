@@ -92,8 +92,9 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.rollouts.html">forge.ethyr.rollouts module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
@@ -177,7 +178,7 @@
 <span id="forge-ethyr-torch-optim-module"></span><h1>forge.ethyr.torch.optim module<a class="headerlink" href="#module-forge.ethyr.torch.optim" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="forge.ethyr.torch.optim.backward">
-<code class="descclassname">forge.ethyr.torch.optim.</code><code class="descname">backward</code><span class="sig-paren">(</span><em>rolls</em>, <em>valWeight=0.5</em>, <em>entWeight=0</em>, <em>device='cpu'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.optim.backward" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">forge.ethyr.torch.optim.</code><code class="descname">backward</code><span class="sig-paren">(</span><em>rollouts</em>, <em>valWeight=0.5</em>, <em>entWeight=0</em>, <em>device='cpu'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.optim.backward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes gradients from a list of rollouts</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -199,6 +200,13 @@ entropy: Entropy bonus</p>
 <dd class="field-odd"><p>reward</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.ethyr.torch.optim.merge">
+<code class="descclassname">forge.ethyr.torch.optim.</code><code class="descname">merge</code><span class="sig-paren">(</span><em>rollouts</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.optim.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges all collected rollouts for batched
+compatibility with optim.backward</p>
 </dd></dl>
 
 </div>

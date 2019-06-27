@@ -4,7 +4,8 @@ from pdb import set_trace as T
 from forge.blade.systems import ai
 from forge.blade.lib.enums import Material, Neon
 
-from forge.blade.io import action
+from forge.blade.io import Stimulus
+from forge.blade.io.action import static as action
 
 class Player:
    def __init__(self, config, iden, pop, name='', color=None):
@@ -44,12 +45,12 @@ class Player:
       return super().__setattr__(name, value)
 
    def inputs(self, config):
-      for name, cls in config.static.Entity:
+      for name, cls in Stimulus.Entity:
          setattr(self, '_'+cls.name, cls(config))
 
    def outputs(self, config):
       data = {}
-      for name, cls in config.static.Entity:
+      for name, cls in Stimulus.Entity:
          data[name] = getattr(self, '_'+cls.name).packet()
       return data
  
@@ -142,7 +143,7 @@ class Player:
 
       self._actions = actions
       
-      key = action.static.Attack
+      key = action.Attack
       if key in actions:
          self._attack = actions[key]
          self.mapAttack()

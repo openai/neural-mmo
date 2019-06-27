@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.ethyr.torch package" href="forge.ethyr.torch.html" />
+    <link rel="next" title="forge.ethyr.experience package" href="forge.ethyr.experience.html" />
     <link rel="prev" title="forge.embyr.twistedserver module" href="forge.embyr.twistedserver.html" /> 
 </head>
 
@@ -92,8 +92,9 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">forge.ethyr package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.rollouts.html">forge.ethyr.rollouts module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
@@ -173,10 +174,24 @@
 <span id="forge-ethyr-package"></span><h1>forge.ethyr package<a class="headerlink" href="#module-forge.ethyr" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.experience.batcher.html">forge.ethyr.experience.batcher module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.experience.comms.html">forge.ethyr.experience.comms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.experience.manager.html">forge.ethyr.experience.manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.experience.rollout.html">forge.ethyr.experience.rollout module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.io.action.html">forge.ethyr.io.action module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.io.serial.html">forge.ethyr.io.serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.io.stimulus.html">forge.ethyr.io.stimulus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.io.utils.html">forge.ethyr.io.utils module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.io.html">forge.ethyr.torch.io package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.torch.io.action.html">forge.ethyr.torch.io.action module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.torch.io.stim.html">forge.ethyr.torch.io.stim module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.torch.io.stimulus.html">forge.ethyr.torch.io.stimulus module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.policy.html">forge.ethyr.torch.policy package</a><ul>
@@ -188,7 +203,6 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.torch.policy.transformer.html">forge.ethyr.torch.policy.transformer module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.experience.html">forge.ethyr.torch.experience module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.loss.html">forge.ethyr.torch.loss module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.model.html">forge.ethyr.torch.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.optim.html">forge.ethyr.torch.optim module</a></li>
@@ -197,11 +211,6 @@
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.torch.utils.html">forge.ethyr.torch.utils module</a></li>
 </ul>
 </li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="forge.ethyr.rollouts.html">forge.ethyr.rollouts module</a></li>
 </ul>
 </div>
 </div>
@@ -214,7 +223,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.ethyr.torch.html" class="btn btn-neutral float-right" title="forge.ethyr.torch package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.ethyr.experience.html" class="btn btn-neutral float-right" title="forge.ethyr.experience package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="forge.embyr.twistedserver.html" class="btn btn-neutral float-left" title="forge.embyr.twistedserver module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

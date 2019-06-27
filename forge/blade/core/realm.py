@@ -12,7 +12,6 @@ from copy import deepcopy
 
 from forge.blade.lib.enums import Palette
 from forge.trinity.timed import runtime, Timed
-from forge.blade.io.action import Static
 
 class Spawner:
    def __init__(self, config, args):

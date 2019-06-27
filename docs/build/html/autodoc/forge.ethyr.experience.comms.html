@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>forge.ethyr.experience.comms module &mdash; Neural MMO 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="forge.ethyr.experience.manager module" href="forge.ethyr.experience.manager.html" />
+    <link rel="prev" title="forge.ethyr.experience.batcher module" href="forge.ethyr.experience.batcher.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="forge.html">forge package</a> &raquo;</li>
+        
+          <li><a href="forge.ethyr.html">forge.ethyr package</a> &raquo;</li>
+        
+          <li><a href="forge.ethyr.experience.html">forge.ethyr.experience package</a> &raquo;</li>
+        
+      <li>forge.ethyr.experience.comms module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/autodoc/forge.ethyr.experience.comms.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-forge.ethyr.experience.comms">
+<span id="forge-ethyr-experience-comms-module"></span><h1>forge.ethyr.experience.comms module<a class="headerlink" href="#module-forge.ethyr.experience.comms" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="forge.ethyr.experience.comms.Comms">
+<em class="property">class </em><code class="descclassname">forge.ethyr.experience.comms.</code><code class="descname">Comms</code><a class="headerlink" href="#forge.ethyr.experience.comms.Comms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Static communication class used internally by RolloutManager</p>
+<dl class="method">
+<dt id="forge.ethyr.experience.comms.Comms.recv">
+<code class="descname">recv</code><span class="sig-paren">(</span><em>full</em>, <em>packets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.comms.Comms.recv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack rollouts from workers on optim server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>partial</strong> – A defaultdict of partially complete rollouts</p></li>
+<li><p><strong>full</strong> – A defaultdict of complete rollouts</p></li>
+<li><p><strong>packets</strong> – a list of serialized experience packets</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.ethyr.experience.comms.Comms.send">
+<code class="descname">send</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.comms.Comms.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pack rollouts from workers for optim server</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="forge.ethyr.experience.manager.html" class="btn btn-neutral float-right" title="forge.ethyr.experience.manager module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="forge.ethyr.experience.batcher.html" class="btn btn-neutral float-left" title="forge.ethyr.experience.batcher module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #001010;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #001818;
+    }
+    .wy-nav-content {
+      background: #002020;
+    }
+    .wy-nav-content-wrap {
+      background: #001818;
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: #00ffff;
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: #001818;
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: #002020;
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: lime;
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: lime;
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: lime;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: lime;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: #003030;
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: #002020;
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: #00ff00;
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: #00ff00;
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: #00ff00;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: #00ff00;
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: #002020;
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: #003030;
+      color: #008888;
+      border-top: solid 6px #001818;
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: #00ff00;
+      border: #00ff00;
+    }
+
+    .highlight {
+      background: #003030;
+      color: #00fafa;
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: #008888 !important;
+      color: #003030 !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px #00000;
+      background: #003030;
+      color: #008888;
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: #002020;
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: #002020;
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: #00aaaa;
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color:#00aaaa;
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color:#008800;
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #008888;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px #002020;
+      padding: .4045em 2.427em;
+    }
+
+    footer {
+      color: teal;
+    }
+
+    p {
+      color: #00aaaa;
+    }
+    h1 {
+      color: lime;
+    }
+
+    h2 {
+      color: aqua;
+    }
+
+    h3 {
+      color: teal;
+    }
+
+    h4 {
+      color: blue;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: blue; /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: teal;
+    }
+
+    /* visited link */
+    a:visited {
+      color: lime;
+    }
+
+  </style>
+
+
+</body>
+</html>

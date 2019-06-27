@@ -8,7 +8,10 @@ from torch import nn
 
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
-from forge.blade.io import action
+from forge.blade.io import Action as Static
+from forge.blade.io.action import static as action
+
+from forge.ethyr.io import Action as Dynamic
 
 class Packet:
    '''Manager class for packets of actions'''
@@ -16,7 +19,7 @@ class Packet:
       self.stim = stim.unsqueeze(0)
       self.env, self.ent = ob 
 
-      self.tree = action.Dynamic(self.env, self.ent, config)
+      self.tree = Dynamic(self.env, self.ent, config)
       self.args, self.done = self.tree.next(self.env, self.ent, root)
 
    def merge(packets, nameFunc, embed, nameMap):
@@ -75,7 +78,7 @@ class NetTree(nn.Module):
 
    def leaves(self, stims, obs, embed):
       #roots = action.Dynamic.leaves()
-      roots = [action.static.Move]
+      roots = [action.Move]
       #roots = [action.Static for _ in 
       #      range(self.config.NATN)]
  
@@ -95,7 +98,7 @@ class NetTree(nn.Module):
 
 
    def tree(self, stims, obs, embed, 
-         atnArgsList, outsList, root=action.Static):
+         atnArgsList, outsList, root=Static):
       '''Select a single action'''
       nameMap, embed = embed
 

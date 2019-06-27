@@ -28,8 +28,8 @@ class Experiment(Config):
    #CPU Debug mode
    #DEVICE = 'cpu:0'
  
-   #CPU Dev mode
    '''
+   #CPU Dev mode
    NROLLOUTS = 10
    SYNCUPDATES = 100
    DEVICE = 'cpu:0'

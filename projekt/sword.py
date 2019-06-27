@@ -9,9 +9,9 @@ from forge import trinity
 from forge.trinity.timed import runtime
 
 from forge.blade.core import realm
-from forge.blade.io import stimulus
 
-from forge.ethyr.buffer import RolloutManager
+from forge.ethyr.io import Stimulus, Action
+from forge.ethyr.experience import RolloutManager
 
 from copy import deepcopy
 
@@ -60,12 +60,20 @@ class Sword(trinity.Sword):
       communication to an upstream optimizer node.'''
  
       #Batch observations and make decisions
-      stims   = [self.config.dynamic(ob) for ob in self.obs]
-      batched = stimulus.Dynamic.batch(stims)
+      stims = Stimulus.process(self.obs)
+      self.manager.collectInputs(self.env, self.obs, stims)
 
-      #Run the policy
-      actions, outs, _ = self.net(batched, obs=self.obs)
+      actions, outs = [], []
+      for batch in self.manager.batched(
+            self.config.BATCH, fullRollouts=False):
+         rollouts, batch = batch
+         keys, obs, stim, _, _, _, _ = batch
 
+         #Run the policy
+         atns, out, _ = self.net(stim, obs=obs)
+         actions += atns
+         outs    += out
+      
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.
       actions = dict(((o[1].entID, a) for o, a in zip(self.obs, actions)))
@@ -73,7 +81,6 @@ class Sword(trinity.Sword):
 
       #Update the experience buffer
       #The envrionment is used to generate serialization keys
-      self.manager.collect(
-         self.env, self.obs, stims, outs, rewards, dones)
+      self.manager.collectOutputs(self.env, self.obs, outs, rewards, dones)
       self.obs = nxtObs
 

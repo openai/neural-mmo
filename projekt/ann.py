@@ -17,7 +17,7 @@ from forge.blade import entity
 from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
-from forge.ethyr.torch.io.stim import Env
+from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 

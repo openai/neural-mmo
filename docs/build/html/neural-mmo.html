@@ -172,15 +172,25 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Install OpenAI environment, the Embyr client, and THREE.js. ~1 GB</span>
 <span class="c1">#Will only install the environment without --recurse-submodules</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">--</span><span class="n">recurse</span><span class="o">-</span><span class="n">submodules</span>
-<span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p><strong>We assume you already have an Anaconda setup with Python 3.7+.</strong>. The environment is framework independent, but our experiment code (the demo) uses PyTorch.</p>
-<p>To render, run:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">render</span> <span class="c1">#Run the environment with rendering on</span>
+<p>To run the environment:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Run the environment with rendering on</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">render</span>
+
+<span class="c1">#Train with 2 GPUs, 2 environments per GPU (editable in config.py)</span>
+<span class="c1">#You may need to tweak CUDA_VISIBLE_DEVICES per your machine</span>
+<span class="n">bash</span> <span class="n">Forge</span><span class="o">.</span><span class="n">sh</span>
+
+<span class="c1">#You can also tell Ray to execute locally.</span>
+<span class="c1">#This is useful for debugging and works with pdb</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">ray</span> <span class="n">local</span>
 </pre></div>
 </div>
-<p>Then navigate to <a class="reference external" href="http://localhost:8080/forge/embyr/">http://localhost:8080/forge/embyr/</a> in Firefox or Chrome to pull up the Embyr client (<a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">source</a>)</p>
+<p>With rendering enabled, navigate to <a class="reference external" href="http://localhost:8080/forge/embyr/">http://localhost:8080/forge/embyr/</a> in Firefox or Chrome to pull up the Embyr client (<a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">source</a>)</p>
 <div class="section" id="ags-projekt">
 <h2><img alt="ags" src="_images/ags.png" /> Projekt<a class="headerlink" href="#ags-projekt" title="Permalink to this headline">¶</a></h2>
 <p>The project is divided into four modules:</p>
@@ -231,10 +241,7 @@
 <span class="n">trinity</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code. You can train locally on multiple cores with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">nRealm</span> <span class="mi">4</span> <span class="c1">#Rapid style training across 4 environments</span>
-</pre></div>
-</div>
+<p>You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code.</p>
 </div>
 <div class="section" id="air-ethyr">
 <h3><img alt="air" src="_images/air_thumbnail.png" /> Ethyr<a class="headerlink" href="#air-ethyr" title="Permalink to this headline">¶</a></h3>

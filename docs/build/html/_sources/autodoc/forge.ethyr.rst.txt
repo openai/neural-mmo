@@ -9,10 +9,7 @@ forge.ethyr package
 
 .. toctree::
 
+    forge.ethyr.experience
+    forge.ethyr.io
     forge.ethyr.torch
-
-
-.. toctree::
-
-   forge.ethyr.rollouts
 

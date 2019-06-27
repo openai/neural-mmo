@@ -176,8 +176,27 @@
 </div>
 <div class="section" id="ags-version-history">
 <h2><img alt="ags" src="_images/ags1.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h2>
-<p>1.1: Infrastructure and API rework, official documentation and Discord</p>
-<p>1.0: Initial OpenAI environment release</p>
+<dl class="simple">
+<dt>v1.1: Infrastructure and API rework, official documentation and Discord</dt><dd><ul class="simple">
+<li><p>Blade: Merge Native and VecEnv environment API. New API is closer to Gym</p></li>
+<li><p>Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.</p></li>
+<li><p>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</p></li>
+<li><p>Official github.io documentation and API reference</p></li>
+<li><p>Official Discord</p></li>
+<li><p>End to end training source and a pretrained model</p></li>
+</ul>
+</dd>
+<dt>v1.0: Initial OpenAI environment release</dt><dd><ul class="simple">
+<li><p>Blade: Base environment with foraging and combat</p></li>
+<li><p>Embyr: THREE.js web client</p></li>
+<li><p>Trinity: CPU based distributed training infrastructure</p></li>
+<li><p>Ethyr: Contrib library of research utilities</p></li>
+<li><p>Basic project-level documentation</p></li>
+<li><p>End to end training source and a pretrained model</p></li>
+</ul>
+</dd>
+</dl>
+<p>Note: This is an open source project, but it’s a young one. For as long as I’m still running it solo, every minor version should be considered a “soft release” – bits of documentation will be missing and not all APIs will throw polished error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.</p>
 </div>
 <div class="section" id="ags-namesake">
 <h2><img alt="ags" src="_images/ags1.png" /> Namesake<a class="headerlink" href="#ags-namesake" title="Permalink to this headline">¶</a></h2>

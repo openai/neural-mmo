@@ -82,16 +82,14 @@ class Stimulus(Config):
             return self.asserts(val)
 
    class Tile(Config):
-
-      
       #A multiplicative interaction between pos and index
       #is required at small training scale
-      class PosIndex(node.Discrete):
-         def init(self, config):
-            self.max = config.NTILE*15*15
+      #class PosIndex(node.Discrete):
+      #   def init(self, config):
+      #      self.max = config.NTILE*15*15
 
-         def get(self, tile, r, c):
-            return (r*15+c)*tile.state.index
+      #   def get(self, tile, r, c):
+      #      return (r*15+c)*tile.state.index
      
       class NEnts(node.Continuous):
          def init(self, config):
@@ -100,7 +98,6 @@ class Stimulus(Config):
          def get(self, tile, r, c):
             return len(tile.ents)
 
-      '''
       class Index(node.Discrete):
          def init(self, config):
             self.max = config.NTILE
@@ -108,12 +105,14 @@ class Stimulus(Config):
          def get(self, tile, r, c):
             return tile.state.index
 
+      '''
       class Position(node.Discrete):
          def init(self, config):
             self.max = 9
 
          def get(self, tile, r, c):
             return r*3+c
+      '''
  
       class RRel(node.Discrete):
          def init(self, config):
@@ -129,4 +128,3 @@ class Stimulus(Config):
          def get(self, tile, r, c):
             return c
 
-      '''

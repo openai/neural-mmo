@@ -68,6 +68,11 @@ class Quill:
       self.time = time.time()
       self.dir = modeldir
       self.index = 0
+
+      self.curUpdates = 0
+      self.curRollouts = 0
+      self.nUpdates = 0
+      self.nRollouts = 0
       try:
          os.remove(modeldir + 'logs.p')
       except:
@@ -81,10 +86,18 @@ class Quill:
 
    def print(self):
       print(
-            'Time: ', self.timestamp(), 
-            ', Iter: ', str(self.index))
+            'Rollouts: (Total) ', self.nRollouts,
+            ' | (Epoch) ', self.curRollouts,
+            ', Updates: (Total) ', self.nUpdates,
+            ' | (Epoch) ', self.curUpdates)
 
-   def scrawl(self, logs):
+   def scrawl(self, logs, nUpdates, nRollouts):
+      #Collect experience information
+      self.nUpdates     += nUpdates
+      self.nRollouts    += nRollouts
+      self.curUpdates   = nUpdates
+      self.curRollouts  = nRollouts
+
       #Collect log update
       self.index += 1
       rewards, blobs = [], []

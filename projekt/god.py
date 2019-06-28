@@ -54,8 +54,8 @@ class God(trinity.God):
 
       #Send update
       grads = self.net.grads()
-      logs  = self.manager.logs()
-      return grads, logs 
+      logs, nUpdates, nRollouts  = self.manager.reset()
+      return grads, logs, nUpdates, nRollouts
 
    def rollouts(self, recv):
       '''Runs rollout workers while asynchronously
@@ -67,20 +67,21 @@ class God(trinity.God):
          packets = super().sync(packets) #sync next batches of experience
          self.manager.recv(packets)
 
-         done = self.manager.nRollouts >= self.config.NROLLOUTS
+         done = self.manager.nUpdates >= self.config.OPTIMUPDATES
       self.processRollouts() #Last batch of gradients
 
    def processRollouts(self):
       '''Runs minibatch forwards/backwards
       over all available experience'''
-      for batch in self.manager.batched(self.config.BATCH):
+      for batch in self.manager.batched(
+            self.config.OPTIMBATCH, forOptim=True):
          rollouts = self.forward(*batch)
          self.backward(rollouts)
 
-   def forward(self, rollouts, data):
+   def forward(self, pop, rollouts, data):
       '''Recompute forward pass and assemble rollout objects'''
       keys, _, stims, rawActions, actions, rewards, dones = data
-      _, outs, vals = self.net(stims, atnArgs=actions)
+      _, outs, vals = self.net(pop, stims, atnArgs=actions)
 
       #Unpack outputs
       atnTensor, idxTensor, atnKeyTensor, lenTensor = actions

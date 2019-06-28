@@ -41,12 +41,12 @@ def render(trin, config, args):
    from forge.embyr.twistedserver import Application
    sword = trin.sword.remote(trin, config, args, idx=0)
    env = sword.getEnv.remote()
-   Application(env, sword.step.remote)
+   Application(env, sword.tick.remote)
 
 if __name__ == '__main__':
    args = parseArgs()
    assert args.api in ('native', 'vecenv')
-   config = experiments.exps['nxt-auto-treechaos128']
+   config = experiments.exps['demochaos128']
 
    #Initialize ray
    lib.ray.init(args.ray)

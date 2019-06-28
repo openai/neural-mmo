@@ -50,7 +50,6 @@ class Serial:
       '''Serialize observations'''
       iden, key = Serial.realmKey(realm, ob)
       stim = Stimulus.serialize(stim, iden)
-
       return iden, key, stim
 
    def outputs(realm, ob, outs):

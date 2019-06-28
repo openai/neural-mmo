@@ -46,13 +46,14 @@ class Pantheon(trinity.Pantheon):
       recvs = super().step(self.net.model)
 
       #Write logs using Quill
-      recvs, logs = list(zip(*recvs))
-      self.quill.scrawl(logs)
+      recvs, logs, nUpdates, nRollouts = list(zip(*recvs))
+      nUpdates = sum(nUpdates)
+      nRollouts = sum(nRollouts)
+      self.quill.scrawl(logs, nUpdates, nRollouts)
       self.tick += 1
 
-      if self.config.TEST:
-         self.quill.print()
-      else:
+      self.quill.print()
+      if not self.config.TEST:
          lifetime = self.quill.latest()
          self.net.stepOpt(recvs)
          self.net.checkpoint(lifetime)

@@ -51,7 +51,7 @@ class Player:
    def outputs(self, config):
       data = {}
       for name, cls in Stimulus.Entity:
-         data[name] = getattr(self, '_'+cls.name).packet()
+         data[name.lower()] = getattr(self, '_'+cls.name).packet()
       return data
  
    def packet(self):

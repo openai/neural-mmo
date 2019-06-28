@@ -12,15 +12,30 @@ class Batcher:
       for key, rollout in rollouts.items():
          groups[Serial.population(key)][key] = rollout
       return groups.items()
+
    
-   def batched(rollouts, batchSize, fullRollouts):
+   def batched(rollouts, nUpdates, fullRollouts):
       ret, groups = [], Batcher.grouped(rollouts)
-      for _, group in Batcher.grouped(rollouts):
+      for groupKey, group in Batcher.grouped(rollouts):
          group = list(group.items())
-         for idx in range(0, len(group), batchSize):
-            rolls = dict(group[idx:idx+batchSize])
+         update, updateSz = [], 0 
+         for idx, rollout in enumerate(group):
+            key, rollout = rollout
+            if updateSz < nUpdates:
+               updateSz += len(rollout)
+               update.append((key, rollout))
+            if updateSz >= nUpdates or idx == len(group) - 1:
+               rolls = dict(update)
+               packet = Batcher.flat(rolls, fullRollouts)
+               ret.append((groupKey, rolls, packet))
+               update, updateSz = [], 0 
+
+         '''
+         for idx in range(0, len(group), nUpdates):
+            rolls = dict(group[idx:idx+nUpdates])
             packet = Batcher.flat(rolls, fullRollouts)
-            ret.append((rolls, packet))
+            ret.append((groupKey, rolls, packet))
+         '''
 
       return ret
 

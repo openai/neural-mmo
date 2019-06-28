@@ -82,7 +82,7 @@ class Action:
    def flat(root=Static):
       '''Returns a flat action tree'''
       rets = [root]
-      if root.nodeType is action.NodeType.SELECTION:
+      if root.nodeType is NodeType.SELECTION:
          for edge in root.edges:
             rets += Action.flat(edge)
       return rets

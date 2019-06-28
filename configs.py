@@ -18,12 +18,23 @@ class Experiment(Config):
    NATN = 1
    KEYLEN = 4
 
-   NROLLOUTS = 400 / NGOD #Rollouts per gradient step
-
    #This is per core. Going too high (frac of nRollout steps)
    #will clobber parallelization
-   SYNCUPDATES = 256 #Number of data to sync
+   #SYNCUPDATES = 2**8  #Number of data to sync
+   #OPTIMUPDATES = 2**12 / NGOD
+   #BATCHUPDATES = SYNCUPDATES * NGOD
+   #DEVICE = 'cuda:0'
+
+   EPOCHUPDATES = 2**14
+
+   OPTIMUPDATES = EPOCHUPDATES / NGOD
+   SYNCUPDATES  = OPTIMUPDATES / 2**4
+
+   OPTIMBATCH  = SYNCUPDATES * NGOD
+   SYNCBATCH   = SYNCUPDATES
+
    DEVICE = 'cuda:0'
+
 
    #CPU Debug mode
    #DEVICE = 'cpu:0'

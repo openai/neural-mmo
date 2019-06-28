@@ -44,8 +44,8 @@ class ANN(nn.Module):
       self.action = NetTree(config)
 
    #TODO: Need to select net index
-   def forward(self, stim, obs=None, atnArgs=None):
-      net = self.net[0]
+   def forward(self, pop, stim, obs=None, atnArgs=None):
+      net = self.net[pop]
 
       stim, embed = self.env(net, stim)
       val         = net.val(stim)

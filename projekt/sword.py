@@ -39,13 +39,15 @@ class Sword(trinity.Sword):
       self.net          = projekt.ANN(config)
       self.obs, _, _, _ = self.env.reset()
 
+      #For the renderer
+      self.manager = RolloutManager()
+
    @runtime
    def step(self, packet=None):
       '''Synchronizes weights from upstream and
       collects a fixed amount of experience.'''
       self.net.recvUpdate(packet)
 
-      self.manager = RolloutManager()
       while self.manager.nUpdates < self.config.SYNCUPDATES:
          self.tick()
 
@@ -65,12 +67,12 @@ class Sword(trinity.Sword):
 
       actions, outs = [], []
       for batch in self.manager.batched(
-            self.config.BATCH, fullRollouts=False):
-         rollouts, batch = batch
+            self.config.SYNCBATCH):
+         pop, rollouts, batch = batch
          keys, obs, stim, _, _, _, _ = batch
 
          #Run the policy
-         atns, out, _ = self.net(stim, obs=obs)
+         atns, out, _ = self.net(pop, stim, obs=obs)
          actions += atns
          outs    += out
       

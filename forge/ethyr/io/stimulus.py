@@ -67,8 +67,12 @@ class Stimulus:
       rets = {}
       for group, data in stim.items():
          names, data = data
-         names = [Serial.key(e, iden) for e in names]
-         rets[group] = (names, data)
+         serialNames = []
+         for name in names:
+            serialName = Serial.key(name, iden)
+            name.injectedSerial = serialName
+            serialNames.append(serialName)
+         rets[group] = (serialNames, data)
       return rets
 
    def batch(stims):

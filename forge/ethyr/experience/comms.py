@@ -22,6 +22,7 @@ class Comms:
       actions = Action.batch(actions)
       keys = np.stack(keys)
 
+      rollouts.clear()
       return keys, stims, actions, rewards, dones
 
    def recv(partial, full, packets):
@@ -32,7 +33,7 @@ class Comms:
          full: A defaultdict of complete rollouts
          packets: a list of serialized experience packets
       '''
-      nNew = 0
+      nUpdates, nRollouts = 0, 0
       for sword, data in enumerate(packets):
          keys, stims, actions, rewards, dones = data
 
@@ -52,6 +53,7 @@ class Comms:
                full[key] = partial[key]
 
                del partial[key]
-               nNew += 1
-      return nNew
+               nUpdates  += len(full[key])
+               nRollouts += 1
+      return nUpdates, nRollouts
 

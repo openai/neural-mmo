@@ -23,14 +23,21 @@ class Packet:
       self.args, self.done = self.tree.next(self.env, self.ent, root)
 
    def merge(packets, nameFunc, embed, nameMap):
-      names = [nameFunc(nameMap, p.args) for p in packets]
+      names, mask = [], []
+      for p in packets:
+         args =  [e.injectedSerial if hasattr(
+            e, 'injectedSerial') else e for e in p.args]
+         name = nameFunc(nameMap, args)
+         names.append(name) 
+         mask.append(len(args))
+
+      #names = [nameFunc(nameMap, p.args) for p in packets]
       names = torch.LongTensor(np.stack(names))
       targs = embed[names]
 
       stims = [p.stim for p in packets]
       stims = torch.stack(stims)
-
-      return stims, targs
+      return stims, targs, mask
 
    def step(packets, outsList, idxList):
       for p, out, idx in zip(
@@ -77,7 +84,7 @@ class NetTree(nn.Module):
       #return torch.stack([embed[nameMap[e]] for e in args])
 
    def leaves(self, stims, obs, embed):
-      #roots = action.Dynamic.leaves()
+      #roots = Dynamic.leaves()
       roots = [action.Move]
       #roots = [action.Static for _ in 
       #      range(self.config.NATN)]
@@ -109,9 +116,9 @@ class NetTree(nn.Module):
          packets[pkt] = Packet(stim, ob, root, self.config)
          
       while len(packets) > 0:
-         stimTensor, targTensor = Packet.merge(
+         stimTensor, targTensor, mask = Packet.merge(
             packets.values(), self.names, embed, nameMap)
-         oList, idxList = self.net(stimTensor, targTensor)
+         oList, idxList = self.net(stimTensor, targTensor, mask)
          Packet.step(packets, oList, idxList)
          Packet.finish(packets, atnArgsList, outsList)
       return
@@ -151,7 +158,7 @@ class NetTree(nn.Module):
       targs = targs.view(i, j, k, -1)
       
       stim = stim.unsqueeze(1).unsqueeze(1)
-      outs, _ = self.net(stim, targs)
+      outs, _ = self.net(stim, targs, None)
       return None, outs
 
    def forward(self, stims, embed, obs=None, actions=None):
@@ -197,9 +204,19 @@ class VariableDiscreteAction(Action):
       #self.net = functional.dot
       #self.net = torch.nn.Linear(h, 4)
 
-   def forward(self, stim, args):
+   def forward(self, stim, args, lens):
       #x = functional.dot(stim, args)
       x = self.net(stim, args)
+
+      '''
+      lens = torch.LongTensor(lens).unsqueeze(1)
+      n, maxLen = x.shape[0], x.shape[-1]
+      inds = torch.arange(maxLen).expand_as(x)
+      mask = inds < lens 
+      '''
+      #if int(torch.sum(mask < 1)) > 0:
+      #   T()
+      # < len(lens), max_len) < lens.unsqueeze(1)
       #x = x.squeeze(-2)
 
       return super().forward(x)

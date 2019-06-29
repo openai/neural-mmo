@@ -3,7 +3,7 @@ import ray
 import pickle
 import time
 
-from forge.blade.core.realm import Realm
+from forge.blade.core import realm
 from forge.trinity.timed import Timed, runtime, waittime
 
 #Agent logic
@@ -20,7 +20,7 @@ class Sword(Timed):
    '''
    def __init__(self, trinity, config, args, idx):
       super().__init__()
-      self.env = Realm(config, args, idx)
+      self.env = realm.Realm(config, args, idx)
       self.env.spawn = self.spawn
 
       self.ent, self.nPop = 0, config.NPOP

@@ -1,33 +1,66 @@
 from pdb import set_trace as T
-from configs import Law, Chaos
-import os
+import os 
 
-#Oversimplified user specification
-#for 1-3 collaborators
+from forge.blade.core.config import Config
+
+class Experiment(Config):
+   MODELDIR ='resource/logs/'
+
+   NGOD   = 2  #Number of GPU optimizer servers
+   NSWORD = 2  #Number of CPU rollout workers per server
+ 
+   HIDDEN = EMBED = 128 #Model embedding and hidden dimensions
+   ENTROPY = 0.01       #Entropy bonus for policy gradient loss
+
+   NATN   = 1 #Number of actions taken by the network
+
+   #EPOCHUPDATES: Number of experience steps per 
+   #synchronized gradient step at the cluster level
+   #EPOCHUPDATES = 2**14 #Training
+   EPOCHUPDATES = 2**8  #Local debug
+
+   #OPTIMUPDATES: Number of experience steps per 
+   #optimizer server per cluster level step
+   #SYNCUPDATES: Number of experience steps between 
+   #syncing rollout workers to the optimizer server
+   OPTIMUPDATES = EPOCHUPDATES / NGOD
+   SYNCUPDATES  = OPTIMUPDATES / 2**4
+
+   #OPTIMBATCH: Number of experience steps per
+   #.backward minibatch on optimizer servers
+   #SYNCUPDATES: Number of experience steps between 
+   #syncing rollout workers to the optimizer server
+   OPTIMBATCH  = SYNCUPDATES * NGOD
+   SYNCBATCH   = SYNCUPDATES
+
+   #Device used on the optimizer server.
+   #Rollout workers use CPU by default
+   DEVICE = 'cuda:0'
+
+#A dumb but simple way to have user-specific experiment
+#configuration when working off of the same fork
 USER = 'your-username'
 if USER == 'your-username':
    #Thousandth
-   prefix = 'demo'
-   remote = False
-   local  = not remote
 
-   test = False
-   best = False
-   load = False
+   load = False #Load model from file?
+   best = False #If loading, most recent or highest lifetime?
+   test = False #Update the model during run?
 
-   sample = not test
-   singles = True
-   tournaments = False
-   
-   exps = {}
-   szs = [128]
-   #For full distributed runs
-   #szs = (16, 32, 64, 128)
-   names = 'law chaos'.split()
-   confs = (Law, Chaos)
+   #Name prefix for experiments
+   prefix, exps = 'demo-', {}
 
-   def makeExp(name, conf, sz, test=False):
-      NENT, NPOP = sz, 1#sz//16
+   #You can generate multiple experiment
+   #configurations at once. The demo
+   #hardcodes the name for the size 128
+   #experiment in Forge.py
+   szs = (16, 32, 64, 128)
+   names = ['baseline-']
+   confs = [Experiment]
+
+   def makeExp(name, conf, sz):
+      NENT, NPOP = sz, 1
+      #NENT, NPOP = sz, sz//16
       ROOT = os.path.dirname(__file__)
       ROOT += '/resource/exps/' + name + '/'
       try:
@@ -39,14 +72,10 @@ if USER == 'your-username':
          pass
       MODELDIR = ROOT + 'model/'
 
-      exp = conf(remote, 
+      exps[name] = conf( 
             NENT=NENT, NPOP=NPOP,
             MODELDIR=MODELDIR,
-            SAMPLE=sample,
-            BEST=best,
-            LOAD=load,
-            TEST=test)
-      exps[name] = exp
+            LOAD=load, BEST=best, TEST=test)
       print(name, ', NENT: ', NENT, ', NPOP: ', NPOP)
 
    def makeExps():
@@ -54,8 +83,7 @@ if USER == 'your-username':
       for label, conf in zip(names, confs):
          for sz in szs:
             name = prefix + label + str(sz)
-            makeExp(name, conf, sz, test=test)
+            makeExp(name, conf, sz)
           
-   #Sample config
+   #Make configs
    makeExps()
-   makeExp('sample', Chaos, 128, test=True)

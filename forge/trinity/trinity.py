@@ -53,6 +53,7 @@ class Trinity(Timed):
       '''
       self.base = self.pantheon(self, config, args)
       self.disciples = [self.base]
+      return self
 
    @runtime
    def step(self):

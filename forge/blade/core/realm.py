@@ -67,12 +67,6 @@ class Realm(Timed):
          idx: Index of the map file to load
       '''
       super().__init__()
-      #Randomly samples a maximum population size
-      if config.SAMPLE:
-         config = deepcopy(config)
-         nent = np.random.randint(0, config.NENT)
-         config.NENT = config.NPOP * (1 + nent // config.NPOP)
-
       self.spawner = Spawner(config, args)
       self.world, self.desciples = core.Env(config, idx), {}
       self.config, self.args = config, args
@@ -190,7 +184,8 @@ class Realm(Timed):
       self.stepWorld()
 
       iden, pop, name = self.spawn()
-      self.spawner.spawn(self, iden, pop, name)
+      if iden is not None:
+         self.spawner.spawn(self, iden, pop, name)
 
       self.stepEnv()
       stims = self.getStims()

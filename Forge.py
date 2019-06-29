@@ -1,22 +1,18 @@
-"""Demo main file"""
-
-#Main file. Hooks into high level world/render updates
+'''Main file for /projekt demo'''
 from pdb import set_trace as T
 import argparse
 
 import experiments
-from forge.trinity import smith, Trinity
-from projekt import Pantheon, God, Sword
-from forge.trinity.timed import TimeLog
 from forge.blade import lib
+
+from forge.trinity import smith, Trinity
+from forge.trinity.timed import TimeLog
+
+from projekt import Pantheon, God, Sword
 
 def parseArgs():
    '''Processes command line arguments'''
    parser = argparse.ArgumentParser('Projekt Godsword')
-   parser.add_argument('--nRealm', type=int, default='1', 
-         help='Number of environments (1 per core)')
-   parser.add_argument('--api', type=str, default='native', 
-         help='API to use (native/vecenv)')
    parser.add_argument('--ray', type=str, default='default', 
          help='Ray mode (local/default/remote)')
    parser.add_argument('--render', action='store_true', default=False, 
@@ -44,11 +40,10 @@ def render(trin, config, args):
    Application(env, sword.tick.remote)
 
 if __name__ == '__main__':
+   #Set up experiment configuration
+   #ray infra, and command line args
+   config = experiments.exps['demo-baseline-128']
    args = parseArgs()
-   assert args.api in ('native', 'vecenv')
-   config = experiments.exps['demochaos128']
-
-   #Initialize ray
    lib.ray.init(args.ray)
 
    #Create a Trinity object specifying

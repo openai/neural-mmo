@@ -18,71 +18,27 @@ class Experiment(Config):
    NATN = 1
    KEYLEN = 4
 
-   #This is per core. Going too high (frac of nRollout steps)
-   #will clobber parallelization
-   #SYNCUPDATES = 2**8  #Number of data to sync
-   #OPTIMUPDATES = 2**12 / NGOD
-   #BATCHUPDATES = SYNCUPDATES * NGOD
-   #DEVICE = 'cuda:0'
+   #EPOCHUPDATES: Number of experience steps per 
+   #synchronized gradient step at the cluster level
+   EPOCHUPDATES = 2**14 #Training
+   EPOCHUPDATES = 2**8  #Local debug
 
-   EPOCHUPDATES = 2**14
-
+   #OPTIMUPDATES: Number of experience steps per 
+   #optimizer server per cluster level step
+   #SYNCUPDATES: Number of experience steps between 
+   #syncing rollout workers to the optimizer server
    OPTIMUPDATES = EPOCHUPDATES / NGOD
    SYNCUPDATES  = OPTIMUPDATES / 2**4
 
+   #OPTIMBATCH: Number of experience steps per
+   #.backward minibatch on optimizer servers
+   #SYNCUPDATES: Number of experience steps between 
+   #syncing rollout workers to the optimizer server
    OPTIMBATCH  = SYNCUPDATES * NGOD
    SYNCBATCH   = SYNCUPDATES
 
+   #Device used on the optimizer server.
+   #Rollout workers use CPU by default
    DEVICE = 'cuda:0'
 
-
-   #CPU Debug mode
-   #DEVICE = 'cpu:0'
- 
-   '''
-   #CPU Dev mode
-   NROLLOUTS = 10
-   SYNCUPDATES = 100
-   DEVICE = 'cpu:0'
-   '''
-
-   BATCH = 32 
-   SAMPLE = False
-   NATTN = 2
-   NPOP = 1
-   SHAREINIT = False
    ENTROPY = 0.01
-   VAMPYR = 1
-   AUTO_TARGET = False
-
-#Foraging only
-class Law(Experiment):
-   pass
-
-#Foraging + Combat
-class Chaos(Experiment):
-   def vamp(self, ent, targ, frac, dmg):
-      dmg = int(frac * dmg)
-      targ.food.decrement(amt=dmg)
-      targ.water.decrement(amt=dmg)
-      ent.food.increment(amt=dmg)
-      ent.water.increment(amt=dmg)
-
-   #Damage formulas. Lambdas don't pickle well
-   def MELEEDAMAGE(self, ent, targ):
-      dmg = 10
-      targ.applyDamage(dmg)
-      self.vamp(ent, targ, self.VAMPYR, dmg)
-      return dmg
-
-   def RANGEDAMAGE(self, ent, targ):
-      dmg = 2
-      targ.applyDamage(dmg)
-      self.vamp(ent, targ, self.VAMPYR, dmg)
-      return dmg
-
-   def MAGEDAMAGE(self, ent, targ):
-      dmg = 1
-      targ.applyDamage(dmg)
-      self.vamp(ent, targ, self.VAMPYR, dmg)
-      return dmg

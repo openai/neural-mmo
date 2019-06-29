@@ -145,19 +145,22 @@ class Attack(Node):
       rCent, cCent = cent
       return abs(r - rCent) + abs(c - cCent)
 
-   def call(world, entity, targ, damageF, freeze=False):
+   def damage(ent, targ, dmg):
+      targ.food.decrement(amt=dmg)
+      targ.water.decrement(amt=dmg)
+      ent.food.increment(amt=dmg)
+      ent.water.increment(amt=dmg)
+
+   def call(world, entity, targ, dmg, freeze=False):
       if entity.entID == targ.entID:
          entity._attack = None
          return
       #entity.targPos = targ.pos
       #entity.attkPos = entity.lastPos
       #entity.targ = targ
-      damage = damageF(entity, targ)
-      assert type(damage) == int
-      if freeze and damage > 0:
-         targ._freeze.update(3)
-      return
-      #return damage
+      assert type(dmg) == int
+      self.damage(entity, targ, dmg)
+      return dmg
 
    def args(stim, entity, config):
       return [Melee, Range, Mage]
@@ -207,6 +210,7 @@ class Mage(Node):
    def call(world, entity, targ):
       damageF = world.config.MAGEDAMAGE
       dmg = Attack.call(world, entity, targ, damageF, freeze=True)
+      targ._freeze.update(3)
 
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.MAGERANGE)

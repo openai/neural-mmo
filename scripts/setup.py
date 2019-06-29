@@ -10,7 +10,7 @@ os.system('pip3 install -r scripts/requirements.txt')
 print('Downloading Embyr client')
 os.chdir('forge')
 os.system('git clone https://github.com/jsuarez5341/neural-mmo-client --recurse-submodules')
-os.system('mv neural-mmo-client embyr')
+os.system('mv -n neural-mmo-client embyr')
 os.chdir('..')
 
 #Build game maps

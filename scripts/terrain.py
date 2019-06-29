@@ -126,14 +126,14 @@ def fractal(terrain, path):
    frac = (256*terrain).astype(np.uint8)
    imsave(path, terrain)
 
-nMaps, sz = 200, 64 + 16
+nMaps, sz = 10, 64 + 16
 #nMaps, sz = 1, 512 + 16
 seeds = np.linspace(0, 2**32, nMaps)
 scale = int(sz / 5)
 root = 'resource/maps/'
 tex = textures()
 
-print('Generating {} game maps. This may take a few minutes'.format(nMaps))
+print('Generating {} game maps. This may take a moment'.format(nMaps))
 for i, seed in enumerate(seeds):
    print('Generating map ' + str(i))
    path = root + 'procedural/map' + str(i) + '/'

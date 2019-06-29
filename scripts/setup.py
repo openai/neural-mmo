@@ -8,7 +8,6 @@ os.system('pip3 install -r scripts/requirements.txt')
 #I tried setting this up as a github submodule.
 #Never do this ever. They are terrible.
 print('Downloading Embyr client')
-T()
 os.chdir('forge')
 os.system('git clone https://github.com/jsuarez5341/neural-mmo-client --recurse-submodules')
 os.system('mv neural-mmo-client embyr')

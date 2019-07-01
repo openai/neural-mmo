@@ -46,12 +46,12 @@ With rendering enabled, navigate to http://localhost:8080/forge/embyr/ in Firefo
 
 The project is divided into four modules:
 
-======================  =====================
+======================  ========================
 Engineering             Research
-======================  =====================
+======================  ========================
 |earth| Blade: Env      |water| Trinity: API
-|fire|  Embyr: Render   |air| Ethyr: Contrib 
-======================  =====================
+|fire|  Embyr: Render   |air| Ethyr: Contrib
+======================  ========================
 
 The objective is to create agents that scale to the complexity and robustness of the real world. This is a variant phrasing of "artificial life." A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into "agents that scale to their environment" and "environments that scale to the real world." These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. See Ideology if you find this sort of macro view interesting. 
 

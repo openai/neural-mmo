@@ -50,7 +50,7 @@ class Experiment:
    def mkdirs(self, path):
       if os.path.exists(path):
          return
-      os.mkdirs(path)
+      os.makedirs(path)
       
    def __init__(self, name, conf):
       ROOT = os.path.join(

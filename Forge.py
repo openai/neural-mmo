@@ -1,74 +1,69 @@
-#Main file. Hooks into high level world/render updates
+'''Main file for /projekt demo'''
 from pdb import set_trace as T
 import argparse
 
-import experiments
-from forge.trinity import smith, Trinity, Pantheon, God, Sword
+from experiments import Experiment, Config
+from forge.blade import lib
+
+from forge.trinity import smith, Trinity
+from forge.trinity.timed import TimeLog
+
+from projekt import Pantheon, God, Sword
 
 def parseArgs():
+   '''Processes command line arguments'''
    parser = argparse.ArgumentParser('Projekt Godsword')
-   parser.add_argument('--nRealm', type=int, default='1', 
-         help='Number of environments (1 per core)')
-   parser.add_argument('--api', type=str, default='native', 
-         help='API to use (native/vecenv)')
    parser.add_argument('--ray', type=str, default='default', 
          help='Ray mode (local/default/remote)')
    parser.add_argument('--render', action='store_true', default=False, 
          help='Render env')
    return parser.parse_args()
 
-#Example runner using the (slower) vecenv api
-#The actual vecenv spec was not designed for
-#multiagent, so this is a best-effort facsimile
-class GymExample:
-   def __init__(self, config, args):
-      self.env = smith.VecEnv(config, args, self.step)
-      #The environment is persistent. Reset only to start it.
-      self.envsObs = self.env.reset()
+def render(trin, config, args):
+   """Runs the environment in render mode
 
-      #the ANN used internally by Trinity
-      from forge.trinity import ANN 
-      self.ann = ANN(config)
+   Connect to localhost:8080 to view the client.
 
-   #Runs a single step of each environment
-   #With slow comms at each step
-   def step(self):
-      actions = []
-      for obs in self.envsObs: #Environment
-         atns = []
-         for ob in obs: #Agent
-            ent, stim = ob
-            action, arguments, atnArgs, val = self.ann(ent, stim)
-            atns.append((ent.entID, action, arguments, float(val)))
-         actions.append(atns)
-      self.envsObs, rews, dones, infos = self.env.step(actions)
+   Args:
+      trin   : A Trinity object as shown in __main__
+      config : A Config object as shown in __main__
 
-   def run(self):
-      while True:
-         self.step()
+   Notes:
+      Blocks execution. This is an unavoidable side
+      effect of running a persistent server with
+      a fixed tick rate
+   """
 
-class NativeExample:
-   def __init__(self, config, args):
-      trinity = Trinity(Pantheon, God, Sword)
-      self.env = smith.Native(config, args, trinity)
-
-   def run(self):
-      while True:
-         self.env.run()
+   from forge.embyr.twistedserver import Application
+   sword = trin.sword.remote(trin, config, args, idx=0)
+   env = sword.getEnv.remote()
+   Application(env, sword.tick.remote)
 
 if __name__ == '__main__':
+   #Set up experiment configuration
+   #ray infra, and command line args
+   config = Experiment('demo', Config).init(
+      NPOP=1,
+      NENT=128,
+   )
+
    args = parseArgs()
-   assert args.api in ('native', 'vecenv')
-   config = experiments.exps['testchaos128']
 
-   if args.api == 'native':
-      example = NativeExample(config, args)
-   elif args.api == 'vecenv':
-      example = GymExample(config, args)
-
-   #Rendering by necessity snags control flow
-   #This will automatically set local mode with 1 core
    if args.render:
-      example.env.render()
-   
-   example.run()
+      args.ray = 'local'
+   lib.ray.init(args.ray)
+
+   #Create a Trinity object specifying
+   #Cluster, Server, and Core level execution
+   trinity = Trinity(Pantheon, God, Sword)
+
+   if args.render:
+      render(trinity, config, args)
+
+   trinity.init(config, args)
+
+   #Run and print logs
+   while True:
+      time = trinity.step()
+      logs = trinity.logs()
+      logs = TimeLog.log(logs)

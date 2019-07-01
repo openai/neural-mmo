@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to the Platform! &mdash; Neural MMO 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quickstart" href="neural-mmo.html" />
+    <link rel="prev" title="Neural MMO v1.1" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Neural MMO
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Welcome to the Platform!</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ags-overview"> Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ags-version-history"> Version History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ags-namesake"> Namesake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ags-disclaimer"> Disclaimer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ags-authorship-and-license"> Authorship and License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ags-assets"> Assets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/modules.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Neural MMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li> Welcome to the Platform!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p><img alt="env" src="_images/splash.png" /></p>
+<div class="section" id="ags-welcome-to-the-platform">
+<h1><img alt="ags" src="_images/ags1.png" /> Welcome to the Platform!<a class="headerlink" href="#ags-welcome-to-the-platform" title="Permalink to this headline">¶</a></h1>
+<p><strong>Important:</strong> My <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">personal github</a> hosts the most updated version of the environment and 3D web client. The <a class="reference external" href="https://github.com/openai/neural-mmo">OpenAI</a> repo will continue to host major environment patches, but it does not get minor bugfixes.</p>
+<p><strong>Getting Started:</strong> Neural MMO is a Gym environment but unlike most platforms, it’s persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:</p>
+<ol class="arabic simple">
+<li><p>Check out the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#">quickstart guide</a> for setup and the <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">update slide deck</a> to see what’s new.</p></li>
+<li><p>Skim the new <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html">documentation</a> for Trinity/Pantheon/God/Sword. The core API is fully documented. The Ethyr contrib has partial documentation – any confusing omissions will be prioritized upon request.</p></li>
+<li><p>Head over to the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/tree/master/projekt">/projekt</a> in the source and familiarize yourself with the end-to-end “demo”. This is my personal research code on the platform.</p></li>
+<li><p>Join our <a class="reference external" href="https://discord.gg/BkMmFUC">Discord</a> for help and discussion!</p></li>
+</ol>
+<p>This is an open source project. Contributions are encouraged. I actively review issues and PRs.</p>
+<div class="section" id="ags-overview">
+<h2><img alt="ags" src="_images/ags1.png" /> Overview<a class="headerlink" href="#ags-overview" title="Permalink to this headline">¶</a></h2>
+<p>This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, and ad-hoc high stakes single and team based conflict.</p>
+</div>
+<div class="section" id="ags-version-history">
+<h2><img alt="ags" src="_images/ags1.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>v1.1: Infrastructure and API rework, official documentation and Discord</dt><dd><ul class="simple">
+<li><p>Blade: Merge Native and VecEnv environment API. New API is closer to Gym</p></li>
+<li><p>Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.</p></li>
+<li><p>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</p></li>
+<li><p>Official github.io documentation and API reference</p></li>
+<li><p>Official Discord</p></li>
+<li><p>End to end training source. There is also a pretrained model, but it’s just a weak single population foraging baseline around 2.5x of random reward. I’m currently between cluster access – once I get my hands on some better hardware, I’ll retune hyperparameters for the new demo model.</p></li>
+</ul>
+</dd>
+<dt>v1.0: Initial OpenAI environment release</dt><dd><ul class="simple">
+<li><p>Blade: Base environment with foraging and combat</p></li>
+<li><p>Embyr: THREE.js web client</p></li>
+<li><p>Trinity: CPU based distributed training infrastructure</p></li>
+<li><p>Ethyr: Contrib library of research utilities</p></li>
+<li><p>Basic project-level documentation</p></li>
+<li><p>End to end training source and a pretrained model</p></li>
+</ul>
+</dd>
+</dl>
+<p>Note: This is an open source project, but it’s a young one. For as long as I’m still running it solo, every minor version should be considered a “soft release” – bits of documentation will be missing and some APIs will throw internal error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.</p>
+</div>
+<div class="section" id="ags-namesake">
+<h2><img alt="ags" src="_images/ags1.png" /> Namesake<a class="headerlink" href="#ags-namesake" title="Permalink to this headline">¶</a></h2>
+<p>In formal publications, we refer to our project as simply a “Neural MMO.” Internally and informally, we call it “Projekt: Godsword.” The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called god swords. The latter is a particularly good model for AI environments; the former is more of a soft flavor inspiration.</p>
+</div>
+<div class="section" id="ags-disclaimer">
+<h2><img alt="ags" src="_images/ags1.png" /> Disclaimer<a class="headerlink" href="#ags-disclaimer" title="Permalink to this headline">¶</a></h2>
+<p>I originally began this problem independently. I continued working on it and released v1.0 during a 6 month internship and collaboration with OpenAI. The client was a collaboration between myself and Clare Zhu. The environment has since been my main project. I plan to continue developing it as an EECS PhD candidate at MIT under Phillip Isola until someone convinces me that there is a better way to solve AGI.</p>
+<p>Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, or Phillip.</p>
+</div>
+<div class="section" id="ags-authorship-and-license">
+<h2><img alt="ags" src="_images/ags1.png" /> Authorship and License<a class="headerlink" href="#ags-authorship-and-license" title="Permalink to this headline">¶</a></h2>
+<p>I, <a class="reference external" href="https://github.com/jsuarez5341">Joseph Suarez</a>, am the author of the environment code base. Yilun Du assisted with running experiments and particularly in setting up tournaments. Phillip Isola and Igor Mordatch have been invaluable collaborators and advisers throughout the project. The environment is registered to OpenAI and available under the MIT license. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment – the initial commit of the OpenAI neural-mmo repository represents the latest pre-employment timestep.</p>
+<p>The client was developed independently as a collaboration between myself and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and available under the MIT license.</p>
+</div>
+<div class="section" id="ags-assets">
+<h2><img alt="ags" src="_images/ags1.png" /> Assets<a class="headerlink" href="#ags-assets" title="Permalink to this headline">¶</a></h2>
+<p>Some assets used in this project belong to <a class="reference external" href="https://www.jagex.com/en-GB/">Jagex</a>, the creators of Runescape, such as</p>
+<p><img alt="ags" src="_images/ags1.png" /> <img alt="earth" src="_images/earth_thumbnail1.png" /> <img alt="water" src="_images/water_thumbnail1.png" /> <img alt="fire" src="_images/fire_thumbnail1.png" /> <img alt="air" src="_images/air_thumbnail1.png" /></p>
+<p>We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research – however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents.</p>
+<img alt="_images/neuralRED.png" src="_images/neuralRED.png" />
+<img alt="_images/neuralBLUE.png" src="_images/neuralBLUE.png" />
+<img alt="_images/neuralGREEN.png" src="_images/neuralGREEN.png" />
+<img alt="_images/neuralFUCHSIA.png" src="_images/neuralFUCHSIA.png" />
+<img alt="_images/neuralORANGE.png" src="_images/neuralORANGE.png" />
+<img alt="_images/neuralMINT.png" src="_images/neuralMINT.png" />
+<img alt="_images/neuralPURPLE.png" src="_images/neuralPURPLE.png" />
+<img alt="_images/neuralSPRING.png" src="_images/neuralSPRING.png" />
+<img alt="_images/neuralYELLOW.png" src="_images/neuralYELLOW.png" />
+<img alt="_images/neuralCYAN.png" src="_images/neuralCYAN.png" />
+<img alt="_images/neuralMAGENTA.png" src="_images/neuralMAGENTA.png" />
+<img alt="_images/neuralSKY.png" src="_images/neuralSKY.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="neural-mmo.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Neural MMO v1.1" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #001010;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #001818;
+    }
+    .wy-nav-content {
+      background: #002020;
+    }
+    .wy-nav-content-wrap {
+      background: #001818;
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: #00ffff;
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: #001818;
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: #002020;
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: lime;
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: lime;
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: lime;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: lime;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: #003030;
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: #002020;
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: #00ff00;
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: #00ff00;
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: #00ff00;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: #00ff00;
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: #002020;
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: #002020;
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: #003030;
+      color: #008888;
+      border-top: solid 6px #001818;
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: #00ff00;
+      border: #00ff00;
+    }
+
+    .highlight {
+      background: #003030;
+      color: #00fafa;
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: #008888 !important;
+      color: #003030 !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px #00000;
+      background: #003030;
+      color: #008888;
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: #002020;
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: #002020;
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: #00aaaa;
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color:#00aaaa;
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color:#008800;
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #008888;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px #002020;
+      padding: .4045em 2.427em;
+    }
+
+    footer {
+      color: teal;
+    }
+
+    p {
+      color: #00aaaa;
+    }
+    h1 {
+      color: lime;
+    }
+
+    h2 {
+      color: aqua;
+    }
+
+    h3 {
+      color: teal;
+    }
+
+    h4 {
+      color: blue;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: blue; /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: teal;
+    }
+
+    /* visited link */
+    a:visited {
+      color: lime;
+    }
+
+  </style>
+
+
+</body>
+</html>

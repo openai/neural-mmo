@@ -1,85 +1,77 @@
 from pdb import set_trace as T
-from collections import defaultdict
-import numpy as np
+import ray
+import pickle
+import time
 
-from forge import trinity
-from forge.ethyr.torch.param import setParameters, zeroGrads
-from forge.ethyr.torch import optim
-from forge.ethyr.rollouts import Rollout
+from forge.blade.core import realm
+from forge.trinity.timed import Timed, runtime, waittime
 
-class Sword:
-   def __init__(self, config, args):
-      self.config, self.args = config, args
-      self.nANN, self.h = config.NPOP, config.HIDDEN
-      self.anns  = [trinity.ANN(config)
-            for i in range(self.nANN)]
+#Agent logic
+class Sword(Timed):
+   '''A simple Core level interface for generic, 
+   persistent, and asynchronous computation over
+   a colocated Neural MMO environment (Realm)
 
-      self.init, self.nRollouts = True, 32
-      self.networksUsed = set()
-      self.updates, self.rollouts = defaultdict(Rollout), {}
-      self.ents, self.rewards, self.grads = {}, [], None
-      self.nGrads = 0
+   Args:
+      trinity: A Trinity object
+      config: A forge.blade.core.Config object
+      args: Hook for additional user arguments
+      idx: An index specifying a game map file
+   '''
+   def __init__(self, trinity, config, args, idx):
+      super().__init__()
+      self.env = realm.Realm(config, args, idx)
+      self.env.spawn = self.spawn
 
-   def backward(self):
-      ents = self.rollouts.keys()
-      anns = [self.anns[idx] for idx in self.networksUsed]
+      self.ent, self.nPop = 0, config.NPOP
+      self.disciples = [self.env]
 
-      reward, val, grads, pg, valLoss, entropy = optim.backward(
-            self.rollouts, anns, valWeight=0.25, 
-            entWeight=self.config.ENTROPY)
-      self.grads = dict((idx, grad) for idx, grad in
-            zip(self.networksUsed, grads))
+   def spawn(self):
+      '''Specifies how the environment adds players
 
-      self.blobs = [r.feather.blob for r in self.rollouts.values()]
-      self.rollouts = {}
-      self.nGrads = 0
-      self.networksUsed = set()
+      Returns:
+         entID (int), popID (int), name (str): 
+         unique IDs for the entity and population, 
+         as well as a name prefix for the agent 
+         (the ID is appended automatically).
 
-   def sendGradUpdate(self):
-      grads = self.grads
-      self.grads = None
-      return grads
- 
-   def sendLogUpdate(self):
-      blobs = self.blobs
-      self.blobs = []
-      return blobs
+      Notes:
+         This is useful for population based research,
+         as it allows one to specify per-agent or
+         per-population policies'''
 
-   def sendUpdate(self):
-      if self.grads is None:
-          return None, None
-      return self.sendGradUpdate(), self.sendLogUpdate()
+      pop = hash(str(self.ent)) % self.nPop
+      self.ent += 1
+      return self.ent, pop, 'Neural_'
 
-   def recvUpdate(self, update):
-      for idx, paramVec in enumerate(update):
-         setParameters(self.anns[idx], paramVec)
-         zeroGrads(self.anns[idx])
+   def getEnv(self):
+      '''Returns the environment. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env
 
-   def collectStep(self, entID, atnArgs, val, reward):
-      if self.config.TEST:
-          return
-      self.updates[entID].step(atnArgs, val, reward)
+   @runtime
+   def step(self, atns):
+      '''Synchronously steps the environment (Realm)
 
-   def collectRollout(self, entID, ent):
-      assert entID not in self.rollouts
-      rollout = self.updates[entID]
-      rollout.finish()
-      self.nGrads += rollout.lifespan
-      self.rollouts[entID] = rollout
-      del self.updates[entID]
+      Args:
+         packet: List of actions to step
+         the environment (Realm)
 
-      # assert ent.annID == (hash(entID) % self.nANN)
-      self.networksUsed.add(ent.annID)
+      Returns:
+         observations: a list of observations for each agent
+         rewards: the reward obtained by each agent (0 if the
+         agent is still alive, -1 if it has died)
+         done: None. Provided for conformity to the Gym API
+         info: None. Provided for conformity to the Gym API
 
-      #Two options: fixed number of gradients or rollouts
-      #if len(self.rollouts) >= self.nRollouts:
-      if self.nGrads >= 100*32:
-         self.backward()
+      Notes:
+         This is the lowest hardware layer: there is
+         currently no need for an asynchronous variant
+      '''
+      return self._step(atns)
 
-   def decide(self, ent, stim):
-      reward, entID, annID = 0, ent.entID, ent.annID
-      action, arguments, atnArgs, val = self.anns[annID](ent, stim)
-      self.collectStep(entID, atnArgs, val, reward)
-      self.updates[entID].feather.scrawl(
-            stim, ent, val, reward)
-      return action, arguments, float(val)
+   #This is an internal function only
+   #used to separate timer decorators
+   @waittime
+   def _step(self, atns):
+      return self.env.step(atns)

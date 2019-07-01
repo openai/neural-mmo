@@ -1,26 +1,61 @@
-class Trinity:
+from pdb import set_trace as T
+import ray
+
+from forge.trinity.timed import Timed, runtime, waittime
+
+class Trinity(Timed):
+   '''Pantheon-God-Sword (Cluster-Server-Core) wrapper
+
+   Trinity is a featherweight wrapper around the
+   excellent Ray API that provides a simple interface
+   for generic, persistent, and asynchronous computation
+   at the Cluster, Server, and Core levels. It also 
+   provides builtin performance logging and does not 
+   interfere with pdb breakpoint debugging.
+  
+   To use Trinity, override Pantheon, God, and Sword to
+   specify Cluster, Server, and Core level execution.
+   Overriding the step() function allows you to perform
+   arbitrary computation and return arbitrary data to
+   the previous layer. Calling super.step() allows you
+   to send arbitrary data and receive computation results 
+   from the next layer.
+
+   Args:
+      pantheon: A subclassed Pantheon object
+      god: A subclassed God object
+      Sword: A subclassed Sword object
+
+   Notes:
+      Trinity is not a single computation model. It is an
+      interface for creating computation models. By
+      example, our demo project adopts a computation
+      model similar to OpenAI Rapid. But trinity makes it
+      possible to move any piece of the execution among 
+      hardware layers with relatively little code and testing.
+   ''' 
    def __init__(self, pantheon, god, sword):
+      super().__init__()
       self.pantheon = pantheon
       self.god      = god
       self.sword    = sword
 
-#Cluster/Master logic
-class Pantheon:
-   def __init__(self, args): pass
-   def step(self, recvs): pass
+   def init(self, config, args):
+      '''
+      Instantiates a Pantheon object to make
+      Trinity runnable. Separated from __init__
+      to make Trinity usable as a stuct to hold
+      Pantheon, God, and Sword subclass references
 
-#Environment logic
-class God:
-   def __init__(self, args, idx): pass
-   def spawn(self): pass
-   def send(self): pass
-   def recv(self, pantheonUpdates): pass
+      Args:
+         config: A forge.blade.core.Config object
+         args: Hook for additional user arguments.
+      '''
+      self.base = self.pantheon(self, config, args)
+      self.disciples = [self.base]
+      return self
 
-#Agent logic
-class Sword:
-   def __init__(self, args): pass
-   def sendUpdate(self): pass
-   def recvUpdate(self, update): pass
-   def collectRollout(self, entID, ent): pass
-   def decide(self, entID, ent, stim): pass
-
+   @runtime
+   def step(self):
+      '''Wraps Pantheon step'''
+      return self.base.step()

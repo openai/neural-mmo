@@ -4,9 +4,12 @@ import numpy as np
 from forge.blade import core
 from forge.blade.lib import enums, utils
 
-def loadTiled(fPath, tiles, nCounts):
-    import pytmx
-    tm = pytmx.TiledMap(fPath)
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from pytmx import TiledMap
+
+def loadTiled(config, fPath, tiles, nCounts):
+    tm = TiledMap(fPath)
     assert len(tm.layers) == 1
     layer = tm.layers[0]
     W, H = layer.width, layer.height
@@ -14,12 +17,14 @@ def loadTiled(fPath, tiles, nCounts):
     for w, h, dat in layer.tiles():
        f = dat[0]
        tex = f.split('/')[-1].split('.')[0]
-       tilemap[h, w] = core.Tile(tiles[tex], h, w, nCounts, tex)
+       tilemap[h, w] = core.Tile(config, tiles[tex], h, w, nCounts, tex)
     return tilemap
 
 class Map:
    def __init__(self, config, idx):
+      print('Loading Map: ', idx)
       self.updateList = set()
+      self.config = config
       self.nCounts = config.NPOP
       self.genEnv(config.ROOT + str(idx) + config.SUFFIX)
 
@@ -58,12 +63,12 @@ class Map:
       return ret
 
    def np(self):
-      env   = np.array([e.state.index for e in 
+      env = np.array([e.state.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)
       return env
      
    def genEnv(self, fName):
       tiles = dict((mat.value.tex, mat.value) for mat in enums.Material)
-      self.tiles = loadTiled(fName, tiles, self.nCounts)
+      self.tiles = loadTiled(self.config, fName, tiles, self.nCounts)
       self.shape = self.tiles.shape
        

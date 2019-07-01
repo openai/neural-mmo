@@ -1,38 +1,68 @@
 from pdb import set_trace as T
-from forge.blade.lib.enums import Palette
-import numpy as np
+import ray
+import pickle
+import time
 
-class God:
-   def __init__(self, config, args):
-      self.config, self.args = config, args
-      self.nEnt, self.nANN = config.NENT, config.NPOP
-      self.popSz = self.nEnt // self.nANN
-      self.popCounts = np.zeros(self.nANN)
-      self.palette = Palette(config.NPOP)
-      self.entID = 0
+from forge.trinity.timed import Timed, runtime, waittime
 
-   #Returns IDs for spawning
-   def spawn(self):
-      entID = str(self.entID)
-      annID = hash(entID) % self.nANN
-      self.entID += 1
+#Environment logic
+class God(Timed):
+   '''A simple Server level interface for generic, 
+   persistent, and asynchronous computation over
+   remote Cores (Sword API)
 
-      assert self.popCounts[annID] <= self.popSz
-      if self.popCounts[annID] == self.popSz:
-         return self.spawn()
+   Args:
+      trinity: A Trinity object
+      config: A forge.blade.core.Config object
+      args: Hook for additional user arguments
+      idx: An index specifying the current server
+   '''
+   def __init__(self, trinity, config, args, idx):
+      super().__init__()
+      self.disciples = [trinity.sword.remote(trinity, config, args, i+idx*config.NGOD) 
+            for i in range(config.NSWORD)]
 
-      self.popCounts[annID] += 1
-      color = self.palette.color(annID)
+   def distrib(self, packet=None):
+      '''Asynchronous wrapper around the step 
+      function of all remote Cores (Sword API)
 
-      return entID, (annID, color)
+      Args:
+         packet: Arbitrary user data broadcast
+            to all Cores (Sword API)
 
-   def cull(self, annID):
-      self.popCounts[annID] -= 1
-      assert self.popCounts[annID] >= 0
+      Returns:
+         A list of async handles to the step returns
+         from all remote cores (Sword API)
+      '''
+      rets = []
+      for sword in self.disciples:
+         rets.append(sword.step.remote(packet))
+      return rets
 
-   def send(self):
-      return
+   def step(self, packet=None):
+      '''Synchronous wrapper around the step 
+      function of all remote Cores (Sword API)
 
-   def recv(self, pantheonUpdates):
-      return
+      Args:
+         packet: Arbitrary user data broadcast
+            to all Cores (Sword API)
 
+      Returns:
+         A list of step returns from
+         all remote cores (Sword API)
+      '''
+      rets = self.distrib(packet)
+      return self.sync(rets)
+
+   @waittime
+   def sync(self, rets):
+      '''Synchronizes returns from distrib
+
+      Args:
+         rets: async handles returned from distrib
+
+      Returns:
+         A list of step returns from
+         all remote cores (Sword API)
+      '''
+      return ray.get(rets)

@@ -1,1 +1,1 @@
-from .stim import Stim
+from .model import Model

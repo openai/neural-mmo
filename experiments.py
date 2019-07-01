@@ -1,60 +1,86 @@
 from pdb import set_trace as T
-from configs import Law, Chaos
-import os
+import os 
 
-#Oversimplified user specification
-#for 1-3 collaborators
-USER = 'your-username'
-if USER == 'your-username':
-   #Thousandth
-   prefix = 'test'
-   remote = False
-   local  = not remote
+from forge.blade.core import config
 
-   test = True#local
-   best = True#local
-   load = True#local
+class Config(config.Config):
+   MODELDIR = 'resource/exps' #Where to store models
 
-   sample = not test
-   singles = True
-   tournaments = False
-   
-   exps = {}
-   szs = [128]
-   #For full distributed runs
-   #szs = (16, 32, 64, 128)
-   names = 'law chaos'.split()
-   confs = (Law, Chaos)
+   LOAD = True #Load model from file?
+   BEST = True #If loading, most recent or highest lifetime?
+   TEST = True #Update the model during run?
 
-   def makeExp(name, conf, sz, test=False):
-      NENT, NPOP = sz, sz//16
-      ROOT = 'resource/exps/' + name + '/'
-      try:
-         os.mkdir(ROOT)
-         os.mkdir(ROOT + 'model')
-         os.mkdir(ROOT + 'train')
-         os.mkdir(ROOT + 'test')
-      except FileExistsError:
-         pass
-      MODELDIR = ROOT + 'model/'
+   NENT = 128
+   NPOP = 1
 
-      exp = conf(remote, 
-            NENT=NENT, NPOP=NPOP,
-            MODELDIR=MODELDIR,
-            SAMPLE=sample,
-            BEST=best,
-            LOAD=load,
-            TEST=test)
-      exps[name] = exp
-      print(name, ', NENT: ', NENT, ', NPOP: ', NPOP)
+   NATN    = 1    #Number of actions taken by the network
+   HIDDEN  = 128  #Model embedding dimension
+   EMBED   = 128  #Model hidden dimension
+   ENTROPY = 0.01 #Entropy bonus for policy gradient loss
+
+   NGOD   = 2  #Number of GPU optimizer servers
+   NSWORD = 2  #Number of CPU rollout workers per server
+
+   #EPOCHUPDATES: Number of experience steps per 
+   #synchronized gradient step at the cluster level
+   EPOCHUPDATES = 2**14 #Training
+   #EPOCHUPDATES = 2**8  #Local debug
+
+   #OPTIMUPDATES: Number of experience steps per 
+   #optimizer server per cluster level step
+   #SYNCUPDATES: Number of experience steps between 
+   #syncing rollout workers to the optimizer server
+   OPTIMUPDATES = EPOCHUPDATES / NGOD
+   SYNCUPDATES  = OPTIMUPDATES / 2**4
+
+   #OPTIMBATCH: Number of experience steps per
+   #.backward minibatch on optimizer servers
+   #SYNCUPDATES: Number of experience steps between 
+   #syncing rollout workers to the optimizer server
+   OPTIMBATCH  = SYNCUPDATES * NGOD
+   SYNCBATCH   = SYNCUPDATES
+
+   #Device used on the optimizer server.
+   #Rollout workers use CPU by default
+   DEVICE = 'cuda:0'
+
+
+class Experiment:
+   '''Manages file structure for experiments'''
+   def mkdirs(self, path):
+      if os.path.exists(path):
+         return
+      os.makedirs(path)
+      
+   def __init__(self, name, conf):
+      ROOT = os.path.join(
+         os.path.dirname(__file__), 
+         conf.MODELDIR, name, '')
+
+      for path in 'model train test'.split():
+         self.mkdirs(os.path.join(ROOT, path))
+
+      #Extend model directory
+      self.MODELDIR = os.path.join(ROOT, 'model')
+      self.config = conf
+      self.name = name
+
+   def init(self, **kwargs):
+      assert 'MODELDIR' not in kwargs 
+      conf = self.config(MODELDIR=self.MODELDIR, **kwargs)
+      
+      print('Experiment: ', self.name, 
+         '-->   NENT: ', conf.NENT, 
+         ', NPOP: ', conf.NPOP)
+
+      return conf
+
+
 
    def makeExps():
       #Training runs
       for label, conf in zip(names, confs):
          for sz in szs:
             name = prefix + label + str(sz)
-            makeExp(name, conf, sz, test=test)
-          
-   #Sample config
-   makeExps()
-   makeExp('sample', Chaos, 128, test=True)
+            makeExp(name, conf, sz)
+      return exps

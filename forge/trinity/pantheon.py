@@ -1,115 +1,69 @@
 from pdb import set_trace as T
-import numpy as np
-import torch
+import ray
+import pickle
 import time
 
-from collections import defaultdict
-from torch.nn.parameter import Parameter
+from forge.trinity.timed import Timed, runtime, waittime
 
-from forge.ethyr.torch import save
-from forge.ethyr.torch.optim import ManualAdam, ManualSGD
-from forge.ethyr.torch.param import getParameters 
-from forge.blade.lib.log import Quill
-from forge import trinity
+#Cluster/Master logic
+class Pantheon(Timed):
+   '''A simple Cluster level interface for generic, 
+   persistent, and asynchronous computation over
+   multiple remote Servers (God API)
 
-class Model:
-   def __init__(self, config, args):
-      self.saver = save.Saver(config.NPOP, config.MODELDIR, 
-            'models', 'bests', resetTol=256)
-      self.config, self.args = config, args
+   Args:
+      trinity: A Trinity object
+      config: A forge.blade.core.Config object
+      args: Hook for additional user arguments
+   '''
+   def __init__(self, trinity, config, args):
+      super().__init__()
+      self.disciples = [trinity.god.remote(trinity, config, args, idx) 
+            for idx in range(config.NGOD)]
 
-      self.init()
-      if self.config.LOAD or self.config.BEST:
-         self.load(self.config.BEST)
+   def distrib(self, packet):
+      '''Asynchronous wrapper around the step function
+      function of all remote Servers (God level API)
 
-   def init(self):
-      print('Initializing new model...')
-      if self.config.SHAREINIT:
-         self.shared(self.config.NPOP)
-      else:
-         self.unshared(self.config.NPOP)
+      Args:
+         packet: Arbitrary user data broadcast
+            to all Servers (God API)
+         
+      Returns:
+         A list of async handles to the step returns
+         from all remote servers (God API)
+      '''
+      rets = []
+      for god in self.disciples:
+         rets.append(god.step.remote(packet))
+      return rets
 
-      self.params = Parameter(torch.Tensor(np.array(self.models)))
-      self.opt = None
-      if not self.config.TEST:
-         self.opt = ManualAdam([self.params], lr=0.001, weight_decay=0.00001)
+   def step(self, packet=None):
+      '''Synchronous wrapper around the step function
+      function of all remote Servers (God level API)
 
-   #Initialize a new network
-   def initModel(self):
-      return getParameters(trinity.ANN(self.config))
-
-   def shared(self, n):
-      model = self.initModel()
-      self.models = [model for _ in range(n)]
+      Args:
+         packet: Arbitrary user data broadcast
+            to all Servers (God API)
  
-   def unshared(self, n):
-      self.models = [self.initModel() for _ in range(n)]
+      Returns:
+         A list of step returns from all
+         remote servers (God level API)
+      '''
+      rets = self.distrib(packet)
+      return self.sync(rets)
 
-   #Grads and clip
-   def stepOpt(self, gradDicts):
-      grads = defaultdict(list)
-      keysets = [grads.keys() for grads in gradDicts]
-      for gradDict in gradDicts:
-         for worker, grad in gradDict.items():
-            grads[worker].append(grad)
-      for worker, gradList in grads.items():
-         grad = np.array(gradList)
-         grad = np.mean(grad, 0)
-         grad = np.clip(grad, -5, 5)
-         grads[worker] = grad
-      gradAry = torch.zeros_like(self.params)
-      for worker, grad in grads.items():
-         gradAry[worker] = torch.Tensor(grad)
-      self.opt.step(gradAry)
+   @waittime
+   def sync(self, rets):
+      '''Synchronizes returns from distrib
 
-   def checkpoint(self, reward):
-      if self.config.TEST:
-         return
-      self.saver.checkpoint(self.params, self.opt, reward)
+      Args:
+         rets: async handles returned from distrib
 
-   def load(self, best=False):
-      print('Loading model...')
-      epoch = self.saver.load(
-            self.opt, self.params, best)
+      Returns:
+         A list of step returns from all
+         remote servers (God API)
+      '''
+      return ray.get(rets)
 
-   @property
-   def nParams(self):
-      nParams = sum([len(e) for e in self.model])
-      print('#Params: ', str(nParams/1000), 'K')
-      
-   @property
-   def model(self):
-      return self.params.detach().numpy()
-
-class Pantheon:
-   def __init__(self, config, args):
-      self.start, self.tick, self.nANN = time.time(), 0, config.NPOP
-      self.config, self.args = config, args
-      self.net = Model(config, args)
-      self.quill = Quill(config.MODELDIR)
-      self.log = defaultdict(list)
-      self.net.nParams
-
-      self.period = 1
-
-   @property 
-   def model(self):
-      return self.net.model
-
-   def step(self, recvs):
-      recvs, logs = list(zip(*recvs))
-
-      #Write logs
-      self.quill.scrawl(logs)
-      self.tick += 1
-
-      if not self.config.TEST:
-         lifetime = self.quill.latest()
-         self.net.stepOpt(recvs)
-         self.net.checkpoint(lifetime)
-         self.net.saver.print()
-      else:
-         self.quill.print()
-
-      return self.model
 

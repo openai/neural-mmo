@@ -5,38 +5,87 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+#NaN grad errors here usually mean too small
+#of a batch for good advantage estimation
+#(or dummy fixed action selection)
 def advantage(returns, val):
+   '''Computes a mean centered advantage function
+   using a value function baseline.
+
+   Args:
+      returns: Tensor of trajectory returns
+      vals: Tensor of value function outpus
+
+   Returns:
+      Advantage estimate tensor
+   '''
    A = returns - val
-   adv = (A - A.mean()) / (1e-4 + A.std())
+   adv = A
+   adv = (A - A.mean())
+   #adv = (A - A.mean()) / (1e-4 + A.std())
+   #adv = (A - A.mean()) / (1e-8 + A.std())
    adv = adv.detach()
    return adv
 
 def policyLoss(logProb, atn, adv):
+   '''Policy gradient loss
+   
+   Args:
+      logProb: Log probability tensor
+      atn: Action index tensor
+      adv: Advantage estimate tensor
+
+   Returns:
+      Mean policy gradient loss
+   '''
    pgLoss = -logProb.gather(1, atn.view(-1, 1))
    return (pgLoss * adv).mean()
 
-def valueLoss(v, returns):
-   return (0.5 * (v - returns) **2).mean()
+def valueLoss(val, returns):
+   '''Value function loss
+
+   Args:
+      val: Value tensor
+      returns: Return tensor
+
+   Returns:
+      Mean value loss
+   '''
+   return (0.5 * (val - returns) **2).mean()
 
 def entropyLoss(prob, logProb):
-   return (prob * logProb).sum(1).mean()
+   '''Entropy computation
+   
+   Args:
+      prob: Probability tensor
+      logProb: Log probability tensor
+   
+   Returns:
+      Mean entropy 
+   '''
+   loss = (prob * logProb)
+   loss[torch.isnan(loss)] = 0
+   return loss.sum(1).mean()
 
-def pad(seq):
-   seq = [e.view(-1) for e in seq]
-   lens = [(len(e), idx) for idx, e in enumerate(seq)]
-   lens, idx = zip(*sorted(lens, reverse=True))
-   seq = np.array(seq)[np.array(idx)]
-
-   seq = torch.nn.utils.rnn.pad_sequence(seq, batch_first=True)
-   #seq = seq.squeeze(dim=1)
-   idx = torch.tensor(idx).view(-1, 1).expand_as(seq)
-   seq = seq.gather(0, idx)
-
-   return seq
-
+#Assumes pi is already -inf padded
 def PG(pi, atn, val, returns):
-   prob = pad([F.softmax(e, dim=1) for e in pi])
-   logProb = pad([F.log_softmax(e, dim=1) for e in pi])
+   '''Computes losses for the policy gradient algorithm
+   
+   Args:
+      pi: Logit tensor (network outputs, pre softmax)
+      atn: Index tensor of selected actions
+      val: Value tensor
+      return: Return tensor 
+   
+   Returns:
+      polLoss, entLoss: Policy and entropy losses 
+   '''
+   #Atns are wrong
+   prob = [F.softmax(e, dim=-1) for e in pi]
+   logProb = [F.log_softmax(e, dim=-1) for e in pi]
+
+   prob = torch.nn.utils.rnn.pad_sequence(prob, batch_first=True)
+   logProb = torch.nn.utils.rnn.pad_sequence(logProb, batch_first=True)
 
    adv = advantage(returns, val)
    polLoss = policyLoss(logProb, atn, adv)

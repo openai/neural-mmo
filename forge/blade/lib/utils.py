@@ -3,6 +3,16 @@ import time
 
 import numpy as np
 
+class staticproperty(property):
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
+
+class classproperty(object):
+    def __init__(self, f):
+        self.f = f
+    def __get__(self, obj, owner):
+        return self.f(owner)
+
 def cosSim(x):
    from sklearn.metrics.pairwise import euclidean_distances as pdist
    mag = np.sqrt(np.sum(x**2, 1))

@@ -57,6 +57,25 @@ class Blacksmith:
       from forge.embyr.twistedserver import Application
       Application(self.env, self.renderStep)
 
+#Example base runner class
+class Blacksmith:
+   def __init__(self, trinity, config, args):
+      if args.render:
+         print('Enabling local test mode for render')
+         args.ray  = 'local'
+         args.nRealm = 1
+
+      lib.ray.init(args.ray)
+
+      self.pantheon = trinity.pantheon(config, args)
+      
+   def render(self):
+      from forge.embyr.twistedserver import Application
+      Application(self.env, self.renderStep)
+
+   def step(self):
+      self.pantheon.step()
+   
 #Example runner using the (slower) vecenv api
 #The actual vecenv spec was not designed for
 #multiagent, so this is a best-effort facsimile
@@ -101,6 +120,7 @@ class Native(Blacksmith):
    #an issue. It is possible this has been patched.
    def rayBuffers(self):
       self.idx += 1
+      # If not local...
       if self.idx % 32 == 0:
          lib.ray.clearbuffers()
 

@@ -4,6 +4,8 @@ import torch
 import time
 from forge.blade.lib.utils import EDA
 
+import os
+
 class Resetter:
    '''Utility for model stalling that keeps track
    of the time since the model has improved
@@ -94,7 +96,8 @@ class Saver:
          epoch: The epoch of the loaded checkpoint
       '''
       fname = self.bestf if best else self.savef
-      data = torch.load(self.root + fname + self.extn)
+      path  = os.path.join(self.root, fname) + self.extn
+      data  = torch.load(path)
       param.data = data['param']
       if opt is not None:
          opt.load_state_dict(data['opt'])

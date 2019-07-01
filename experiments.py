@@ -5,7 +5,6 @@ from forge.blade.core import config
 
 class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
-   PREFIX   = 'demo-'          #Name prefix for experiments
 
    LOAD = True #Load model from file?
    BEST = True #If loading, most recent or highest lifetime?
@@ -62,7 +61,7 @@ class Experiment:
          self.mkdirs(os.path.join(ROOT, path))
 
       #Extend model directory
-      self.MODELDIR = os.path.join(conf.MODELDIR, 'model')
+      self.MODELDIR = os.path.join(ROOT, 'model')
       self.config = conf
       self.name = name
 

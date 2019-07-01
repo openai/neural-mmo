@@ -21,7 +21,7 @@
 
 1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ for setup and the `update slide deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_ to see what's new.
 
-2. Skim the `Trinity <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ documentation for Pantheon/God/Sword.
+2. Skim the new `documentation <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ for Trinity/Pantheon/God/Sword. The core API is fully documented. The Ethyr contrib has partial documentation -- any confusing omissions will be prioritized upon request.
 
 3. Head over to the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ in the source and familiarize yourself with the end-to-end "demo". This is my personal research code on the platform.
 

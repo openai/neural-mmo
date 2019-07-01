@@ -92,6 +92,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -163,8 +164,10 @@
   <p><img alt="env" src="_images/splash.png" /></p>
 <div class="section" id="ags-welcome-to-the-platform">
 <h1><img alt="ags" src="_images/ags1.png" /> Welcome to the Platform!<a class="headerlink" href="#ags-welcome-to-the-platform" title="Permalink to this headline">¶</a></h1>
+<p><strong>Important:</strong> My <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">personal github</a> hosts the most updated version of the environment and 3D web client. The <a class="reference external" href="https://github.com/openai/neural-mmo">OpenAI</a> repo will continue to host major environment patches, but it does not get minor bugfixes.</p>
+<p><strong>Getting Started:</strong> Neural MMO is a Gym environment but unlike most platforms, it’s persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:</p>
 <ol class="arabic simple">
-<li><p>Check out the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#">quickstart guide</a> and <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">update slide deck</a>.</p></li>
+<li><p>Check out the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#">quickstart guide</a> for setup and the <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">update slide deck</a> to see what’s new.</p></li>
 <li><p>Skim the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html">Trinity</a> documentation for Pantheon/God/Sword.</p></li>
 <li><p>Head over to the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/tree/master/projekt">/projekt</a> in the source and familiarize yourself with the end-to-end “demo”. This is my personal research code on the platform.</p></li>
 <li><p>Join our <a class="reference external" href="https://discord.gg/BkMmFUC">Discord</a> for help and discussion!</p></li>
@@ -183,7 +186,7 @@
 <li><p>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</p></li>
 <li><p>Official github.io documentation and API reference</p></li>
 <li><p>Official Discord</p></li>
-<li><p>End to end training source and a pretrained model</p></li>
+<li><p>End to end training source. There is also a pretrained model, but it’s just a weak single population foraging baseline around 2.5x of random reward. I’m currently between cluster access – once I get my hands on some better hardware, I’ll retune hyperparameters for the new demo model.</p></li>
 </ul>
 </dd>
 <dt>v1.0: Initial OpenAI environment release</dt><dd><ul class="simple">
@@ -196,7 +199,7 @@
 </ul>
 </dd>
 </dl>
-<p>Note: This is an open source project, but it’s a young one. For as long as I’m still running it solo, every minor version should be considered a “soft release” – bits of documentation will be missing and not all APIs will throw polished error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.</p>
+<p>Note: This is an open source project, but it’s a young one. For as long as I’m still running it solo, every minor version should be considered a “soft release” – bits of documentation will be missing and some APIs will throw internal error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.</p>
 </div>
 <div class="section" id="ags-namesake">
 <h2><img alt="ags" src="_images/ags1.png" /> Namesake<a class="headerlink" href="#ags-namesake" title="Permalink to this headline">¶</a></h2>

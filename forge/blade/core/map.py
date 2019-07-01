@@ -4,9 +4,12 @@ import numpy as np
 from forge.blade import core
 from forge.blade.lib import enums, utils
 
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from pytmx import TiledMap
+
 def loadTiled(config, fPath, tiles, nCounts):
-    import pytmx
-    tm = pytmx.TiledMap(fPath)
+    tm = TiledMap(fPath)
     assert len(tm.layers) == 1
     layer = tm.layers[0]
     W, H = layer.width, layer.height
@@ -19,6 +22,7 @@ def loadTiled(config, fPath, tiles, nCounts):
 
 class Map:
    def __init__(self, config, idx):
+      print('Loading Map: ', idx)
       self.updateList = set()
       self.config = config
       self.nCounts = config.NPOP

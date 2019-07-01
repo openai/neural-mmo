@@ -15,7 +15,11 @@
 |ags| Welcome to the Platform!
 ##############################
 
-1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ and `update slide deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_.
+**Important:** My `personal github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the most updated version of the environment and 3D web client. The `OpenAI <https://github.com/openai/neural-mmo>`_ repo will continue to host major environment patches, but it does not get minor bugfixes. 
+
+**Getting Started:** Neural MMO is a Gym environment but unlike most platforms, it's persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:
+
+1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ for setup and the `update slide deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_ to see what's new.
 
 2. Skim the `Trinity <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ documentation for Pantheon/God/Sword.
 
@@ -39,7 +43,7 @@ v1.1: Infrastructure and API rework, official documentation and Discord
    - Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.
    - Official github.io documentation and API reference
    - Official Discord
-   - End to end training source and a pretrained model
+   - End to end training source. There is also a pretrained model, but it's just a weak single population foraging baseline around 2.5x of random reward. I'm currently between cluster access -- once I get my hands on some better hardware, I'll retune hyperparameters for the new demo model.
 
 v1.0: Initial OpenAI environment release
    - Blade: Base environment with foraging and combat
@@ -49,7 +53,7 @@ v1.0: Initial OpenAI environment release
    - Basic project-level documentation
    - End to end training source and a pretrained model
 
-Note: This is an open source project, but it's a young one. For as long as I'm still running it solo, every minor version should be considered a "soft release" -- bits of documentation will be missing and not all APIs will throw polished error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.
+Note: This is an open source project, but it's a young one. For as long as I'm still running it solo, every minor version should be considered a "soft release" -- bits of documentation will be missing and some APIs will throw internal error messages. However, you can expect any issues raised on Github to be addressed quickly, and I actively monitor the Discord support channel. Feel free to drop in if you are having trouble.
 
 |ags| Namesake
 ==============

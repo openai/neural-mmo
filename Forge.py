@@ -2,7 +2,7 @@
 from pdb import set_trace as T
 import argparse
 
-import experiments
+from experiments import Experiment, Config
 from forge.blade import lib
 
 from forge.trinity import smith, Trinity
@@ -42,8 +42,15 @@ def render(trin, config, args):
 if __name__ == '__main__':
    #Set up experiment configuration
    #ray infra, and command line args
-   config = experiments.exps['demo-baseline-128']
+   config = Experiment('demo', Config).init(
+      NPOP=1,
+      NENT=128,
+   )
+
    args = parseArgs()
+
+   if args.render:
+      args.ray = 'local'
    lib.ray.init(args.ray)
 
    #Create a Trinity object specifying

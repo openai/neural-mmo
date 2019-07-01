@@ -16,6 +16,7 @@ Neural MMO v1.1
 
    overview
    neural-mmo
+   ideology
 
 .. toctree::
    :maxdepth: 8

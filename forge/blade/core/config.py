@@ -33,7 +33,7 @@ class Config:
    RANGEDAMAGE = 2
    MAGEDAMAGE  = 1
 
-   def __init__(self, remote=False, **kwargs):
+   def __init__(self, **kwargs):
       for k, v in kwargs.items():
          setattr(self, k, v)
 

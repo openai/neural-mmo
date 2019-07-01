@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="autodoc/modules.html" />
+    <link rel="next" title="Ideology" href="ideology.html" />
     <link rel="prev" title="Welcome to the Platform!" href="overview.html" /> 
 </head>
 
@@ -94,9 +94,9 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#ags-failure-modes"> Failure Modes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -168,22 +168,23 @@
   <p><img alt="env" src="_images/banner.png" /></p>
 <div class="section" id="ags-quickstart">
 <h1><img alt="ags" src="_images/ags.png" /> Quickstart<a class="headerlink" href="#ags-quickstart" title="Permalink to this headline">¶</a></h1>
-<p>The master branch will always contain the latest stable version. Note that master cannot be renamed to the current version because of a limitation in Github Pages. <strong>Don’t clone cowboy-dev.</strong> It’s an extremely aggressive dev branch for contributors, not a bleeding edge build.</p>
+<p>The master branch will always contain the latest stable version. <strong>Users should not fork cowboy branches.</strong> These are hyperagressive dev branches for contributors, not bleeding edge builds.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Install OpenAI environment, the Embyr client, and THREE.js. ~1 GB</span>
-<span class="c1">#Will only install the environment without --recurse-submodules</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">--</span><span class="n">recurse</span><span class="o">-</span><span class="n">submodules</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
 <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+
+<span class="c1">#We assume you already have a Python 3.7+ Anaconda setup</span>
 <span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<p><strong>We assume you already have an Anaconda setup with Python 3.7+.</strong>. The environment is framework independent, but our experiment code (the demo) uses PyTorch.</p>
-<p>To run the environment:</p>
+<p>All configuration options are available in experiments.py. The environment is framework independent. So are some of the contrib libraries. Our demo code is a full fledged research pipeline written in PyTorch. It makes use of some PyTorch-specific contrib libraries. If you don’t have a strong framework preference, extending the demo is a great way to get started immediately. To run the environment:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Run the environment with rendering on</span>
+<span class="c1">#This will automatically set --local</span>
 <span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">render</span>
 
 <span class="c1">#Train with 2 GPUs, 2 environments per GPU (editable in config.py)</span>
-<span class="c1">#You may need to tweak CUDA_VISIBLE_DEVICES per your machine</span>
-<span class="n">bash</span> <span class="n">Forge</span><span class="o">.</span><span class="n">sh</span>
+<span class="c1">#You may need to tweak CUDA_VISIBLE_DEVICES for your machine</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span>
 
 <span class="c1">#You can also tell Ray to execute locally.</span>
 <span class="c1">#This is useful for debugging and works with pdb</span>
@@ -209,18 +210,18 @@
 <td><p><img alt="water" src="_images/water_thumbnail.png" /> Trinity: API</p></td>
 </tr>
 <tr class="row-odd"><td><p><img alt="fire" src="_images/fire_thumbnail.png" />  Embyr: Render</p></td>
-<td><p><img alt="air" src="_images/air_thumbnail.png" /> Ethyr: Neural</p></td>
+<td><p><img alt="air" src="_images/air_thumbnail.png" /> Ethyr: Contrib</p></td>
 </tr>
 </tbody>
 </table>
-<p>The objective is to create agents that scale to the complexity and robustness of the real world. This is a variant phrasing of “artificial life.” A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into “agents that scale to their environment” and “environments that scale to the real world.” These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. For a more thorough overview of the project approach and objective, see this <a class="reference external" href="https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing">Two Pager</a>.</p>
+<p>The objective is to create agents that scale to the complexity and robustness of the real world. This is a variant phrasing of “artificial life.” A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into “agents that scale to their environment” and “environments that scale to the real world.” These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. See Ideology if you find this sort of macro view interesting.</p>
 <p><img alt="water" src="_images/water_thumbnail.png" /> <img alt="air" src="_images/air_thumbnail.png" /> Research: Agents that scale to env complexity</p>
 <p><img alt="earth" src="_images/earth_thumbnail.png" /> <img alt="fire" src="_images/fire_thumbnail.png" /> Engineering: Env that scales to real world complexity</p>
 <div class="section" id="water-trinity">
 <h3><img alt="water" src="_images/water_thumbnail.png" /> Trinity<a class="headerlink" href="#water-trinity" title="Permalink to this headline">¶</a></h3>
 <p>The environment itself follows the OpenAI Gym API almost identically.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.blade.core.realm</span> <span class="kn">import</span> <span class="n">Realm</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">mapIdx</span><span class="p">)</span>
 
 <span class="c1">#The environment is persistent: call reset only upon initialization</span>
 <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -229,8 +230,9 @@
 <span class="c1">#for each agent in each environment.</span>
 <span class="n">actions</span> <span class="o">=</span> <span class="n">your_algorithm_here</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
-<span class="c1">#The environment is persistent: &quot;dones&quot; is always None</span>
-<span class="c1">#If an observation is missing, that agent has died</span>
+<span class="c1">#Observations length is variable (as is the number of agents)</span>
+<span class="c1">#The environment is persistent: &quot;dones&quot; denotes whether</span>
+<span class="c1">#whether the given agent has died, but the env goes on.</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -239,6 +241,8 @@
 <span class="c1">#Cluster, Server, and Core level execution</span>
 <span class="n">trinity</span> <span class="o">=</span> <span class="n">Trinity</span><span class="p">(</span><span class="n">Pantheon</span><span class="p">,</span> <span class="n">God</span><span class="p">,</span> <span class="n">Sword</span><span class="p">)</span>
 <span class="n">trinity</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">theSkyIsBlue</span><span class="p">:</span>
+   <span class="n">trinity</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code.</p>
@@ -249,12 +253,11 @@
 </div>
 <div class="section" id="earth-blade">
 <h3><img alt="earth" src="_images/earth_thumbnail.png" /> Blade<a class="headerlink" href="#earth-blade" title="Permalink to this headline">¶</a></h3>
-<p>Blade is the core environment, including game state and control flow. Researchers should not need to touch this, outside perhaps importing core configurations, i/o tools, and enums.</p>
+<p>Blade is the core environment, including game state and control flow. Researchers should not need to touch this.</p>
 </div>
 <div class="section" id="fire-embyr">
 <h3><img alt="fire" src="_images/fire_thumbnail.png" /> Embyr<a class="headerlink" href="#fire-embyr" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">Embyr</a> is an independent repository containing THREE.js web client. It’s written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. You will need to refresh the page whenever you reboot the server (Forge.py).</p>
-<p>Performance is around 50-60 FPS with ~3s load on a high-end desktop, 30 FPS with ~10s load on my Razer laptop. It runs better on Chrome than Firefox. Other browsers may work but are not officially supported.</p>
+<p><a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">Embyr</a> is an independent repository containing THREE.js web client. It’s written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. You will need to refresh the page whenever you reboot the server (Forge.py). Performance should no longer be an issue, but it runs better on Chrome than Firefox. Other browsers may work but are not officially supported.</p>
 <p>I personally plan on continuing development on both the main environment and the client. The environment repo is quite clean, but the client could use some restructuring. I intend to refactor it for v1.2. Environment updates will most likely be released in larger chunks, potentially coupled to future publications. On the other hand, the client is under active and rapid development. You can expect most features, at least in so far as they are applicable to the current environment build, to be released as soon as they are stable. Feel free to contact me with ideas and feature requests.</p>
 <div class="section" id="ags-known-limitations">
 <h4><img alt="ags" src="_images/ags.png" /> Known Limitations<a class="headerlink" href="#ags-known-limitations" title="Permalink to this headline">¶</a></h4>
@@ -263,39 +266,6 @@
 <p>This is because the research overlays are written as raw glsl shaders, which you probably don’t want to try to edit. In particular, the counts exploration visualizer hard codes eight textures corresponding to exploration maps. This exceeds the number of allowable textures. I will look into fixing this into future if there is significant demand. If you happen to be a shader wizard with spare time, feel free to submit a PR.</p>
 </div>
 </div>
-</div>
-<div class="section" id="ags-failure-modes">
-<h2><img alt="ags" src="_images/ags.png" /> Failure Modes<a class="headerlink" href="#ags-failure-modes" title="Permalink to this headline">¶</a></h2>
-<p>Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.</p>
-<dl class="simple">
-<dt>We are currently aware of three failure cases for the project:</dt><dd><ul class="simple">
-<li><p>Computational infeasibility</p></li>
-<li><p>“Agents that scale to their environment” is too hard</p></li>
-<li><p>“Environments that scale to the real world” is too hard</p></li>
-</ul>
-</dd>
-</dl>
-<p>The first failure case is a serious risk, but is shared among all areas of the field. This project is not uniquely compute intensive – in fact, it is one of few environments where it is straightforward to train reasonable policies on a single CPU. If scale is the main issue here, it is likely shared among most if not all other approaches.</p>
-<dl class="simple">
-<dt>The second problem is probably most familiar to researchers as exploration. Given a cold start, how can agents bootstrap both to better policies and to better exploration strategies? This is a hard problem, but it is unlikely to kill the project because:</dt><dd><ul class="simple">
-<li><p>This is independently an important problem that many researchers are already working on already</p></li>
-<li><p>The environment of this project is designed collaboratively to assist agents early on in learning, rather than adversarially as a hard benchmark</p></li>
-<li><p><a class="reference external" href="https://blog.openai.com/openai-five/">Recent</a> <a class="reference external" href="https://blog.openai.com/learning-dexterity/">projects</a> have demonstrated success at scale.</p></li>
-</ul>
-</dd>
-</dl>
-<p>The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:</p>
-<img alt="Quest Map" src="_images/quests.png" />
-<p><a class="reference external" href="https://www.reddit.com/user/Gamez_X">Source</a></p>
-<p>Actually, it’s a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:</p>
-<img alt="Skills" src="_images/skills.png" />
-<img alt="Equipment" src="_images/equipment.png" />
-<p><a class="reference external" href="https://www.jagex.com/en-GB/">Source</a></p>
-<p>In a massive open world:</p>
-<img alt="GameMap" src="_images/map.png" />
-<p><a class="reference external" href="https://www.jagex.com/en-GB/">Source</a></p>
-<p>The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy–especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.</p>
-<p>While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.</p>
 </div>
 </div>
 
@@ -307,7 +277,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="autodoc/modules.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ideology.html" class="btn btn-neutral float-right" title="Ideology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="overview.html" class="btn btn-neutral float-left" title="Welcome to the Platform!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

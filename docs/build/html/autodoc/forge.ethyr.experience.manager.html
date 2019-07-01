@@ -84,6 +84,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -187,7 +188,7 @@ for use on remote machines, and handle network output data
 for use with the ethyr loss/optimizer libraries.</p>
 <dl class="method">
 <dt id="forge.ethyr.experience.manager.RolloutManager.batched">
-<code class="descname">batched</code><span class="sig-paren">(</span><em>batchSize</em>, <em>fullRollouts=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.batched" title="Permalink to this definition">¶</a></dt>
+<code class="descname">batched</code><span class="sig-paren">(</span><em>nUpdates</em>, <em>forOptim=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.batched" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns flat batches of experience of the specified size</p>
 <p class="rubric">Notes</p>
 <p>The last batch may be smaller than the specified sz</p>
@@ -212,8 +213,14 @@ for use with the ethyr loss/optimizer libraries.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.ethyr.experience.manager.RolloutManager.logs">
-<code class="descname">logs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.logs" title="Permalink to this definition">¶</a></dt>
+<dt id="forge.ethyr.experience.manager.RolloutManager.recv">
+<code class="descname">recv</code><span class="sig-paren">(</span><em>packets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.recv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack communicated data to internal buffers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.ethyr.experience.manager.RolloutManager.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns log objects of all rollouts.</p>
 <p>Also resets the rollout counter.</p>
 <dl class="field-list simple">
@@ -224,12 +231,6 @@ for use with the ethyr loss/optimizer libraries.</p>
 <dd class="field-even"><p>logs</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.ethyr.experience.manager.RolloutManager.recv">
-<code class="descname">recv</code><span class="sig-paren">(</span><em>packets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.recv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unpack communicated data to internal buffers</p>
 </dd></dl>
 
 <dl class="method">

@@ -19,8 +19,8 @@ class God(Timed):
    '''
    def __init__(self, trinity, config, args, idx):
       super().__init__()
-      self.disciples = [trinity.sword.remote(trinity, config, args, idx) 
-            for idx in range(config.NSWORD)]
+      self.disciples = [trinity.sword.remote(trinity, config, args, i+idx*config.NGOD) 
+            for i in range(config.NSWORD)]
 
    def distrib(self, packet=None):
       '''Asynchronous wrapper around the step 

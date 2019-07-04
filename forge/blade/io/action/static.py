@@ -45,24 +45,24 @@ class Action(Node):
 class Move(Node):
    nodeType = NodeType.SELECTION
    def call(world, entity, rDelta, cDelta):
-      r, c = entity.pos
-      entity._lastPos = entity.pos
+      r, c = entity.base.pos
+      entity.history._lastPos = (r, c)
       rNew, cNew = r+rDelta, c+cDelta
       if world.env.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
          return
       if not utils.inBounds(rNew, cNew, world.shape):
          return
-      if entity.freeze > 0:
+      if entity.status.freeze > 0:
          return
 
-      entity._r.update(rNew)
-      entity._c.update(cNew)
+      entity.base.r.update(rNew)
+      entity.base.c.update(cNew)
       entID = entity.entID
       
-      r, c = entity.lastPos
+      r, c = entity.history.lastPos
       world.env.tiles[r, c].delEnt(entID)
 
-      r, c = entity.pos
+      r, c = entity.base.pos
       world.env.tiles[r, c].addEnt(entID, entity)
 
    @staticproperty

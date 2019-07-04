@@ -42,8 +42,8 @@ def render(trin, config, args):
 if __name__ == '__main__':
    #Set up experiment configuration
    #ray infra, and command line args
-   config = Experiment('demo', Config).init(
-      NPOP=1,
+   config = Experiment('env', Config).init(
+      NPOP=2,
       NENT=128,
    )
 

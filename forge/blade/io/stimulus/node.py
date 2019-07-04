@@ -3,6 +3,9 @@ import numpy as np
 
 from forge.blade.lib.utils import classproperty
 
+class Flat:
+   pass
+
 class Stim:
    default = 0
    max = float('inf')

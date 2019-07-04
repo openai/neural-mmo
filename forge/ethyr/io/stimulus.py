@@ -16,7 +16,10 @@ class Data:
 
    def add(self, static, obj, *args, key):
       for name, attr in static:
-         val = getattr(obj, attr.name).get(*args)
+         val = obj
+         for n in name:
+            val = getattr(val, n[0].lower() + n[1:])
+         val = val.get(*args)
          if key != self.key:
             self.data[name].append([])
          self.data[name][-1].append(val)
@@ -47,7 +50,7 @@ class Stimulus:
       '''
       rets = [] 
       for stim in stims:
-         keys      = 'Entity Tile'.split()
+         keys      = [tuple(['Entity']), tuple(['Tile'])]
          functions = [Stimulus.entity, Stimulus.tile]
          ret = Stimulus.makeSets(stim, keys, functions)
          rets.append(ret)

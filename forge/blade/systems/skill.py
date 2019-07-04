@@ -4,40 +4,67 @@ import numpy as np
 from forge.blade.systems import experience
 
 class Skills:
-   def __init__(self):
-      self.melee        = Melee()
-      self.ranged       = Ranged()
-      self.defense      = Defense()
-      self.constitution = Constitution()
+   def __init__(self, config):
+      expCalc = experience.ExperienceCalculator()
+   
+      #Combat skills
+      self.constitution = Constitution(expCalc)
+      self.melee        = Melee(expCalc)
+      self.ranged       = Ranged(expCalc)
+      self.defense      = Defense(expCalc)
 
-      self.fishing = Fishing()
-      self.mining = Mining()
+      #Harvesting Skills
+      self.fishing      = Fishing(expCalc)
+      self.mining       = Mining(expCalc)
 
-      self.cooking = Cooking()
-      self.smithing = Smithing()
+      #Processing Skills
+      self.cooking      = Cooking(expCalc)
+      self.smithing     = Smithing(expCalc)
 
-   def addCombatExp(self, skill, dmg):
-      skill.exp += int(3*dmg)
-      self.constitution.exp += int(dmg)
+   def packet(self):
+      data = {}
+      
+      data['constitution'] = self.constitution.packet()
+      data['melee']        = self.melee.packet()
+      data['ranged']       = self.ranged.packet()
+      data['defense']      = self.defense.packet()
+      data['fishing']      = self.fishing.packet()
+      data['mining']       = self.mining.packet()
+      data['cooking']      = self.cooking.packet()
+      data['smithing']     = self.smithing.packet()
+
+   def update(self, world, actions):
+      return 
 
 class Skill:
    skillItems = abc.ABCMeta
-   expCalculator = experience.ExperienceCalculator()
-   def __init__(self):
-      self.exp = 0
+   def __init__(self, expCalc):
+      self.expCalc = expCalc
+      self.exp     = 0
+
+   def packet(self):
+      data = {}
+      
+      data['exp']   = self.exp
+      data['level'] = self.level
 
    @property
    def level(self):
-      return self.expCalculator.levelAtExp(self.exp)
+      return self.expCalc.levelAtExp(self.exp)
 
 class CombatSkill(Skill):
-   @property
-   def isMelee(self):
-      return False
+   def addCombatExp(self, skill, dmg):
+      skill.exp             += int(3*dmg)
+      self.constitution.exp += int(dmg)
 
-   @property
-   def isRanged(self):
-      return False
+class Constitution(CombatSkill):
+   def __init__(self, expCalc):
+      super().__init__(expCalc)
+      self.exp = self.expCalc.expAtLevel(10)
+
+class Melee(CombatSkill): pass
+class Ranged(CombatSkill): pass
+class Defense(CombatSkill): pass
 
 class NonCombatSkill(Skill):
    def success(self, levelReq):
@@ -71,29 +98,15 @@ class HarvestingSkill(NonCombatSkill):
          if self.attempt(inv, e):
             return
 
+class Fishing(HarvestingSkill): pass
+class Mining(HarvestingSkill): pass
+
+
 class ProcessingSkill(NonCombatSkill):
    def process(self, inv, item):
       self.attempt(inv, item)
      
-class Fishing(HarvestingSkill): pass
-   
-class Mining(HarvestingSkill): pass
-
 class Cooking(ProcessingSkill): pass
-
 class Smithing(ProcessingSkill): pass        
 
-class Melee(CombatSkill):
-   @property
-   def isMelee(self):
-      return True
-
-class Ranged(CombatSkill):
-   @property
-   def isRanged(self):
-      return True
-
-class Defense(CombatSkill): pass
-
-class Constitution(CombatSkill): pass
 

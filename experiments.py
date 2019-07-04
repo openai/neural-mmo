@@ -5,33 +5,35 @@ from forge.blade.core import config
 
 class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
+   DEBUG    = True
 
-   LOAD = True #Load model from file?
-   BEST = True #If loading, most recent or highest lifetime?
-   TEST = True #Update the model during run?
+   LOAD = False #Load model from file?
+   BEST = False #If loading, most recent or highest lifetime?
+   TEST = False #Update the model during run?
 
    NENT = 128
    NPOP = 1
 
    NATN    = 1    #Number of actions taken by the network
-   HIDDEN  = 128  #Model embedding dimension
-   EMBED   = 128  #Model hidden dimension
    ENTROPY = 0.01 #Entropy bonus for policy gradient loss
 
+   HIDDEN  = 128  #Model embedding dimension
+   EMBED   = 128  #Model hidden dimension
+ 
    NGOD   = 2  #Number of GPU optimizer servers
    NSWORD = 2  #Number of CPU rollout workers per server
 
    #EPOCHUPDATES: Number of experience steps per 
    #synchronized gradient step at the cluster level
-   EPOCHUPDATES = 2**14 #Training
-   #EPOCHUPDATES = 2**8  #Local debug
+   #EPOCHUPDATES = 2**14 #Training
+   EPOCHUPDATES = 2**16 #Training
 
    #OPTIMUPDATES: Number of experience steps per 
    #optimizer server per cluster level step
    #SYNCUPDATES: Number of experience steps between 
    #syncing rollout workers to the optimizer server
    OPTIMUPDATES = EPOCHUPDATES / NGOD
-   SYNCUPDATES  = OPTIMUPDATES / 2**4
+   SYNCUPDATES  = 2**10
 
    #OPTIMBATCH: Number of experience steps per
    #.backward minibatch on optimizer servers
@@ -44,6 +46,13 @@ class Config(config.Config):
    #Rollout workers use CPU by default
    DEVICE = 'cuda:0'
 
+   #Debug params
+   if DEBUG:
+      HIDDEN  = 2
+      EMBED   = 2
+      EPOCHUPDATES = 2**8
+      SYNCUPDATES  = 2**4
+      DEVICE = 'cpu:0'
 
 class Experiment:
    '''Manages file structure for experiments'''

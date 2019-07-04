@@ -58,8 +58,10 @@ class Env(nn.Module):
       '''Initialize embedding networks'''
       emb  = nn.ModuleDict()
       for name, subnet in StaticStimulus:
+         name = '-'.join(name)
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
+            param = '-'.join(param)
             emb[name][param] = TaggedInput(val(config), config)
       self.emb = emb
 
@@ -82,6 +84,7 @@ class Env(nn.Module):
       '''Embed and pack attributes of each entity'''
       feats = []
       for param, val in subnet.items():
+         param = '-'.join(param)
          val = torch.Tensor(val).to(self.config.DEVICE)
          emb = self.emb[group][param](val)
          feats.append(emb)
@@ -97,6 +100,7 @@ class Env(nn.Module):
 
       #Pack entities of each observation set
       for group, stim in stims.items():
+         group = '-'.join(group)
          names, subnet = stim
          emb = self.attrs(group, net, subnet)
          features[group] = emb.unsqueeze(0)

@@ -42,10 +42,10 @@ class Spawner:
       ent   = entity.Player(self.config, iden, pop, name, color)
       assert ent not in realm.desciples
 
-      r, c = ent.pos
+      r, c = ent.base.pos
       realm.desciples[ent.entID] = ent
       realm.world.env.tiles[r, c].addEnt(iden, ent)
-      realm.world.env.tiles[r, c].counts[ent.population.val] += 1
+      realm.world.env.tiles[r, c].counts[ent.base.population.val] += 1
 
    def cull(self, pop):
       assert self.pops[pop] >= 1
@@ -96,7 +96,7 @@ class Realm(Timed):
    def cullDead(self, dead):
       for entID in dead:
          ent = self.desciples[entID]
-         r, c = ent.pos
+         r, c = ent.base.pos
          self.world.env.tiles[r, c].delEnt(entID)
          self.spawner.cull(ent.annID)
          del self.desciples[entID]
@@ -110,7 +110,7 @@ class Realm(Timed):
       self.env = self.world.env.np()
 
    def getStim(self, ent):
-      return self.world.env.stim(ent.pos, self.config.STIM)
+      return self.world.env.stim(ent.base.pos, self.config.STIM)
 
    #Only saves the first action of each priority
    def prioritize(self, decisions):
@@ -154,7 +154,7 @@ class Realm(Timed):
 
    def postmortem(self, ent, dead):
       entID = ent.entID
-      if not ent.alive or ent.kill:
+      if not ent.base.alive:
          dead.append(entID)
          return True
       return False
@@ -162,7 +162,8 @@ class Realm(Timed):
    def getStims(self):
       stims = []
       for entID, ent in self.desciples.items():
-         tile = self.world.env.tiles[ent.r.val, ent.c.val].tex
+         r, c = ent.base.pos
+         tile = self.world.env.tiles[r, c].tex
          stim = self.getStim(ent)
          stims.append((self.getStim(ent), ent))
       return stims

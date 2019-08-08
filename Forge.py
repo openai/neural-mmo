@@ -35,6 +35,8 @@ def render(trin, config, args):
    """
 
    from forge.embyr.twistedserver import Application
+   #model = Model(projekt.ANN, config, args)
+   #sword.recvUpdate(model.net.model)
    sword = trin.sword.remote(trin, config, args, idx=0)
    env = sword.getEnv.remote()
    Application(env, sword.tick.remote)
@@ -43,7 +45,7 @@ if __name__ == '__main__':
    #Set up experiment configuration
    #ray infra, and command line args
    config = Experiment('env', Config).init(
-      NPOP=2,
+      NPOP=8,
       NENT=128,
    )
 

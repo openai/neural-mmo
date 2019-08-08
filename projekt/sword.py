@@ -12,6 +12,7 @@ from forge.blade.core import realm
 
 from forge.ethyr.io import Stimulus, Action
 from forge.ethyr.experience import RolloutManager
+from forge.ethyr.torch import Model
 
 from copy import deepcopy
 
@@ -29,6 +30,7 @@ class Sword(trinity.Sword):
       '''Initializes a model, env, and relevent utilities'''
 
       super().__init__(trin, config, args, idx)
+      self.foo = True;
       config        = deepcopy(config)
       config.DEVICE = 'cpu:0'
 
@@ -62,27 +64,30 @@ class Sword(trinity.Sword):
       communication to an upstream optimizer node.'''
  
       #Batch observations and make decisions
+
       stims = Stimulus.process(self.obs)
       self.manager.collectInputs(self.env, self.obs, stims)
 
-      actions, outs = [], []
-      for batch in self.manager.batched(
-            self.config.SYNCBATCH):
+      observations, actions, outs = [], [], []
+      for batch in self.manager.batched(self.config.SYNCBATCH):
          pop, rollouts, batch = batch
          keys, obs, stim, _, _, _, _ = batch
+         observations += obs
 
          #Run the policy
          atns, out, _ = self.net(pop, stim, obs=obs)
-         actions += atns
+
+         actions += [(o[1].entID, a) for o, a in zip(obs, atns)]
          outs    += out
-      
+
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.
-      actions = dict(((o[1].entID, a) for o, a in zip(self.obs, actions)))
+      assert len(actions) == len(dict(actions))
+      actions = dict(actions)
       nxtObs, rewards, dones, info = super().step(actions)
 
       #Update the experience buffer
-      #The envrionment is used to generate serialization keys
-      self.manager.collectOutputs(self.env, self.obs, outs, rewards, dones)
+      #The environment is used to generate serialization keys
+      self.manager.collectOutputs(self.env, observations, outs, rewards, dones)
       self.obs = nxtObs
 

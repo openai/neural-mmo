@@ -97,7 +97,7 @@ class Stimulus(Config):
                self.default = 0
 
       #Resources
-      class Resource(Config, node.Flat):
+      class Resources(Config, node.Flat):
          class Food(node.Continuous):
             def init(self, config):
                self.default = config.RESOURCE

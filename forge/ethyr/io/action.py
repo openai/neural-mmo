@@ -68,7 +68,7 @@ class Action:
          self.ret.args = args #Only one arg support for now
          self.nxt = self.nxt[1:]
 
-         return [args], done
+         return [args], True #done
  
       args = atn.args(env, ent, self.config)
       if atn.nodeType is NodeType.ACTION:

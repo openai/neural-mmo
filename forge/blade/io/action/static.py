@@ -4,6 +4,7 @@ import numpy as np
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
+from forge.blade.systems import combat
 
 #ActionRoot
 class Action(Node):
@@ -133,6 +134,7 @@ class Attack(Node):
       R, C = R//2, C//2
       #R, C = entity.pos
 
+      #return [entity]
       rets = []
       for r in range(R-N, R+N+1):
          for c in range(C-N, C+N+1):
@@ -145,26 +147,21 @@ class Attack(Node):
       rCent, cCent = cent
       return abs(r - rCent) + abs(c - cCent)
 
-   def damage(ent, targ, dmg):
-      targ.food.decrement(amt=dmg)
-      targ.water.decrement(amt=dmg)
-      ent.food.increment(amt=dmg)
-      ent.water.increment(amt=dmg)
-
-   def call(world, entity, targ, dmg, freeze=False):
+   def call(world, entity, targ, style, freeze=False):
+      entity.history._attack = {}
+      entity.history._attack['target'] = targ.entID
+      entity.history._attack['style'] = style.__class__.__name__
       if entity.entID == targ.entID:
-         entity._attack = None
+         entity.history._attack = None
          return
-      #entity.targPos = targ.pos
-      #entity.attkPos = entity.lastPos
-      #entity.targ = targ
-      assert type(dmg) == int
-      self.damage(entity, targ, dmg)
+
+      dmg = combat.attack(entity, targ, style)
+      #entity.applyDamage(dmg, style.__name__.lower())
+      #targ.receiveDamage(dmg)
       return dmg
 
    def args(stim, entity, config):
       return [Melee, Range, Mage]
-      #return Melee.args(stim, entity, config) + Range.args(stim, entity, config) + Mage.args(stim, entity, config)
 
 class AttackStyle(Node):
    pass
@@ -178,8 +175,8 @@ class Melee(Node):
       return None
 
    def call(world, entity, targ):
-      damageF = world.config.MELEEDAMAGE
-      Attack.call(world, entity, targ, damageF)
+      #dmg = world.config.MELEEDAMAGE
+      Attack.call(world, entity, targ, entity.skills.melee)
 
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.MELEERANGE)
@@ -193,8 +190,8 @@ class Range(Node):
       return None
 
    def call(world, entity, targ):
-      damageF = world.config.RANGEDAMAGE
-      Attack.call(world, entity, targ, damageF)
+      #dmg = world.config.RANGEDAMAGE
+      Attack.call(world, entity, targ, entity.skills.range);
 
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.RANGERANGE)
@@ -208,9 +205,10 @@ class Mage(Node):
       return None
 
    def call(world, entity, targ):
-      damageF = world.config.MAGEDAMAGE
-      dmg = Attack.call(world, entity, targ, damageF, freeze=True)
-      targ._freeze.update(3)
+      #dmg = world.config.MAGEDAMAGE
+      dmg = Attack.call(world, entity, targ, entity.skills.mage, freeze=True)
+      if dmg is not None and dmg > 0:
+         targ.status.freeze.update(3)
 
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config.MAGERANGE)

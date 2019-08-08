@@ -112,6 +112,10 @@ class Env(nn.Module):
             v = v.split(1, dim=0)
             lookup.add(k, v)
 
+      k = [tuple([0]*Serial.KEYLEN)]
+      v = [v[-1] * 0]
+      lookup.add(k, v)
+   
       #Concat feature block
       features = list(features.values())
       features = torch.cat(features, -2)

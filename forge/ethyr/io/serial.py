@@ -16,7 +16,9 @@ class Serial:
    '''Internal serialization class for communication across machines
 
    Mainly wraps Stimulus.serialize and Action.serialize. Also provides
-   keying functionality for converting game objects to unique IDs.'''
+   keying functionality for converting game objects to unique IDs.
+
+   Format: World, Tick, key.serial[0], key.serial[1], key type'''
    def key(key, iden):
       '''Convert a game object to a unique key'''
       from forge.blade.entity import Player
@@ -37,8 +39,8 @@ class Serial:
       ret = tuple(pad*[-1]) + ret
       return ret
 
-   def realmKey(realm, ob):
-      iden = realm.worldIdx, realm.tick
+   def realmKey(realm, ob, offset=0):
+      iden = realm.worldIdx, realm.tick - offset
 
       #The environment is used to
       #generate serialization keys
@@ -54,7 +56,9 @@ class Serial:
 
    def outputs(realm, ob, outs):
       '''Serialize actions'''
-      iden, key = Serial.realmKey(realm, ob)
+      #Offset environment tick by 1 because we have
+      #stepped the environment.
+      iden, key = Serial.realmKey(realm, ob, 1)
       actn = Action.serialize(outs, iden)
       return iden, key, actn
 

@@ -51,6 +51,10 @@ class Stim:
    def get(self, *args):
       return self.asserts(self.val)
 
+   @property
+   def missing(self):
+      return self.max - self.val
+
    def increment(self, amt=1):
       self._val = min(self.max, self.val + amt)
 

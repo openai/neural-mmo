@@ -51,6 +51,7 @@ class ANN(nn.Module):
       val         = net.val(stim)
 
       atnArgs, outs = self.action(stim, embed, obs, atnArgs)
+
       return atnArgs, outs, val
 
    def recvUpdate(self, update):

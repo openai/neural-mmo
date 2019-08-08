@@ -5,11 +5,18 @@ import torch
 from torch import nn
 from torch.distributions import Categorical
 
-def classify(logits):
+def classify(logits, mask=None):
    '''Sample an action from logits'''
    if len(logits.shape) == 1:
       logits = logits.view(1, -1)
-   distribution = Categorical(1e-3+torch.softmax(logits, dim=1))
+
+   #Masking the noise required
+   logits += 1e-3
+   if mask is not None:
+      logits[1-mask] = -np.inf
+
+   #distribution = Categorical(torch.softmax(logits, dim=1))
+   distribution = Categorical(logits=logits)
    atn = distribution.sample()
    return atn
 

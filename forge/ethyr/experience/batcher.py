@@ -10,13 +10,14 @@ class Batcher:
    def grouped(rollouts):
       groups = defaultdict(dict)
       for key, rollout in rollouts.items():
+         assert key not in groups[Serial.population(key)]
          groups[Serial.population(key)][key] = rollout
-      return groups.items()
+      return groups
 
    
    def batched(rollouts, nUpdates, fullRollouts):
       ret, groups = [], Batcher.grouped(rollouts)
-      for groupKey, group in Batcher.grouped(rollouts):
+      for groupKey, group in groups.items():
          group = list(group.items())
          update, updateSz = [], 0 
          for idx, rollout in enumerate(group):

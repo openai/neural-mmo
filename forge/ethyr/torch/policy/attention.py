@@ -29,7 +29,9 @@ class DotReluBlock(nn.Module):
    def forward(self, k, v):
       k = self.key(k)
       v = self.val(v)
-      x = functional.dot(k, v)
+      x = torch.sum(k * v, -1)
+      #x = functional.dot(k, v)
+      return x
       return x.squeeze(-1)
 
 

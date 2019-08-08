@@ -5,7 +5,7 @@ from forge.blade.core import config
 
 class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
-   DEBUG    = True
+   DEBUG    = False
 
    LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
@@ -20,13 +20,13 @@ class Config(config.Config):
    HIDDEN  = 128  #Model embedding dimension
    EMBED   = 128  #Model hidden dimension
  
-   NGOD   = 2  #Number of GPU optimizer servers
-   NSWORD = 2  #Number of CPU rollout workers per server
+   NGOD   = 1  #Number of GPU optimizer servers
+   NSWORD = 1  #Number of CPU rollout workers per server
 
    #EPOCHUPDATES: Number of experience steps per 
    #synchronized gradient step at the cluster level
-   #EPOCHUPDATES = 2**14 #Training
-   EPOCHUPDATES = 2**16 #Training
+   EPOCHUPDATES = 2**14 #Training
+   #EPOCHUPDATES = 2**16 #Training
 
    #OPTIMUPDATES: Number of experience steps per 
    #optimizer server per cluster level step

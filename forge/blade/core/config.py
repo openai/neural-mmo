@@ -20,18 +20,30 @@ class Config:
    NPOP = 8
    NTILE = 6 #Add this to tile static
 
-   RESOURCE = 32
-   HEALTH = 10
-   IMMUNE = 15
+   #V1.2 settings
+   #RESTORE flat 5
+   #RESOURCE = 32
+   #HEALTH = 10
+   #IMMUNE = 15
+
+   XPSCALE = 10
+
+   RESOURCE = 10
+   HEALTH   = 10
+
+   RESOURCERESTORE = 0.5
+   HEALTHRESTORE   = 0.1
+
+   IMMUNE = 10
 
    #Attack ranges
    MELEERANGE = 1
    RANGERANGE = 2
    MAGERANGE  = 3
 
-   MELEEDAMAGE = 10
-   RANGEDAMAGE = 2
-   MAGEDAMAGE  = 1
+   #MELEEDAMAGE = 10
+   #RANGEDAMAGE = 2
+   #MAGEDAMAGE  = 1
 
    def __init__(self, **kwargs):
       for k, v in kwargs.items():

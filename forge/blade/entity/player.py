@@ -39,7 +39,7 @@ class Base(Protected, StimHook):
       self.population.update(pop)
 
    def update(self, ent, world, actions):
-      if ent.resource.health <= 0:
+      if ent.resources.health.val <= 0:
          self._alive = False
          return
 
@@ -77,6 +77,10 @@ class History(Protected, StimHook):
       self._damage.update(None)
       self._actions = actions
       key = action.Attack
+
+      self.timeAlive.increment()
+
+      #need to rekey this
       if key in actions:
          self._attack = actions[key]
          self.mapAttack()
@@ -102,50 +106,19 @@ class History(Protected, StimHook):
       data = self.outputs(self.config)
 
       if self._attack is not None:  
-         data['attack'] = {
-               'style': self._attack.action.__name__,
-               'target': self._attack.args.name}
+         data['attack'] = self._attack
+         #   {
+         #      'style': self._attack.action.__name__,
+         #      'target': self._attack.args.name}
 
       return data
  
-class Resource(Protected, StimHook):
+class Resources(Protected, StimHook):
    def __init__(self, config):
-      super().__init__(Stimulus.Entity.Resource, config)
+      super().__init__(Stimulus.Entity.Resources, config)
 
    def update(self, ent, world, actions):
-      if (self._food.val > self._food.max//2 and
-            self._water.val > self._water.max//2):
-            self._health.increment()
-
-      self.forage(ent, world)
-      ent.history.timeAlive.increment()
-
-      self.water.decrement()
-      self.food.decrement()
-
-      if self.food.val  <= 0:
-         self.health.decrement()
-      if self.water.val <= 0:
-         self.health.decrement()
-
-   def forage(self, ent, world):
-      r, c = ent.base.pos
-      isForest = type(world.env.tiles[r, c].mat) in [Material.FOREST.value]
-      if isForest and world.env.harvest(r, c):
-         self.food.increment(5)
-
-      isWater = Material.WATER.value in ai.adjacentMats(
-         world.env, ent.base.pos)
-      if isWater:
-         self.water.increment(5)
-
-   #Note: does not stack damage, but still applies to health
-   def applyDamage(self, damage):
-      if self.immune:
-         return
-
-      self._damage = damage
-      self._health.decrement(damage)
+      pass
 
 class Status(Protected, StimHook):
    def __init__(self, config):
@@ -165,7 +138,8 @@ class Player(Protected):
 
       #Submodules
       self.base      = Base(config, iden, pop, name, color)
-      self.resource  = Resource(config)
+      
+      self.resources = Resources(config)
       self.status    = Status(config)
       self.skills    = Skills(config)
       self.history   = History(config)
@@ -174,6 +148,21 @@ class Player(Protected):
 
       #What the hell is this?
       #self._index = 1
+
+   #Note: does not stack damage, but still applies to health
+   def applyDamage(self, dmg, style):
+      self.resources.food.increment(amt=dmg)
+      self.resources.water.increment(amt=dmg)
+
+      self.skills.applyDamage(dmg, style)
+      
+   def receiveDamage(self, dmg):
+      self.resources.health.decrement(dmg)
+      self.resources.food.decrement(amt=dmg)
+      self.resources.water.decrement(amt=dmg)
+
+      self.history.damage.update(dmg)
+      self.skills.receiveDamage(dmg)
 
    @property
    def serial(self):
@@ -186,7 +175,7 @@ class Player(Protected):
       data['annID']    = self.annID
 
       data['base']     = self.base.packet()
-      data['resource'] = self.resource.packet()
+      data['resource'] = self.resources.packet()
       data['status']   = self.status.packet()
       data['skills']   = self.skills.packet()
       data['history']  = self.history.packet()
@@ -204,9 +193,9 @@ class Player(Protected):
       if not self.base.alive:
          return
 
-      self.resource.update(self, world, actions)
+      self.resources.update(self, world, actions)
       self.status.update(self, world, actions)
-      self.skills.update(world, actions)
+      self.skills.update(self, world, actions)
       self.history.update(self, world, actions)
       #self.inventory.update(world, actions)
       #self.update(world, actions)

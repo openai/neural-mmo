@@ -12,6 +12,9 @@ from forge.blade.io import Action as Static
 from forge.blade.io.action import static as action
 
 from forge.ethyr.io import Action as Dynamic
+from forge.ethyr.io.utils import pack, unpack
+
+from forge.blade.entity.player import Player
 
 class Packet:
    '''Manager class for packets of actions'''
@@ -30,9 +33,9 @@ class Packet:
          name = nameFunc(nameMap, args)
          names.append(name) 
          mask.append(len(args))
-
-      #names = [nameFunc(nameMap, p.args) for p in packets]
-      names = torch.LongTensor(np.stack(names))
+            
+      names, _ = pack(names)
+      names    = torch.LongTensor(names)
       targs = embed[names]
 
       stims = [p.stim for p in packets]
@@ -41,17 +44,18 @@ class Packet:
 
    def step(packets, outsList, idxList):
       for p, out, idx in zip(
-            packets.values(), outsList, idxList): 
+            packets, outsList, idxList): 
 
          atn  = p.args[int(idx)]
          p.args, p.done = p.tree.next(
             p.env, p.ent, atn, (p.args, idx))
-      
+
    def finish(packets, atnArgsList, outsList):
       delIdx = []
       for idx, p in packets.items():
          if not p.done:
             continue
+         done = False
 
          atnArgsList[idx].append(p.tree.atnArgs)
          outsList[idx] = {**outsList[idx], **p.tree.outs}
@@ -75,80 +79,45 @@ class NetTree(nn.Module):
       self.net = VariableDiscreteAction(
                self.config, self.h, self.h)
 
-      #self.net = ConstDiscreteAction(
-      #         self.config, self.h, 4)
-
-
    def names(self, nameMap, args):
       return np.array([nameMap[e] for e in args])
-      #return torch.stack([embed[nameMap[e]] for e in args])
 
-   def leaves(self, stims, obs, embed):
-      #roots = Dynamic.leaves()
-      roots = [action.Move]
-      #roots = [action.Static for _ in 
-      #      range(self.config.NATN)]
- 
-      return self.select(stims, obs, embed, roots)
-
-   def select(self, stims, obs, embed, roots):
+   def selectAction(self, stims, obs, nameMap, embed):
       '''Select actions'''
-      #atnArgs, outs = [], {}
+      #roots = Dynamic.leaves()
+      #roots = [action.Attack]
+      roots = [action.Move]
+ 
       n = len(obs)
       atnArgs = [[] for _ in range(n)]
       outs    = [{} for _ in range(n)]
       for atn in roots:
-         self.tree(stims, obs, 
-            embed, atnArgs, outs, atn)
+         self.subselect(stims, obs, nameMap, 
+               embed, atnArgs, outs, atn)
 
       return atnArgs, outs
 
-
-   def tree(self, stims, obs, embed, 
+   def subselect(self, stims, obs, nameMap, embed, 
          atnArgsList, outsList, root=Static):
       '''Select a single action'''
-      nameMap, embed = embed
 
       packets = {}
       inputs = zip(stims, obs, atnArgsList, outsList)
-      for pkt, packet in enumerate(inputs):
+      for idx, packet in enumerate(inputs):
          stim, ob, atnArgs, outs = packet
-         packets[pkt] = Packet(stim, ob, root, self.config)
+         pkt = Packet(stim, ob, root, self.config)
+         packets[idx] = pkt
          
       while len(packets) > 0:
          stimTensor, targTensor, mask = Packet.merge(
             packets.values(), self.names, embed, nameMap)
          oList, idxList = self.net(stimTensor, targTensor, mask)
-         Packet.step(packets, oList, idxList)
+         Packet.step(packets.values(), oList, idxList)
          Packet.finish(packets, atnArgsList, outsList)
-      return
 
-         
-      '''
-         targs = self
-
-         stim, ob, atnArgs, outs = packet
-         stim = stim.unsqueeze(0)
-         env, ent = ob
-
-         actionTree = action.Dynamic(env, ent, self.config)
-         args, done = actionTree.next(env, ent, root)
-         
-         while not done:
-            targs = self.embed(embed, nameMap, args)
-            out, idx =  self.net(stim, targs)
-
-            atn = args[int(idx)]
-            args, done = actionTree.next(env, ent, atn, (args, idx))
-
-         atnArgsList[pkt].append(actionTree.atnArgs)
-         outsList[pkt] = {**outsList[pkt], **actionTree.outs}
-      '''
-
-   def buffered(self, stim, embed, actions):
+   def bufferedSelect(self, stim, nameMap, embed, actions):
       atnTensor, idxTensor, keyTensor, lenTensor = actions 
       lenTensor, atnLens = lenTensor
-      nameMap, embed = embed
 
       i, j, k, n = atnTensor.shape
       atnTensor = atnTensor.reshape(-1, n)
@@ -157,27 +126,29 @@ class NetTree(nn.Module):
       targs = embed[names]
       targs = targs.view(i, j, k, -1)
       
+      #The dot prod net does not match dims.
       stim = stim.unsqueeze(1).unsqueeze(1)
-      outs, _ = self.net(stim, targs, None)
+      outs, _ = self.net(stim, targs, lenTensor)
       return None, outs
 
    def forward(self, stims, embed, obs=None, actions=None):
       assert obs is None or actions is None
+      nameMap, embed = embed
 
       #Provide final action buffers; do not need access to env
       if obs is None:
-         atnArgsList, outList = self.buffered(stims, embed, actions)
+         atnArgsList, outList = self.bufferedSelect(stims, nameMap, embed, actions)
 
       #No buffers; need access to environment
       elif actions is None:
-         atnArgsList, outList = self.leaves(stims, obs, embed)
+         atnArgsList, outList = self.selectAction(stims, obs, nameMap, embed)
 
       return atnArgsList, outList
 
 class Action(nn.Module):
    '''Head for selecting an action'''
-   def forward(self, x):
-      xIdx = functional.classify(x)
+   def forward(self, x, mask=None):
+      xIdx = functional.classify(x, mask)
       return x, xIdx
 
 class ConstDiscreteAction(Action):
@@ -205,21 +176,17 @@ class VariableDiscreteAction(Action):
       #self.net = torch.nn.Linear(h, 4)
 
    def forward(self, stim, args, lens):
-      #x = functional.dot(stim, args)
-      x = self.net(stim, args)
+      x = (stim * args).sum(-1)
+      #x = self.net(stim, args)
 
-      '''
-      lens = torch.LongTensor(lens).unsqueeze(1)
+      lens      = torch.LongTensor(lens).unsqueeze(-1)
       n, maxLen = x.shape[0], x.shape[-1]
+
       inds = torch.arange(maxLen).expand_as(x)
       mask = inds < lens 
-      '''
-      #if int(torch.sum(mask < 1)) > 0:
-      #   T()
-      # < len(lens), max_len) < lens.unsqueeze(1)
-      #x = x.squeeze(-2)
+      #x[1-mask] = -np.inf
 
-      return super().forward(x)
+      return super().forward(x, mask)
 
 
 

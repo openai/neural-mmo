@@ -11,7 +11,11 @@ def classify(logits, mask=None):
       logits = logits.view(1, -1)
 
    #Masking the noise required
-   logits += 1e-3
+   #Do not do this in place.
+   #We do not want to -inf pad
+   #logits for pg loss, only for
+   #Categorical sampling
+   logits = logits + 1e-3
    if mask is not None:
       logits[1-mask] = -np.inf
 

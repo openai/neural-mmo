@@ -56,9 +56,10 @@ class Saver:
 
    def save(self, params, opt, fname):
       data = {'param': params,
-              'opt' : opt.state_dict(),
+              'opt' : opt,
               'epoch': self.epoch}
-      torch.save(data, self.root + fname + self.extn) 
+      path = os.path.join(self.root, fname + self.extn)
+      torch.save(data, path)
 
    def checkpoint(self, params, opt, reward):
       '''Save the model to file
@@ -100,7 +101,7 @@ class Saver:
       data  = torch.load(path)
       param.data = data['param']
       if opt is not None:
-         opt.load_state_dict(data['opt'])
+         opt.load(data['opt'])
       epoch = data['epoch']
       return epoch
 

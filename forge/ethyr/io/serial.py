@@ -8,7 +8,7 @@ from forge.blade.io.action import Node
 from forge.ethyr.io import Stimulus, Action
 
 class Serial:
-   KEYLEN = 5
+   KEYLEN = 3
    ACTION = 2
    TILE   = 1
    PLAYER = 0
@@ -19,17 +19,20 @@ class Serial:
    keying functionality for converting game objects to unique IDs.
 
    Format: World, Tick, key.serial[0], key.serial[1], key type'''
-   def key(key, iden):
+   def key(key):
       '''Convert a game object to a unique key'''
       from forge.blade.entity import Player
       from forge.blade.core.tile import Tile
+
+      if key is None:
+         return tuple([-1]*Serial.KEYLEN)
 
       ret = key.serial
       if isinstance(key, type):
          if issubclass(key, Node):
             ret += tuple([Serial.ACTION])
       else:
-         ret = iden + key.serial
+         ret = key.serial
          if isinstance(key, Player):
             ret += tuple([Serial.PLAYER])
          elif isinstance(key, Tile):
@@ -39,7 +42,9 @@ class Serial:
       ret = tuple(pad*[-1]) + ret
       return ret
 
-   def realmKey(realm, ob, offset=0):
+   def realmKey(realm, stim, offset=0):
+      #Compute from stim?
+      T()
       iden = realm.worldIdx, realm.tick - offset
 
       #The environment is used to
@@ -48,9 +53,9 @@ class Serial:
       key      = Serial.key(ent, iden)
       return iden, key
 
-   def inputs(realm, ob, stim):
+   def inputs(realm, stim):
       '''Serialize observations'''
-      iden, key = Serial.realmKey(realm, ob)
+      iden, key = Serial.realmKey(realm, stim)
       stim = Stimulus.serialize(stim, iden)
       return iden, key, stim
 

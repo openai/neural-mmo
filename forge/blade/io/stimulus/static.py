@@ -51,6 +51,9 @@ class StimHook:
 
 
 class Stimulus(Config):
+   def dict():
+      return { k[0] : v for k, v in dict(Stimulus).items()}
+
    class Entity(Config):
       #Base data
       class Base(Config, node.Flat):
@@ -156,7 +159,7 @@ class Stimulus(Config):
          def get(self, tile, r, c):
             return r*3+c
       '''
- 
+
       class RRel(node.Discrete):
          def init(self, config):
             self.max = config.WINDOW

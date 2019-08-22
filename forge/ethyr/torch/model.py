@@ -8,6 +8,66 @@ from torch.nn.parameter import Parameter
 
 from forge.ethyr.torch import save
 from forge.ethyr.torch.optim import ManualAdam
+from forge.ethyr.torch.param import setParameters, getParameters
+
+class GradientOptimizer:
+   def __init__(self, net, config):
+      self.config = config
+      self.net    = net
+
+      self.opt = ManualAdam([net.parameters], 
+         lr=self.config.LR, weight_decay=self.config.DECAY)
+
+   #Grads and clip
+   def step(self, gradList, logs):
+      '''Clip the provided gradients and step the optimizer
+
+      Args:
+         gradList: a list of gradients
+      '''
+      grad = np.array(gradList)
+      grad = np.mean(grad, 0)
+      grad = np.clip(grad, -5, 5)
+
+      gradAry = torch.Tensor(grad)
+      self.opt.step(gradAry)
+
+      self.net.syncParameters()
+
+   def load(self, opt):
+      self.opt.load_state_dict(opt.opt.state_dict())
+
+class PopulationOptimizer:
+   def __init__(self, model, config):
+      self.config = config
+      self.model  = model 
+
+   def step(self, gradList, logs):
+      lifetimes = defaultdict(list)
+      for blob in logs.blobs:
+         lifetimes[blob.annID].append(blob.lifetime)
+
+      performance = {}
+      for key, val in lifetimes.items():
+         performance[key] = np.mean(val)
+
+      performance = sorted(performance.items(), 
+         key=lambda x: x[1], reverse=True)
+      
+      for idx in range(self.config.PERMPOPS):
+         goodIdx, goodPerf = performance[idx]
+         badIdx,  badPerf  = performance[-idx-1]
+
+         self.permuteNet(goodIdx, badIdx)
+
+   def permuteNet(self, goodIdx, badIdx):
+      goodNet = self.model.net.net[goodIdx]
+      badNet  = self.model.net.net[badIdx]
+
+      goodParams = getParameters(goodNet)
+      noise      = self.config.PERMVAL * np.random.randn(len(goodParams))
+      goodParams = np.array(goodParams) + noise
+      setParameters(badNet, goodParams)
 
 class Model:
    '''Model manager class
@@ -25,48 +85,12 @@ class Model:
             'models', 'bests', resetTol=256)
       self.config, self.args = config, args
 
-      self.init(ann)
-      if self.config.LOAD or self.config.BEST:
-         self.load(self.config.BEST)
-
-   def init(self, ann):
       print('Initializing new model...')
-      self.initModel(ann)
+      self.net = ann(config)
+      self.parameters = Parameter(torch.Tensor(
+            np.array(getParameters(self.net))))
 
-      self.opt = None
-      if not self.config.TEST:
-         self.opt = ManualAdam([self.params], lr=0.001, weight_decay=0.00001)
-
-   #Initialize a new network
-   def initModel(self, ann):
-      self.models = ann(self.config).params()
-      self.params = Parameter(torch.Tensor(np.array(self.models)))
-
-   #Grads and clip
-   def stepOpt(self, gradList):
-      '''Clip the provided gradients and step the optimizer
-
-      Args:
-         gradList: a list of gradients
-      '''
-      grad = np.array(gradList)
-      grad = np.mean(grad, 0)
-      grad = np.clip(grad, -5, 5)
-
-      gradAry = torch.Tensor(grad)
-      self.opt.step(gradAry)
-
-   def checkpoint(self, reward):
-      '''Save the model to checkpoint
-
-      Args:
-         reward: Mean reward of the model
-      '''
-      if self.config.TEST:
-         return
-      self.saver.checkpoint(self.params, self.opt, reward)
-
-   def load(self, best=False):
+   def load(self, opt, best=False):
       '''Load a model from file
 
       Args:
@@ -74,21 +98,35 @@ class Model:
              or most recent (False) checkpoint
       '''
       print('Loading model...')
-      epoch = self.saver.load(
-            self.opt, self.params, best)
+      epoch = self.saver.load(opt, self.parameters, best)
+      self.syncParameters()
+
+   def checkpoint(self, opt, reward):
+      '''Save the model to checkpoint
+
+      Args:
+         reward: Mean reward of the model
+      '''
+      self.saver.checkpoint(self.parameters, opt, reward)
+      self.saver.print()
 
    @property
    def nParams(self):
       '''Print the number of model parameters'''
-      nParams = len(self.model)
+      nParams = len(self.weights)
       print('#Params: ', str(nParams/1000), 'K')
 
+   def syncParameters(self):
+      parameters = self.parameters.detach().numpy().tolist()
+      setParameters(self.net, parameters)
+
    @property
-   def model(self):
+   def weights(self):
       '''Get model parameters
 
       Returns:
          a numpy array of model parameters
       '''
-      return self.params.detach().numpy()
+      return getParameters(self.net)
+
 

@@ -13,6 +13,12 @@ from copy import deepcopy
 from forge.blade.lib.enums import Palette
 from forge.trinity.timed import runtime, Timed
 
+class Packet():
+   def __init__(self):
+      self.stim  = None
+      self.reward = None
+      self.done   = None
+
 class Spawner:
    def __init__(self, config, args):
       self.config, self.args = config, args
@@ -58,7 +64,7 @@ class Spawner:
          del self.pops[pop]
 
 class Realm(Timed):
-   def __init__(self, config, args, idx):
+   def __init__(self, config, args, idx, spawn):
       '''Neural MMO Environment
       
       Args:
@@ -68,6 +74,8 @@ class Realm(Timed):
       '''
       super().__init__()
       self.spawner = Spawner(config, args)
+      self.spawn   = spawn
+
       self.world, self.desciples = core.Env(config, idx), {}
       self.config, self.args = config, args
       self.npop = config.NPOP
@@ -101,12 +109,13 @@ class Realm(Timed):
          self.spawner.cull(ent.annID)
          del self.desciples[entID]
 
-   def stepWorld(self):
-      ents = list(chain(self.desciples.values()))
-      self.world.step(ents, [])
-
    def stepEnv(self):
+      ents = list(chain(self.desciples.values()))
+
+      #Stats
+      self.world.step(ents, [])
       self.world.env.step()
+
       self.env = self.world.env.np()
 
    def getStim(self, ent):
@@ -138,19 +147,21 @@ class Realm(Timed):
       self.act(actions)
 
       #Finally cull dead. This will enable MAD melee
-      rewards, dones, dead = [], [], []
-      for entID, actions in decisions.items():
+      dead = []
+      packets = defaultdict(Packet)
+      for entID in decisions.keys():
          ent = self.desciples[entID]
-
+         packets[entID].stim = ent
          if self.postmortem(ent, dead):
-            rewards.append(-1)
-            dones.append(True)
+            packets[entID].stim   = ent
+            packets[entID].reward = -1
+            packets[entID].done   = True
          else:
-            rewards.append(0)
-            dones.append(False)
+            packets[entID].reward = 0
+            packets[entID].done   = False
 
       self.cullDead(dead)
-      return rewards, dones
+      return packets
 
    def postmortem(self, ent, dead):
       entID = ent.entID
@@ -159,14 +170,14 @@ class Realm(Timed):
          return True
       return False
 
-   def getStims(self):
-      stims = []
+   def getStims(self, packets):
       for entID, ent in self.desciples.items():
          r, c = ent.base.pos
          tile = self.world.env.tiles[r, c].tex
          stim = self.getStim(ent)
-         stims.append((self.getStim(ent), ent))
-      return stims
+         packets[entID].stim = (stim, ent)
+
+      return packets
 
    @runtime
    def step(self, decisions):
@@ -181,15 +192,23 @@ class Realm(Timed):
 
       self.tick += 1
 
-      rewards, dones = self.stepEnts(decisions)
-      self.stepWorld()
-
+      #Spawn an ent
       iden, pop, name = self.spawn()
       if iden is not None:
          self.spawner.spawn(self, iden, pop, name)
 
+      packets = self.stepEnts(decisions)
+
       self.stepEnv()
-      stims = self.getStims()
+      packets = self.getStims(packets)
+
+      #Conform to gym
+      stims   = [p.stim   for p in packets.values()]
+      rewards = [p.reward for p in packets.values()]
+      dones   = [p.done   for p in packets.values()]
+
+      if not len(stims) == len(rewards) == len(dones):
+         T()
 
       return stims, rewards, dones, None
 

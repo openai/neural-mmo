@@ -45,23 +45,39 @@ class InkWell:
    def value(blobs):
       return {'value': [blob.value for blob in blobs]}
 
+class BlobLogs:
+   def __init__(self):
+      self.nRollouts = 0
+      self.nUpdates  = 0
+      self.blobs     = []
+
+   def merge(blobLogs):
+      logs = BlobLogs()
+      for log in blobLogs:
+         logs.nRollouts += log.nRollouts
+         logs.nUpdates  += log.nUpdates
+         logs.blobs     += log.blobs
+
+      return logs
+
 #Agent logger
 class Blob:
-   def __init__(self): 
+   def __init__(self, entID, annID): 
       self.unique = {Material.GRASS.value: 0,
                      Material.SCRUB.value: 0,
                      Material.FOREST.value: 0}
       self.counts = deepcopy(self.unique)
       self.lifetime = 0
 
-      self.reward, self.ret = [], []
-      self.value, self.entropy= [], []
-      self.pg_loss, self.val_loss = [], []
+      self.reward, self.ret       = None, []
+      self.value, self.entropy    = None, []
+      self.pg_loss, self.val_loss = []  , []
 
-   def finish(self):
-      self.lifetime = len(self.reward)
-      self.reward   = np.sum(self.reward)
-      self.value    = np.mean(self.value)
+      self.entID = entID 
+      self.annID = annID
+
+   def update(self):
+      self.lifetime += 1
 
 class Quill:
    def __init__(self, modeldir):
@@ -85,32 +101,37 @@ class Quill:
       return str(ret)
 
    def print(self):
-      print(
-            'Rollouts: (Total) ', self.nRollouts,
-            ' | (Epoch) ', self.curRollouts,
-            ', Updates: (Total) ', self.nUpdates,
-            ' | (Epoch) ', self.curUpdates)
+      updates  = 'Updates:  (Total) ' + str(self.nUpdates)
+      rollouts = 'Rollouts: (Total) ' + str(self.nRollouts)
 
-   def scrawl(self, logs, nUpdates, nRollouts):
+      padlen   = len(updates)
+      updates  = updates.ljust(padlen)  
+      rollouts = rollouts.ljust(padlen) 
+
+      updates  += '  |  (Epoch) ' + str(self.curUpdates)
+      rollouts += '  |  (Epoch) ' + str(self.curRollouts)
+
+      print(updates)
+      print(rollouts)
+
+   def scrawl(self, logs):
       #Collect experience information
-      self.nUpdates     += nUpdates
-      self.nRollouts    += nRollouts
-      self.curUpdates   = nUpdates
-      self.curRollouts  = nRollouts
+      self.nUpdates     += logs.nUpdates
+      self.nRollouts    += logs.nRollouts
+      self.curUpdates   =  logs.nUpdates
+      self.curRollouts  =  logs.nRollouts
 
       #Collect log update
+      rewards = []
       self.index += 1
-      rewards, blobs = [], []
-      for blobList in logs:
-         blobs += blobList
-         for blob in blobList:
-            rewards.append(float(blob.lifetime))
+      for blob in logs.blobs:
+         rewards.append(float(blob.lifetime))
             
-      self.lifetime = np.mean(rewards)   
       blobRet = []
-      for e in blobs:
-          if np.random.rand() < 0.1:
-              blobRet.append(e)
+      self.lifetime = np.mean(rewards)   
+      for e in logs.blobs:
+         if np.random.rand() < 0.1:
+            blobRet.append(e)
       self.save(blobRet)
 
    def latest(self):

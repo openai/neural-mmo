@@ -17,19 +17,80 @@ from forge.blade import entity
 from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
+from forge.ethyr.torch.policy import functional
+
 from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
+
+class Atn(nn.Module):
+   def __init__(self):
+      super().__init__()
+      self.fc = nn.Linear(128, 4)
+
+   def forward(self, x):
+      x = x.unsqueeze(1)
+      x = self.fc(x)
+      xIdx = functional.classify(x, None)
+      return x, xIdx
+
+class EmbAttn(nn.Module):
+   def __init__(self, config, n):
+      super().__init__()
+      self.fc1 = nn.Linear(n*config.EMBED, config.HIDDEN)
+
+   def forward(self, x):
+      batch, ents, _, _ = x.shape
+      x = x.view(batch, ents, -1)
+      x = self.fc1(x)
+      return x
+
+class EntAttn(nn.Module):
+   def __init__(self, config, n):
+      super().__init__()
+      self.fc1 = nn.Linear(n*config.HIDDEN, config.HIDDEN)
+
+   def forward(self, x):
+      batch, ents, _, = x.shape
+      x = x.view(batch, -1)
+      x = self.fc1(x)
+      return x
+
+class Max(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+
+   def forward(self, x):
+      x, _ = x.max(-2)
+      return x
+
+#Variable number of entities
+class Entity(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.emb = EmbAttn(config, 11)
+      self.ent = EntAttn(config, 10)
+
+#Fixed number of entities
+class Tile(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.emb = EmbAttn(config, 4)
+      self.ent = EntAttn(config, 225)
 
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
 
       h = config.HIDDEN
-      net = attention.MiniAttend
+      #net = attention.BareAttend
       #net = attention.MaxReluBlock
-      self.attn1 = net(h)
-      self.attn2 = net(h)
+      self.attns = nn.ModuleDict({
+         'Tile':   Tile(config),
+         'Entity': Entity(config),
+         'Meta':   EntAttn(config, 2),
+      })
+
       self.val  = torch.nn.Linear(h, 1)
 
 class ANN(nn.Module):
@@ -43,26 +104,35 @@ class ANN(nn.Module):
       self.env    = Env(config)
       self.action = NetTree(config)
 
+      #self.env = nn.Linear(4, 128)
+      #self.val = nn.Linear(128, 1)
+      #self.atn = Atn()
+
    #TODO: Need to select net index
-   def forward(self, pop, stim, obs=None, atnArgs=None):
+   def forward(self, pop, stim, actions):
       net = self.net[pop]
 
+      #stim = torch.Tensor(stim)
+      #stim = self.env(stim)
       stim, embed = self.env(net, stim)
       val         = net.val(stim)
 
-      atnArgs, outs = self.action(stim, embed, obs, atnArgs)
+      atns, atnsIdx = self.action(stim, actions, embed)
+      #atns, atnsIdx = self.atn(stim)
 
-      return atnArgs, outs, val
+      return atns, atnsIdx, val
 
    def recvUpdate(self, update):
       if update is None:
          return
 
       setParameters(self, update)
-      zeroGrads(self)
+      #zeroGrads(self)
 
    def grads(self):
-      return param.getGrads(self)
+      grads = param.getGrads(self)
+      zeroGrads(self)
+      return grads
 
    def params(self):
       return param.getParameters(self)

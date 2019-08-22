@@ -1,6 +1,9 @@
 from pdb import set_trace as T
 import numpy as np
 
+from collections import defaultdict
+
+from forge.blade.io.action import static
 from forge.blade.io import Action as Static
 from forge.blade.io.action.node import NodeType
 from forge.ethyr.io import utils
@@ -26,6 +29,30 @@ class Action:
       self.prev = None
 
       self.out = {}
+
+   def process(env, ent, config, serialize=True):
+      #root = Action.leaves()
+      #roots = [static.Attack, static.Move]
+      #roots = [action.Attack]
+      #roots = [static.Move]
+      rets   = defaultdict(list)
+      sRets  = defaultdict(list)
+      #roots  = Static.edges
+      roots  = [static.Move]
+
+      for root in roots:
+         for atn in Action.leaves(root):
+            for arg in atn.args(env, ent, config):
+               atnRoot = root
+               atnArgs = ActionArgs(atn, arg)
+
+               rets[atnRoot].append(atnArgs)
+
+               if serialize:
+                  atnRoot, atnArgs = Action.serialize(root, atnArgs)
+                  sRets[atnRoot].append(atnArgs)
+                  
+      return rets, sRets
 
    @property
    def atnArgs(self):
@@ -79,21 +106,25 @@ class Action:
       return args, done
 
    @staticmethod
-   def flat(root=Static):
+   def flat(root):
       '''Returns a flat action tree'''
-      rets = [root]
+      rets = []
+      if root.nodeType is NodeType.ACTION:
+         rets = [root]
       if root.nodeType is NodeType.SELECTION:
-         for edge in root.edges:
-            rets += Action.flat(edge)
+         for edge in root.edges():
+            rets += Action.flat()
       return rets
 
-   @staticmethod
+   #@staticmethod
    def leaves(root=Static):
       '''Returns only the action leaves'''
       rets = []
-      for e in Action.flat():
-         if e.leaf:
-            rets.append(e)
+      if root.nodeType is NodeType.ACTION:
+         rets = [root]
+      if root.nodeType is NodeType.SELECTION:
+         for edge in root.edges:
+            rets += Action.leaves(edge)
       return rets
 
    @staticmethod
@@ -105,23 +136,41 @@ class Action:
             rets.append(e)
       return rets
 
-   def serialize(outs, iden):
+   def serialize(atnKey, atnArgs):
       '''Internal action serializer for communication across machines'''
       from forge.ethyr.io.serial import Serial
-      ret = []
-      for key, out in outs.items():
-         key = Serial.key(key, iden)
+      atnKey  = Serial.key(atnKey)
+      atn     = Serial.key(atnArgs.action)
+      args    = Serial.key(atnArgs.args)
 
-         arguments, idx = out
-         args, idx = [], int(out[1])
-         for e in arguments:
-            #May need e.serial[-1]
-            #to form a unique key
-            k = Serial.key(e, iden)
-            args.append(k)
-        
-         ret.append([key, args, idx])
-      return ret
+      atnArgs = ActionArgs(atn, args) 
+      return atnKey, atnArgs
+
+   def batchInputs(actionLists):
+      atnTensor     = []
+      atnTensorLens = []
+      atnLens       = []
+      atnLenLens    = []
+
+      for actions in actionLists:
+         tensor = []
+         for atn, atnArgList in actions.items():
+            dat = []
+            for atnArg in atnArgList:
+               atn, arg = atnArg.action, atnArg.args
+               atnArg = np.array([atn, arg])
+               dat.append(atnArg)
+
+            tensor.append(np.array(dat))
+
+         tensor, lens = utils.pack(tensor)
+         atnTensor.append(tensor)
+         atnLens.append(lens)
+
+      atnTensor, atnTensorLens = utils.pack(atnTensor)
+      atnLens, atnLenLens      = utils.pack(atnLens)
+
+      return atnTensor, atnTensorLens, atnLens, atnLenLens
 
    #Dimension packing: batch, atnList, atn, serial key
    def batch(actionLists):

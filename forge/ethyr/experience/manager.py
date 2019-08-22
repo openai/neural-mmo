@@ -5,7 +5,7 @@ from itertools import chain
 from collections import defaultdict
 
 
-from forge.blade.lib.log import Blob
+from forge.blade.lib.log import BlobLogs
 
 from forge.ethyr.io import Serial
 from forge.ethyr.experience import Rollout, Comms, Batcher
@@ -18,15 +18,59 @@ class RolloutManager:
    for use on remote machines, and handle network output data
    for use with the ethyr loss/optimizer libraries.
    '''
-   def __init__(self, rollout=Rollout):
-      self.partial  = defaultdict(rollout)
-      self.complete = defaultdict(rollout)
-      self.log = []
+   def __init__(self):
+      self.temp    = defaultdict(Rollout)
+      self.outputs = defaultdict(Rollout)
+      self.inputs  = {}
 
-      self.nUpdates  = 0
-      self.nRollouts = 0
+      self.logs = BlobLogs()
 
-   def reset(self):
+   @property
+   def nUpdates(self):
+      return self.logs.nUpdates
+
+   @property
+   def nRollouts(self):
+      return self.logs.nRollouts
+
+   ### For use on rollout workers ###
+   def collectInputs(self, stims):
+      '''Collects observation data to internal buffers'''
+      #Figure out why stim lens are not matching up. Something
+      #to do with newly spawned entities. This was broken in 1.1.
+      self.inputs.clear()
+      for stim in stims:
+         key = stim.key
+         rollout = self.temp[key]
+         rollout.inputs(stim)
+
+         if stim.done:
+            assert key not in self.outputs
+            rollout.finish()
+            self.outputs[key] = rollout
+            del self.temp[key]
+
+            self.logs.blobs.append(rollout.blob)
+            self.logs.nRollouts += 1
+            self.logs.nUpdates += len(rollout)
+ 
+         else:
+            assert key not in self.outputs
+            assert key not in self.inputs
+            self.inputs[key] = stim
+
+
+   ### For use on rollout workers ###
+   def collectOutputs(self, outputs):
+      '''Collects output data to internal buffers'''
+      for output in outputs:
+         key = output.key
+
+         assert output.key in self.temp
+         assert not self.temp[key].done
+         self.temp[key].outputs(output)
+
+   def step(self):
       '''Returns log objects of all rollouts.
 
       Also resets the rollout counter.
@@ -34,75 +78,20 @@ class RolloutManager:
       Returns:
          logs: list of blob logging objects
       '''
-      assert len(self.complete) == 0
-      nUpdates  = self.nUpdates
-      nRollouts = self.nRollouts
+      logs      = self.logs
+      self.logs = BlobLogs()
 
-      self.nUpdates  = 0
-      self.nRollouts = 0
+      outputs      = self.outputs
+      self.outputs = defaultdict(Rollout)
 
-      logs = self.log
-      self.log = []
-      return logs, nUpdates, nRollouts
-
-   ### For use on optimizer ###
-   def fill(self, key, out, val, done):
-      '''Fill in output/value data needed for the backward pass'''
-      key = Serial.nontemporal(key)
-      rollout = self.complete[key]
-      rollout.fill(key, out, val)
-
-      if done:
-         rollout.feather.finish()
-         self.log.append(rollout.feather.blob)
-         del self.complete[key]
-
-   ### For use on rollout workers ###
-   def collectInputs(self, realm, obs, stims):
-      '''Collects observation data to internal buffers'''
-      for ob, stim, in zip(obs, stims):
-         _, key, stim = Serial.inputs(realm, ob, stim)
-
-         self.nUpdates += 1
-         iden = Serial.nontemporal(key)
-
-         self.partial[iden].inputs(key, ob, stim)
-         self.complete[iden].inputs(key, ob, stim)
-
-   ### For use on rollout workers ###
-   def collectOutputs(self, realm, obs, actions, rewards, dones):
-      '''Collects output data to internal buffers'''
-      self.partial.clear()
-      for ob, atn, reward, done in zip(obs, actions, rewards, dones):
-         _, key, atn = Serial.outputs(realm, ob, atn)
-
-         iden = Serial.nontemporal(key)
-         assert iden in self.complete
-         self.complete[iden].outputs(atn, reward, done)
-
-   ### For use on rollout workers ###
-   def send(self):
-      '''Pack internal buffers for communication across hardware'''
-      packet = Comms.send(self.complete)
-      self.complete.clear()
-      self.reset()
-      return packet
-   
-   ### For use on optimizer ###
-   def recv(self, packets):
-      '''Unpack communicated data to internal buffers'''
-      nUpdates, nRollouts = Comms.recv(
-         self.partial, self.complete, packets)
-      self.nUpdates  += nUpdates
-      self.nRollouts += nRollouts
+      return outputs, logs 
 
    ### For use on both ###
-   def batched(self, nUpdates, forOptim=False):
+   def batched(self, nUpdates=None):
       '''Returns flat batches of experience of the specified size
 
       Notes:
          The last batch may be smaller than the specified sz
       '''
-      rollouts = self.complete if forOptim else self.partial
-      return Batcher.batched(rollouts, nUpdates, forOptim)
+      return Batcher.batched(self.inputs, nUpdates)
 

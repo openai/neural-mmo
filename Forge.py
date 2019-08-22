@@ -7,8 +7,10 @@ from forge.blade import lib
 
 from forge.trinity import smith, Trinity
 from forge.trinity.timed import TimeLog
+from forge.ethyr.torch import Model
 
 from projekt import Pantheon, God, Sword
+from projekt.ann import ANN
 
 def parseArgs():
    '''Processes command line arguments'''
@@ -35,17 +37,24 @@ def render(trin, config, args):
    """
 
    from forge.embyr.twistedserver import Application
-   #model = Model(projekt.ANN, config, args)
-   #sword.recvUpdate(model.net.model)
-   sword = trin.sword.remote(trin, config, args, idx=0)
-   env = sword.getEnv.remote()
-   Application(env, sword.tick.remote)
+   config.LOAD = True
+   config.TEST = True
+
+   god = trin.god.remote(trin, config, args, idx=0)
+
+   model = Model(ANN, config, args)
+   model.load(None, config)
+   packet = model.weights
+   
+   env = god.getEnv.remote()
+   god.tick.remote(packet)
+   Application(env, god.tick.remote)
 
 if __name__ == '__main__':
    #Set up experiment configuration
    #ray infra, and command line args
    config = Experiment('env', Config).init(
-      NPOP=8,
+      NPOP=1,
       NENT=128,
    )
 

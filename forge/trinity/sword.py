@@ -20,37 +20,10 @@ class Sword(Timed):
    '''
    def __init__(self, trinity, config, args, idx):
       super().__init__()
-      self.env = realm.Realm(config, args, idx)
-      self.env.spawn = self.spawn
-
-      self.ent, self.nPop = 0, config.NPOP
-      self.disciples = [self.env]
-
-   def spawn(self):
-      '''Specifies how the environment adds players
-
-      Returns:
-         entID (int), popID (int), name (str): 
-         unique IDs for the entity and population, 
-         as well as a name prefix for the agent 
-         (the ID is appended automatically).
-
-      Notes:
-         This is useful for population based research,
-         as it allows one to specify per-agent or
-         per-population policies'''
-
-      pop = hash(str(self.ent)) % self.nPop
-      self.ent += 1
-      return self.ent, pop, 'Neural_'
-
-   def getEnv(self):
-      '''Returns the environment. Ray does not allow
-      access to remote attributes without a getter'''
-      return self.env
+      self.disciples = []
 
    @runtime
-   def step(self, atns):
+   def step(self, *args):
       '''Synchronously steps the environment (Realm)
 
       Args:
@@ -68,10 +41,4 @@ class Sword(Timed):
          This is the lowest hardware layer: there is
          currently no need for an asynchronous variant
       '''
-      return self._step(atns)
-
-   #This is an internal function only
-   #used to separate timer decorators
-   @waittime
-   def _step(self, atns):
-      return self.env.step(atns)
+      return

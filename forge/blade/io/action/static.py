@@ -85,7 +85,7 @@ class North(Node):
       Move.call(world, entity, -1, 0)
 
    def args(stim, entity, config):
-      return []
+      return [None]
 
 class South(Node):
    priority = 0
@@ -94,7 +94,7 @@ class South(Node):
       Move.call(world, entity, 1, 0)
 
    def args(stim, entity, config):
-      return []
+      return [None]
 
 class East(Node):
    priority = 0
@@ -103,7 +103,7 @@ class East(Node):
       Move.call(world, entity, 0, 1)
 
    def args(stim, entity, config):
-      return []
+      return [None]
 
 class West(Node):
    priority = 0
@@ -112,7 +112,7 @@ class West(Node):
       Move.call(world, entity, 0, -1)
 
    def args(stim, entity, config):
-      return []
+      return [None]
 
 
 class Attack(Node):

@@ -18,9 +18,8 @@ from forge.blade.entity.player import Player
 
 class Packet:
    '''Manager class for packets of actions'''
-   def __init__(self, stim, ob, root, config):
+   def __init__(self, stim, root, config):
       self.stim = stim.unsqueeze(0)
-      self.env, self.ent = ob 
 
       self.tree = Dynamic(self.env, self.ent, config)
       self.args, self.done = self.tree.next(self.env, self.ent, root)
@@ -82,30 +81,30 @@ class NetTree(nn.Module):
    def names(self, nameMap, args):
       return np.array([nameMap[e] for e in args])
 
-   def selectAction(self, stims, obs, nameMap, embed):
+   def selectAction(self, stims, nameMap, embed):
       '''Select actions'''
-      #roots = Dynamic.leaves()
+      roots = Dynamic.leaves()
       #roots = [action.Attack]
-      roots = [action.Move]
+      #roots = [action.Move]
  
       n = len(obs)
       atnArgs = [[] for _ in range(n)]
       outs    = [{} for _ in range(n)]
       for atn in roots:
-         self.subselect(stims, obs, nameMap, 
+         self.subselect(stims, nameMap, 
                embed, atnArgs, outs, atn)
 
       return atnArgs, outs
 
-   def subselect(self, stims, obs, nameMap, embed, 
+   def subselect(self, stims, nameMap, embed, 
          atnArgsList, outsList, root=Static):
       '''Select a single action'''
 
       packets = {}
-      inputs = zip(stims, obs, atnArgsList, outsList)
+      inputs = zip(stims, atnArgsList, outsList)
       for idx, packet in enumerate(inputs):
-         stim, ob, atnArgs, outs = packet
-         pkt = Packet(stim, ob, root, self.config)
+         stim, atnArgs, outs = packet
+         pkt = Packet(stim, root, self.config)
          packets[idx] = pkt
          
       while len(packets) > 0:
@@ -115,35 +114,37 @@ class NetTree(nn.Module):
          Packet.step(packets.values(), oList, idxList)
          Packet.finish(packets, atnArgsList, outsList)
 
-   def bufferedSelect(self, stim, nameMap, embed, actions):
-      atnTensor, idxTensor, keyTensor, lenTensor = actions 
-      lenTensor, atnLens = lenTensor
+   def bufferedSelect(self, stim, actions, nameMap, embed):
+      atnTensor, atnTensorLens, atnLens, atnLenLens = actions
 
-      i, j, k, n = atnTensor.shape
-      atnTensor = atnTensor.reshape(-1, n)
+      batch, nAtn, nArgs, nAtnArg, keyDim = atnTensor.shape
+      atnTensor = atnTensor.reshape(-1, keyDim)
+
       targs = [tuple(e) for e in atnTensor]
       names = self.names(nameMap, targs)
       targs = embed[names]
-      targs = targs.view(i, j, k, -1)
+      targs = targs.view(batch, nAtn, nArgs, nAtnArg, -1)
+
+      #Sum the atn and arg embedding to make a key dim
+      targs = targs.sum(-2)
       
       #The dot prod net does not match dims.
       stim = stim.unsqueeze(1).unsqueeze(1)
-      outs, _ = self.net(stim, targs, lenTensor)
-      return None, outs
+      atns, atnsIdx = self.net(stim, targs, atnLens)
 
-   def forward(self, stims, embed, obs=None, actions=None):
-      assert obs is None or actions is None
+      if self.config.TEST:
+         atns = atns.detach()
+
+      atns = [unpack(atn, l) for atn, l in zip(atns, atnLens)]
+      return atns, atnsIdx 
+
+   def forward(self, stims, actions, embed):
       nameMap, embed = embed
 
-      #Provide final action buffers; do not need access to env
-      if obs is None:
-         atnArgsList, outList = self.bufferedSelect(stims, nameMap, embed, actions)
+      #atnArgsList, outList = self.selectAction(stims, nameMap, embed)
+      outList = self.bufferedSelect(stims, actions, nameMap, embed)
 
-      #No buffers; need access to environment
-      elif actions is None:
-         atnArgsList, outList = self.selectAction(stims, obs, nameMap, embed)
-
-      return atnArgsList, outList
+      return outList
 
 class Action(nn.Module):
    '''Head for selecting an action'''
@@ -175,9 +176,10 @@ class VariableDiscreteAction(Action):
       #self.net = functional.dot
       #self.net = torch.nn.Linear(h, 4)
 
+   #Error is coming from masking. Goes away when no mask.
    def forward(self, stim, args, lens):
-      x = (stim * args).sum(-1)
-      #x = self.net(stim, args)
+      #x = (stim * args).sum(-1)
+      x = self.net(stim, args)
 
       lens      = torch.LongTensor(lens).unsqueeze(-1)
       n, maxLen = x.shape[0], x.shape[-1]

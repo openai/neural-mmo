@@ -57,8 +57,10 @@ def merge(rollouts):
          outs['value'].append(val)
          outs['return'].append(ret)
 
-         for k, o, a in zip(key, out, atn):
-            k = tuple(k)
+         #Going to have to change to key by atn type (move, attk, etc)
+         for k, packet in enumerate(zip(key, out, atn)):
+            _, o, a = packet
+            #k = tuple([k])
             outk = outs['action'][k]
             outk['atns'].append(o)
             outk['idxs'].append(a)
@@ -99,7 +101,7 @@ def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
    valLoss = loss.valueLoss(values, returns)
    totLoss = pg + valWeight*valLoss + entWeight*entropy
 
-   totLoss.backward()
+   totLoss.backward(retain_graph=True)
    reward = np.mean(outs['return'])
 
    return reward, vals.mean(), pg, valLoss, entropy

@@ -11,21 +11,26 @@ class Config(config.Config):
    BEST = False #If loading, most recent or highest lifetime?
    TEST = False #Update the model during run?
 
-   NENT = 128
+   NENT = 1
    NPOP = 1
 
    NATN    = 1    #Number of actions taken by the network
    ENTROPY = 0.01 #Entropy bonus for policy gradient loss
 
    HIDDEN  = 128  #Model embedding dimension
-   EMBED   = 128  #Model hidden dimension
+   EMBED   = 16   #Model hidden dimension
  
-   NGOD   = 1  #Number of GPU optimizer servers
-   NSWORD = 1  #Number of CPU rollout workers per server
+   NGOD   = 4 #Number of GPU optimizer servers
+   NSWORD = 1 #Number of CPU rollout workers per server
+
+   POPOPT   = False
+   PERMPOPS = 4
+   PERMVAL  = 1e-2
 
    #EPOCHUPDATES: Number of experience steps per 
    #synchronized gradient step at the cluster level
-   EPOCHUPDATES = 2**14 #Training
+   EPOCHUPDATES = 4096
+   #2**14 #Training
    #EPOCHUPDATES = 2**16 #Training
 
    #OPTIMUPDATES: Number of experience steps per 
@@ -33,7 +38,11 @@ class Config(config.Config):
    #SYNCUPDATES: Number of experience steps between 
    #syncing rollout workers to the optimizer server
    OPTIMUPDATES = EPOCHUPDATES / NGOD
-   SYNCUPDATES  = 2**10
+
+   LR    = 1e-3
+   DECAY = 1e-5
+   #SYNCUPDATES  = 2**10
+   SYNCUPDATES  = 128
 
    #OPTIMBATCH: Number of experience steps per
    #.backward minibatch on optimizer servers
@@ -44,7 +53,8 @@ class Config(config.Config):
 
    #Device used on the optimizer server.
    #Rollout workers use CPU by default
-   DEVICE = 'cuda:0'
+   #DEVICE = 'cuda:0'
+   DEVICE = 'cpu:0'
 
    #Debug params
    if DEBUG:

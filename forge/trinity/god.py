@@ -19,10 +19,18 @@ class God(Timed):
    '''
    def __init__(self, trinity, config, args, idx):
       super().__init__()
-      self.disciples = [trinity.sword.remote(trinity, config, args, i+idx*config.NGOD) 
-            for i in range(config.NSWORD)]
 
-   def distrib(self, packet=None):
+      '''
+      self.disciples = [trinity.sword.remote(
+         trinity, config, args, i+idx*config.NGOD) 
+         for i in range(config.NSWORD)]
+      '''
+      self.disciples = [trinity.sword(
+         trinity, config, args, i+idx*config.NGOD) 
+         for i in range(config.NSWORD)]
+
+
+   def distrib(self, *args):
       '''Asynchronous wrapper around the step 
       function of all remote Cores (Sword API)
 
@@ -36,10 +44,11 @@ class God(Timed):
       '''
       rets = []
       for sword in self.disciples:
-         rets.append(sword.step.remote(packet))
+         #rets.append(sword.step.remote(*args))
+         rets.append(sword.step(*args))
       return rets
 
-   def step(self, packet=None):
+   def step(self, *args):
       '''Synchronous wrapper around the step 
       function of all remote Cores (Sword API)
 
@@ -51,7 +60,7 @@ class God(Timed):
          A list of step returns from
          all remote cores (Sword API)
       '''
-      rets = self.distrib(packet)
+      rets = self.distrib(*args)
       return self.sync(rets)
 
    @waittime
@@ -65,4 +74,5 @@ class God(Timed):
          A list of step returns from
          all remote cores (Sword API)
       '''
-      return ray.get(rets)
+      return rets
+      #return ray.get(rets)

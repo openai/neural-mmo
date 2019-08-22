@@ -58,6 +58,22 @@ class MiniAttend(nn.Module):
 
       return x
 
+
+class BareAttend(nn.Module):
+   def __init__(self, h, flat=True):
+      super().__init__()
+      self.flat = flat
+
+   def forward(self, x, kv=None):
+      if kv is not None:
+         x = x * kv
+   
+      if self.flat:
+         x = torch.mean(x, dim=-2)
+
+      return x
+
+
 class AttnCat(nn.Module):
    def __init__(self, h):
       super().__init__()

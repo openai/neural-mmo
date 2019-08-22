@@ -52,7 +52,8 @@ class Env(nn.Module):
       self.h = h
 
       self.initSubnets(config)
-      self.action = nn.Embedding(StaticAction.n, self.h)
+
+      self.action = nn.Embedding(StaticAction.n, config.HIDDEN)
 
    def initSubnets(self, config, name=None):
       '''Initialize embedding networks'''
@@ -76,51 +77,69 @@ class Env(nn.Module):
          #Dirty hack -- remove duplicates
          lookup.add([atn], [emb])
 
-         key = Serial.key(atn, tuple([]))
+         key = Serial.key(atn)
          #What to replace serial with here
          lookup.add([key], [emb])
 
-   def attrs(self, group, net, subnet):
+   def attrs(self, group, attn, subnet):
       '''Embed and pack attributes of each entity'''
-      feats = []
+      embeddings = []
       for param, val in subnet.items():
          param = '-'.join(param)
          val = torch.Tensor(val).to(self.config.DEVICE)
          emb = self.emb[group][param](val)
-         feats.append(emb)
+         embeddings.append(emb)
 
-      emb = torch.stack(feats, -2)
-      emb = net.attn1(emb)
+      embeddings = torch.stack(embeddings, -2)
 
-      return emb
+      #Batch, ents, nattrs, hidden
+      embeddings = attn.emb(embeddings)
 
+      #Batch, ents, hidden
+      features   = attn.ent(embeddings)
+
+      return embeddings, features
+
+   #Okay. You have some issues
+   #Dimensions are batch, nEnts/tiles, nAttrs, hidden
+   #So you need to go down to 3 dims for 2nd tier
+   #batch, nEnts/tiles, hidden
+   #And down to batch, hidden for final tier
    def forward(self, net, stims):
       features, lookup = {}, Lookup()
       self.actions(lookup)
-
+ 
       #Pack entities of each observation set
       for group, stim in stims.items():
-         group = '-'.join(group)
          names, subnet = stim
-         emb = self.attrs(group, net, subnet)
-         features[group] = emb.unsqueeze(0)
+         embs, feats     = self.attrs(group, net.attns[group], subnet)
+         features[group] = feats
 
          #Unpack and flatten for embedding
          lens = [len(e) for e in names]
-         vals = utils.unpack(emb, lens, dim=1)
+         vals = utils.unpack(embs, lens, dim=1)
          for k, v in zip(names, vals):
             v = v.split(1, dim=0)
             lookup.add(k, v)
 
+
       k = [tuple([0]*Serial.KEYLEN)]
+      v = [v[-1] * 0]
+      lookup.add(k, v)
+
+      k = [tuple([-1]*Serial.KEYLEN)]
       v = [v[-1] * 0]
       lookup.add(k, v)
    
       #Concat feature block
+      feats = features 
       features = list(features.values())
-      features = torch.cat(features, -2)
-      features = net.attn2(features).squeeze(0)
+      features = torch.stack(features, -2)
+
+      #Batch, group (tile/ent), hidden
+      features = net.attns['Meta'](features)#.squeeze(0)
       
       embed = lookup.table()
+      #embed = None
       return features, embed
 

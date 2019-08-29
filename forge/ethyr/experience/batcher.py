@@ -9,6 +9,7 @@ from forge.ethyr.io import IO
 class Batcher:
    '''Static experience batcher class used internally by RolloutManager'''
    def grouped(rollouts):
+      '''Group by population'''
       groups = defaultdict(dict)
       for key, rollout in rollouts.items():
          annID, entID = key
@@ -17,6 +18,7 @@ class Batcher:
       return groups
 
    def batched(inputs, nUpdates):
+      '''Batch by group key to maximum fixed size'''
       ret, groups = [], Batcher.grouped(inputs)
       for groupKey, group in groups.items():
          group = list(group.items())
@@ -31,22 +33,12 @@ class Batcher:
             batchDone = nUpdates is not None and updateSz >= nUpdates
             groupDone = idx == len(group) - 1 
             if batchDone or groupDone:
-               packet = Batcher.flat(dict(update))
+               update = dict(update)
+               keys   = update.keys()
+               stims  = update.values()
+               stims, actions = IO.batch(stims)
+               packet = (keys, stims, actions)
                ret.append((groupKey, packet))
                update, updateSz = [], 0 
 
       return ret
-
-   def flat(inputs):
-      '''Flattens rollouts by removing the time index.
-      Useful for batching non recurrent policies
-
-      Args:
-         rollouts: A list of rollouts to flatten
-         fullRollouts: whether to batch full rollouts
-      '''
-      keys  = inputs.keys()
-      stims = inputs.values()
-      stims, actions = IO.batch(stims)
-      return keys, stims, actions
-

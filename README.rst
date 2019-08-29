@@ -37,6 +37,15 @@ This environment is the first neural MMO; it attempts to create agents that scal
 |ags| Version History
 =====================
 
+v1.2: Client and Skilling update
+   - Blade: New persistent progression systems: skilling (professions) comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. No policy IO changes are required to support the current skills. Additional bug fixes and enhancements.
+   - Trinity: Moved environment out of Trinity. This allows placement of the environment at any hardware layer. Additional bug fixes and enhancements.
+   - Ethyr: Dramatically streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 prefferred usage, which places the environment server side and only communicates serialized observations and actions -- not full rollouts. Expect further changes in the next update -- IO is the single most technically complex aspect of this project and has the largest impact on performance.
+   - Embyr: Focus of this update. Full client rewrite in Unity3D with improved visuals, UI, and controls. The new client makes visualizing policies and tracking down bugs substantially easier. As the environment progresses towards a more complete MMO, development entirely in THREE.js was impractical. This update will also speed up environment development by easing integration into the front end.
+   - Baseline model is improved but still weak. This is largely a compute issue. I expect the final model to be relatively effecient to train, but I'm currently low on processing power for running parallel experiments. I'll be regaining cluster access soon.
+   - Official documentation has been updated accordingly
+   - 20+ people have joined the Discord. I've started posting frequent dev updates and thoughts here. This is also the best way to get support and reach me directly.
+
 v1.1: Infrastructure and API rework, official documentation and Discord
    - Blade: Merge Native and VecEnv environment API. New API is closer to Gym
    - Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.
@@ -70,9 +79,9 @@ Everything written in the source and documentation is my own opinion. I do not s
 |ags| Authorship and License
 ============================
 
-I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the author of the environment code base. Yilun Du assisted with running experiments and particularly in setting up tournaments. Phillip Isola and Igor Mordatch have been invaluable collaborators and advisers throughout the project. The environment is registered to OpenAI and available under the MIT license. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment -- the initial commit of the OpenAI neural-mmo repository represents the latest pre-employment timestep.
+I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the author of the environment code base and Unity3D client. Yilun Du assisted with running experiments and particularly in setting up tournaments. Phillip Isola and Igor Mordatch have been invaluable collaborators and advisers throughout the project. The environment is registered to OpenAI and available under the MIT license. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment -- the initial commit of the OpenAI neural-mmo repository represents the latest pre-employment timestep.
 
-The client was developed independently as a collaboration between myself and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and available under the MIT license.
+The legacy THREE.js client was developed independently as a collaboration between myself and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and available under the MIT license.
 
 |ags| Assets
 ============

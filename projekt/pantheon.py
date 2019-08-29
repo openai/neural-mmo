@@ -11,10 +11,10 @@ from forge.ethyr.torch import Model
 from forge.ethyr.torch.model import PopulationOptimizer, GradientOptimizer
 from forge.blade.lib.log import Quill, BlobLogs
 
-from forge import trinity
-from forge.trinity.timed import runtime
 
-class Pantheon(trinity.Pantheon):
+from forge.trinity.ascend import Ascend, runtime
+
+class Pantheon(Ascend):
    '''Cluster level Pantheon API demo
 
    This cluster level module aggregrates
@@ -25,13 +25,16 @@ class Pantheon(trinity.Pantheon):
    functionality through the Quill and Model
    libraries, respectively.'''
 
-   def __init__(self, trinity, config, args):
+   def __init__(self, trinity, config, idx):
       '''Initializes a copy of the model, which keeps
       track of a copy of the weights for the optimizer.'''
-      super().__init__(trinity, config, args)      
-      self.config, self.args = config, args
+      super().__init__(trinity.god, config.NGOD, trinity, config)
+      self.config = config
 
-      self.net = Model(projekt.ANN, config, args)
+      self.net = Model(projekt.ANN, config)
+
+      #Have been experimenting with population based
+      #training. Nothing stable yet -- advise avoiding
       if config.POPOPT:
          self.opt = PopulationOptimizer(self.net, config)
       else:

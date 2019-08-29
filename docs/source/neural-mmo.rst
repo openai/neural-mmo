@@ -26,32 +26,31 @@ All configuration options are available in experiments.py. The environment is fr
 
 .. code-block:: python
 
-   #Run the environment with rendering on
-   #This will automatically set --local
-   python Forge.py --render
-
-   #Train with 2 GPUs, 2 environments per GPU (editable in config.py)
-   #You may need to tweak CUDA_VISIBLE_DEVICES for your machine
+   #Train with 4 CPU cores (editable in config.py)
    python Forge.py
 
    #You can also tell Ray to execute locally.
    #This is useful for debugging and works with pdb
    python Forge.py --ray local 
 
+   #Run the environment with rendering on
+   #This will automatically set --local
+   python Forge.py --render
 
-With rendering enabled, navigate to http://localhost:8080/forge/embyr/ in Firefox or Chrome to pull up the Embyr client (`source <https://github.com/jsuarez5341/neural-mmo-client>`_)
+
+Once the environment is running with --render, run ./embyr to launch the Unity3D `client <https://github.com/jsuarez5341/neural-mmo-client>`_. You will need to relaunch the client any time you relaunch the server.
 
 |ags| Projekt 
 =============
 
 The project is divided into four modules:
 
-======================  ========================
-Engineering             Research
-======================  ========================
-|earth| Blade: Env      |water| Trinity: API
-|fire|  Embyr: Render   |air| Ethyr: Contrib
-======================  ========================
+=============================  ========================
+Engineering                    Research
+=============================  ========================
+|earth| Blade: Environment     |water| Trinity: API
+|fire|  Embyr: Render          |air| Ethyr: Contrib
+=============================  ========================
 
 The objective is to create agents that scale to the complexity and robustness of the real world. This is a variant phrasing of "artificial life." A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into "agents that scale to their environment" and "environments that scale to the real world." These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. See Ideology if you find this sort of macro view interesting. 
 
@@ -62,7 +61,10 @@ The objective is to create agents that scale to the complexity and robustness of
 |water| Trinity
 ---------------
 
-The environment itself follows the OpenAI Gym API almost identically.
+Neural MMO uses the OpenAI Gym API function signatures, but there are some neccesary deviations in argument/return values:
+1. Observations and actions are objects, not tensors. This is a major compute saver, but it also complicates IO -- the process of inputting observations into networks and outputing action choices. Ethyr provides a dedicated IO api to assist with this.
+2. The environment supports a large and variable number of agents. Observations are returned with variable length in an arbitrary order. Each observation is tagged with the ID of the associated agent.
+3. The environment is ill suited to per-frame rendering and instead functions as an MMO client/server. Example usage is provided in Forge.py.
 
 .. code-block:: python
 
@@ -104,15 +106,8 @@ Blade is the core environment, including game state and control flow. Researcher
 
 |fire| Embyr
 ------------
-`Embyr <https://github.com/jsuarez5341/neural-mmo-client>`_ is an independent repository containing THREE.js web client. It's written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. You will need to refresh the page whenever you reboot the server (Forge.py). Performance should no longer be an issue, but it runs better on Chrome than Firefox. Other browsers may work but are not officially supported.
+`Embyr <https://github.com/jsuarez5341/neural-mmo-client>`_ is an independent repository containing the Unity3D client. All associated scripts are written in C# but reads relatively similarly to python. Researchers familiar with python and static typing should have no trouble beginning to contribute immediately, even without direct experience in C#. Performance should not be an issue on any decent machine; post in the Discord if you are having issues. 
 
-I personally plan on continuing development on both the main environment and the client. The environment repo is quite clean, but the client could use some restructuring. I intend to refactor it for v1.2. Environment updates will most likely be released in larger chunks, potentially coupled to future publications. On the other hand, the client is under active and rapid development. You can expect most features, at least in so far as they are applicable to the current environment build, to be released as soon as they are stable. Feel free to contact me with ideas and feature requests.
+I am actively developing the environment and associated client in tandem. Updates are typically released in large chunks every few months. The Discrd is the best place to get more frequent news. Feel free to contact me there with ideas and feature requests.
 
-|ags| Known Limitations
-^^^^^^^^^^^^^^^^^^^^^^^
-
-The client has been tested with Firefox on Ubuntu. Don't use Chrome. It should work on other Linux distros and on Macs -- if you run into issues, let me know.
-
-Use Nvidia drivers if your hardware setup allows. The only real requirement is support for more that 16 textures per shader. This is only required for the Counts visualizer -- you'll know your setup is wrong if the terrain map vanishes when switching overlays.
-
-This is because the research overlays are written as raw glsl shaders, which you probably don't want to try to edit. In particular, the counts exploration visualizer hard codes eight textures corresponding to exploration maps. This exceeds the number of allowable textures. I will look into fixing this into future if there is significant demand. If you happen to be a shader wizard with spare time, feel free to submit a PR.
+The Legacy THREE.js web client is still available on old branches but does not work with v1.2+ server code. It's written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. You will need to refresh the page whenever you reboot the server (Forge.py). Performance should no longer be an issue, but it runs better on Chrome than Firefox. Other browsers may work but are not officially supported.

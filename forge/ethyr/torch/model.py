@@ -80,10 +80,10 @@ class Model:
       config: A Config specification
       args: Hook for additional user arguments
    '''
-   def __init__(self, ann, config, args):
+   def __init__(self, ann, config):
       self.saver = save.Saver(config.MODELDIR,
             'models', 'bests', resetTol=256)
-      self.config, self.args = config, args
+      self.config = config
 
       print('Initializing new model...')
       self.net = ann(config)

@@ -11,7 +11,7 @@ from itertools import chain
 from copy import deepcopy
 
 from forge.blade.lib.enums import Palette
-from forge.trinity.timed import runtime, Timed
+from forge.trinity.ascend import runtime, Timed
 
 class Packet():
    def __init__(self):
@@ -20,8 +20,8 @@ class Packet():
       self.done   = None
 
 class Spawner:
-   def __init__(self, config, args):
-      self.config, self.args = config, args
+   def __init__(self, config):
+      self.config = config
 
       self.nEnt, self.nPop = config.NENT, config.NPOP
       self.popSz = self.nEnt // self.nPop
@@ -64,7 +64,7 @@ class Spawner:
          del self.pops[pop]
 
 class Realm(Timed):
-   def __init__(self, config, args, idx, spawn):
+   def __init__(self, config, idx, spawn):
       '''Neural MMO Environment
       
       Args:
@@ -73,11 +73,11 @@ class Realm(Timed):
          idx: Index of the map file to load
       '''
       super().__init__()
-      self.spawner = Spawner(config, args)
+      self.spawner = Spawner(config)
       self.spawn   = spawn
 
       self.world, self.desciples = core.Env(config, idx), {}
-      self.config, self.args = config, args
+      self.config = config
       self.npop = config.NPOP
 
       self.worldIdx = idx

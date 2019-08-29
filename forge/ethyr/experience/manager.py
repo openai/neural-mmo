@@ -13,10 +13,6 @@ from forge.ethyr.experience import Rollout, Comms, Batcher
 class RolloutManager:
    '''Collects and batches rollouts for inference and training
 
-   This is an all-in-one for managing experience. It can be
-   used to facillitate fast batched inference, pack/unpack data
-   for use on remote machines, and handle network output data
-   for use with the ethyr loss/optimizer libraries.
    '''
    def __init__(self):
       self.temp    = defaultdict(Rollout)
@@ -36,14 +32,13 @@ class RolloutManager:
    ### For use on rollout workers ###
    def collectInputs(self, stims):
       '''Collects observation data to internal buffers'''
-      #Figure out why stim lens are not matching up. Something
-      #to do with newly spawned entities. This was broken in 1.1.
       self.inputs.clear()
       for stim in stims:
          key = stim.key
          rollout = self.temp[key]
          rollout.inputs(stim)
 
+         #Finish rollout
          if stim.done:
             assert key not in self.outputs
             rollout.finish()
@@ -54,13 +49,13 @@ class RolloutManager:
             self.logs.nRollouts += 1
             self.logs.nUpdates += len(rollout)
  
+         #Update input
          else:
             assert key not in self.outputs
             assert key not in self.inputs
             self.inputs[key] = stim
 
 
-   ### For use on rollout workers ###
    def collectOutputs(self, outputs):
       '''Collects output data to internal buffers'''
       for output in outputs:

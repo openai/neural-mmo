@@ -1,3 +1,5 @@
+'''Just a test file for designing combat formulas'''
+
 from pdb import set_trace as T
 
 import numpy as np

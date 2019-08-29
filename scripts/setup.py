@@ -10,7 +10,9 @@ print('Downloading Embyr client')
 os.chdir('forge')
 os.system('git clone https://github.com/jsuarez5341/neural-mmo-client')
 os.system('mv -n neural-mmo-client embyr')
-os.chdir('..')
+os.chdir('embyr')
+os.system('git checkout --track origin/v1.2-cowboy-dev')
+os.chdir('../..')
 
 #Build game maps
 print('Building game maps')

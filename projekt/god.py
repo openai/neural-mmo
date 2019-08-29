@@ -7,11 +7,8 @@ from collections import defaultdict
 
 import projekt
 
-
-from forge import trinity
 from forge.blade.core.realm import Realm
 from forge.blade.lib.log import BlobLogs
-from forge.trinity.timed import runtime
 
 from forge.ethyr.io import Stimulus, Action, utils
 from forge.ethyr.io import IO
@@ -21,34 +18,36 @@ from forge.ethyr.experience import RolloutManager
 
 import torch
 
+from forge.trinity.ascend import Ascend, runtime
+
 @ray.remote
-class God(trinity.God):
+class God(Ascend):
    '''Server level God API demo
 
-   This server level optimizer node aggregates experience
-   across all core level rollout worker nodes. It
-   uses the aggregated experience compute gradients.
+   This environment server runs a persistent game instance
+   It distributes agents observations and collects action
+   decisions from a set of client nod es. This is the direct
+   opposite of the typical MPI broadcast/recv paradigm, which
+   operates an optimizer server over a bank of environments.
 
-   This is effectively a lightweight variant of the
-   Rapid computation model, with the potential notable
-   difference that we also recompute the forward pass
-   from small observation buffers rather than 
-   communicating large activation tensors.
+   Notably, OpenAI Rapid style optimization does not scale
+   well to to this setting, as it assumes environment and
+   agent collocation. This quickly becomes impossible when
+   the number of agents becomes large. While this may not
+   be a problem for small scale versions of this demo, it
+   is built with future scale in mind.'''
 
-   This demo builds up the ExperienceBuffer utility, 
-   which handles rollout batching.'''
-
-   def __init__(self, trin, config, args, idx):
+   def __init__(self, trinity, config, idx):
       '''Initializes a model and relevent utilities'''
-      super().__init__(trin, config, args, idx)
-      self.config, self.args = config, args
+      super().__init__(trinity.sword, config.NSWORD, trinity, config)
+      self.config, self.idx = config, idx
       self.nPop = config.NPOP
       self.ent  = 0
 
-      self.env  = Realm(config, args, idx, self.spawn)
+      self.env  = Realm(config, idx, self.spawn)
       self.obs, self.rewards, self.dones, _ = self.env.reset()
 
-      self.grads, self.logs = [], BlobLogs()
+      self.grads, self.log = [], BlobLogs()
 
    def spawn(self):
       '''Specifies how the environment adds players
@@ -73,46 +72,74 @@ class God(trinity.God):
       access to remote attributes without a getter'''
       return self.env
 
+   def getEnvLogs(self):
+      '''Returns the environment logs. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env.logs()
+
+   def getDisciples(self):
+      return self.disciples
+
+   def getSwordLogs(self):
+      return [e.logs() for e in self.disciples]
+
    def distrib(self, *args):
+      '''Trinity API override.
+
+      Shards observation data across clients'''
       obs, recv = args
       N = self.config.NSWORD
       clientData = [[] for _ in range(N)]
-      for idx, ob in enumerate(obs):
-         clientData[idx % N].append(ob)
+      for ob in obs:
+         clientData[ob.entID % N].append(ob)
       return super().distrib(obs, recv)
 
    def sync(self, rets):
+      '''Trinity API override.
+
+      Aggregates action, update, and log
+      data from all remote clients'''
       rets = super().sync(rets)
 
       atnDict, gradList, logList = {}, [], []
       for atns, grads, logs in rets:
          atnDict.update(atns)
 
+         #Gradients only present when a particular
+         #client has computed a batch
          if grads is not None:
             gradList.append(grads)
 
          if logs is not None:
             logList.append(logs)
 
+      #Aggregate gradients/logs
       self.grads += gradList
-      self.logs  = BlobLogs.merge([self.logs, *logList])
+      self.log  = BlobLogs.merge([self.log, *logList])
 
       return atnDict
 
    @runtime
    def step(self, recv):
-      '''Broadcasts updated weights to the core level
-      Sword rollout workers. Runs rollout workers'''
-      self.grads, self.logs = [], BlobLogs()
-      while self.logs.nUpdates < self.config.OPTIMUPDATES:
+      '''Trinity API override
+      
+      Broadcasts updated weights to the core level clients.
+      Collects a full batch of data for upstream optimizer.'''
+      self.grads, self.log = [], BlobLogs()
+      while self.log.nUpdates < self.config.SERVER_UPDATES:
          self.tick(recv)
          recv = None
 
       grads = np.mean(self.grads, 0)
       grads = grads.tolist()
-      return grads, self.logs
+      return grads, self.log
 
    def tick(self, recv=None):
+      '''Environment step Thunk. Optionally takes a data packet.
+
+      In this case, the data packet arg is used to specify
+      model updates in the form of a new parameter vector'''
+
       #Preprocess obs
       obs, rawAtns = IO.inputs(
          self.obs, self.rewards, self.dones, 

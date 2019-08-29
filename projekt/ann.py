@@ -1,4 +1,10 @@
-'''Demo agent class'''
+'''Demo agent class
+
+The policies for v1.2 are sanity checyks only.
+I rushed a simple baseline to get the new client
+out faster. I am working on something better now.
+If you want help getting other models working in
+the meanwhile, drop in the Discord support channel.'''
 from pdb import set_trace as T
 import numpy as np
 import torch
@@ -23,17 +29,7 @@ from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 
-class Atn(nn.Module):
-   def __init__(self):
-      super().__init__()
-      self.fc = nn.Linear(128, 4)
-
-   def forward(self, x):
-      x = x.unsqueeze(1)
-      x = self.fc(x)
-      xIdx = functional.classify(x, None)
-      return x, xIdx
-
+#Hacky inner attention layer
 class EmbAttn(nn.Module):
    def __init__(self, config, n):
       super().__init__()
@@ -45,6 +41,7 @@ class EmbAttn(nn.Module):
       x = self.fc1(x)
       return x
 
+#Hacky outer attention layer
 class EntAttn(nn.Module):
    def __init__(self, config, n):
       super().__init__()
@@ -56,6 +53,7 @@ class EntAttn(nn.Module):
       x = self.fc1(x)
       return x
 
+#Simple max
 class Max(nn.Module):
    def __init__(self, config):
       super().__init__()
@@ -95,6 +93,7 @@ class Net(nn.Module):
 
 class ANN(nn.Module):
    def __init__(self, config):
+      '''Demo model'''
       super().__init__()
       self.config = config
       self.net = nn.ModuleList([Net(config)
@@ -104,21 +103,11 @@ class ANN(nn.Module):
       self.env    = Env(config)
       self.action = NetTree(config)
 
-      #self.env = nn.Linear(4, 128)
-      #self.val = nn.Linear(128, 1)
-      #self.atn = Atn()
-
-   #TODO: Need to select net index
    def forward(self, pop, stim, actions):
-      net = self.net[pop]
-
-      #stim = torch.Tensor(stim)
-      #stim = self.env(stim)
-      stim, embed = self.env(net, stim)
-      val         = net.val(stim)
-
+      net           = self.net[pop]
+      stim, embed   = self.env(net, stim)
+      val           = net.val(stim)
       atns, atnsIdx = self.action(stim, actions, embed)
-      #atns, atnsIdx = self.atn(stim)
 
       return atns, atnsIdx, val
 
@@ -127,7 +116,6 @@ class ANN(nn.Module):
          return
 
       setParameters(self, update)
-      #zeroGrads(self)
 
    def grads(self):
       grads = param.getGrads(self)
@@ -137,7 +125,9 @@ class ANN(nn.Module):
    def params(self):
       return param.getParameters(self)
 
-   #Messy hooks for visualizers
+   #These hooks are outdated. Better policy
+   #visualization for the new client is planned
+   #for a future update
    def visDeps(self):
       from forge.blade.core import realm
       from forge.blade.core.tile import Tile
@@ -168,6 +158,9 @@ class ANN(nn.Module):
       vals = list(zip(posList, vals))
       return vals
 
+   #These hooks are outdated. Better policy
+   #visualization for the new client is planned
+   #for a future update
    def visVals(self, food='max', water='max'):
       from forge.blade.core import realm
       posList, vals = [], []

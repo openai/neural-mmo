@@ -5,7 +5,6 @@ import ray
 import projekt
 
 from forge import trinity
-from forge.trinity.timed import runtime
 
 from forge.blade.core import realm
 
@@ -17,26 +16,28 @@ from forge.ethyr.io.io import Output
 
 from copy import deepcopy
 
-#@ray.remote
-class Sword(trinity.Sword):
+from forge.trinity.ascend import Ascend, runtime
+
+#Currently, agents technically run on the same core
+#as the environment. This saves 2x cores at small scale
+#but will not work with a large number of agents.
+#Enable @ray.remote when this becomes an issue.
+class Sword(Ascend):
    '''Core level Sword API demo
 
-   This core level rollout worker node runs
-   a copy of the environment and all associated
-   agents. Multiple Swords return observations, 
-   actions, and rewards to each server level 
-   optimizer node.'''
+   This core level client node maintains a
+   full copy of the model. It runs and computes
+   updates for the associated policies of all
+   agents.'''
 
-   def __init__(self, trin, config, args, idx):
+
+   def __init__(self, trinity, config, idx):
       '''Initializes a model, env, and relevent utilities'''
-
-      super().__init__(trin, config, args, idx)
-      self.foo = True;
+      super().__init__(None, 0)
       config        = deepcopy(config)
       config.DEVICE = 'cpu:0'
 
       self.config   = config
-      self.args     = args
       self.ent      = 0
 
       self.keys = set()
@@ -46,19 +47,28 @@ class Sword(trinity.Sword):
 
    @runtime
    def step(self, obs, packet=None):
-      '''Synchronizes weights from upstream and
-      collects a fixed amount of experience.'''
-      '''Steps the agent and environment
-
-      Processes observations, selects actions, and
-      steps the environment to obtain new observations.
-      Serializes (obs, action, reward) triplets for
-      communication to an upstream optimizer node.'''
+      '''Synchronizes weights from upstream; computes
+      agent decisions; computes policy updates.
+      
+      A few bug notes:
+         1. It appears pytorch errors in .backward when batching
+         data. This is because the graph is retained over all
+         trajectories in the batch, even though only some are
+         finished.
+         
+         2. Currently specifying retain_graph. This should not be
+         required with batch size 1, even with the above bug.
+      '''
+      #Sync weights    
       self.net.recvUpdate(packet)
+
+      config  = self.config
       actions = {}
 
-      #Batch observations and compute forward pass
+      #Batch observations
       self.manager.collectInputs(obs)
+
+      #Compute forward pass
       for pop, batch in self.manager.batched():
          keys, stim, atns = batch
 
@@ -71,46 +81,24 @@ class Sword(trinity.Sword):
             atnsIdx = atnsIdx.detach()
             vals    = vals.detach()
 
+         #Collect output actions and values for .backward
          for key, atn, atnIdx, val in zip(keys, atns, atnsIdx, vals):
             out = Output(key, atn, atnIdx, val)
             actions.update(out.action)
             self.manager.collectOutputs([out])
          
       #Compute backward pass and logs from rollout objects
-      if self.manager.nUpdates >= self.config.SYNCBATCH:
+      if self.manager.nUpdates >= config.CLIENT_UPDATES:
          rollouts, logs = self.manager.step()
 
-         if self.config.TEST or self.config.POPOPT:
+         if config.TEST or config.POPOPT:
             return actions, None, logs
 
-         optim.backward(rollouts, valWeight=0.25,
-            entWeight=self.config.ENTROPY, device=self.config.DEVICE)
+         optim.backward(rollouts, valWeight=config.VAL_WEIGHT,
+            entWeight=config.ENTROPY, device=config.DEVICE)
          grads = self.net.grads()
          return actions, grads, logs
 
       return actions, None, None
 
-      '''
-      #Lol pytorch... thanks for 4 hour bug.
-      #Using larger batch sizes causes .backward errors because
-      #the graph is retained over all trajectories in the batch,
-      #even though only some of them are finished
- 
-      #Currently specifying retain_graph. This is not great
-      #Need to set batch size 1? and figure out what is being stored
- 
-      Goal for today: get something training
-      Possible hints: 
-         .backward does not work without retain graph
-         Movement only does not work either
-         1 population does not work either (not just batch size issue)
-         keeping the same graph while using stale weights (big one?)
-      
-      Options: 
-         Flag and drop partial trajectories from .backward.
-         Strip down ethyr libraries and simplify it out
-         Implement PBT on Pantheon, with RL as an optional addon
-         If all else fails, hammer on .backward until you figure out what is broken (reusing weights?)
 
-      '''
- 

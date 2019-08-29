@@ -1,4 +1,11 @@
-'''Main file for /projekt demo'''
+'''Main file for /projekt demo
+
+The demo is simply a copy of my own research code.
+It is not a simplest-possible working example, nor would
+one be helpful -- the IO is a bit nontrivial in this setting,
+and the model presented should give you a starting point for
+dealing with it.'''
+
 from pdb import set_trace as T
 import argparse
 
@@ -6,10 +13,10 @@ from experiments import Experiment, Config
 from forge.blade import lib
 
 from forge.trinity import smith, Trinity
-from forge.trinity.timed import TimeLog
 from forge.ethyr.torch import Model
 
 from projekt import Pantheon, God, Sword
+from projekt.timed import TimeLog
 from projekt.ann import ANN
 
 def parseArgs():
@@ -29,6 +36,7 @@ def render(trin, config, args):
    Args:
       trin   : A Trinity object as shown in __main__
       config : A Config object as shown in __main__
+      args:    Any command line arguments
 
    Notes:
       Blocks execution. This is an unavoidable side
@@ -37,15 +45,22 @@ def render(trin, config, args):
    """
 
    from forge.embyr.twistedserver import Application
+
+   #Prevent accidentally overwriting the trained model
    config.LOAD = True
    config.TEST = True
 
-   god = trin.god.remote(trin, config, args, idx=0)
-
+   #Note: this is a small hack to reuse training code
+   #at test time in order to avoid rewriting the
+   #lengthy inference loo
+   god   = trin.god.remote(trin, config, args, idx=0)
    model = Model(ANN, config, args)
+
+   #Load model
    model.load(None, config)
    packet = model.weights
    
+   #Pass the tick thunk to a twisted WebSocket server
    env = god.getEnv.remote()
    god.tick.remote(packet)
    Application(env, god.tick.remote)
@@ -71,10 +86,9 @@ if __name__ == '__main__':
    if args.render:
       render(trinity, config, args)
 
-   trinity.init(config, args)
+   trinity.init(config)
 
    #Run and print logs
    while True:
       time = trinity.step()
-      logs = trinity.logs()
-      logs = TimeLog.log(logs)
+      TimeLog.log(trinity)

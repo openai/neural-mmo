@@ -4,15 +4,24 @@ import os
 from forge.blade.core import config
 
 class Config(config.Config):
+   '''Configuration specification for Neural MMO experiements
+
+   Additional parameters can be found in the forge/blade configuration.
+   These represent game parameters -- you can edit them, but beware that
+   this can significantly alter the environment.
+
+   All parameters can also be overridden at run time.
+   See Forge.py for an example'''
+
    MODELDIR = 'resource/exps' #Where to store models
-   DEBUG    = False
+   DEBUG    = True #Whether to run with debug settings
 
    LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
    TEST = False #Update the model during run?
 
-   NENT = 1
-   NPOP = 1
+   NENT = 1  #Maximum population size
+   NPOP = 1  #Number of populations
 
    NATN    = 1    #Number of actions taken by the network
    ENTROPY = 0.01 #Entropy bonus for policy gradient loss
@@ -23,33 +32,11 @@ class Config(config.Config):
    NGOD   = 4 #Number of GPU optimizer servers
    NSWORD = 1 #Number of CPU rollout workers per server
 
-   POPOPT   = False
-   PERMPOPS = 4
-   PERMVAL  = 1e-2
-
-   #EPOCHUPDATES: Number of experience steps per 
-   #synchronized gradient step at the cluster level
-   EPOCHUPDATES = 4096
-   #2**14 #Training
-   #EPOCHUPDATES = 2**16 #Training
-
-   #OPTIMUPDATES: Number of experience steps per 
-   #optimizer server per cluster level step
-   #SYNCUPDATES: Number of experience steps between 
-   #syncing rollout workers to the optimizer server
-   OPTIMUPDATES = EPOCHUPDATES / NGOD
-
-   LR    = 1e-3
-   DECAY = 1e-5
-   #SYNCUPDATES  = 2**10
-   SYNCUPDATES  = 128
-
-   #OPTIMBATCH: Number of experience steps per
-   #.backward minibatch on optimizer servers
-   #SYNCUPDATES: Number of experience steps between 
-   #syncing rollout workers to the optimizer server
-   OPTIMBATCH  = SYNCUPDATES * NGOD
-   SYNCBATCH   = SYNCUPDATES
+   #Number of experience steps before
+   #syncronizing at each hardware layer
+   CLUSTER_UPDATES = 4096
+   SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
+   CLIENT_UPDATES  = 128
 
    #Device used on the optimizer server.
    #Rollout workers use CPU by default
@@ -63,6 +50,18 @@ class Config(config.Config):
       EPOCHUPDATES = 2**8
       SYNCUPDATES  = 2**4
       DEVICE = 'cpu:0'
+
+   #Gradient based optimization parameters
+   LR         = 1e-3
+   DECAY      = 1e-5
+   VAL_WEIGHT = 0.25
+
+   #Experimental population based training parameters
+   #Disabled and not currently functional -- avoid modification
+   POPOPT   = False
+   PERMPOPS = 4
+   PERMVAL  = 1e-2
+
 
 class Experiment:
    '''Manages file structure for experiments'''
@@ -93,7 +92,6 @@ class Experiment:
          ', NPOP: ', conf.NPOP)
 
       return conf
-
 
 
    def makeExps():

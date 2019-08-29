@@ -1,9 +1,9 @@
 from pdb import set_trace as T
 import ray
 
-from forge.trinity.timed import Timed, runtime, waittime
+from forge.trinity.ascend import Ascend, runtime, waittime
 
-class Trinity(Timed):
+class Trinity(Ascend):
    '''Pantheon-God-Sword (Cluster-Server-Core) wrapper
 
    Trinity is a featherweight wrapper around the
@@ -35,12 +35,11 @@ class Trinity(Timed):
       hardware layers with relatively little code and testing.
    ''' 
    def __init__(self, pantheon, god, sword):
-      super().__init__()
       self.pantheon = pantheon
       self.god      = god
       self.sword    = sword
 
-   def init(self, config, args):
+   def init(self, config):
       '''
       Instantiates a Pantheon object to make
       Trinity runnable. Separated from __init__
@@ -49,13 +48,11 @@ class Trinity(Timed):
 
       Args:
          config: A forge.blade.core.Config object
-         args: Hook for additional user arguments.
       '''
-      self.base = self.pantheon(self, config, args)
-      self.disciples = [self.base]
+      super().__init__(self.pantheon, 1, self, config)
       return self
 
    @runtime
    def step(self):
       '''Wraps Pantheon step'''
-      return self.base.step()
+      return self.disciples[0].step()

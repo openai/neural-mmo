@@ -4,35 +4,37 @@ import ray
 from forge.trinity.ascend import Ascend, runtime, waittime
 
 class Trinity(Ascend):
-   '''Pantheon-God-Sword (Cluster-Server-Core) wrapper
+   '''Pantheon-God-Sword (Cluster-Server-Core) infra 
 
-   Trinity is a featherweight wrapper around the
-   excellent Ray API that provides a simple interface
+   Trinity is three layer distributed infra design pattern
    for generic, persistent, and asynchronous computation
-   at the Cluster, Server, and Core levels. It also 
-   provides builtin performance logging and does not 
+   at the Cluster, Server, and Core levels. It is built from
+   three user-provided Ascend subclasses, which specify
+   behavior at each layer. Trinity takes advantage of
+   Ascend's builtin performance logging and does not 
    interfere with pdb breakpoint debugging.
   
-   To use Trinity, override Pantheon, God, and Sword to
-   specify Cluster, Server, and Core level execution.
-   Overriding the step() function allows you to perform
-   arbitrary computation and return arbitrary data to
-   the previous layer. Calling super.step() allows you
-   to send arbitrary data and receive computation results 
-   from the next layer.
+   To use Trinity, implement Pantheon, God, and Sword as
+   Ascend subclasses to specify Cluster, Server, and 
+   Core level execution. Overriding the step() function 
+   allows you to perform arbitrary computation and return 
+   arbitrary data to the previous layer. Calling super.step() 
+   allows you to send arbitrary data and receive computation 
+   results from the next layer.
 
    Args:
       pantheon: A subclassed Pantheon object
       god: A subclassed God object
-      Sword: A subclassed Sword object
+      sword: A subclassed Sword object
 
    Notes:
-      Trinity is not a single computation model. It is an
-      interface for creating computation models. By
-      example, our demo project adopts a computation
-      model similar to OpenAI Rapid. But trinity makes it
-      possible to move any piece of the execution among 
-      hardware layers with relatively little code and testing.
+      Ascend is the base API defining distributed infra
+      layers. Trinity is simply three stacked Ascend layers.
+      Ascend and Trinity are not specific computation models:
+      they are design patterns for creating computation models.
+      You can implement anything from MPI broadcast-reduce to 
+      OpenAI's Rapid to our demo's MMO style communications using
+      Ascend + Trinity with relatively little code and testing.
    ''' 
    def __init__(self, pantheon, god, sword):
       self.pantheon = pantheon

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="forge.trinity.timed module" href="forge.trinity.timed.html" /> 
+    <link rel="prev" title="forge.trinity.ascend module" href="forge.trinity.ascend.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,11 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="forge.trinity.god.html">forge.trinity.god module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.trinity.pantheon.html">forge.trinity.pantheon module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.trinity.smith.html">forge.trinity.smith module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.trinity.sword.html">forge.trinity.sword module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.trinity.timed.html">forge.trinity.timed module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.ascend.html">forge.trinity.ascend module</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">forge.trinity.trinity module</a></li>
 </ul>
 </li>
@@ -180,50 +176,88 @@
 <dl class="class">
 <dt id="forge.trinity.trinity.Trinity">
 <em class="property">class </em><code class="descclassname">forge.trinity.trinity.</code><code class="descname">Trinity</code><span class="sig-paren">(</span><em>pantheon</em>, <em>god</em>, <em>sword</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.trinity.Trinity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">forge.trinity.timed.Timed</span></code></p>
-<p>Pantheon-God-Sword (Cluster-Server-Core) wrapper</p>
-<p>Trinity is a featherweight wrapper around the
-excellent Ray API that provides a simple interface
+<dd><p>Bases: <a class="reference internal" href="forge.trinity.ascend.html#forge.trinity.ascend.Ascend" title="forge.trinity.ascend.Ascend"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.trinity.ascend.Ascend</span></code></a></p>
+<p>Pantheon-God-Sword (Cluster-Server-Core) infra</p>
+<p>Trinity is three layer distributed infra design pattern
 for generic, persistent, and asynchronous computation
-at the Cluster, Server, and Core levels. It also
-provides builtin performance logging and does not
+at the Cluster, Server, and Core levels. It is built from
+three user-provided Ascend subclasses, which specify
+behavior at each layer. Trinity takes advantage of
+Ascend’s builtin performance logging and does not
 interfere with pdb breakpoint debugging.</p>
-<p>To use Trinity, override Pantheon, God, and Sword to
-specify Cluster, Server, and Core level execution.
-Overriding the step() function allows you to perform
-arbitrary computation and return arbitrary data to
-the previous layer. Calling super.step() allows you
-to send arbitrary data and receive computation results
-from the next layer.</p>
+<p>To use Trinity, implement Pantheon, God, and Sword as
+Ascend subclasses to specify Cluster, Server, and
+Core level execution. Overriding the step() function
+allows you to perform arbitrary computation and return
+arbitrary data to the previous layer. Calling super.step()
+allows you to send arbitrary data and receive computation
+results from the next layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pantheon</strong> – A subclassed Pantheon object</p></li>
 <li><p><strong>god</strong> – A subclassed God object</p></li>
-<li><p><strong>Sword</strong> – A subclassed Sword object</p></li>
+<li><p><strong>sword</strong> – A subclassed Sword object</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Trinity is not a single computation model. It is an
-interface for creating computation models. By
-example, our demo project adopts a computation
-model similar to OpenAI Rapid. But trinity makes it
-possible to move any piece of the execution among
-hardware layers with relatively little code and testing.</p>
+<p>Ascend is the base API defining distributed infra
+layers. Trinity is simply three stacked Ascend layers.
+Ascend and Trinity are not specific computation models:
+they are design patterns for creating computation models.
+You can implement anything from MPI broadcast-reduce to
+OpenAI’s Rapid to our demo’s MMO style communications using
+Ascend + Trinity with relatively little code and testing.</p>
+<dl class="method">
+<dt id="forge.trinity.trinity.Trinity.distrib">
+<code class="descname">distrib</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.trinity.Trinity.distrib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronous wrapper around the step function
+function of all remote disciples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*args</strong> – Arbitrary data to broadcast to disciples</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of async handles to the step returns
+from all remote disciples</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="forge.trinity.trinity.Trinity.init">
-<code class="descname">init</code><span class="sig-paren">(</span><em>config</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.trinity.Trinity.init" title="Permalink to this definition">¶</a></dt>
+<code class="descname">init</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.trinity.Trinity.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiates a Pantheon object to make
 Trinity runnable. Separated from __init__
 to make Trinity usable as a stuct to hold
 Pantheon, God, and Sword subclass references</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> – A forge.blade.core.Config object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.trinity.Trinity.isRemote">
+<code class="descname">isRemote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.trinity.Trinity.isRemote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an object is remote</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.trinity.Trinity.localize">
+<code class="descname">localize</code><span class="sig-paren">(</span><em>remote</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.trinity.Trinity.localize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts to the correct local/remote function version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> – A forge.blade.core.Config object</p></li>
-<li><p><strong>args</strong> – Hook for additional user arguments.</p></li>
+<li><p><strong>f</strong> – Function to localize</p></li>
+<li><p><strong>remote</strong> – Whether f is remote</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A localized function (f or f.remote)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -241,7 +275,7 @@ Pantheon, God, and Sword subclass references</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="forge.trinity.timed.html" class="btn btn-neutral float-left" title="forge.trinity.timed module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.trinity.ascend.html" class="btn btn-neutral float-left" title="forge.trinity.ascend module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

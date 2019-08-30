@@ -51,7 +51,6 @@ class Stimulus:
       keys      = 'Entity Tile'.split()
       functions = [Stimulus.entity, Stimulus.tile]
 
-      #ret = Stimulus.basic(env, ent, config)
       ret = Stimulus.makeSets(env, ent, keys, functions)
 
       if serialize:
@@ -141,25 +140,20 @@ class Stimulus:
    def tile(env, ent, static):
       '''Internal processor for tile objects'''
       data = Data()
-      #env = env[5:-5, 5:-5]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             data.add(static, tile, tile, r, c, key=ent)
       return data.ret
 
-   def self(env, ent, static):
-      '''Internal processor for own player'''
-      data = Data()
-      data.add(static, ent, ent, ent, key=ent)
-      return data.ret
-
    def entity(env, ent, static):
-      '''Internal processor for player objects'''
+      '''Internal processor for player objects. Always returns self first'''
       ents = []
       for tile in env.ravel():
          for e in tile.ents.values():
             ents.append(e)
 
+      #Sorting to return self first.
+      #This makes it easier to hack together cheap baselines
       data = Data()
       ents = sorted(ents, key=lambda e: e is ent, reverse=True)
       ents = ents[:10]

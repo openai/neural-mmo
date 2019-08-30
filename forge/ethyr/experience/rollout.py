@@ -33,9 +33,6 @@ class Rollout:
 
       Returns:
          Discounted list of rewards
-
-      Notes:
-         You can override Rollout to modify the discount algorithm
       '''
       rets, N = [], len(self.rewards)
       discounts = np.array([gamma**i for i in range(N)])

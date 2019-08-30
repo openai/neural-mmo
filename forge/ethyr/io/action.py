@@ -31,12 +31,9 @@ class Action:
       self.out = {}
 
    def process(env, ent, config, serialize=True):
-      #root = Action.leaves()
-      #roots = [static.Attack, static.Move]
-      #roots = [action.Attack]
-      #roots = [static.Move]
       rets   = defaultdict(list)
       sRets  = defaultdict(list)
+
       #roots  = Static.edges
       roots  = [static.Move]
 

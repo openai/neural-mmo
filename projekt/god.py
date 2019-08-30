@@ -1,5 +1,5 @@
 from pdb import set_trace as T
-import numpy as np 
+import numpy as np
 import time
 import ray
 import pickle
@@ -26,7 +26,7 @@ class God(Ascend):
 
    This environment server runs a persistent game instance
    It distributes agents observations and collects action
-   decisions from a set of client nod es. This is the direct
+   decisions from a set of client nodes. This is the direct
    opposite of the typical MPI broadcast/recv paradigm, which
    operates an optimizer server over a bank of environments.
 
@@ -49,6 +49,26 @@ class God(Ascend):
 
       self.grads, self.log = [], BlobLogs()
 
+   def getEnv(self):
+      '''Returns the environment. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env
+
+   def getEnvLogs(self):
+      '''Returns the environment logs. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env.logs()
+
+   def getDisciples(self):
+      '''Returns client instances. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.disciples
+
+   def getSwordLogs(self):
+      '''Returns client logs. Ray does not allow
+      access to remote attributes without a getter'''
+      return [e.logs() for e in self.disciples]
+
    def spawn(self):
       '''Specifies how the environment adds players
 
@@ -67,26 +87,8 @@ class God(Ascend):
       self.ent += 1
       return self.ent, pop, 'Neural_'
 
-   def getEnv(self):
-      '''Returns the environment. Ray does not allow
-      access to remote attributes without a getter'''
-      return self.env
-
-   def getEnvLogs(self):
-      '''Returns the environment logs. Ray does not allow
-      access to remote attributes without a getter'''
-      return self.env.logs()
-
-   def getDisciples(self):
-      return self.disciples
-
-   def getSwordLogs(self):
-      return [e.logs() for e in self.disciples]
-
    def distrib(self, *args):
-      '''Trinity API override.
-
-      Shards observation data across clients'''
+      '''Shards observation data across clients using the Trinity async API'''
       obs, recv = args
       N = self.config.NSWORD
       clientData = [[] for _ in range(N)]
@@ -95,10 +97,7 @@ class God(Ascend):
       return super().distrib(obs, recv)
 
    def sync(self, rets):
-      '''Trinity API override.
-
-      Aggregates action, update, and log
-      data from all remote clients'''
+      '''Aggregates actions/updates/logs from shards using the Trinity async API'''
       rets = super().sync(rets)
 
       atnDict, gradList, logList = {}, [], []
@@ -121,10 +120,8 @@ class God(Ascend):
 
    @runtime
    def step(self, recv):
-      '''Trinity API override
-      
-      Broadcasts updated weights to the core level clients.
-      Collects a full batch of data for upstream optimizer.'''
+      '''Broadcasts updated weights to the core level clients.
+      Collects gradient updates for upstream optimizer.'''
       self.grads, self.log = [], BlobLogs()
       while self.log.nUpdates < self.config.SERVER_UPDATES:
          self.tick(recv)

@@ -15,7 +15,7 @@ The master branch will always contain the latest stable version. **Users should 
 
 .. code-block:: python
 
-   #Install OpenAI environment, the Embyr client, and THREE.js. ~1 GB
+   #Install OpenAI environment and the Embyr client
    git clone https://github.com/jsuarez5341/neural-mmo
    cd neural-mmo
 
@@ -34,25 +34,24 @@ All configuration options are available in experiments.py. The environment is fr
    python Forge.py --ray local 
 
    #Run the environment with rendering on
-   #This will automatically set --local
    python Forge.py --render
 
 
-Once the environment is running with --render, run ./embyr to launch the Unity3D `client <https://github.com/jsuarez5341/neural-mmo-client>`_. You will need to relaunch the client any time you relaunch the server.
+Once the environment is running with --render, run ./client to launch the Unity3D `client <https://github.com/jsuarez5341/neural-mmo-client>`_. For now, you will need to relaunch the client any time you relaunch the server.
 
 |ags| Projekt 
 =============
 
 The project is divided into four modules:
 
-=============================  ========================
+=============================  =======================
 Engineering                    Research
-=============================  ========================
-|earth| Blade: Environment     |water| Trinity: API
-|fire|  Embyr: Render          |air| Ethyr: Contrib
-=============================  ========================
+=============================  =======================
+|earth| Blade: Environment     |water| Trinity: API   
+|fire|  Embyr: Render          |air| Ethyr: Contrib   
+=============================  =======================
 
-The objective is to create agents that scale to the complexity and robustness of the real world. This is a variant phrasing of "artificial life." A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into "agents that scale to their environment" and "environments that scale to the real world." These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. See Ideology if you find this sort of macro view interesting. 
+The objective is similar to "artificial life": create agents that scale to the complexity and robustness of the real world. A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into "agents that scale to their environment" and "environments that scale to the real world." These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. See Ideology if you find this sort of macro view interesting. 
 
 |water| |air| Research: Agents that scale to env complexity
 
@@ -61,10 +60,7 @@ The objective is to create agents that scale to the complexity and robustness of
 |water| Trinity
 ---------------
 
-Neural MMO uses the OpenAI Gym API function signatures, but there are some neccesary deviations in argument/return values:
-1. Observations and actions are objects, not tensors. This is a major compute saver, but it also complicates IO -- the process of inputting observations into networks and outputing action choices. Ethyr provides a dedicated IO api to assist with this.
-2. The environment supports a large and variable number of agents. Observations are returned with variable length in an arbitrary order. Each observation is tagged with the ID of the associated agent.
-3. The environment is ill suited to per-frame rendering and instead functions as an MMO client/server. Example usage is provided in Forge.py.
+Neural MMO uses the OpenAI Gym API function signatures:
 
 .. code-block:: python
 
@@ -83,22 +79,34 @@ Neural MMO uses the OpenAI Gym API function signatures, but there are some necce
    #whether the given agent has died, but the env goes on.
    obs, rewards, dones, infos = env.step(actions)
 
-The Trinity API consists of three base classes --- Pantheon, God, and Sword (see Namesake if that sounds odd) -- that implement framwork agnostic distributed infrastrure on top of the environment. Basic functionality is:
+However, there are some necesary deviations in argument/return values:
+
+1. Observations and actions are objects, not tensors. This is a major compute saver, but it also complicates IO -- the process of inputting observations into networks and outputing action choices. Ethyr provides a dedicated IO api to assist with this.
+
+2. The environment supports a large and variable number of agents. Observations are returned with variable length in an arbitrary order. Each observation is tagged with the ID of the associated agent.
+
+3. The environment is ill suited to per-frame rendering and instead functions as an MMO client/server. Example usage is provided in Forge.py.
+
+You can provide your own infrastructure or use our Trinity API. Trinity is a simple three layer persistent, synchronous/asynchronous, distributed computation model that allows you to specify cluster, server, and core level functionality by implementing three base classes. High level usage is:
 
 .. code-block:: python
 
-   #Create a Trinity object specifying
+   #Ready: Create a Trinity object specifying
    #Cluster, Server, and Core level execution
    trinity = Trinity(Pantheon, God, Sword)
-   trinity.init(config, args)
-   while theSkyIsBlue:
+
+   #Aim: Pass it an experiment configuration
+   trinity.init(config)
+
+   #Fire.
+   while not solved(AGI):
       trinity.step()
 
-You override Pantheon, God, and Sword to specify functionality at the Cluster, Server, and Core levels, respectively. All communications are handled internally. The demo in /projekt shows how Trinity can be used for Openai Rapid style training with very little code. 
+Where Pantheon, God, and Sword (see Namesake if that sounds odd) are user defined subclasses of Ascend -- our lightweight and framework agnostic Ray wrapper defining an arbitrary "layer" of infrastructure. All communications are handled internally and easily exposed for debugging. The demo in /projekt shows how Trinity can be used for distributed training with very little code outside of the model and rollout collection. 
 
 |air| Ethyr
 -----------
-Ethyr is the "contrib" for this project. It contains useful research tools for interacting with the project. I've seeded it with the helper classes from my personal experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
+Ethyr is the "contrib" for this project. It contains useful research tools for interacting with the project, most notably IO classes for pre/post processing observations and actions. I've seeded it with the helper classes from my personal experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
 
 |earth| Blade
 -------------

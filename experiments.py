@@ -14,23 +14,24 @@ class Config(config.Config):
    See Forge.py for an example'''
 
    MODELDIR = 'resource/exps' #Where to store models
-   DEBUG    = True #Whether to run with debug settings
+   DEBUG    = False           #Whether to run with debug settings
 
-   LOAD = False #Load model from file?
+   LOAD = True  #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
-   TEST = False #Update the model during run?
+   TEST = True  #Update the model during run?
 
+   #Typically overriden in Forge.py
    NENT = 1  #Maximum population size
    NPOP = 1  #Number of populations
 
-   NATN    = 1    #Number of actions taken by the network
+   NATN    = 1    #Number of actions taken by the network (deprecated)
    ENTROPY = 0.01 #Entropy bonus for policy gradient loss
 
    HIDDEN  = 128  #Model embedding dimension
    EMBED   = 16   #Model hidden dimension
  
-   NGOD   = 4 #Number of GPU optimizer servers
-   NSWORD = 1 #Number of CPU rollout workers per server
+   NGOD   = 6 #Number of environment servers
+   NSWORD = 1 #Number of clients per server
 
    #Number of experience steps before
    #syncronizing at each hardware layer
@@ -38,18 +39,8 @@ class Config(config.Config):
    SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
    CLIENT_UPDATES  = 128
 
-   #Device used on the optimizer server.
-   #Rollout workers use CPU by default
-   #DEVICE = 'cuda:0'
+   #Hardware specification
    DEVICE = 'cpu:0'
-
-   #Debug params
-   if DEBUG:
-      HIDDEN  = 2
-      EMBED   = 2
-      EPOCHUPDATES = 2**8
-      SYNCUPDATES  = 2**4
-      DEVICE = 'cpu:0'
 
    #Gradient based optimization parameters
    LR         = 1e-3
@@ -61,6 +52,13 @@ class Config(config.Config):
    POPOPT   = False
    PERMPOPS = 4
    PERMVAL  = 1e-2
+
+   #Debug params
+   if DEBUG:
+      HIDDEN  = 2
+      EMBED   = 2
+      EPOCHUPDATES = 2**8
+      SYNCUPDATES  = 2**4
 
 
 class Experiment:

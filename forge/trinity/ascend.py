@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import ray, time
 
 class Timed:
+   '''Performance logging superclass'''
    def __init__(self):
       self.run_time  = 0
       self.wait_time = 0
@@ -33,6 +34,7 @@ class Log:
       self.disciples = []
 
 def waittime(func):
+   '''Performance profiling decorator'''
    def decorated(self, *args):
       t = time.time()
       ret = func(self, *args)
@@ -43,6 +45,7 @@ def waittime(func):
    return decorated
 
 def runtime(func):
+   '''Performance profiling decorator'''
    def decorated(self, *args):
       t = time.time()
       ret = func(self, *args)
@@ -52,11 +55,20 @@ def runtime(func):
 
    return decorated
 
-
 class Ascend(Timed):
-   '''A featherweight ray wrapper for persistent,
+   '''A featherweight Ray wrapper for persistent,
    multilevel, synchronous and asynchronous computation 
-   
+
+   Provides:
+      - A synchronous step() function for performing
+      persistent computation across remote workers
+      - An asynchronous distrib() function that
+      steps remote workers without waiting for returns
+      - A sync() function for collecting distrib() returns
+      - Various smaller tools + Timed logging
+
+   Works with pdb while using Ray local mode
+
    Args:
       disciple: a class to instantiate remotely
       n: number of remote instances
@@ -113,9 +125,19 @@ class Ascend(Timed):
       return self.sync(rets)
   
    def localize(f, remote):
+      '''Converts to the correct local/remote function version
+
+      Args:
+         f: Function to localize
+         remote: Whether f is remote
+ 
+      Returns:
+         A localized function (f or f.remote)
+      '''
       return f if not remote else f.remote
 
    def isRemote(obj):
+      '''Check if an object is remote'''
       return hasattr(obj, 'remote') or hasattr(obj, '__ray_checkpoint__')
 
 

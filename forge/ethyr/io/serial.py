@@ -42,17 +42,6 @@ class Serial:
       ret = tuple(pad*[-1]) + ret
       return ret
 
-   def realmKey(realm, stim, offset=0):
-      #Compute from stim?
-      T()
-      iden = realm.worldIdx, realm.tick - offset
-
-      #The environment is used to
-      #generate serialization keys
-      env, ent = ob
-      key      = Serial.key(ent, iden)
-      return iden, key
-
    def inputs(realm, stim):
       '''Serialize observations'''
       iden, key = Serial.realmKey(realm, stim)

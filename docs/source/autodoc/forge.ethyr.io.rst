@@ -10,6 +10,7 @@ forge.ethyr.io package
 .. toctree::
 
    forge.ethyr.io.action
+   forge.ethyr.io.io
    forge.ethyr.io.serial
    forge.ethyr.io.stimulus
    forge.ethyr.io.utils

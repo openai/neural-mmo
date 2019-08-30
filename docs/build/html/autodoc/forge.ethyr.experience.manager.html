@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="forge.ethyr.experience.rollout module" href="forge.ethyr.experience.rollout.html" />
-    <link rel="prev" title="forge.ethyr.experience.comms module" href="forge.ethyr.experience.comms.html" /> 
+    <link rel="prev" title="forge.ethyr.experience.batcher module" href="forge.ethyr.experience.batcher.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -179,64 +179,42 @@
 <span id="forge-ethyr-experience-manager-module"></span><h1>forge.ethyr.experience.manager module<a class="headerlink" href="#module-forge.ethyr.experience.manager" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.ethyr.experience.manager.RolloutManager">
-<em class="property">class </em><code class="descclassname">forge.ethyr.experience.manager.</code><code class="descname">RolloutManager</code><span class="sig-paren">(</span><em>rollout=&lt;class 'forge.ethyr.experience.rollout.Rollout'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">forge.ethyr.experience.manager.</code><code class="descname">RolloutManager</code><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Collects and batches rollouts for inference and training</p>
-<p>This is an all-in-one for managing experience. It can be
-used to facillitate fast batched inference, pack/unpack data
-for use on remote machines, and handle network output data
-for use with the ethyr loss/optimizer libraries.</p>
 <dl class="method">
 <dt id="forge.ethyr.experience.manager.RolloutManager.batched">
-<code class="descname">batched</code><span class="sig-paren">(</span><em>nUpdates</em>, <em>forOptim=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.batched" title="Permalink to this definition">¶</a></dt>
+<code class="descname">batched</code><span class="sig-paren">(</span><em>nUpdates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.batched" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns flat batches of experience of the specified size</p>
 <p class="rubric">Notes</p>
-<p>The last batch may be smaller than the specified sz</p>
+<p>The last batch of each group may be smaller than the specified sz</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.ethyr.experience.manager.RolloutManager.collectInputs">
-<code class="descname">collectInputs</code><span class="sig-paren">(</span><em>realm</em>, <em>obs</em>, <em>stims</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.collectInputs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">collectInputs</code><span class="sig-paren">(</span><em>stims</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.collectInputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collects observation data to internal buffers</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.ethyr.experience.manager.RolloutManager.collectOutputs">
-<code class="descname">collectOutputs</code><span class="sig-paren">(</span><em>realm</em>, <em>obs</em>, <em>actions</em>, <em>rewards</em>, <em>dones</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.collectOutputs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">collectOutputs</code><span class="sig-paren">(</span><em>outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.collectOutputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collects output data to internal buffers</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.ethyr.experience.manager.RolloutManager.fill">
-<code class="descname">fill</code><span class="sig-paren">(</span><em>key</em>, <em>out</em>, <em>val</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.fill" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill in output/value data needed for the backward pass</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.ethyr.experience.manager.RolloutManager.recv">
-<code class="descname">recv</code><span class="sig-paren">(</span><em>packets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.recv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unpack communicated data to internal buffers</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.ethyr.experience.manager.RolloutManager.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="forge.ethyr.experience.manager.RolloutManager.step">
+<code class="descname">step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns log objects of all rollouts.</p>
 <p>Also resets the rollout counter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list of blob logging objects</p>
+<dd class="field-odd"><p>rolloutdict, list of blob logging objects</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>logs</p>
+<dd class="field-even"><p>outputs, logs</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.ethyr.experience.manager.RolloutManager.send">
-<code class="descname">send</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.manager.RolloutManager.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pack internal buffers for communication across hardware</p>
 </dd></dl>
 
 </dd></dl>
@@ -254,7 +232,7 @@ for use with the ethyr loss/optimizer libraries.</p>
         <a href="forge.ethyr.experience.rollout.html" class="btn btn-neutral float-right" title="forge.ethyr.experience.rollout module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="forge.ethyr.experience.comms.html" class="btn btn-neutral float-left" title="forge.ethyr.experience.comms module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.ethyr.experience.batcher.html" class="btn btn-neutral float-left" title="forge.ethyr.experience.batcher module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

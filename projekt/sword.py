@@ -30,9 +30,8 @@ class Sword(Ascend):
    updates for the associated policies of all
    agents.'''
 
-
    def __init__(self, trinity, config, idx):
-      '''Initializes a model, env, and relevent utilities'''
+      '''Initializes a model and relevent utilities'''
       super().__init__(None, 0)
       config        = deepcopy(config)
       config.DEVICE = 'cpu:0'

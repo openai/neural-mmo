@@ -207,9 +207,6 @@ class Realm(Timed):
       rewards = [p.reward for p in packets.values()]
       dones   = [p.done   for p in packets.values()]
 
-      if not len(stims) == len(rewards) == len(dones):
-         T()
-
       return stims, rewards, dones, None
 
    def reset(self):

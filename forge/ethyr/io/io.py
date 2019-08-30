@@ -32,10 +32,11 @@ class Output:
 
       self.action = {key: atnIdx}
       self.value  = value
-      #self.action = [(o.key, a) for o, a in zip(obs, action)]
 
 class IO:
+   '''High level I/O class for abstracting game state and action selection'''
    def inputs(obs, rewards, dones, config, serialize):
+      '''Preprocess inputs'''
       rets    = []
       rawAtns = []
       
@@ -50,6 +51,7 @@ class IO:
       return rets, rawAtns
 
    def outputs(obs, rawAtns, atns):
+      '''Postprocess outputs'''
       actions = defaultdict(list)
       for ob, rawAtn in zip(obs, rawAtns):
          if not hasattr(ob, 'stim'):
@@ -63,7 +65,6 @@ class IO:
             atn, args = atnArgs
             args      = args[entAtn]
 
-            #atnArgs = ActionArgs(atn, args)
             actions[entID].append(args)
 
       return actions

@@ -8,12 +8,10 @@ from collections import defaultdict
 from forge.blade.lib.log import BlobLogs
 
 from forge.ethyr.io import Serial
-from forge.ethyr.experience import Rollout, Comms, Batcher
+from forge.ethyr.experience import Rollout, Batcher
 
 class RolloutManager:
-   '''Collects and batches rollouts for inference and training
-
-   '''
+   '''Collects and batches rollouts for inference and training'''
    def __init__(self):
       self.temp    = defaultdict(Rollout)
       self.outputs = defaultdict(Rollout)
@@ -29,7 +27,6 @@ class RolloutManager:
    def nRollouts(self):
       return self.logs.nRollouts
 
-   ### For use on rollout workers ###
    def collectInputs(self, stims):
       '''Collects observation data to internal buffers'''
       self.inputs.clear()
@@ -71,7 +68,7 @@ class RolloutManager:
       Also resets the rollout counter.
 
       Returns:
-         logs: list of blob logging objects
+         outputs, logs: rolloutdict, list of blob logging objects
       '''
       logs      = self.logs
       self.logs = BlobLogs()
@@ -81,12 +78,11 @@ class RolloutManager:
 
       return outputs, logs 
 
-   ### For use on both ###
    def batched(self, nUpdates=None):
       '''Returns flat batches of experience of the specified size
 
       Notes:
-         The last batch may be smaller than the specified sz
+         The last batch of each group may be smaller than the specified sz
       '''
       return Batcher.batched(self.inputs, nUpdates)
 

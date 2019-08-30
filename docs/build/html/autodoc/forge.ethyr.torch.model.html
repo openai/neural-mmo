@@ -179,7 +179,7 @@
 <span id="forge-ethyr-torch-model-module"></span><h1>forge.ethyr.torch.model module<a class="headerlink" href="#module-forge.ethyr.torch.model" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.ethyr.torch.model.Model">
-<em class="property">class </em><code class="descclassname">forge.ethyr.torch.model.</code><code class="descname">Model</code><span class="sig-paren">(</span><em>ann</em>, <em>config</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">forge.ethyr.torch.model.</code><code class="descname">Model</code><span class="sig-paren">(</span><em>ann</em>, <em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Model manager class</p>
 <p>Convenience class wrapping saving/loading,
@@ -195,7 +195,7 @@ model initialization, optimization, and logging.</p>
 </dl>
 <dl class="method">
 <dt id="forge.ethyr.torch.model.Model.checkpoint">
-<code class="descname">checkpoint</code><span class="sig-paren">(</span><em>reward</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.checkpoint" title="Permalink to this definition">¶</a></dt>
+<code class="descname">checkpoint</code><span class="sig-paren">(</span><em>opt</em>, <em>reward</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.checkpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the model to checkpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -206,7 +206,7 @@ model initialization, optimization, and logging.</p>
 
 <dl class="method">
 <dt id="forge.ethyr.torch.model.Model.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.load" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load</code><span class="sig-paren">(</span><em>opt</em>, <em>best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a model from file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -217,29 +217,18 @@ or most recent (False) checkpoint</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="forge.ethyr.torch.model.Model.model">
-<code class="descname">model</code><a class="headerlink" href="#forge.ethyr.torch.model.Model.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get model parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a numpy array of model parameters</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="forge.ethyr.torch.model.Model.nParams">
 <code class="descname">nParams</code><a class="headerlink" href="#forge.ethyr.torch.model.Model.nParams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the number of model parameters</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="forge.ethyr.torch.model.Model.stepOpt">
-<code class="descname">stepOpt</code><span class="sig-paren">(</span><em>gradList</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.stepOpt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clip the provided gradients and step the optimizer</p>
+<dl class="attribute">
+<dt id="forge.ethyr.torch.model.Model.weights">
+<code class="descname">weights</code><a class="headerlink" href="#forge.ethyr.torch.model.Model.weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get model parameters</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>gradList</strong> – a list of gradients</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a numpy array of model parameters</p>
 </dd>
 </dl>
 </dd></dl>

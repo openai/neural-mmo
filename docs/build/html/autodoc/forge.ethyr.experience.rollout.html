@@ -178,24 +178,6 @@
   <div class="section" id="module-forge.ethyr.experience.rollout">
 <span id="forge-ethyr-experience-rollout-module"></span><h1>forge.ethyr.experience.rollout module<a class="headerlink" href="#module-forge.ethyr.experience.rollout" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="forge.ethyr.experience.rollout.Feather">
-<em class="property">class </em><code class="descclassname">forge.ethyr.experience.rollout.</code><code class="descname">Feather</code><a class="headerlink" href="#forge.ethyr.experience.rollout.Feather" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Internal logger used by Rollout. Due for a rewrite.</p>
-<dl class="method">
-<dt id="forge.ethyr.experience.rollout.Feather.scrawl">
-<code class="descname">scrawl</code><span class="sig-paren">(</span><em>iden</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.rollout.Feather.scrawl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write logs from one time step</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>iden</strong> – The unique ID used in serialization</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="forge.ethyr.experience.rollout.Rollout">
 <em class="property">class </em><code class="descclassname">forge.ethyr.experience.rollout.</code><code class="descname">Rollout</code><a class="headerlink" href="#forge.ethyr.experience.rollout.Rollout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -215,14 +197,6 @@
 <dd class="field-even"><p>Discounted list of rewards</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>You can override Rollout to modify the discount algorithm</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.ethyr.experience.rollout.Rollout.fill">
-<code class="descname">fill</code><span class="sig-paren">(</span><em>key</em>, <em>out</em>, <em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.rollout.Rollout.fill" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add in data needed for backwards pass</p>
 </dd></dl>
 
 <dl class="method">
@@ -233,13 +207,13 @@
 
 <dl class="method">
 <dt id="forge.ethyr.experience.rollout.Rollout.inputs">
-<code class="descname">inputs</code><span class="sig-paren">(</span><em>iden</em>, <em>ob</em>, <em>stim</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.rollout.Rollout.inputs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">inputs</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.rollout.Rollout.inputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process observation data</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.ethyr.experience.rollout.Rollout.outputs">
-<code class="descname">outputs</code><span class="sig-paren">(</span><em>atn</em>, <em>reward</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.rollout.Rollout.outputs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">outputs</code><span class="sig-paren">(</span><em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.rollout.Rollout.outputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process output action/reward/done data</p>
 </dd></dl>
 

@@ -3,6 +3,9 @@ import numpy as np
 
 from forge.blade.lib.utils import classproperty
 
+class Flat:
+   pass
+
 class Stim:
    default = 0
    max = float('inf')
@@ -47,6 +50,10 @@ class Stim:
 
    def get(self, *args):
       return self.asserts(self.val)
+
+   @property
+   def missing(self):
+      return self.max - self.val
 
    def increment(self, amt=1):
       self._val = min(self.max, self.val + amt)

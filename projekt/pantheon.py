@@ -8,12 +8,13 @@ from collections import defaultdict
 import projekt
 from forge.ethyr.torch import save
 from forge.ethyr.torch import Model
-from forge.blade.lib.log import Quill
+from forge.ethyr.torch.model import PopulationOptimizer, GradientOptimizer
+from forge.blade.lib.log import Quill, BlobLogs
 
-from forge import trinity
-from forge.trinity.timed import runtime
 
-class Pantheon(trinity.Pantheon):
+from forge.trinity.ascend import Ascend, runtime
+
+class Pantheon(Ascend):
    '''Cluster level Pantheon API demo
 
    This cluster level module aggregrates
@@ -24,13 +25,24 @@ class Pantheon(trinity.Pantheon):
    functionality through the Quill and Model
    libraries, respectively.'''
 
-   def __init__(self, trinity, config, args):
+   def __init__(self, trinity, config, idx):
       '''Initializes a copy of the model, which keeps
       track of a copy of the weights for the optimizer.'''
-      super().__init__(trinity, config, args)      
-      self.config, self.args = config, args
+      super().__init__(trinity.god, config.NGOD, trinity, config)
+      self.config = config
 
-      self.net = Model(projekt.ANN, config, args)
+      self.net = Model(projekt.ANN, config)
+
+      #Have been experimenting with population based
+      #training. Nothing stable yet -- advise avoiding
+      if config.POPOPT:
+         self.opt = PopulationOptimizer(self.net, config)
+      else:
+         self.opt = GradientOptimizer(self.net, config)
+
+      if config.LOAD or config.BEST:
+         self.net.load(self.opt, config.BEST)
+
       self.quill = Quill(config.MODELDIR)
       self.log = defaultdict(list)
 
@@ -43,18 +55,17 @@ class Pantheon(trinity.Pantheon):
       God optimizer nodes. Performs an Adam step
       once optimizers return a batch of gradients.''' 
       
-      recvs = super().step(self.net.model)
+      recvs = super().step(self.net.weights)
 
       #Write logs using Quill
-      recvs, logs, nUpdates, nRollouts = list(zip(*recvs))
-      nUpdates = sum(nUpdates)
-      nRollouts = sum(nRollouts)
-      self.quill.scrawl(logs, nUpdates, nRollouts)
+      recvs, logs = list(zip(*recvs))
+      logs        = BlobLogs.merge(logs)
+
+      self.quill.scrawl(logs)
       self.tick += 1
 
       self.quill.print()
       if not self.config.TEST:
          lifetime = self.quill.latest()
-         self.net.stepOpt(recvs)
-         self.net.checkpoint(lifetime)
-         self.net.saver.print()
+         self.opt.step(recvs, logs)
+         self.net.checkpoint(self.opt, lifetime)

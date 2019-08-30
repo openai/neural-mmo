@@ -10,7 +10,6 @@ forge.ethyr.experience package
 .. toctree::
 
    forge.ethyr.experience.batcher
-   forge.ethyr.experience.comms
    forge.ethyr.experience.manager
    forge.ethyr.experience.rollout
 

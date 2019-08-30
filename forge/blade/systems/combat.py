@@ -1,12 +1,15 @@
 #Various utilities for managing combat, including hit/damage
 
-import numpy as np
+from pdb import set_trace as T
 
-def combatLevel(skills):
+import numpy as np
+from forge.blade.systems import skill as Skill
+
+def level(skills):
    hp = skills.constitution.level
    defense = skills.defense.level
    melee = skills.melee.level
-   ranged = skills.ranged.level
+   ranged = skills.range.level
    
    base = 0.25*(defense + hp)
    meleeAdjust = 0.65*melee
@@ -14,6 +17,7 @@ def combatLevel(skills):
    final = np.floor(base + max(meleeAdjust, rangeAdjust))
    return final
 
+'''
 def attack(entity, targ, skill):
    attackLevel  = skill.level
    defenseLevel = targ.skills.defense.level
@@ -41,20 +45,50 @@ def attack(entity, targ, skill):
    if entity.isPC:
       targ.skills.addCombatExp(targ.skills.defense, dmg)
    targ.registerHit(entity, dmg)
+'''
+
+def attack(entity, targ, skill):
+   attackLevel  = skill.level
+   defenseLevel = targ.skills.defense.level
+
+   if targ.status.immune.val > 0:
+      return
+
+   dmg = 0
+   if np.random.rand() < accuracy(attackLevel, defenseLevel):
+      #No roll now, just does the max hit
+      dmg = maxHit(skill, attackLevel)
+      
+   #targ.registerHit(entity, dmg)
+   entity.applyDamage(dmg, skill.__class__.__name__.lower())
+   targ.receiveDamage(dmg)
+   return dmg
 
 #Compute maximum damage roll
-def maxHit(effectiveLevel, equipmentBonus):
-   return np.floor(0.5 + (8+effectiveLevel)*(equipmentBonus+64.0)/640.0)
+#def maxHit(effectiveLevel, equipmentBonus=220):
+#   return np.floor(0.5 + (8+effectiveLevel)*(equipmentBonus+64.0)/640.0)
+def maxHit(skill, level):
+   if isinstance(skill, Skill.Melee):
+      return np.floor(5 + level * 45 / 99)
+   if isinstance(skill, Skill.Range):
+      return np.floor(3 + level * 32 / 99)
+   if isinstance(skill, Skill.Mage):
+      return np.floor(1 + level * 24 / 99)
 
 #Compute maximum attack or defense roll (same formula)
 def maxAttackDefense(effectiveLevel, equipmentBonus):
    return effectiveLevel*(equipmentBonus+64)
 
+def accuracy(defLevel, targDef):
+   return 0.5 + (defLevel - targDef) / 200
+
 #Compute hit chance from max attack and defense
+'''
 def accuracy(atk, dfn):
    if atk > dfn:
       return 1 - (dfn+2) / (2*(atk+1))
    return atk/(2*(dfn+1))
+'''
 
 def isHit(attackLevel, attackBonus, defenseLevel, defenseBonus):
    maxAttack  = maxAttackDefense(attackLevel, attackBonus)

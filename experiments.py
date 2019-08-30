@@ -4,45 +4,61 @@ import os
 from forge.blade.core import config
 
 class Config(config.Config):
+   '''Configuration specification for Neural MMO experiements
+
+   Additional parameters can be found in the forge/blade configuration.
+   These represent game parameters -- you can edit them, but beware that
+   this can significantly alter the environment.
+
+   All parameters can also be overridden at run time.
+   See Forge.py for an example'''
+
    MODELDIR = 'resource/exps' #Where to store models
+   DEBUG    = False           #Whether to run with debug settings
 
-   LOAD = True #Load model from file?
-   BEST = True #If loading, most recent or highest lifetime?
-   TEST = True #Update the model during run?
+   LOAD = True  #Load model from file?
+   BEST = False #If loading, most recent or highest lifetime?
+   TEST = True  #Update the model during run?
 
-   NENT = 128
-   NPOP = 1
+   #Typically overriden in Forge.py
+   NENT = 1  #Maximum population size
+   NPOP = 1  #Number of populations
 
-   NATN    = 1    #Number of actions taken by the network
-   HIDDEN  = 128  #Model embedding dimension
-   EMBED   = 128  #Model hidden dimension
+   NATN    = 1    #Number of actions taken by the network (deprecated)
    ENTROPY = 0.01 #Entropy bonus for policy gradient loss
 
-   NGOD   = 2  #Number of GPU optimizer servers
-   NSWORD = 2  #Number of CPU rollout workers per server
+   HIDDEN  = 128  #Model embedding dimension
+   EMBED   = 16   #Model hidden dimension
+ 
+   NGOD   = 6 #Number of environment servers
+   NSWORD = 1 #Number of clients per server
 
-   #EPOCHUPDATES: Number of experience steps per 
-   #synchronized gradient step at the cluster level
-   EPOCHUPDATES = 2**14 #Training
-   #EPOCHUPDATES = 2**8  #Local debug
+   #Number of experience steps before
+   #syncronizing at each hardware layer
+   CLUSTER_UPDATES = 4096
+   SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
+   CLIENT_UPDATES  = 128
 
-   #OPTIMUPDATES: Number of experience steps per 
-   #optimizer server per cluster level step
-   #SYNCUPDATES: Number of experience steps between 
-   #syncing rollout workers to the optimizer server
-   OPTIMUPDATES = EPOCHUPDATES / NGOD
-   SYNCUPDATES  = OPTIMUPDATES / 2**4
+   #Hardware specification
+   DEVICE = 'cpu:0'
 
-   #OPTIMBATCH: Number of experience steps per
-   #.backward minibatch on optimizer servers
-   #SYNCUPDATES: Number of experience steps between 
-   #syncing rollout workers to the optimizer server
-   OPTIMBATCH  = SYNCUPDATES * NGOD
-   SYNCBATCH   = SYNCUPDATES
+   #Gradient based optimization parameters
+   LR         = 1e-3
+   DECAY      = 1e-5
+   VAL_WEIGHT = 0.25
 
-   #Device used on the optimizer server.
-   #Rollout workers use CPU by default
-   DEVICE = 'cuda:0'
+   #Experimental population based training parameters
+   #Disabled and not currently functional -- avoid modification
+   POPOPT   = False
+   PERMPOPS = 4
+   PERMVAL  = 1e-2
+
+   #Debug params
+   if DEBUG:
+      HIDDEN  = 2
+      EMBED   = 2
+      EPOCHUPDATES = 2**8
+      SYNCUPDATES  = 2**4
 
 
 class Experiment:
@@ -74,7 +90,6 @@ class Experiment:
          ', NPOP: ', conf.NPOP)
 
       return conf
-
 
 
    def makeExps():

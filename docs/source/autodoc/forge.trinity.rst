@@ -9,10 +9,6 @@ forge.trinity package
 
 .. toctree::
 
-   forge.trinity.god
-   forge.trinity.pantheon
-   forge.trinity.smith
-   forge.trinity.sword
-   forge.trinity.timed
+   forge.trinity.ascend
    forge.trinity.trinity
 

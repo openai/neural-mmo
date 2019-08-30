@@ -4,7 +4,7 @@ from forge.blade.item import item, ore
 
 class Knife(item.Weapon):
    createSkill = skill.Smithing
-   useSkill = skill.Ranged
+   useSkill = skill.Range
    amtMade = 10
    oreReq  = 1
    

@@ -7,79 +7,125 @@ from forge.blade.io.stimulus import node
 
 class InnerClassIterable(type):
    def __iter__(cls):
-      for name, attr in cls.__dict__.items():
+      stack = list(cls.__dict__.items())
+      while len(stack) > 0:
+         name, attr = stack.pop()
+         if type(name) != tuple:
+            name = tuple([name])
          if not inspect.isclass(attr):
+            continue
+         if issubclass(attr, node.Flat):
+            for n, a in attr.__dict__.items():
+               n = name + tuple([n]) 
+               stack.append((n, a))
             continue
          yield name, attr
 
 class Config(metaclass=InnerClassIterable):
    pass
 
+class StimHook:
+   def __init__(self, meta, config):
+      self.meta = meta
+      self.config = config
+   
+      self.inputs(meta, config)
+
+   def inputs(self, cls, config):
+      for name, c in cls:
+         setattr(self, '_' + c.name, c(config))
+
+   def outputs(self, config):
+      data = {}
+      for name, cls in self.meta:
+         assert type(name) == tuple and len(name) == 1
+         name = name[0]
+
+         attr = getattr(self, '_' + cls.name, cls(config))
+         data[name.lower()] = attr.packet()
+
+      return data
+
+   def packet(self):
+      return self.outputs(self.config)
+
+
 class Stimulus(Config):
+   def dict():
+      return { k[0] : v for k, v in dict(Stimulus).items()}
+
    class Entity(Config):
-      class Food(node.Continuous):
-         def init(self, config):
-            self.default = config.RESOURCE
-            self.max     = config.RESOURCE
+      #Base data
+      class Base(Config, node.Flat):
+         class Self(node.Discrete):
+            def init(self, config):
+               self.default = 0
+               self.max = 1
 
-      class Water(node.Continuous):
-         def init(self, config):
-            self.default = config.RESOURCE
-            self.max     = config.RESOURCE
+            def get(self, ent, ref):
+               val = int(ent is ref)
+               return self.asserts(val)
 
-      class Health(node.Continuous):
-         def init(self, config):
-            self.default = config.HEALTH 
-            self.max     = config.HEALTH
+         class Population(node.Discrete):
+            def init(self, config):
+               self.default = None
+               self.max = config.NPOP
 
-      class TimeAlive(node.Continuous):
-         def init(self, config):
-            self.default = 0
+         class R(node.Discrete):
+            def init(self, config):
+               self.min = -config.STIM
+               self.max = config.STIM
 
-      class Damage(node.Continuous):
-         def init(self, config):
-            self.default = None
+            def get(self, ent, ref):
+               val = self.val - ref.base.r.val
+               return self.asserts(val)
+    
+         class C(node.Discrete):
+            def init(self, config):
+               self.min = -config.STIM
+               self.max = config.STIM
 
-      class Freeze(node.Continuous):
-         def init(self, config):
-            self.default = 0
+            def get(self, ent, ref):
+               val = self.val - ref.base.c.val
+               return self.asserts(val)
 
-      class Immune(node.Continuous):
-         def init(self, config):
-            self.default = config.IMMUNE
-            self.max     = config.IMMUNE
+      #Historical stats
+      class History(Config, node.Flat):
+         class Damage(node.Continuous):
+            def init(self, config):
+               self.default = None
 
-      class Self(node.Discrete):
-         def init(self, config):
-            self.default = 0
-            self.max = 1
+         class TimeAlive(node.Continuous):
+            def init(self, config):
+               self.default = 0
 
-         def get(self, ent, ref):
-            val = int(ent is ref)
-            return self.asserts(val)
- 
-      class Population(node.Discrete):
-         def init(self, config):
-            self.default = None
-            self.max = config.NPOP
+      #Resources
+      class Resources(Config, node.Flat):
+         class Food(node.Continuous):
+            def init(self, config):
+               self.default = config.RESOURCE
+               self.max     = config.RESOURCE
 
-      class R(node.Discrete):
-         def init(self, config):
-            self.min = -config.STIM
-            self.max = config.STIM
+         class Water(node.Continuous):
+            def init(self, config):
+               self.default = config.RESOURCE
+               self.max     = config.RESOURCE
 
-         def get(self, ent, ref):
-            val = self.val - ref.r.val
-            return self.asserts(val)
- 
-      class C(node.Discrete):
-         def init(self, config):
-            self.min = -config.STIM
-            self.max = config.STIM
+         class Health(node.Continuous):
+            def init(self, config):
+               self.default = config.HEALTH 
+               self.max     = config.HEALTH
 
-         def get(self, ent, ref):
-            val = self.val - ref.c.val
-            return self.asserts(val)
+      #Status effects
+      class Status(Config, node.Flat):
+         class Freeze(node.Continuous):
+            def init(self, config):
+               self.default = 0
+
+         class Immune(node.Continuous):
+            def init(self, config):
+               self.default = config.IMMUNE
+               self.max     = config.IMMUNE
 
    class Tile(Config):
       #A multiplicative interaction between pos and index
@@ -113,7 +159,7 @@ class Stimulus(Config):
          def get(self, tile, r, c):
             return r*3+c
       '''
- 
+
       class RRel(node.Discrete):
          def init(self, config):
             self.max = config.WINDOW

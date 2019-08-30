@@ -4,69 +4,41 @@ import numpy as np
 from collections import defaultdict
 
 from forge.ethyr.io import Stimulus, Action, Serial
+from forge.ethyr.io import IO
 
 class Batcher:
    '''Static experience batcher class used internally by RolloutManager'''
    def grouped(rollouts):
+      '''Group by population'''
       groups = defaultdict(dict)
       for key, rollout in rollouts.items():
-         groups[Serial.population(key)][key] = rollout
-      return groups.items()
+         annID, entID = key
+         assert key not in groups[annID]
+         groups[annID][key] = rollout
+      return groups
 
-   
-   def batched(rollouts, nUpdates, fullRollouts):
-      ret, groups = [], Batcher.grouped(rollouts)
-      for groupKey, group in Batcher.grouped(rollouts):
+   def batched(inputs, nUpdates):
+      '''Batch by group key to maximum fixed size'''
+      ret, groups = [], Batcher.grouped(inputs)
+      for groupKey, group in groups.items():
          group = list(group.items())
          update, updateSz = [], 0 
-         for idx, rollout in enumerate(group):
-            key, rollout = rollout
-            if updateSz < nUpdates:
-               updateSz += len(rollout)
-               update.append((key, rollout))
-            if updateSz >= nUpdates or idx == len(group) - 1:
-               rolls = dict(update)
-               packet = Batcher.flat(rolls, fullRollouts)
-               ret.append((groupKey, rolls, packet))
+         for idx, inputs in enumerate(group):
+            key, inp = inputs
+            if nUpdates is None or updateSz < nUpdates:
+               update.append((key, inp))
+               updateSz += 1
+
+            #Package a batch of updates
+            batchDone = nUpdates is not None and updateSz >= nUpdates
+            groupDone = idx == len(group) - 1 
+            if batchDone or groupDone:
+               update = dict(update)
+               keys   = update.keys()
+               stims  = update.values()
+               stims, actions = IO.batch(stims)
+               packet = (keys, stims, actions)
+               ret.append((groupKey, packet))
                update, updateSz = [], 0 
 
-         '''
-         for idx in range(0, len(group), nUpdates):
-            rolls = dict(group[idx:idx+nUpdates])
-            packet = Batcher.flat(rolls, fullRollouts)
-            ret.append((groupKey, rolls, packet))
-         '''
-
       return ret
-
-   def flat(rollouts, fullRollouts):
-      '''Flattens rollouts by removing the time index.
-      Useful for batching non recurrent policies
-
-      Args:
-         rollouts: A list of rollouts to flatten
-         fullRollouts: whether to batch full rollouts
-      '''
-      tick = 0
-      keys, obs = [], []
-      rawStims, rawActions = [], []
-      stims, actions, rewards, dones = [], [], [], []
-
-      for key, rollout in rollouts.items():
-         keys     += rollout.keys
-         stims    += rollout.stims
-
-         if fullRollouts:
-            rawActions += rollout.actions
-            rewards    += rollout.returns
-            dones      += rollout.dones
-         else:
-            rawStims   += rollout.obs
-
-      stims   = Stimulus.batch(stims)
-
-      if fullRollouts:
-         actions = Action.batch(rawActions)
-
-      return keys, rawStims, stims, rawActions, actions, rewards, dones
-

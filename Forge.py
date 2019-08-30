@@ -1,14 +1,23 @@
-'''Main file for /projekt demo'''
+'''Main file for /projekt demo
+
+The demo is simply a copy of my own research code.
+It is not a simplest-possible working example, nor would
+one be helpful -- the IO is a bit nontrivial in this setting,
+and the model presented should give you a starting point for
+dealing with it.'''
+
 from pdb import set_trace as T
 import argparse
 
 from experiments import Experiment, Config
 from forge.blade import lib
 
-from forge.trinity import smith, Trinity
-from forge.trinity.timed import TimeLog
+from forge.trinity import Trinity
+from forge.ethyr.torch import Model
 
 from projekt import Pantheon, God, Sword
+from projekt.timed import TimeLog
+from projekt.ann import ANN
 
 def parseArgs():
    '''Processes command line arguments'''
@@ -19,7 +28,7 @@ def parseArgs():
          help='Render env')
    return parser.parse_args()
 
-def render(trin, config, args):
+def render(trin, config):
    """Runs the environment in render mode
 
    Connect to localhost:8080 to view the client.
@@ -35,14 +44,30 @@ def render(trin, config, args):
    """
 
    from forge.embyr.twistedserver import Application
-   sword = trin.sword.remote(trin, config, args, idx=0)
-   env = sword.getEnv.remote()
-   Application(env, sword.tick.remote)
+
+   #Prevent accidentally overwriting the trained model
+   config.LOAD = True
+   config.TEST = True
+
+   #Note: this is a small hack to reuse training code
+   #at test time in order to avoid rewriting the
+   #lengthy inference loo
+   god   = trin.god.remote(trin, config, idx=0)
+   model = Model(ANN, config)
+
+   #Load model
+   model.load(None, config)
+   packet = model.weights
+   
+   #Pass the tick thunk to a twisted WebSocket server
+   env = god.getEnv.remote()
+   god.tick.remote(packet)
+   Application(env, god.tick.remote)
 
 if __name__ == '__main__':
    #Set up experiment configuration
    #ray infra, and command line args
-   config = Experiment('demo', Config).init(
+   config = Experiment('env', Config).init(
       NPOP=1,
       NENT=128,
    )
@@ -58,12 +83,11 @@ if __name__ == '__main__':
    trinity = Trinity(Pantheon, God, Sword)
 
    if args.render:
-      render(trinity, config, args)
+      render(trinity, config)
 
-   trinity.init(config, args)
+   trinity.init(config)
 
    #Run and print logs
    while True:
       time = trinity.step()
-      logs = trinity.logs()
-      logs = TimeLog.log(logs)
+      TimeLog.log(trinity)

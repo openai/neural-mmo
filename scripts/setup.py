@@ -5,13 +5,14 @@ import os
 print('Installing requirements')
 os.system('pip3 install -r scripts/requirements.txt')
 
-#I tried setting this up as a github submodule.
-#Never do this ever. They are terrible.
+#Download the Unity client
 print('Downloading Embyr client')
 os.chdir('forge')
-os.system('git clone https://github.com/jsuarez5341/neural-mmo-client --recurse-submodules')
+os.system('git clone https://github.com/jsuarez5341/neural-mmo-client')
 os.system('mv -n neural-mmo-client embyr')
-os.chdir('..')
+os.chdir('embyr')
+os.system('git checkout --track origin/v1.2-cowboy-dev')
+os.chdir('../..')
 
 #Build game maps
 print('Building game maps')

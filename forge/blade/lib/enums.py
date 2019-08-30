@@ -6,7 +6,7 @@ from pdb import set_trace as T
 import numpy as np
 import colorsys
 from enum import Enum
-from forge.blade.item import ore
+#from forge.blade.item import ore
 from forge.blade import systems
 
 class Tile:
@@ -50,8 +50,8 @@ class Orerock(Tile):
    def __init__(self):
       super().__init__()
       self.harvestable = True
-      self.dropTable = systems.DropTable()
-      self.dropTable.add(ore.Copper, 1)
+      #self.dropTable = systems.DropTable()
+      #self.dropTable.add(ore.Copper, 1)
 
 class Material(Enum):
    LAVA     = Lava

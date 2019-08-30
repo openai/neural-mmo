@@ -200,18 +200,18 @@ assembles them into usable data packets</p>
 <dl class="method">
 <dt id="forge.ethyr.io.stimulus.Stimulus.entity">
 <code class="descname">entity</code><span class="sig-paren">(</span><em>ent</em>, <em>static</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Internal processor for player objects</p>
+<dd><p>Internal processor for player objects. Always returns self first</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.ethyr.io.stimulus.Stimulus.makeSets">
-<code class="descname">makeSets</code><span class="sig-paren">(</span><em>keys</em>, <em>functions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.makeSets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">makeSets</code><span class="sig-paren">(</span><em>ent</em>, <em>keys</em>, <em>functions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.makeSets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for sets of objects</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.ethyr.io.stimulus.Stimulus.process">
-<code class="descname">process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.process" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process</code><span class="sig-paren">(</span><em>ent</em>, <em>config</em>, <em>serialize</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main utility for processing game observations.</p>
 <p>Built to be semi-automatic and only require small updates
 for large new classes of observations</p>
@@ -227,7 +227,7 @@ for large new classes of observations</p>
 
 <dl class="method">
 <dt id="forge.ethyr.io.stimulus.Stimulus.serialize">
-<code class="descname">serialize</code><span class="sig-paren">(</span><em>iden</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.serialize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">serialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.io.stimulus.Stimulus.serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal stimulus serializer for communication across machines</p>
 </dd></dl>
 

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.ethyr.experience.comms module" href="forge.ethyr.experience.comms.html" />
+    <link rel="next" title="forge.ethyr.experience.manager module" href="forge.ethyr.experience.manager.html" />
     <link rel="prev" title="forge.ethyr.experience package" href="forge.ethyr.experience.html" /> 
 </head>
 
@@ -183,18 +183,15 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Static experience batcher class used internally by RolloutManager</p>
 <dl class="method">
-<dt id="forge.ethyr.experience.batcher.Batcher.flat">
-<code class="descname">flat</code><span class="sig-paren">(</span><em>fullRollouts</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.batcher.Batcher.flat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flattens rollouts by removing the time index.
-Useful for batching non recurrent policies</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rollouts</strong> – A list of rollouts to flatten</p></li>
-<li><p><strong>fullRollouts</strong> – whether to batch full rollouts</p></li>
-</ul>
-</dd>
-</dl>
+<dt id="forge.ethyr.experience.batcher.Batcher.batched">
+<code class="descname">batched</code><span class="sig-paren">(</span><em>nUpdates</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.batcher.Batcher.batched" title="Permalink to this definition">¶</a></dt>
+<dd><p>Batch by group key to maximum fixed size</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.ethyr.experience.batcher.Batcher.grouped">
+<code class="descname">grouped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.experience.batcher.Batcher.grouped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group by population</p>
 </dd></dl>
 
 </dd></dl>
@@ -209,7 +206,7 @@ Useful for batching non recurrent policies</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.ethyr.experience.comms.html" class="btn btn-neutral float-right" title="forge.ethyr.experience.comms module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.ethyr.experience.manager.html" class="btn btn-neutral float-right" title="forge.ethyr.experience.manager module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="forge.ethyr.experience.html" class="btn btn-neutral float-left" title="forge.ethyr.experience package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

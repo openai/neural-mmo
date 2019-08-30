@@ -29,7 +29,9 @@ class DotReluBlock(nn.Module):
    def forward(self, k, v):
       k = self.key(k)
       v = self.val(v)
-      x = functional.dot(k, v)
+      x = torch.sum(k * v, -1)
+      #x = functional.dot(k, v)
+      return x
       return x.squeeze(-1)
 
 
@@ -55,6 +57,22 @@ class MiniAttend(nn.Module):
          x, _ = torch.max(x, dim=-2)
 
       return x
+
+
+class BareAttend(nn.Module):
+   def __init__(self, h, flat=True):
+      super().__init__()
+      self.flat = flat
+
+   def forward(self, x, kv=None):
+      if kv is not None:
+         x = x * kv
+   
+      if self.flat:
+         x = torch.mean(x, dim=-2)
+
+      return x
+
 
 class AttnCat(nn.Module):
    def __init__(self, h):

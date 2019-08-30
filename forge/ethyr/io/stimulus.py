@@ -16,7 +16,10 @@ class Data:
 
    def add(self, static, obj, *args, key):
       for name, attr in static:
-         val = getattr(obj, attr.name).get(*args)
+         val = obj
+         for n in name:
+            val = getattr(val, n[0].lower() + n[1:])
+         val = val.get(*args)
          if key != self.key:
             self.data[name].append([])
          self.data[name][-1].append(val)
@@ -33,7 +36,7 @@ class Stimulus:
    The environment returns game objects in observations; this class
    assembles them into usable data packets
    '''
-   def process(stims):
+   def process(env, ent, config, serialize):
       '''Main utility for processing game observations.
 
       Built to be semi-automatic and only require small updates
@@ -45,38 +48,49 @@ class Stimulus:
       Returns:
          An unbatched list of proccessed stimulus packets
       '''
-      rets = [] 
-      for stim in stims:
-         keys      = 'Entity Tile'.split()
-         functions = [Stimulus.entity, Stimulus.tile]
-         ret = Stimulus.makeSets(stim, keys, functions)
-         rets.append(ret)
-      return rets
+      keys      = 'Entity Tile'.split()
+      functions = [Stimulus.entity, Stimulus.tile]
 
-   def makeSets(stim, keys, functions):
+      ret = Stimulus.makeSets(env, ent, keys, functions)
+
+      if serialize:
+         ret = Stimulus.serialize(ret)
+
+      return ret
+
+   def basic(env, ent, config):
+      N = env[config.STIM - 1, config.STIM].state.index == 0
+      S = env[config.STIM + 1, config.STIM].state.index == 0
+      W = env[config.STIM, config.STIM - 1].state.index == 0
+      E = env[config.STIM, config.STIM + 1].state.index == 0
+      return np.array([N, S, E, W]).astype(np.float)
+      return [N, S, E, W]
+
+   def makeSets(env, ent, keys, functions):
       '''Internal processor for sets of objects'''
-      env, ent = stim
-      data, static = {}, dict(Static)
+      data, static = {}, Static.dict()
       for key, f in zip(keys, functions):
          data[key]  = f(env, ent, static[key])
       return data
 
-   def serialize(stim, iden):
+   def serialize(stim):
       '''Internal stimulus serializer for communication across machines'''
       from forge.ethyr.io import Serial
       rets = {}
       for group, data in stim.items():
          names, data = data
-         serialNames = []
+         serialized = []
          for name in names:
-            serialName = Serial.key(name, iden)
-            name.injectedSerial = serialName
-            serialNames.append(serialName)
-         rets[group] = (serialNames, data)
+            key = Serial.key(name)
+            name.injectedSerial = key
+            serialized.append(key)
+         rets[group] = (serialized, data)
       return rets
 
    def batch(stims):
       '''Internal batcher for lists of stimuli'''
+      #return np.array(stims)
+
       batch = {}
 
       #Process into set of sets
@@ -132,9 +146,20 @@ class Stimulus:
       return data.ret
 
    def entity(env, ent, static):
-      '''Internal processor for player objects'''
-      data = Data()
+      '''Internal processor for player objects. Always returns self first'''
+      ents = []
       for tile in env.ravel():
          for e in tile.ents.values():
-            data.add(static, e, ent, e, key=ent)
+            ents.append(e)
+
+      #Sorting to return self first.
+      #This makes it easier to hack together cheap baselines
+      data = Data()
+      ents = sorted(ents, key=lambda e: e is ent, reverse=True)
+      ents = ents[:10]
+      while len(ents) < 10:
+         ents.append(ent)
+
+      for e in ents:
+         data.add(static, e, ent, e, key=ent)
       return data.ret

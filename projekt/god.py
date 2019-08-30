@@ -1,6 +1,5 @@
 from pdb import set_trace as T
 import numpy as np
-
 import time
 import ray
 import pickle
@@ -8,104 +7,147 @@ from collections import defaultdict
 
 import projekt
 
-
-from forge import trinity
-from forge.trinity.timed import runtime
+from forge.blade.core.realm import Realm
+from forge.blade.lib.log import BlobLogs
 
 from forge.ethyr.io import Stimulus, Action, utils
+from forge.ethyr.io import IO
+
 from forge.ethyr.torch import optim
 from forge.ethyr.experience import RolloutManager
 
 import torch
 
-@ray.remote(num_gpus=1)
-class God(trinity.God):
+from forge.trinity.ascend import Ascend, runtime
+
+@ray.remote
+class God(Ascend):
    '''Server level God API demo
 
-   This server level optimizer node aggregates experience
-   across all core level rollout worker nodes. It
-   uses the aggregated experience compute gradients.
+   This environment server runs a persistent game instance
+   It distributes agents observations and collects action
+   decisions from a set of client nodes. This is the direct
+   opposite of the typical MPI broadcast/recv paradigm, which
+   operates an optimizer server over a bank of environments.
 
-   This is effectively a lightweight variant of the
-   Rapid computation model, with the potential notable
-   difference that we also recompute the forward pass
-   from small observation buffers rather than 
-   communicating large activation tensors.
+   Notably, OpenAI Rapid style optimization does not scale
+   well to to this setting, as it assumes environment and
+   agent collocation. This quickly becomes impossible when
+   the number of agents becomes large. While this may not
+   be a problem for small scale versions of this demo, it
+   is built with future scale in mind.'''
 
-   This demo builds up the ExperienceBuffer utility, 
-   which handles rollout batching.'''
-
-   def __init__(self, trin, config, args, idx):
+   def __init__(self, trinity, config, idx):
       '''Initializes a model and relevent utilities'''
-      super().__init__(trin, config, args, idx)
-      self.config, self.args = config, args
+      super().__init__(trinity.sword, config.NSWORD, trinity, config)
+      self.config, self.idx = config, idx
+      self.nPop = config.NPOP
+      self.ent  = 0
 
-      self.manager = RolloutManager()
+      self.env  = Realm(config, idx, self.spawn)
+      self.obs, self.rewards, self.dones, _ = self.env.reset()
 
-      self.net = projekt.ANN(
-               config).to(self.config.DEVICE)
+      self.grads, self.log = [], BlobLogs()
+
+   def getEnv(self):
+      '''Returns the environment. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env
+
+   def getEnvLogs(self):
+      '''Returns the environment logs. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.env.logs()
+
+   def getDisciples(self):
+      '''Returns client instances. Ray does not allow
+      access to remote attributes without a getter'''
+      return self.disciples
+
+   def getSwordLogs(self):
+      '''Returns client logs. Ray does not allow
+      access to remote attributes without a getter'''
+      return [e.logs() for e in self.disciples]
+
+   def spawn(self):
+      '''Specifies how the environment adds players
+
+      Returns:
+         entID (int), popID (int), name (str): 
+         unique IDs for the entity and population, 
+         as well as a name prefix for the agent 
+         (the ID is appended automatically).
+
+      Notes:
+         This is useful for population based research,
+         as it allows one to specify per-agent or
+         per-population policies'''
+
+      pop = hash(str(self.ent)) % self.nPop
+      self.ent += 1
+      return self.ent, pop, 'Neural_'
+
+   def distrib(self, *args):
+      '''Shards observation data across clients using the Trinity async API'''
+      obs, recv = args
+      N = self.config.NSWORD
+      clientData = [[] for _ in range(N)]
+      for ob in obs:
+         clientData[ob.entID % N].append(ob)
+      return super().distrib(clientData, recv, shard=(1, 0))
+
+   def sync(self, rets):
+      '''Aggregates actions/updates/logs from shards using the Trinity async API'''
+      rets = super().sync(rets)
+
+      atnDict, gradList, logList = {}, [], []
+      for atns, grads, logs in rets:
+         atnDict.update(atns)
+
+         #Gradients only present when a particular
+         #client has computed a batch
+         if grads is not None:
+            gradList.append(grads)
+
+         if logs is not None:
+            logList.append(logs)
+
+      #Aggregate gradients/logs
+      self.grads += gradList
+      self.log  = BlobLogs.merge([self.log, *logList])
+
+      return atnDict
 
    @runtime
    def step(self, recv):
-      '''Broadcasts updated weights to the core level
-      Sword rollout workers. Runs rollout workers'''
-      self.net.recvUpdate(recv)
-      self.rollouts(recv)
+      '''Broadcasts updated weights to the core level clients.
+      Collects gradient updates for upstream optimizer.'''
+      self.grads, self.log = [], BlobLogs()
+      while self.log.nUpdates < self.config.SERVER_UPDATES:
+         self.tick(recv)
+         recv = None
 
-      #Send update
-      grads = self.net.grads()
-      logs, nUpdates, nRollouts  = self.manager.reset()
-      return grads, logs, nUpdates, nRollouts
+      grads = np.mean(self.grads, 0)
+      grads = grads.tolist()
+      return grads, self.log
 
-   def rollouts(self, recv):
-      '''Runs rollout workers while asynchronously
-      computing gradients over available experience'''
-      self.nRollouts, done = 0, False
-      while not done:
-         packets = super().distrib(recv) #async rollout workers
-         self.processRollouts()          #intermediate gradient computatation
-         packets = super().sync(packets) #sync next batches of experience
-         self.manager.recv(packets)
+   def tick(self, recv=None):
+      '''Environment step Thunk. Optionally takes a data packet.
 
-         done = self.manager.nUpdates >= self.config.OPTIMUPDATES
-      self.processRollouts() #Last batch of gradients
+      In this case, the data packet arg is used to specify
+      model updates in the form of a new parameter vector'''
 
-   def processRollouts(self):
-      '''Runs minibatch forwards/backwards
-      over all available experience'''
-      for batch in self.manager.batched(
-            self.config.OPTIMBATCH, forOptim=True):
-         rollouts = self.forward(*batch)
-         self.backward(rollouts)
+      #Preprocess obs
+      obs, rawAtns = IO.inputs(
+         self.obs, self.rewards, self.dones, 
+         self.config, serialize=True)
 
-   def forward(self, pop, rollouts, data):
-      '''Recompute forward pass and assemble rollout objects'''
-      keys, _, stims, rawActions, actions, rewards, dones = data
-      _, outs, vals = self.net(pop, stims, atnArgs=actions)
+      #Make decisions
+      atns = super().step(obs, recv)
 
-      #Unpack outputs
-      atnTensor, idxTensor, atnKeyTensor, lenTensor = actions
-      lens, lenTensor = lenTensor
-      atnOuts = utils.unpack(outs, lenTensor, dim=1)
+      #Postprocess outputs
+      actions = IO.outputs(obs, rawAtns, atns)
 
-      #Collect rollouts
-      for key, out, atn, val, reward, done in zip(
-            keys, outs, rawActions, vals, rewards, dones):
-
-         atnKey, lens, atn = list(zip(*[(k, len(e), idx) 
-            for k, e, idx in atn]))
-
-         atn = np.array(atn)
-         out = utils.unpack(out, lens)
-
-         self.manager.fill(key, (atnKey, atn, out), val, done)
-
-      return rollouts
-
-   def backward(self, rollouts):
-      '''Compute backward pass and logs from rollout objects'''
-      reward, val, pg, valLoss, entropy = optim.backward(
-            rollouts, valWeight=0.25,
-            entWeight=self.config.ENTROPY, device=self.config.DEVICE)
-
-    
+      #Step the environment and all agents at once.
+      #The environment handles action priotization etc.
+      self.obs, self.rewards, self.dones, _ = self.env.step(actions)

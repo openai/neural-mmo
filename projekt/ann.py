@@ -1,4 +1,10 @@
-'''Demo agent class'''
+'''Demo agent class
+
+The policies for v1.2 are sanity checyks only.
+I rushed a simple baseline to get the new client
+out faster. I am working on something better now.
+If you want help getting other models working in
+the meanwhile, drop in the Discord support channel.'''
 from pdb import set_trace as T
 import numpy as np
 import torch
@@ -17,23 +23,77 @@ from forge.blade import entity
 from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
+from forge.ethyr.torch.policy import functional
+
 from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
+
+#Hacky inner attention layer
+class EmbAttn(nn.Module):
+   def __init__(self, config, n):
+      super().__init__()
+      self.fc1 = nn.Linear(n*config.EMBED, config.HIDDEN)
+
+   def forward(self, x):
+      batch, ents, _, _ = x.shape
+      x = x.view(batch, ents, -1)
+      x = self.fc1(x)
+      return x
+
+#Hacky outer attention layer
+class EntAttn(nn.Module):
+   def __init__(self, config, n):
+      super().__init__()
+      self.fc1 = nn.Linear(n*config.HIDDEN, config.HIDDEN)
+
+   def forward(self, x):
+      batch, ents, _, = x.shape
+      x = x.view(batch, -1)
+      x = self.fc1(x)
+      return x
+
+#Simple max
+class Max(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+
+   def forward(self, x):
+      x, _ = x.max(-2)
+      return x
+
+#Variable number of entities
+class Entity(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.emb = EmbAttn(config, 11)
+      self.ent = EntAttn(config, 10)
+
+#Fixed number of entities
+class Tile(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.emb = EmbAttn(config, 4)
+      self.ent = EntAttn(config, 225)
 
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
 
       h = config.HIDDEN
-      net = attention.MiniAttend
+      #net = attention.BareAttend
       #net = attention.MaxReluBlock
-      self.attn1 = net(h)
-      self.attn2 = net(h)
+      self.attns = nn.ModuleDict({
+         'Tile':   Tile(config),
+         'Entity': Entity(config),
+         'Meta':   EntAttn(config, 2),
+      })
+
       self.val  = torch.nn.Linear(h, 1)
 
 class ANN(nn.Module):
    def __init__(self, config):
+      '''Demo model'''
       super().__init__()
       self.config = config
       self.net = nn.ModuleList([Net(config)
@@ -43,30 +103,31 @@ class ANN(nn.Module):
       self.env    = Env(config)
       self.action = NetTree(config)
 
-   #TODO: Need to select net index
-   def forward(self, pop, stim, obs=None, atnArgs=None):
-      net = self.net[pop]
+   def forward(self, pop, stim, actions):
+      net           = self.net[pop]
+      stim, embed   = self.env(net, stim)
+      val           = net.val(stim)
+      atns, atnsIdx = self.action(stim, actions, embed)
 
-      stim, embed = self.env(net, stim)
-      val         = net.val(stim)
-
-      atnArgs, outs = self.action(stim, embed, obs, atnArgs)
-      return atnArgs, outs, val
+      return atns, atnsIdx, val
 
    def recvUpdate(self, update):
       if update is None:
          return
 
       setParameters(self, update)
-      zeroGrads(self)
 
    def grads(self):
-      return param.getGrads(self)
+      grads = param.getGrads(self)
+      zeroGrads(self)
+      return grads
 
    def params(self):
       return param.getParameters(self)
 
-   #Messy hooks for visualizers
+   #These hooks are outdated. Better policy
+   #visualization for the new client is planned
+   #for a future update
    def visDeps(self):
       from forge.blade.core import realm
       from forge.blade.core.tile import Tile
@@ -97,6 +158,9 @@ class ANN(nn.Module):
       vals = list(zip(posList, vals))
       return vals
 
+   #These hooks are outdated. Better policy
+   #visualization for the new client is planned
+   #for a future update
    def visVals(self, food='max', water='max'):
       from forge.blade.core import realm
       posList, vals = [], []

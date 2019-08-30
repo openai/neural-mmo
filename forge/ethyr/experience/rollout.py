@@ -18,11 +18,11 @@ class Rollout:
       self.time = 0
 
       #Logger
-      self.feather = Feather()
+      self.blob = None
 
    def __len__(self):
-      assert self.time == len(self.stims)
-      return self.time
+      #assert self.time == len(self.stims)
+      return self.blob.lifetime
 
    def discount(self, gamma=0.99):
       '''Applies standard gamma discounting to the given trajectory
@@ -33,9 +33,6 @@ class Rollout:
 
       Returns:
          Discounted list of rewards
-
-      Notes:
-         You can override Rollout to modify the discount algorithm
       '''
       rets, N = [], len(self.rewards)
       discounts = np.array([gamma**i for i in range(N)])
@@ -44,88 +41,35 @@ class Rollout:
          rets.append(sum(rewards[idx:]*discounts[:N-idx]))
       return rets
 
-   def fill(self, key, out, val):
-      '''Add in data needed for backwards pass'''
-      self.outs.append(out) 
-      self.vals.append(val) 
-
-      self.feather.scrawl(key)
-      self.feather.value(val)
-
-   def inputs(self, iden, ob, stim):
+   def inputs(self, inputs):
       '''Process observation data'''
-      self.obs.append(ob)
-      self.stims.append(stim)
-      self.keys.append(iden)
-      self.time += 1
-
-   def outputs(self, atn, reward, done):
-      '''Process output action/reward/done data'''
-      self.actions.append(atn)
-      self.rewards.append(reward)
-      self.dones.append(done)
-
-      self.done = done
-
+      self.stims.append(inputs)
+      
+      reward, done = inputs.reward, inputs.done
+      
+      if reward is not None:
+         self.rewards.append(reward)
+      if done is not None:
+         self.dones.append(done)
       if done:
-         self.finish()
+         self.done = True
 
-      self.feather.reward(reward)
+      if self.blob is None:
+         self.blob = Blob(inputs.entID, inputs.annID)
+
+   def outputs(self, output):
+      '''Process output action/reward/done data'''
+      self.actions.append(output.action)
+      self.vals.append(output.value)
+      self.outs.append(output.out)
+
+      self.time += 1
+      self.blob.update()
 
    def finish(self):
       '''Called internally once the full rollout has been collected'''
       assert self.rewards[-1] == -1
-      self.returns = self.discount()
+      self.returns  = self.discount()
       self.lifespan = len(self.rewards)
 
-class Feather:
-   '''Internal logger used by Rollout. Due for a rewrite.'''
-   def __init__(self):
-      self.expMap = set()
-      self.blob = Blob()
-
-   def scrawl(self, iden):
-      '''Write logs from one time step
-
-      Args:
-         iden: The unique ID used in serialization
-      '''
-      world, annID, entID, _ = iden
-      self.blob.entID = entID
-      self.blob.annID = annID
-      self.blob.world = world
-      
-      #tile = self.tile(stim)
-      #self.move(tile, ent.pos)
-      #self.action(arguments, atnArgs)
-
-   def tile(self, stim):
-      R, C = stim.shape
-      rCent, cCent = R//2, C//2
-      tile = stim[rCent, cCent]
-      return tile
-
-   def action(self, arguments, atnArgs):
-      move, attk = arguments
-      moveArgs, attkArgs, _ = atnArgs
-      moveLogits, moveIdx = moveArgs
-      attkLogits, attkIdx = attkArgs
-
-   def move(self, tile, pos):
-      tile = type(tile.state)
-      if pos not in self.expMap:
-         self.expMap.add(pos)
-         if tile in self.blob.unique:
-            self.blob.unique[tile] += 1
-      if tile in self.blob.counts:
-         self.blob.counts[tile] += 1
-
-   def reward(self, reward):
-      self.blob.reward.append(reward)
-
-   def value(self, value):
-      self.blob.value.append(float(value))
-
-   def finish(self):
-      self.blob.finish()
-
+      self.blob.value  = np.mean([float(e) for e in self.vals])

@@ -80,21 +80,33 @@ class Ascend(Timed):
       disciple       = Ascend.localize(disciple, self.remote)
       self.disciples = [disciple(*args, idx) for idx in range(n)]
 
-   def distrib(self, *args):
+   def distrib(self, *args, shard=None):
       '''Asynchronous wrapper around the step function
       function of all remote disciples
 
       Args:
          *args: Arbitrary data to broadcast to disciples
+         shard: A binary mask of length len(args) specifying whether to scatter each argument
          
       Returns:
          A list of async handles to the step returns
          from all remote disciples
       '''
-      rets = []
-      for disciple in self.disciples:
+      arg, rets = args, []
+      for discIdx, disciple in enumerate(self.disciples):
          step = Ascend.localize(disciple.step, self.remote)
-         rets.append(step(*args))
+
+         arg = []
+         for shardIdx, e in enumerate(args):
+            if shard is None:
+               arg = args
+            elif shard[shardIdx]:
+               arg.append(e[discIdx])
+            else:
+               arg.append(e)
+         arg = tuple(arg)
+                  
+         rets.append(step(*arg))
       return rets
 
    @waittime
@@ -111,7 +123,7 @@ class Ascend(Timed):
          return ray.get(rets)
       return rets
 
-   def step(self, *args):
+   def step(self, *args, shrd=False):
       '''Synchronous wrapper around the step function
       function of all remote disciples
 

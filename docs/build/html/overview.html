@@ -166,7 +166,7 @@
 <p><strong>Important:</strong> My <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">personal github</a> hosts the most updated version of the environment and 3D web client. The <a class="reference external" href="https://github.com/openai/neural-mmo">OpenAI</a> repo will continue to host major environment patches, but it does not get minor bugfixes.</p>
 <p><strong>Getting Started:</strong> Neural MMO follows the OpenAI Gym API, but unlike most platforms, it’s persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:</p>
 <ol class="arabic simple">
-<li><p>Check out the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#">quickstart guide</a> for setup and the <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">update slide deck</a> to see what’s new.</p></li>
+<li><p>Check out the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#">quickstart guide</a> for setup and the patch notes + slides below to see what’s new.</p></li>
 <li><p>Skim the new <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html">documentation</a> for Trinity/Pantheon/God/Sword. The core API is fully documented. The Ethyr contrib has partial documentation – any confusing omissions will be prioritized upon request.</p></li>
 <li><p>Head over to the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/tree/master/projekt">/projekt</a> in the source and familiarize yourself with the end-to-end demo. This is my personal research code on the platform.</p></li>
 <li><p>Join our <a class="reference external" href="https://discord.gg/BkMmFUC">Discord</a> for help and discussion! <strong>This is also the best way to contact me.</strong></p></li>
@@ -179,7 +179,7 @@
 <div class="section" id="ags-version-history">
 <h2><img alt="ags" src="_images/ags1.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
-<dt>v1.2: Client and Skilling update</dt><dd><ul class="simple">
+<dt>v1.2: Client and Skilling update | <a class="reference external" href="https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing">Update Slide Deck</a></dt><dd><ul class="simple">
 <li><p>Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.</p></li>
 <li><p>Trinity: Major new infrastructure API: Ascend – a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc… Ascend implements a single infrastructure “layer” object with all the same features and more. Trinity is still around and functions identically – it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.</p></li>
 <li><p>Ethyr: Streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 preferred environment placement, which places the environment server side and only communicates serialized observations and actions – not full rollouts. Expect further changes in the next update – IO is the single most technically complex aspect of this project and has the largest impact on performance.</p></li>
@@ -189,7 +189,7 @@
 <li><p>20+ people have joined the Discord. I’ve started posting frequent dev updates and thoughts here.</p></li>
 </ul>
 </dd>
-<dt>v1.1: Infrastructure and API rework, official documentation and Discord</dt><dd><ul class="simple">
+<dt>v1.1: Infrastructure and API rework, official documentation and Discord | <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">Update Slide Deck</a></dt><dd><ul class="simple">
 <li><p>Blade: Merge Native and VecEnv environment API. New API is closer to Gym</p></li>
 <li><p>Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.</p></li>
 <li><p>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</p></li>

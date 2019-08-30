@@ -19,7 +19,7 @@
 
 **Getting Started:** Neural MMO follows the OpenAI Gym API, but unlike most platforms, it's persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:
 
-1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ for setup and the `update slide deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_ to see what's new.
+1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ for setup and the patch notes + slides below to see what's new.
 
 2. Skim the new `documentation <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ for Trinity/Pantheon/God/Sword. The core API is fully documented. The Ethyr contrib has partial documentation -- any confusing omissions will be prioritized upon request.
 
@@ -37,7 +37,7 @@ This environment is the first neural MMO; it attempts to create agents that scal
 |ags| Version History
 =====================
 
-v1.2: Client and Skilling update
+v1.2: Client and Skilling update | `Update Slide Deck <https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing>`_
    - Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.
    - Trinity: Major new infrastructure API: Ascend -- a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc... Ascend implements a single infrastructure "layer" object with all the same features and more. Trinity is still around and functions identically -- it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.
    - Ethyr: Streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 preferred environment placement, which places the environment server side and only communicates serialized observations and actions -- not full rollouts. Expect further changes in the next update -- IO is the single most technically complex aspect of this project and has the largest impact on performance.
@@ -46,7 +46,7 @@ v1.2: Client and Skilling update
    - Official documentation has been updated accordingly
    - 20+ people have joined the Discord. I've started posting frequent dev updates and thoughts here.
 
-v1.1: Infrastructure and API rework, official documentation and Discord
+v1.1: Infrastructure and API rework, official documentation and Discord | `Update Slide Deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_ 
    - Blade: Merge Native and VecEnv environment API. New API is closer to Gym
    - Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.
    - Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.

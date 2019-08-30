@@ -94,7 +94,7 @@ class God(Ascend):
       clientData = [[] for _ in range(N)]
       for ob in obs:
          clientData[ob.entID % N].append(ob)
-      return super().distrib(obs, recv)
+      return super().distrib(clientData, recv, shard=(1, 0))
 
    def sync(self, rets):
       '''Aggregates actions/updates/logs from shards using the Trinity async API'''

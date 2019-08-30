@@ -56,7 +56,7 @@ def render(trin, config):
    model = Model(ANN, config)
 
    #Load model
-   model.load(None, config)
+   model.load(None, config.BEST)
    packet = model.weights
    
    #Pass the tick thunk to a twisted WebSocket server

@@ -14,8 +14,8 @@ autobahn==19.3.3
 Twisted==19.2.0
 
 #PyTorch
-torch==1.1.0
-torchvision==0.2.2
+torch==1.2.0
+torchvision==0.4.0
 
 #Other deps -- should
 #be covered by conda

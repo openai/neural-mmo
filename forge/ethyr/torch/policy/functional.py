@@ -17,7 +17,7 @@ def classify(logits, mask=None):
    #Categorical sampling
    logits = logits + 1e-3
    if mask is not None:
-      logits[1-mask] = -np.inf
+      logits[~mask] = -np.inf
 
    #distribution = Categorical(torch.softmax(logits, dim=1))
    distribution = Categorical(logits=logits)

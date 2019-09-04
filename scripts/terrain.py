@@ -4,7 +4,17 @@ gen = OpenSimplex()
 
 from forge.blade.lib import enums
 from matplotlib import pyplot as plt
-from scipy.misc import imread, imsave
+
+import sys
+
+try:
+    from imageio import imread, imsave
+except ImportError:
+    try:
+        from scipy.misc import imread, imsave
+    except ImportError:
+        print(sys.exc_info())
+
 from shutil import copyfile
 from copy import deepcopy
 import numpy as np

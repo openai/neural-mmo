@@ -24,6 +24,7 @@ from forge.ethyr.torch.param import setParameters, getParameters, zeroGrads
 from forge.ethyr.torch import param
 
 from forge.ethyr.torch.policy import functional
+from forge.ethyr.io.utils import pack, unpack
 
 from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
@@ -53,15 +54,6 @@ class EntAttn(nn.Module):
       x = self.fc1(x)
       return x
 
-#Simple max
-class Max(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-
-   def forward(self, x):
-      x, _ = x.max(-2)
-      return x
-
 #Variable number of entities
 class Entity(nn.Module):
    def __init__(self, config):
@@ -69,6 +61,20 @@ class Entity(nn.Module):
       self.emb = EmbAttn(config, 11)
       self.ent = EntAttn(config, 10)
 
+class Atn(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.fc = nn.Linear(config.HIDDEN, 4)
+
+   def forward(self, x):
+      x    = self.fc(x)
+      xIdx = functional.classify(x)
+
+      x = [[e] for e in x]
+      xIdx = xIdx.view(-1, 1)
+
+      return x, xIdx
+      
 #Fixed number of entities
 class Tile(nn.Module):
    def __init__(self, config):
@@ -101,13 +107,16 @@ class ANN(nn.Module):
 
       #Shared environment/action maps
       self.env    = Env(config)
-      self.action = NetTree(config)
+      #self.action = NetTree(config)
+      self.atn = Atn(config)
 
    def forward(self, pop, stim, actions):
       net           = self.net[pop]
       stim, embed   = self.env(net, stim)
       val           = net.val(stim)
-      atns, atnsIdx = self.action(stim, actions, embed)
+
+      #atns, atnsIdx = self.action(stim, actions, embed)
+      atns, atnsIdx = self.atn(stim)
 
       return atns, atnsIdx, val
 

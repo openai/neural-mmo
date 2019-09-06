@@ -58,14 +58,9 @@ class Sword(Ascend):
          2. Currently specifying retain_graph. This should not be
          required with batch size 1, even with the above bug.
       '''
-      #Time logs
-      packet, backward = packet
-
       #Sync weights
-      #logs = self.logs()
       if packet is not None:
          setParameters(self.net, packet)
-         #self.resetLogs()
 
       config  = self.config
       actions = {}
@@ -104,8 +99,8 @@ class Sword(Ascend):
             entWeight=config.ENTROPY)#, device=config.DEVICE)
 
          grads = self.net.grads()
-         return actions, grads, blobs#, logs
+         return actions, grads, blobs
 
-      return actions, None, None#, logs
+      return actions, None, None
 
 

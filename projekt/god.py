@@ -128,14 +128,11 @@ class God(Ascend):
       Collects gradient updates for upstream optimizer.'''
       #self.resetLogs()
       self.grads, self.blobs = [], BlobSummary()
-      idx = 0
       while self.blobs.nUpdates < self.config.SERVER_UPDATES:
-         idx += 1
-         self.tick(recv, idx%self.config.CLIENT_TICKS==0)
+         self.tick(recv)
          recv = None
 
       grads = np.mean(self.grads, 0)
-      grads = grads.tolist()
 
       swordLog = self.discipleLogs()
       realmLog = self.env.logs()
@@ -145,7 +142,7 @@ class God(Ascend):
    #Note: IO is currently slow relative to the
    #forward pass. The backward pass is fast relative to
    #the forward pass but slow relative to IO.
-   def tick(self, recv, backward):
+   def tick(self, recv=None):
       '''Environment step Thunk. Optionally takes a data packet.
 
       In this case, the data packet arg is used to specify
@@ -157,7 +154,7 @@ class God(Ascend):
          self.config, serialize=True)
 
       #Make decisions
-      atns = super().step(obs, (recv, backward))
+      atns = super().step(obs, recv)
 
       #Postprocess outputs
       actions = IO.outputs(obs, rawAtns, atns)

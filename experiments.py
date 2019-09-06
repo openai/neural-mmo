@@ -48,6 +48,7 @@ class Config(config.Config):
    LR         = 1e-3
    DECAY      = 1e-5
    VAL_WEIGHT = 0.25
+   GRAD_CLIP  = 5.0
 
    #Experimental population based training parameters
    #Disabled and not currently functional -- avoid modification

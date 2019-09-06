@@ -19,18 +19,19 @@ class GradientOptimizer:
          lr=self.config.LR, weight_decay=self.config.DECAY)
 
    #Grads and clip
-   def step(self, gradList, logs):
+   def step(self, grads, logs):
       '''Clip the provided gradients and step the optimizer
 
       Args:
          gradList: a list of gradients
       '''
-      grad = np.array(gradList)
-      grad = np.mean(grad, 0)
-      grad = np.clip(grad, -5, 5)
+      grads = np.mean(grads, 0)
+      print('Gradient magnitude: ', np.sqrt(np.sum(grads**2)))
+      mag = self.config.GRAD_CLIP
+      grads = np.clip(grads, -mag, mag)
 
-      gradAry = torch.Tensor(grad)
-      self.opt.step(gradAry)
+      gradTensor = torch.Tensor(grads)
+      self.opt.step(gradTensor)
 
       self.net.syncParameters()
 

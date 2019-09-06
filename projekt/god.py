@@ -8,7 +8,7 @@ from collections import defaultdict
 import projekt
 
 from forge.blade.core.realm import Realm
-from forge.blade.lib.log import BlobLogs
+from forge.blade.lib.log import BlobSummary 
 
 from forge.ethyr.io import Stimulus, Action, utils
 from forge.ethyr.io import IO
@@ -18,8 +18,9 @@ from forge.ethyr.experience import RolloutManager
 
 import torch
 
-from forge.trinity.ascend import Ascend, runtime
+from forge.trinity.ascend import Ascend, runtime, Log
 
+#Figure out why the fuck this isn't spliting shard time on sync
 @ray.remote
 class God(Ascend):
    '''Server level God API demo
@@ -47,7 +48,7 @@ class God(Ascend):
       self.env  = Realm(config, idx, self.spawn)
       self.obs, self.rewards, self.dones, _ = self.env.reset()
 
-      self.grads, self.log = [], BlobLogs()
+      self.grads, self.blobs = [], BlobSummary()
 
    def getEnv(self):
       '''Returns the environment. Ray does not allow
@@ -67,7 +68,7 @@ class God(Ascend):
    def getSwordLogs(self):
       '''Returns client logs. Ray does not allow
       access to remote attributes without a getter'''
-      return [e.logs() for e in self.disciples]
+      return [e.logs.remote() for e in self.disciples]
 
    def spawn(self):
       '''Specifies how the environment adds players
@@ -100,21 +101,24 @@ class God(Ascend):
       '''Aggregates actions/updates/logs from shards using the Trinity async API'''
       rets = super().sync(rets)
 
-      atnDict, gradList, logList = {}, [], []
-      for atns, grads, logs in rets:
+      atnDict, gradList, blobList = {}, [], []#, logList = {}, [], [], []
+      for atns, grads, blobs in rets:
          atnDict.update(atns)
 
          #Gradients only present when a particular
          #client has computed a batch
+         #logList.append(logs)
+
          if grads is not None:
             gradList.append(grads)
 
-         if logs is not None:
-            logList.append(logs)
+         if blobs is not None:
+            blobList.append(blobs)
 
       #Aggregate gradients/logs
       self.grads += gradList
-      self.log  = BlobLogs.merge([self.log, *logList])
+      self.blobs = BlobSummary.merge([self.blobs, *blobList])
+      #self.log   = Log.summary(logList)
 
       return atnDict
 
@@ -122,16 +126,26 @@ class God(Ascend):
    def step(self, recv):
       '''Broadcasts updated weights to the core level clients.
       Collects gradient updates for upstream optimizer.'''
-      self.grads, self.log = [], BlobLogs()
-      while self.log.nUpdates < self.config.SERVER_UPDATES:
-         self.tick(recv)
+      #self.resetLogs()
+      self.grads, self.blobs = [], BlobSummary()
+      idx = 0
+      while self.blobs.nUpdates < self.config.SERVER_UPDATES:
+         idx += 1
+         self.tick(recv, idx%self.config.CLIENT_TICKS==0)
          recv = None
 
       grads = np.mean(self.grads, 0)
       grads = grads.tolist()
-      return grads, self.log
 
-   def tick(self, recv=None):
+      swordLog = self.discipleLogs()
+      realmLog = self.env.logs()
+      log = Log.summary([swordLog, realmLog])
+      return grads, self.blobs, log
+
+   #Note: IO is currently slow relative to the
+   #forward pass. The backward pass is fast relative to
+   #the forward pass but slow relative to IO.
+   def tick(self, recv, backward):
       '''Environment step Thunk. Optionally takes a data packet.
 
       In this case, the data packet arg is used to specify
@@ -143,7 +157,7 @@ class God(Ascend):
          self.config, serialize=True)
 
       #Make decisions
-      atns = super().step(obs, recv)
+      atns = super().step(obs, (recv, backward))
 
       #Postprocess outputs
       actions = IO.outputs(obs, rawAtns, atns)

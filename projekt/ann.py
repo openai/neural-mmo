@@ -112,9 +112,6 @@ class ANN(nn.Module):
       return atns, atnsIdx, val
 
    def recvUpdate(self, update):
-      if update is None:
-         return
-
       setParameters(self, update)
 
    def grads(self):

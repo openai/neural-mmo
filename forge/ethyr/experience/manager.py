@@ -5,7 +5,7 @@ from itertools import chain
 from collections import defaultdict
 
 
-from forge.blade.lib.log import BlobLogs
+from forge.blade.lib.log import BlobSummary
 
 from forge.ethyr.io import Serial
 from forge.ethyr.experience import Rollout, Batcher
@@ -17,7 +17,7 @@ class RolloutManager:
       self.outputs = defaultdict(Rollout)
       self.inputs  = {}
 
-      self.logs = BlobLogs()
+      self.logs = BlobSummary()
 
    @property
    def nUpdates(self):
@@ -71,7 +71,7 @@ class RolloutManager:
          outputs, logs: rolloutdict, list of blob logging objects
       '''
       logs      = self.logs
-      self.logs = BlobLogs()
+      self.logs = BlobSummary()
 
       outputs      = self.outputs
       self.outputs = defaultdict(Rollout)

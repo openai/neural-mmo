@@ -71,7 +71,7 @@ class Env(nn.Module):
       for atn in StaticAction.actions:
          #Brackets on atn.serial?
          idx = torch.Tensor([atn.idx])
-         idx = idx.long().to(self.config.DEVICE)
+         idx = idx.long()#.to(self.config.DEVICE)
 
          emb = self.action(idx)
          #Dirty hack -- remove duplicates
@@ -86,7 +86,7 @@ class Env(nn.Module):
       embeddings = []
       for param, val in subnet.items():
          param = '-'.join(param)
-         val = torch.Tensor(val).to(self.config.DEVICE)
+         val = torch.Tensor(val)#.to(self.config.DEVICE)
          emb = self.emb[group][param](val)
          embeddings.append(emb)
 

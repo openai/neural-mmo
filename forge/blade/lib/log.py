@@ -45,20 +45,20 @@ class InkWell:
    def value(blobs):
       return {'value': [blob.value for blob in blobs]}
 
-class BlobLogs:
+class BlobSummary:
    def __init__(self):
       self.nRollouts = 0
       self.nUpdates  = 0
       self.blobs     = []
 
-   def merge(blobLogs):
-      logs = BlobLogs()
-      for log in blobLogs:
-         logs.nRollouts += log.nRollouts
-         logs.nUpdates  += log.nUpdates
-         logs.blobs     += log.blobs
+   def merge(blobs):
+      summary = BlobSummary()
+      for blob in blobs:
+         summary.nRollouts += blob.nRollouts
+         summary.nUpdates  += blob.nUpdates
+         summary.blobs     += blob.blobs
 
-      return logs
+      return summary
 
 #Agent logger
 class Blob:

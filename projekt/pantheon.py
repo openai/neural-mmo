@@ -9,10 +9,10 @@ import projekt
 from forge.ethyr.torch import save
 from forge.ethyr.torch import Model
 from forge.ethyr.torch.model import PopulationOptimizer, GradientOptimizer
-from forge.blade.lib.log import Quill, BlobLogs
+from forge.blade.lib.log import Quill, BlobSummary
 
 
-from forge.trinity.ascend import Ascend, runtime
+from forge.trinity.ascend import Ascend, runtime, Log
 
 class Pantheon(Ascend):
    '''Cluster level Pantheon API demo
@@ -55,17 +55,21 @@ class Pantheon(Ascend):
       God optimizer nodes. Performs an Adam step
       once optimizers return a batch of gradients.''' 
       
+      #self.resetLogs()
       recvs = super().step(self.net.weights)
 
       #Write logs using Quill
-      recvs, logs = list(zip(*recvs))
-      logs        = BlobLogs.merge(logs)
+      recvs, blobs, log = list(zip(*recvs))
 
-      self.quill.scrawl(logs)
+      blobs = BlobSummary.merge(blobs)
+      self.quill.scrawl(blobs)
       self.tick += 1
 
       self.quill.print()
       if not self.config.TEST:
          lifetime = self.quill.latest()
-         self.opt.step(recvs, logs)
+         self.opt.step(recvs, blobs)
          self.net.checkpoint(self.opt, lifetime)
+
+      log = Log.summary([self.discipleLogs(), *log])
+      return log

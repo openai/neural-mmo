@@ -11,6 +11,7 @@ from forge.blade.core import realm
 from forge.ethyr.io import Stimulus, Action
 from forge.ethyr.experience import RolloutManager
 from forge.ethyr.torch import Model, optim
+from forge.ethyr.torch.param import setParameters
 
 from forge.ethyr.io.io import Output
 
@@ -22,6 +23,7 @@ from forge.trinity.ascend import Ascend, runtime
 #as the environment. This saves 2x cores at small scale
 #but will not work with a large number of agents.
 #Enable @ray.remote when this becomes an issue.
+#@ray.remote
 class Sword(Ascend):
    '''Core level Sword API demo
 
@@ -34,8 +36,6 @@ class Sword(Ascend):
       '''Initializes a model and relevent utilities'''
       super().__init__(None, 0)
       config        = deepcopy(config)
-      config.DEVICE = 'cpu:0'
-
       self.config   = config
       self.ent      = 0
 
@@ -58,8 +58,14 @@ class Sword(Ascend):
          2. Currently specifying retain_graph. This should not be
          required with batch size 1, even with the above bug.
       '''
-      #Sync weights    
-      self.net.recvUpdate(packet)
+      #Time logs
+      packet, backward = packet
+
+      #Sync weights
+      #logs = self.logs()
+      if packet is not None:
+         setParameters(self.net, packet)
+         #self.resetLogs()
 
       config  = self.config
       actions = {}
@@ -87,17 +93,19 @@ class Sword(Ascend):
             self.manager.collectOutputs([out])
          
       #Compute backward pass and logs from rollout objects
+      #if backward:
       if self.manager.nUpdates >= config.CLIENT_UPDATES:
-         rollouts, logs = self.manager.step()
+         rollouts, blobs = self.manager.step()
 
          if config.TEST or config.POPOPT:
-            return actions, None, logs
+            return actions, None, blobs
 
          optim.backward(rollouts, valWeight=config.VAL_WEIGHT,
-            entWeight=config.ENTROPY, device=config.DEVICE)
-         grads = self.net.grads()
-         return actions, grads, logs
+            entWeight=config.ENTROPY)#, device=config.DEVICE)
 
-      return actions, None, None
+         grads = self.net.grads()
+         return actions, grads, blobs#, logs
+
+      return actions, None, None#, logs
 
 

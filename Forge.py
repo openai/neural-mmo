@@ -16,8 +16,10 @@ from forge.trinity import Trinity
 from forge.ethyr.torch import Model
 
 from projekt import Pantheon, God, Sword
-from projekt.timed import TimeLog
+from projekt.timed import Summary
 from projekt.ann import ANN
+
+from forge.trinity.ascend import Log
 
 def parseArgs():
    '''Processes command line arguments'''
@@ -89,5 +91,7 @@ if __name__ == '__main__':
 
    #Run and print logs
    while True:
-      time = trinity.step()
-      TimeLog.log(trinity)
+      log = trinity.step()
+      log = Log.summary([log, trinity.discipleLogs()])
+      summary = Summary(log)
+      print(str(summary))

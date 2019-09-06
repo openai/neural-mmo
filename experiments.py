@@ -14,11 +14,11 @@ class Config(config.Config):
    See Forge.py for an example'''
 
    MODELDIR = 'resource/exps' #Where to store models
-   DEBUG    = False           #Whether to run with debug settings
+   DEBUG    = False #Whether to run with debug settings
 
-   LOAD = True  #Load model from file?
+   LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
-   TEST = True  #Update the model during run?
+   TEST = False #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 1  #Maximum population size
@@ -30,6 +30,7 @@ class Config(config.Config):
    HIDDEN  = 128  #Model embedding dimension
    EMBED   = 16   #Model hidden dimension
  
+   #NGOD   = 6 #Number of environment servers
    NGOD   = 6 #Number of environment servers
    NSWORD = 1 #Number of clients per server
 
@@ -37,10 +38,11 @@ class Config(config.Config):
    #syncronizing at each hardware layer
    CLUSTER_UPDATES = 4096
    SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
-   CLIENT_UPDATES  = 128
+   CLIENT_UPDATES  = 256
+   CLIENT_TICKS = 64
 
    #Hardware specification
-   DEVICE = 'cpu:0'
+   #DEVICE = 'cpu:0'
 
    #Gradient based optimization parameters
    LR         = 1e-3
@@ -57,9 +59,10 @@ class Config(config.Config):
    if DEBUG:
       HIDDEN  = 2
       EMBED   = 2
-      EPOCHUPDATES = 2**8
-      SYNCUPDATES  = 2**4
 
+      CLUSTER_UPDATES = 32
+      SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
+      CLIENT_UPDATES  = 16
 
 class Experiment:
    '''Manages file structure for experiments'''

@@ -95,13 +95,23 @@ class Model:
 
       self.quill = Quill(config)
 
-   def step(self, blobs, log):
+      #Have been experimenting with population based
+      #training. Nothing stable yet -- advise avoiding
+      if config.POPOPT:
+         self.opt = PopulationOptimizer(self, config)
+      else:
+         self.opt = GradientOptimizer(self, config)
+
+      if config.LOAD or config.BEST:
+         self.load(self.opt, config.BEST)
+
+   def step(self, recvs, blobs, log):
       self.quill.scrawl(blobs)
 
       if not self.config.TEST:
          lifetime = self.quill.latest()
          self.opt.step(recvs, blobs)
-         self.net.checkpoint(self.opt, lifetime)
+         self.checkpoint(self.opt, lifetime)
 
    def load(self, opt, best=False):
       '''Load a model from file

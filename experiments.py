@@ -16,9 +16,9 @@ class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
    DEBUG    = False #Whether to run with debug settings
 
-   LOAD = True #Load model from file?
-   BEST = True #If loading, most recent or highest lifetime?
-   TEST = True #Update the model during run?
+   LOAD = False #Load model from file?
+   BEST = False #If loading, most recent or highest lifetime?
+   TEST = False #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 1  #Maximum population size
@@ -30,7 +30,6 @@ class Config(config.Config):
    HIDDEN  = 128  #Model embedding dimension
    EMBED   = 16   #Model hidden dimension
  
-   #NGOD   = 6 #Number of environment servers
    NGOD   = 6 #Number of environment servers
    NSWORD = 1 #Number of clients per server
 

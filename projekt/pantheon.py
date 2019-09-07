@@ -34,17 +34,6 @@ class Pantheon(Ascend):
       self.config = config
 
       self.net = Model(projekt.ANN, config)
-
-      #Have been experimenting with population based
-      #training. Nothing stable yet -- advise avoiding
-      if config.POPOPT:
-         self.opt = PopulationOptimizer(self.net, config)
-      else:
-         self.opt = GradientOptimizer(self.net, config)
-
-      if config.LOAD or config.BEST:
-         self.net.load(self.opt, config.BEST)
-
       self.log = defaultdict(list)
 
       self.net.nParams
@@ -59,7 +48,7 @@ class Pantheon(Ascend):
       recvs, blobs, log = list(zip(*recvs))
       blobs = BlobSummary.merge(blobs)
 
-      self.net.step(blobs, log)
+      self.net.step(recvs, blobs, log)
 
       return log
 

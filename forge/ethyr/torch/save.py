@@ -69,7 +69,7 @@ class Saver:
          opt: Optimizer to save
          fname: File to save to
       '''
-      self.save(params, opt, self.savef)
+      #self.save(params, opt, self.savef)
       best = reward > self.best
       if best: 
          self.best = reward

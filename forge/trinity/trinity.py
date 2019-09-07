@@ -57,4 +57,4 @@ class Trinity(Ascend):
    @runtime
    def step(self):
       '''Wraps Pantheon step'''
-      return self.disciples[0].step()
+      return super().step()[0]

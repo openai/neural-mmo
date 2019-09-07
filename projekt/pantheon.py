@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 import torch
 import time
+import ray
 
 from collections import defaultdict
 
@@ -14,6 +15,7 @@ from forge.blade.lib.log import Quill, BlobSummary
 
 from forge.trinity.ascend import Ascend, runtime, Log
 
+@ray.remote
 class Pantheon(Ascend):
    '''Cluster level Pantheon API demo
 

@@ -6,6 +6,8 @@ import time
 from collections import defaultdict
 from torch.nn.parameter import Parameter
 
+from forge.blade.lib.log import Quill
+
 from forge.ethyr.torch import save
 from forge.ethyr.torch.optim import ManualAdam
 from forge.ethyr.torch.param import setParameters, getParameters
@@ -90,6 +92,16 @@ class Model:
       self.net = ann(config)
       self.parameters = Parameter(torch.Tensor(
             np.array(getParameters(self.net))))
+
+      self.quill = Quill(config)
+
+   def step(self, blobs, log):
+      self.quill.scrawl(blobs)
+
+      if not self.config.TEST:
+         lifetime = self.quill.latest()
+         self.opt.step(recvs, blobs)
+         self.net.checkpoint(self.opt, lifetime)
 
    def load(self, opt, best=False):
       '''Load a model from file

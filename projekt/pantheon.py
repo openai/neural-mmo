@@ -1,17 +1,18 @@
 from pdb import set_trace as T
 import numpy as np
 import torch
-import time
+import time, os
 import ray
 
 from collections import defaultdict
 
 import projekt
+from projekt.timed import Summary
+
 from forge.ethyr.torch import save
 from forge.ethyr.torch import Model
 from forge.ethyr.torch.model import PopulationOptimizer, GradientOptimizer
 from forge.blade.lib.log import Quill, BlobSummary
-
 
 from forge.trinity.ascend import Ascend, runtime, Log
 
@@ -44,33 +45,38 @@ class Pantheon(Ascend):
       if config.LOAD or config.BEST:
          self.net.load(self.opt, config.BEST)
 
-      self.quill = Quill(config.MODELDIR)
       self.log = defaultdict(list)
 
-      self.tick = 0
       self.net.nParams
 
    @runtime
-   def step(self):
-      '''Broadcasts updated weights to server level
-      God optimizer nodes. Performs an Adam step
-      once optimizers return a batch of gradients.''' 
-      
+   def tick(self):
+      '''Inner timed step'''
       #self.resetLogs()
       recvs = super().step(self.net.weights)
 
       #Write logs using Quill
       recvs, blobs, log = list(zip(*recvs))
-
       blobs = BlobSummary.merge(blobs)
-      self.quill.scrawl(blobs)
-      self.tick += 1
 
-      self.quill.print()
-      if not self.config.TEST:
-         lifetime = self.quill.latest()
-         self.opt.step(recvs, blobs)
-         self.net.checkpoint(self.opt, lifetime)
+      self.net.step(blobs, log)
 
-      log = Log.summary([self.discipleLogs(), *log])
       return log
+
+
+   def step(self):
+      '''Broadcasts updated weights to server level
+      God optimizer nodes. Performs an Adam step
+      once optimizers return a batch of gradients.''' 
+      log = self.tick()
+      
+      stats = self.net.quill.stats()
+      log = Log.summary([self.discipleLogs(), *log, self.logs()])
+      log = str(Summary(log))
+  
+      path = os.path.join(self.config.MODELDIR, 'stats.txt')
+      with open(path, 'a') as f:
+         f.write(stats)
+         f.write(log)
+
+      return stats, log

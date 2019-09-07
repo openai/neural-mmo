@@ -50,6 +50,10 @@ class Config(config.Config):
    VAL_WEIGHT = 0.25
    GRAD_CLIP  = 5.0
 
+   #Per agent logging
+   SAVE_BLOBS = False #Log at all? (IO/comms intensive)
+   BLOB_FRAC  = 0.1   #What fraction of blobs to log?
+
    #Experimental population based training parameters
    #Disabled and not currently functional -- avoid modification
    POPOPT   = False

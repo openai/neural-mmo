@@ -16,7 +16,6 @@ from forge.trinity import Trinity
 from forge.ethyr.torch import Model
 
 from projekt import Pantheon, God, Sword
-from projekt.timed import Summary
 from projekt.ann import ANN
 
 from forge.trinity.ascend import Log
@@ -91,7 +90,7 @@ if __name__ == '__main__':
 
    #Run and print logs
    while True:
-      log = trinity.step()
-      log = Log.summary([log, trinity.discipleLogs()])
-      summary = Summary(log)
-      print(str(summary))
+      stats, log = trinity.step()
+
+      print(stats)
+      print(log)

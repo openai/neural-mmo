@@ -15,7 +15,6 @@ from forge.blade.lib.log import Quill, BlobSummary
 
 from forge.trinity.ascend import Ascend, runtime, Log
 
-@ray.remote
 class Pantheon(Ascend):
    '''Cluster level Pantheon API demo
 

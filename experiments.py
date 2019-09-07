@@ -16,9 +16,9 @@ class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
    DEBUG    = False #Whether to run with debug settings
 
-   LOAD = False #Load model from file?
-   BEST = False #If loading, most recent or highest lifetime?
-   TEST = False #Update the model during run?
+   LOAD = True #Load model from file?
+   BEST = True #If loading, most recent or highest lifetime?
+   TEST = True #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 1  #Maximum population size

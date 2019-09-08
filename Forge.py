@@ -90,7 +90,5 @@ if __name__ == '__main__':
 
    #Run and print logs
    while True:
-      stats, log = trinity.step()
-
-      print(stats)
+      log = trinity.step()
       print(log)

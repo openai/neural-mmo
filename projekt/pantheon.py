@@ -38,6 +38,12 @@ class Pantheon(Ascend):
 
       self.net.nParams
 
+      #Remove this file
+      path = os.path.join(config.MODELDIR, 'stats.txt')
+      with open(path, 'w') as f:
+         pass
+ 
+
    @runtime
    def tick(self):
       '''Inner timed step'''
@@ -60,12 +66,13 @@ class Pantheon(Ascend):
       log = self.tick()
       
       stats = self.net.quill.stats()
+      save = self.net.saver.log()
       log = Log.summary([self.discipleLogs(), *log, self.logs()])
       log = str(Summary(log))
   
       path = os.path.join(self.config.MODELDIR, 'stats.txt')
+      txt = '\n'.join([save, stats, log])
       with open(path, 'a') as f:
-         f.write(stats)
-         f.write(log)
+         f.write(txt + '\n')
 
-      return stats, log
+      return txt

@@ -105,11 +105,11 @@ class Saver:
       epoch = data['epoch']
       return epoch
 
-   def print(self):
+   def log(self):
       '''Print stats for the latest epoch'''
-      print(
-            'Tick: ', self.epoch,
+      return ''.join([
+            'Tick: ', str(self.epoch),
             ', Time: ', str(self.time)[:5],
             ', Lifetime: ', str(self.reward)[:5],
-            ', Best: ', str(self.best)[:5]) 
+            ', Best: ', str(self.best)[:5]])
 

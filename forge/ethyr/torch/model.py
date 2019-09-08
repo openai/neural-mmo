@@ -131,7 +131,6 @@ class Model:
          reward: Mean reward of the model
       '''
       self.saver.checkpoint(self.parameters, opt, reward)
-      self.saver.print()
 
    @property
    def nParams(self):

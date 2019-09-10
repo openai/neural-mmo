@@ -163,8 +163,8 @@ class Stimulus:
       #This makes it easier to hack together cheap baselines
       data = Data()
       ents = sorted(ents, key=lambda e: e is ent, reverse=True)
-      ents = ents[:1]
-      while len(ents) < 1:
+      ents = ents[:10]
+      while len(ents) < 10:
          ents.append(ent)
 
       for e in ents:

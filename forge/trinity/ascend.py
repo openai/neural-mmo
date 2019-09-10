@@ -164,17 +164,17 @@ class Ascend(Timed):
    def discipleLogs(self):
       logs = []
       for e in self.disciples:
+         log = e.logs
          try:
-            logs.append(e.logs.remote())
+            log = ray.get(log.remote())
          except:
-            logs.append(e.logs())
+            log = log()
+         logs.append(log)
 
       try:
-         logs = ray.get(logs)
+         logs = Log.summary(logs)
       except:
-         pass
-
-      logs = Log.summary(logs)
+         T()
       return logs
 
  

@@ -5,7 +5,7 @@ OBJECT_INFO_PREFIX = b"OI:"
 OBJECT_LOCATION_PREFIX = b"OL:"
 TASK_TABLE_PREFIX = b"TT:"
 
-def init(mode):
+def init(config, mode):
    os.environ['MKL_NUM_THREADS'] = '1'
    os.environ['OMP_NUM_THREADS'] = '1'
 
@@ -14,8 +14,7 @@ def init(mode):
    elif mode == 'default':
       ray.init()
    elif mode == 'remote':
-      print('Set up HOSTNAME')
-      ray.init(redis_address=os.environ['HOSTNAME'] + ':6379')
+      ray.init(redis_address=config.HOST + ':6379')
    else:
       print('Invalid ray mode (local/default/remote)')
       exit(-1)

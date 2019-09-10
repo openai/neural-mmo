@@ -59,7 +59,7 @@ class Entity(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.emb = EmbAttn(config, 11)
-      self.ent = EntAttn(config, 1)
+      self.ent = EntAttn(config, 10)
 
 class Atn(nn.Module):
    def __init__(self, config):

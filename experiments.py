@@ -15,6 +15,7 @@ class Config(config.Config):
 
    MODELDIR = 'resource/exps' #Where to store models
    DEBUG    = False #Whether to run with debug settings
+   HOST     = 'localhost'
 
    LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
@@ -44,7 +45,6 @@ class Config(config.Config):
    #DEVICE = 'cpu:0'
 
    #Gradient based optimization parameters
-   #LR         = 1e-3
    LR         = 3e-4
    DECAY      = 1e-5
    VAL_WEIGHT = 0.5

@@ -16,7 +16,7 @@ class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
    DEBUG    = False #Whether to run with debug settings
 
-   LOAD = False #Load model from file?
+   LOAD = True #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
    TEST = False #Update the model during run?
 
@@ -25,7 +25,7 @@ class Config(config.Config):
    NPOP = 1  #Number of populations
 
    NATN    = 1    #Number of actions taken by the network (deprecated)
-   ENTROPY = 0.01 #Entropy bonus for policy gradient loss
+   ENTROPY = 0.0 #Entropy bonus for policy gradient loss
 
    HIDDEN  = 128  #Model embedding dimension
    EMBED   = 16   #Model hidden dimension
@@ -44,9 +44,10 @@ class Config(config.Config):
    #DEVICE = 'cpu:0'
 
    #Gradient based optimization parameters
-   LR         = 1e-3
+   #LR         = 1e-3
+   LR         = 3e-4
    DECAY      = 1e-5
-   VAL_WEIGHT = 0.25
+   VAL_WEIGHT = 0.5
    GRAD_CLIP  = 5.0
 
    #Per agent logging

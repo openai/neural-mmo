@@ -24,7 +24,7 @@ class Rollout:
       #assert self.time == len(self.stims)
       return self.blob.lifetime
 
-   def discount(self, gamma=0.99):
+   def discount(self, gamma=0.95):
       '''Applies standard gamma discounting to the given trajectory
       
       Args:

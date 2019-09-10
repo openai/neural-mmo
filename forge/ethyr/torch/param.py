@@ -73,7 +73,7 @@ def getGrads(ann, warn=True):
    ret = []
    for param, e in ann.named_parameters():
       if e.grad is None:
-         if warn:
+         if False and warn:
             print(str(param), ': GRADIENT NOT FOUND. Possible causes: (1) you have loaded a model with a different architecture. (2) This layer is not differentiable or not in use.')
          ret += np.zeros(e.shape).ravel().tolist()
       else:

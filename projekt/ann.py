@@ -58,8 +58,8 @@ class EntAttn(nn.Module):
 class Entity(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.emb = EmbAttn(config, 11)
-      self.ent = EntAttn(config, 10)
+      self.emb = EmbAttn(config, 4)
+      self.ent = EntAttn(config, 1)
 
 class Atn(nn.Module):
    def __init__(self, config):
@@ -79,7 +79,7 @@ class Atn(nn.Module):
 class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.emb = EmbAttn(config, 4)
+      self.emb = EmbAttn(config, 1)
       self.ent = EntAttn(config, 225)
 
 class Net(nn.Module):

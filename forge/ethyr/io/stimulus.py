@@ -143,6 +143,13 @@ class Stimulus:
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             data.add(static, tile, tile, r, c, key=ent)
+
+      '''
+      popKeys = [('CRel',), ('RRel',), ('NEnts',)]
+      for key in popKeys:
+         data.data.pop(key)
+      '''
+
       return data.ret
 
    def entity(env, ent, static):
@@ -156,10 +163,17 @@ class Stimulus:
       #This makes it easier to hack together cheap baselines
       data = Data()
       ents = sorted(ents, key=lambda e: e is ent, reverse=True)
-      ents = ents[:10]
-      while len(ents) < 10:
+      ents = ents[:1]
+      while len(ents) < 1:
          ents.append(ent)
 
       for e in ents:
          data.add(static, e, ent, e, key=ent)
+
+      '''
+      popKeys = [('Status', 'Immune'), ('Status', 'Freeze'), ('History', 'TimeAlive'), ('History', 'Damage'), ('Base', 'C'), ('Base', 'R'), ('Base', 'Population')]
+      for key in popKeys:
+         data.data.pop(key)
+      '''
+
       return data.ret

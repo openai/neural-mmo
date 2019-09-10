@@ -16,7 +16,7 @@ class Config(config.Config):
    MODELDIR = 'resource/exps' #Where to store models
    DEBUG    = False #Whether to run with debug settings
 
-   LOAD = True #Load model from file?
+   LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
    TEST = False #Update the model during run?
 

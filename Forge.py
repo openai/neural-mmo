@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
    if args.render:
       args.ray = 'local'
-   lib.ray.init(args.ray)
+   lib.ray.init(config, args.ray)
 
    #Create a Trinity object specifying
    #Cluster, Server, and Core level execution

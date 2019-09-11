@@ -49,6 +49,7 @@ def render(trin, config):
    #Prevent accidentally overwriting the trained model
    config.LOAD = True
    config.TEST = True
+   config.BEST = True
 
    #Note: this is a small hack to reuse training code
    #at test time in order to avoid rewriting the

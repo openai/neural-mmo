@@ -107,16 +107,16 @@ class ANN(nn.Module):
 
       #Shared environment/action maps
       self.env    = Env(config)
-      #self.action = NetTree(config)
-      self.atn = Atn(config)
+      self.action = NetTree(config)
+      #self.atn = Atn(config)
 
    def forward(self, pop, stim, actions):
       net           = self.net[pop]
       stim, embed   = self.env(net, stim)
       val           = net.val(stim)
 
-      #atns, atnsIdx = self.action(stim, actions, embed)
-      atns, atnsIdx = self.atn(stim)
+      atns, atnsIdx = self.action(stim, actions, embed)
+      #atns, atnsIdx = self.atn(stim)
 
       return atns, atnsIdx, val
 

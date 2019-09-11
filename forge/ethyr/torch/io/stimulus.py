@@ -53,7 +53,7 @@ class Env(nn.Module):
 
       self.initSubnets(config)
 
-      #self.action = nn.Embedding(StaticAction.n, config.HIDDEN)
+      self.action = nn.Embedding(StaticAction.n, config.HIDDEN)
 
    def initSubnets(self, config, name=None):
       '''Initialize embedding networks'''
@@ -107,7 +107,7 @@ class Env(nn.Module):
    #And down to batch, hidden for final tier
    def forward(self, net, stims):
       features, lookup = {}, Lookup()
-      #self.actions(lookup)
+      self.actions(lookup)
  
       #Pack entities of each observation set
       for group, stim in stims.items():

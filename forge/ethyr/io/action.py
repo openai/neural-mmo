@@ -34,8 +34,8 @@ class Action:
       rets   = defaultdict(list)
       sRets  = defaultdict(list)
 
-      #roots  = Static.edges
-      roots  = [static.Move]
+      roots  = Static.edges
+      #roots  = [static.Move]
 
       for root in roots:
          for atn in Action.leaves(root):

@@ -17,8 +17,8 @@ class Config(config.Config):
    DEBUG    = False #Whether to run with debug settings
    HOST     = 'localhost'
 
-   LOAD = True #Load model from file?
-   BEST = True #If loading, most recent or highest lifetime?
+   LOAD = False #Load model from file?
+   BEST = False #If loading, most recent or highest lifetime?
    TEST = False #Update the model during run?
 
    #Typically overriden in Forge.py

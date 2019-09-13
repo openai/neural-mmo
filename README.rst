@@ -1,9 +1,9 @@
 **Status:** Archive (code is provided as-is, no updates expected)
 
 |ags| Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents
-##############################
+############################################################################################################
 
-# This is an archive of the inital release of the `Neural MMO project <https://openai.com/blog/neural-mmo/>`_, see `OpenAI <https://github.com/jsuarez5341/neural-mmo>`_ for current development.
+This is an archive of the inital release of the `Neural MMO project <https://openai.com/blog/neural-mmo/>`_, see `OpenAI <https://github.com/jsuarez5341/neural-mmo>`_ for current development.
 
 .. |ags| image:: docs/source/resource/ags.png
 .. |env| image:: docs/source/resource/splash.png

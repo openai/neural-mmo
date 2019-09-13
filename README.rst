@@ -1,3 +1,10 @@
+**Status:** Archive (code is provided as-is, no updates expected)
+
+|ags| Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents
+##############################
+
+# This is an archive of the inital release of the `Neural MMO project <https://openai.com/blog/neural-mmo/>`_, see `OpenAI <https://github.com/jsuarez5341/neural-mmo>`_ for current development.
+
 .. |ags| image:: docs/source/resource/ags.png
 .. |env| image:: docs/source/resource/splash.png
 
@@ -15,7 +22,7 @@
 |ags| Welcome to the Platform!
 ##############################
 
-**Important:** My `personal github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the most updated version of the environment and 3D web client. The `OpenAI <https://github.com/openai/neural-mmo>`_ repo will continue to host major environment patches, but it does not get minor bugfixes. 
+**Important:** My `personal github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the most updated version of the environment and 3D web client.
 
 **Getting Started:** Neural MMO follows the OpenAI Gym API, but unlike most platforms, it's persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:
 

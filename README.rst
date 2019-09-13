@@ -4,6 +4,7 @@
 ############################################################################################################
 
 This is an archive of the inital release of the `Neural MMO project <https://openai.com/blog/neural-mmo/>`_, see `jsuarez5341/neural-mmo <https://github.com/jsuarez5341/neural-mmo>`_ for current development.
+===========================================================================================================================================================================================================================
 
 .. |ags| image:: docs/source/resource/ags.png
 .. |env| image:: docs/source/resource/splash.png

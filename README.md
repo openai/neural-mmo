@@ -4,12 +4,15 @@
 [water]: resource/docs/water_thumbnail.png
 [air]: resource/docs/air_thumbnail.png
 [env]: resource/docs/env.jpg
+[demo]: v1.2.png
 
 **Status:** Archive (code is provided as-is, no updates expected)
 
 # ![][ags] Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents
 
-## This is an archive of the inital release of the [Neural MMO project](https://openai.com/blog/neural-mmo/). Active development continuing at [jsuarez5341/neural-mmo](https://github.com/jsuarez5341/neural-mmo).
+## (9/19) This is an archive of the inital release of the [Neural MMO project](https://openai.com/blog/neural-mmo/). Active development continuing at [jsuarez5341/neural-mmo](https://github.com/jsuarez5341/neural-mmo). At the time of archiving, the project is on version 1.2 and has made significant progress since v1.0 -- here is a screenshot:
+
+![][demo]
 
 This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, and ad-hoc high stakes single and team based conflict.
 

@@ -12,7 +12,7 @@ def init(config, mode):
    if mode == 'local':
       ray.init(local_mode=True)
    elif mode == 'default':
-      ray.init()
+      ray.init(object_store_memory=2147483648)
    elif mode == 'remote':
       ray.init(redis_address=config.HOST + ':6379')
    else:

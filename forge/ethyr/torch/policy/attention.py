@@ -6,6 +6,37 @@ from torch import nn
 
 from forge.ethyr.torch.policy import linear, functional
 
+class ScaledDotProductAttention(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.scale = np.sqrt(h)
+
+   def forward(self, Q, K, V):
+      Kt  = K.transpose(-2, -1)
+      QK  = torch.matmul(Q, Kt)
+      QK  = torch.softmax(QK / self.scale, dim=-2)
+      QKV = torch.matmul(QK, V)
+      return QKV
+
+class Attention(nn.Module):
+   def __init__(self, xDim, yDim):
+      super().__init__()
+
+      self.Q = nn.Linear(xDim, yDim)
+      self.K = nn.Linear(xDim, yDim)
+      self.V = nn.Linear(xDim, yDim)
+
+      self.attention = ScaledDotProductAttention(yDim)
+
+   def forward(self, q):
+      Q = self.Q(q)
+      K = self.K(q)
+      V = self.V(q)
+
+      attn = self.attention(Q, K, V)
+      attn, _ = torch.max(attn, dim=-2)
+      return attn
+
 class MaxReluBlock(nn.Module):
    def __init__(self, h, layers=2):
       super().__init__()

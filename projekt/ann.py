@@ -30,6 +30,20 @@ from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 
+class Atn(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      self.fc = nn.Linear(config.HIDDEN, 4)
+
+   def forward(self, x):
+      x    = self.fc(x)
+      xIdx = functional.classify(x)
+
+      x = [[e] for e in x]
+      xIdx = xIdx.view(-1, 1)
+
+      return x, xIdx
+ 
 #Hacky inner attention layer
 class EmbAttn(nn.Module):
    def __init__(self, config, n):
@@ -44,55 +58,63 @@ class EmbAttn(nn.Module):
 
 #Hacky outer attention layer
 class EntAttn(nn.Module):
-   def __init__(self, config, n):
+   def __init__(self, xDim, yDim, n):
       super().__init__()
-      self.fc1 = nn.Linear(n*config.HIDDEN, config.HIDDEN)
+      self.fc1 = nn.Linear(n*xDim, yDim)
+      #self.emb = attention.MaxReluBlock(128)
 
    def forward(self, x):
       batch, ents, _, = x.shape
       x = x.view(batch, -1)
       x = self.fc1(x)
+      #x = self.emb(x)
       return x
+
+#Hacky outer attention layer
+class TileConv(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.conv1 = nn.Conv2d(h, 16, 3)
+      #self.fc1 = nn.Linear(n*xDim, yDim)
+      #self.emb = attention.MaxReluBlock(128)
+
+      self.h = h
+
+   def forward(self, x):
+      x = x.view(-1, self.h, 15, 15)
+      T()
+      x = self.conv1(x)
+      batch, ents, _, = x.shape
+      x = x.view(batch, -1)
+      x = self.fc1(x)
+      #x = self.emb(x)
+      return x
+
 
 #Variable number of entities
 class Entity(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.emb = EmbAttn(config, 11)
-      self.ent = EntAttn(config, 10)
+      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
+      self.ent = attention.Attention(config.HIDDEN, config.HIDDEN)
 
-class Atn(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-      self.fc = nn.Linear(config.HIDDEN, 4)
-
-   def forward(self, x):
-      x    = self.fc(x)
-      xIdx = functional.classify(x)
-
-      x = [[e] for e in x]
-      xIdx = xIdx.view(-1, 1)
-
-      return x, xIdx
-      
 #Fixed number of entities
 class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.emb = EmbAttn(config, 4)
-      self.ent = EntAttn(config, 225)
+      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
+      self.ent = EntAttn(config.HIDDEN, config.HIDDEN, 225)
+      #self.ent = TileConv(config.HIDDEN)
 
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
-
       h = config.HIDDEN
-      #net = attention.BareAttend
-      #net = attention.MaxReluBlock
+
       self.attns = nn.ModuleDict({
          'Tile':   Tile(config),
          'Entity': Entity(config),
-         'Meta':   EntAttn(config, 2),
+         'Meta':   EntAttn(h, h, 2),
       })
 
       self.val  = torch.nn.Linear(h, 1)

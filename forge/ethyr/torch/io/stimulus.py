@@ -132,6 +132,10 @@ class Env(nn.Module):
       lookup.add(k, v)
    
       #Concat feature block
+      #me = features['Entity'][:, 0, :]
+      #features = torch.cat(list(features.values()), dim=-2)
+      #features = net.attns['Meta'](me, features)
+      
       feats = features 
       features = list(features.values())
       features = torch.stack(features, -2)

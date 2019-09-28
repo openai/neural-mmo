@@ -17,9 +17,9 @@ class Config(config.Config):
    DEBUG    = False #Whether to run with debug settings
    HOST     = 'localhost'
 
-   LOAD = False #Load model from file?
-   BEST = False #If loading, most recent or highest lifetime?
-   TEST = False #Update the model during run?
+   LOAD = True #Load model from file?
+   BEST = True #If loading, most recent or highest lifetime?
+   TEST = True #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 1  #Maximum population size
@@ -28,18 +28,17 @@ class Config(config.Config):
    NATN    = 1    #Number of actions taken by the network (deprecated)
    ENTROPY = 0.0 #Entropy bonus for policy gradient loss
 
-   HIDDEN  = 128  #Model embedding dimension
-   EMBED   = 16   #Model hidden dimension
+   HIDDEN  = 32 #Model embedding dimension
+   EMBED   = 32  #Model hidden dimension
  
-   NGOD   = 6 #Number of environment servers
+   NGOD   = 4 #Number of environment servers
    NSWORD = 1 #Number of clients per server
 
    #Number of experience steps before
    #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 4096
-   SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
    CLIENT_UPDATES  = 256
-   CLIENT_TICKS = 64
+   SERVER_UPDATES  = CLIENT_UPDATES
+   CLUSTER_UPDATES = NGOD * CLIENT_UPDATES
 
    #Hardware specification
    #DEVICE = 'cpu:0'

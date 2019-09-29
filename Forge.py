@@ -69,10 +69,7 @@ def render(trin, config):
 if __name__ == '__main__':
    #Set up experiment configuration
    #ray infra, and command line args
-   config = Experiment('env', Config).init(
-      NPOP=1,
-      NENT=128,
-   )
+   config = Experiment('env', Config).init()
 
    args = parseArgs()
 

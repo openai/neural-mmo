@@ -41,7 +41,8 @@ class Sword(Ascend):
 
       self.keys = set()
 
-      self.net     = projekt.ANN(config)
+      self.net = projekt.ANN(self.config)
+      #self.ents = {}
       self.manager = RolloutManager()
 
    @runtime
@@ -58,6 +59,36 @@ class Sword(Ascend):
          2. Currently specifying retain_graph. This should not be
          required with batch size 1, even with the above bug.
       '''
+      '''
+      ids = set()
+      n = 96833
+      
+      #Add new nets
+      for ob in obs:
+         iden = ob.entID
+         ids.add(iden)
+
+         net = self.net[iden]
+         if iden not in self.net:
+            net['ann'] = project.ANN(self.config)
+
+
+            noise = 0.1 * np.random.randn(n)
+            net['noise'] = noise
+
+            params = getParameters(self.net[iden])
+            setParameters(self.net[iden]), params + noise)
+
+         if ob.done:
+            net['reward'] = ob.reward 
+            
+
+      #Remove old nets
+      for iden in self.net.keys():
+         if iden not in ids:
+            ids.remove(iden)
+      '''
+
       #Sync weights
       if packet is not None:
          setParameters(self.net, packet)

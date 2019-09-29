@@ -19,11 +19,11 @@ class Config(config.Config):
 
    LOAD = True #Load model from file?
    BEST = True #If loading, most recent or highest lifetime?
-   TEST = False #Update the model during run?
+   TEST = True #Update the model during run?
 
    #Typically overriden in Forge.py
-   NENT = 1  #Maximum population size
-   NPOP = 1  #Number of populations
+   NENT = 128  #Maximum population size
+   NPOP = 8  #Number of populations
 
    NATN    = 1    #Number of actions taken by the network (deprecated)
    ENTROPY = 0.0 #Entropy bonus for policy gradient loss

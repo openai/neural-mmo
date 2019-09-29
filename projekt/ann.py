@@ -74,20 +74,22 @@ class EntAttn(nn.Module):
 class TileConv(nn.Module):
    def __init__(self, h):
       super().__init__()
-      self.conv1 = nn.Conv2d(h, 16, 3)
-      #self.fc1 = nn.Linear(n*xDim, yDim)
-      #self.emb = attention.MaxReluBlock(128)
-
       self.h = h
 
+      self.conv1 = nn.Conv2d(h, h, 3)
+      self.pool1 = nn.MaxPool2d(2)
+      self.fc1 = nn.Linear(h*6*6, h)
+
    def forward(self, x):
+      x = x.transpose(1, 2)
       x = x.view(-1, self.h, 15, 15)
-      T()
       x = self.conv1(x)
-      batch, ents, _, = x.shape
+      x = self.pool1(x)
+
+      batch, _, _, _ = x.shape
       x = x.view(batch, -1)
       x = self.fc1(x)
-      #x = self.emb(x)
+
       return x
 
 
@@ -103,8 +105,8 @@ class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      self.ent = EntAttn(config.HIDDEN, config.HIDDEN, 225)
-      #self.ent = TileConv(config.HIDDEN)
+      #self.ent = EntAttn(config.HIDDEN, config.HIDDEN, 225)
+      self.ent = TileConv(config.HIDDEN)
 
 class Net(nn.Module):
    def __init__(self, config):

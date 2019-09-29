@@ -50,7 +50,7 @@ class TaggedInput(nn.Module):
       embed = self.embed(x)
 
       tag = torch.LongTensor([0])
-      tag = tag#.to(self.config.DEVICE)
+      #tag = tag#.to(self.config.DEVICE)
       tag = self.tag(tag)
       tag = tag.expand_as(embed)
 

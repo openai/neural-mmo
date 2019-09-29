@@ -19,7 +19,7 @@ class Config(config.Config):
 
    LOAD = True #Load model from file?
    BEST = True #If loading, most recent or highest lifetime?
-   TEST = True #Update the model during run?
+   TEST = False #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 1  #Maximum population size
@@ -31,7 +31,7 @@ class Config(config.Config):
    HIDDEN  = 32 #Model embedding dimension
    EMBED   = 32  #Model hidden dimension
  
-   NGOD   = 4 #Number of environment servers
+   NGOD   = 6 #Number of environment servers
    NSWORD = 1 #Number of clients per server
 
    #Number of experience steps before

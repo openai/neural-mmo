@@ -21,7 +21,7 @@ import torch
 from forge.trinity.ascend import Ascend, runtime, Log
 
 #Figure out why the fuck this isn't spliting shard time on sync
-@ray.remote(num_gpus=1/6)
+@ray.remote
 class God(Ascend):
    '''Server level God API demo
 

@@ -10,7 +10,7 @@ def init(mode):
    os.environ['OMP_NUM_THREADS'] = '1'
 
    if mode == 'local':
-      ray.init(local_mode=ray.PYTHON_MODE)
+      ray.init(local_mode=True)
    elif mode == 'default':
       ray.init()
    elif mode == 'remote':

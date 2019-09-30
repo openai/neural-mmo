@@ -19,7 +19,7 @@ class Config(config.Config):
 
    LOAD = True #Load model from file?
    BEST = True #If loading, most recent or highest lifetime?
-   TEST = False #Update the model during run?
+   TEST = True #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 128  #Maximum population size

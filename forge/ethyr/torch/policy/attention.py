@@ -19,7 +19,7 @@ class ScaledDotProductAttention(nn.Module):
       return QKV
 
 class Attention(nn.Module):
-   def __init__(self, xDim, yDim):
+   def __init__(self, xDim, yDim, flat=True):
       super().__init__()
 
       self.Q = nn.Linear(xDim, yDim)
@@ -27,6 +27,7 @@ class Attention(nn.Module):
       self.V = nn.Linear(xDim, yDim)
 
       self.attention = ScaledDotProductAttention(yDim)
+      self.flat = flat
 
    def forward(self, q):
       Q = self.Q(q)
@@ -34,8 +35,22 @@ class Attention(nn.Module):
       V = self.V(q)
 
       attn = self.attention(Q, K, V)
-      attn, _ = torch.max(attn, dim=-2)
+
+      if self.flat:
+         attn, _ = torch.max(attn, dim=-2)
+
       return attn
+
+class Attention2(nn.Module):
+   def __init__(self, xDim, yDim):
+      super().__init__()
+      self.attn1 = Attention(xDim, yDim, flat=False)
+      self.attn2 = Attention(xDim, yDim)
+   
+   def forward(self, x):
+      x = self.attn1(x)
+      x = self.attn2(x)
+      return x
 
 class MaxReluBlock(nn.Module):
    def __init__(self, h, layers=2):

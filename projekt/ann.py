@@ -78,13 +78,18 @@ class TileConv(nn.Module):
 
       self.conv1 = nn.Conv2d(h, h, 3)
       self.pool1 = nn.MaxPool2d(2)
-      self.fc1 = nn.Linear(h*6*6, h)
+
+      self.conv2 = nn.Conv2d(h, h, 3)
+      self.pool2 = nn.MaxPool2d(2)
+ 
+      #self.fc1 = nn.Linear(h*6*6, h)
+      self.fc1 = nn.Linear(h*2*2, h)
 
    def forward(self, x):
       x = x.transpose(1, 2)
       x = x.view(-1, self.h, 15, 15)
-      x = self.conv1(x)
-      x = self.pool1(x)
+      x = self.pool1(torch.relu(self.conv1(x)))
+      x = self.pool2(torch.relu(self.conv2(x)))
 
       batch, _, _, _ = x.shape
       x = x.view(batch, -1)
@@ -97,14 +102,14 @@ class TileConv(nn.Module):
 class Entity(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      self.ent = attention.Attention(config.HIDDEN, config.HIDDEN)
+      self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
+      self.ent = attention.Attention2(config.HIDDEN, config.HIDDEN)
 
 #Fixed number of entities
 class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
-      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
+      self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
       #self.ent = EntAttn(config.HIDDEN, config.HIDDEN, 225)
       self.ent = TileConv(config.HIDDEN)
 

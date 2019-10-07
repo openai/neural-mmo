@@ -22,8 +22,8 @@ class Config(config.Config):
    TEST = True #Update the model during run?
 
    #Typically overriden in Forge.py
-   NENT = 128  #Maximum population size
-   NPOP = 8  #Number of populations
+   NENT = 128 #Maximum population size
+   NPOP = 1  #Number of populations
 
    NATN    = 1    #Number of actions taken by the network (deprecated)
    ENTROPY = 0.0 #Entropy bonus for policy gradient loss

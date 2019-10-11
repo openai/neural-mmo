@@ -17,13 +17,13 @@ class Config(config.Config):
    DEBUG    = False #Whether to run with debug settings
    HOST     = 'localhost'
 
-   LOAD = True #Load model from file?
-   BEST = True #If loading, most recent or highest lifetime?
-   TEST = True #Update the model during run?
+   LOAD = False #Load model from file?
+   BEST = False #If loading, most recent or highest lifetime?
+   TEST = False #Update the model during run?
 
    #Typically overriden in Forge.py
    NENT = 128 #Maximum population size
-   NPOP = 1  #Number of populations
+   NPOP = 8  #Number of populations
 
    NATN    = 1    #Number of actions taken by the network (deprecated)
    ENTROPY = 0.0 #Entropy bonus for policy gradient loss

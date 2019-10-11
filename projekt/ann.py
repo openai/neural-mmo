@@ -30,20 +30,6 @@ from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 
-class Atn(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-      self.fc = nn.Linear(config.HIDDEN, 4)
-
-   def forward(self, x):
-      x    = self.fc(x)
-      xIdx = functional.classify(x)
-
-      x = [[e] for e in x]
-      xIdx = xIdx.view(-1, 1)
-
-      return x, xIdx
- 
 #Hacky inner attention layer
 class EmbAttn(nn.Module):
    def __init__(self, config, n):
@@ -61,13 +47,11 @@ class EntAttn(nn.Module):
    def __init__(self, xDim, yDim, n):
       super().__init__()
       self.fc1 = nn.Linear(n*xDim, yDim)
-      #self.emb = attention.MaxReluBlock(128)
 
    def forward(self, x):
       batch, ents, _, = x.shape
       x = x.view(batch, -1)
       x = self.fc1(x)
-      #x = self.emb(x)
       return x
 
 #Hacky outer attention layer
@@ -82,7 +66,6 @@ class TileConv(nn.Module):
       self.conv2 = nn.Conv2d(h, h, 3)
       self.pool2 = nn.MaxPool2d(2)
  
-      #self.fc1 = nn.Linear(h*6*6, h)
       self.fc1 = nn.Linear(h*2*2, h)
 
    def forward(self, x):
@@ -97,7 +80,6 @@ class TileConv(nn.Module):
 
       return x
 
-
 #Variable number of entities
 class Entity(nn.Module):
    def __init__(self, config):
@@ -110,7 +92,6 @@ class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
-      #self.ent = EntAttn(config.HIDDEN, config.HIDDEN, 225)
       self.ent = TileConv(config.HIDDEN)
 
 class Net(nn.Module):
@@ -137,7 +118,6 @@ class ANN(nn.Module):
       #Shared environment/action maps
       self.env    = Env(config)
       self.action = NetTree(config)
-      #self.atn = Atn(config)
 
    def forward(self, pop, stim, actions):
       net           = self.net[pop]
@@ -145,7 +125,6 @@ class ANN(nn.Module):
       val           = net.val(stim)
 
       atns, atnsIdx = self.action(stim, actions, embed)
-      #atns, atnsIdx = self.atn(stim)
 
       return atns, atnsIdx, val
 

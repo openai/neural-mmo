@@ -1,3 +1,4 @@
+from pdb import set_trace as T
 import ray, os
 import time
 
@@ -15,6 +16,9 @@ def init(config, mode):
       ray.init(object_store_memory=2147483648)
    elif mode == 'remote':
       ray.init(redis_address=config.HOST + ':6379')
+      print('Cluster started with resources:')
+      print(ray.cluster_resources())
+   
    else:
       print('Invalid ray mode (local/default/remote)')
       exit(-1)

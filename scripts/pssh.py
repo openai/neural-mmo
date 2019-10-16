@@ -2,7 +2,7 @@ from pdb import set_trace as T
 import sys, os
 from experiments import Config
 
-with open('scripts/hosts.txt') as f:
+with open('scripts/private_hosts.txt') as f:
    hosts = f.read().splitlines()
    server = hosts[3]
    client = hosts[6:]
@@ -14,7 +14,7 @@ PREFIX_CMD = 'ray stop; ray start'
 
 #ray stop; ray start --head --redis-port=6379 --num-cpus=0
 SERVER_CMD = ' '.join([
-      PREFIX_CMD,
+      'ray stop; bash ~/longjob -u jsuarez -k ~/keytab ray start',
       '--head', 
       '--redis-port='+PORT,
       '--num-cpus=0'
@@ -23,7 +23,7 @@ SERVER_CMD = ' '.join([
 #parallel-ssh -h hosts.txt -P -i "ray stop; ray start --block --address=vision33:6379 --num-cpus=12"
 CLIENT_CMD = ' '.join([
       'parallel-ssh --host', client, '-P -i',
-      '"' + PREFIX_CMD, 
+      '"' + 'ray stop; bash ~/longjob -u jsuarez -k ~/keytab ray start',
       '--block',
       '--address='+server+':'+PORT,
       '--num-cpus='+str(Config.NGOD) 

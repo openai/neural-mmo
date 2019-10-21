@@ -1,8 +1,8 @@
 from pdb import set_trace as T
 import numpy as np
-import torch
 import time, os
 import ray
+import torch
 
 from collections import defaultdict
 

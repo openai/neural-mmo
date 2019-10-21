@@ -31,7 +31,8 @@ class Config(config.Config):
    HIDDEN  = 32 #Model embedding dimension
    EMBED   = 32  #Model hidden dimension
  
-   NGOD   = 12 #Number of environment servers
+   NCORE  = 12 #Number of environment servers
+   NGOD   = 24 #Number of environment servers
    NSWORD = 1 #Number of clients per server
 
    #Number of experience steps before

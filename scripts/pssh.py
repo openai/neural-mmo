@@ -7,7 +7,7 @@ with open('scripts/private_hosts.txt') as f:
    server = hosts[3]
    client = hosts[6:]
    client = [c for c in client if c[0] != '#']
-   client = ' '.join(client)
+   client = '"' + ' '.join(client) + '"'
 
 PORT       = '6379'
 PREFIX_CMD = 'ray stop; ray start'

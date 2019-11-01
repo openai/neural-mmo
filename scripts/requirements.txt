@@ -1,5 +1,5 @@
 #Ray infra
-ray==0.6.6
+ray==0.7.6
 cloudpickle==0.8.1
 setproctitle==1.1.10
 service-identity==18.1.0

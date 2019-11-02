@@ -52,6 +52,8 @@ class RolloutManager:
             assert key not in self.inputs
             self.inputs[key] = stim
 
+      database, databaseLookup = self.unique()
+      return self.inputs, database, databaseLookup
 
    def collectOutputs(self, outputs):
       '''Collects output data to internal buffers'''
@@ -77,6 +79,9 @@ class RolloutManager:
       self.outputs = defaultdict(Rollout)
 
       return outputs, logs 
+
+   def unique(self):
+      return Batcher.unique(self.inputs)
 
    def batched(self, nUpdates=None):
       '''Returns flat batches of experience of the specified size

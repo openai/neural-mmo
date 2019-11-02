@@ -171,10 +171,7 @@ class Ascend(Timed):
             log = log()
          logs.append(log)
 
-      try:
-         logs = Log.summary(logs)
-      except:
-         T()
+      logs = Log.summary(logs)
       return logs
 
  

@@ -6,6 +6,26 @@ from collections import defaultdict
 from forge.ethyr.io import Stimulus, Action, Serial
 from forge.ethyr.io import IO
 
+class Lookup:
+   '''Lookup utility for indexing 
+   (name, data) pairs'''
+   def __init__(self):
+      self.data = {}
+      self.max = 0
+
+   def add(self, name, idx=None):
+      '''Add entries to the table'''
+      if idx is None:
+         idx = self.max
+      self.data[name] =idx 
+      self.max += 1
+
+   def __contains__(self, key):
+      return key in self.data
+
+   def get(self, idx):
+      return self.data[idx]
+
 class Batcher:
    '''Static experience batcher class used internally by RolloutManager'''
    def grouped(rollouts):
@@ -16,6 +36,30 @@ class Batcher:
          assert key not in groups[annID]
          groups[annID][key] = rollout
       return groups
+
+   def unique(inputs):
+      '''Batch by group key; map to unique set of obs '''
+      data = defaultdict(lambda: defaultdict(list))
+      objCounts = defaultdict(int)
+      objLookup = Lookup()
+      for key, inp in inputs.items():
+         stim, atn = inp.stim, inp.action
+   
+         for group, objs in stim.items():
+            names, vals = objs
+            for idx, objID in enumerate(names):
+               if objID in objLookup:
+                  continue
+
+               objLookup.add(objID)#, idx=objCounts[group])
+               #objCounts[group] += 1
+               for attr, val in vals.items():
+                  #Check idx
+                  data[group][attr].append(val[0][idx])
+
+            inp.stim[group] = inp.stim[group][0]
+            
+      return data, objLookup
 
    def batched(inputs, nUpdates):
       '''Batch by group key to maximum fixed size'''

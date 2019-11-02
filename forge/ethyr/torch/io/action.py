@@ -31,10 +31,10 @@ class NetTree(nn.Module):
                self.config, self.h, self.h)
 
    def names(self, nameMap, args):
-      return np.array([nameMap[e] for e in args])
+      return np.array([nameMap.get(e) for e in args])
 
-   def forward(self, stim, actions, embed):
-      nameMap, embed = embed
+   def forward(self, stim, actions, embed, nameMap):
+      actions = Dynamic.batchInputs(actions)
       atnTensor, atnTensorLens, atnLens, atnLenLens = actions
 
       batch, nAtn, nArgs, nAtnArg, keyDim = atnTensor.shape

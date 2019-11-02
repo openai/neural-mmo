@@ -31,7 +31,7 @@ class Input(nn.Module):
       if isinstance(self.cls, stimulus.node.Discrete):
          x = x.long()
       elif isinstance(self.cls, stimulus.node.Continuous):
-         x = x.float().unsqueeze(2)
+         x = x.float().unsqueeze(-1)
       x = self.embed(x)
       return x
 

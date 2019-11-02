@@ -46,7 +46,7 @@ class Sword(Ascend):
       self.manager = RolloutManager()
 
    @runtime
-   def step(self, obs, packet=None):
+   def step(self, obs, recv=None):
       '''Synchronizes weights from upstream; computes
       agent decisions; computes policy updates.
       
@@ -59,35 +59,7 @@ class Sword(Ascend):
          2. Currently specifying retain_graph. This should not be
          required with batch size 1, even with the above bug.
       '''
-      '''
-      ids = set()
-      n = 96833
-      
-      #Add new nets
-      for ob in obs:
-         iden = ob.entID
-         ids.add(iden)
-
-         net = self.net[iden]
-         if iden not in self.net:
-            net['ann'] = project.ANN(self.config)
-
-
-            noise = 0.1 * np.random.randn(n)
-            net['noise'] = noise
-
-            params = getParameters(self.net[iden])
-            setParameters(self.net[iden]), params + noise)
-
-         if ob.done:
-            net['reward'] = ob.reward 
-            
-
-      #Remove old nets
-      for iden in self.net.keys():
-         if iden not in ids:
-            ids.remove(iden)
-      '''
+      packet, backward = recv
 
       #Sync weights
       if packet is not None:
@@ -96,31 +68,30 @@ class Sword(Ascend):
       config  = self.config
       actions = {}
 
+      if len(obs) == 0:
+         return actions, None, None
+
       #Batch observations
-      self.manager.collectInputs(obs)
+      inputs, data, dataLookup = self.manager.collectInputs(obs)
 
       #Compute forward pass
-      for pop, batch in self.manager.batched():
-         keys, stim, atns = batch
+      keys, atns, atnsIdx, vals = self.net(inputs, data, dataLookup)
 
-         #Run the policy
-         atns, atnsIdx, vals = self.net(pop, stim, atns)
+      #Clear .backward buffers during test
+      if self.config.TEST or self.config.POPOPT:
+         #atns are detached in torch/io/action
+         atnsIdx = atnsIdx.detach()
+         vals    = vals.detach()
 
-         #Clear .backward buffers during test
-         if self.config.TEST or self.config.POPOPT:
-            #atns are detached in torch/io/action
-            atnsIdx = atnsIdx.detach()
-            vals    = vals.detach()
-
-         #Collect output actions and values for .backward
-         for key, atn, atnIdx, val in zip(keys, atns, atnsIdx, vals):
-            out = Output(key, atn, atnIdx, val)
-            actions.update(out.action)
-            self.manager.collectOutputs([out])
+      #Collect output actions and values for .backward
+      for key, atn, atnIdx, val in zip(keys, atns, atnsIdx, vals):
+         out = Output(key, atn, atnIdx, val)
+         actions.update(out.action)
+         self.manager.collectOutputs([out])
          
       #Compute backward pass and logs from rollout objects
-      #if backward:
-      if self.manager.nUpdates >= config.CLIENT_UPDATES:
+      #if self.manager.nUpdates >= config.CLIENT_UPDATES:
+      if backward:
          rollouts, blobs = self.manager.step()
 
          if config.TEST or config.POPOPT:

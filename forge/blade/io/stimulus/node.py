@@ -96,17 +96,27 @@ class Discrete(Stim):
       assert val == int(val)
       return int(val)
 
+   def get(self, *args):
+      self.asserts(self.val)
+      return self.norm()
+
 class Continuous(Stim):
    @property
    def range(self):
       return self.max - self.min
 
-   def norm(self, val):
-      assert val >= self.min and val <= self.max
+   def norm(self):
+      assert self.val >= self.min and self.val <= self.max
+      val = self.val - self.min
       if self.range == float('inf'):
          return self.scaled(val)
       return val / self.range - 0.5
 
    def scaled(self, val):
       return self.scale * val
+
+   def get(self, *args):
+      self.asserts(self.val)
+      return self.norm()
+
 

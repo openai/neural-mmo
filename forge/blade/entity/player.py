@@ -120,6 +120,17 @@ class Resources(Protected, StimHook):
    def update(self, ent, world, actions):
       pass
 
+def wilderness(config, pos):
+   rCent = config.R//2
+   cCent = config.C//2
+
+   R = abs(pos[0] - rCent)
+   C = abs(pos[1] - cCent)
+
+   diff = max(R, C) - 7
+   diff = max(diff // 3, -1)
+   return diff
+
 class Status(Protected, StimHook):
    def __init__(self, config):
       super().__init__(Stimulus.Entity.Status, config)
@@ -127,6 +138,9 @@ class Status(Protected, StimHook):
    def update(self, ent, world, actions):
       self.immune.decrement()
       self.freeze.decrement()
+   
+      lvl = wilderness(self.config, ent.base.pos)
+      self.wilderness.update(lvl)
 
 class Player(Protected):
    def __init__(self, config, iden, pop, name='', color=None):

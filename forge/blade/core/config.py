@@ -7,9 +7,13 @@ from collections import defaultdict
 from itertools import chain
 
 class Config:
-   ROOT = '/data/scratch/jsuarez/neural-mmo/resource/maps/procedural/map'
-   #ROOT = os.path.join(os.getcwd(), 'resource/maps/procedural/map')
+   #ROOT = '/data/scratch/jsuarez/neural-mmo/resource/maps/procedural/map'
+   ROOT = os.path.join(os.getcwd(), 'resource/maps/procedural/map')
    SUFFIX = '/map.tmx'
+
+   #SZ = 128
+   #BORDER = 8
+   #R = C = SZ + 2*BORDER
 
    SZ = 62
    BORDER = 9
@@ -60,5 +64,14 @@ class Config:
       spawn += [(border+i, C-1) for i in range(sz)]
       idx = np.random.randint(0, len(spawn))
       return spawn[idx]
+
+   '''
+   def SPAWN(self):
+      R, C = int(Config.R/2), int(Config.C/2)
+      spawn = [(R-3, C), (R+3, C), (R, C-3), (R, C+3),
+         (R+3, C+3), (R-3, C+3), (R+3, C+3), (R+3, C-3)]
+      idx = np.random.randint(0, len(spawn))
+      return spawn[idx]
+   '''
 
 

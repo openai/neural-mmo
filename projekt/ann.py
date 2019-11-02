@@ -8,6 +8,7 @@ the meanwhile, drop in the Discord support channel.'''
 from pdb import set_trace as T
 import numpy as np
 import torch
+import time
 
 from torch import nn
 
@@ -30,6 +31,8 @@ from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 
+from forge.ethyr.experience.manager import Batcher
+
 #Hacky inner attention layer
 class EmbAttn(nn.Module):
    def __init__(self, config, n):
@@ -49,8 +52,8 @@ class EntAttn(nn.Module):
       self.fc1 = nn.Linear(n*xDim, yDim)
 
    def forward(self, x):
-      batch, ents, _, = x.shape
-      x = x.view(batch, -1)
+      #batch, ents, _, = x.shape
+      #x = x.view(batch, -1)
       x = self.fc1(x)
       return x
 
@@ -70,7 +73,7 @@ class TileConv(nn.Module):
       #self.fc1 = nn.Linear(h*2*2, h)
 
    def forward(self, x):
-      x = x.transpose(1, 2)
+      x = x.transpose(-2, -1)
       x = x.view(-1, self.h, 15, 15)
       x = self.pool1(self.conv1(x))
       #x = self.pool1(torch.relu(self.conv1(x)))
@@ -78,7 +81,7 @@ class TileConv(nn.Module):
 
       batch, _, _, _ = x.shape
       x = x.view(batch, -1)
-      x = self.fc1(x)
+      x = self.fc1(x).squeeze(0)
 
       return x
 
@@ -97,42 +100,77 @@ class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.emb = attention.Attention(config.EMBED, config.HIDDEN)
+      self.ent = attention.Attention(config.EMBED, config.HIDDEN)
       #self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
-      self.ent = TileConv(config.HIDDEN)
+      #self.ent = TileConv(config.HIDDEN)
+
+#Fixed number of entities
+class Attn(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      #self.emb = attention.Attention(config.EMBED, config.HIDDEN)
+      self.emb = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 2)
+      self.ent = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 8)
 
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
       h = config.HIDDEN
 
-      self.attns = nn.ModuleDict({
-         'Tile':   Tile(config),
-         'Entity': Entity(config),
-         'Meta':   EntAttn(h, h, 2),
-      })
+      self.attn = Attn(config)
+      #self.val  = torch.nn.Linear(h, 1)
 
-      self.val  = torch.nn.Linear(h, 1)
+      self.val = nn.ModuleList([ValNet(config)
+           for _ in range(config.NPOP)])
 
+class ValNet(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      h = config.HIDDEN
+      self.fc1 = torch.nn.Linear(h, 1)
+
+   def forward(self, stim):
+      val = self.fc1(stim)
+      return stim, val
+ 
 class ANN(nn.Module):
    def __init__(self, config):
       '''Demo model'''
       super().__init__()
       self.config = config
-      self.net = nn.ModuleList([Net(config)
-            for _ in range(config.NPOP)])
+      #self.net = nn.ModuleList([Net(config)
+      #      for _ in range(config.NPOP)])
+
+      self.net = Net(config)
 
       #Shared environment/action maps
       self.env    = Env(config)
       self.action = NetTree(config)
 
-   def forward(self, pop, stim, actions):
-      net           = self.net[pop]
-      stim, embed   = self.env(net, stim)
-      val           = net.val(stim)
+   def forward(self, inputs, data, lookup):
+      embed, lookup = self.env(self.net, inputs, data, lookup)
 
-      atns, atnsIdx = self.action(stim, actions, embed)
+      #Per pop internal net and value net
+      for pop, dat in Batcher.grouped(inputs).items():
+         stim = torch.stack([e.stim for e in dat.values()])
+         stim, val = self.net.val[pop](stim)
+         for ent, s, v in zip(dat.keys(), stim, val):
+            atn = dat[ent].action
+            inputs[ent] = [s, atn, v]
 
-      return atns, atnsIdx, val
+      keys, stims, actions, values = [], [], [], []
+      for ent, inp in inputs.items():
+         s, atn, v = inp
+         keys.append(ent)
+         stims.append(s)
+         actions.append(atn)
+         values.append(v)
+ 
+      stims  = torch.stack(stims)
+      values = torch.stack(values)
+      atns, atnsIdx = self.action(stims, actions, embed, lookup)
+
+      return keys, atns, atnsIdx, values
 
    def recvUpdate(self, update):
       setParameters(self, update)

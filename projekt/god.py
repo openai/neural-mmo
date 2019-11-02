@@ -48,7 +48,9 @@ class God(Ascend):
       self.env  = Realm(config, idx, self.spawn)
       self.obs, self.rewards, self.dones, _ = self.env.reset()
 
-      self.grads, self.blobs = [], BlobSummary()
+      self.blobs = BlobSummary()
+      self.grads = []
+      self.nUpdates = 0
 
    def getEnv(self):
       '''Returns the environment. Ray does not allow
@@ -101,13 +103,12 @@ class God(Ascend):
       '''Aggregates actions/updates/logs from shards using the Trinity async API'''
       rets = super().sync(rets)
 
-      atnDict, gradList, blobList = {}, [], []#, logList = {}, [], [], []
+      atnDict, gradList, blobList = {}, [], []
       for atns, grads, blobs in rets:
          atnDict.update(atns)
 
          #Gradients only present when a particular
          #client has computed a batch
-         #logList.append(logs)
 
          if grads is not None:
             gradList.append(grads)
@@ -118,7 +119,6 @@ class God(Ascend):
       #Aggregate gradients/logs
       self.grads += gradList
       self.blobs = BlobSummary.merge([self.blobs, *blobList])
-      #self.log   = Log.summary(logList)
 
       return atnDict
 
@@ -128,7 +128,7 @@ class God(Ascend):
       Collects gradient updates for upstream optimizer.'''
       #self.resetLogs()
       self.grads, self.blobs = [], BlobSummary()
-      while self.blobs.nUpdates < self.config.SERVER_UPDATES:
+      while len(self.grads) == 0:
          self.tick(recv)
          recv = None
 
@@ -153,11 +153,19 @@ class God(Ascend):
          self.obs, self.rewards, self.dones, 
          self.config, serialize=True)
 
+      backward = False
+      config   = self.config
+      if self.nUpdates > config.SERVER_UPDATES:
+         backward      = True
+         self.nUpdates = 0
+         
       #Make decisions
-      atns = super().step(obs, recv)
+      atns = super().step(obs, (recv, backward))
 
       #Postprocess outputs
       actions = IO.outputs(obs, rawAtns, atns)
+
+      self.nUpdates += len(obs)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.

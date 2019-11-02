@@ -66,20 +66,31 @@ class Env(nn.Module):
             emb[name][param] = TaggedInput(val(config), config)
       self.emb = emb
 
-   def actions(self, lookup):
+   def actions(self, embeddings, objLookup):
       '''Embed actions'''
+      embed = []
       for atn in StaticAction.actions:
          #Brackets on atn.serial?
          idx = torch.Tensor([atn.idx])
          idx = idx.long()#.to(self.config.DEVICE)
 
          emb = self.action(idx)
-         #Dirty hack -- remove duplicates
-         lookup.add([atn], [emb])
+         embed.append(emb)
 
          key = Serial.key(atn)
-         #What to replace serial with here
-         lookup.add([key], [emb])
+         objLookup.add(key)
+
+      padEmbed = emb * 0
+      embed.append(padEmbed)
+      embed.append(padEmbed)
+
+      objLookup.add(tuple([0]*Serial.KEYLEN))
+      objLookup.add(tuple([-1]*Serial.KEYLEN))
+      
+      embed      = torch.cat(embed)
+      embeddings = torch.cat([embeddings, embed])
+   
+      return embeddings, objLookup
 
    def attrs(self, group, attn, subnet):
       '''Embed and pack attributes of each entity'''
@@ -90,60 +101,43 @@ class Env(nn.Module):
          emb = self.emb[group][param](val)
          embeddings.append(emb)
 
+
       embeddings = torch.stack(embeddings, -2)
 
       #Batch, ents, nattrs, hidden
-      embeddings = attn.emb(embeddings)
-
-      #Batch, ents, hidden
-      features   = attn.ent(embeddings)
-
-      return embeddings, features
+      embeddings = attn(embeddings)
+      return embeddings
 
    #Okay. You have some issues
    #Dimensions are batch, nEnts/tiles, nAttrs, hidden
    #So you need to go down to 3 dims for 2nd tier
    #batch, nEnts/tiles, hidden
    #And down to batch, hidden for final tier
-   def forward(self, net, stims):
-      features, lookup = {}, Lookup()
-      self.actions(lookup)
+   def forward(self, net, inputs, database, objLookup):
+      #features, lookup = {}, Lookup()
+      #self.actions(lookup)
  
+      embeddings = []
       #Pack entities of each observation set
-      for group, stim in stims.items():
-         names, subnet = stim
-         embs, feats     = self.attrs(group, net.attns[group], subnet)
-         features[group] = feats
+      for group, stim in database.items():
+         embeddings.append(self.attrs(group, net.attn.emb, stim))
 
-         #Unpack and flatten for embedding
-         lens = [len(e) for e in names]
-         vals = utils.unpack(embs, lens, dim=1)
-         for k, v in zip(names, vals):
-            v = v.split(1, dim=0)
-            lookup.add(k, v)
+      embeddings = torch.cat(embeddings)
+      features   = []
+      for objID, inp in inputs.items():
+         dat = []
+         for group, stim in inp.stim.items():
+            dat += [embeddings[objLookup.get(e)] for e in stim]
+         dat = torch.stack(dat)
+         dat = net.attn.ent(dat)
+         features.append(dat)
 
+      stims = torch.stack(features)
+      stims = dict(zip(inputs.keys(), stims))
 
-      k = [tuple([0]*Serial.KEYLEN)]
-      v = [v[-1] * 0]
-      lookup.add(k, v)
+      for entID, inp in stims.items():
+         inputs[entID].stim = inp
 
-      k = [tuple([-1]*Serial.KEYLEN)]
-      v = [v[-1] * 0]
-      lookup.add(k, v)
-   
-      #Concat feature block
-      #me = features['Entity'][:, 0, :]
-      #features = torch.cat(list(features.values()), dim=-2)
-      #features = net.attns['Meta'](me, features)
-      
-      feats = features 
-      features = list(features.values())
-      features = torch.stack(features, -2)
-
-      #Batch, group (tile/ent), hidden
-      features = net.attns['Meta'](features)#.squeeze(0)
-      
-      embed = lookup.table()
-      #embed = None
-      return features, embed
+      embeddings, objLookup = self.actions(embeddings, objLookup)
+      return embeddings, objLookup
 

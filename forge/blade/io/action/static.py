@@ -129,17 +129,21 @@ class Attack(Node):
    def leaf():
       return True
 
-   def inRange(entity, stim, N):
+   def inRange(entity, stim, config, N):
       R, C = stim.shape
       R, C = R//2, C//2
-      #R, C = entity.pos
 
-      #return [entity]
-      rets = []
+      rets = set([entity])
       for r in range(R-N, R+N+1):
          for c in range(C-N, C+N+1):
             for e in stim[r, c].ents.values():
-               rets.append(e)
+               minWilderness = min(entity.status.wilderness.val, e.status.wilderness.val)
+
+               selfLevel = combat.level(entity.skills)
+               targLevel = combat.level(e.skills)
+               #if abs(selfLevel - targLevel) <= minWilderness:
+               rets.add(e)
+      rets = list(rets)
       return rets
 
    def l1(pos, cent):
@@ -179,7 +183,7 @@ class Melee(Node):
       Attack.call(world, entity, targ, entity.skills.melee)
 
    def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config.MELEERANGE)
+      return Attack.inRange(entity, stim, config, config.MELEERANGE)
 
 class Range(Node):
    priority = 1
@@ -194,7 +198,7 @@ class Range(Node):
       Attack.call(world, entity, targ, entity.skills.range);
 
    def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config.RANGERANGE)
+      return Attack.inRange(entity, stim, config, config.RANGERANGE)
 
 class Mage(Node):
    priority = 1
@@ -211,7 +215,7 @@ class Mage(Node):
          targ.status.freeze.update(3)
 
    def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config.MAGERANGE)
+      return Attack.inRange(entity, stim, config, config.MAGERANGE)
 
 class Reproduce:
    pass

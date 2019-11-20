@@ -48,10 +48,13 @@ class Batcher:
          for group, objs in stim.items():
             names, vals = objs
             for idx, objID in enumerate(names):
-               if objID in objLookup:
+               k = key + objID
+               #if objID in objLookup:
+               if k in objLookup:
                   continue
 
-               objLookup.add(objID)#, idx=objCounts[group])
+               objLookup.add(k)
+               #objLookup.add(objID)
                #objCounts[group] += 1
                for attr, val in vals.items():
                   #Check idx
@@ -61,7 +64,7 @@ class Batcher:
             
       return data, objLookup
 
-   def batched(inputs, nUpdates):
+   def batchedold(inputs, nUpdates=None):
       '''Batch by group key to maximum fixed size'''
       ret, groups = [], Batcher.grouped(inputs)
       for groupKey, group in groups.items():

@@ -77,15 +77,15 @@ class Env(nn.Module):
          emb = self.action(idx)
          embed.append(emb)
 
-         key = Serial.key(atn)
+         key = (0, 0) + Serial.key(atn)
          objLookup.add(key)
 
       padEmbed = emb * 0
       embed.append(padEmbed)
       embed.append(padEmbed)
 
-      objLookup.add(tuple([0]*Serial.KEYLEN))
-      objLookup.add(tuple([-1]*Serial.KEYLEN))
+      objLookup.add((0, 0) + tuple([0]*Serial.KEYLEN))
+      objLookup.add((0, 0) + tuple([-1]*Serial.KEYLEN))
       
       embed      = torch.cat(embed)
       embeddings = torch.cat([embeddings, embed])
@@ -120,16 +120,21 @@ class Env(nn.Module):
       embeddings = []
       #Pack entities of each observation set
       for group, stim in database.items():
-         embeddings.append(self.attrs(group, net.attn.emb, stim))
+         embeddings.append(self.attrs(group, net.attns[group].emb, stim))
 
       embeddings = torch.cat(embeddings)
       features   = []
       for objID, inp in inputs.items():
          dat = []
          for group, stim in inp.stim.items():
-            dat += [embeddings[objLookup.get(e)] for e in stim]
-         dat = torch.stack(dat)
-         dat = net.attn.ent(dat)
+            emb = [embeddings[objLookup.get(objID + e)] for e in stim]
+            emb = torch.stack(emb)
+            emb = net.attns[group].ent(emb)
+            dat.append(emb) 
+         #dat = torch.stack(dat)
+         dat = torch.cat(dat)
+         dat = net.attns['Meta'](dat)
+         #dat = net.attn.ent(dat)
          features.append(dat)
 
       stims = torch.stack(features)

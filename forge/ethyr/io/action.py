@@ -143,18 +143,23 @@ class Action:
       atnArgs = ActionArgs(atn, args) 
       return atnKey, atnArgs
 
-   def batchInputs(actionLists):
+   def batchInputs(keys, actionLists):
       atnTensor     = []
       atnTensorLens = []
       atnLens       = []
       atnLenLens    = []
 
-      for actions in actionLists:
+      for entKey, actions in zip(keys, actionLists):
          tensor = []
          for atn, atnArgList in actions.items():
             dat = []
             for atnArg in atnArgList:
                atn, arg = atnArg.action, atnArg.args
+               atn = (0, 0) + atn
+               if arg == (-1, -1, -1):
+                  arg = (0, 0) + arg
+               else:
+                  arg = entKey + arg
                atnArg = np.array([atn, arg])
                dat.append(atnArg)
 

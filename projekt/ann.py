@@ -100,28 +100,48 @@ class Tile(nn.Module):
    def __init__(self, config):
       super().__init__()
       self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      self.ent = attention.Attention(config.EMBED, config.HIDDEN)
+      #self.ent = attention.Attention(config.EMBED, config.HIDDEN)
       #self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
       #self.ent = TileConv(config.HIDDEN)
+      self.ent  = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 16)
 
+class Meta(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.fc = nn.Linear(2*h, h)
+
+   def forward(self, x):
+      return self.fc(x)
+ 
 #Fixed number of entities
 class Attn(nn.Module):
    def __init__(self, config):
       super().__init__()
-      #self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      self.emb = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 2)
-      self.ent = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 8)
+      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
+      #self.emb = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 2)
+      #self.ent  = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 16)
+      self.ent = attention.Attention(config.EMBED, config.HIDDEN)
+      self.tile = TileConv(config.HIDDEN)
+      self.meta = Meta(config.HIDDEN)
 
 class Net(nn.Module):
    def __init__(self, config):
       super().__init__()
       h = config.HIDDEN
 
-      self.attn = Attn(config)
+      #self.attn = Attn(config)
       #self.val  = torch.nn.Linear(h, 1)
 
-      self.val = nn.ModuleList([ValNet(config)
-           for _ in range(config.NPOP)])
+      self.attns = nn.ModuleDict({
+         'Tile':   Tile(config),
+         'Entity': Entity(config),
+         'Meta':   EntAttn(h, h, 2),
+      })
+
+      self.val = torch.nn.Linear(h, 1)
+
+      #self.val = nn.ModuleList([ValNet(config)
+      #     for _ in range(config.NPOP)])
 
 class ValNet(nn.Module):
    def __init__(self, config):
@@ -153,7 +173,8 @@ class ANN(nn.Module):
       #Per pop internal net and value net
       for pop, dat in Batcher.grouped(inputs).items():
          stim = torch.stack([e.stim for e in dat.values()])
-         stim, val = self.net.val[pop](stim)
+         #stim, val = self.net.val[pop](stim)
+         val = self.net.val(stim)
          for ent, s, v in zip(dat.keys(), stim, val):
             atn = dat[ent].action
             inputs[ent] = [s, atn, v]
@@ -168,7 +189,7 @@ class ANN(nn.Module):
  
       stims  = torch.stack(stims)
       values = torch.stack(values)
-      atns, atnsIdx = self.action(stims, actions, embed, lookup)
+      atns, atnsIdx = self.action(keys, stims, actions, embed, lookup)
 
       return keys, atns, atnsIdx, values
 

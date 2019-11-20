@@ -68,11 +68,11 @@ class Sword(Ascend):
       config  = self.config
       actions = {}
 
-      if len(obs) == 0:
-         return actions, None, None
-
       #Batch observations
       inputs, data, dataLookup = self.manager.collectInputs(obs)
+
+      if len(inputs) == 0:
+         return actions, None, None
 
       #Compute forward pass
       keys, atns, atnsIdx, vals = self.net(inputs, data, dataLookup)

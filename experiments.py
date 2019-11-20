@@ -31,13 +31,14 @@ class Config(config.Config):
    HIDDEN  = 32 #Model embedding dimension
    EMBED   = 32 #Model hidden dimension
  
-   NGOD   = 12  #Number of environment servers
+   NGOD   = 1  #Number of environment servers
    NSWORD = 1  #Number of clients per server
    NCORE  = NGOD * (NSWORD + 1) #Total number of cores
 
    #Number of experience steps before
    #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 1024
+   CLUSTER_UPDATES = 128
+   #CLUSTER_UPDATES = 1024
    SERVER_UPDATES  = CLUSTER_UPDATES // NGOD
 
    #Hardware specification

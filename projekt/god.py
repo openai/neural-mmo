@@ -92,12 +92,14 @@ class God(Ascend):
 
    def distrib(self, *args):
       '''Shards observation data across clients using the Trinity async API'''
-      obs, recv = args
-      N = self.config.NSWORD
-      clientData = [[] for _ in range(N)]
-      for ob in obs:
-         clientData[ob.entID % N].append(ob)
-      return super().distrib(clientData, recv, shard=(1, 0))
+      groupFn = lambda ob: ob.entID % self.config.NSWORD
+
+      #Preprocess obs
+      clientData, self.inputs = IO.inputs(
+         self.obs, self.rewards, self.dones, 
+         groupFn, self.config, serialize=True)
+
+      return super().distrib(clientData, args, shard=(1, 0))
 
    def sync(self, rets):
       '''Aggregates actions/updates/logs from shards using the Trinity async API'''
@@ -120,7 +122,8 @@ class God(Ascend):
       self.grads += gradList
       self.blobs = BlobSummary.merge([self.blobs, *blobList])
 
-      return atnDict
+      #Postprocess outputs
+      return IO.outputs(self.inputs, atnDict)
 
    @runtime
    def step(self, recv):
@@ -148,24 +151,15 @@ class God(Ascend):
       In this case, the data packet arg is used to specify
       model updates in the form of a new parameter vector'''
 
-      #Preprocess obs
-      obs, rawAtns = IO.inputs(
-         self.obs, self.rewards, self.dones, 
-         self.config, serialize=True)
-
       backward = False
       config   = self.config
+      self.nUpdates += len(self.obs)
       if self.nUpdates > config.SERVER_UPDATES:
          backward      = True
          self.nUpdates = 0
          
       #Make decisions
-      atns = super().step(obs, (recv, backward))
-
-      #Postprocess outputs
-      actions = IO.outputs(obs, rawAtns, atns)
-
-      self.nUpdates += len(obs)
+      actions = super().step(recv, backward)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.

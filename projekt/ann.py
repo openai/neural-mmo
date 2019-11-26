@@ -31,8 +31,6 @@ from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 
-from forge.ethyr.experience.manager import Batcher
-
 #Hacky inner attention layer
 class EmbAttn(nn.Module):
    def __init__(self, config, n):
@@ -172,36 +170,32 @@ class ANN(nn.Module):
       self.env    = Env(config)
       self.action = NetTree(config)
 
+   def grouped(self, keys, vals, groupFn):
+      '''Group by population'''
+      groups = defaultdict(lambda: [[], []])
+      for key, val in zip(keys, vals):
+         key = groupFn(key)
+         groups[key][0].append(key)
+         groups[key][1].append(val)
+
+      for key in groups.keys():
+         groups[key] = torch.stack(groups[key])
+
+      return groups
+
    def forward(self, obs, manager):
       observationTensor, entityLookup = self.env(self.net, obs)
 
       #Per pop internal net and value net
-      '''
-      for pop, dat in Batcher.grouped(inputs).items():
-         stim = torch.stack([e.stim for e in dat.values()])
-         #stim, val = self.net.val[pop](stim)
-         val = self.net.val(stim)
-         for ent, s, v in zip(dat.keys(), stim, val):
-            atn = dat[ent].action
-            inputs[ent] = [s, atn, v]
-      '''
+      #You have a population group function, but you'll need to reorder
+      #To match action ordering
+      #for pop, data in self.grouped(obs.keys, observationTensor):
+      #   keys, obsTensor = data
+      #   self.net.val[pop](obsTensor)
+         
       vals = self.net.val(observationTensor)
       self.action(obs, vals, observationTensor, entityLookup, manager)
       return vals
-
-      keys, stims, actions, values = [], [], [], []
-      for ent, inp in inputs.items():
-         s, atn, v = inp
-         keys.append(ent)
-         stims.append(s)
-         actions.append(atn)
-         values.append(v)
- 
-      stims  = torch.stack(stims)
-      values = torch.stack(values)
-      atns, atnsIdx = self.action(keys, stims, actions, embed, lookup)
-
-      return keys, atns, atnsIdx, values
 
    def recvUpdate(self, update):
       setParameters(self, update)
@@ -213,67 +207,3 @@ class ANN(nn.Module):
 
    def params(self):
       return param.getParameters(self)
-
-   #These hooks are outdated. Better policy
-   #visualization for the new client is planned
-   #for a future update
-   def visDeps(self):
-      from forge.blade.core import realm
-      from forge.blade.core.tile import Tile
-      colorInd = int(self.config.NPOP*np.random.rand())
-      color    = Neon.color12()[colorInd]
-      color    = (colorInd, color)
-      ent = realm.Desciple(-1, self.config, color).server
-      targ = realm.Desciple(-1, self.config, color).server
-
-      sz = 15
-      tiles = np.zeros((sz, sz), dtype=object)
-      for r in range(sz):
-         for c in range(sz):
-            tiles[r, c] = Tile(enums.Grass, r, c, 1, None)
-
-      targ.pos = (7, 7)
-      tiles[7, 7].addEnt(0, targ)
-      posList, vals = [], []
-      for r in range(sz):
-         for c in range(sz):
-            ent.pos  = (r, c)
-            tiles[r, c].addEnt(1, ent)
-            #_, _, val = self.net(tiles, ent)
-            val = np.random.rand()
-            vals.append(float(val))
-            tiles[r, c].delEnt(1)
-            posList.append((r, c))
-      vals = list(zip(posList, vals))
-      return vals
-
-   #These hooks are outdated. Better policy
-   #visualization for the new client is planned
-   #for a future update
-   def visVals(self, food='max', water='max'):
-      from forge.blade.core import realm
-      posList, vals = [], []
-      R, C = self.world.shape
-      for r in range(self.config.BORDER, R-self.config.BORDER):
-          for c in range(self.config.BORDER, C-self.config.BORDER):
-            colorInd = int(self.config.NPOP*np.random.rand())
-            color    = Neon.color12()[colorInd]
-            color    = (colorInd, color)
-            ent = entity.Player(-1, color, self.config)
-            ent._r.update(r)
-            ent._c.update(c)
-            if food != 'max':
-               ent._food = food
-            if water != 'max':
-               ent._water = water
-            posList.append(ent.pos)
-
-            self.world.env.tiles[r, c].addEnt(ent.entID, ent)
-            stim = self.world.env.stim(ent.pos, self.config.STIM)
-            #_, _, val = self.net(stim, ent)
-            val = np.random.rand()
-            self.world.env.tiles[r, c].delEnt(ent.entID)
-            vals.append(float(val))
-
-      vals = list(zip(posList, vals))
-      return vals

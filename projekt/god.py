@@ -16,8 +16,6 @@ from forge.ethyr.io import IO
 from forge.ethyr.torch import optim
 from forge.ethyr.experience import RolloutManager
 
-import torch
-
 from forge.trinity.ascend import Ascend, runtime, Log
 
 @ray.remote
@@ -107,15 +105,16 @@ class God(Ascend):
 
       atnDict, gradList, blobList = None, [], []
       for obs, grads, blobs in rets:
+
+         #Process outputs
          atnDict = IO.outputs(obs, atnDict)
 
          #Collect update
          if self.backward:
-            gradList.append(grads)
+            self.grads.append(grads)
             blobList.append(blobs)
 
-      #Aggregate gradients/logs
-      self.grads += gradList
+      #Aggregate logs
       self.blobs = BlobSummary.merge([self.blobs, *blobList])
 
       return atnDict

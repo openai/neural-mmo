@@ -37,61 +37,40 @@ class Sword(Ascend):
       super().__init__(None, 0)
       config        = deepcopy(config)
       self.config   = config
-      self.ent      = 0
 
-      self.keys = set()
-
-      self.net = projekt.ANN(self.config)
-      #self.ents = {}
-      self.manager = RolloutManager()
+      self.net      = projekt.ANN(self.config)
+      self.manager  = RolloutManager()
 
    @runtime
    def step(self, data, recv=None):
       '''Synchronizes weights from upstream; computes
-      agent decisions; computes policy updates.
-      
-      A few bug notes:
-         1. It appears pytorch errors in .backward when batching
-         data. This is because the graph is retained over all
-         trajectories in the batch, even though only some are
-         finished.
-         
-         2. Currently specifying retain_graph. This should not be
-         required with batch size 1, even with the above bug.
-      '''
+      agent decisions; computes policy updates.'''
       packet, backward = recv
+      config           = self.config
 
-      #Sync weights
+      #Sync weights to model
       if packet is not None:
          setParameters(self.net, packet)
 
-      config  = self.config
-      actions = {}
-
-      #Batch observations
-      self.manager.collectInputs(data)
-
+      #There may be no obs if NCLIENTS > 1
       if data.obs.n == 0:
          return data, None, None
 
-      #Compute forward pass
-      #keys, atns, atnsIdx, vals = self.net(data)
+      #Batch observations and compute forward pass
+      self.manager.collectInputs(data)
       self.net(data, self.manager)
   
+      if not backward or config.TEST or config.POPOPT:
+         return data, None, None
+
       #Compute backward pass and logs from rollout objects
-      #if self.manager.nUpdates >= config.CLIENT_UPDATES:
-      if backward:
-         rollouts, blobs = self.manager.step()
+      rollouts, blobs = self.manager.step()
+      optim.backward(rollouts, valWeight=config.VAL_WEIGHT,
+         entWeight=config.ENTROPY)#, device=config.DEVICE)
+      self.manager.inputs.clear() #Discard partial trajectories
 
-         if config.TEST or config.POPOPT:
-            return actions, None, blobs
+      grads = self.net.grads()
+      return data, grads, blobs
 
-         optim.backward(rollouts, valWeight=config.VAL_WEIGHT,
-            entWeight=config.ENTROPY)#, device=config.DEVICE)
-
-         grads = self.net.grads()
-         return data, grads, blobs
-
-      return data, None, None
 
 

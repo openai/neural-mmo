@@ -8,12 +8,12 @@ from collections import defaultdict
 from forge.blade.lib.log import BlobSummary
 
 from forge.ethyr.io import Serial
-from forge.ethyr.experience import Rollout, Batcher
+from forge.ethyr.experience import Rollout
 
 class RolloutManager:
    '''Collects and batches rollouts for inference and training'''
    def __init__(self):
-      self.temp    = defaultdict(Rollout)
+      self.inputs  = defaultdict(Rollout)
       self.outputs = defaultdict(Rollout)
       self.logs    = BlobSummary()
 
@@ -31,11 +31,15 @@ class RolloutManager:
       for key in stims.dones:
          assert key not in self.outputs
 
-         rollout           = self.temp[key]
+         #Already cleared as a partial traj
+         if key not in self.inputs:
+            continue
+
+         rollout           = self.inputs[key]
          rollout.finish()
 
          self.outputs[key] = rollout
-         del self.temp[key]
+         del self.inputs[key]
 
          self.logs.blobs.append(rollout.blob)
          self.logs.nRollouts += 1
@@ -44,15 +48,15 @@ class RolloutManager:
       #Update inputs 
       for key, reward in zip(stims.keys, stims.rewards ):
          assert key not in self.outputs
-         rollout = self.temp[key]
+         rollout = self.inputs[key]
          rollout.inputs(reward, key)
 
    def collectOutputs(self, atnArg, keys, atns, atnsIdx, values):
       '''Collects output data to internal buffers'''
       for key, atn, atnIdx, val in zip(keys, atns, atnsIdx, values):
-         assert key in self.temp
-         assert not self.temp[key].done
-         self.temp[key].outputs(atnArg, atn, atnIdx, val)
+         assert key in self.inputs
+         assert not self.inputs[key].done
+         self.inputs[key].outputs(atnArg, atn, atnIdx, val)
 
    def step(self):
       '''Returns log objects of all rollouts.

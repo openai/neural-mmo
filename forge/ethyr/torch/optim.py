@@ -91,7 +91,8 @@ def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
    valLoss = loss.valueLoss(values, returns)
    totLoss = pg + valWeight*valLoss + entWeight*entropy
 
-   totLoss.backward(retain_graph=True)
+   #totLoss.backward(retain_graph=True)
+   totLoss.backward()
    reward = np.mean(outs['return'])
 
    return reward, vals.mean(), pg, valLoss, entropy

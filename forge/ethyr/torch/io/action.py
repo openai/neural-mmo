@@ -45,7 +45,8 @@ class NetTree(nn.Module):
 
             #Gen Atn_Arg style names for backward pass
             name = '_'.join([atn.__name__, arg.__name__])
-            manager.collectOutputs(name, obs.keys, atns, atnsIdx, values)
+            if self.config.TEST:
+               manager.collectOutputs(name, obs.keys, atns, atnsIdx, values)
 
             #Convert from local index over atns to
             #absolute index into entity lookup table

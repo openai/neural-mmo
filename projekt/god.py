@@ -145,10 +145,13 @@ class God(Ascend):
       In this case, the data packet arg is used to specify
       model updates in the form of a new parameter vector'''
 
+      TEST           = self.config.TEST
+      SERVER_UPDATES = self.config.SERVER_UPDATES
+
       #Process end of batch
-      self.backward =  False
-      self.nUpdates += len(self.obs)
-      if self.nUpdates > self.config.SERVER_UPDATES:
+      self.backward  =  False
+      self.nUpdates  += len(self.obs)
+      if not TEST and self.nUpdates > SERVER_UPDATES:
          self.backward = True
          self.nUpdates = 0
          

@@ -28,7 +28,7 @@ class Config(config.Config):
    HIDDEN  = 32 #Model embedding dimension
    EMBED   = 32 #Model hidden dimension
  
-   NGOD   = 6                   #Number of environment servers
+   NGOD   = 1                   #Number of environment servers
    NSWORD = 1                   #Number of clients per server
    NCORE  = NGOD * (NSWORD + 1) #Total number of cores
 

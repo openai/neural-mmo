@@ -5,6 +5,7 @@ import inspect
 
 from forge.blade.io.stimulus import node
 
+#Makes private attributes read only
 class InnerClassIterable(type):
    def __iter__(cls):
       stack = list(cls.__dict__.items())
@@ -33,16 +34,15 @@ class StimHook:
 
    def inputs(self, cls, config):
       for name, c in cls:
-         setattr(self, '_' + c.name, c(config))
+         self.__dict__[c.name] = c(config)
 
    def outputs(self, config):
       data = {}
       for name, cls in self.meta:
          assert type(name) == tuple and len(name) == 1
-         name = name[0]
-
-         attr = getattr(self, '_' + cls.name, cls(config))
-         data[name.lower()] = attr.packet()
+         name       = name[0].lower()
+         attr       = self.__dict__[cls.name]
+         data[name] = attr.packet()
 
       return data
 

@@ -125,9 +125,8 @@ class Realm(Timed):
    def prioritize(self, decisions):
       actions = defaultdict(dict)
       for entID, atns in decisions.items():
-         for atnArgs in reversed(atns):
-            priority = atnArgs.action.priority
-            actions[priority][entID] = atnArgs
+         for atn, args in atns.items():
+            actions[atn.priority][entID] = [atn, args]
       return actions
 
    #Take actions
@@ -147,21 +146,22 @@ class Realm(Timed):
       self.act(actions)
 
       #Finally cull dead. This will enable MAD melee
-      dead = []
+      dead  = []
+      dones = []
       packets = defaultdict(Packet)
       for entID in decisions.keys():
          ent = self.desciples[entID]
-         packets[entID].stim = ent
+         #packets[entID].stim = ent
          if self.postmortem(ent, dead):
-            packets[entID].stim   = ent
-            packets[entID].reward = -1
-            packets[entID].done   = True
+            #packets[entID].stim   = ent
+            #packets[entID].reward = -1
+            dones.append(ent.serial)
          else:
             packets[entID].reward = 0
-            packets[entID].done   = False
+            packets[entID].stim = ent
 
       self.cullDead(dead)
-      return packets
+      return packets, dones
 
    def postmortem(self, ent, dead):
       entID = ent.entID
@@ -197,7 +197,7 @@ class Realm(Timed):
       if iden is not None:
          self.spawner.spawn(self, iden, pop, name)
 
-      packets = self.stepEnts(decisions)
+      packets, dead = self.stepEnts(decisions)
 
       self.stepEnv()
       packets = self.getStims(packets)
@@ -205,7 +205,7 @@ class Realm(Timed):
       #Conform to gym
       stims   = [p.stim   for p in packets.values()]
       rewards = [p.reward for p in packets.values()]
-      dones   = [p.done   for p in packets.values()]
+      dones   = dead
 
       return stims, rewards, dones, None
 

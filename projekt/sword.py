@@ -46,7 +46,7 @@ class Sword(Ascend):
       self.manager = RolloutManager()
 
    @runtime
-   def step(self, obs, recv=None):
+   def step(self, data, recv=None):
       '''Synchronizes weights from upstream; computes
       agent decisions; computes policy updates.
       
@@ -69,26 +69,15 @@ class Sword(Ascend):
       actions = {}
 
       #Batch observations
-      inputs, data, dataLookup = self.manager.collectInputs(obs)
+      self.manager.collectInputs(data)
 
-      if len(inputs) == 0:
-         return actions, None, None
+      if data.obs.n == 0:
+         return data, None, None
 
       #Compute forward pass
-      keys, atns, atnsIdx, vals = self.net(inputs, data, dataLookup)
-
-      #Clear .backward buffers during test
-      if self.config.TEST or self.config.POPOPT:
-         #atns are detached in torch/io/action
-         atnsIdx = atnsIdx.detach()
-         vals    = vals.detach()
-
-      #Collect output actions and values for .backward
-      for key, atn, atnIdx, val in zip(keys, atns, atnsIdx, vals):
-         out = Output(key, atn, atnIdx, val)
-         actions.update(out.action)
-         self.manager.collectOutputs([out])
-         
+      #keys, atns, atnsIdx, vals = self.net(data)
+      self.net(data, self.manager)
+  
       #Compute backward pass and logs from rollout objects
       #if self.manager.nUpdates >= config.CLIENT_UPDATES:
       if backward:
@@ -101,8 +90,8 @@ class Sword(Ascend):
             entWeight=config.ENTROPY)#, device=config.DEVICE)
 
          grads = self.net.grads()
-         return actions, grads, blobs
+         return data, grads, blobs
 
-      return actions, None, None
+      return data, None, None
 
 

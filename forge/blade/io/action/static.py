@@ -17,7 +17,7 @@ class Action(Node):
 
    @staticproperty
    def n():
-      return len(Action.actions)
+      return len(Action.arguments)
 
    def args(stim, entity, config):
       return Static.edges
@@ -25,29 +25,26 @@ class Action(Node):
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
    def hook():
-      actions = Action.flat()
-      Action.actions = actions
-
-      for idx, atn in enumerate(actions):
-         atn.serial = tuple([idx])
-         atn.idx = idx 
-
-   def flat(root=None):
-      if root is None:
-         root = Action
-
-      rets = [root]
-      if root.nodeType is NodeType.SELECTION:
-         for edge in root.edges:
-            rets += Action.flat(edge)
-
-      return rets
+      idx = 0
+      arguments = []
+      for action in Action.edges:
+         for args in action.edges:
+            if not 'edges' in args.__dict__:
+               continue
+            for arg in args.edges: 
+               arguments.append(arg)
+               arg.serial = tuple([idx])
+               arg.idx = idx 
+               idx += 1
+      Action.arguments = arguments
 
 class Move(Node):
+   priority = 0
    nodeType = NodeType.SELECTION
-   def call(world, entity, rDelta, cDelta):
+   def call(world, entity, direction):
       r, c = entity.base.pos
-      entity.history._lastPos = (r, c)
+      entity.history.lastPos = (r, c)
+      rDelta, cDelta = direction.delta
       rNew, cNew = r+rDelta, c+cDelta
       if world.env.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
          return
@@ -68,51 +65,31 @@ class Move(Node):
 
    @staticproperty
    def edges():
-      return [North, South, East, West]
-
-   def args(stim, entity, config):
-      return Move.edges
+      return [Direction]
 
    @staticproperty
    def leaf():
       return True
 
-#Todo: kill args on these.
-class North(Node):
-   priority = 0
-   nodeType = NodeType.ACTION
-   def call(world, entity):
-      Move.call(world, entity, -1, 0)
+class Direction(Node):
+   @staticproperty
+   def edges():
+      return [North, South, East, West]
 
    def args(stim, entity, config):
-      return [None]
+      return Direction.edges
 
-class South(Node):
-   priority = 0
-   nodeType = NodeType.ACTION
-   def call(world, entity):
-      Move.call(world, entity, 1, 0)
+class North:
+   delta = (-1, 0)
 
-   def args(stim, entity, config):
-      return [None]
+class South:
+   delta = (1, 0)
 
-class East(Node):
-   priority = 0
-   nodeType = NodeType.ACTION
-   def call(world, entity):
-      Move.call(world, entity, 0, 1)
+class East:
+   delta = (0, 1)
 
-   def args(stim, entity, config):
-      return [None]
-
-class West(Node):
-   priority = 0
-   nodeType = NodeType.ACTION
-   def call(world, entity):
-      Move.call(world, entity, 0, -1)
-
-   def args(stim, entity, config):
-      return [None]
+class West:
+   delta = (0, -1)
 
 
 class Attack(Node):
@@ -123,7 +100,7 @@ class Attack(Node):
 
    @staticproperty
    def edges():
-      return [Melee, Range, Mage]
+      return [Style, Target]
 
    @staticproperty
    def leaf():
@@ -151,71 +128,61 @@ class Attack(Node):
       rCent, cCent = cent
       return abs(r - rCent) + abs(c - cCent)
 
-   def call(world, entity, targ, style, freeze=False):
-      entity.history._attack = {}
-      entity.history._attack['target'] = targ.entID
-      entity.history._attack['style'] = style.__class__.__name__
+   def call(world, entity, style, targ):
+      entity.history.attack = {}
+      entity.history.attack['target'] = targ.entID
+      entity.history.attack['style'] = style.__name__
       if entity.entID == targ.entID:
-         entity.history._attack = None
+         entity.history.attack = None
          return
 
-      dmg = combat.attack(entity, targ, style)
+      dmg = combat.attack(entity, targ, style.skill(entity))
+      if style.freeze and dmg is not None and dmg > 0:
+         targ.status.freeze.update(3)
+
       #entity.applyDamage(dmg, style.__name__.lower())
       #targ.receiveDamage(dmg)
       return dmg
 
-   def args(stim, entity, config):
+class Style(Node):
+   @staticproperty
+   def edges():
       return [Melee, Range, Mage]
 
-class AttackStyle(Node):
-   pass
+   def args(stim, entity, config):
+      return Style.edges
+
+
+class Target(Node):
+   def args(stim, entity, config):
+      return Attack.inRange(entity, stim, config, config.MELEERANGE)
 
 class Melee(Node):
    priority = 1
    nodeType = NodeType.ACTION
    index = 0
-   @staticproperty
-   def edges():
-      return None
+   freeze=False
 
-   def call(world, entity, targ):
-      #dmg = world.config.MELEEDAMAGE
-      Attack.call(world, entity, targ, entity.skills.melee)
-
-   def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config, config.MELEERANGE)
+   def skill(entity):
+      return entity.skills.melee
 
 class Range(Node):
    priority = 1
    nodeType = NodeType.ACTION
    index = 1
-   @staticproperty
-   def edges():
-      return None
+   freeze=False
 
-   def call(world, entity, targ):
-      #dmg = world.config.RANGEDAMAGE
-      Attack.call(world, entity, targ, entity.skills.range);
-
-   def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config, config.RANGERANGE)
+   def skill(entity):
+      return entity.skills.range
 
 class Mage(Node):
    priority = 1
    nodeType = NodeType.ACTION
    index = 2
-   @staticproperty
-   def edges():
-      return None
+   freeze=True
 
-   def call(world, entity, targ):
-      #dmg = world.config.MAGEDAMAGE
-      dmg = Attack.call(world, entity, targ, entity.skills.mage, freeze=True)
-      if dmg is not None and dmg > 0:
-         targ.status.freeze.update(3)
-
-   def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config, config.MAGERANGE)
+   def skill(entity):
+      return entity.skills.mage
 
 class Reproduce:
    pass
@@ -278,6 +245,9 @@ class CancelOffer(Node):
    nodeType = NodeType.ACTION
 
 class Message:
+   pass
+
+class BecomeSkynet:
    pass
 
 Action.hook()

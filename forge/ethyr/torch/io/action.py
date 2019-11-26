@@ -33,33 +33,25 @@ class NetTree(nn.Module):
    def names(self, nameMap, args):
       return np.array([nameMap.get(e) for e in args])
 
-   def forward(self, keys, stim, actions, embed, nameMap):
-      actions = Dynamic.batchInputs(keys, actions)
-      atnTensor, atnTensorLens, atnLens, atnLenLens = actions
-
-      batch, nAtn, nArgs, nAtnArg, keyDim = atnTensor.shape
-      keys = np.array(keys).reshape(batch, 1, 1, 1, -1)
-      atnTensor = atnTensor.reshape(-1, keyDim)
-
-      targs = [tuple(e) for e in atnTensor]
-      names = self.names(nameMap, targs)
-      targs = embed[names]
-      targs = targs.view(batch, nAtn, nArgs, nAtnArg, -1)
-
-      #Sum the atn and arg embedding to make a key dim
-      targs = targs.sum(-2)
+   def forward(self, obs, values, observationTensor, entityLookup, manager):
+      observationTensor = observationTensor.unsqueeze(-2)
       
-      #The dot prod net does not match dims.
-      stim = stim.unsqueeze(1).unsqueeze(1)
-      atns, atnsIdx = self.net(stim, targs, atnLens)
+      for atn, action in obs.atn.actions.items():
+         for arg, data in action.arguments.items():
+            #Perform forward pass
+            tensor, lens  = data
+            vals          = torch.stack([entityLookup[e] for e in tensor])
+            atns, atnsIdx = self.net(observationTensor, vals, lens)
 
-      if self.config.TEST:
-         atns = atns.detach()
+            #Gen Atn_Arg style names for backward pass
+            name = '_'.join([atn.__name__, arg.__name__])
+            manager.collectOutputs(name, obs.keys, atns, atnsIdx, values)
 
-      atns = [unpack(atn, l) for atn, l in zip(atns, atnLens)]
-
-      outList = (atns, atnsIdx)
-      return outList
+            #Convert from local index over atns to
+            #absolute index into entity lookup table
+            atnsIdx = atnsIdx.numpy().tolist()
+            atnsIdx = [t[a] for t, a in zip(tensor, atnsIdx)]
+            obs.atn.actions[atn].arguments[arg] = [atns, atnsIdx]
 
 class Action(nn.Module):
    '''Head for selecting an action'''

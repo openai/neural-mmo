@@ -64,6 +64,20 @@ def render(trin, config):
    #Pass the tick thunk to a twisted WebSocket server
    env = god.getEnv.remote()
    god.tick.remote(packet)
+
+   #Decision making is currently flawed.
+   #The number of stims/actions keeps going up,
+   #and entities are not being marked dead.
+   t = 0
+   import ray
+   data = None
+   while True:
+      god.tick.remote()
+      newData = ray.get(env).clientData()
+      data = newData
+      t += 1
+      print(t)
+
    Application(env, god.tick.remote)
 
 if __name__ == '__main__':

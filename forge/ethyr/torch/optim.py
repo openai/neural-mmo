@@ -36,36 +36,26 @@ class ManualSGD(optim.SGD):
 def merge(rollouts):
    '''Merges all collected rollouts for batched
    compatibility with optim.backward'''
-
    outs = {'value': [], 'return': [],
          'action': defaultdict(lambda: defaultdict(list))}
+
    for rollout in rollouts.values():
       for idx in range(rollout.time):
-         try:
-            key, atn, out = rollout.outs[idx]
-         except:
-            print(rollout.time)
-            print(len(rollout))
-            print(len(rollout.returns))
-            print(len(rollout.outs))
-            print('----')
-            T()
-           
-         val = rollout.vals[idx]
-         ret = rollout.returns[idx]
+         outputs = rollout.actions[idx]
+         val     = rollout.values[idx]
+         ret     = rollout.returns[idx]
 
          outs['value'].append(val)
          outs['return'].append(ret)
 
          #Going to have to change to key by atn type (move, attk, etc)
-         for k, packet in enumerate(zip(key, out, atn)):
-            _, o, a = packet
-            #k = tuple([k])
-            outk = outs['action'][k]
-            outk['atns'].append(o)
-            outk['idxs'].append(a)
+         for out in outputs:
+            outk = outs['action'][out.atnArgKey]
+            outk['atns'].append(out.atnLogits)
+            outk['idxs'].append(out.atnIdx)
             outk['vals'].append(val)
             outk['rets'].append(ret)
+
    return outs
 
 
@@ -91,14 +81,12 @@ def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
       atns = out['atns']
       vals = torch.stack(out['vals'])#.to(device)
       idxs = torch.tensor(out['idxs'])#.to(device)
-      #rets = torch.tensor(out['rets']).to(device).view(-1, 1)
       rets = torch.tensor(out['rets']).view(-1, 1)
       l, e = loss.PG(atns, idxs, vals, rets)
       pg += l
       entropy += e
 
    returns = torch.stack(outs['value'])#.to(device)
-   #values  = torch.tensor(outs['return']).to(device).view(-1, 1)
    values  = torch.tensor(outs['return']).view(-1, 1)
    valLoss = loss.valueLoss(values, returns)
    totLoss = pg + valWeight*valLoss + entWeight*entropy

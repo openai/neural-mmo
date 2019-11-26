@@ -5,7 +5,8 @@ from collections import defaultdict
 
 from forge.blade.io.action import static
 from forge.blade.io import Action as Static
-from forge.blade.io.action.node import NodeType
+from forge.blade.io.action.node import NodeType, Node
+from forge.ethyr.io.serial import Serial
 from forge.ethyr.io import utils
 
 class ActionArgs:
@@ -30,37 +31,31 @@ class Action:
 
       self.out = {}
 
-   def process(env, ent, config, serialize=True):
-      rets   = defaultdict(list)
-      sRets  = defaultdict(list)
+   def process(inp, env, ent, config, serialize):
+      actions = defaultdict(list)
+      outputs = defaultdict(list)
 
+      entKey = Serial.key(ent)
       roots  = Static.edges
       #roots  = [static.Move]
 
       for root in roots:
-         for atn in Action.leaves(root):
-            for arg in atn.args(env, ent, config):
-               atnRoot = root
-               atnArgs = ActionArgs(atn, arg)
+         arguments = []
+         for args in root.edges:
+            idxs = []
+            for arg in args.args(env, ent, config):
+               #Check if is a static action type
+               if type(arg) is type:
+                  key = Serial.key(arg)
+               else:
+                  key = entKey + Serial.key(arg)
 
-               rets[atnRoot].append(atnArgs)
+               #Currently fails because inp is at the start of the emb block
+               idx = inp.lookup.data[key]
+               idxs.append(idx)
 
-               if serialize:
-                  atnRoot, atnArgs = Action.serialize(root, atnArgs)
-                  sRets[atnRoot].append(atnArgs)
-                  
-      return rets, sRets
-
-   @property
-   def atnArgs(self):
-      '''Final chosed action argument pair'''
-      return self.ret
-
-   @property
-   def outs(self):
-      '''The logit packets from intermediate selection'''
-      return self.out
-   
+            inp.atn.actions[root].arguments[args].append(np.array(idxs))
+         
    def next(self, env, ent, atn, outs=None):
       '''Compute the available choices for the next action
 
@@ -101,125 +96,3 @@ class Action:
          done = len(args) == 0
 
       return args, done
-
-   @staticmethod
-   def flat(root):
-      '''Returns a flat action tree'''
-      rets = []
-      if root.nodeType is NodeType.ACTION:
-         rets = [root]
-      if root.nodeType is NodeType.SELECTION:
-         for edge in root.edges():
-            rets += Action.flat()
-      return rets
-
-   #@staticmethod
-   def leaves(root=Static):
-      '''Returns only the action leaves'''
-      rets = []
-      if root.nodeType is NodeType.ACTION:
-         rets = [root]
-      if root.nodeType is NodeType.SELECTION:
-         for edge in root.edges:
-            rets += Action.leaves(edge)
-      return rets
-
-   @staticmethod
-   def actions(root=Static):
-      '''Returns only selection nodes'''
-      rets = []
-      for e in Action.flat():
-         if e.nodeType is action.NodeType.SELECTION:
-            rets.append(e)
-      return rets
-
-   def serialize(atnKey, atnArgs):
-      '''Internal action serializer for communication across machines'''
-      from forge.ethyr.io.serial import Serial
-      atnKey  = Serial.key(atnKey)
-      atn     = Serial.key(atnArgs.action)
-      args    = Serial.key(atnArgs.args)
-
-      atnArgs = ActionArgs(atn, args) 
-      return atnKey, atnArgs
-
-   def batchInputs(keys, actionLists):
-      atnTensor     = []
-      atnTensorLens = []
-      atnLens       = []
-      atnLenLens    = []
-
-      for entKey, actions in zip(keys, actionLists):
-         tensor = []
-         for atn, atnArgList in actions.items():
-            dat = []
-            for atnArg in atnArgList:
-               atn, arg = atnArg.action, atnArg.args
-               atn = (0, 0) + atn
-               if arg == (-1, -1, -1):
-                  arg = (0, 0) + arg
-               else:
-                  arg = entKey + arg
-               atnArg = np.array([atn, arg])
-               dat.append(atnArg)
-
-            tensor.append(np.array(dat))
-
-         tensor, lens = utils.pack(tensor)
-         atnTensor.append(tensor)
-         atnLens.append(lens)
-
-      atnTensor, atnTensorLens = utils.pack(atnTensor)
-      atnLens, atnLenLens      = utils.pack(atnLens)
-
-      return atnTensor, atnTensorLens, atnLens, atnLenLens
-
-   #Dimension packing: batch, atnList, atn, serial key
-   def batch(actionLists):
-      '''Internal batcher for lists of actions'''
-      atnTensor, idxTensor = [], []
-      keyTensor, lenTensor = [], []
-
-      #Pack inner set
-      for actionList in actionLists:
-         keys, atns, idxs = [], [], []
-         for key, atn, idx in actionList:
-            atns.append(np.array(atn))
-            idxs.append(idx)
-            keys.append(key)
-         
-         idxs = np.array(idxs)
-         keys = np.array(keys)
-         atns, lens = utils.pack(atns)
-
-         atnTensor.append(atns)
-         idxTensor.append(idxs)
-         keyTensor.append(keys)
-         lenTensor.append(lens)
-
-      #Pack outer set
-      idxTensor, _ = utils.pack(idxTensor)
-      atnTensor, _ = utils.pack(atnTensor)
-      keyTensor, _ = utils.pack(keyTensor)
-      lenTensor    = utils.pack(lenTensor)
-
-      return atnTensor, idxTensor, keyTensor, lenTensor
-
-   def unbatch(atnTensor, idxTensor, keyTensor, lenTensor):
-      '''Internal inverse batcher'''
-      lenTensor, lenLens = lenTensor
-      actions = []
-
-      #Unpack outer set (careful with unpack dim)
-      atnTensor = utils.unpack(atnTensor, lenLens, dim=1)
-      idxTensor = utils.unpack(idxTensor, lenLens, dim=1)
-      keyTensor = utils.unpack(keyTensor, lenLens, dim=1)
-      lenTensor = utils.unpack(lenTensor, lenLens, dim=1)
-
-      #Unpack inner set
-      for atns, idxs, keys, lens in zip(
-               atnTensor, idxTensor, keyTensor, lenTensor):
-         atns = utils.unpack(atns, lens, dim=-2)
-         actions.append(list(zip(keys, atns, idxs)))
-
-      return actions

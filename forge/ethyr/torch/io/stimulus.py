@@ -66,10 +66,10 @@ class Env(nn.Module):
             emb[name][param] = TaggedInput(val(config), config)
       self.emb = emb
 
-   def actions(self, embeddings, objLookup):
+   def actions(self, embeddings):
       '''Embed actions'''
       embed = []
-      for atn in StaticAction.actions:
+      for atn in StaticAction.arguments:
          #Brackets on atn.serial?
          idx = torch.Tensor([atn.idx])
          idx = idx.long()#.to(self.config.DEVICE)
@@ -77,30 +77,19 @@ class Env(nn.Module):
          emb = self.action(idx)
          embed.append(emb)
 
-         key = (0, 0) + Serial.key(atn)
-         objLookup.add(key)
-
       padEmbed = emb * 0
       embed.append(padEmbed)
-      embed.append(padEmbed)
 
-      objLookup.add((0, 0) + tuple([0]*Serial.KEYLEN))
-      objLookup.add((0, 0) + tuple([-1]*Serial.KEYLEN))
-      
-      embed      = torch.cat(embed)
-      embeddings = torch.cat([embeddings, embed])
-   
-      return embeddings, objLookup
+      return torch.cat([embeddings, *embed])
 
-   def attrs(self, group, attn, subnet):
+   def attrs(self, name, attn, entities):
       '''Embed and pack attributes of each entity'''
       embeddings = []
-      for param, val in subnet.items():
+      for param, val in entities.attributes.items():
          param = '-'.join(param)
          val = torch.Tensor(val)#.to(self.config.DEVICE)
-         emb = self.emb[group][param](val)
+         emb = self.emb[name][param](val)
          embeddings.append(emb)
-
 
       embeddings = torch.stack(embeddings, -2)
 
@@ -108,41 +97,22 @@ class Env(nn.Module):
       embeddings = attn(embeddings)
       return embeddings
 
-   #Okay. You have some issues
-   #Dimensions are batch, nEnts/tiles, nAttrs, hidden
-   #So you need to go down to 3 dims for 2nd tier
-   #batch, nEnts/tiles, hidden
-   #And down to batch, hidden for final tier
-   def forward(self, net, inputs, database, objLookup):
-      #features, lookup = {}, Lookup()
-      #self.actions(lookup)
- 
+   def forward(self, net, inp):
+      observationTensor = []
       embeddings = []
-      #Pack entities of each observation set
-      for group, stim in database.items():
-         embeddings.append(self.attrs(group, net.attns[group].emb, stim))
 
-      embeddings = torch.cat(embeddings)
-      features   = []
-      for objID, inp in inputs.items():
-         dat = []
-         for group, stim in inp.stim.items():
-            emb = [embeddings[objLookup.get(objID + e)] for e in stim]
-            emb = torch.stack(emb)
-            emb = net.attns[group].ent(emb)
-            dat.append(emb) 
-         #dat = torch.stack(dat)
-         dat = torch.cat(dat)
-         dat = net.attns['Meta'](dat)
-         #dat = net.attn.ent(dat)
-         features.append(dat)
+      #Pack entities of each attribute set
+      for name, entities in inp.obs.entities.items():
+         embs = self.attrs(name, net.attributes[name], entities)
+         embeddings.append(embs)
 
-      stims = torch.stack(features)
-      stims = dict(zip(inputs.keys(), stims))
+      #Pack entities of each observation
+      entityLookup = torch.cat(embeddings)
+      for objID, idxs in inp.obs.names.items():
+         emb = entityLookup[[e for e in idxs]]
+         obs = net.entities(emb)
+         observationTensor.append(obs)
 
-      for entID, inp in stims.items():
-         inputs[entID].stim = inp
-
-      embeddings, objLookup = self.actions(embeddings, objLookup)
-      return embeddings, objLookup
-
+      entityLookup = self.actions(entityLookup)
+      observationTensor = torch.stack(observationTensor)
+      return observationTensor, entityLookup

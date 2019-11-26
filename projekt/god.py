@@ -20,7 +20,6 @@ import torch
 
 from forge.trinity.ascend import Ascend, runtime, Log
 
-#Figure out why the fuck this isn't spliting shard time on sync
 @ray.remote
 class God(Ascend):
    '''Server level God API demo
@@ -92,10 +91,11 @@ class God(Ascend):
 
    def distrib(self, *args):
       '''Shards observation data across clients using the Trinity async API'''
-      groupFn = lambda ob: ob.entID % self.config.NSWORD
+      def groupFn(entID):
+         return entID % self.config.NSWORD
 
       #Preprocess obs
-      clientData, self.inputs = IO.inputs(
+      clientData = IO.inputs(
          self.obs, self.rewards, self.dones, 
          groupFn, self.config, serialize=True)
 
@@ -105,41 +105,35 @@ class God(Ascend):
       '''Aggregates actions/updates/logs from shards using the Trinity async API'''
       rets = super().sync(rets)
 
-      atnDict, gradList, blobList = {}, [], []
-      for atns, grads, blobs in rets:
-         atnDict.update(atns)
+      atnDict, gradList, blobList = None, [], []
+      for obs, grads, blobs in rets:
+         atnDict = IO.outputs(obs, atnDict)
 
-         #Gradients only present when a particular
-         #client has computed a batch
-
-         if grads is not None:
+         #Collect update
+         if self.backward:
             gradList.append(grads)
-
-         if blobs is not None:
             blobList.append(blobs)
 
       #Aggregate gradients/logs
       self.grads += gradList
       self.blobs = BlobSummary.merge([self.blobs, *blobList])
 
-      #Postprocess outputs
-      return IO.outputs(self.inputs, atnDict)
+      return atnDict
 
    @runtime
    def step(self, recv):
       '''Broadcasts updated weights to the core level clients.
       Collects gradient updates for upstream optimizer.'''
-      #self.resetLogs()
       self.grads, self.blobs = [], BlobSummary()
       while len(self.grads) == 0:
          self.tick(recv)
          recv = None
 
-      grads = np.mean(self.grads, 0)
-
+      grads    = np.mean(self.grads, 0)
       swordLog = self.discipleLogs()
       realmLog = self.env.logs()
-      log = Log.summary([swordLog, realmLog])
+      log      = Log.summary([swordLog, realmLog])
+
       return grads, self.blobs, log
 
    #Note: IO is currently slow relative to the
@@ -151,15 +145,15 @@ class God(Ascend):
       In this case, the data packet arg is used to specify
       model updates in the form of a new parameter vector'''
 
-      backward = False
-      config   = self.config
+      #Process end of batch
+      self.backward =  False
       self.nUpdates += len(self.obs)
-      if self.nUpdates > config.SERVER_UPDATES:
-         backward      = True
+      if self.nUpdates > self.config.SERVER_UPDATES:
+         self.backward = True
          self.nUpdates = 0
          
       #Make decisions
-      actions = super().step(recv, backward)
+      actions = super().step(recv, self.backward)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.

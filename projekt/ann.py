@@ -132,11 +132,12 @@ class Net(nn.Module):
       #self.attn = Attn(config)
       #self.val  = torch.nn.Linear(h, 1)
 
-      self.attns = nn.ModuleDict({
-         'Tile':   Tile(config),
-         'Entity': Entity(config),
-         'Meta':   EntAttn(h, h, 2),
+      self.attributes = nn.ModuleDict({
+         'Tile':   attention.Attention(config.EMBED, config.HIDDEN),
+         'Entity': attention.Attention(config.EMBED, config.HIDDEN)
       })
+
+      self.entities = attention.Attention(config.HIDDEN, config.HIDDEN)
 
       self.val = torch.nn.Linear(h, 1)
 
@@ -147,10 +148,14 @@ class ValNet(nn.Module):
    def __init__(self, config):
       super().__init__()
       h = config.HIDDEN
+      self.config = config
       self.fc1 = torch.nn.Linear(h, 1)
 
    def forward(self, stim):
       val = self.fc1(stim)
+      if self.config.TEST:
+         val = val.detach()
+
       return stim, val
  
 class ANN(nn.Module):
@@ -167,10 +172,11 @@ class ANN(nn.Module):
       self.env    = Env(config)
       self.action = NetTree(config)
 
-   def forward(self, inputs, data, lookup):
-      embed, lookup = self.env(self.net, inputs, data, lookup)
+   def forward(self, obs, manager):
+      observationTensor, entityLookup = self.env(self.net, obs)
 
       #Per pop internal net and value net
+      '''
       for pop, dat in Batcher.grouped(inputs).items():
          stim = torch.stack([e.stim for e in dat.values()])
          #stim, val = self.net.val[pop](stim)
@@ -178,6 +184,10 @@ class ANN(nn.Module):
          for ent, s, v in zip(dat.keys(), stim, val):
             atn = dat[ent].action
             inputs[ent] = [s, atn, v]
+      '''
+      vals = self.net.val(observationTensor)
+      self.action(obs, vals, observationTensor, entityLookup, manager)
+      return vals
 
       keys, stims, actions, values = [], [], [], []
       for ent, inp in inputs.items():

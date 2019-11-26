@@ -14,8 +14,8 @@ class Config(config.Config):
    See Forge.py for an example'''
 
    MODELDIR = 'resource/exps' #Where to store models
-   DEBUG    = False #Whether to run with debug settings
-   HOST     = 'localhost'
+   HOST     = 'localhost'     #Host for client
+   DEBUG    = False           #Whether to run with debug settings
 
    LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
@@ -25,20 +25,17 @@ class Config(config.Config):
    NENT = 128 #Maximum population size
    NPOP = 8  #Number of populations
 
-   NATN    = 1    #Number of actions taken by the network (deprecated)
-   ENTROPY = 0.0 #Entropy bonus for policy gradient loss
-
    HIDDEN  = 32 #Model embedding dimension
    EMBED   = 32 #Model hidden dimension
  
-   NGOD   = 1  #Number of environment servers
-   NSWORD = 1  #Number of clients per server
+   NGOD   = 6                   #Number of environment servers
+   NSWORD = 1                   #Number of clients per server
    NCORE  = NGOD * (NSWORD + 1) #Total number of cores
 
    #Number of experience steps before
    #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 128
-   #CLUSTER_UPDATES = 1024
+   #CLUSTER_UPDATES = 128
+   CLUSTER_UPDATES = 1024
    SERVER_UPDATES  = CLUSTER_UPDATES // NGOD
 
    #Hardware specification
@@ -47,8 +44,9 @@ class Config(config.Config):
    #Gradient based optimization parameters
    LR         = 3e-4
    DECAY      = 1e-5
-   VAL_WEIGHT = 0.5
    GRAD_CLIP  = 5.0
+   VAL_WEIGHT = 0.5
+   ENTROPY    = 0.0
 
    #Per agent logging
    SAVE_BLOBS = False #Log at all? (IO/comms intensive)

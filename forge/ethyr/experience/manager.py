@@ -15,9 +15,7 @@ class RolloutManager:
    def __init__(self):
       self.temp    = defaultdict(Rollout)
       self.outputs = defaultdict(Rollout)
-      self.inputs  = {}
-
-      self.logs = BlobSummary()
+      self.logs    = BlobSummary()
 
    @property
    def nUpdates(self):
@@ -29,40 +27,32 @@ class RolloutManager:
 
    def collectInputs(self, stims):
       '''Collects observation data to internal buffers'''
-      self.inputs.clear()
-      for stim in stims:
-         key = stim.key
+      #Finish rollout
+      for key in stims.dones:
+         assert key not in self.outputs
+
+         rollout           = self.temp[key]
+         rollout.finish()
+
+         self.outputs[key] = rollout
+         del self.temp[key]
+
+         self.logs.blobs.append(rollout.blob)
+         self.logs.nRollouts += 1
+         self.logs.nUpdates += len(rollout)
+
+      #Update inputs 
+      for key, reward in zip(stims.keys, stims.rewards ):
+         assert key not in self.outputs
          rollout = self.temp[key]
-         rollout.inputs(stim)
+         rollout.inputs(reward, key)
 
-         #Finish rollout
-         if stim.done:
-            assert key not in self.outputs
-            rollout.finish()
-            self.outputs[key] = rollout
-            del self.temp[key]
-
-            self.logs.blobs.append(rollout.blob)
-            self.logs.nRollouts += 1
-            self.logs.nUpdates += len(rollout)
- 
-         #Update input
-         else:
-            assert key not in self.outputs
-            assert key not in self.inputs
-            self.inputs[key] = stim
-
-      database, databaseLookup = self.unique()
-      return self.inputs, database, databaseLookup
-
-   def collectOutputs(self, outputs):
+   def collectOutputs(self, atnArg, keys, atns, atnsIdx, values):
       '''Collects output data to internal buffers'''
-      for output in outputs:
-         key = output.key
-
-         assert output.key in self.temp
+      for key, atn, atnIdx, val in zip(keys, atns, atnsIdx, values):
+         assert key in self.temp
          assert not self.temp[key].done
-         self.temp[key].outputs(output)
+         self.temp[key].outputs(atnArg, atn, atnIdx, val)
 
    def step(self):
       '''Returns log objects of all rollouts.
@@ -79,15 +69,3 @@ class RolloutManager:
       self.outputs = defaultdict(Rollout)
 
       return outputs, logs 
-
-   def unique(self):
-      return Batcher.unique(self.inputs)
-
-   def batched(self, nUpdates=None):
-      '''Returns flat batches of experience of the specified size
-
-      Notes:
-         The last batch of each group may be smaller than the specified sz
-      '''
-      return Batcher.batched(self.inputs, nUpdates)
-

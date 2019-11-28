@@ -5,6 +5,7 @@ import inspect
 
 from forge.blade.io.stimulus import node
 
+#Makes private attributes read only
 class InnerClassIterable(type):
    def __iter__(cls):
       stack = list(cls.__dict__.items())
@@ -33,16 +34,15 @@ class StimHook:
 
    def inputs(self, cls, config):
       for name, c in cls:
-         setattr(self, '_' + c.name, c(config))
+         self.__dict__[c.name] = c(config)
 
    def outputs(self, config):
       data = {}
       for name, cls in self.meta:
          assert type(name) == tuple and len(name) == 1
-         name = name[0]
-
-         attr = getattr(self, '_' + cls.name, cls(config))
-         data[name.lower()] = attr.packet()
+         name       = name[0].lower()
+         attr       = self.__dict__[cls.name]
+         data[name] = attr.packet()
 
       return data
 
@@ -94,10 +94,12 @@ class Stimulus(Config):
          class Damage(node.Continuous):
             def init(self, config):
                self.default = None
+               self.scale = 0.01
 
          class TimeAlive(node.Continuous):
             def init(self, config):
                self.default = 0
+               self.scale = 0.01
 
       #Resources
       class Resources(Config, node.Flat):
@@ -121,11 +123,18 @@ class Stimulus(Config):
          class Freeze(node.Continuous):
             def init(self, config):
                self.default = 0
+               self.max     = 3
 
          class Immune(node.Continuous):
             def init(self, config):
                self.default = config.IMMUNE
                self.max     = config.IMMUNE
+
+         class Wilderness(node.Continuous):
+            def init(self, config):
+               self.default = -1
+               self.min     = -1
+               self.max     = 126
 
    class Tile(Config):
       #A multiplicative interaction between pos and index

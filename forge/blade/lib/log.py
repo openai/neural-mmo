@@ -45,20 +45,20 @@ class InkWell:
    def value(blobs):
       return {'value': [blob.value for blob in blobs]}
 
-class BlobLogs:
+class BlobSummary:
    def __init__(self):
       self.nRollouts = 0
       self.nUpdates  = 0
       self.blobs     = []
 
-   def merge(blobLogs):
-      logs = BlobLogs()
-      for log in blobLogs:
-         logs.nRollouts += log.nRollouts
-         logs.nUpdates  += log.nUpdates
-         logs.blobs     += log.blobs
+   def merge(blobs):
+      summary = BlobSummary()
+      for blob in blobs:
+         summary.nRollouts += blob.nRollouts
+         summary.nUpdates  += blob.nUpdates
+         summary.blobs     += blob.blobs
 
-      return logs
+      return summary
 
 #Agent logger
 class Blob:
@@ -80,7 +80,10 @@ class Blob:
       self.lifetime += 1
 
 class Quill:
-   def __init__(self, modeldir):
+   def __init__(self, config):
+      self.config = config
+      modeldir = config.MODELDIR
+
       self.time = time.time()
       self.dir = modeldir
       self.index = 0
@@ -100,7 +103,7 @@ class Quill:
       self.time = cur
       return str(ret)
 
-   def print(self):
+   def stats(self):
       updates  = 'Updates:  (Total) ' + str(self.nUpdates)
       rollouts = 'Rollouts: (Total) ' + str(self.nRollouts)
 
@@ -111,8 +114,7 @@ class Quill:
       updates  += '  |  (Epoch) ' + str(self.curUpdates)
       rollouts += '  |  (Epoch) ' + str(self.curRollouts)
 
-      print(updates)
-      print(rollouts)
+      return updates + '\n' + rollouts
 
    def scrawl(self, logs):
       #Collect experience information
@@ -126,11 +128,15 @@ class Quill:
       self.index += 1
       for blob in logs.blobs:
          rewards.append(float(blob.lifetime))
-            
-      blobRet = []
+
       self.lifetime = np.mean(rewards)   
+
+      if not self.config.SAVE_BLOBS:
+         return
+      
+      blobRet = []
       for e in logs.blobs:
-         if np.random.rand() < 0.1:
+         if np.random.rand() < self.config.BLOB_FRAC:
             blobRet.append(e)
       self.save(blobRet)
 

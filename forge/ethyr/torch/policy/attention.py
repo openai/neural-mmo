@@ -6,6 +6,105 @@ from torch import nn
 
 from forge.ethyr.torch.policy import linear, functional
 
+
+class DecomposedAttention(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.scale = h
+
+   def forward(self, X, Q, K, V):
+      X   = Q.transpose(-2, -1)
+      QX  = torch.matmul(Q, X)
+      KXT = torch.matmul(K, X).transpose(-2, -1)
+      VX  = torch.matmul(V, X) / self.scale 
+      
+      KXTVX   = torch.matmul(KXT, VX)
+      QXKXTVX = torch.matmul(QX, KXTVX)
+
+      return QXKXTVX
+
+class ScaledDotProductAttention(nn.Module):
+   def __init__(self, h):
+      super().__init__()
+      self.scale = np.sqrt(h)
+
+   def forward(self, Q, K, V):
+      Kt  = K.transpose(-2, -1)
+      QK  = torch.matmul(Q, Kt)
+      QK  = torch.softmax(QK / self.scale, dim=-2)
+      QKV = torch.matmul(QK, V)
+      return QKV
+
+class MultiLinear(nn.Module):
+   def __init__(self, xDim, yDim, n):
+      super().__init__()
+      self.fc = nn.ModuleList([
+         nn.Linear(xDim, yDim) for _ in range(n)
+      ])
+
+   def forward(self, x):
+      x = [fc(x) for fc in self.fc]
+      x = torch.stack(x, -3)
+      x = torch.max(x, -2)[0]
+      return x
+
+class Attention(nn.Module):
+   def __init__(self, xDim, yDim, flat=True):
+      super().__init__()
+
+      self.Q = torch.nn.Linear(xDim, yDim)
+      self.K = torch.nn.Linear(xDim, yDim)
+      self.V = torch.nn.Linear(xDim, yDim)
+
+      self.attention = ScaledDotProductAttention(yDim)
+      self.flat = flat
+
+   def forward(self, q):
+      Q = self.Q(q)
+      K = self.K(q)
+      V = self.V(q)
+
+      attn = self.attention(Q, K, V)
+
+      if self.flat:
+         attn, _ = torch.max(attn, dim=-2)
+
+      return attn
+
+class FactorizedAttention(nn.Module):
+   def __init__(self, xDim, yDim, h, flat=True):
+      super().__init__()
+
+      self.Q = MultiLinear(xDim, yDim, h)
+      self.K = MultiLinear(xDim, yDim, h)
+      self.V = MultiLinear(xDim, yDim, h)
+
+      self.attention = ScaledDotProductAttention(yDim)
+      self.flat = flat
+
+   def forward(self, q):
+      Q = self.Q(q)
+      K = self.K(q)
+      V = self.V(q)
+
+      attn = self.attention(Q, K, V)
+
+      if self.flat:
+         attn, _ = torch.max(attn, dim=-2)
+
+      return attn
+
+class Attention2(nn.Module):
+   def __init__(self, xDim, yDim):
+      super().__init__()
+      self.attn1 = Attention(xDim, yDim, flat=False)
+      self.attn2 = Attention(xDim, yDim)
+   
+   def forward(self, x):
+      x = self.attn1(x)
+      x = self.attn2(x)
+      return x
+
 class MaxReluBlock(nn.Module):
    def __init__(self, h, layers=2):
       super().__init__()

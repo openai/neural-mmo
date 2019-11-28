@@ -8,7 +8,7 @@ from collections import defaultdict
 import projekt
 
 from forge.blade.core.realm import Realm
-from forge.blade.lib.log import BlobLogs
+from forge.blade.lib.log import BlobSummary 
 
 from forge.ethyr.io import Stimulus, Action, utils
 from forge.ethyr.io import IO
@@ -16,9 +16,7 @@ from forge.ethyr.io import IO
 from forge.ethyr.torch import optim
 from forge.ethyr.experience import RolloutManager
 
-import torch
-
-from forge.trinity.ascend import Ascend, runtime
+from forge.trinity.ascend import Ascend, runtime, Log
 
 @ray.remote
 class God(Ascend):
@@ -47,7 +45,9 @@ class God(Ascend):
       self.env  = Realm(config, idx, self.spawn)
       self.obs, self.rewards, self.dones, _ = self.env.reset()
 
-      self.grads, self.log = [], BlobLogs()
+      self.blobs = BlobSummary()
+      self.grads = []
+      self.nUpdates = 0
 
    def getEnv(self):
       '''Returns the environment. Ray does not allow
@@ -67,7 +67,7 @@ class God(Ascend):
    def getSwordLogs(self):
       '''Returns client logs. Ray does not allow
       access to remote attributes without a getter'''
-      return [e.logs() for e in self.disciples]
+      return [e.logs.remote() for e in self.disciples]
 
    def spawn(self):
       '''Specifies how the environment adds players
@@ -89,32 +89,33 @@ class God(Ascend):
 
    def distrib(self, *args):
       '''Shards observation data across clients using the Trinity async API'''
-      obs, recv = args
-      N = self.config.NSWORD
-      clientData = [[] for _ in range(N)]
-      for ob in obs:
-         clientData[ob.entID % N].append(ob)
-      return super().distrib(clientData, recv, shard=(1, 0))
+      def groupFn(entID):
+         return entID % self.config.NSWORD
+
+      #Preprocess obs
+      clientData = IO.inputs(
+         self.obs, self.rewards, self.dones, 
+         groupFn, self.config, serialize=True)
+
+      return super().distrib(clientData, args, shard=(1, 0))
 
    def sync(self, rets):
       '''Aggregates actions/updates/logs from shards using the Trinity async API'''
       rets = super().sync(rets)
 
-      atnDict, gradList, logList = {}, [], []
-      for atns, grads, logs in rets:
-         atnDict.update(atns)
+      atnDict, gradList, blobList = None, [], []
+      for obs, grads, blobs in rets:
 
-         #Gradients only present when a particular
-         #client has computed a batch
-         if grads is not None:
-            gradList.append(grads)
+         #Process outputs
+         atnDict = IO.outputs(obs, atnDict)
 
-         if logs is not None:
-            logList.append(logs)
+         #Collect update
+         if self.backward:
+            self.grads.append(grads)
+            blobList.append(blobs)
 
-      #Aggregate gradients/logs
-      self.grads += gradList
-      self.log  = BlobLogs.merge([self.log, *logList])
+      #Aggregate logs
+      self.blobs = BlobSummary.merge([self.blobs, *blobList])
 
       return atnDict
 
@@ -122,31 +123,39 @@ class God(Ascend):
    def step(self, recv):
       '''Broadcasts updated weights to the core level clients.
       Collects gradient updates for upstream optimizer.'''
-      self.grads, self.log = [], BlobLogs()
-      while self.log.nUpdates < self.config.SERVER_UPDATES:
+      self.grads, self.blobs = [], BlobSummary()
+      while len(self.grads) == 0:
          self.tick(recv)
          recv = None
 
-      grads = np.mean(self.grads, 0)
-      grads = grads.tolist()
-      return grads, self.log
+      grads    = np.mean(self.grads, 0)
+      swordLog = self.discipleLogs()
+      realmLog = self.env.logs()
+      log      = Log.summary([swordLog, realmLog])
 
+      return grads, self.blobs, log
+
+   #Note: IO is currently slow relative to the
+   #forward pass. The backward pass is fast relative to
+   #the forward pass but slow relative to IO.
    def tick(self, recv=None):
       '''Environment step Thunk. Optionally takes a data packet.
 
       In this case, the data packet arg is used to specify
       model updates in the form of a new parameter vector'''
 
-      #Preprocess obs
-      obs, rawAtns = IO.inputs(
-         self.obs, self.rewards, self.dones, 
-         self.config, serialize=True)
+      TEST           = self.config.TEST
+      SERVER_UPDATES = self.config.SERVER_UPDATES
 
+      #Process end of batch
+      self.backward  =  False
+      self.nUpdates  += len(self.obs)
+      if not TEST and self.nUpdates > SERVER_UPDATES:
+         self.backward = True
+         self.nUpdates = 0
+         
       #Make decisions
-      atns = super().step(obs, recv)
-
-      #Postprocess outputs
-      actions = IO.outputs(obs, rawAtns, atns)
+      actions = super().step(recv, self.backward)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.

@@ -1,3 +1,4 @@
+from pdb import set_trace as T
 import ray, os
 import time
 
@@ -5,17 +6,19 @@ OBJECT_INFO_PREFIX = b"OI:"
 OBJECT_LOCATION_PREFIX = b"OL:"
 TASK_TABLE_PREFIX = b"TT:"
 
-def init(mode):
+def init(config, mode):
    os.environ['MKL_NUM_THREADS'] = '1'
    os.environ['OMP_NUM_THREADS'] = '1'
 
    if mode == 'local':
       ray.init(local_mode=True)
    elif mode == 'default':
-      ray.init()
+      ray.init(object_store_memory=2147483648)
    elif mode == 'remote':
-      print('Set up HOSTNAME')
-      ray.init(redis_address=os.environ['HOSTNAME'] + ':6379')
+      ray.init(redis_address=config.HOST + ':6379')
+      print('Cluster started with resources:')
+      print(ray.cluster_resources())
+   
    else:
       print('Invalid ray mode (local/default/remote)')
       exit(-1)

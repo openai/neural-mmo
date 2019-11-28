@@ -29,7 +29,7 @@ def parseArgs():
          help='Render env')
    return parser.parse_args()
 
-def render(trin, config):
+def render(trin, config, args):
    """Runs the environment in render mode
 
    Connect to localhost:8080 to view the client.
@@ -51,19 +51,19 @@ def render(trin, config):
    config.TEST = True
    config.BEST = True
 
-   #Note: this is a small hack to reuse training code
-   #at test time in order to avoid rewriting the
-   #lengthy inference loo
+   #Init infra in local mode
+   args.ray = 'local'
+   lib.ray.init(config, args.ray)
+
+   #Instantiate environment
    god   = trin.god.remote(trin, config, idx=0)
-   model = Model(ANN, config)
 
    #Load model
-   model.load(None, config.BEST)
-   packet = model.weights
+   model = Model(ANN, config).load(None, config.BEST).weights
    
    #Pass the tick thunk to a twisted WebSocket server
    env = god.getEnv.remote()
-   god.tick.remote(packet)
+   god.tick.remote(model)
 
    #Decision making is currently flawed.
    #The number of stims/actions keeps going up,
@@ -72,25 +72,18 @@ def render(trin, config):
 
 if __name__ == '__main__':
    #Set up experiment configuration
-   #ray infra, and command line args
    config = Experiment('pop', Config).init()
+   args   = parseArgs()
 
-   args = parseArgs()
-
+   #Blocking call: switches execution to a
+   #Web Socket Server module
    if args.render:
-      args.ray = 'local'
-   lib.ray.init(config, args.ray)
+      render(trinity, config, args)
 
-   #Create a Trinity object specifying
-   #Cluster, Server, and Core level execution
-   trinity = Trinity(Pantheon, God, Sword)
 
-   if args.render:
-      render(trinity, config)
+   #Trinity specifies Cluster-Server-Core infra modules
+   trinity = Trinity(Pantheon, God, Sword).init(config, args)
 
-   trinity.init(config)
-
-   #Run and print logs
    while True:
       log = trinity.step()
       print(log)

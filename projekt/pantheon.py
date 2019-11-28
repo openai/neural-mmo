@@ -17,11 +17,11 @@ from forge.blade.lib.log import Quill, BlobSummary
 from forge.trinity.ascend import Ascend, runtime, Log
 
 class Pantheon(Ascend):
-   '''Cluster level Pantheon API demo
+   '''Cluster level infrastructure demo
 
-   This cluster level module aggregrates
-   gradients across all server level optimizer
-   nodes and updates model weights using Adam.
+   This module aggregates gradients across all
+   server level environments and updates model
+   weights using Agam.
 
    Also demonstrates logging and snapshotting
    functionality through the Quill and Model
@@ -29,50 +29,34 @@ class Pantheon(Ascend):
 
    def __init__(self, trinity, config, idx):
       '''Initializes a copy of the model, which keeps
-      track of a copy of the weights for the optimizer.'''
+      track of the weights for the optimizer.'''
       super().__init__(trinity.god, config.NGOD, trinity, config)
       self.config = config
 
       self.net = Model(projekt.ANN, config)
       self.log = defaultdict(list)
 
-      self.net.nParams
+      self.net.printParams()
 
-      #Remove this file
-      path = os.path.join(config.MODELDIR, 'stats.txt')
-      with open(path, 'w') as f:
-         pass
- 
-
-   @runtime
    def tick(self):
-      '''Inner timed step'''
-      #self.resetLogs()
-      recvs = super().step(self.net.weights)
-
-      #Write logs using Quill
+      recvs             = super().step(self.net.weights)
       recvs, blobs, log = list(zip(*recvs))
-      blobs = BlobSummary.merge(blobs)
+      blobs             = BlobSummary.merge(blobs)
 
       self.net.step(recvs, blobs, log)
 
-      return log
+      return recvs, blobs, log
 
-
+   @runtime
    def step(self):
       '''Broadcasts updated weights to server level
       God optimizer nodes. Performs an Adam step
       once optimizers return a batch of gradients.''' 
-      log = self.tick()
+      #Update model
+      recvs, blobs, log = self.tick()
       
+      #Write logs using Quill, checkpoint model
       stats = self.net.quill.stats()
-      save = self.net.saver.log()
-      log = Log.summary([self.discipleLogs(), *log, self.logs()])
-      log = str(Summary(log))
-  
-      path = os.path.join(self.config.MODELDIR, 'stats.txt')
-      txt = '\n'.join([save, stats, log])
-      with open(path, 'a') as f:
-         f.write(txt + '\n')
+      save  = self.net.saver.log()
 
-      return txt
+      return save, stats, log

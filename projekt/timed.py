@@ -35,7 +35,6 @@ class Summary:
             val = log[key]
 
             percent = 100 * val / total
-
             percent = '{0:.2f}%'.format(percent)
             val     = '({0:.2f}s)'.format(val)
 

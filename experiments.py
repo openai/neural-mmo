@@ -15,7 +15,7 @@ class Config(config.Config):
 
    MODELDIR = 'resource/exps' #Where to store models
    HOST     = 'localhost'     #Host for client
-   DEBUG    = False           #Whether to run with debug settings
+   DEBUG    = True            #Whether to run with debug settings
 
    LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?
@@ -58,13 +58,16 @@ class Config(config.Config):
    PERMPOPS = 4
    PERMVAL  = 1e-2
 
+   #Stats
+   STAT_FILE = 'stats.txt'
+
    #Debug params
    if DEBUG:
       NGOD = 1
       NSWORD = 1
 
-      HIDDEN  = 2
-      EMBED   = 2
+      HIDDEN  = 4
+      EMBED   = 4
 
       CLUSTER_UPDATES = 128
       SERVER_UPDATES  = CLUSTER_UPDATES
@@ -88,6 +91,10 @@ class Experiment:
       self.MODELDIR = os.path.join(ROOT, 'model')
       self.config = conf
       self.name = name
+
+      #Remove old stats file
+      path = os.path.join(self.MODELDIR, conf.STAT_FILE)
+      with open(path, 'w') as f: pass
 
    def init(self, **kwargs):
       assert 'MODELDIR' not in kwargs 

@@ -39,6 +39,7 @@ class GradientOptimizer:
 
    def load(self, opt):
       self.opt.load_state_dict(opt.opt.state_dict())
+      return self
 
 class PopulationOptimizer:
    def __init__(self, model, config):
@@ -132,8 +133,7 @@ class Model:
       '''
       self.saver.checkpoint(self.parameters, opt, reward)
 
-   @property
-   def nParams(self):
+   def printParams(self):
       '''Print the number of model parameters'''
       nParams = len(self.weights)
       print('#Params: ', str(nParams/1000), 'K')

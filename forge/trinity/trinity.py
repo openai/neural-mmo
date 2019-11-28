@@ -1,9 +1,12 @@
-import ray
-
-from forge.trinity.ascend import Ascend, runtime, waittime
 from pdb import set_trace as T
 
-class Trinity(Ascend):
+import os
+
+from forge.blade import lib
+from forge.trinity.ascend import Ascend, runtime, waittime, Log
+from projekt.timed import Summary
+
+class Trinity():
    '''Pantheon-God-Sword (Cluster-Server-Core) infra 
 
    Trinity is three layer distributed infra design pattern
@@ -41,7 +44,7 @@ class Trinity(Ascend):
       self.god      = god
       self.sword    = sword
 
-   def init(self, config):
+   def init(self, config, args):
       '''
       Instantiates a Pantheon object to make
       Trinity runnable. Separated from __init__
@@ -51,10 +54,22 @@ class Trinity(Ascend):
       Args:
          config: A forge.blade.core.Config object
       '''
-      super().__init__(self.pantheon, 1, self, config)
+      lib.ray.init(config, args.ray)
+      self.cluster = self.pantheon(self, config, 1)
+      self.config  = config
       return self
 
-   @runtime
    def step(self):
-      '''Wraps Pantheon step'''
-      return super().step()[0]
+      save, stats, log = self.cluster.step()
+
+      log   = Log.summary([self.cluster.discipleLogs(), 
+            *log, self.cluster.logs()])
+      log   = str(Summary(log))
+
+      #Write stats to txt file
+      path = os.path.join(self.config.MODELDIR, self.config.STAT_FILE)
+      txt = '\n'.join([save, stats, log])
+      with open(path, 'a') as f:
+         f.write(txt + '\n')
+
+      return txt

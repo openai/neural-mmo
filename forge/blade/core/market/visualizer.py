@@ -1,11 +1,13 @@
+from pdb import set_trace as T
+
 from functools import partial
-from random import random, seed
 from threading import Thread
+from random import random
 import time
 
 from bokeh.models import ColumnDataSource
 # from bokeh.models.widgets import CheckboxGroup
-from bokeh.plotting import curdoc, figure
+from bokeh.plotting import curdoc, figure, show
 
 from tornado import gen
 
@@ -13,16 +15,16 @@ from tornado import gen
 # to run a demo with dummy data:
 # $ bokeh serve --show visualizer.py
 
-class market_visualizer(object):
-
+class MarketVisualizer:
     """
     Market Visualizer
     Visualizes a stream of data, automatically refreshes on update()
     """
 
+
     def __init__(self, keys: list, history_len: int = 10,
                  title: str = "NeuralMMO Market Data", x: str = "tick",
-                 ylabel: str = "Dummy Values", _seed: int = 0):
+                 ylabel: str = "Dummy Values"):
         """
         Args:
             keys (list):       List of object names (str) to be displayed on
@@ -34,20 +36,23 @@ class market_visualizer(object):
             ylabel (str):      Name of y axis on plot
             seed (int):        seed for random number generation
         """
-        seed(_seed)
-        self.keys = keys
-        self.history_len = history_len
-        self.title = title
-        self.x = x
-        self.ylabel = ylabel
-        # TODO figure out a better way to ensure each object has a unique color
-        # len(KEYS) must be >= len(COLORS) in order to have a new color
-        # for each item
-        COLORS = ['blue', 'red', 'green', 'yellow', 'black', 'purple']
-        self.data: dict = {x: [0]}
-        self.colors: dict = dict()
+        COLORS = 'blue red green yellow black purple'.split()
 
-        for i, key in enumerate(KEYS):
+        self.history_len = history_len
+        self.title       = title
+        self.keys        = keys
+
+        self.ylabel      = ylabel
+        self.x           = x
+
+        self.data        = {x: [0]}
+        self.colors      = {}
+
+        # TODO figure out a better way to ensure each 
+        # object has a unique color
+        assert len(keys) <= len(COLORS), 'Limited color pool'
+
+        for i, key in enumerate(keys):
             self.data[key] = [0.5]
             self.colors[key] = COLORS[i]
 
@@ -58,11 +63,11 @@ class market_visualizer(object):
         # see the same document.
         self.doc = curdoc()
         self.p = figure(
-           title='NeuralMMO Market Data',
+           title='Neural MMO: Market Data',
            x_axis_label=x,
            y_axis_label=ylabel)
 
-        for key in KEYS:
+        for key in keys:
             self.p.line(x=x, y=key, source=self.source,
                         color=self.colors[key], legend_label=key)
 
@@ -70,6 +75,7 @@ class market_visualizer(object):
         # ease of use for visualization
         self.p.legend.click_policy = "hide"
         self.doc.add_root(self.p)
+        show(self.p)
 
         # market plans
         # click on objects in market to display stats about them
@@ -89,26 +95,28 @@ class market_visualizer(object):
         # Update the document from callback
         self.doc.add_next_tick_callback(partial(self.stream))
 
-
-def blocking_task(mv: market_visualizer):
+def recv_dummy_data(market_visualizer):
     while True:
         # do some blocking computation
         time.sleep(1)
-        # updates data for new tick
-        for key in mv.data:
+
+        #Best practice: update in one tick
+        data = {}
+
+        for key, val in market_visualizer.data.items():
+            data[key] = val
             # increments tick (x axis)
             if key == mv.x:
-                mv.data[key].append(mv.data[key][-1]+1)
+                data[key].append(val[-1] + 1)
             # adds r in [-0.5, 0.5) to each value
             else:
-                mv.data[key].append(mv.data[key][-1] + random() - 0.5)
+                data[key].append(val[-1] + random() - 0.5)
+        mv.data = data
         mv.update()
 
-
 # Example setup
-# KEYS represent a list of all item names on the market
-KEYS = ['Food', 'Water', 'Sword']
-mv = market_visualizer(KEYS)
+MARKET_ITEMS = ['Food', 'Water', 'Sword']
+mv = MarketVisualizer(MARKET_ITEMS)
 
-thread = Thread(target=blocking_task, args=[mv])
+thread = Thread(target=recv_dummy_data, args=[mv])
 thread.start()

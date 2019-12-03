@@ -21,7 +21,7 @@ class Pantheon(Ascend):
 
    This module aggregates gradients across all
    server level environments and updates model
-   weights using Agam.
+   weights using Adam.
 
    Also demonstrates logging and snapshotting
    functionality through the Quill and Model

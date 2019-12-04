@@ -38,22 +38,18 @@ class Pantheon(Ascend):
 
       self.net.printParams()
 
-   def tick(self):
-      recvs             = super().step(self.net.weights)
-      recvs, blobs, log = list(zip(*recvs))
-      blobs             = BlobSummary.merge(blobs)
-
-      self.net.step(recvs, blobs, log)
-
-      return recvs, blobs, log
-
    @runtime
    def step(self):
       '''Broadcasts updated weights to server level
       God optimizer nodes. Performs an Adam step
       once optimizers return a batch of gradients.''' 
+      #Aggregate logs
+      recvs             = super().step(self.net.weights)
+      recvs, blobs, log = list(zip(*recvs))
+      blobs             = BlobSummary.merge(blobs)
+
       #Update model
-      recvs, blobs, log = self.tick()
+      self.net.step(recvs, blobs, log)
       
       #Write logs using Quill, checkpoint model
       stats = self.net.quill.stats()

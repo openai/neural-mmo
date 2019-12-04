@@ -37,15 +37,13 @@ def render(trin, config, args):
    Args:
       trin   : A Trinity object as shown in __main__
       config : A Config object as shown in __main__
+      args:  : Command line arguments from argparse
 
    Notes:
       Blocks execution. This is an unavoidable side
       effect of running a persistent server with
       a fixed tick rate
    """
-
-   from forge.embyr.twistedserver import Application
-
    #Prevent accidentally overwriting the trained model
    config.LOAD = True
    config.TEST = True
@@ -55,35 +53,31 @@ def render(trin, config, args):
    args.ray = 'local'
    lib.ray.init(config, args.ray)
 
-   #Instantiate environment
-   god   = trin.god.remote(trin, config, idx=0)
-
-   #Load model
-   model = Model(ANN, config).load(None, config.BEST).weights
-   
+   #Instantiate environment and load the model,
    #Pass the tick thunk to a twisted WebSocket server
-   env = god.getEnv.remote()
+   god   = trin.god.remote(trin, config, idx=0)
+   model = Model(ANN, config).load(None, config.BEST).weights
+   env   = god.getEnv.remote()
    god.tick.remote(model)
 
-   #Decision making is currently flawed.
-   #The number of stims/actions keeps going up,
-   #and entities are not being marked dead.
+   #Start a websocket server for rendering
+   from forge.embyr.twistedserver import Application
    Application(env, god.tick.remote)
 
 if __name__ == '__main__':
-   #Set up experiment configuration
-   config = Experiment('pop', Config).init()
-   args   = parseArgs()
+   #Trinity specifies Cluster-Server-Core infra modules
+   #Experiment + command line args specify configuration
+   trinity = Trinity(Pantheon, God, Sword)
+   config  = Experiment('pop', Config).init()
+   args    = parseArgs()
 
    #Blocking call: switches execution to a
    #Web Socket Server module
    if args.render:
       render(trinity, config, args)
 
-
-   #Trinity specifies Cluster-Server-Core infra modules
-   trinity = Trinity(Pantheon, God, Sword).init(config, args)
-
+   #Endlessley run training epochs
+   trinity.init(config, args)
    while True:
       log = trinity.step()
       print(log)

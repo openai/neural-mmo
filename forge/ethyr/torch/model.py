@@ -124,6 +124,7 @@ class Model:
       print('Loading model...')
       epoch = self.saver.load(opt, self.parameters, best)
       self.syncParameters()
+      return self
 
    def checkpoint(self, opt, reward):
       '''Save the model to checkpoint

@@ -183,8 +183,11 @@ class ANN(nn.Module):
 
       return groups
 
-   def forward(self, obs, manager):
-      observationTensor, entityLookup = self.env(self.net, obs)
+   def forward(self, data, manager):
+      if data.obs.n == 0:
+         return
+
+      observationTensor, entityLookup = self.env(self.net, data)
 
       #Per pop internal net and value net
       #You have a population group function, but you'll need to reorder
@@ -194,11 +197,7 @@ class ANN(nn.Module):
       #   self.net.val[pop](obsTensor)
          
       vals = self.net.val(observationTensor)
-      self.action(obs, vals, observationTensor, entityLookup, manager)
-      return vals
-
-   def recvUpdate(self, update):
-      setParameters(self, update)
+      self.action(data, vals, observationTensor, entityLookup, manager)
 
    def grads(self):
       grads = param.getGrads(self)

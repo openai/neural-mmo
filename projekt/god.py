@@ -20,57 +20,49 @@ from forge.trinity.ascend import Ascend, runtime, Log
 
 @ray.remote
 class God(Ascend):
-   '''Server level God API demo
+   '''Server level infrastructure demo
 
    This environment server runs a persistent game instance
-   It distributes agents observations and collects action
-   decisions from a set of client nodes. This is the direct
-   opposite of the typical MPI broadcast/recv paradigm, which
-   operates an optimizer server over a bank of environments.
+   that distributes agents observations and collects action
+   decisions from a set of client nodes.
 
-   Notably, OpenAI Rapid style optimization does not scale
-   well to to this setting, as it assumes environment and
-   agent collocation. This quickly becomes impossible when
-   the number of agents becomes large. While this may not
-   be a problem for small scale versions of this demo, it
-   is built with future scale in mind.'''
+   This infrastructure configuration is the direct opposite
+   of the typical MPI broadcast/recv paradigm, which operates 
+   an optimizer server over a bank of environments. The MPI
+   approach does not scale well to massively multiagent
+   environments, as it assumes a many-to-one (as opposed to
+   a one-to-many) ratio of envs to optimizers.
+
+   OpenAI Rapid style optimization does not fix this
+   issue. Rapid solves bandwidth constraints by collocating
+   the agent policies with the environment, but it still
+   makes the same many-to-one assumption. 
+
+   Note that you could probably get away with either MPI
+   or Rapid style optimization on current instances of
+   the environment because we only have 128 agents, not
+   thousands. However, we built with future scale in
+   mind and invested in infrastructure early.''' 
 
    def __init__(self, trinity, config, idx):
-      '''Initializes a model and relevent utilities'''
+      '''Initializes an environment and logging utilities'''
       super().__init__(trinity.sword, config.NSWORD, trinity, config)
-      self.config, self.idx = config, idx
-      self.nPop = config.NPOP
-      self.ent  = 0
+      self.config, self.idx     = config, idx
+      self.nPop, self.ent       = config.NPOP, 0
+      self.nUpdates, self.grads = 0, []
 
-      self.env  = Realm(config, idx, self.spawn)
+      self.blobs    = BlobSummary()
+      self.env      = Realm(config, idx, self.spawn)
+
       self.obs, self.rewards, self.dones, _ = self.env.reset()
-
-      self.blobs = BlobSummary()
-      self.grads = []
-      self.nUpdates = 0
 
    def getEnv(self):
       '''Returns the environment. Ray does not allow
       access to remote attributes without a getter'''
       return self.env
 
-   def getEnvLogs(self):
-      '''Returns the environment logs. Ray does not allow
-      access to remote attributes without a getter'''
-      return self.env.logs()
-
-   def getDisciples(self):
-      '''Returns client instances. Ray does not allow
-      access to remote attributes without a getter'''
-      return self.disciples
-
-   def getSwordLogs(self):
-      '''Returns client logs. Ray does not allow
-      access to remote attributes without a getter'''
-      return [e.logs.remote() for e in self.disciples]
-
    def spawn(self):
-      '''Specifies how the environment adds players
+      '''Specifies the environment protocol for adding players
 
       Returns:
          entID (int), popID (int), name (str): 
@@ -83,13 +75,16 @@ class God(Ascend):
          as it allows one to specify per-agent or
          per-population policies'''
 
-      pop = hash(str(self.ent)) % self.nPop
+      pop      =  hash(str(self.ent)) % self.nPop
       self.ent += 1
+
       return self.ent, pop, 'Neural_'
 
    def distrib(self, *args):
-      '''Shards observation data across clients using the Trinity async API'''
+      '''Shards input data across clients using the Ascend async API'''
+
       def groupFn(entID):
+         '''Hash function for mapping entID->popID'''
          return entID % self.config.NSWORD
 
       #Preprocess obs
@@ -97,15 +92,13 @@ class God(Ascend):
          self.obs, self.rewards, self.dones, 
          groupFn, self.config, serialize=True)
 
+      #Shard entities across clients
       return super().distrib(clientData, args, shard=(1, 0))
 
    def sync(self, rets):
-      '''Aggregates actions/updates/logs from shards using the Trinity async API'''
-      rets = super().sync(rets)
-
+      '''Aggregates output data across shards with the Ascend async API'''
       atnDict, gradList, blobList = None, [], []
-      for obs, grads, blobs in rets:
-
+      for obs, grads, blobs in super().sync(rets):
          #Process outputs
          atnDict = IO.outputs(obs, atnDict)
 
@@ -116,44 +109,49 @@ class God(Ascend):
 
       #Aggregate logs
       self.blobs = BlobSummary.merge([self.blobs, *blobList])
-
       return atnDict
 
    @runtime
    def step(self, recv):
-      '''Broadcasts updated weights to the core level clients.
-      Collects gradient updates for upstream optimizer.'''
+      '''Sync weights and compute a model update by collecting
+      a batch of trajectories from remote clients.'''
       self.grads, self.blobs = [], BlobSummary()
       while len(self.grads) == 0:
          self.tick(recv)
          recv = None
 
-      grads    = np.mean(self.grads, 0)
-      swordLog = self.discipleLogs()
-      realmLog = self.env.logs()
-      log      = Log.summary([swordLog, realmLog])
+      #Aggregate updates and logs
+      grads = np.mean(self.grads, 0)
+      log   = Log.summary([
+                  self.discipleLogs(), 
+                  self.env.logs()])
 
       return grads, self.blobs, log
 
+   def batch(self):
+      '''Set backward pass flag and reset update counts
+      if the end of the data batch has been reached'''
+      SERVER_UPDATES = self.config.SERVER_UPDATES
+      TEST           = self.config.TEST
+
+      self.backward  =  False
+      self.nUpdates  += len(self.obs)
+
+      if not TEST and self.nUpdates > SERVER_UPDATES:
+         self.backward = True
+         self.nUpdates = 0
+ 
    #Note: IO is currently slow relative to the
    #forward pass. The backward pass is fast relative to
    #the forward pass but slow relative to IO.
    def tick(self, recv=None):
-      '''Environment step Thunk. Optionally takes a data packet.
+      '''Simulate a single server tick and all remote clients.
 
-      In this case, the data packet arg is used to specify
-      model updates in the form of a new parameter vector'''
+      The optional data packet specifies a new model parameter vector
+      '''
+      #Handle possible end of batch
+      self.batch()
 
-      TEST           = self.config.TEST
-      SERVER_UPDATES = self.config.SERVER_UPDATES
-
-      #Process end of batch
-      self.backward  =  False
-      self.nUpdates  += len(self.obs)
-      if not TEST and self.nUpdates > SERVER_UPDATES:
-         self.backward = True
-         self.nUpdates = 0
-         
       #Make decisions
       actions = super().step(recv, self.backward)
 

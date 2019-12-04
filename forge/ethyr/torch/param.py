@@ -23,6 +23,9 @@ def setParameters(ann, meanVec):
    Args:
       meanVec: A list of parameters
    '''
+   if meanVec is None:
+      return
+
    ind = 0
    for e in ann.parameters():
       shape = e.size()

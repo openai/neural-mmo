@@ -15,7 +15,7 @@ class Config(config.Config):
 
    MODELDIR = 'resource/exps' #Where to store models
    HOST     = 'localhost'     #Host for client
-   DEBUG    = True            #Whether to run with debug settings
+   DEBUG    = False           #Whether to run with debug settings
 
    LOAD = False #Load model from file?
    BEST = False #If loading, most recent or highest lifetime?

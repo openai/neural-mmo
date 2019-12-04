@@ -59,7 +59,7 @@ def merge(rollouts):
    return outs
 
 
-def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
+def backward(rollouts, config):
    '''Computes gradients from a list of rollouts
 
    Args:
@@ -89,7 +89,7 @@ def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
    returns = torch.stack(outs['value'])#.to(device)
    values  = torch.tensor(outs['return']).view(-1, 1)
    valLoss = loss.valueLoss(values, returns)
-   totLoss = pg + valWeight*valLoss + entWeight*entropy
+   totLoss = pg + config.VAL_WEIGHT*valLoss + config.ENTROPY*entropy
 
    #totLoss.backward(retain_graph=True)
    totLoss.backward()

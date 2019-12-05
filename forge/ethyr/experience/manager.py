@@ -36,17 +36,17 @@ class RolloutManager:
             continue
 
          rollout           = self.inputs[key]
-         rollout.finish()
-
          self.outputs[key] = rollout
+
+         rollout.finish()
          del self.inputs[key]
 
          self.logs.blobs.append(rollout.blob)
+         self.logs.nUpdates  += len(rollout)
          self.logs.nRollouts += 1
-         self.logs.nUpdates += len(rollout)
 
       #Update inputs 
-      for key, reward in zip(stims.keys, stims.rewards ):
+      for key, reward in zip(stims.keys, stims.rewards):
          assert key not in self.outputs
          rollout = self.inputs[key]
          rollout.inputs(reward, key)

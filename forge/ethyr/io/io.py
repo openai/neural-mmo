@@ -20,7 +20,7 @@ class Lookup:
       if idx is None:
          idx = self.max
 
-      assert name not in self.data
+      #assert name not in self.data
       self.data[name] = idx
       if orig is not None:
          self.back[idx] = orig
@@ -86,7 +86,6 @@ class Inp:
       #self.lookup.add(zero_key, orig='NULL_PAD')
 
    def key(self, env, ent, reward, config):
-
       annID, entID = ent.annID, ent.entID
       key = (annID, entID)
       self.keys.append(key)
@@ -108,11 +107,14 @@ class IO:
          inputs[idx].dones.append(done)
 
       ### Process inputs
+      n = 0
       for ob, reward in zip(obs, rewards):
          env, ent = ob
          idx = groupFn(ent.entID)
          inputs[idx].key(env, ent, reward, config)
          Stimulus.process(inputs[idx], env, ent, config, serialize)
+         inputs[idx].obs.n += 1
+         n += 1
       
       start = time.time()
       #Index actions
@@ -129,7 +131,7 @@ class IO:
       for idx, inp in inputs.items():
          inputs[idx].pack()
 
-      return inputs
+      return inputs, n
 
    def outputs(obs, atnDict=None):
       '''Postprocess outputs'''

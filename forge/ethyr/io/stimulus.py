@@ -61,8 +61,6 @@ class Stimulus:
       for key, f in zip(Stimulus.funcNames, Stimulus.functions):
          f(inp, env, ent, key, serialize)
 
-      inp.obs.n += 1
-
    def add(inp, obs, lookup, static, obj, *args, key, serialize=False):
       '''Pull attributes from game and serialize names'''
       for name, attr in static:
@@ -96,5 +94,25 @@ class Stimulus:
       static = Stimulus.static[key]
       for tile in env.ravel():
          for e in tile.ents.values():
+            ents.append(e)
+
+      while len(ents) < 10:
+         ents.append(ent)
+      
+      ents = sorted(ents, key=lambda e: e is ent, reverse=True)
+
+      for e in ents:
+         Stimulus.add(inp, inp.obs.entities[key], inp.lookup,
+            static, e, ent, e, key=ent, serialize=serialize)
+
+      '''
+      ents = []
+      static = Stimulus.static[key]
+      for tile in env.ravel():
+         for e in tile.ents.values():
             Stimulus.add(inp, inp.obs.entities[key], inp.lookup,
                static, e, ent, e, key=ent, serialize=serialize)
+      '''
+
+
+

@@ -31,116 +31,14 @@ from forge.ethyr.torch.io.stimulus import Env
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.policy import attention
 
-#Hacky inner attention layer
-class EmbAttn(nn.Module):
-   def __init__(self, config, n):
+class Entities(nn.Module):
+    def __init__(self, h):
       super().__init__()
-      self.fc1 = nn.Linear(n*config.EMBED, config.HIDDEN)
+      self.fc = nn.Linear(235*h, h)
 
-   def forward(self, x):
-      batch, ents, _, _ = x.shape
-      x = x.view(batch, ents, -1)
-      x = self.fc1(x)
-      return x
-
-#Hacky outer attention layer
-class EntAttn(nn.Module):
-   def __init__(self, xDim, yDim, n):
-      super().__init__()
-      self.fc1 = nn.Linear(n*xDim, yDim)
-
-   def forward(self, x):
-      #batch, ents, _, = x.shape
-      #x = x.view(batch, -1)
-      x = self.fc1(x)
-      return x
-
-#Hacky outer attention layer
-class TileConv(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.h = h
-
-      self.conv1 = nn.Conv2d(h, h, 3)
-      self.pool1 = nn.MaxPool2d(2)
-
-      #self.conv2 = nn.Conv2d(h, h, 3)
-      #self.pool2 = nn.MaxPool2d(2)
- 
-      self.fc1 = nn.Linear(h*6*6, h)
-      #self.fc1 = nn.Linear(h*2*2, h)
-
-   def forward(self, x):
-      x = x.transpose(-2, -1)
-      x = x.view(-1, self.h, 15, 15)
-      x = self.pool1(self.conv1(x))
-      #x = self.pool1(torch.relu(self.conv1(x)))
-      #x = self.pool2(torch.relu(self.conv2(x)))
-
-      batch, _, _, _ = x.shape
-      x = x.view(batch, -1)
-      x = self.fc1(x).squeeze(0)
-
-      return x
-
-#Variable number of entities
-class Entity(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      self.ent = attention.Attention(config.HIDDEN, config.HIDDEN)
-
-      #self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
-      #self.ent = attention.Attention2(config.HIDDEN, config.HIDDEN)
-
-#Fixed number of entities
-class Tile(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      #self.ent = attention.Attention(config.EMBED, config.HIDDEN)
-      #self.emb = attention.Attention2(config.EMBED, config.HIDDEN)
-      #self.ent = TileConv(config.HIDDEN)
-      self.ent  = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 16)
-
-class Meta(nn.Module):
-   def __init__(self, h):
-      super().__init__()
-      self.fc = nn.Linear(2*h, h)
-
-   def forward(self, x):
+    def forward(self, x):
+      x = x.view(-1)
       return self.fc(x)
- 
-#Fixed number of entities
-class Attn(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-      self.emb = attention.Attention(config.EMBED, config.HIDDEN)
-      #self.emb = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 2)
-      #self.ent  = attention.FactorizedAttention(config.EMBED, config.HIDDEN, 16)
-      self.ent = attention.Attention(config.EMBED, config.HIDDEN)
-      self.tile = TileConv(config.HIDDEN)
-      self.meta = Meta(config.HIDDEN)
-
-class Net(nn.Module):
-   def __init__(self, config):
-      super().__init__()
-      h = config.HIDDEN
-
-      #self.attn = Attn(config)
-      #self.val  = torch.nn.Linear(h, 1)
-
-      self.attributes = nn.ModuleDict({
-         'Tile':   attention.Attention(config.EMBED, config.HIDDEN),
-         'Entity': attention.Attention(config.EMBED, config.HIDDEN)
-      })
-
-      self.entities = attention.Attention(config.HIDDEN, config.HIDDEN)
-
-      self.val = torch.nn.Linear(h, 1)
-
-      #self.val = nn.ModuleList([ValNet(config)
-      #     for _ in range(config.NPOP)])
 
 class ValNet(nn.Module):
    def __init__(self, config):
@@ -154,17 +52,31 @@ class ValNet(nn.Module):
       if self.config.TEST:
          val = val.detach()
 
-      return stim, val
+      return val
  
+class Net(nn.Module):
+   def __init__(self, config):
+      super().__init__()
+      h = config.HIDDEN
+
+      self.attributes = nn.ModuleDict({
+         'Tile':   attention.Attention(config.EMBED, config.HIDDEN),
+         'Entity': attention.Attention(config.EMBED, config.HIDDEN)
+      })
+
+      #self.entities = attention.Attention(config.HIDDEN, config.HIDDEN)
+      self.entities = Entities(config.HIDDEN)
+      self.val      = ValNet(config)
+
+      #self.val = nn.ModuleList([ValNet(config)
+      #     for _ in range(config.NPOP)])
+
 class ANN(nn.Module):
    def __init__(self, config):
       '''Demo model'''
       super().__init__()
       self.config = config
-      #self.net = nn.ModuleList([Net(config)
-      #      for _ in range(config.NPOP)])
-
-      self.net = Net(config)
+      self.net    = Net(config)
 
       #Shared environment/action maps
       self.env    = Env(config)

@@ -29,8 +29,6 @@ class Rollout:
 
    def inputs(self, reward, key):
       '''Process observation data'''
-      self.time += 1
-
       if reward is not None:
          self.rewards.append(reward)
 
@@ -38,6 +36,7 @@ class Rollout:
          annID, entID = key
          self.blob = Blob(entID, annID)
 
+      self.time += 1
       self.blob.update()
 
    def outputs(self, atnArgKey, atnLogits, atnIdx, value):
@@ -52,6 +51,7 @@ class Rollout:
 
    def finish(self):
       '''Called internally once the full rollout has been collected'''
+      #self.blob.update()
       self.rewards.append(-1)
 
       self.returns     = self.discount()

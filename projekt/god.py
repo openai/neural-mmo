@@ -47,9 +47,9 @@ class God(Ascend):
    def __init__(self, trinity, config, idx):
       '''Initializes an environment and logging utilities'''
       super().__init__(trinity.sword, config.NSWORD, trinity, config)
+      self.nUpdates, self.grads = 0, []
       self.config, self.idx     = config, idx
       self.nPop, self.ent       = config.NPOP, 0
-      self.nUpdates, self.grads = 0, []
 
       self.blobs    = BlobSummary()
       self.env      = Realm(config, idx, self.spawn)
@@ -80,7 +80,25 @@ class God(Ascend):
 
       return self.ent, pop, 'Neural_'
 
-   def distrib(self, *args):
+   def batch(self, nUpdates):
+      '''Set backward pass flag and reset update counts
+      if the end of the data batch has been reached
+
+      Note: the actual batch size will be smaller than
+      specified due to discarded partial trajectories'''
+      SERVER_UPDATES = self.config.SERVER_UPDATES
+      TEST           = self.config.TEST
+
+      self.backward  =  False
+      self.nUpdates  += nUpdates
+
+      if not TEST and self.nUpdates > SERVER_UPDATES:
+         self.backward = True
+         self.nUpdates = 0
+
+      return self.backward
+ 
+   def distrib(self, weights):
       '''Shards input data across clients using the Ascend async API'''
 
       def groupFn(entID):
@@ -88,12 +106,15 @@ class God(Ascend):
          return entID % self.config.NSWORD
 
       #Preprocess obs
-      clientData = IO.inputs(
+      clientData, nUpdates = IO.inputs(
          self.obs, self.rewards, self.dones, 
          groupFn, self.config, serialize=True)
 
+      #Handle possible end of batch
+      backward = self.batch(nUpdates)
+
       #Shard entities across clients
-      return super().distrib(clientData, args, shard=(1, 0))
+      return super().distrib(clientData, weights, backward, shard=(1, 0, 0))
 
    def sync(self, rets):
       '''Aggregates output data across shards with the Ascend async API'''
@@ -128,19 +149,6 @@ class God(Ascend):
 
       return grads, self.blobs, log
 
-   def batch(self):
-      '''Set backward pass flag and reset update counts
-      if the end of the data batch has been reached'''
-      SERVER_UPDATES = self.config.SERVER_UPDATES
-      TEST           = self.config.TEST
-
-      self.backward  =  False
-      self.nUpdates  += len(self.obs)
-
-      if not TEST and self.nUpdates > SERVER_UPDATES:
-         self.backward = True
-         self.nUpdates = 0
- 
    #Note: IO is currently slow relative to the
    #forward pass. The backward pass is fast relative to
    #the forward pass but slow relative to IO.
@@ -149,11 +157,8 @@ class God(Ascend):
 
       The optional data packet specifies a new model parameter vector
       '''
-      #Handle possible end of batch
-      self.batch()
-
       #Make decisions
-      actions = super().step(recv, self.backward)
+      actions = super().step(recv)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.

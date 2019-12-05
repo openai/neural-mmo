@@ -38,11 +38,10 @@ class Sword(Ascend):
       self.manager  = RolloutManager()
 
    @runtime
-   def step(self, data, recv=None):
+   def step(self, data, packet, backward):
       '''Synchronizes weights from upstream; computes
       agent decisions; computes policy updates.'''
-      packet, backward = recv
-      grads, blobs     = None, None
+      grads, blobs = None, None
 
       #Sync model weights; batch obs; compute forward pass
       setParameters(self.net, packet)

@@ -13,32 +13,6 @@ from forge.blade.io import Action as StaticAction
 from forge.ethyr.io import Serial, utils
 from forge.ethyr.torch.policy.embed import Input, TaggedInput, Embedding
 
-class Lookup:
-   '''Lookup utility for indexing 
-   (name, data) pairs'''
-   def __init__(self):
-      self.names = []
-      self.data  = []
-
-   def add(self, names, data):
-      '''Add entries to the table'''
-      self.names += names
-      self.data  += data
-
-   def table(self):
-      names, data = self.names, self.data
-      dat = dict(zip(names, data))
-      names = set(self.names)
-
-      idxs, data = {}, []
-      for idx, name in enumerate(names):
-         idxs[name] = idx
-         data.append(dat[name])
-
-      data = torch.cat(data)
-      assert len(idxs) == len(data)
-      return idxs, data
- 
 class Env(nn.Module):
    '''Network responsible for processing observations
 

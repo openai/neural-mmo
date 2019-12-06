@@ -51,9 +51,6 @@ class Env(nn.Module):
          emb = self.action(idx)
          embed.append(emb)
 
-      padEmbed = emb * 0
-      embed.append(padEmbed)
-
       return torch.cat([embeddings, *embed])
 
    def attrs(self, name, attn, entities):

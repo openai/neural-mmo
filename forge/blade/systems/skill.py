@@ -52,7 +52,7 @@ class Skills:
       scale = self.config.XPSCALE
       self.constitution.exp += scale * dmg * 2
    
-      skill = getattr(self, style)
+      skill = self.__dict__[style]
       skill.exp += scale * dmg * 4
 
    def receiveDamage(self, dmg):

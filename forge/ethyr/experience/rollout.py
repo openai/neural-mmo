@@ -6,14 +6,15 @@ from collections import defaultdict
 from forge.blade.lib.log import Blob
 
 class Output:
-   def __init__(self, atnArgKey, atnLogits, atnIdx):
+   def __init__(self, atnArgKey, atnLogits, atnIdx, value):
       self.atnArgKey = atnArgKey
       self.atnLogits = atnLogits
       self.atnIdx    = atnIdx      
+      self.value     = value
 
 class Rollout:
    '''Rollout object used internally by RolloutManager'''
-   def __init__(self):
+   def __init__(self, config):
       self.actions = defaultdict(list)
       self.values  = []
       self.rewards = []
@@ -22,7 +23,8 @@ class Rollout:
       self.time = -1
 
       #Logger
-      self.blob = None
+      self.config  = config
+      self.blob    = None
 
    def __len__(self):
       return self.blob.lifetime
@@ -41,24 +43,19 @@ class Rollout:
 
    def outputs(self, atnArgKey, atnLogits, atnIdx, value):
       '''Process output actions and values'''
-      actions = self.actions[self.time]
-
-      if len(actions) == 0:
-         self.values.append(value)
-
-      output = Output(atnArgKey, atnLogits, atnIdx)
-      actions.append(output)
+      output = Output(atnArgKey, atnLogits, atnIdx, value)
+      self.actions[self.time].append(output)
+      self.values.append(value)
 
    def finish(self):
       '''Called internally once the full rollout has been collected'''
-      #self.blob.update()
       self.rewards.append(-1)
 
-      self.returns     = self.discount()
+      self.returns     = self.discount(self.config.DISCOUNT)
       self.lifespan    = len(self.rewards)
       self.blob.value  = np.mean([float(e) for e in self.values])
 
-   def discount(self, gamma=0.95):
+   def discount(self, gamma):
       '''Applies standard gamma discounting to the given trajectory
       
       Args:
@@ -73,7 +70,11 @@ class Rollout:
       rewards   = np.array(self.rewards)
 
       for idx in range(N):
-         rets.append(sum(rewards[idx:]*discounts[:N-idx]))
+         R_i = sum(rewards[idx:]*discounts[:N-idx])
+         for out in self.actions[idx]:
+            out.returns = R_i 
+         
+         rets.append(R_i)
 
       return rets
 

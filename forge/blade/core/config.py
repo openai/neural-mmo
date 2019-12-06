@@ -11,6 +11,8 @@ class Config:
    ROOT = os.path.join(os.getcwd(), 'resource/maps/procedural/map')
    SUFFIX = '/map.tmx'
 
+   NAME_PREFIX = 'Neural_'
+
    SZ = 128
    ##BORDER = 8
    #R = C = SZ + 2*BORDER

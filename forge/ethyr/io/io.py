@@ -20,7 +20,7 @@ class Lookup:
       if idx is None:
          idx = self.max
 
-      #assert name not in self.data
+      assert name not in self.data
       self.data[name] = idx
       if orig is not None:
          self.back[idx] = orig
@@ -78,13 +78,6 @@ class Inp:
             serial = Serial.key(serial)
          self.lookup.add(serial, orig=atn)
 
-      #Set the 0 index embedding to pad
-      zero_key = (0, 0) + tuple([0]*Serial.KEYLEN)
-      negs_key = (0, 0) + tuple([-1]*Serial.KEYLEN)
-
-      self.lookup.add(zero_key, orig='ZERO_PAD')
-      #self.lookup.add(zero_key, orig='NULL_PAD')
-
    def key(self, env, ent, reward, config):
       annID, entID = ent.annID, ent.entID
       key = (annID, entID)
@@ -141,12 +134,11 @@ class IO:
          atnDict = defaultdict(lambda: defaultdict(list))
 
       #Reverse format lookup over actions
+      names = list(obs.obs.names.keys())
       for atn, action in obs.atn.actions.items():
          for arg, atnsIdx in action.arguments.items():
-            for idx, a in enumerate(atnsIdx[1]):
-               names = list(obs.obs.names.keys())
-               _, entID, _= names[idx]
-
+            for idx, a in enumerate(atnsIdx):
+               _, entID, _ = names[idx]
                a = obs.lookup.reverse(a)
                atnDict[entID][atn].append(a)
 

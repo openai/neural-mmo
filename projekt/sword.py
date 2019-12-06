@@ -34,8 +34,8 @@ class Sword(Ascend):
       config        = deepcopy(config)
       self.config   = config
 
-      self.net      = projekt.ANN(self.config)
-      self.manager  = RolloutManager()
+      self.net      = projekt.ANN(config)
+      self.manager  = RolloutManager(config)
 
    @runtime
    def step(self, data, packet, backward):

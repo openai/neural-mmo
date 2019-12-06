@@ -12,9 +12,9 @@ from forge.ethyr.experience import Rollout
 
 class RolloutManager:
    '''Collects and batches rollouts for inference and training'''
-   def __init__(self):
-      self.inputs  = defaultdict(Rollout)
-      self.outputs = defaultdict(Rollout)
+   def __init__(self, config):
+      self.inputs  = defaultdict(lambda: Rollout(config))
+      self.outputs = defaultdict(lambda: Rollout(config))
       self.logs    = BlobSummary()
 
    @property

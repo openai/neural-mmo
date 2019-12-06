@@ -50,7 +50,6 @@ class Action:
                else:
                   key = entKey + Serial.key(arg)
 
-               #Currently fails because inp is at the start of the emb block
                idx = inp.lookup.data[key]
                idxs.append(idx)
 

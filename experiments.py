@@ -23,7 +23,7 @@ class Config(config.Config):
 
    #Typically overriden in Forge.py
    NENT = 128 #Maximum population size
-   NPOP = 8  #Number of populations
+   NPOP = 1  #Number of populations
 
    HIDDEN  = 32 #Model embedding dimension
    EMBED   = 32 #Model hidden dimension
@@ -34,7 +34,7 @@ class Config(config.Config):
 
    #Number of experience steps before
    #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 2048
+   CLUSTER_UPDATES = 8192# 256*6
    SERVER_UPDATES  = CLUSTER_UPDATES // NGOD
 
    #Hardware specification
@@ -44,8 +44,9 @@ class Config(config.Config):
    LR         = 3e-4
    DECAY      = 1e-5
    GRAD_CLIP  = 5.0
+   DISCOUNT   = 0.95
    VAL_WEIGHT = 0.5
-   ENTROPY    = 0.0
+   ENTROPY    = 0.001
 
    #Per agent logging
    SAVE_BLOBS = False #Log at all? (IO/comms intensive)

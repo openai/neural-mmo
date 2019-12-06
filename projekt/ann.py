@@ -34,11 +34,18 @@ from forge.ethyr.torch.policy import attention
 class Entities(nn.Module):
     def __init__(self, h):
       super().__init__()
-      self.fc = nn.Linear(235*h, h)
+      self.targDim = 245*h
+      self.fc = nn.Linear(self.targDim, h)
+      self.fc1 = nn.Linear(h, h)
 
     def forward(self, x):
       x = x.view(-1)
-      return self.fc(x)
+      pad = torch.zeros(self.targDim - len(x))
+      x = torch.cat([x, pad])
+      x = self.fc(x)
+      x = torch.relu(x)
+      x = self.fc1(x)
+      return x
 
 class ValNet(nn.Module):
    def __init__(self, config):

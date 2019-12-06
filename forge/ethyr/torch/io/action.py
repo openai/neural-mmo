@@ -9,7 +9,7 @@ from torch import nn
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
 from forge.blade.io import Action as Static
-from forge.blade.io.action import static as action
+from forge.blade.io.action import static as StaticAction
 
 from forge.ethyr.io import Action as Dynamic
 from forge.ethyr.io.utils import pack, unpack
@@ -40,8 +40,8 @@ class NetTree(nn.Module):
          for arg, data in action.arguments.items():
             #Perform forward pass
             tensor, lens  = data
-            vals          = torch.stack([entityLookup[e] for e in tensor])
-            atns, atnsIdx = self.net(observationTensor, vals, lens)
+            targs         = torch.stack([entityLookup[e] for e in tensor])
+            atns, atnsIdx = self.net(observationTensor, targs, lens)
 
             #Gen Atn_Arg style names for backward pass
             name = '_'.join([atn.__name__, arg.__name__])
@@ -50,9 +50,9 @@ class NetTree(nn.Module):
 
             #Convert from local index over atns to
             #absolute index into entity lookup table
-            atnsIdx = atnsIdx.numpy().tolist()
-            atnsIdx = [t[a] for t, a in zip(tensor, atnsIdx)]
-            obs.atn.actions[atn].arguments[arg] = [atns, atnsIdx]
+            idxs = atnsIdx.numpy().tolist()
+            idxs = [t[a] for t, a in zip(tensor, idxs)]
+            obs.atn.actions[atn].arguments[arg] = idxs
 
 class Action(nn.Module):
    '''Head for selecting an action'''

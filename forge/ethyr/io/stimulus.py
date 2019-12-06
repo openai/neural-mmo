@@ -95,10 +95,7 @@ class Stimulus:
       for tile in env.ravel():
          for e in tile.ents.values():
             ents.append(e)
-
-      while len(ents) < 10:
-         ents.append(ent)
-      
+     
       ents = sorted(ents, key=lambda e: e is ent, reverse=True)
 
       for e in ents:

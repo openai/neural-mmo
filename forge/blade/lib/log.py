@@ -123,6 +123,9 @@ class Quill:
       self.curUpdates   =  logs.nUpdates
       self.curRollouts  =  logs.nRollouts
 
+      value = np.mean([b.value for b in logs.blobs])
+      print('Value Function: ', value)
+
       #Collect log update
       rewards = []
       self.index += 1

@@ -41,20 +41,12 @@ def merge(rollouts):
 
    for rollout in rollouts.values():
       for idx in range(rollout.time):
-         outputs = rollout.actions[idx]
-         val     = rollout.values[idx]
-         ret     = rollout.returns[idx]
-
-         outs['value'].append(val)
-         outs['return'].append(ret)
-
-         #Going to have to change to key by atn type (move, attk, etc)
-         for out in outputs:
+         for out in rollout.actions[idx]:
             outk = outs['action'][out.atnArgKey]
             outk['atns'].append(out.atnLogits)
             outk['idxs'].append(out.atnIdx)
-            outk['vals'].append(val)
-            outk['rets'].append(ret)
+            outk['vals'].append(out.value)
+            outk['rets'].append(out.returns)
 
    return outs
 
@@ -76,24 +68,21 @@ def backward(rollouts, config):
       entropy: Entropy bonus      
    '''
    outs = merge(rollouts)
-   pg, entropy, attackentropy = 0, 0, 0
+   pgLoss, valLoss, entLoss = 0, 0, 0
    for k, out in outs['action'].items():
       atns = out['atns']
       vals = torch.stack(out['vals'])#.to(device)
       idxs = torch.tensor(out['idxs'])#.to(device)
       rets = torch.tensor(out['rets']).view(-1, 1)
-      l, e = loss.PG(atns, idxs, vals, rets)
-      pg += l
-      entropy += e
 
-   returns = torch.stack(outs['value'])#.to(device)
-   values  = torch.tensor(outs['return']).view(-1, 1)
-   valLoss = loss.valueLoss(values, returns)
-   totLoss = pg + config.VAL_WEIGHT*valLoss + config.ENTROPY*entropy
+      l, v, e = loss.PG(atns, idxs, vals, rets)
 
-   #totLoss.backward(retain_graph=True)
+      pgLoss  += l
+      valLoss += v
+      entLoss += e
+
+   totLoss = pgLoss + config.VAL_WEIGHT*valLoss + config.ENTROPY*entLoss
    totLoss.backward()
-   reward = np.mean(outs['return'])
 
-   return reward, vals.mean(), pg, valLoss, entropy
+   return pgLoss, valLoss, entLoss
 

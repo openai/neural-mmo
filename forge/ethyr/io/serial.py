@@ -42,20 +42,6 @@ class Serial:
       ret = tuple(pad*[-1]) + ret
       return ret
 
-   #def inputs(realm, stim):
-   #   '''Serialize observations'''
-   #   iden, key = Serial.realmKey(realm, stim)
-   #   stim = Stimulus.serialize(stim, iden)
-   #   return iden, key, stim
-
-   #def outputs(realm, ob, outs):
-   #   '''Serialize actions'''
-   #   #Offset environment tick by 1 because we have
-   #   #stepped the environment.
-   #   iden, key = Serial.realmKey(realm, ob, 1)
-   #   actn = Action.serialize(outs, iden)
-   #   return iden, key, actn
-
    def nontemporal(key):
       '''Get the time independent part of a key'''
       return tuple(key[:1]) + tuple(key[2:])

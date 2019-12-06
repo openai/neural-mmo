@@ -90,7 +90,8 @@ def PG(pi, atn, val, returns):
    adv = advantage(returns, val)
    polLoss = policyLoss(logProb, atn, adv)
    entLoss = entropyLoss(prob, logProb)
-   return polLoss, entLoss
+   valLoss = valueLoss(val, returns)
+   return polLoss, valLoss, entLoss
 
 #A bit stale--not currently used because
 #Vanilla PG is equivalent with 1 update per minibatch

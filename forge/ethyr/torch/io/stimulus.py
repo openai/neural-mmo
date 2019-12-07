@@ -1,35 +1,37 @@
+'''Observation processing module'''
+
 from pdb import set_trace as T
 import numpy as np
 
-from collections import defaultdict
-
 import torch
 from torch import nn
-from torch.nn import functional as F
-from itertools import chain
 
 from forge.blade.io import Stimulus as StaticStimulus
 from forge.blade.io import Action as StaticAction
-from forge.ethyr.io import Serial, utils
-from forge.ethyr.torch.policy.embed import Input, TaggedInput, Embedding
 
 class Env(nn.Module):
-   '''Network responsible for processing observations
+   def __init__(self, config, embeddings, attributes, entities):
+      '''Network responsible for processing observations
 
-   Args:
-      config: A Config object
-   '''
-   def __init__(self, config):
+      Args:
+         config     : A configuration object
+         embeddings : An attribute embedding module
+         attributes : An attribute attention module
+         entities   : An entity attention module
+      '''
       super().__init__()
+      h           = config.HIDDEN
       self.config = config
-      h = config.HIDDEN
-      self.h = h
+      self.h      = h
 
-      self.initSubnets(config)
+      #Assemble network modules
+      self.initEmbeddings(embeddings)
+      self.initAttributes(attributes)
+      self.initEntities(entities)
 
       self.action = nn.Embedding(StaticAction.n, config.HIDDEN)
 
-   def initSubnets(self, config, name=None):
+   def initEmbeddings(self, embedF):
       '''Initialize embedding networks'''
       emb  = nn.ModuleDict()
       for name, subnet in StaticStimulus:
@@ -37,14 +39,23 @@ class Env(nn.Module):
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
             param = '-'.join(param)
-            emb[name][param] = TaggedInput(val(config), config)
+            emb[name][param] = embedF(val(self.config), self.config)
       self.emb = emb
+
+   def initAttributes(self, attrF):
+      '''Initialize attribute networks'''
+      self.attributes = {}
+      for name, subnet in StaticStimulus:  
+         self.attributes['-'.join(name)] = attrF(self.config)
+
+   def initEntities(self, entF):
+      '''Initialize entity network'''
+      self.entities = entF(self.config) 
 
    def actions(self, embeddings):
       '''Embed actions'''
       embed = []
       for atn in StaticAction.arguments:
-         #Brackets on atn.serial?
          idx = torch.Tensor([atn.idx])
          idx = idx.long()#.to(self.config.DEVICE)
 
@@ -68,20 +79,29 @@ class Env(nn.Module):
       embeddings = attn(embeddings)
       return embeddings
 
-   def forward(self, net, inp):
+   def forward(self, inp):
+      '''Produces tensor representations from an IO object
+
+      Args:                                                                   
+         inp: An IO object specifying observations                      
+
+      Returns:
+         observationTensor : A fixed size observation representation
+         entityLookup      : A fixed size representation of each entity
+      ''' 
       observationTensor = []
       embeddings = []
 
       #Pack entities of each attribute set
       for name, entities in inp.obs.entities.items():
-         embs = self.attrs(name, net.attributes[name], entities)
+         embs = self.attrs(name, self.attributes[name], entities)
          embeddings.append(embs)
 
       #Pack entities of each observation
       entityLookup = torch.cat(embeddings)
       for objID, idxs in inp.obs.names.items():
          emb = entityLookup[[e for e in idxs]]
-         obs = net.entities(emb)
+         obs = self.entities(emb)
          observationTensor.append(obs)
 
       entityLookup = self.actions(entityLookup)

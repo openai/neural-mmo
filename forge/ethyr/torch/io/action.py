@@ -1,39 +1,41 @@
+'''Action decision module'''
+
 from pdb import set_trace as T
 import numpy as np
-
-from collections import defaultdict
 
 import torch
 from torch import nn
 
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
-from forge.blade.io import Action as Static
-from forge.blade.io.action import static as StaticAction
-
-from forge.ethyr.io import Action as Dynamic
-from forge.ethyr.io.utils import pack, unpack
-
-from forge.blade.entity.player import Player
 
 class NetTree(nn.Module):
-   '''Network responsible for selecting actions
-
-   Args:
-      config: A Config object
-   '''
    def __init__(self, config):
+      '''Network responsible for selecting actions
+
+      Args:
+         config: A Config object
+      '''
       super().__init__()
       self.config = config
       self.h = config.HIDDEN
 
-      self.net = VariableDiscreteAction(
-               self.config, self.h, self.h)
+      self.net = DiscreteAction(self.config, self.h, self.h)
 
    def names(self, nameMap, args):
+      '''Lookup argument indices from name mapping'''
       return np.array([nameMap.get(e) for e in args])
 
    def forward(self, obs, values, observationTensor, entityLookup, manager):
+      '''Populates an IO object with actions in-place                         
+                                                                              
+      Args:                                                                   
+         obs               : An IO object specifying observations
+         vals              : A value prediction for each agent
+         observationTensor : A fixed size observation representation
+         entityLookup      : A fixed size representation of each entity
+         manager           : A RolloutManager object
+      ''' 
       observationTensor = observationTensor.unsqueeze(-2)
       
       for atn, action in obs.atn.actions.items():
@@ -60,20 +62,7 @@ class Action(nn.Module):
       xIdx = functional.classify(x, mask)
       return x, xIdx
 
-class ConstDiscreteAction(Action):
-   '''Head for making a discrete selection from
-   a constant number of candidate actions'''
-   def __init__(self, config, h, ydim):
-      super().__init__()
-      self.net = torch.nn.Linear(h, ydim)
-
-   def forward(self, stim):
-      x = self.net(stim)
-      if len(x.shape) > 1:
-         x = x.squeeze(-2)
-      return super().forward(x)
-
-class VariableDiscreteAction(Action):
+class DiscreteAction(Action):
    '''Head for making a discrete selection from
    a variable number of candidate actions'''
    def __init__(self, config, xdim, h):

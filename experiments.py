@@ -34,7 +34,7 @@ class Config(config.Config):
 
    #Number of experience steps before
    #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 8192# 256*6
+   CLUSTER_UPDATES = 8192
    SERVER_UPDATES  = CLUSTER_UPDATES // NGOD
 
    #Hardware specification

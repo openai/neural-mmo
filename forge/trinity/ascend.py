@@ -4,7 +4,7 @@ import ray, time
 from collections import defaultdict
 
 class Timed:
-   '''Performance logging superclass'''
+   '''Performance timing superclass'''
    def __init__(self):
       self.run_time  = 0
       self.wait_time = 0
@@ -30,6 +30,7 @@ class Timed:
       return ret
 
 class Log:
+   '''Performance logging superclass'''
    def __init__(self, runTime, waitTime):
       self.run  = runTime
       self.wait = waitTime
@@ -92,30 +93,30 @@ class Ascend(Timed):
       - A sync() function for collecting distrib() returns
       - Various smaller tools + Timed logging
 
-   Works with pdb while using Ray local mode
-
-   Args:
-      disciple: a class to instantiate remotely
-      n: number of remote instances
-      *args: arguments for the disciple
+   Notes:
+      Works with pdb while using Ray local mode
    '''
    def __init__(self, disciple, n, *args):
+      '''
+      Args:
+         disciple: a class to instantiate remotely
+         n: number of remote instances
+         *args: arguments for the disciple
+      '''
       super().__init__()
       self.remote    = Ascend.isRemote(disciple)
       disciple       = Ascend.localize(disciple, self.remote)
       self.disciples = [disciple(*args, idx) for idx in range(n)]
 
    def distrib(self, *args, shard=None):
-      '''Asynchronous wrapper around the step function
-      function of all remote disciples
+      '''Asynchronous wrapper around the step function of remote disciples
 
       Args:
          *args: Arbitrary data to broadcast to disciples
-         shard: A binary mask of length len(args) specifying whether to scatter each argument
+         shard: Binary mask of len(args) specifying which args to scatter
          
       Returns:
-         A list of async handles to the step returns
-         from all remote disciples
+         rets: A list of async step return handles from remote disciples
       '''
       arg, rets = args, []
       for discIdx, disciple in enumerate(self.disciples):
@@ -142,7 +143,7 @@ class Ascend(Timed):
          rets: async handles returned from distrib
 
       Returns:
-         A list of returns from all disciples
+         rets: A list of returns from all disciples
       '''
       if self.remote:
          return ray.get(rets)
@@ -153,15 +154,21 @@ class Ascend(Timed):
       function of all remote disciples
 
       Args:
-         *args: broadcast to all disciples
+         *args : Arguments to broadcast or shart to all disciples
+         shard : Sharding protocal as defined by Ascend.distrib()
  
       Returns:
-         A list of returns from all disciples
+         rets: A list of returns from all disciples
       '''
       rets = self.distrib(*args)
       return self.sync(rets)
 
    def discipleLogs(self):
+      '''Logging data from all disciples
+
+      Returns:
+         logs: A list of disciple logs
+      '''
       logs = []
       for e in self.disciples:
          log = e.logs
@@ -179,16 +186,17 @@ class Ascend(Timed):
       '''Converts to the correct local/remote function version
 
       Args:
-         f: Function to localize
-         remote: Whether f is remote
+         f      : Function to localize
+         remote : Whether f is remote
  
       Returns:
-         A localized function (f or f.remote)
+         f: A localized function (f or f.remote)
       '''
       return f if not remote else f.remote
 
    def isRemote(obj):
-      '''Check if an object is remote'''
+      '''Check if an object is remote
+
+      Returns:
+         isRemote: (bool) Whether an object is remote'''
       return hasattr(obj, 'remote') or hasattr(obj, '__ray_checkpoint__')
-
-

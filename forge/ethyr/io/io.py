@@ -5,7 +5,6 @@ import time
 from forge.blade.io.action.static import Action as StaticAction
 
 from forge.ethyr.io import Stimulus, Action, Serial, utils
-from forge.ethyr.io.action import ActionArgs
 
 class Lookup:
    '''Lookup utility for indexing 
@@ -92,20 +91,20 @@ class Inp:
   
 class IO:
    '''High level I/O class for abstracting game state and action selection'''
-   def inputs(obs, rewards, dones, groupFn, config, serialize):
+   def inputs(obs, rewards, dones, clientHash, config, serialize):
       '''Preprocess inputs'''
       inputs = defaultdict(Inp)
       for done in dones:
-         idx = groupFn(done[1])
+         idx = clientHash(done[1])
          inputs[idx].dones.append(done)
 
       ### Process inputs
       n = 0
       for ob, reward in zip(obs, rewards):
          env, ent = ob
-         idx = groupFn(ent.entID)
+         idx = clientHash(ent.entID)
          inputs[idx].key(env, ent, reward, config)
-         Stimulus.process(inputs[idx], env, ent, config, serialize)
+         Stimulus.process(config, inputs[idx], env, ent, serialize)
          inputs[idx].obs.n += 1
          n += 1
       
@@ -117,7 +116,7 @@ class IO:
       ### Process outputs
       for ob, reward in zip(obs, rewards):
          env, ent = ob
-         idx = groupFn(ent.entID)
+         idx = clientHash(ent.entID)
          Action.process(inputs[idx], env, ent, config, serialize)
    
       #Pack actions

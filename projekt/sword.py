@@ -1,19 +1,15 @@
 from pdb import set_trace as T
-from collections import defaultdict
 from copy import deepcopy
 
-import numpy as np 
 import ray
 
-import projekt
-from forge import trinity
-from forge.blade.core import realm
 from forge.trinity.ascend import Ascend, runtime
+
 from forge.ethyr.experience import RolloutManager
-from forge.ethyr.io import Stimulus, Action
-from forge.ethyr.io.io import Output
-from forge.ethyr.torch import Model, optim
 from forge.ethyr.torch.param import setParameters
+from forge.ethyr.torch import optim
+
+import projekt
 
 #@ray.remote
 class Sword(Ascend):
@@ -29,7 +25,13 @@ class Sword(Ascend):
    class with @ray.remote to enable sharding.'''
 
    def __init__(self, trinity, config, idx):
-      '''Initializes a model and relevent utilities'''
+      '''Initializes a model and relevent utilities
+                                                                              
+      Args:                                                                   
+         trinity : A Trinity object as shown in __main__                      
+         config  : A Config object as shown in __main__                       
+         idx     : Unused hardware index                                      
+      '''
       super().__init__(disciple=None, n=0)
       config        = deepcopy(config)
       self.config   = config
@@ -40,7 +42,18 @@ class Sword(Ascend):
    @runtime
    def step(self, data, packet, backward):
       '''Synchronizes weights from upstream; computes
-      agent decisions; computes policy updates.'''
+      agent decisions; computes policy updates.
+                                                                              
+      Args:                                                                   
+         data     : An IO object specifying observations
+         packet   : An optional parameter vector to replace model weights
+         backward : (bool) Whether of not a backward pass should be performed  
+
+      Returns:                                                                   
+         data    : The same IO object populated with action decisions
+         grads   : A vector of gradients aggregated across trajectories
+         summary : A BlobSummary object logging agent statistics
+      '''   
       grads, blobs = None, None
 
       #Sync model weights; batch obs; compute forward pass

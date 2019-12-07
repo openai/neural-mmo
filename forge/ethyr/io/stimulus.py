@@ -9,6 +9,7 @@ from forge.ethyr.io import utils
 from forge.ethyr.io.serial import Serial
 
 def camel(string):
+   '''Convert a string to camel case'''
    return string[0].lower() + string[1:]
 
 class Data:
@@ -38,21 +39,22 @@ class Data:
 class Stimulus:
    '''Static IO class used for interacting with game observations
 
-   The environment returns game objects in observations; this class
-   assembles them into usable data packets
-   '''
-   def process(inp, env, ent, config, serialize=True):
-      '''Main utility for processing game observations.
+   The environment returns game objects in observations.
+   This class assembles them into usable data packets'''
+   def process(config, inp, env, ent, serialize=True):
+      '''Utility for preprocessing game observations
 
       Built to be semi-automatic and only require small updates
       for large new classes of observations
 
       Args:
-         A list of observations as returned by the environment
-      
-      Returns:
-         An unbatched list of proccessed stimulus packets
+         config    : A configuration object
+         inp       : An IO object specifying observations
+         env       : Local environment observation
+         ent       : Local entity observation
+         serialize : (bool) Whether to serialize the IO object data
       '''
+
       #Static handles
       Stimulus.funcNames = 'Entity Tile'.split()
       Stimulus.functions = [Stimulus.entity, Stimulus.tile]

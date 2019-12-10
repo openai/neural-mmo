@@ -30,7 +30,7 @@ class Pantheon(Ascend):
       self.log    = defaultdict(list)
       self.config = config
 
-      self.net = Model(projekt.ANN, config)
+      self.net = Model(projekt.Policy, config)
       self.net.printParams()
 
    @runtime

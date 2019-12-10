@@ -4,40 +4,24 @@ import numpy as np
 from itertools import chain 
 from collections import defaultdict
 
-from forge.blade.io.action import Node
-#from forge.ethyr.io import Stimulus, Action
-
 class Serial:
-   KEYLEN = 3
-   ACTION = 2
-   TILE   = 1
-   PLAYER = 0
-
    '''Internal serialization class for communication across machines
 
    Mainly wraps Stimulus.serialize and Action.serialize. Also provides
    keying functionality for converting game objects to unique IDs.
 
    Format: World, Tick, key.serial[0], key.serial[1], key type'''
+
+   #Length of serial key tuple
+   KEYLEN = 3
+
    def key(key):
       '''Convert a game object to a unique key'''
-      from forge.blade.entity import Player
-      from forge.blade.core.tile import Tile
-
       if key is None:
          return tuple([-1]*Serial.KEYLEN)
 
-      ret = key.serial
-      if isinstance(key, type):
-         if issubclass(key, Node):
-            ret += tuple([Serial.ACTION])
-      else:
-         ret = key.serial
-         if isinstance(key, Player):
-            ret += tuple([Serial.PLAYER])
-         elif isinstance(key, Tile):
-            ret += tuple([Serial.TILE])
-
+      #Concat object key with class key
+      ret = key.serial + tuple([key.SERIAL])
       pad = Serial.KEYLEN - len(ret)
       ret = tuple(pad*[-1]) + ret
       return ret

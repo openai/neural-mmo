@@ -1,12 +1,14 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.io import Stimulus, StimHook
+from forge.blade.io.stimulus.hook import StimHook
+from forge.blade.io.stimulus.static import Stimulus
 
 def camel(string):
    return string[0].lower() + string[1:]
 
 class Tile(StimHook):
+   SERIAL = 1
    def __init__(self, config, mat, r, c, nCounts, tex):
       super().__init__(Stimulus.Tile, config)
       self.r, self.c = r, c

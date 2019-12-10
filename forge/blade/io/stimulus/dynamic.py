@@ -4,9 +4,8 @@ import time
 
 from collections import defaultdict
 
-from forge.blade.io import Stimulus as Static
-from forge.ethyr.io import utils
-from forge.ethyr.io.serial import Serial
+from forge.blade.io.stimulus.static import Stimulus as Static
+from forge.blade.io.serial import Serial
 
 def camel(string):
    '''Convert a string to camel case'''

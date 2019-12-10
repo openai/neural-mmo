@@ -13,55 +13,50 @@ class Config(config.Config):
    All parameters can also be overridden at run time.
    See Forge.py for an example'''
 
-   MODELDIR = 'resource/exps' #Where to store models
-   HOST     = 'localhost'     #Host for client
-   DEBUG    = False           #Whether to run with debug settings
+   MODELDIR  = 'resource/exps'  #Where to store models
+   HOST      = 'localhost'      #Host for client
+   STAT_FILE = 'stats.txt'      #Run statistics log file
+   DEVICE    = 'cpu'            #Hardware specification
+   DEBUG     = False            #Whether to run with debug settings
 
-   LOAD = False #Load model from file?
-   BEST = False #If loading, most recent or highest lifetime?
-   TEST = False #Update the model during run?
+   LOAD = False                 #Load model from file?
+   BEST = False                 #If loading, most recent or highest lifetime?
+   TEST = False                 #Update the model during run?
 
-   #Typically overriden in Forge.py
-   NENT = 128 #Maximum population size
-   NPOP = 1  #Number of populations
+                                ##Typically overriden in Forge.py
+   NENT = 128                   #Maximum population size
+   NPOP = 8                     #Number of populations
 
-   HIDDEN  = 32 #Model embedding dimension
-   EMBED   = 32 #Model hidden dimension
+   HIDDEN  = 32                 #Model embedding dimension
+   EMBED   = 32                 #Model hidden dimension
  
    NGOD   = 6                   #Number of environment servers
    NSWORD = 1                   #Number of clients per server
    NCORE  = NGOD * (NSWORD + 1) #Total number of cores
 
-   #Number of experience steps before
-   #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 8192
-   SERVER_UPDATES  = CLUSTER_UPDATES // NGOD
+   _ = 8192
+   CLUSTER_UPDATES = _          #Number of samples per optim
+   SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
 
-   #Hardware specification
-   #DEVICE = 'cpu:0'
+   ###############################Gradient based optimization parameters
+   LR         = 3e-4            #Learning rate
+   DECAY      = 1e-5            #Weight decay
+   GRAD_CLIP  = 5.0             #Gradient absolute value clip threshold
+   DISCOUNT   = 0.95            #Reward discount factor
+   VAL_WEIGHT = 0.5             #Value function loss weighting
+   ENTROPY    = 0.001           #Entropy bonus strength
 
-   #Gradient based optimization parameters
-   LR         = 3e-4
-   DECAY      = 1e-5
-   GRAD_CLIP  = 5.0
-   DISCOUNT   = 0.95
-   VAL_WEIGHT = 0.5
-   ENTROPY    = 0.001
+                                ##Per agent logging
+   SAVE_BLOBS = False           #Log at all? (IO/comms intensive)
+   BLOB_FRAC  = 0.1             #What fraction of blobs to log?
 
-   #Per agent logging
-   SAVE_BLOBS = False #Log at all? (IO/comms intensive)
-   BLOB_FRAC  = 0.1   #What fraction of blobs to log?
+   ###############################Experimental population based training
+   ###############################parameters -- not currently used
+   POPOPT   = False             #Whether to enable
+   PERMPOPS = 4                 #Number of permutations
+   PERMVAL  = 1e-2              #Permutation strength
 
-   #Experimental population based training parameters
-   #Disabled and not currently functional -- avoid modification
-   POPOPT   = False
-   PERMPOPS = 4
-   PERMVAL  = 1e-2
-
-   #Stats
-   STAT_FILE = 'stats.txt'
-
-   #Debug params
+   #Parameter overrides for debugging
    if DEBUG:
       NGOD = 1
       NSWORD = 1

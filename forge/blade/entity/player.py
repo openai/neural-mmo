@@ -4,7 +4,8 @@ from pdb import set_trace as T
 from forge.blade.systems import ai
 from forge.blade.lib.enums import Material, Neon
 
-from forge.blade.io import Stimulus, StimHook
+from forge.blade.io.stimulus.hook import StimHook
+from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action import static as action
 
 from forge.blade.systems.skill import Skills
@@ -131,6 +132,7 @@ class Status(StimHook):
       self.wilderness.update(lvl)
 
 class Player():
+   SERIAL = 0
    def __init__(self, config, iden, pop, name='', color=None):
       self.config = config
 

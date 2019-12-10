@@ -1,6 +1,9 @@
 '''Policy submodules and a baseline agent.'''
 from pdb import set_trace as T
 
+import numpy as np
+from collections import defaultdict
+
 import torch
 from torch import nn
 
@@ -13,25 +16,6 @@ from forge.ethyr.torch import policy
 from forge.ethyr.torch.policy import embed, attention
 from forge.ethyr.torch.io.action import NetTree
 from forge.ethyr.torch.io.stimulus import Env
-
-class ValNet(nn.Module):
-   def __init__(self, config):
-      '''Value network
-
-      Args:                                                                   
-         config: A Configuration object
-      '''
-      super().__init__()
-      h = config.HIDDEN
-      self.config = config
-      self.fc1 = torch.nn.Linear(h, 1)
-
-   def forward(self, stim):
-      val = self.fc1(stim)
-      if self.config.TEST:
-         val = val.detach()
-
-      return val
 
 class Attributes(attention.Attention):
     def __init__(self, config):
@@ -54,18 +38,46 @@ class Entities(nn.Module):
       self.targDim = 250*h
 
       self.fc = nn.Linear(self.targDim, 4*h)
-      self.fc1 = nn.Linear(4*h, h)
 
     def forward(self, x):
       x = x.view(-1)
       pad = torch.zeros(self.targDim - len(x))
       x = torch.cat([x, pad])
       x = self.fc(x)
-      x = torch.relu(x)
-      x = self.fc1(x)
       return x
 
-class ANN(nn.Module):
+class IO(nn.Module):
+    def __init__(self, config):
+      #Assemble input network with the IO library
+      #Output and value networks
+      super().__init__()
+      self.input  = Env(config, embed.TaggedInput, Attributes, Entities)
+      self.output = NetTree(config)
+ 
+class Hidden(nn.Module):
+   def __init__(self, config):
+      '''Value network
+
+      Args:                                                                   
+         config: A Configuration object
+      '''
+      super().__init__()
+      h = config.HIDDEN
+      self.config = config
+   
+      self.policy = torch.nn.Linear(4*h, h)
+      self.value  = torch.nn.Linear(h, 1)
+      
+   def forward(self, x):
+      x = self.policy(x)
+ 
+      val = self.value(x)
+      if self.config.TEST:
+         val = val.detach()
+
+      return x, val
+
+class Policy(nn.Module):
    def __init__(self, config):
       '''Agent policy
 
@@ -75,19 +87,12 @@ class ANN(nn.Module):
       super().__init__()
       self.config = config
 
-      #Module references
-      embeddings = embed.TaggedInput
-      attributes = Attributes
-      entities   = Entities
+      self.IO = IO(config)
 
-      #Assemble input network with the IO library
-      self.env    = Env(config, embeddings, attributes, entities)
+      self.policy = nn.ModuleList([
+            Hidden(config) for _ in range(config.NPOP)])
 
-      #Output and value networks
-      self.action = NetTree(config)
-      self.val    = ValNet(config)
-
-   def forward(self, data, manager):
+   def forward(self, packet, manager):
       '''Populates an IO object with actions in-place
                                                                               
       Args:                                                                   
@@ -96,33 +101,70 @@ class ANN(nn.Module):
       ''' 
 
       #Some shards may not always have data
-      if data.obs.n == 0: return
+      if packet.obs.n == 0: return
 
-      observationTensor, entityLookup = self.env(data)
-      vals                            = self.val(observationTensor)
+      #Run the input network
+      observationTensor, entityLookup = self.IO.input(packet)
 
-      self.action(data, vals, observationTensor, entityLookup, manager)
+      #Run the main hidden network with unshared population and value weights
+      hidden, values = self.hidden(packet, observationTensor)
+
+      #Run the output network
+      self.IO.output(packet, values, hidden, entityLookup, manager)
+
+   def hidden(self, packet, state):
+      '''Population-specific hidden network and value function
+
+      Args:                                                                   
+         packet: An IO object
+         state: The current hidden state
+ 
+      Returns:
+         hidden: The new hidden state
+         values: The value estimate
+      ''' 
+      idxs, hidden, values = [], [], []
+      groups = self.grouped(
+            packet.keys,
+            state,
+            lambda key: key[0])
+
+      for pop, s in groups.items():
+         k, s = s
+         h, v = self.policy[pop](s)
+         idxs.append(k)
+         hidden.append(h)
+         values.append(v)
+
+      #Rearrange in input order
+      idxs   = np.concatenate(idxs).tolist()
+      hidden = torch.cat(hidden)[idxs]
+      values = torch.cat(values)[idxs]
+   
+      return hidden, values
 
    def grouped(self, keys, vals, groupFn):
       '''Group input data by population
 
-      Returns:                                                                            groups: population keyed dictionary of input data
-      ''' 
-      #Per pop internal net and value net
-      #You have a population group function, but you'll need to reorder
-      #To match action ordering
-      #for pop, data in self.grouped(obs.keys, observationTensor):
-      #   keys, obsTensor = data
-      #   self.net.val[pop](obsTensor)
+      Args:                                                                   
+         keys    : Keys
+         vals    : Vals
+         groupFn : Hash fn
  
+      Returns:
+         groups: population keyed dictionary of input data
+      ''' 
+
+      idx = 0
       groups = defaultdict(lambda: [[], []])
       for key, val in zip(keys, vals):
          key = groupFn(key)
-         groups[key][0].append(key)
+         groups[key][0].append(idx)
          groups[key][1].append(val)
+         idx += 1
 
       for key in groups.keys():
-         groups[key] = torch.stack(groups[key])
+         groups[key][1] = torch.stack(groups[key][1])
 
       return groups
 

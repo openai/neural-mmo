@@ -4,10 +4,10 @@ import numpy as np
 from collections import defaultdict
 
 from forge.blade.io.action import static
-from forge.blade.io import Action as Static
+from forge.blade.io.action.static import Action as Static
 from forge.blade.io.action.node import NodeType, Node
-from forge.ethyr.io.serial import Serial
-from forge.ethyr.io import utils
+from forge.blade.io.serial import Serial
+from forge.blade.io import utils
 
 class Action:
    '''Static IO class used for interacting with game actions

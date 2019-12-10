@@ -2,9 +2,10 @@ from pdb import set_trace as T
 from collections import defaultdict
 import time
 
-from forge.blade.io.action.static import Action as StaticAction
 
-from forge.ethyr.io import Stimulus, Action, Serial, utils
+from forge.blade.io import stimulus, action
+from forge.blade.io.serial import Serial
+from forge.blade.io import utils
 
 class Lookup:
    '''Lookup utility for indexing 
@@ -33,6 +34,7 @@ class Lookup:
    def reverse(self, idx):
       return self.back[idx]
 
+### Begin Internal IO Packet Objects ###
 class Output:
    def __init__(self, key, atn, atnIdx, value):
       self.key    = key
@@ -59,8 +61,9 @@ class AtnData:
 class ArgsData:
    def __init__(self):
       self.arguments = defaultdict(list)
+### End Internal IO Packet Objects ###
 
-class Inp:
+class IOPacket:
    def __init__(self):
       self.obs    = ObsData()
       self.atn    = AtnData()
@@ -71,7 +74,7 @@ class Inp:
       self.dones   = []
 
    def actions(self, serialize=True):
-      for atn in StaticAction.arguments:
+      for atn in action.Static.arguments:
          serial = atn
          if serialize:
             serial = Serial.key(serial)
@@ -88,57 +91,56 @@ class Inp:
          for arg, argument in action.arguments.items():
             tensor, lens = utils.pack(argument)
             self.atn.actions[atn].arguments[arg] = tuple([tensor, lens])
-  
-class IO:
-   '''High level I/O class for abstracting game state and action selection'''
-   def inputs(obs, rewards, dones, clientHash, config, serialize):
-      '''Preprocess inputs'''
-      inputs = defaultdict(Inp)
-      for done in dones:
-         idx = clientHash(done[1])
-         inputs[idx].dones.append(done)
 
-      ### Process inputs
-      n = 0
-      for ob, reward in zip(obs, rewards):
-         env, ent = ob
-         idx = clientHash(ent.entID)
-         inputs[idx].key(env, ent, reward, config)
-         Stimulus.process(config, inputs[idx], env, ent, serialize)
-         inputs[idx].obs.n += 1
-         n += 1
-      
-      start = time.time()
-      #Index actions
-      for idx, inp in inputs.items():
-         inputs[idx].actions()
+'''High level I/O class for abstracting game state and action selection'''
+def inputs(obs, rewards, dones, clientHash, config, serialize):
+   '''Preprocess inputs'''
+   inputs = defaultdict(IOPacket)
+   for done in dones:
+      idx = clientHash(done[1])
+      inputs[idx].dones.append(done)
 
-      ### Process outputs
-      for ob, reward in zip(obs, rewards):
-         env, ent = ob
-         idx = clientHash(ent.entID)
-         Action.process(inputs[idx], env, ent, config, serialize)
+   ### Process inputs
+   n = 0
+   for ob, reward in zip(obs, rewards):
+      env, ent = ob
+      idx = clientHash(ent.entID)
+      inputs[idx].key(env, ent, reward, config)
+      stimulus.Dynamic.process(config, inputs[idx], env, ent, serialize)
+      inputs[idx].obs.n += 1
+      n += 1
    
-      #Pack actions
-      for idx, inp in inputs.items():
-         inputs[idx].pack()
+   start = time.time()
+   #Index actions
+   for idx, inp in inputs.items():
+      inputs[idx].actions()
 
-      return inputs, n
+   ### Process outputs
+   for ob, reward in zip(obs, rewards):
+      env, ent = ob
+      idx = clientHash(ent.entID)
+      action.Dynamic.process(inputs[idx], env, ent, config, serialize)
 
-   def outputs(obs, atnDict=None):
-      '''Postprocess outputs'''
+   #Pack actions
+   for idx, inp in inputs.items():
+      inputs[idx].pack()
 
-      #Initialize output dictionary
-      if atnDict is None:
-         atnDict = defaultdict(lambda: defaultdict(list))
+   return inputs, n
 
-      #Reverse format lookup over actions
-      names = list(obs.obs.names.keys())
-      for atn, action in obs.atn.actions.items():
-         for arg, atnsIdx in action.arguments.items():
-            for idx, a in enumerate(atnsIdx):
-               _, entID, _ = names[idx]
-               a = obs.lookup.reverse(a)
-               atnDict[entID][atn].append(a)
+def outputs(obs, atnDict=None):
+   '''Postprocess outputs'''
 
-      return atnDict 
+   #Initialize output dictionary
+   if atnDict is None:
+      atnDict = defaultdict(lambda: defaultdict(list))
+
+   #Reverse format lookup over actions
+   names = list(obs.obs.names.keys())
+   for atn, action in obs.atn.actions.items():
+      for arg, atnsIdx in action.arguments.items():
+         for idx, a in enumerate(atnsIdx):
+            _, entID, _ = names[idx]
+            a = obs.lookup.reverse(a)
+            atnDict[entID][atn].append(a)
+
+   return atnDict 

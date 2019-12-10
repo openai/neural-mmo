@@ -79,16 +79,16 @@ class Direction(Node):
    def args(stim, entity, config):
       return Direction.edges
 
-class North:
+class North(Node):
    delta = (-1, 0)
 
-class South:
+class South(Node):
    delta = (1, 0)
 
-class East:
+class East(Node):
    delta = (0, 1)
 
-class West:
+class West(Node):
    delta = (0, -1)
 
 

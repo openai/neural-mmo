@@ -30,7 +30,7 @@ from forge.ethyr.torch import Model
 
 from experiments import Experiment, Config
 from projekt import Pantheon, God, Sword
-from projekt.ann import ANN
+from projekt.ann import Policy
 
 def parseArgs():
    '''Processes command line arguments'''
@@ -66,7 +66,7 @@ def render(trinity, config, args):
 
    #Instantiate environment and load the model,
    #Pass the tick thunk to a twisted WebSocket server
-   god   = trin.god.remote(trin, config, idx=0)
+   god   = trinity.god.remote(trinity, config, idx=0)
    model = Model(ANN, config).load(None, config.BEST).weights
    env   = god.getEnv.remote()
    god.tick.remote(model)

@@ -6,8 +6,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from forge.blade.io import Stimulus as StaticStimulus
-from forge.blade.io import Action as StaticAction
+from forge.blade.io import stimulus, action
 
 class Env(nn.Module):
    def __init__(self, config, embeddings, attributes, entities):
@@ -29,12 +28,12 @@ class Env(nn.Module):
       self.initAttributes(attributes)
       self.initEntities(entities)
 
-      self.action = nn.Embedding(StaticAction.n, config.HIDDEN)
+      self.action = nn.Embedding(action.Static.n, config.HIDDEN)
 
    def initEmbeddings(self, embedF):
       '''Initialize embedding networks'''
       emb  = nn.ModuleDict()
-      for name, subnet in StaticStimulus:
+      for name, subnet in stimulus.Static:
          name = '-'.join(name)
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
@@ -45,7 +44,7 @@ class Env(nn.Module):
    def initAttributes(self, attrF):
       '''Initialize attribute networks'''
       self.attributes = {}
-      for name, subnet in StaticStimulus:  
+      for name, subnet in stimulus.Static:  
          self.attributes['-'.join(name)] = attrF(self.config)
 
    def initEntities(self, entF):
@@ -55,7 +54,7 @@ class Env(nn.Module):
    def actions(self, embeddings):
       '''Embed actions'''
       embed = []
-      for atn in StaticAction.arguments:
+      for atn in action.Static.arguments:
          idx = torch.Tensor([atn.idx])
          idx = idx.long()#.to(self.config.DEVICE)
 

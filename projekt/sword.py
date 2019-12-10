@@ -36,17 +36,17 @@ class Sword(Ascend):
       config        = deepcopy(config)
       self.config   = config
 
-      self.net      = projekt.ANN(config)
+      self.net      = projekt.Policy(config)
       self.manager  = RolloutManager(config)
 
    @runtime
-   def step(self, data, packet, backward):
+   def step(self, packet, weights, backward):
       '''Synchronizes weights from upstream; computes
       agent decisions; computes policy updates.
                                                                               
       Args:                                                                   
-         data     : An IO object specifying observations
-         packet   : An optional parameter vector to replace model weights
+         packet   : An IO object specifying observations
+         weights  : An optional parameter vector to replace model weights
          backward : (bool) Whether of not a backward pass should be performed  
 
       Returns:                                                                   
@@ -57,9 +57,9 @@ class Sword(Ascend):
       grads, blobs = None, None
 
       #Sync model weights; batch obs; compute forward pass
-      setParameters(self.net, packet)
-      self.manager.collectInputs(data)
-      self.net(data, self.manager)
+      setParameters(self.net, weights)
+      self.manager.collectInputs(packet)
+      self.net(packet, self.manager)
   
       #Compute backward pass and logs from full rollouts,
       #discarding any partial trajectories
@@ -69,5 +69,5 @@ class Sword(Ascend):
          self.manager.inputs.clear()
          grads = self.net.grads()
 
-      return data, grads, blobs
+      return packet, grads, blobs
 

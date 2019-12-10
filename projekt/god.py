@@ -9,7 +9,7 @@ from forge.blade.core.realm import Realm
 from forge.blade.lib.log import BlobSummary 
 
 from forge.trinity.ascend import Ascend, runtime, Log
-from forge.ethyr.io import IO
+from forge.blade.io import io
 
 import projekt
 
@@ -121,7 +121,7 @@ class God(Ascend):
       '''
 
       #Preprocess obs
-      clientData, nUpdates = IO.inputs(
+      clientData, nUpdates = io.inputs(
          self.obs, self.rewards, self.dones, 
          self.clientHash, self.config, serialize=True)
 
@@ -143,7 +143,7 @@ class God(Ascend):
       atnDict, gradList, blobList = None, [], []
       for obs, grads, blobs in super().sync(rets):
          #Process outputs
-         atnDict = IO.outputs(obs, atnDict)
+         atnDict = io.outputs(obs, atnDict)
 
          #Collect update
          if self.backward:

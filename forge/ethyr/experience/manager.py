@@ -4,10 +4,9 @@ import numpy as np
 from itertools import chain 
 from collections import defaultdict
 
-
+from forge.blade.io.serial import Serial
 from forge.blade.lib.log import BlobSummary
 
-from forge.ethyr.io import Serial
 from forge.ethyr.experience import Rollout
 
 class RolloutManager:

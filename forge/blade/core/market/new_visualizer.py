@@ -31,7 +31,7 @@ class MarketVisualizer:
     Market Visualizer
     Visualizes a stream of data, automatically refreshes on update()
     """
-    def __init__(self, keys, history_len: int = 10,
+    def __init__(self, keys, history_len: int = 256,
                  title: str = "NeuralMMO Market Data", x: str = "tick",
                  ylabel: str = "Dummy Values"):
         """
@@ -55,8 +55,7 @@ class MarketVisualizer:
         self.ylabel      = ylabel
         self.x           = x
 
-        self.packet  = {}
-        self.data        = {x: [0]}
+        self.data        = {}
         self.colors      = {}
 
     def init(self, doc):
@@ -65,8 +64,8 @@ class MarketVisualizer:
         assert len(self.keys) <= len(self.COLORS), 'Limited color pool'
 
         for i, key in enumerate(self.keys):
-            self.data[key] = [0.5]
-        self.data['tick'] = [0.5]
+            self.data[key] = []
+        self.data['tick'] = []
 
         # this must only be modified from a Bokeh session callback
         self.source = ColumnDataSource(data=self.data)
@@ -77,11 +76,12 @@ class MarketVisualizer:
         self.doc = doc
 
         fig = figure(
+           plot_width=600,
+           plot_height=400,
+           tools='xpan,xwheel_zoom, xbox_zoom, reset',
            title='Neural MMO: Market Data',
            x_axis_label=self.x,
            y_axis_label=self.ylabel,
-           plot_width=600,
-           plot_height=400,
            **PLOT_OPTS)
 
         for i, key in enumerate(self.keys):
@@ -121,15 +121,11 @@ class MarketVisualizer:
 
 @ray.remote
 class BokehServer:
-    """
-    Market Visualizer
-    Visualizes a stream of data, automatically refreshes on update()
-    """
-
-    def __init__(self, market, keys, history_len: int = 10,
-                 title: str = "NeuralMMO Market Data", x: str = "tick",
-                 ylabel: str = "Dummy Values"):
+    def __init__(self, market, *args, **kwargs):
         """
+        Market Visualizer
+        Visualizes a stream of data, automatically refreshes on update()
+    
         Args:
             keys (list):       List of object names (str) to be displayed on
                                the market
@@ -140,33 +136,28 @@ class BokehServer:
             ylabel (str):      Name of y axis on plot
             seed (int):        seed for random number generation
         """
- 
+        self.visu   = MarketVisualizer(*args, **kwargs)
+        self.market = market
 
-        self.visu = MarketVisualizer(keys, history_len, title, x, ylabel)
+        server = Server(
+                {'/': self.init},
+                io_loop=IOLoop.current(),
+                port=PORT,
+                num_procs=1)
 
-        self.started = False
-        self.market  = market
+        self.thread = None
+        self.server = server
+        server.start()
 
-        self.server  = self.makeServer()
+        server.io_loop.add_callback(server.show, "/")
+        server.io_loop.start()
 
     def init(self, doc):
         self.doc = doc
         self.visu.init(doc)
-        thread = Thread(target=self.update, args=[])
-        thread.start()
+        self.thread = Thread(target=self.update, args=[])
+        self.thread.start()
         self.started = True
-
-    def makeServer(self):
-       io_loop = IOLoop.current()
-       server  = Server({'/': self.init}, io_loop=io_loop, 
-               port=PORT, num_procs=1)
-
-      
-       self.server = server
-       server.start()
-
-       server.io_loop.add_callback(server.show, "/")
-       server.io_loop.start()
 
     def update(self):
         """
@@ -174,24 +165,21 @@ class BokehServer:
         data (dict): updated data to be added to market, including tick value
         """
         while True:
-            time.sleep(0.2)
-            print('Update')
-            if not self.started:
+            time.sleep(1/60)
+            if self.thread is None:
                continue 
 
-            #Causes sync issues
-            packet           = ray.get(self.market.getData.remote())
-            self.visu.packet = packet
+            packet = ray.get(self.market.getData.remote())
+            data   = deepcopy(self.visu.data)
 
+            for key, val in packet.items():
+              data[key].append(val)
+            self.visu.data = data
+    
             self.doc.add_next_tick_callback(partial(self.stream))
 
     @gen.coroutine
     def stream(self):
-        data = deepcopy(self.visu.data)
-        for key, val in self.visu.packet.items():
-           data[key].append(val)
-
-        self.visu.data = data
         self.visu.source.stream(self.visu.data, self.visu.history_len)
 
 @ray.remote
@@ -217,25 +205,22 @@ class Market:
         self.keys = items
 
         for i, key in enumerate(self.keys):
-            self.data[key] = [0.5]
-        self.data['tick'] = [0.5]
+            self.data[key] = 0
+        self.data['tick'] = 0
 
         self.tick = 0
 
     def update(self):
-        data = {}
         #Best practice: update in one tick
-        self.tick += 1
-
         for key, val in self.data.items():
-            data[key] = val
+            self.data[key] = val
             if key == 'tick':
-                data[key] = self.tick
+                self.data[key] = self.tick
             else:
-                data[key] = random() - 0.5
+                self.data[key] += 0.2*(random() - 0.5)
 
-        self.data = data
-        self.middleman.setData.remote(data)
+        self.tick += 1
+        self.middleman.setData.remote(self.data)
 
 # Example setup
 PORT=5009
@@ -247,8 +232,7 @@ market     = Market(ITEMS, middleman)
 visualizer = BokehServer.remote(middleman, ITEMS)
 
 while True:
-  time.sleep(0.5)
-  print('tick')
+  time.sleep(1/30)
   market.update()
 
 

@@ -16,11 +16,111 @@ from bokeh.plotting import curdoc, figure, show
 from tornado import gen
 from tornado.ioloop import IOLoop
 
+from config import *
+
 # to run a demo with dummy data:
 # $ bokeh serve --show visualizer.py
 
-@ray.remote
+# market plans
+# click on objects in market to display stats about them
+# market overview tab
+# -> trade bandwidth, demand, gdp
+
 class MarketVisualizer:
+    """
+    Market Visualizer
+    Visualizes a stream of data, automatically refreshes on update()
+    """
+    def __init__(self, keys, history_len: int = 10,
+                 title: str = "NeuralMMO Market Data", x: str = "tick",
+                 ylabel: str = "Dummy Values"):
+        """
+        Args:
+            keys (list):       List of object names (str) to be displayed on
+                               the market
+            history_len (int): How far back to plot data, default is 10 ticks
+            title (str):       Title of graph
+            x (str):           Name of x value, both in data representation and
+                               x axis
+            ylabel (str):      Name of y axis on plot
+            seed (int):        seed for random number generation
+        """
+ 
+        self.COLORS = 'blue red green yellow black purple'.split()
+
+        self.history_len = history_len
+        self.title       = title
+        self.keys        = keys
+
+        self.ylabel      = ylabel
+        self.x           = x
+
+        self.packet  = {}
+        self.data        = {x: [0]}
+        self.colors      = {}
+
+    def init(self, doc):
+        # TODO figure out a better way to ensure each 
+        # object has a unique color
+        assert len(self.keys) <= len(self.COLORS), 'Limited color pool'
+
+        for i, key in enumerate(self.keys):
+            self.data[key] = [0.5]
+        self.data['tick'] = [0.5]
+
+        # this must only be modified from a Bokeh session callback
+        self.source = ColumnDataSource(data=self.data)
+
+        # This is important! Save curdoc() to make sure all threads
+        # see the same document.
+        #self.doc = curdoc()
+        self.doc = doc
+
+        fig = figure(
+           title='Neural MMO: Market Data',
+           x_axis_label=self.x,
+           y_axis_label=self.ylabel,
+           plot_width=600,
+           plot_height=400,
+           **PLOT_OPTS)
+
+        for i, key in enumerate(self.keys):
+            self.colors[key] = self.COLORS[i]
+            fig.line(x=self.x, y=key, source=self.source,
+                color=self.colors[key], legend_label=key)
+
+        #fig.xaxis.ticker = scales                                                     
+        #fig.xaxis.major_label_overrides = {1:'', 2:''}                                
+                                                                                       
+        fig.yaxis.major_tick_line_color='black'                                       
+        fig.xaxis.major_tick_line_color='black'                                       
+                                                                                       
+        fig.title.text_font_size = TEXT_LARGE                                         
+        fig.title.text_color = MAIN_COLOR                                             
+        fig.title.align = 'center'                                                    
+                                                                                       
+        #fig.grid[0].ticker  = scales                                                  
+        fig.legend.location = 'bottom_left'
+        fig.legend.label_text_color     = 'black'
+        fig.legend.label_text_font_size = TEXT_SMALL
+                                                   
+        fig.xaxis.major_label_text_font_size  = TEXT_SMALL
+        fig.xaxis.major_label_text_color = MAIN_COLOR    
+        fig.xaxis.axis_label_text_font_size = TEXT_MEDIUM
+        fig.xaxis.axis_label_text_color = MAIN_COLOR
+                                                                                       
+        fig.yaxis.major_label_text_font_size = TEXT_SMALL
+        fig.yaxis.major_label_text_color = MAIN_COLOR
+        fig.yaxis.axis_label_text_font_size = TEXT_MEDIUM
+        fig.yaxis.axis_label_text_color = MAIN_COLOR
+
+        # Hide lines that you click on in legend,
+        # ease of use for visualization
+        fig.legend.click_policy = "hide"
+        self.doc.add_root(fig)
+
+@ray.remote
+class BokehServer:
     """
     Market Visualizer
     Visualizes a stream of data, automatically refreshes on update()
@@ -41,85 +141,32 @@ class MarketVisualizer:
             seed (int):        seed for random number generation
         """
  
-        self.COLORS = 'blue red green yellow black purple'.split()
 
-        self.history_len = history_len
-        self.packet      = {}
-        self.title       = title
-        self.keys        = keys
-
-        self.ylabel      = ylabel
-        self.x           = x
-
-        self.data        = {x: [0]}
-        self.colors      = {}
+        self.visu = MarketVisualizer(keys, history_len, title, x, ylabel)
 
         self.started = False
-        self.market = market
-        self.server = self.makeServer()
+        self.market  = market
+
+        self.server  = self.makeServer()
+
+    def init(self, doc):
+        self.doc = doc
+        self.visu.init(doc)
+        thread = Thread(target=self.update, args=[])
+        thread.start()
+        self.started = True
 
     def makeServer(self):
        io_loop = IOLoop.current()
        server  = Server({'/': self.init}, io_loop=io_loop, 
                port=PORT, num_procs=1)
+
+      
        self.server = server
        server.start()
 
        server.io_loop.add_callback(server.show, "/")
-       #server.io_loop.add_callback(self.update, '/')
        server.io_loop.start()
-
-    def init(self, doc):
-        # TODO figure out a better way to ensure each 
-        # object has a unique color
-        assert len(self.keys) <= len(self.COLORS), 'Limited color pool'
-
-        for i, key in enumerate(self.keys):
-            self.data[key] = [0.5]
-        self.data['tick'] = [0.5]
-
-        # this must only be modified from a Bokeh session callback
-        self.source = ColumnDataSource(data=self.data)
-
-        # This is important! Save curdoc() to make sure all threads
-        # see the same document.
-        #self.doc = curdoc()
-        self.doc = doc
-
-        self.p = figure(
-           title='Neural MMO: Market Data',
-           x_axis_label=self.x,
-           y_axis_label=self.ylabel)
-
-        for i, key in enumerate(self.keys):
-            self.colors[key] = self.COLORS[i]
-            self.p.line(x=self.x, y=key, source=self.source,
-                color=self.colors[key], legend_label=key)
-
-        # Hide lines that you click on in legend,
-        # ease of use for visualization
-        self.p.legend.click_policy = "hide"
-        self.doc.add_root(self.p)
-        # market plans
-        # click on objects in market to display stats about them
-        # market overview tab
-        # -> trade bandwidth, demand, gdp
-
-        thread = Thread(target=self.update, args=[])
-        thread.start()
-        print('INITIALIZED')
-        self.started = True
-
-    @gen.coroutine
-    def stream(self):
-        #self.source = ColumnDataSource(data=self.data)
-        data = deepcopy(self.data)
-        for key, val in self.packet.items():
-           data[key].append(val)
-
-        self.data = data
-
-        self.source.stream(self.data, self.history_len)
 
     def update(self):
         """
@@ -133,10 +180,19 @@ class MarketVisualizer:
                continue 
 
             #Causes sync issues
-            packet = ray.get(self.market.getData.remote())
-            self.packet = packet
+            packet           = ray.get(self.market.getData.remote())
+            self.visu.packet = packet
 
             self.doc.add_next_tick_callback(partial(self.stream))
+
+    @gen.coroutine
+    def stream(self):
+        data = deepcopy(self.visu.data)
+        for key, val in self.visu.packet.items():
+           data[key].append(val)
+
+        self.visu.data = data
+        self.visu.source.stream(self.visu.data, self.visu.history_len)
 
 @ray.remote
 class Middleman:
@@ -181,31 +237,18 @@ class Market:
         self.data = data
         self.middleman.setData.remote(data)
 
-
-def update():
-    while True:
-        time.sleep(1.0)
-        print('tick')
-        market.update()
-
 # Example setup
-PORT=5008
-ITEMS = ['Food', 'Water', 'Sword']
+PORT=5009
 ray.init()
+ITEMS = ['Food', 'Water', 'Sword']
+
 middleman  = Middleman.remote()
 market     = Market(ITEMS, middleman)
-visualizer = MarketVisualizer.remote(middleman, ITEMS)
-update()
+visualizer = BokehServer.remote(middleman, ITEMS)
 
-#thread = Thread(target=update, args=[market])
-#thread.start()
+while True:
+  time.sleep(0.5)
+  print('tick')
+  market.update()
 
-#market.update()
-#market.update()
-#market.update()
-#market.update()
-#server = Server({'/': thunk})
-#server.start()
 
-#server.io_loop.add_callback(server.show, "/")
-#server.io_loop.start()

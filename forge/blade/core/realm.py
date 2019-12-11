@@ -68,9 +68,9 @@ class Realm(Timed):
       '''Neural MMO Environment
       
       Args:
-         config: A Config specification object
-         args: Hook for command line arguments
-         idx: Index of the map file to load
+         config : A Config specification object
+         args   : Hook for command line arguments
+         idx    : Index of the map file to load
       '''
       super().__init__()
       self.spawner = Spawner(config)
@@ -87,8 +87,11 @@ class Realm(Timed):
       self.values = None
 
    def clientData(self):
-      '''Data packet used by the renderer'''
- 
+      '''Data packet used by the renderer
+
+      Returns:
+         packet: A packet of data for the client
+      '''
       if self.values is None:# and hasattr(self, 'sword'):
          #self.values = self.sword.anns[0].visVals()
          self.values = []
@@ -184,12 +187,14 @@ class Realm(Timed):
       '''Take actions for all agents and return new observations
 
       Args:
-         List of decisions
+         decisions: A dictionary of agent decisions
 
       Returns:
-         observations, rewards, None, None
+         observations : A dictionary of local game state
+         reward       : 0
+         dones        : (bool) Whether the agent has died
+         info         : None
       '''
-
       self.tick += 1
 
       #Spawn an ent
@@ -210,13 +215,17 @@ class Realm(Timed):
       return stims, rewards, dones, None
 
    def reset(self):
-      '''Stub for conformity with Gym. Calls step([]).
+      '''Stub for conformity with Gym. Calls step({}).
 
       The environment is persistent. Reset it only
       once upon initialization to obtain initial
       observations. If you must experiment with
       short lived environment instances, instantiate
-      a new Realm instead of calling reset.'''
+      a new Realm instead of calling reset.
+
+      Returns:
+         data: Output of self.step({})
+      '''
       assert self.tick == 0
       return self.step({})
 

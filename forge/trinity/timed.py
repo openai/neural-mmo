@@ -1,8 +1,3 @@
-'''Logging for the demo model
-
-This was rewritten very quickly for the Ascend update.
-It is still rough and will be updated soon'''
-
 from pdb import set_trace as T
 
 from collections import defaultdict
@@ -14,11 +9,21 @@ def format(x):
    return ('{0:<' + str(n) + '}').format(x)
 
 class Summary:
-   '''Formatted logging prints'''
+   '''Formatted infrastructure logging for patheon/god/sword/realm'''
    def __init__(self, log):
+      '''Initializes a logging object
+
+      Args:
+         log: Logging object to aggregate
+      ''' 
       self.log   = Log.aggregate(log)
 
    def __str__(self):
+      '''Log representation as a formatted string
+
+      Returns:
+         log: A formatted log string
+      '''
       ret = ''
       keys = 'Pantheon God Sword Realm'.split()
       for key in keys:

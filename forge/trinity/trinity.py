@@ -4,38 +4,37 @@ import os
 
 from forge.blade import lib
 from forge.trinity.ascend import Ascend, runtime, waittime, Log
-from projekt.timed import Summary
+from forge.trinity.timed import Summary
 
 class Trinity():
-   '''Pantheon-God-Sword (Cluster-Server-Core) infra 
-
-   Trinity is three layer distributed infra design pattern for generic, 
-   persistent, and asynchronous computation at the Cluster, Server, and Core
-   levels. It is built from three user-provided Ascend subclasses, which 
-   specify behavior at each layer. Trinity takes advantage of Ascend's
-   builtin performance logging and does not interfere with pdb breakpoint 
-   debugging in local mode.
-  
-   To use Trinity, implement Pantheon, God, and Sword as Ascend subclasses
-   to specify Cluster, Server, and Core level execution. Overriding the 
-   step() function allows you to perform arbitrary computation and return 
-   arbitrary data to the previous layer. Calling super.step() allows you to 
-   send arbitrary data and receive computation results from the next layer.
-
-   Notes:
-      Ascend is the base API defining distributed infra layers. Trinity is 
-      simply three stacked Ascend layers. Ascend and Trinity are not 
-      specific computation models: they are design patterns for creating
-      computation models. You can implement anything from MPI 
-      broadcast-reduce to OpenAI's Rapid to our  MMO style communications
-      using Ascend + Trinity with relatively little code and testing.
-   ''' 
    def __init__(self, pantheon, god, sword):
-      '''
+      '''Pantheon-God-Sword (Cluster-Server-Core) infra 
+
+      Trinity is three layer distributed infra design pattern for generic, 
+      persistent, and asynchronous computation at the Cluster, Server, and
+      Core levels. It is built from three user-provided Ascend subclasses, 
+      which specify behavior at each layer. Trinity takes advantage of 
+      Ascend's builtin performance logging and does not interfere with pdb 
+      breakpoint debugging in local mode.
+     
+      To use Trinity, implement Pantheon, God, and Sword as Ascend subclasses
+      to specify Cluster, Server, and Core level execution. Overriding the 
+      step() function allows you to perform arbitrary computation and return 
+      arbitrary data to the previous layer. Calling super.step() allows you 
+      to send and receive arbitrary data to and from the next layer.
+
       Args:
          pantheon : A subclassed Pantheon class reference
          god      : A subclassed God class reference
          sword    : A subclassed Sword class reference
+ 
+      Notes:
+         Ascend is the base API defining distributed infra layers. Trinity is 
+         simply three stacked Ascend layers. Ascend and Trinity are not 
+         specific computation models: they are design patterns for creating
+         computation models. You can implement anything from MPI 
+         broadcast-reduce to OpenAI's Rapid to our  MMO style communications
+         using Ascend + Trinity with relatively little code and testing.
       '''
       self.pantheon = pantheon
       self.god      = god

@@ -1,20 +1,32 @@
 from pdb import set_trace as T
-import numpy as np
 
 from collections import defaultdict
+import numpy as np
 
 from forge.blade.lib.log import Blob
 
 class Output:
    def __init__(self, atnArgKey, atnLogits, atnIdx, value):
+      '''Data structure specifying a chosen action
+
+      Args:
+         atnArgKey : Action-Argument formatted string                           
+         atnLogits : Action logits                                              
+         atnsIdx   : Argument indices sampled from logits                       
+         value     : Value function prediction  
+      '''
       self.atnArgKey = atnArgKey
       self.atnLogits = atnLogits
       self.atnIdx    = atnIdx      
       self.value     = value
 
 class Rollout:
-   '''Rollout object used internally by RolloutManager'''
    def __init__(self, config):
+      '''Rollout object used internally by RolloutManager
+
+      Args:
+         config: A configuration object
+      '''
       self.actions = defaultdict(list)
       self.values  = []
       self.rewards = []
@@ -27,10 +39,20 @@ class Rollout:
       self.blob    = None
 
    def __len__(self):
+      '''Length of a rollout
+
+      Returns:
+         lifetime: Number of timesteps the agent has survived
+      '''
       return self.blob.lifetime
 
    def inputs(self, reward, key):
-      '''Process observation data'''
+      '''Collects input data to internal buffers
+
+      Args:
+         reward : The reward received by the agent for its last action
+         key    : The ID associated with the agent
+      '''
       if reward is not None:
          self.rewards.append(reward)
 
@@ -42,7 +64,14 @@ class Rollout:
       self.blob.update()
 
    def outputs(self, atnArgKey, atnLogits, atnIdx, value):
-      '''Process output actions and values'''
+      '''Collects output data to internal buffers
+
+      Args:
+         atnArgKey : Action-Argument formatted string                           
+         atnLogits : Action logits                                              
+         atnsIdx   : Argument indices sampled from logits                       
+         value     : Value function prediction  
+      '''
       output = Output(atnArgKey, atnLogits, atnIdx, value)
       self.actions[self.time].append(output)
       self.values.append(value)
@@ -59,11 +88,10 @@ class Rollout:
       '''Applies standard gamma discounting to the given trajectory
       
       Args:
-         rewards: List of rewards
-         gamma: Discount factor
+         gamma: Reward discount factor
 
       Returns:
-         Discounted list of rewards
+         rewards: Discounted list of rewards
       '''
       rets, N   = [], len(self.rewards)
       discounts = np.array([gamma**i for i in range(N)])
@@ -77,5 +105,3 @@ class Rollout:
          rets.append(R_i)
 
       return rets
-
-

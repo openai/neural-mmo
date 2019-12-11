@@ -48,15 +48,18 @@ class Entities(nn.Module):
 
 class IO(nn.Module):
     def __init__(self, config):
-      #Assemble input network with the IO library
-      #Output and value networks
+      '''Input and output networks
+
+      Args:                                                                   
+         config: A Configuration object
+      '''
       super().__init__()
       self.input  = Env(config, embed.TaggedInput, Attributes, Entities)
       self.output = NetTree(config)
  
 class Hidden(nn.Module):
    def __init__(self, config):
-      '''Value network
+      '''Hidden and value networks
 
       Args:                                                                   
          config: A Configuration object
@@ -66,16 +69,16 @@ class Hidden(nn.Module):
       self.config = config
    
       self.policy = torch.nn.Linear(4*h, h)
-      self.value  = torch.nn.Linear(h, 1)
+      self.value  = torch.nn.Linear(4*h, 1)
       
    def forward(self, x):
-      x = self.policy(x)
- 
+      out = self.policy(x)
       val = self.value(x)
+
       if self.config.TEST:
          val = val.detach()
 
-      return x, val
+      return out, val
 
 class Policy(nn.Module):
    def __init__(self, config):
@@ -87,7 +90,7 @@ class Policy(nn.Module):
       super().__init__()
       self.config = config
 
-      self.IO = IO(config)
+      self.IO     = IO(config)
 
       self.policy = nn.ModuleList([
             Hidden(config) for _ in range(config.NPOP)])
@@ -96,7 +99,7 @@ class Policy(nn.Module):
       '''Populates an IO object with actions in-place
                                                                               
       Args:                                                                   
-         data    : An IO object specifying observations                      
+         packet  : An IO object specifying observations                      
          manager : A RolloutManager object
       ''' 
 
@@ -116,43 +119,55 @@ class Policy(nn.Module):
       '''Population-specific hidden network and value function
 
       Args:                                                                   
-         packet: An IO object
-         state: The current hidden state
+         packet : An IO object specifying observations
+         state  : The current hidden state
  
       Returns:
-         hidden: The new hidden state
-         values: The value estimate
+         hidden : The new hidden state
+         values : The value estimate
       ''' 
-      idxs, hidden, values = [], [], []
+
+      #Rearrange by population membership
       groups = self.grouped(
             packet.keys,
             state,
             lambda key: key[0])
 
-      for pop, s in groups.items():
-         k, s = s
-         h, v = self.policy[pop](s)
-         idxs.append(k)
+      #Initialize output buffers
+      hidden = torch.zeros((packet.obs.n, self.config.HIDDEN))
+      values = torch.zeros((packet.obs.n, 1))
+
+      #Per-population policies rearranged in input order
+      for pop in groups:
+         idxs, s = groups[pop]
+         h, v    = self.policy[pop](s)
+
+         hidden[idxs] = h
+         values[idxs] = v 
+  
+      return hidden, values
+
+   def sanity(self, observationTensor):
+      hidden, values = [], []
+      for idx, obs in enumerate(observationTensor):
+         pop  = packet.keys[idx][0]
+         h, v = self.policy[pop](obs)
          hidden.append(h)
          values.append(v)
-
-      #Rearrange in input order
-      idxs   = np.concatenate(idxs).tolist()
-      hidden = torch.cat(hidden)[idxs]
-      values = torch.cat(values)[idxs]
-   
+      hidden = torch.stack(hidden)
+      values = torch.stack(values)
       return hidden, values
 
    def grouped(self, keys, vals, groupFn):
       '''Group input data by population
 
       Args:                                                                   
-         keys    : Keys
-         vals    : Vals
-         groupFn : Hash fn
+         keys    : IO object entity keys
+         vals    : Predictions from the value network
+         groupFn : Entity key -> population hash function
  
       Returns:
-         groups: population keyed dictionary of input data
+         groups  : Population keyed dictionary of input data
       ''' 
 
       idx = 0

@@ -13,40 +13,44 @@ class Config(config.Config):
    All parameters can also be overridden at run time.
    See Forge.py for an example'''
 
+   ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
    STAT_FILE = 'stats.txt'      #Run statistics log file
    DEVICE    = 'cpu'            #Hardware specification
+
+   ###############################Train/test mode settings
    DEBUG     = False            #Whether to run with debug settings
+   LOAD      = False            #Load model from file?
+   BEST      = False            #If loading, most recent or highest lifetime?
+   TEST      = False            #Update the model during run?
 
-   LOAD = False                 #Load model from file?
-   BEST = False                 #If loading, most recent or highest lifetime?
-   TEST = False                 #Update the model during run?
+   ###############################Distributed infrastructure config
+   NGOD    = 6                  #Number of environment servers
+   NSWORD  = 1                  #Number of clients per server
+   NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
-                                ##Typically overriden in Forge.py
-   NENT = 128                   #Maximum population size
-   NPOP = 8                     #Number of populations
+   _ = 2048 
+   CLUSTER_UPDATES = _          #Number of samples per optim
+   SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
+
+   ###############################Population and network sizes
+   NENT    = 128                #Maximum population size
+   NPOP    = 8                  #Number of populations
 
    HIDDEN  = 32                 #Model embedding dimension
    EMBED   = 32                 #Model hidden dimension
  
-   NGOD   = 6                   #Number of environment servers
-   NSWORD = 1                   #Number of clients per server
-   NCORE  = NGOD * (NSWORD + 1) #Total number of cores
-
-   _ = 8192
-   CLUSTER_UPDATES = _          #Number of samples per optim
-   SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
-
    ###############################Gradient based optimization parameters
    LR         = 3e-4            #Learning rate
    DECAY      = 1e-5            #Weight decay
    GRAD_CLIP  = 5.0             #Gradient absolute value clip threshold
    DISCOUNT   = 0.95            #Reward discount factor
    VAL_WEIGHT = 0.5             #Value function loss weighting
-   ENTROPY    = 0.001           #Entropy bonus strength
+   ENTROPY    = 0.000           #Entropy bonus strength
+   #ENTROPY    = 0.001           #Entropy bonus strength
 
-                                ##Per agent logging
+   ###############################Per agent logging settings
    SAVE_BLOBS = False           #Log at all? (IO/comms intensive)
    BLOB_FRAC  = 0.1             #What fraction of blobs to log?
 

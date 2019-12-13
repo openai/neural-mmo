@@ -61,7 +61,7 @@ class Rollout:
          self.blob = Blob(entID, annID)
 
       self.time += 1
-      self.blob.update()
+      self.blob.inputs(reward)
 
    def outputs(self, atnArgKey, atnLogits, atnIdx, value):
       '''Collects output data to internal buffers
@@ -74,15 +74,17 @@ class Rollout:
       '''
       output = Output(atnArgKey, atnLogits, atnIdx, value)
       self.actions[self.time].append(output)
-      self.values.append(value)
+      self.blob.outputs(float(value))
 
    def finish(self):
       '''Called internally once the full rollout has been collected'''
       self.rewards.append(-1)
+      self.blob.inputs(-1)
 
       self.returns     = self.discount(self.config.DISCOUNT)
       self.lifespan    = len(self.rewards)
-      self.blob.value  = np.mean([float(e) for e in self.values])
+
+      self.blob.finish()
 
    def discount(self, gamma):
       '''Applies standard gamma discounting to the given trajectory

@@ -27,11 +27,12 @@ class Pantheon(Ascend):
          idx     : Unused hardware index
       '''
       super().__init__(trinity.god, config.NGOD, trinity, config)
-      self.log    = defaultdict(list)
+      self.quill  = Quill(config)
       self.config = config
 
       self.net = Model(projekt.Policy, config)
       self.net.printParams()
+
 
    @runtime
    def step(self):
@@ -46,11 +47,10 @@ class Pantheon(Ascend):
       #Aggregate Blob logs as a BlobSummary
       recvs             = super().step(self.net.weights)
       recvs, blobs, log = list(zip(*recvs))
-      blobs             = BlobSummary.merge(blobs)
+      blobs = BlobSummary().add(blobs)
 
       #Update/checkpoint model and write logs
-      self.net.step(recvs, blobs, log)
-      stats = self.net.quill.stats()
-      perf  = self.net.saver.log()
+      stats, lifetime = self.quill.scrawl(blobs)
+      perf            = self.net.step(recvs, blobs, log, lifetime)
 
       return perf, stats, log

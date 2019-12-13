@@ -10,6 +10,28 @@ import json, pickle
 import time
 import ray
 
+from forge.blade.core.market.new_visualizer import Middleman, Market, BokehServer
+
+class Logger:                                                                 
+   def __init__(self, middleman):                                             
+      self.items     = 'reward lifetime value'.split()                              
+      self.middleman = middleman                                              
+      self.tick      = 0                                                      
+                                                                              
+   def update(self, lifetime_mean, reward_mean, value_mean,
+              lifetime_std, reward_std, value_std):
+      data = {}                                                               
+      data['lifetime'] = lifetime_mean
+      data['reward']   = reward_mean
+      data['value']    = value_mean
+      data['lifetime_std']  = lifetime_std
+      data['reward_std']    = reward_std
+      data['value_std']     = value_std
+      data['tick']     = self.tick                                            
+                                                                              
+      self.tick += 1                                                          
+      self.middleman.setData.remote(data)
+
 #Static blob analytics
 class InkWell:
    def unique(blobs):
@@ -49,35 +71,46 @@ class BlobSummary:
    def __init__(self):
       self.nRollouts = 0
       self.nUpdates  = 0
-      self.blobs     = []
 
-   def merge(blobs):
-      summary = BlobSummary()
+      self.lifetime = []
+      self.reward   = [] 
+      self.value    = []
+
+   def add(self, blobs):
       for blob in blobs:
-         summary.nRollouts += blob.nRollouts
-         summary.nUpdates  += blob.nUpdates
-         summary.blobs     += blob.blobs
+         self.nRollouts += blob.nRollouts
+         self.nUpdates  += blob.nUpdates
 
-      return summary
+         self.lifetime.append(blob.lifetime)
+         self.reward.append(blob.reward)
+         self.value.append(blob.value)
+
+      return self
 
 #Agent logger
 class Blob:
    def __init__(self, entID, annID): 
-      self.unique = {Material.GRASS.value: 0,
-                     Material.SCRUB.value: 0,
-                     Material.FOREST.value: 0}
-      self.counts = deepcopy(self.unique)
       self.lifetime = 0
-
-      self.reward, self.ret       = None, []
-      self.value, self.entropy    = None, []
-      self.pg_loss, self.val_loss = []  , []
+      self.reward   = [] 
+      self.value    = []
 
       self.entID = entID 
       self.annID = annID
 
-   def update(self):
+   def inputs(self, reward):
+      if reward is not None:
+         self.reward.append(reward)
+
+   def outputs(self, value):
+      self.value.append(value)
       self.lifetime += 1
+
+   def finish(self):
+      self.reward  = np.mean(self.reward)
+      self.value   = np.mean(self.value)
+
+      self.nUpdates  = self.lifetime
+      self.nRollouts = 1
 
 class Quill:
    def __init__(self, config):
@@ -86,7 +119,6 @@ class Quill:
 
       self.time = time.time()
       self.dir = modeldir
-      self.index = 0
 
       self.curUpdates = 0
       self.curRollouts = 0
@@ -96,6 +128,11 @@ class Quill:
          os.remove(modeldir + 'logs.p')
       except:
          pass
+
+      middleman   = Middleman.remote()                                        
+      self.logger = Logger(middleman)                                         
+      visualizer  = BokehServer.remote(middleman, self.logger.items)          
+
  
    def timestamp(self):
       cur = time.time()
@@ -123,28 +160,22 @@ class Quill:
       self.curUpdates   =  logs.nUpdates
       self.curRollouts  =  logs.nRollouts
 
-      value = np.mean([b.value for b in logs.blobs])
-      print('Value Function: ', value)
+      self.value_mean    = np.mean(logs.value)
+      self.reward_mean   = np.mean(logs.reward)
+      self.lifetime_mean = np.mean(logs.lifetime)
 
-      #Collect log update
-      rewards = []
-      self.index += 1
-      for blob in logs.blobs:
-         rewards.append(float(blob.lifetime))
+      self.value_std    = np.std(logs.value)
+      self.reward_std   = np.std(logs.reward)
+      self.lifetime_std = np.std(logs.lifetime)
 
-      self.lifetime = np.mean(rewards)   
+      print('Value Function: ', self.value_mean)
+      self.logger.update(self.lifetime_mean, self.reward_mean, self.value_mean,
+                         self.lifetime_std, self.reward_std, self.value_std)
 
-      if not self.config.SAVE_BLOBS:
-         return
-      
-      blobRet = []
-      for e in logs.blobs:
-         if np.random.rand() < self.config.BLOB_FRAC:
-            blobRet.append(e)
-      self.save(blobRet)
+      return self.stats(), self.lifetime_mean
 
    def latest(self):
-      return self.lifetime
+      return self.lifetime_mean, self.reward_mean
 
    def save(self, blobs):
       with open(self.dir + 'logs.p', 'ab') as f:

@@ -37,7 +37,7 @@ class Entities(nn.Module):
       h = config.HIDDEN 
       self.targDim = 250*h
 
-      self.fc = nn.Linear(self.targDim, 4*h)
+      self.fc = nn.Linear(self.targDim, h)
 
     def forward(self, x):
       x = x.view(-1)
@@ -68,11 +68,12 @@ class Hidden(nn.Module):
       h = config.HIDDEN
       self.config = config
    
-      self.policy = torch.nn.Linear(4*h, h)
-      self.value  = torch.nn.Linear(4*h, 1)
+      #self.policy = torch.nn.Linear(4*h, h)
+      self.value  = torch.nn.Linear(h, 1)
       
    def forward(self, x):
-      out = self.policy(x)
+      #out = self.policy(x)
+      out = x
       val = self.value(x)
 
       if self.config.TEST:
@@ -110,7 +111,8 @@ class Policy(nn.Module):
       observationTensor, entityLookup = self.IO.input(packet)
 
       #Run the main hidden network with unshared population and value weights
-      hidden, values = self.hidden(packet, observationTensor)
+      #hidden, values = self.hidden(packet, observationTensor)
+      hidden, values = self.policy[0](observationTensor)
 
       #Run the output network
       self.IO.output(packet, values, hidden, entityLookup, manager)

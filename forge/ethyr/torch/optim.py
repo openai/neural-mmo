@@ -36,13 +36,11 @@ class ManualSGD(optim.SGD):
 def merge(rollouts):
    '''Merges all collected rollouts for batched
    compatibility with optim.backward'''
-   outs = {'value': [], 'return': [],
-         'action': defaultdict(lambda: defaultdict(list))}
-
+   outs = defaultdict(lambda: defaultdict(list))
    for rollout in rollouts.values():
       for idx in range(rollout.time):
          for out in rollout.actions[idx]:
-            outk = outs['action'][out.atnArgKey]
+            outk = outs[out.atnArgKey]
             outk['atns'].append(out.atnLogits)
             outk['idxs'].append(out.atnIdx)
             outk['vals'].append(out.value)
@@ -69,10 +67,10 @@ def backward(rollouts, config):
    '''
    outs = merge(rollouts)
    pgLoss, valLoss, entLoss = 0, 0, 0
-   for k, out in outs['action'].items():
+   for k, out in outs.items():
       atns = out['atns']
-      vals = torch.stack(out['vals'])#.to(device)
-      idxs = torch.tensor(out['idxs'])#.to(device)
+      vals = torch.stack(out['vals'])
+      idxs = torch.tensor(out['idxs'])
       rets = torch.tensor(out['rets']).view(-1, 1)
 
       l, v, e = loss.PG(atns, idxs, vals, rets)

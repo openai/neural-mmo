@@ -2,8 +2,8 @@ from pdb import set_trace as T
 import numpy as np
 import torch
 import time
-from forge.blade.lib.utils import EDA
 
+from forge.blade.lib.utils import EDA
 import os
 
 class Resetter:
@@ -61,7 +61,7 @@ class Saver:
       path = os.path.join(self.root, fname + self.extn)
       torch.save(data, path)
 
-   def checkpoint(self, params, opt, reward):
+   def checkpoint(self, params, opt, lifetime):
       '''Save the model to file
 
       Args:
@@ -70,20 +70,20 @@ class Saver:
          fname: File to save to
       '''
       #self.save(params, opt, self.savef)
-      best = reward > self.best
+      best = lifetime > self.best
       if best: 
-         self.best = reward
+         self.best = lifetime
          self.save(params, opt, self.bestf)
 
-      self.time  = time.time() - self.start
-      self.start = time.time()
-      self.reward = reward
+      self.time     = time.time() - self.start
+      self.start    = time.time()
+      self.lifetime = lifetime
       self.epoch += 1
 
       if self.epoch % 100 == 0:
          self.save(params, opt, 'model'+str(self.epoch))
 
-      return self.resetter.step(best)
+      return self.perf(), self.resetter.step(best)
 
    def load(self, opt, param, best=False):
       '''Load the model from file
@@ -105,11 +105,11 @@ class Saver:
       epoch = data['epoch']
       return epoch
 
-   def log(self):
+   def perf(self):
       '''Print stats for the latest epoch'''
       return ''.join([
             'Tick: ', str(self.epoch),
             ', Time: ', str(self.time)[:5],
-            ', Lifetime: ', str(self.reward)[:5],
+            ', Lifetime: ', str(self.lifetime)[:5],
             ', Best: ', str(self.best)[:5]])
 

@@ -32,13 +32,14 @@ class Config(config.Config):
    NSWORD  = 1                  #Number of clients per server
    NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
-   _ = 2048 
+   #_ = 256
+   _ = 4096
    CLUSTER_UPDATES = _          #Number of samples per optim
    SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
 
    ###############################Population and network sizes
    NENT    = 128                #Maximum population size
-   NPOP    = 8                  #Number of populations
+   NPOP    = 1                  #Number of populations
 
    HIDDEN  = 32                 #Model embedding dimension
    EMBED   = 32                 #Model hidden dimension

@@ -16,7 +16,7 @@ from bokeh.themes import Theme
 from tornado import gen
 from tornado.ioloop import IOLoop
 
-from config import *
+from forge.blade.core.market.config import *
 
 # to run a demo with dummy data:
 # $ bokeh serve --show visualizer.py
@@ -26,8 +26,10 @@ from config import *
 # market overview tab
 # -> trade bandwidth, demand, gdp
 
+PORT=5009
+
 class MarketVisualizer:
-    def __init__(self, keys, history_len: int = 256,
+    def __init__(self, keys, history_len: int = 512,
                  title: str = "NeuralMMO Market Data", x: str = "tick",
                  ylabel: str = "Dummy Values"):
         """Visualizes a stream of data with threaded refreshing
@@ -64,7 +66,7 @@ class MarketVisualizer:
         self.source = ColumnDataSource(data=self.data)
 
         #Enable theming
-        theme = Theme('theme.yaml')
+        theme = Theme('forge/blade/core/market/theme.yaml')
         doc.theme = theme
         self.doc = doc
 
@@ -161,10 +163,13 @@ class BokehServer:
 
             #Ingest market data
             for key, val in packet.items():
-              self.visu.data[key].append(val)
-              if  key != 'tick':
-                 self.visu.data[key + 'lower'].append(val - 0.1)
-                 self.visu.data[key + 'upper'].append(val + 0.1)
+              if key[-3:] == 'std':
+                 key = key[:-4]
+                 dat = packet[key]
+                 self.visu.data[key + 'lower'].append(dat - val)
+                 self.visu.data[key + 'upper'].append(dat + val)
+              else:
+                 self.visu.data[key].append(val)
 
             #Stream to Bokeh client
             self.doc.add_next_tick_callback(partial(self.stream))
@@ -232,15 +237,15 @@ class Market:
         self.middleman.setData.remote(self.data)
 
 # Example setup
-PORT=5009
-ray.init()
-ITEMS = ['Food', 'Water', 'Health', 'Melee', 'Range', 'Mage']
+if __name__ == '__main__':
+   ray.init()
+   ITEMS = ['Food', 'Water', 'Health', 'Melee', 'Range', 'Mage']
 
-middleman  = Middleman.remote()
-market     = Market(ITEMS, middleman)
-visualizer = BokehServer.remote(middleman, ITEMS)
+   middleman  = Middleman.remote()
+   market     = Market(ITEMS, middleman)
+   visualizer = BokehServer.remote(middleman, ITEMS)
 
-while True:
-  time.sleep(0.1)
-  market.update()
+   while True:
+     time.sleep(0.1)
+     market.update()
 

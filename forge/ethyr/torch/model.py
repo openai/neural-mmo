@@ -94,8 +94,6 @@ class Model:
       self.parameters = Parameter(torch.Tensor(
             np.array(getParameters(self.net))))
 
-      self.quill = Quill(config)
-
       #Have been experimenting with population based
       #training. Nothing stable yet -- advise avoiding
       if config.POPOPT:
@@ -106,13 +104,13 @@ class Model:
       if config.LOAD or config.BEST:
          self.load(self.opt, config.BEST)
 
-   def step(self, recvs, blobs, log):
-      self.quill.scrawl(blobs)
+   def step(self, recvs, blobs, log, lifetime):
+      if self.config.TEST:
+         return
 
-      if not self.config.TEST:
-         lifetime = self.quill.latest()
-         self.opt.step(recvs, blobs)
-         self.checkpoint(self.opt, lifetime)
+      self.opt.step(recvs, blobs)
+      perf, _ = self.checkpoint(self.opt, lifetime)
+      return perf
 
    def load(self, opt, best=False):
       '''Load a model from file
@@ -126,13 +124,13 @@ class Model:
       self.syncParameters()
       return self
 
-   def checkpoint(self, opt, reward):
+   def checkpoint(self, opt, lifetime):
       '''Save the model to checkpoint
 
       Args:
          reward: Mean reward of the model
       '''
-      self.saver.checkpoint(self.parameters, opt, reward)
+      return self.saver.checkpoint(self.parameters, opt, lifetime)
 
    def printParams(self):
       '''Print the number of model parameters'''

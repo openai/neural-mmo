@@ -148,10 +148,8 @@ class God(Ascend):
          #Collect update
          if self.backward:
             self.grads.append(grads)
-            blobList.append(blobs)
+            self.blobs.add([blobs])
 
-      #Aggregate logs
-      self.blobs = BlobSummary.merge([self.blobs, *blobList])
       return atnDict
 
    @runtime

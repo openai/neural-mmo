@@ -20,7 +20,8 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      self.net = DiscreteAction(self.config, self.h, self.h)
+      #self.net = DiscreteAction(self.config, self.h, self.h)
+      self.net = FlatAction(self.config, self.h, self.h)
 
    def names(self, nameMap, args):
       '''Lookup argument indices from name mapping'''
@@ -61,6 +62,15 @@ class Action(nn.Module):
    def forward(self, x, mask=None):
       xIdx = functional.classify(x, mask)
       return x, xIdx
+
+class FlatAction(Action):
+   def __init__(self, config, xdim, h):
+      super().__init__()
+      self.net = nn.Linear(xdim, 4)
+
+   def forward(self, stim, args, lens):
+      x = self.net(stim).squeeze(1)
+      return super().forward(x)
 
 class DiscreteAction(Action):
    '''Head for making a discrete selection from

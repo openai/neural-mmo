@@ -53,7 +53,7 @@ class NetTree(nn.Module):
 
             #Convert from local index over atns to
             #absolute index into entity lookup table
-            idxs = atnsIdx.numpy().tolist()
+            idxs = atnsIdx.cpu().numpy().tolist()
             idxs = [t[a] for t, a in zip(tensor, idxs)]
             obs.atn.actions[atn].arguments[arg] = idxs
 

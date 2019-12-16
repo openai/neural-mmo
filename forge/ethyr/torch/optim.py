@@ -65,13 +65,14 @@ def backward(rollouts, config):
       valLoss: Value loss
       entropy: Entropy bonus      
    '''
+   device = config.DEVICE
    outs = merge(rollouts)
    pgLoss, valLoss, entLoss = 0, 0, 0
    for k, out in outs.items():
       atns = out['atns']
       vals = torch.stack(out['vals'])
-      idxs = torch.tensor(out['idxs'])
-      rets = torch.tensor(out['rets']).view(-1, 1)
+      idxs = torch.tensor(out['idxs']).to(device)
+      rets = torch.tensor(out['rets']).view(-1, 1).to(device)
 
       l, v, e = loss.PG(atns, idxs, vals, rets)
 

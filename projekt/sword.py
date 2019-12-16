@@ -34,9 +34,10 @@ class Sword(Ascend):
       '''
       super().__init__(disciple=None, n=0)
       config        = deepcopy(config)
+      device        = config.DEVICE
       self.config   = config
 
-      self.net      = projekt.Policy(config)
+      self.net      = projekt.Policy(config).to(device)
       self.manager  = RolloutManager(config)
 
    @runtime

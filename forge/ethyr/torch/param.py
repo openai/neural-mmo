@@ -58,7 +58,7 @@ def getParameters(ann):
    '''
    ret = []
    for e in ann.parameters():
-      ret += e.data.view(-1).numpy().tolist()
+      ret += e.data.cpu().view(-1).numpy().tolist()
    return ret
 
 def getGrads(ann, warn=True):

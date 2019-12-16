@@ -20,6 +20,7 @@ class Env(nn.Module):
       '''
       super().__init__()
       h           = config.HIDDEN
+      self.device = config.DEVICE
       self.config = config
       self.h      = h
 
@@ -43,7 +44,7 @@ class Env(nn.Module):
 
    def initAttributes(self, attrF):
       '''Initialize attribute networks'''
-      self.attributes = {}
+      self.attributes = nn.ModuleDict()
       for name, subnet in stimulus.Static:  
          self.attributes['-'.join(name)] = attrF(self.config)
 
@@ -56,7 +57,7 @@ class Env(nn.Module):
       embed = []
       for atn in action.Static.arguments:
          idx = torch.Tensor([atn.idx])
-         idx = idx.long()#.to(self.config.DEVICE)
+         idx = idx.long().to(self.device)
 
          emb = self.action(idx)
          embed.append(emb)
@@ -68,7 +69,7 @@ class Env(nn.Module):
       embeddings = []
       for param, val in entities.attributes.items():
          param = '-'.join(param)
-         val = torch.Tensor(val)#.to(self.config.DEVICE)
+         val = torch.Tensor(val).to(self.device)
          emb = self.emb[name][param](val)
          embeddings.append(emb)
 

@@ -13,7 +13,7 @@ from forge.blade.io import io
 
 import projekt
 
-@ray.remote
+@ray.remote(num_gpus=0)
 class God(Ascend):
    '''Server level infrastructure layer 
 

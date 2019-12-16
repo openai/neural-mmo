@@ -39,6 +39,7 @@ class TaggedInput(nn.Module):
    def __init__(self, cls, config):
       super().__init__()
       self.config = config
+      self.device = config.DEVICE
       h           = config.EMBED
 
       self.embed  = Input(cls, config)
@@ -50,7 +51,7 @@ class TaggedInput(nn.Module):
       embed = self.embed(x)
 
       tag = torch.LongTensor([0])
-      #tag = tag#.to(self.config.DEVICE)
+      tag = tag.to(self.device)
       tag = self.tag(tag)
       tag = tag.expand_as(embed)
 

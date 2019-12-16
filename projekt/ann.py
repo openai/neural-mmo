@@ -34,6 +34,7 @@ class Entities(nn.Module):
          config: A Configuration object
       '''
       super().__init__()
+      self.device = config.DEVICE
       h = config.HIDDEN 
       self.targDim = 250*h
 
@@ -41,7 +42,7 @@ class Entities(nn.Module):
 
     def forward(self, x):
       x = x.view(-1)
-      pad = torch.zeros(self.targDim - len(x))
+      pad = torch.zeros(self.targDim - len(x)).to(self.device)
       x = torch.cat([x, pad])
       x = self.fc(x)
       return x

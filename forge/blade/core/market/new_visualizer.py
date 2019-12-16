@@ -73,7 +73,7 @@ class MarketVisualizer:
         fig = figure(
            plot_width=600,
            plot_height=400,
-           tools='xpan,xwheel_zoom, xbox_zoom, reset',
+           tools='pan,xwheel_zoom,box_zoom,save,reset',
            title='Neural MMO: Market Data',
            x_axis_label=self.x,
            y_axis_label=self.ylabel)

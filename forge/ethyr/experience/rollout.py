@@ -72,9 +72,11 @@ class Rollout:
          atnsIdx   : Argument indices sampled from logits                       
          value     : Value function prediction  
       '''
+      if len(self.actions[self.time]) == 0:
+         self.blob.outputs(float(value))
+
       output = Output(atnArgKey, atnLogits, atnIdx, value)
       self.actions[self.time].append(output)
-      self.blob.outputs(float(value))
 
    def finish(self):
       '''Called internally once the full rollout has been collected'''

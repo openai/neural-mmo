@@ -20,8 +20,8 @@ class NetTree(nn.Module):
       self.config = config
       self.h = config.HIDDEN
 
-      #self.net = DiscreteAction(self.config, self.h, self.h)
-      self.net = FlatAction(self.config, self.h, self.h)
+      self.net = DiscreteAction(self.config, self.h, self.h)
+      #self.net = FlatAction(self.config, self.h, self.h)
 
    def names(self, nameMap, args):
       '''Lookup argument indices from name mapping'''

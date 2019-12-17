@@ -40,6 +40,8 @@ def merge(rollouts):
    for rollout in rollouts.values():
       for idx in range(rollout.time):
          for out in rollout.actions[idx]:
+            if len(out.atnLogits) == 1:
+               continue
             outk = outs[out.atnArgKey]
             outk['atns'].append(out.atnLogits)
             outk['idxs'].append(out.atnIdx)

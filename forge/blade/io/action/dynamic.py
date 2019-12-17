@@ -30,8 +30,8 @@ class Action:
       outputs = defaultdict(list)
 
       entKey = Serial.key(ent)
-      #roots  = Static.edges
-      roots  = [static.Move]
+      roots  = Static.edges
+      #roots  = [static.Move]
 
       for root in roots:
          arguments = []

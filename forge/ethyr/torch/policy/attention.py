@@ -116,6 +116,7 @@ class MaxReluBlock(nn.Module):
       x, _ = torch.max(x, dim=-2)
       return x
 
+'''
 class DotReluBlock(nn.Module):
    def __init__(self, h, layers=2):
       super().__init__()
@@ -129,17 +130,71 @@ class DotReluBlock(nn.Module):
       k = self.key(k)
       v = self.val(v)
       x = torch.sum(k * v, -1)
-      #x = functional.dot(k, v)
       return x
-      return x.squeeze(-1)
 
+class DotReluBlock(nn.Module):
+   def __init__(self, h, layers=2):
+      super().__init__()
+      self.proj1 = nn.Linear(2*h, h)
+      self.proj2 = nn.Linear(h, 1)
+   
+   def forward(self, k, v):
+      k = k.expand_as(v)
+      kv = torch.cat((k, v), dim=-1)
+      x = self.proj1(kv)
+      x = torch.relu(x)
+      x = self.proj2(x)
+      x = x.squeeze(dim=-1)
+      return x
+
+class DotReluBlock(nn.Module):
+   #Not stable
+   def __init__(self, h, layers=2):
+      super().__init__()
+      self.K = linear.ReluBlock(
+         h, layers, postRelu=False)
+
+      self.V = linear.ReluBlock(
+         h, layers, postRelu=False)
+
+      self.scale = np.sqrt(h)
+
+   def forward(self, k, v):
+      k  = self.K(k)
+      v  = self.V(v).transpose(-2, -1)
+      kv = torch.matmul(k, v) / self.scale
+      kv = kv.squeeze(-2)
+      return kv
+'''
+
+
+class DotReluBlock(nn.Module):
+   def __init__(self, h, layers=2):
+      super().__init__()
+
+      self.Q = torch.nn.Linear(h, h)
+      self.K = torch.nn.Linear(h, h)
+      self.V = torch.nn.Linear(h, h)
+
+      self.proj = torch.nn.Linear(h, 1)
+      self.attention = ScaledDotProductAttention(h)
+
+   def forward(self, k, v):
+      Q = self.Q(v)
+      K = self.K(k)
+      V = self.V(k)
+
+      attn = self.attention(Q, K, V)
+      attn = self.proj(attn).squeeze(-1)
+
+      return attn
 
 class MiniAttend(nn.Module):
    def __init__(self, h, flat=True):
       super().__init__()
       self.fc1   = nn.Linear(h, h)
       self.fc2   = nn.Linear(h, h)
-      self.flat = flat
+      self.flat  = flat
 
    def forward(self, x, kv=None):
       if kv is not None:

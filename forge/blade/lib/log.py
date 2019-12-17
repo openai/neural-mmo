@@ -121,10 +121,11 @@ class Quill:
       self.time = time.time()
       self.dir = modeldir
 
-      self.curUpdates = 0
+      self.curUpdates  = 0
       self.curRollouts = 0
-      self.nUpdates = 0
-      self.nRollouts = 0
+      self.nUpdates    = 0
+      self.nRollouts   = 0
+
       try:
          os.remove(modeldir + 'logs.p')
       except:
@@ -156,18 +157,18 @@ class Quill:
 
    def scrawl(self, logs):
       #Collect experience information
-      self.nUpdates     += logs.nUpdates
-      self.nRollouts    += logs.nRollouts
-      self.curUpdates   =  logs.nUpdates
-      self.curRollouts  =  logs.nRollouts
+      self.nUpdates      += logs.nUpdates
+      self.nRollouts     += logs.nRollouts
+      self.curUpdates    =  logs.nUpdates
+      self.curRollouts   =  logs.nRollouts
 
       self.value_mean    = np.mean(logs.value)
       self.reward_mean   = np.mean(logs.reward)
       self.lifetime_mean = np.mean(logs.lifetime)
 
-      self.value_std    = np.std(logs.value)
-      self.reward_std   = np.std(logs.reward)
-      self.lifetime_std = np.std(logs.lifetime)
+      self.value_std     = np.std(logs.value)
+      self.reward_std    = np.std(logs.reward)
+      self.lifetime_std  = np.std(logs.lifetime)
 
       print('Value Function: ', self.value_mean)
       self.logger.update(self.lifetime_mean, self.reward_mean, self.value_mean,

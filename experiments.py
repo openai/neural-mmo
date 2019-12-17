@@ -49,6 +49,7 @@ class Config(config.Config):
    DECAY      = 1e-5            #Weight decay
    GRAD_CLIP  = 5.0             #Gradient absolute value clip threshold
    DISCOUNT   = 0.95            #Reward discount factor
+   PG_WEIGHT  = 1.0             #Policy gradient loss weighting
    VAL_WEIGHT = 0.5             #Value function loss weighting
    ENTROPY    = 0.000           #Entropy bonus strength
    #ENTROPY    = 0.001           #Entropy bonus strength

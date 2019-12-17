@@ -87,6 +87,8 @@ class DiscreteAction(Action):
 
       inds = torch.arange(maxLen).expand_as(x)
       mask = inds < lens 
+      x, xIdx = super().forward(x, mask)
 
-      return super().forward(x, mask)
+      x = [e[:l] for e, l in zip(x, lens)]
+      return x, xIdx
 

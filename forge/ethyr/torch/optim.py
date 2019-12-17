@@ -36,6 +36,7 @@ class ManualSGD(optim.SGD):
 def merge(rollouts):
    '''Merges all collected rollouts for batched
    compatibility with optim.backward'''
+   n = 0
    outs = defaultdict(lambda: defaultdict(list))
    for rollout in rollouts.values():
       for idx in range(rollout.time):
@@ -47,8 +48,9 @@ def merge(rollouts):
             outk['idxs'].append(out.atnIdx)
             outk['vals'].append(out.value)
             outk['rets'].append(out.returns)
+            n += 1
 
-   return outs
+   return outs, n
 
 
 def backward(rollouts, config):
@@ -68,7 +70,7 @@ def backward(rollouts, config):
       entropy: Entropy bonus      
    '''
    device = config.DEVICE
-   outs = merge(rollouts)
+   outs, n = merge(rollouts)
    pgLoss, valLoss, entLoss = 0, 0, 0
    for k, out in outs.items():
       atns = out['atns']
@@ -78,11 +80,16 @@ def backward(rollouts, config):
 
       l, v, e = loss.PG(atns, idxs, vals, rets)
 
-      pgLoss  += l
-      valLoss += v
-      entLoss += e
+      pgLoss  += l# / n
+      valLoss += v# / n
+      entLoss += e# / n
+   #Why is this loss not an average?
 
-   totLoss = pgLoss + config.VAL_WEIGHT*valLoss + config.ENTROPY*entLoss
+   totLoss = (
+         config.PG_WEIGHT*pgLoss + 
+         config.VAL_WEIGHT*valLoss + 
+         config.ENTROPY*entLoss)
+
    totLoss.backward()
 
    return pgLoss, valLoss, entLoss

@@ -39,7 +39,7 @@ class Config(config.Config):
 
    ###############################Population and network sizes
    NENT    = 128                #Maximum population size
-   NPOP    = 1                  #Number of populations
+   NPOP    = 8                  #Number of populations
 
    HIDDEN  = 32                 #Model embedding dimension
    EMBED   = 32                 #Model hidden dimension

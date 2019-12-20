@@ -154,16 +154,15 @@ class Realm(Timed):
       packets = defaultdict(Packet)
       for entID in decisions.keys():
          ent = self.desciples[entID]
-         #packets[entID].stim = ent
          if self.postmortem(ent, dead):
             #packets[entID].reward = -1
             dones.append(ent.serial)
          else:
-            packets[entID].reward = 0.05 * min(
-                  ent.resources.health.val,
-                  ent.resources.water.val,
-                  ent.resources.food.val)
-            #packets[entID].reward = 0
+            #packets[entID].reward = 0.05 * min(
+            #      ent.resources.health.val,
+            #      ent.resources.water.val,
+            #      ent.resources.food.val)
+            packets[entID].reward = 0
             packets[entID].stim = ent
 
       self.cullDead(dead)

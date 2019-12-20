@@ -32,7 +32,6 @@ class Config(config.Config):
    NSWORD  = 1                  #Number of clients per server
    NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
-   #_ = 256
    _ = 8192
    CLUSTER_UPDATES = _          #Number of samples per optim
    SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
@@ -51,8 +50,7 @@ class Config(config.Config):
    DISCOUNT   = 0.95            #Reward discount factor
    PG_WEIGHT  = 1.0             #Policy gradient loss weighting
    VAL_WEIGHT = 0.5             #Value function loss weighting
-   ENTROPY    = 0.000           #Entropy bonus strength
-   #ENTROPY    = 0.001           #Entropy bonus strength
+   ENTROPY    = 0.001           #Entropy bonus strength
 
    ###############################Per agent logging settings
    SAVE_BLOBS = False           #Log at all? (IO/comms intensive)

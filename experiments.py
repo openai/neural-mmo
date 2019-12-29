@@ -18,9 +18,13 @@ class Config(config.Config):
    ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
-   STAT_FILE = 'stats.txt'      #Run statistics log file
-   DEVICE    = 'cpu'           #Hardware specification
+   STAT_FILE = 'stats10.txt'     #Run statistics log file
+   DEVICE    = 'cpu'            #Hardware specification
 
+   #7: 12 god sanity with double batch and 1e-3 ent
+   #8: 5e-3 ent
+   #9: 2e-4 ent
+   #10: 1e-3 ent, fc-relu-fc hidden
    ###############################Train/test mode settings
    DEBUG     = False            #Whether to run with debug settings
    LOAD      = False            #Load model from file?
@@ -28,11 +32,11 @@ class Config(config.Config):
    TEST      = False            #Update the model during run?
 
    ###############################Distributed infrastructure config
-   NGOD    = 6                  #Number of environment servers
+   NGOD    = 12                 #Number of environment servers
    NSWORD  = 1                  #Number of clients per server
    NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
-   _ = 8192
+   _ = 16384
    CLUSTER_UPDATES = _          #Number of samples per optim
    SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
 
@@ -50,7 +54,7 @@ class Config(config.Config):
    DISCOUNT   = 0.95            #Reward discount factor
    PG_WEIGHT  = 1.0             #Policy gradient loss weighting
    VAL_WEIGHT = 0.5             #Value function loss weighting
-   ENTROPY    = 0.001           #Entropy bonus strength
+   ENTROPY    = 0.005           #Entropy bonus strength
 
    ###############################Per agent logging settings
    SAVE_BLOBS = False           #Log at all? (IO/comms intensive)

@@ -90,7 +90,7 @@ class Env(nn.Module):
          entityLookup      : A fixed size representation of each entity
       ''' 
       observationTensor = []
-      embeddings = []
+      embeddings        = []
 
       #Pack entities of each attribute set
       for name, entities in inp.obs.entities.items():
@@ -100,10 +100,10 @@ class Env(nn.Module):
       #Pack entities of each observation
       entityLookup = torch.cat(embeddings)
       for objID, idxs in inp.obs.names.items():
-         emb = entityLookup[[e for e in idxs]]
+         emb = entityLookup[idxs]
          obs = self.entities(emb)
          observationTensor.append(obs)
 
-      entityLookup = self.actions(entityLookup)
+      entityLookup      = self.actions(entityLookup)
       observationTensor = torch.stack(observationTensor)
       return observationTensor, entityLookup

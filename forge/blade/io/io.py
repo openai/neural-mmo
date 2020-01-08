@@ -21,6 +21,7 @@ class Lookup:
          idx = self.max
 
       assert name not in self.data
+      assert idx not in self.back
       self.data[name] = idx
       if orig is not None:
          self.back[idx] = orig

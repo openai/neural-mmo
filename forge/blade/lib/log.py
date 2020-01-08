@@ -131,9 +131,9 @@ class Quill:
       except:
          pass
 
-      middleman   = Middleman.remote()                                        
-      self.logger = Logger(middleman)                                         
-      visualizer  = BokehServer.remote(middleman, self.logger.items)          
+      #middleman   = Middleman.remote()                                        
+      #self.logger = Logger(middleman)                                         
+      #visualizer  = BokehServer.remote(middleman, self.logger.items)          
 
  
    def timestamp(self):
@@ -171,8 +171,6 @@ class Quill:
       self.lifetime_std  = np.std(logs.lifetime)
 
       print('Value Function: ', self.value_mean)
-      self.logger.update(self.lifetime_mean, self.reward_mean, self.value_mean,
-                         self.lifetime_std, self.reward_std, self.value_std)
 
       return self.stats(), self.lifetime_mean
 

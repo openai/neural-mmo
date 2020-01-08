@@ -36,15 +36,32 @@ class Entities(nn.Module):
       super().__init__()
       self.device = config.DEVICE
       h = config.HIDDEN 
-      self.targDim = 250*h
+      #self.targDim = 250*h
 
-      self.fc = nn.Linear(self.targDim, h)
+      self.conv = nn.Conv2d(h, h, 3)
+      self.pool = nn.MaxPool2d(2)
+      self.fc1 = nn.Linear(h*6*6, h)
+
+      self.fc2  = nn.Linear(2*h, h)
+      self.attn = attention.Attention(config.EMBED, config.HIDDEN)
 
     def forward(self, x):
-      x = x.view(-1)
-      pad = torch.zeros(self.targDim - len(x)).to(self.device)
-      x = torch.cat([x, pad])
-      x = self.fc(x)
+      conv = x[-225:].view(1, 15, 15, -1).permute(0, 3, 1, 2)
+      conv = self.conv(conv)
+      conv = self.pool(conv)
+      conv = conv.view(-1)
+      conv = self.fc1(conv)
+
+      attn = x[:-225]
+      attn = self.attn(attn)
+
+      x = torch.cat((attn, conv))
+      x = self.fc2(x)
+      
+      #x = x.view(-1)
+      #pad = torch.zeros(self.targDim - len(x)).to(self.device)
+      #x = torch.cat([x, pad])
+      #x = self.fc(x)
       return x
 
 class IO(nn.Module):
@@ -70,13 +87,18 @@ class Hidden(nn.Module):
       self.config = config
    
       #Added policy head
-      self.policy = torch.nn.Linear(h, h)
+      #self.fc1 = torch.nn.Linear(h, 4*h)
+      #self.fc2 = torch.nn.Linear(4*h, h)
       self.value  = torch.nn.Linear(h, 1)
       
    def forward(self, x):
-      out = self.policy(x)
-      #out = x
-      val = self.value(x)
+      out = x
+      #out = self.fc1(x)
+      #out = torch.relu(out)
+      #out = self.fc2(out)
+
+      #Note: moved value to end of net
+      val = self.value(out)
 
       if self.config.TEST:
          val = val.detach()

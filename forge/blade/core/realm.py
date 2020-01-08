@@ -14,13 +14,20 @@ from forge.blade.lib.enums import Palette
 from forge.trinity.ascend import runtime, Timed
 
 class Packet():
+   '''Wrapper for state, reward, done signals'''
    def __init__(self):
+      '''Instantiates packet data'''
       self.stim  = None
       self.reward = None
       self.done   = None
 
 class Spawner:
+   '''Manager class responsible for agent spawning logic'''
    def __init__(self, config):
+      '''
+      Args:
+         config: A Config object
+      '''
       self.config = config
 
       self.nEnt, self.nPop = config.NENT, config.NPOP
@@ -31,6 +38,14 @@ class Spawner:
       self.palette = Palette(self.nPop)
 
    def spawn(self, realm, iden, pop, name):
+      '''Adds an entity to the given environment
+
+      Args:
+         realm : An environment Realm object
+         iden  : An identifier index to assign to the new agent
+         pop   : A population index to assign to the new agent
+         name  : A string to prepend to iden as an agent name
+      '''
       assert self.pops[pop] <= self.popSz
       assert self.ents      <= self.nEnt
 
@@ -54,6 +69,11 @@ class Spawner:
       realm.world.env.tiles[r, c].counts[ent.base.population.val] += 1
 
    def cull(self, pop):
+      '''Decrement the agent counter for the specified population
+
+      Args: 
+         pop: A population index
+      '''
       assert self.pops[pop] >= 1
       assert self.ents      >= 1
 
@@ -64,10 +84,11 @@ class Spawner:
          del self.pops[pop]
 
 class Realm(Timed):
+   '''Neural MMO Environment'''
    def __init__(self, config, idx, spawn):
-      '''Neural MMO Environment
-      
+      '''
       Args:
+
          config : A Config specification object
          args   : Hook for command line arguments
          idx    : Index of the map file to load
@@ -105,6 +126,11 @@ class Realm(Timed):
       return ret
 
    def cullDead(self, dead):
+      '''Deletes the specified list of agents
+
+      Args: 
+         dead: A list of dead agent IDs to remove
+      '''
       for entID in dead:
          ent = self.desciples[entID]
          r, c = ent.base.pos
@@ -113,6 +139,7 @@ class Realm(Timed):
          del self.desciples[entID]
 
    def stepEnv(self):
+      '''Advances the environment'''
       ents = list(chain(self.desciples.values()))
 
       #Stats
@@ -122,24 +149,53 @@ class Realm(Timed):
       self.env = self.world.env.np()
 
    def getStim(self, ent):
+      '''Gets agent stimuli from the environment
+
+      Args:
+         ent: An agent object
+
+      Returns:
+         Stimuli for the given agent
+      '''
       return self.world.env.stim(ent.base.pos, self.config.STIM)
 
    #Only saves the first action of each priority
    def prioritize(self, decisions):
+      '''Reorders actions according to their priorities
+
+      Args:
+         decisions: A dictionary of agent actions
+      
+      Returns:
+         Repriotized actions
+      '''
       actions = defaultdict(dict)
       for entID, atns in decisions.items():
          for atn, args in atns.items():
             actions[atn.priority][entID] = [atn, args]
       return actions
 
-   #Take actions
    def act(self, actions):
+      '''Execute agent actions
+      
+      Args:
+         actions: A dictionary of agent actions
+      '''
       for priority, tups in actions.items():
          for entID, atnArgs in tups.items():
             ent = self.desciples[entID]
             ent.act(self.world, atnArgs)
 
    def stepEnts(self, decisions):
+      '''Advance agents
+      
+      Args:
+         decisions: A dictionary of agent actions
+
+      Returns:
+         packets : State-reward-done packets
+         dones   : A list of dead agent IDs
+      '''
       #Step all ents first
       for entID, actions in decisions.items():
          ent = self.desciples[entID]
@@ -169,6 +225,15 @@ class Realm(Timed):
       return packets, dones
 
    def postmortem(self, ent, dead):
+      '''Add agent to the graveyard if it is dead
+
+      Args:
+         ent  : An agent object
+         dead : A list of dead agents
+
+      Returns:
+         bool: Whether the agent is dead
+      '''
       entID = ent.entID
       if not ent.base.alive:
          dead.append(entID)
@@ -176,6 +241,14 @@ class Realm(Timed):
       return False
 
    def getStims(self, packets):
+      '''Gets agent stimuli from the environment
+
+      Args:
+         packets: A dictionary of Packet objects
+
+      Returns:
+         The packet dictionary populated with agent data
+      '''
       for entID, ent in self.desciples.items():
          r, c = ent.base.pos
          tile = self.world.env.tiles[r, c].tex

@@ -11,8 +11,8 @@ def camel(string):
    '''Convert a string to camel case'''
    return string[0].lower() + string[1:]
 
+'''Internal datastructure used in Stimulus processing
 class Data:
-   '''Internal datastructure used in Stimulus processing'''
    def __init__(self):
       self.keys = []
       self.key = None
@@ -34,6 +34,7 @@ class Data:
    @property
    def ret(self):
       return self.keys, self.data
+'''
 
 class Stimulus:
    '''Static IO class used for interacting with game observations
@@ -75,7 +76,7 @@ class Stimulus:
       lookupKey = obj
       if serialize:
          objKey = Serial.key(obj)
-         key = Serial.key(key)
+         key    = Serial.key(key)
          lookupKey = key + objKey
 
       idx = lookup.add(lookupKey, orig=obj)

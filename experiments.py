@@ -18,13 +18,28 @@ class Config(config.Config):
    ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
-   STAT_FILE = 'stats10.txt'     #Run statistics log file
+   STAT_FILE = 'stats19.txt'    #Run statistics log file
    DEVICE    = 'cpu'            #Hardware specification
 
+   #All run defaults: 12 gods, 16384 batch
+   #0: 5e-3 ent (sanity) 18.72
+   #1: 1e-2 ent: 16.66
+   #2: 2.5e-2: 17.91
+   #3: 5e-2: 17.58
+   #4: 1e-1: 16.85
    #7: 12 god sanity with double batch and 1e-3 ent
    #8: 5e-3 ent
    #9: 2e-4 ent
    #10: 1e-3 ent, fc-relu-fc hidden
+   #All run defaults: 12 gods, 16384 batch, 2.5e-2 entropy
+   #11: 1 pop: 17.95
+   #12: 1 pop, old dotrelublock, remove hidden net, 18.20
+   #13: 1 pop, remove hidden net, 18.09
+   #14: orig hypers (batch doubled)
+   #16: orig hypers, same fucking network, orig stupid retain_gradients and stale data because why the hell not? 15.68
+   #17: Above but fixed the input net (conv and fc were flipped, so was conving over ents). Note that there was no normalization in orig 15.01
+   #18: Orig net with new hypers. Consistency isnt going to cut it: 18.22
+   #19: 8 pops: 18.04
    ###############################Train/test mode settings
    DEBUG     = False            #Whether to run with debug settings
    LOAD      = False            #Load model from file?
@@ -37,6 +52,7 @@ class Config(config.Config):
    NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
    _ = 16384
+   #_ = 256 * 6
    CLUSTER_UPDATES = _          #Number of samples per optim
    SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
 
@@ -54,7 +70,7 @@ class Config(config.Config):
    DISCOUNT   = 0.95            #Reward discount factor
    PG_WEIGHT  = 1.0             #Policy gradient loss weighting
    VAL_WEIGHT = 0.5             #Value function loss weighting
-   ENTROPY    = 0.005           #Entropy bonus strength
+   ENTROPY    = 0.025           #Entropy bonus strength
 
    ###############################Per agent logging settings
    SAVE_BLOBS = False           #Log at all? (IO/comms intensive)

@@ -18,7 +18,7 @@ class Config(config.Config):
    ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
-   STAT_FILE = 'stats19.txt'    #Run statistics log file
+   STAT_FILE = 'stats31.txt'    #Run statistics log file
    DEVICE    = 'cpu'            #Hardware specification
 
    #All run defaults: 12 gods, 16384 batch
@@ -39,7 +39,17 @@ class Config(config.Config):
    #16: orig hypers, same fucking network, orig stupid retain_gradients and stale data because why the hell not? 15.68
    #17: Above but fixed the input net (conv and fc were flipped, so was conving over ents). Note that there was no normalization in orig 15.01
    #18: Orig net with new hypers. Consistency isnt going to cut it: 18.22
-   #19: 8 pops: 18.04
+   #19: 8 pops: 18.23
+   #20: discount 0.98: 17.77
+   #21: discount 0.90: 17.56
+   #22: discount 0.95: 8.108, avg optim vals
+   #23: Non mean centered val func. discount 0.95, avg optim vals: 8.293
+   #24: Non mean centered val func, no avg optim vals: 18.04
+   #25: Fix reward partial trajs, discount .95, no avg: 18.15
+   #26: GAE: 8.084
+   #29: Discount; sanity
+   #30: Stale data
+   #31: No stale data, no input norm
    ###############################Train/test mode settings
    DEBUG     = False            #Whether to run with debug settings
    LOAD      = False            #Load model from file?
@@ -52,7 +62,6 @@ class Config(config.Config):
    NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
    _ = 16384
-   #_ = 256 * 6
    CLUSTER_UPDATES = _          #Number of samples per optim
    SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
 
@@ -67,7 +76,9 @@ class Config(config.Config):
    LR         = 3e-4            #Learning rate
    DECAY      = 1e-5            #Weight decay
    GRAD_CLIP  = 5.0             #Gradient absolute value clip threshold
-   DISCOUNT   = 0.95            #Reward discount factor
+   GAMMA      = 0.95            #Reward discount factor
+   LAMBDA     = 0.96            #GAE discount factor
+   HORIZON    = 8               #GAE horizon
    PG_WEIGHT  = 1.0             #Policy gradient loss weighting
    VAL_WEIGHT = 0.5             #Value function loss weighting
    ENTROPY    = 0.025           #Entropy bonus strength

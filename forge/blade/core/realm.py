@@ -211,6 +211,7 @@ class Realm(Timed):
       for entID in decisions.keys():
          ent = self.desciples[entID]
          if self.postmortem(ent, dead):
+            #This line was commented before
             #packets[entID].reward = -1
             dones.append(ent.serial)
          else:

@@ -38,10 +38,9 @@ class Action:
          for args in root.edges:
             idxs = []
             for arg in args.args(env, ent, config):
-               if type(arg) is type: #Static reference
-                  key = Serial.key(arg)
-               else: #Entity instance
-                  key = entKey + Serial.key(arg)
+               key = Serial.key(arg)
+               if type(arg) is not type: #Entity reference
+                  key = entKey + key
 
                idx = inp.lookup.data[key]
                idxs.append(idx)

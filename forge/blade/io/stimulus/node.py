@@ -119,4 +119,3 @@ class Continuous(Stim):
       self.asserts(self.val)
       return self.norm()
 
-

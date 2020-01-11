@@ -15,29 +15,36 @@
 |ags| Welcome to the Platform!
 ##############################
 
-**Important:** My `personal github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the most updated version of the environment and 3D web client. The `OpenAI <https://github.com/openai/neural-mmo>`_ repo will continue to host major environment patches, but it does not get minor bugfixes. 
+**Overview:** Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs). The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and effecient facsimile. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. We consider them the best proxy for the real world among human games.
 
-**Getting Started:** Neural MMO follows the OpenAI Gym API, but unlike most platforms, it's persistent, multi-(and variable numbered)-agent, and has nontrivial input/output spaces. The quickest way to dive in is:
 
-1. Check out the `quickstart guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ for setup and the patch notes + slides below to see what's new.
+**Versioning:** The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My personal fork `personal github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release.
 
-2. Skim the new `documentation <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.html>`_ for Trinity/Pantheon/God/Sword. The core API is fully documented. The Ethyr contrib has partial documentation -- any confusing omissions will be prioritized upon request.
+**Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-3. Head over to the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ in the source and familiarize yourself with the end-to-end demo. This is my personal research code on the platform.
+**1:** Check out the `Quickstart Guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ 
 
-4. Join our `Discord <https://discord.gg/BkMmFUC>`_ for help and discussion! **This is also the best way to contact me.**
+**2:** Skim the `Documentation <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
 
-Neural MMO is an open source project. Contributions are encouraged. I actively review issues and PRs.
+**3:** Get familiar with the end-to-end demo in `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_
 
-|ags| Overview
-==============
+**4:** Join our `Discord community <https://discord.gg/BkMmFUC>`_ for help and discussion! **This is also the best way to contact me**
 
-This environment is the first neural MMO; it attempts to create agents that scale to real world complexity. Simulating evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile. We consider MMORPGs (Massive Multiplayer Online Role Playing Games) the best proxy for the real world among human games: they are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict.
+**5:** Contribute to the platform! Neural MMO is an active open source project -- I actively review issues and PRs
 
 |ags| Version History
 =====================
 
-v1.2: Client and Skilling update | `Update Slide Deck <https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing>`_
+v1.3: Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_
+   - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.preprocess and IO.postprocess functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
+   - Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.
+   - Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks -- our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.
+   - Embyr: Agents now display additional information overhead, such as when they are immune to attacks or when they have been frozen in place.
+   - A reasonable 8-population baseline model trained on 12 (old) CPU cores in a day.
+   - Improved and expanded official documentation and quickstart guide
+   - The Discord has grown to 80+! Join for active development updates, the quickest support, and community discussions.
+
+v1.2: Unity Client and Skilling | `[Update Slide Deck] <https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing>`_
    - Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.
    - Trinity: Major new infrastructure API: Ascend -- a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc... Ascend implements a single infrastructure "layer" object with all the same features and more. Trinity is still around and functions identically -- it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.
    - Ethyr: Streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 preferred environment placement, which places the environment server side and only communicates serialized observations and actions -- not full rollouts. Expect further changes in the next update -- IO is the single most technically complex aspect of this project and has the largest impact on performance.
@@ -46,7 +53,7 @@ v1.2: Client and Skilling update | `Update Slide Deck <https://docs.google.com/p
    - Official documentation has been updated accordingly
    - 20+ people have joined the Discord. I've started posting frequent dev updates and thoughts here.
 
-v1.1: Infrastructure and API rework, official documentation and Discord | `Update Slide Deck <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_ 
+v1.1: Infrastructure and API rework, official documentation and Discord | `[Update Slide Deck] <https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing>`_ 
    - Blade: Merge Native and VecEnv environment API. New API is closer to Gym
    - Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.
    - Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.

@@ -11,33 +11,95 @@
 |ags| Quickstart
 ################
 
-The master branch will always contain the latest stable version. **Users should not fork cowboy branches.** These are hyperagressive dev branches for contributors, not bleeding edge builds.
+**Installation:** The master branch will always contain the latest stable version. *Users should not fork cowboy branches.* These are hyperagressive dev branches for contributors. They are not bleeding edge builds and may be flammable. You no longer need to install the Unity3D `client <https://github.com/jsuarez5341/neural-mmo-client>`_ manually.
 
 .. code-block:: python
 
-   #Install OpenAI environment and the Embyr client
-   git clone https://github.com/jsuarez5341/neural-mmo
-   cd neural-mmo
+   #Download the Neural MMO environment
+   #We assume a Python 3.7+ setup with Anaconda pip
+   git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
 
-   #We assume you already have a Python 3.7+ Anaconda setup
+   #Installation options:
+   #   --no-client:   Omit the Embyr 3D Unity client
+   #   --virtual-env: Install in a virtual env
    python scripts/setup.py
 
-All configuration options are available in experiments.py. The environment is framework independent. So are some of the contrib libraries. Our demo code is a full fledged research pipeline written in PyTorch. It makes use of some PyTorch-specific contrib libraries. If you don't have a strong framework preference, extending the demo is a great way to get started immediately. To run the environment:
+   #Run the pretrained demo model to test the intallation
+   python Forge.py --render
+
+   #Open the client in a separate terminal
+   #You will need to rerun this if you restart the environment
+   ./client.sh
+
+**Training from scratch:** Next, you will familiarize yourself with the baseline parameters and train a model from scratch. Open up experiments.py, which contains all of the training configuration options. First, we'll disable the test mode flags:
 
 .. code-block:: python
 
-   #Train with 4 CPU cores (editable in config.py)
+   LOAD = False
+   TEST = False
+   BEST = False
+   
+You will probably also want to reduce the number of cores used for training. I reccomend using two fewer cores than your CPU has to prevent the system from locking up. For a 6 core CPU:
+
+.. code-block:: python
+
+   NGOD = 4
+ 
+That's it. We can train a model now:
+
+.. code-block:: python
+
    python Forge.py
 
-   #You can also tell Ray to execute locally.
-   #This is useful for debugging and works with pdb
-   python Forge.py --ray local 
+If you leave it running for a few hours, you should see the reward slowly increasing. The baseline model gets to >20 average lifetime. Once you are satisfied, you can reenable testing flags and run with rendering enabled to view agent policies.
 
-   #Run the environment with rendering on
-   python Forge.py --render
+**Learning the API:** On the surface, Neural MMO follows the OpenAI Gym API:
 
+.. code-block:: python
 
-Once the environment is running with --render, run ./client to launch the Unity3D `client <https://github.com/jsuarez5341/neural-mmo-client>`_. For now, you will need to relaunch the client any time you relaunch the server.
+   env = Realm(config, *args)
+   obs, rewards, dones, info = env.reset()
+
+   while not done:
+      actions = somePolicy(obs)
+      obs, rewards, dones, info = env.step(actions)
+
+However, the actual contents of *obs, rewards, dones, info* might not be what you expect. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces. Developing infrastructure to handle these could take months! Luckily, we've already done that for you. Let's make use of the core IO libraries:
+
+.. code-block:: python
+
+   env = Realm(config, *args)
+   obs, rewards, dones, info = env.reset()
+
+   while not done:
+      data = io.inputs(obs, rewards, dones, config)
+      actions = somePolicy(data)
+
+      atns = io.outputs(obs, actions)
+      obs, rewards, dones, info = env.step(actions)
+
+We're almost there. The IO API done a ton of work behind the scenes -- batching, normalization, serialization, to name a few. handled data batching and structuring. The only remaining issue is that *somePolicy* had be able to handle heirarchical data and variable action spaces. Let's use the Ethyr prebuilt IO modules:
+
+.. code-block:: python
+
+   policy = torch.nn.Sequential(
+      ethyr.Input(*args),
+      ethyr.Output(*args))
+
+   env = Realm(config, *args)
+   obs, rewards, dones, info = env.reset()
+
+   while not done:
+      data = io.inputs(obs, rewards, dones, config)
+   
+      #Populates data in place
+      policy(data)
+
+      atns = io.outputs(obs, actions)
+      obs, rewards, dones, info = env.step(actions)
+
+And there you have it! You can insert your own model between the IO networks without having to deal with any wonky structured data. We've made a few small simplifications for this tutorial. Plus, we haven't discussed rollout collection, training, distributed computation, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo. 
+
 
 |ags| Projekt 
 =============

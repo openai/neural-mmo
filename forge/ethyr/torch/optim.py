@@ -90,7 +90,7 @@ def backward(rollouts, config):
          config.VAL_WEIGHT*valLoss + 
          config.ENTROPY*entLoss)
 
-   totLoss.backward()
+   totLoss.backward(retain_graph=True)
 
    return pgLoss, valLoss, entLoss
 

@@ -48,8 +48,8 @@ class Config(config.Config):
    #25: Fix reward partial trajs, discount .95, no avg: 18.15
    #26: GAE: 8.084
    #29: Discount; sanity
-   #30: Stale data
-   #31: No stale data, no input norm
+   #30: Stale data: 23.33 :) works :)
+   #31: No entropy
    ###############################Train/test mode settings
    DEBUG     = False            #Whether to run with debug settings
    LOAD      = False            #Load model from file?

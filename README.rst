@@ -362,22 +362,22 @@ The second problem is probably most familiar to researchers as exploration. Give
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 
-.. image:: resource/quests.png
+.. image:: docs/source/resource/quests.png
   :alt: Quest Map
 `Source <https://www.reddit.com/user/Gamez_X>`_
 
 Actually, it's a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:
 
-.. image:: resource/skills.png
+.. image:: docs/source/resource/skills.png
   :alt: Skills
 
-.. image:: resource/equipment.png
+.. image:: docs/source/resource/equipment.png
   :alt: Equipment
 `Source <https://www.jagex.com/en-GB/>`_
 
 In a massive open world:
 
-.. image:: resource/map.png
+.. image:: docs/source/resource/map.png
   :alt: GameMap
 `Source <https://www.jagex.com/en-GB/>`_
 

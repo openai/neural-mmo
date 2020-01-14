@@ -6,11 +6,6 @@
 .. |fire| image:: resource/fire_thumbnail.png
 .. |water| image:: resource/water_thumbnail.png
 
-.. |air| image:: docs/source/resource/air_thumbnail.png
-.. |earth| image:: docs/source/resource/earth_thumbnail.png
-.. |fire| image:: docs/source/resource/fire_thumbnail.png
-.. |water| image:: docs/source/resource/water_thumbnail.png
-
 .. |red| image:: docs/source/resource/neuralRED.png
 .. |blue| image:: docs/source/resource/neuralBLUE.png
 .. |green| image:: docs/source/resource/neuralGREEN.png

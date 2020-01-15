@@ -11,7 +11,7 @@
 |ags| Quickstart
 ################
 
-**Installation:** The master branch will always contain the latest stable version. *Users should not fork cowboy branches.* These are hyperagressive dev branches for contributors. They are not bleeding edge builds and may be flammable. You no longer need to install the Unity3D `client <https://github.com/jsuarez5341/neural-mmo-client>`_ manually.
+**Installation:** The master branch will always contain the latest stable version. *Users should not fork cowboy branches.* These are hyperagressive dev branches for contributors. They are not bleeding edge builds and may be flammable.
 
 .. code-block:: python
 
@@ -24,160 +24,201 @@
    #   --virtual-env: Install in a virtual env
    python scripts/setup.py
 
-   #Run the pretrained demo model to test the intallation
+   #Run the pretrained demo model to test the installation
    python Forge.py --render
 
    #Open the client in a separate terminal
    #You will need to rerun this if you restart the environment
    ./client.sh
 
-**Training from scratch:** Next, you will familiarize yourself with the baseline parameters and train a model from scratch. Open up experiments.py, which contains all of the training configuration options. First, we'll disable the test mode flags:
+|ags| Training from scratch
+###########################
+
+Next, we will get familiar with the baseline parameters and train a model from scratch. Open up experiments.py, which contains all of the training configuration options. First, we'll disable the test mode flags:
 
 .. code-block:: python
 
    LOAD = False
    TEST = False
    BEST = False
-   
-You will probably also want to reduce the number of cores used for training. I reccomend using two fewer cores than your CPU has to prevent the system from locking up. For a 6 core CPU:
+
+Our baseline was trained on a 12 core machine. Your CPU probably does not have this many. To use 4 cores instead:
 
 .. code-block:: python
 
    NGOD = 4
- 
-That's it. We can train a model now:
+
+Now we can train a model:
 
 .. code-block:: python
 
    python Forge.py
 
-If you leave it running for a few hours, you should see the reward slowly increasing. The baseline model gets to >20 average lifetime. Once you are satisfied, you can reenable testing flags and run with rendering enabled to view agent policies.
+If you leave it running, you will see the reward steadily increasing. The baseline model gets to >23 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
 
-**Learning the API:** On the surface, Neural MMO follows the OpenAI Gym API:
+|ags| The IO API
+################
+
+On the surface, Neural MMO follows the OpenAI Gym API:
 
 .. code-block:: python
 
+from forge.blade.core.realm import Realm
+from experiments import Experiment, Config
+
+if __name__ == '__main__':
+   config = Experiment('demo', Config).init()
+
    env = Realm(config, *args)
-   obs, rewards, dones, info = env.reset()
+   obs, rewards, dones, infos = env.reset()
 
    while not done:
       actions = somePolicy(obs)
       obs, rewards, dones, info = env.step(actions)
 
-However, the actual contents of *obs, rewards, dones, info* might not be what you expect. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces. Developing infrastructure to handle these could take months! Luckily, we've already done that for you. Let's make use of the core IO libraries:
+However, the actual contents of *obs, rewards, dones, info* is nonstandard by necessity. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces. You're free to develop your own methods for handling these, but we've already done all that work for you. Let's make use of the core IO libraries:
 
 .. code-block:: python
+
+from forge.blade.core.realm import Realm
+from experiments import Experiment, Config
+
+if __name__ == '__main__':
+   config = Experiment('demo', Config).init()
 
    env = Realm(config, *args)
-   obs, rewards, dones, info = env.reset()
+   obs, rewards, dones, infos = env.reset()
 
    while not done:
-      data = io.inputs(obs, rewards, dones, config)
-      actions = somePolicy(data)
+      input, _ = io.inputs(obs, rewards, dones, *args)
+      output   = somePolicy(input)
 
-      atns = io.outputs(obs, actions)
+      actions = io.outputs(output)
       obs, rewards, dones, info = env.step(actions)
 
-We're almost there. The IO API done a ton of work behind the scenes -- batching, normalization, serialization, to name a few. handled data batching and structuring. The only remaining issue is that *somePolicy* had be able to handle heirarchical data and variable action spaces. Let's use the Ethyr prebuilt IO modules:
+We're almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that *somePolicy* must handle hierarchical data and variable action spaces. Let's use the Ethyr prebuilt IO modules:
 
 .. code-block:: python
+
+from forge.blade.core.realm import Realm
+from experiments import Experiment, Config
+import torch
+
+if __name__ == '__main__':
+   config = Experiment('demo', Config).init()
+
+   env = Realm(config, *args)
+   obs, rewards, dones, infos = env.reset()
 
    policy = torch.nn.Sequential(
       ethyr.Input(*args),
-      ethyr.Output(*args))
-
-   env = Realm(config, *args)
-   obs, rewards, dones, info = env.reset()
+      ethyr.Output(*args)
 
    while not done:
-      data = io.inputs(obs, rewards, dones, config)
-   
-      #Populates data in place
-      policy(data)
+      input, _ = io.inputs(obs, rewards, dones, *args)
+      output   = policy(input)
 
-      atns = io.outputs(obs, actions)
+      actions = io.outputs(output)
       obs, rewards, dones, info = env.step(actions)
 
-And there you have it! You can insert your own model between the IO networks without having to deal with any wonky structured data. We've made a few small simplifications for this tutorial. Plus, we haven't discussed rollout collection, training, distributed computation, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo. 
+And there you have it! You can insert your own model between the input and output networks without having to deal with nonstandard structured data. However, this only covers the forward pass. We haven't discussed rollout collection, training, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo.
 
+|ags| Distributed computation with Ascend
+#########################################
 
-|ags| Projekt 
-=============
-
-The project is divided into four modules:
-
-=============================  =======================
-Engineering                    Research
-=============================  =======================
-|earth| Blade: Environment     |water| Trinity: API   
-|fire|  Embyr: Render          |air| Ethyr: Contrib   
-=============================  =======================
-
-The objective is similar to "artificial life": create agents that scale to the complexity and robustness of the real world. A key perspective of the project is decoupling this statement into subproblems that are concrete, feasible, and directly composable to solve the whole problem. We split the objective into "agents that scale to their environment" and "environments that scale to the real world." These are large respective research and engineering problems, but unlike the original objective, they are specific enough to attempt individually. See Ideology if you find this sort of macro view interesting. 
-
-|water| |air| Research: Agents that scale to env complexity
-
-|earth| |fire| Engineering: Env that scales to real world complexity
-
-|water| Trinity
----------------
-
-Neural MMO uses the OpenAI Gym API function signatures:
+Ascend is a lightweight wrapper on top of the excellent Ray distributed computing library. The core paradigm is to model each *layer* of hardware -- cluster, server, core -- by subclassing the Ascend object. Let's first implement a remote client (Sword) without using Ascend. In order to keep track of several remote clients, we will also create a server (God).
 
 .. code-block:: python
 
-   from forge.blade.core.realm import Realm
-   env = Realm(config, args, mapIdx)
+import ray, time
 
-   #The environment is persistent: call reset only upon initialization
-   obs = env.reset()
+@ray.remote
+class Sword:
+   def __init__(self, idx):
+      self.idx = idx
 
-   #Observations contain entity and stimulus
-   #for each agent in each environment.
-   actions = your_algorithm_here(obs)
+   def step(self):
+      time.sleep(1)
+      return self.idx
 
-   #Observations length is variable (as is the number of agents)
-   #The environment is persistent: "dones" denotes whether
-   #whether the given agent has died, but the env goes on.
-   obs, rewards, dones, infos = env.step(actions)
+class God:
+   def __init__(self, n=5):
+      self.disciples = [Sword.remote(i) for i in range(n)]
 
-However, there are some necesary deviations in argument/return values:
+   def step(self):
+      clientData = ray.get([d.step.remote() for d in self.disciples])
+      print(clientData) #[0, 1, 2, 3, 4]
 
-1. Observations and actions are objects, not tensors. This is a major compute saver, but it also complicates IO -- the process of inputting observations into networks and outputing action choices. Ethyr provides a dedicated IO api to assist with this.
+if __name__ == '__main__':
+   ray.init()
+   God().step()
 
-2. The environment supports a large and variable number of agents. Observations are returned with variable length in an arbitrary order. Each observation is tagged with the ID of the associated agent.
-
-3. The environment is ill suited to per-frame rendering and instead functions as an MMO client/server. Example usage is provided in Forge.py.
-
-You can provide your own infrastructure or use our Trinity API. Trinity is a simple three layer persistent, synchronous/asynchronous, distributed computation model that allows you to specify cluster, server, and core level functionality by implementing three base classes. High level usage is:
+Ascend enables us to do all of this without manually writing loops over hardware:
 
 .. code-block:: python
 
-   #Ready: Create a Trinity object specifying
-   #Cluster, Server, and Core level execution
-   trinity = Trinity(Pantheon, God, Sword)
+from forge.trinity.ascend import Ascend
+import ray, time
 
-   #Aim: Pass it an experiment configuration
-   trinity.init(config)
+@ray.remote
+class Sword:
+   def __init__(self, idx):
+      self.idx = idx
 
-   #Fire.
-   while not solved(AGI):
-      trinity.step()
+   def step(self):
+      time.sleep(1)
+      return self.idx
 
-Where Pantheon, God, and Sword (see Namesake if that sounds odd) are user defined subclasses of Ascend -- our lightweight and framework agnostic Ray wrapper defining an arbitrary "layer" of infrastructure. All communications are handled internally and easily exposed for debugging. The demo in /projekt shows how Trinity can be used for distributed training with very little code outside of the model and rollout collection. 
+class God(Ascend):
+   def __init__(self, n=5):
+      super().__init__(Sword, n)
 
-|air| Ethyr
------------
-Ethyr is the "contrib" for this project. It contains useful research tools for interacting with the project, most notably IO classes for pre/post processing observations and actions. I've seeded it with the helper classes from my personal experiments, including a model save/load manager, a rollout objects, and a basic optimizer. If you would like to contribute code (in any framework, not just PyTorch), please submit a pull request.
+   def step(self):
+      clientData = super().step()
+      print(clientData) #[0, 1, 2, 3, 4]
 
-|earth| Blade
--------------
-Blade is the core environment, including game state and control flow. Researchers should not need to touch this.
+if __name__ == '__main__':
+   ray.init()
+   God().step()
 
-|fire| Embyr
-------------
-`Embyr <https://github.com/jsuarez5341/neural-mmo-client>`_ is an independent repository containing the Unity3D client. All associated scripts are written in C# but reads relatively similarly to python. Researchers familiar with python and static typing should have no trouble beginning to contribute immediately, even without direct experience in C#. Performance should not be an issue on any decent machine; post in the Discord if you are having issues. 
+The source is only a few hundred lines and isn't very useful in toy examples. Ascend really shines in more complex environments that already have too many moving parts:
 
-I am actively developing the environment and associated client in tandem. Updates are typically released in large chunks every few months. The Discrd is the best place to get more frequent news. Feel free to contact me there with ideas and feature requests.
+.. code-block:: python
 
-The Legacy THREE.js web client is still available on old branches but does not work with v1.2+ server code. It's written in javascript, but it reads like python. This is to allow researchers with a Python background and 30 minutes of javascript experience to begin contributing immediately. You will need to refresh the page whenever you reboot the server (Forge.py). Performance should no longer be an issue, but it runs better on Chrome than Firefox. Other browsers may work but are not officially supported.
+from forge.trinity.ascend import Ascend, runtime, waittime
+import ray, time
+
+@ray.remote
+class Sword(Ascend):
+   def __init__(self, idx):
+      super().__init__(None, 0)
+      self.idx = idx
+
+   @runtime
+   def step(self, coef, bias):
+      time.sleep(1)
+      return coef*self.idx + bias
+
+class God(Ascend):
+   def __init__(self, n=5):
+      super().__init__(Sword, n)
+
+   def update(self):
+      time.sleep(1)
+
+   @runtime
+   def step(self):
+      asyncHandles = super().distrib(
+            2,
+            [4, 3, 2, 1, 0],
+            shard=(False, True))
+
+      self.update()
+      clientData = super().sync(asyncHandles)
+      print(clientData) #[4, 5, 6, 7, 8]
+
+if __name__ == '__main__':
+   ray.init()
+   God().step()
+
+Like before, we have a server interacting with five remote clients. This time, the *coef* argument is shared among clients while the *bias* argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side *update()* function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code. In a full research environment, we have found it an indispensable tool. Welcome, Ascendant!

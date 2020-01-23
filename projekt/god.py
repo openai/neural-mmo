@@ -5,13 +5,30 @@ import ray
 
 from collections import defaultdict
 
-from forge.blade.core.realm import Realm
+from forge.blade import core
 from forge.blade.lib.log import BlobSummary 
 
 from forge.trinity.ascend import Ascend, runtime, Log
 from forge.blade.io import io
 
 import projekt
+
+class Realm(core.Realm):
+   '''Example environment overrides'''
+   def spawn(self):
+      '''Example override of the spawn function'''
+      return super().spawn()
+
+      #Example override
+      ent    = self.desciples[entID]
+      packets[entID].reward = 0.05 * min(
+          ent.resources.health.val,
+          ent.resources.water.val,
+          ent.resources.food.val)
+
+   def reward(self, ent):
+      '''Example override of the reward function'''
+      return super().reward(ent)
 
 @ray.remote(num_gpus=0)
 class God(Ascend):
@@ -48,7 +65,7 @@ class God(Ascend):
       self.config, self.idx     = config, idx
       self.nUpdates, self.grads = 0, []
 
-      self.env      = Realm(config, idx, self.spawn)
+      self.env      = Realm(config, idx)
       self.blobs    = BlobSummary()
 
       self.obs, self.rewards, self.dones, _ = self.env.reset()
@@ -68,23 +85,6 @@ class God(Ascend):
          clientID: A client membership ID
       '''
       return entID % self.config.NSWORD
-
-   def spawn(self):
-      '''Specifies the environment protocol for adding players
-
-      Returns:
-         entID  : A unique entity ID
-         pop    : A population membership ID
-         prefix : A string prepended to agent names
-
-      Notes:
-         This fomulation is useful for population based research, as it 
-         allows one to specify per-agent or per-population policies'''
-
-      pop      =  hash(str(self.ent)) % self.nPop
-      self.ent += 1
-
-      return self.ent, pop, 'Neural_'
 
    def batch(self, nUpdates):
       '''Set backward pass flag and reset update counts

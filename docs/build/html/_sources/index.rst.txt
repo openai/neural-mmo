@@ -7,7 +7,7 @@
 
 |env|
 
-Neural MMO v1.1
+Neural MMO v1.3
 ###############
 
 .. toctree::

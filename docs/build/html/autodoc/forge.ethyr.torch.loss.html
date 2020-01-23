@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.loss module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.ethyr.torch.loss module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -20,11 +20,20 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'1.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -50,7 +59,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../contents.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -83,8 +92,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -94,7 +109,6 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
 </ul>
 </li>
@@ -117,7 +131,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../contents.html">Neural MMO</a>
         
       </nav>
 
@@ -146,7 +160,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -181,22 +195,27 @@
 <dt id="forge.ethyr.torch.loss.PG">
 <code class="descclassname">forge.ethyr.torch.loss.</code><code class="descname">PG</code><span class="sig-paren">(</span><em>pi</em>, <em>atn</em>, <em>val</em>, <em>returns</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.PG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes losses for the policy gradient algorithm</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pi</strong> – Logit tensor (network outputs, pre softmax)</p></li>
-<li><p><strong>atn</strong> – Index tensor of selected actions</p></li>
-<li><p><strong>val</strong> – Value tensor</p></li>
-<li><p><strong>return</strong> – Return tensor</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pi</strong> – Logit tensor (network outputs, pre softmax)</li>
+<li><strong>atn</strong> – Index tensor of selected actions</li>
+<li><strong>val</strong> – Value tensor</li>
+<li><strong>return</strong> – Return tensor</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Policy and entropy losses</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>polLoss, entLoss</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Policy loss
+entLoss : Entropy loss</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">polLoss</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -204,69 +223,97 @@
 <code class="descclassname">forge.ethyr.torch.loss.</code><code class="descname">advantage</code><span class="sig-paren">(</span><em>returns</em>, <em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.advantage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a mean centered advantage function
 using a value function baseline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> – Tensor of trajectory returns</p></li>
-<li><p><strong>vals</strong> – Tensor of value function outpus</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>returns</strong> – Tensor of trajectory returns</li>
+<li><strong>vals</strong> – Tensor of value function outpus</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Advantage estimate tensor</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Advantage estimate tensor</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">advantage</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.loss.entropyLoss">
 <code class="descclassname">forge.ethyr.torch.loss.</code><code class="descname">entropyLoss</code><span class="sig-paren">(</span><em>prob</em>, <em>logProb</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.entropyLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entropy computation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob</strong> – Probability tensor</p></li>
-<li><p><strong>logProb</strong> – Log probability tensor</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prob</strong> – Probability tensor</li>
+<li><strong>logProb</strong> – Log probability tensor</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Mean entropy</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Mean entropy</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">entropy</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.loss.policyLoss">
 <code class="descclassname">forge.ethyr.torch.loss.</code><code class="descname">policyLoss</code><span class="sig-paren">(</span><em>logProb</em>, <em>atn</em>, <em>adv</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.policyLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Policy gradient loss</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logProb</strong> – Log probability tensor</p></li>
-<li><p><strong>atn</strong> – Action index tensor</p></li>
-<li><p><strong>adv</strong> – Advantage estimate tensor</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>logProb</strong> – Log probability tensor</li>
+<li><strong>atn</strong> – Action index tensor</li>
+<li><strong>adv</strong> – Advantage estimate tensor</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Mean policy gradient loss</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Mean policy gradient loss</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">loss</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.loss.valueLoss">
 <code class="descclassname">forge.ethyr.torch.loss.</code><code class="descname">valueLoss</code><span class="sig-paren">(</span><em>val</em>, <em>returns</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.valueLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Value function loss</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>val</strong> – Value tensor</p></li>
-<li><p><strong>returns</strong> – Return tensor</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>val</strong> – Value tensor</li>
+<li><strong>returns</strong> – Return tensor</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Mean value loss</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Mean value loss</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">value</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -291,7 +338,7 @@ using a value function baseline.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>

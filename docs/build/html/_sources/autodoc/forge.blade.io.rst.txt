@@ -12,3 +12,10 @@ forge.blade.io package
     forge.blade.io.action
     forge.blade.io.stimulus
 
+
+.. toctree::
+
+   forge.blade.io.io
+   forge.blade.io.serial
+   forge.blade.io.utils
+

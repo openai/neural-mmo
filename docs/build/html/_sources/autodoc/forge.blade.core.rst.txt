@@ -9,6 +9,11 @@ forge.blade.core package
 
 .. toctree::
 
+    forge.blade.core.market
+
+
+.. toctree::
+
    forge.blade.core.config
    forge.blade.core.env
    forge.blade.core.map

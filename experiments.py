@@ -18,7 +18,7 @@ class Config(config.Config):
    ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
-   STAT_FILE = 'stats31.txt'    #Run statistics log file
+   STAT_FILE = 'stats34.txt'    #Run statistics log file
    DEVICE    = 'cpu'            #Hardware specification
 
    #All run defaults: 12 gods, 16384 batch
@@ -51,7 +51,7 @@ class Config(config.Config):
    #30: Stale data: 23.33 :) works :)
    #31: No entropy
    ###############################Train/test mode settings
-   DEBUG     = False            #Whether to run with debug settings
+   DEBUG     = True             #Whether to run with debug settings
    LOAD      = False            #Load model from file?
    BEST      = False            #If loading, most recent or highest lifetime?
    TEST      = False            #Update the model during run?

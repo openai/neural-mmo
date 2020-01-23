@@ -9,7 +9,7 @@ from torch import nn
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
 
-class NetTree(nn.Module):
+class Output(nn.Module):
    def __init__(self, config):
       '''Network responsible for selecting actions
 

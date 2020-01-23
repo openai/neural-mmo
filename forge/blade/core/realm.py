@@ -1,15 +1,9 @@
-import ray
-import pickle
-import numpy as np
 from pdb import set_trace as T
-import numpy as np
-
-from forge.blade import entity, core
 
 from collections import defaultdict
 from itertools import chain
-from copy import deepcopy
 
+from forge.blade import entity, core
 from forge.blade.lib.enums import Palette
 from forge.trinity.ascend import runtime, Timed
 
@@ -17,7 +11,7 @@ class Packet():
    '''Wrapper for state, reward, done signals'''
    def __init__(self):
       '''Instantiates packet data'''
-      self.stim  = None
+      self.stim   = None
       self.reward = None
       self.done   = None
 
@@ -28,10 +22,9 @@ class Spawner:
       Args:
          config: A Config object
       '''
-      self.config = config
-
       self.nEnt, self.nPop = config.NENT, config.NPOP
-      self.popSz = self.nEnt // self.nPop
+      self.popSz  = self.nEnt // self.nPop
+      self.config = config
 
       self.ents = 0
       self.pops = defaultdict(int)
@@ -46,6 +39,8 @@ class Spawner:
          pop   : A population index to assign to the new agent
          name  : A string to prepend to iden as an agent name
       '''
+
+      assert iden is not None
       assert self.pops[pop] <= self.popSz
       assert self.ents      <= self.nEnt
 
@@ -57,7 +52,7 @@ class Spawner:
          return None
 
       self.pops[pop] += 1
-      self.ents += 1
+      self.ents      += 1
 
       color = self.palette.colors[pop]
       ent   = entity.Player(self.config, iden, pop, name, color)
@@ -78,14 +73,14 @@ class Spawner:
       assert self.ents      >= 1
 
       self.pops[pop] -= 1
-      self.ents -= 1
+      self.ents      -= 1
 
       if self.pops[pop] == 0:
          del self.pops[pop]
 
 class Realm(Timed):
    '''Neural MMO Environment'''
-   def __init__(self, config, idx, spawn):
+   def __init__(self, config, idx=0):
       '''
       Args:
 
@@ -94,18 +89,16 @@ class Realm(Timed):
          idx    : Index of the map file to load
       '''
       super().__init__()
-      self.spawner = Spawner(config)
-      self.spawn   = spawn
+      self.spawner   = Spawner(config)
+      self.world     = core.Env(config, idx)
+      self.env       = self.world.env
 
-      self.world, self.desciples = core.Env(config, idx), {}
-      self.config = config
-      self.npop = config.NPOP
+      self.config    = config
+      self.worldIdx  = idx
+      self.desciples = {}
 
-      self.worldIdx = idx
-      self.tick = 0
-
-      self.env = self.world.env
-      self.values = None
+      self.entID     = 1
+      self.tick      = 0
 
    def clientData(self):
       '''Data packet used by the renderer
@@ -113,68 +106,46 @@ class Realm(Timed):
       Returns:
          packet: A packet of data for the client
       '''
-      if self.values is None:# and hasattr(self, 'sword'):
-         #self.values = self.sword.anns[0].visVals()
-         self.values = []
-
-      ret = {
+      packet = {
             'environment': self.world.env,
             'entities': dict((k, v.packet()) 
                for k, v in self.desciples.items()),
-            'values': self.values
+            'values': []
             }
-      return ret
 
-   def cullDead(self, dead):
-      '''Deletes the specified list of agents
+      return packet
 
-      Args: 
-         dead: A list of dead agent IDs to remove
-      '''
-      for entID in dead:
-         ent = self.desciples[entID]
-         r, c = ent.base.pos
-         self.world.env.tiles[r, c].delEnt(entID)
-         self.spawner.cull(ent.annID)
-         del self.desciples[entID]
-
-   def stepEnv(self):
-      '''Advances the environment'''
-      ents = list(chain(self.desciples.values()))
-
-      #Stats
-      self.world.step(ents, [])
-      self.world.env.step()
-
-      self.env = self.world.env.np()
-
-   def getStim(self, ent):
-      '''Gets agent stimuli from the environment
-
-      Args:
-         ent: An agent object
+   def spawn(self):
+      '''Specifies the environment protocol for adding players
+      Override to specify custom spawning behavior
 
       Returns:
-         Stimuli for the given agent
-      '''
-      return self.world.env.stim(ent.base.pos, self.config.STIM)
+         entID  : A unique entity ID
+         pop    : A population membership ID
+         prefix : A string prepended to agent names
 
-   #Only saves the first action of each priority
-   def prioritize(self, decisions):
-      '''Reorders actions according to their priorities
+      Notes:
+         This fomulation is useful for population based research, as it
+         allows one to specify per-agent or per-population policies'''
 
-      Args:
-         decisions: A dictionary of agent actions
-      
+      pop        =  hash(str(self.entID)) % self.config.NPOP
+      self.entID += 1
+
+      return self.entID, pop, 'Neural_'
+
+   def reward(self, entID):
+      '''Specifies the environment protocol for rewarding agents
+      Override to specify custom reward behavior
+
       Returns:
-         Repriotized actions
-      '''
-      actions = defaultdict(dict)
-      for entID, atns in decisions.items():
-         for atn, args in atns.items():
-            actions[atn.priority][entID] = [atn, args]
-      return actions
+         reward: floating point reward value
 
+      Notes:
+         Default behavior returns only zero. You will need to interpret
+         the "done" signal as a -1 during rollout collection'''
+
+      return 0
+ 
    def act(self, actions):
       '''Execute agent actions
       
@@ -185,6 +156,34 @@ class Realm(Timed):
          for entID, atnArgs in tups.items():
             ent = self.desciples[entID]
             ent.act(self.world, atnArgs)
+
+   def prioritize(self, decisions):
+      '''Reorders actions according to their priorities
+
+      Args:
+         decisions: A dictionary of agent actions
+      
+      Returns:
+         Repriotized actions
+
+      Notes:
+         Only saves the first action of each priority
+      '''
+      actions = defaultdict(dict)
+      for entID, atns in decisions.items():
+         for atn, args in atns.items():
+            actions[atn.priority][entID] = [atn, args]
+      return actions
+
+   def stepEnv(self):
+      '''Advances the environment'''
+      ents = list(chain(self.desciples.values()))
+
+      #Stats
+      self.world.step(ents, [])
+      self.world.env.step()
+
+      self.env = self.world.env.np()
 
    def stepEnts(self, decisions):
       '''Advance agents
@@ -205,21 +204,14 @@ class Realm(Timed):
       self.act(actions)
 
       #Finally cull dead. This will enable MAD melee
-      dead  = []
-      dones = []
-      packets = defaultdict(Packet)
+      dead, dones = set(), set()
+      packets     = defaultdict(Packet)
       for entID in decisions.keys():
-         ent = self.desciples[entID]
+         ent    = self.desciples[entID]
          if self.postmortem(ent, dead):
-            #This line was commented before
-            #packets[entID].reward = -1
-            dones.append(ent.serial)
+            dones.add(ent.serial)
          else:
-            #packets[entID].reward = 0.05 * min(
-            #      ent.resources.health.val,
-            #      ent.resources.water.val,
-            #      ent.resources.food.val)
-            packets[entID].reward = 0
+            packets[entID].reward = self.reward(entID)
             packets[entID].stim = ent
 
       self.cullDead(dead)
@@ -237,9 +229,24 @@ class Realm(Timed):
       '''
       entID = ent.entID
       if not ent.base.alive:
-         dead.append(entID)
+         dead.add(entID)
          return True
       return False
+
+   def cullDead(self, dead):
+      '''Deletes the specified list of agents
+
+      Args: 
+         dead: A list of dead agent IDs to remove
+      '''
+      for entID in dead:
+         ent  = self.desciples[entID]
+         r, c = ent.base.pos
+
+         self.world.env.tiles[r, c].delEnt(entID)
+         self.spawner.cull(ent.annID)
+
+         del self.desciples[entID]
 
    def getStims(self, packets):
       '''Gets agent stimuli from the environment
@@ -253,7 +260,9 @@ class Realm(Timed):
       for entID, ent in self.desciples.items():
          r, c = ent.base.pos
          tile = self.world.env.tiles[r, c].tex
-         stim = self.getStim(ent)
+         stim = self.world.env.stim(
+                ent.base.pos, self.config.STIM)
+
          packets[entID].stim = (stim, ent)
 
       return packets
@@ -266,18 +275,18 @@ class Realm(Timed):
          decisions: A dictionary of agent decisions
 
       Returns:
-         observations : A dictionary of local game state
-         reward       : 0
-         dones        : (bool) Whether the agent has died
-         info         : None
+         observations : A list of local game state observations of form (env, ent) for each agent where "env" is a grid of game tile objects and "ent" is a game entity object representing the current agent. Use forge.io libraries for preprocessing.
+         reward       : A list of rewards for each agent (floating point or None)
+         dones        : A set of IDs corresponding to agents that have died during the past game tick
+         info         : None -- provided for conformity with OpenAI Gym
       '''
       self.tick += 1
 
       #Spawn an ent
       iden, pop, name = self.spawn()
-      if iden is not None:
-         self.spawner.spawn(self, iden, pop, name)
+      assert iden is not None
 
+      self.spawner.spawn(self, iden, pop, name)
       packets, dead = self.stepEnts(decisions)
 
       self.stepEnv()
@@ -302,7 +311,8 @@ class Realm(Timed):
       Returns:
          data: Output of self.step({})
       '''
-      assert self.tick == 0
+      err = 'Neural MMO is persistent and may only be reset once upon initialization'
+      assert self.tick == 0, err
       return self.step({})
 
 

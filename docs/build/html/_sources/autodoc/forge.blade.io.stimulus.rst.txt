@@ -9,6 +9,8 @@ forge.blade.io.stimulus package
 
 .. toctree::
 
+   forge.blade.io.stimulus.dynamic
+   forge.blade.io.stimulus.hook
    forge.blade.io.stimulus.node
    forge.blade.io.stimulus.static
 

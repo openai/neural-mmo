@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.embyr.twistedserver module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.embyr.twistedserver module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -20,11 +20,20 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'1.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -50,7 +59,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../contents.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -83,8 +92,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -115,7 +130,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../contents.html">Neural MMO</a>
         
       </nav>
 
@@ -144,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -223,12 +238,12 @@ send any greeting or initial message, do it here.</p>
 <p>Use this method to translate to a higher-level message.  Usually, some
 callback will be made upon the receipt of each complete protocol
 message.</p>
-<dl class="simple">
-<dt>&#64;param data: a string of indeterminate length.  Please keep in mind</dt><dd><p>that you will probably need to buffer some data, as partial
+<dl class="docutils">
+<dt>&#64;param data: a string of indeterminate length.  Please keep in mind</dt>
+<dd>that you will probably need to buffer some data, as partial
 (or multiple) protocol messages may be received!  I recommend
 that unit tests for protocols call through to this method with
-differing chunk sizes, down to one byte at a time.</p>
-</dd>
+differing chunk sizes, down to one byte at a time.</dd>
 </dl>
 </dd></dl>
 
@@ -320,14 +335,18 @@ did not reply in time to our ping. We drop the connection.</p>
 sending a Close when no Close was sent before. Otherwise it drops
 the TCP connection either immediately (when we are a server) or after a timeout
 (when we are a client and expect the server to drop the TCP).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>code</strong> (<em>int</em>) – Close status code, if there was one (<code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProtocol</span></code>.CLOSE_STATUS_CODE_*).</p></li>
-<li><p><strong>reasonRaw</strong> (<em>bytes</em>) – Close reason (when present, a status code MUST have been also be present).</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>code</strong> (<em>int</em>) – Close status code, if there was one (<code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProtocol</span></code>.CLOSE_STATUS_CODE_*).</li>
+<li><strong>reasonRaw</strong> (<em>bytes</em>) – Close reason (when present, a status code MUST have been also be present).</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -350,11 +369,14 @@ speak no specific one or when the client protocol list was empty.</p>
 HTTP headers, with <cite>headers</cite> being a dictionary of key-values.</p>
 <p>Throw <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.types.ConnectionDeny</span></code> when you don’t want
 to accept the WebSocket connection request.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -480,14 +502,18 @@ all subsequent processing of incoming bytes.</p>
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.registerProducer">
 <code class="descname">registerProducer</code><span class="sig-paren">(</span><em>producer</em>, <em>streaming</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.registerProducer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a Twisted producer with this protocol.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>producer</strong> (<em>object</em>) – A Twisted push or pull producer.</p></li>
-<li><p><strong>streaming</strong> (<em>bool</em>) – Producer type.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>producer</strong> (<em>object</em>) – A Twisted push or pull producer.</li>
+<li><strong>streaming</strong> (<em>bool</em>) – Producer type.</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -598,11 +624,14 @@ upgrade to WebSocket header (and option serverStatus is True).</p>
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.setTrackTimings">
 <code class="descname">setTrackTimings</code><span class="sig-paren">(</span><em>enable</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.setTrackTimings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable/disable tracking of detailed timings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – Turn time tracking on/off.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enable</strong> (<em>bool</em>) – Turn time tracking on/off.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -666,11 +695,14 @@ instance.</p>
 <dt id="forge.embyr.twistedserver.WSServerFactory.getConnectionCount">
 <code class="descname">getConnectionCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.WSServerFactory.getConnectionCount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get number of currently connected clients.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>int – Number of currently connected clients.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">int – Number of currently connected clients.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -688,22 +720,26 @@ instances of <code class="xref py py-class docutils literal notranslate"><span c
 <p>By doing so, you can avoid the (small) overhead of framing the
 <em>same</em> payload into WebSocket messages multiple times when that
 same payload is to be sent out on multiple connections.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>payload</strong> (<em>bytes</em>) – The message payload.</p></li>
-<li><p><strong>isBinary</strong> (<em>bool</em>) – <cite>True</cite> iff payload is binary, else the payload must be
-UTF-8 encoded text.</p></li>
-<li><p><strong>doNotCompress</strong> (<em>bool</em>) – Iff <cite>True</cite>, never compress this message. This
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>payload</strong> (<em>bytes</em>) – The message payload.</li>
+<li><strong>isBinary</strong> (<em>bool</em>) – <cite>True</cite> iff payload is binary, else the payload must be
+UTF-8 encoded text.</li>
+<li><strong>doNotCompress</strong> (<em>bool</em>) – Iff <cite>True</cite>, never compress this message. This
 only applies when WebSocket compression has been negotiated on the
 WebSocket connection. Use when you know the payload incompressible
-(e.g. encrypted or already compressed).</p></li>
+(e.g. encrypted or already compressed).</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>obj – An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.PreparedMessage</span></code>.</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">obj – An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.PreparedMessage</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -776,7 +812,7 @@ directly.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>

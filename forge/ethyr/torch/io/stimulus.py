@@ -8,7 +8,7 @@ from torch import nn
 
 from forge.blade.io import stimulus, action
 
-class Env(nn.Module):
+class Input(nn.Module):
    def __init__(self, config, embeddings, attributes, entities):
       '''Network responsible for processing observations
 

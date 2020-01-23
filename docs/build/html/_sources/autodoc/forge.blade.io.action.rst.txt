@@ -9,6 +9,7 @@ forge.blade.io.action package
 
 .. toctree::
 
+   forge.blade.io.action.dynamic
    forge.blade.io.action.node
    forge.blade.io.action.static
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.param module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.ethyr.torch.param module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -20,11 +20,20 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'1.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -50,7 +59,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../contents.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -83,8 +92,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -94,7 +109,6 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
 </ul>
 </li>
@@ -117,7 +131,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../contents.html">Neural MMO</a>
         
       </nav>
 
@@ -146,7 +160,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -181,72 +195,86 @@
 <dt id="forge.ethyr.torch.param.getGrads">
 <code class="descclassname">forge.ethyr.torch.param.</code><code class="descname">getGrads</code><span class="sig-paren">(</span><em>ann</em>, <em>warn=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.getGrads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the gradients of the ann</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ann</strong> – The model to get gradients from</p></li>
-<li><p><strong>warn</strong> (<em>bool</em>) – Whether to warn when gradients are None.
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ann</strong> – The model to get gradients from</li>
+<li><strong>warn</strong> (<em>bool</em>) – Whether to warn when gradients are None.
 This is a common red flag that there is something
-wrong with the network or training</p></li>
+wrong with the network or training</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of gradients</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ret</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of gradients</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">ret</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.param.getParameters">
 <code class="descclassname">forge.ethyr.torch.param.</code><code class="descname">getParameters</code><span class="sig-paren">(</span><em>ann</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.getParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the parameters of the ann</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ann</strong> – The model to get parameters from</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of parameters</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ret</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ann</strong> – The model to get parameters from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ret</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.param.setGrads">
 <code class="descclassname">forge.ethyr.torch.param.</code><code class="descname">setGrads</code><span class="sig-paren">(</span><em>ann</em>, <em>grads</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.setGrads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the gradients of the ann</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>grads</strong> – A list of gradients</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grads</strong> – A list of gradients</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.param.setParameters">
 <code class="descclassname">forge.ethyr.torch.param.</code><code class="descname">setParameters</code><span class="sig-paren">(</span><em>ann</em>, <em>meanVec</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.setParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the parameters of the ann</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>meanVec</strong> – A list of parameters</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>meanVec</strong> – A list of parameters</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="forge.ethyr.torch.param.zeroGrads">
 <code class="descclassname">forge.ethyr.torch.param.</code><code class="descname">zeroGrads</code><span class="sig-paren">(</span><em>ann</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.zeroGrads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zeros out gradients</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ann</strong> – a model</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ann</strong> – a model</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -271,7 +299,7 @@ wrong with the network or training</p></li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.save module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.ethyr.torch.save module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -20,11 +20,20 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'1.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -50,7 +59,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../contents.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -83,8 +92,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -94,7 +109,6 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
 </ul>
 </li>
@@ -117,7 +131,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../contents.html">Neural MMO</a>
         
       </nav>
 
@@ -146,7 +160,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -183,31 +197,35 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Utility for model stalling that keeps track
 of the time since the model has improved</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>resetTol</strong> – ticks before resetting</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resetTol</strong> – ticks before resetting</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="forge.ethyr.torch.save.Resetter.step">
 <code class="descname">step</code><span class="sig-paren">(</span><em>best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Resetter.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Step the resetter</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>best</strong> (<em>bool</em>) – whether this is the best model
-performance thus far</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>whether the model should be reset to</dt><dd><p>the previous best checkpoint</p>
-</dd>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>best</strong> (<em>bool</em>) – whether this is the best model
+performance thus far</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>whether the model should be reset to</dt>
+<dd>the previous best checkpoint</dd>
 </dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -217,55 +235,67 @@ performance thus far</p>
 <em class="property">class </em><code class="descclassname">forge.ethyr.torch.save.</code><code class="descname">Saver</code><span class="sig-paren">(</span><em>root</em>, <em>savef</em>, <em>bestf</em>, <em>resetTol</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Saver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Model save/load class</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>root</strong> – Path for save</p></li>
-<li><p><strong>savef</strong> – Name of the save file</p></li>
-<li><p><strong>bestf</strong> – Name of the best checkpoint file</p></li>
-<li><p><strong>resetTol</strong> – How often to reset if training stalls</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>root</strong> – Path for save</li>
+<li><strong>savef</strong> – Name of the save file</li>
+<li><strong>bestf</strong> – Name of the best checkpoint file</li>
+<li><strong>resetTol</strong> – How often to reset if training stalls</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="forge.ethyr.torch.save.Saver.checkpoint">
-<code class="descname">checkpoint</code><span class="sig-paren">(</span><em>params</em>, <em>opt</em>, <em>reward</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Saver.checkpoint" title="Permalink to this definition">¶</a></dt>
+<code class="descname">checkpoint</code><span class="sig-paren">(</span><em>params</em>, <em>opt</em>, <em>lifetime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Saver.checkpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the model to file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>params</strong> – Parameters to save</p></li>
-<li><p><strong>opt</strong> – Optimizer to save</p></li>
-<li><p><strong>fname</strong> – File to save to</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> – Parameters to save</li>
+<li><strong>opt</strong> – Optimizer to save</li>
+<li><strong>fname</strong> – File to save to</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.ethyr.torch.save.Saver.load">
 <code class="descname">load</code><span class="sig-paren">(</span><em>opt</em>, <em>param</em>, <em>best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Saver.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the model from file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opt</strong> – Optimizer to load</p></li>
-<li><p><strong>params</strong> – Parameters to load</p></li>
-<li><p><strong>best</strong> – Whether to load the best or latest checkpoint</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>opt</strong> – Optimizer to load</li>
+<li><strong>params</strong> – Parameters to load</li>
+<li><strong>best</strong> – Whether to load the best or latest checkpoint</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The epoch of the loaded checkpoint</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>epoch</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The epoch of the loaded checkpoint</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">epoch</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.ethyr.torch.save.Saver.print">
-<code class="descname">print</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Saver.print" title="Permalink to this definition">¶</a></dt>
+<dt id="forge.ethyr.torch.save.Saver.perf">
+<code class="descname">perf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.save.Saver.perf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print stats for the latest epoch</p>
 </dd></dl>
 
@@ -293,7 +323,7 @@ performance thus far</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>

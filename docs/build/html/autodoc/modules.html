@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; Neural MMO 1.1 documentation</title>
+  <title>API Reference &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -20,11 +20,20 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'1.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -36,7 +45,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="forge package" href="forge.html" />
-    <link rel="prev" title="Ideology" href="../ideology.html" /> 
+    <link rel="prev" title="Welcome to the Platform!" href="../overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +59,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../contents.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -83,8 +92,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -106,7 +121,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../contents.html">Neural MMO</a>
         
       </nav>
 
@@ -135,7 +150,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
         
       <li>API Reference</li>
     
@@ -163,6 +178,7 @@
 <li class="toctree-l1"><a class="reference internal" href="forge.html">forge package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="forge.blade.html">forge.blade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.core.html">forge.blade.core package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.market.html">forge.blade.core.market namespace</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.core.config.html">forge.blade.core.config module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.core.env.html">forge.blade.core.env module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.core.map.html">forge.blade.core.map module</a></li>
@@ -184,6 +200,9 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.io.html">forge.blade.io package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.io.action.html">forge.blade.io.action package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.io.stimulus.html">forge.blade.io.stimulus package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.io.html">forge.blade.io.io module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.serial.html">forge.blade.io.serial module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.utils.html">forge.blade.io.utils module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.item.html">forge.blade.item package</a><ul>
@@ -229,17 +248,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.batcher.html">forge.ethyr.experience.batcher module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.manager.html">forge.ethyr.experience.manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.rollout.html">forge.ethyr.experience.rollout module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.action.html">forge.ethyr.io.action module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.io.html">forge.ethyr.io.io module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.serial.html">forge.ethyr.io.serial module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.stimulus.html">forge.ethyr.io.stimulus module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.utils.html">forge.ethyr.io.utils module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a><ul>
@@ -257,6 +267,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.ascend.html">forge.trinity.ascend module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.trinity.timed.html">forge.trinity.timed module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.trinity.html">forge.trinity.trinity module</a></li>
 </ul>
 </li>
@@ -277,7 +288,7 @@
         <a href="forge.html" class="btn btn-neutral float-right" title="forge package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../ideology.html" class="btn btn-neutral float-left" title="Ideology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../overview.html" class="btn btn-neutral float-left" title="Welcome to the Platform!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -286,7 +297,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>

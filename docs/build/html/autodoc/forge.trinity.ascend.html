@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.trinity.ascend module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.trinity.ascend module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -20,11 +20,20 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'1.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -35,7 +44,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.trinity.trinity module" href="forge.trinity.trinity.html" />
+    <link rel="next" title="forge.trinity.timed module" href="forge.trinity.timed.html" />
     <link rel="prev" title="forge.trinity package" href="forge.trinity.html" /> 
 </head>
 
@@ -50,7 +59,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../contents.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -83,8 +92,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -95,6 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">forge.trinity.ascend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.timed.html">forge.trinity.timed module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="forge.trinity.trinity.html">forge.trinity.trinity module</a></li>
 </ul>
 </li>
@@ -116,7 +132,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../contents.html">Neural MMO</a>
         
       </nav>
 
@@ -145,7 +161,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../contents.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -180,88 +196,139 @@
 <dd><p>Bases: <a class="reference internal" href="#forge.trinity.ascend.Timed" title="forge.trinity.ascend.Timed"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.trinity.ascend.Timed</span></code></a></p>
 <p>A featherweight Ray wrapper for persistent,
 multilevel, synchronous and asynchronous computation</p>
-<dl>
-<dt>Provides:</dt><dd><ul class="simple">
-<li><p>A synchronous step() function for performing</p></li>
+<dl class="docutils">
+<dt>Provides:</dt>
+<dd><ul class="first simple">
+<li>A synchronous step() function for performing</li>
 </ul>
-<p>persistent computation across remote workers
+<p class="last">persistent computation across remote workers
 - An asynchronous distrib() function that
 steps remote workers without waiting for returns
 - A sync() function for collecting distrib() returns
 - Various smaller tools + Timed logging</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
 <p>Works with pdb while using Ray local mode</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>disciple</strong> – a class to instantiate remotely</p></li>
-<li><p><strong>n</strong> – number of remote instances</p></li>
-<li><p><strong>*args</strong> – arguments for the disciple</p></li>
-</ul>
-</dd>
-</dl>
+<dl class="method">
+<dt id="forge.trinity.ascend.Ascend.discipleLogs">
+<code class="descname">discipleLogs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.discipleLogs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging data from all disciples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of disciple logs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">logs</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="forge.trinity.ascend.Ascend.distrib">
-<code class="descname">distrib</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.distrib" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asynchronous wrapper around the step function
-function of all remote disciples</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>*args</strong> – Arbitrary data to broadcast to disciples</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of async handles to the step returns
-from all remote disciples</p>
-</dd>
-</dl>
+<code class="descname">distrib</code><span class="sig-paren">(</span><em>*args</em>, <em>shard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.distrib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronous wrapper around the step function of remote disciples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>*args</strong> – Arbitrary data to broadcast to disciples</li>
+<li><strong>shard</strong> – Binary mask of len(args) specifying which args to scatter</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of async step return handles from remote disciples</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">rets</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.trinity.ascend.Ascend.isRemote">
 <code class="descname">isRemote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.isRemote" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if an object is remote</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(bool) Whether an object is remote</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">isRemote</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.trinity.ascend.Ascend.localize">
 <code class="descname">localize</code><span class="sig-paren">(</span><em>remote</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.localize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts to the correct local/remote function version</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> – Function to localize</p></li>
-<li><p><strong>remote</strong> – Whether f is remote</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> – Function to localize</li>
+<li><strong>remote</strong> – Whether f is remote</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A localized function (f or f.remote)</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A localized function (f or f.remote)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">f</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.trinity.ascend.Ascend.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.step" title="Permalink to this definition">¶</a></dt>
+<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>shrd=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchronous wrapper around the step function
 function of all remote disciples</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>*args</strong> – broadcast to all disciples</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of returns from all disciples</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>*args</strong> – Arguments to broadcast or shart to all disciples</li>
+<li><strong>shard</strong> – Sharding protocal as defined by Ascend.distrib()</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of returns from all disciples</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">rets</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="forge.trinity.ascend.Log">
+<em class="property">class </em><code class="descclassname">forge.trinity.ascend.</code><code class="descname">Log</code><span class="sig-paren">(</span><em>runTime</em>, <em>waitTime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Performance logging superclass</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="forge.trinity.ascend.Timed">
 <em class="property">class </em><code class="descclassname">forge.trinity.ascend.</code><code class="descname">Timed</code><a class="headerlink" href="#forge.trinity.ascend.Timed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Performance logging superclass</p>
+<p>Performance timing superclass</p>
 </dd></dl>
 
 <dl class="function">
@@ -286,7 +353,7 @@ function of all remote disciples</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.trinity.trinity.html" class="btn btn-neutral float-right" title="forge.trinity.trinity module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.trinity.timed.html" class="btn btn-neutral float-right" title="forge.trinity.timed module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="forge.trinity.html" class="btn btn-neutral float-left" title="forge.trinity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -298,7 +365,7 @@ function of all remote disciples</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>

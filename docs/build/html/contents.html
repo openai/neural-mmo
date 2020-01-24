@@ -20,20 +20,11 @@
   <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'1.3',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -43,8 +34,7 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Welcome to the Platform!" href="overview.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -58,7 +48,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> Neural MMO
+            <a href="index.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -99,6 +89,11 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-the-io-api"> The IO API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-distributed-computation-with-ascend"> Distributed computation with Ascend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -117,7 +112,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Neural MMO</a>
+          <a href="index.html">Neural MMO</a>
         
       </nav>
 
@@ -146,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
       <li>Neural MMO v1.3</li>
     
@@ -288,6 +283,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="autodoc/forge.embyr.html">forge.embyr namespace</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autodoc/forge.embyr.neural-mmo-client.html">forge.embyr.neural-mmo-client namespace</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="autodoc/forge.embyr.neural-mmo-client.twistedserver.html">forge.embyr.neural-mmo-client.twistedserver module</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.embyr.twistedserver.html">forge.embyr.twistedserver module</a></li>
 </ul>
 </li>
@@ -305,6 +304,7 @@
 </li>
 <li class="toctree-l5"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.html">forge.ethyr.torch.policy package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.attention.html">forge.ethyr.torch.policy.attention module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.baseline.html">forge.ethyr.torch.policy.baseline module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.conv.html">forge.ethyr.torch.policy.conv module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.embed.html">forge.ethyr.torch.policy.embed module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.functional.html">forge.ethyr.torch.policy.functional module</a></li>
@@ -320,6 +320,10 @@
 <li class="toctree-l5"><a class="reference internal" href="autodoc/forge.ethyr.torch.utils.html">forge.ethyr.torch.utils module</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autodoc/forge.neural-mmo-client.twistedserver.html">forge.neural-mmo-client.twistedserver module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="autodoc/forge.trinity.html">forge.trinity package</a><ul>
@@ -341,13 +345,6 @@
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="overview.html" class="btn btn-neutral float-right" title="Welcome to the Platform!" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-    </div>
   
 
   <hr/>
@@ -650,7 +647,7 @@
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

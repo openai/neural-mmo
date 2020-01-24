@@ -94,9 +94,16 @@ class IOPacket:
             self.atn.actions[atn].arguments[arg] = tuple([tensor, lens])
 
 '''High level I/O class for abstracting game state and action selection'''
-def inputs(obs, rewards, dones, clientHash, config, serialize):
+def inputs(obs, rewards, dones, config, 
+         clientHash=None, serialize=True):
    '''Preprocess inputs'''
    inputs = defaultdict(IOPacket)
+
+   #No sharding
+   default = clientHash is None
+   if clientHash is None:
+      clientHash=lambda x: 0
+
    for done in dones:
       idx = clientHash(done[1])
       inputs[idx].dones.append(done)
@@ -125,6 +132,10 @@ def inputs(obs, rewards, dones, clientHash, config, serialize):
    #Pack actions
    for idx, inp in inputs.items():
       inputs[idx].pack()
+
+   #No sharding
+   if default:
+      inputs = inputs[0]
 
    return inputs, n
 

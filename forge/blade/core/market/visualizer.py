@@ -115,8 +115,8 @@ def recv_dummy_data(market_visualizer):
         mv.update()
 
 # Example setup
-MARKET_ITEMS = ['Food', 'Water', 'Sword']
-mv = MarketVisualizer(MARKET_ITEMS)
+#MARKET_ITEMS = ['Food', 'Water', 'Sword']
+#mv = MarketVisualizer(MARKET_ITEMS)
 
-thread = Thread(target=recv_dummy_data, args=[mv])
-thread.start()
+#thread = Thread(target=recv_dummy_data, args=[mv])
+#thread.start()

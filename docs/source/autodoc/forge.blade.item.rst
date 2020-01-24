@@ -2,9 +2,9 @@ forge.blade.item package
 ========================
 
 .. automodule:: forge.blade.item
-    :members:
-    :inherited-members:
-    :show-inheritance:
+   :members:
+   :inherited-members:
+   :show-inheritance:
 
 
 .. toctree::
@@ -18,4 +18,3 @@ forge.blade.item package
    forge.blade.item.rawmeat
    forge.blade.item.sword
    forge.blade.item.tool
-

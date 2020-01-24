@@ -27,7 +27,8 @@ class Output(nn.Module):
       '''Lookup argument indices from name mapping'''
       return np.array([nameMap.get(e) for e in args])
 
-   def forward(self, obs, values, observationTensor, entityLookup, manager):
+   def forward(self, obs, observationTensor, entityLookup, 
+         values=None, manager=None):
       '''Populates an IO object with actions in-place                         
                                                                               
       Args:                                                                   

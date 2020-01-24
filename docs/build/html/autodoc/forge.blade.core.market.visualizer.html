@@ -20,20 +20,11 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../',
-              VERSION:'1.3',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -59,7 +50,7 @@
           
 
           
-            <a href="../contents.html" class="icon icon-home"> Neural MMO
+            <a href="../index.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -100,6 +91,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html#ags-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html#ags-the-io-api"> The IO API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html#ags-distributed-computation-with-ascend"> Distributed computation with Ascend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -117,6 +113,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
@@ -136,7 +133,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../contents.html">Neural MMO</a>
+          <a href="../index.html">Neural MMO</a>
         
       </nav>
 
@@ -165,7 +162,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../contents.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -200,13 +197,13 @@
 <span id="forge-blade-core-market-visualizer-module"></span><h1>forge.blade.core.market.visualizer module<a class="headerlink" href="#module-forge.blade.core.market.visualizer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.blade.core.market.visualizer.MarketVisualizer">
-<em class="property">class </em><code class="descclassname">forge.blade.core.market.visualizer.</code><code class="descname">MarketVisualizer</code><span class="sig-paren">(</span><em>keys: list</em>, <em>history_len: int = 10</em>, <em>title: str = 'NeuralMMO Market Data'</em>, <em>x: str = 'tick'</em>, <em>ylabel: str = 'Dummy Values'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.market.visualizer.MarketVisualizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.market.visualizer.</code><code class="sig-name descname">MarketVisualizer</code><span class="sig-paren">(</span><em class="sig-param">keys: list</em>, <em class="sig-param">history_len: int = 10</em>, <em class="sig-param">title: str = 'NeuralMMO Market Data'</em>, <em class="sig-param">x: str = 'tick'</em>, <em class="sig-param">ylabel: str = 'Dummy Values'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.market.visualizer.MarketVisualizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Market Visualizer
 Visualizes a stream of data, automatically refreshes on update()</p>
 <dl class="method">
 <dt id="forge.blade.core.market.visualizer.MarketVisualizer.update">
-<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.market.visualizer.MarketVisualizer.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.market.visualizer.MarketVisualizer.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update fuction to be used externally.
 data (dict): updated data to be added to market, including tick value</p>
 </dd></dl>
@@ -215,7 +212,7 @@ data (dict): updated data to be added to market, including tick value</p>
 
 <dl class="function">
 <dt id="forge.blade.core.market.visualizer.random">
-<code class="descclassname">forge.blade.core.market.visualizer.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; x in the interval [0, 1).<a class="headerlink" href="#forge.blade.core.market.visualizer.random" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">forge.blade.core.market.visualizer.</code><code class="sig-name descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; x in the interval [0, 1).<a class="headerlink" href="#forge.blade.core.market.visualizer.random" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -536,7 +533,7 @@ data (dict): updated data to be added to market, including tick value</p>
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

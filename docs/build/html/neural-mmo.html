@@ -20,20 +20,11 @@
   <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'1.3',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -43,7 +34,9 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Ideology" href="ideology.html" />
+    <link rel="prev" title="Welcome to the Platform!" href="overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -57,7 +50,7 @@
           
 
           
-            <a href="contents.html" class="icon icon-home"> Neural MMO
+            <a href="index.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -88,7 +81,7 @@
             
             
               <p class="caption"><span class="caption-text">User Guide:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html"> Welcome to the Platform!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-overview"> Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-quickstart"> Quickstart</a></li>
@@ -98,6 +91,11 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-the-io-api"> The IO API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-distributed-computation-with-ascend"> Distributed computation with Ascend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -116,7 +114,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="contents.html">Neural MMO</a>
+          <a href="index.html">Neural MMO</a>
         
       </nav>
 
@@ -145,7 +143,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="contents.html">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
       <li> Quickstart</li>
     
@@ -214,15 +212,14 @@
 </div>
 <p>from forge.blade.core.realm import Realm
 from experiments import Experiment, Config</p>
-<dl class="docutils">
-<dt>if __name__ == ‘__main__’:</dt>
-<dd><p class="first">config = Experiment(‘demo’, Config).init()</p>
+<dl>
+<dt>if __name__ == ‘__main__’:</dt><dd><p>config = Experiment(‘demo’, Config).init()</p>
 <p>env = Realm(config, <a href="#id1"><span class="problematic" id="id2">*</span></a>args)
 obs, rewards, dones, infos = env.reset()</p>
-<dl class="last docutils">
-<dt>while not done:</dt>
-<dd>actions = somePolicy(obs)
-obs, rewards, dones, info = env.step(actions)</dd>
+<dl class="simple">
+<dt>while not done:</dt><dd><p>actions = somePolicy(obs)
+obs, rewards, dones, info = env.step(actions)</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -232,16 +229,14 @@ obs, rewards, dones, info = env.step(actions)</dd>
 </div>
 <p>from forge.blade.core.realm import Realm
 from experiments import Experiment, Config</p>
-<dl class="docutils">
-<dt>if __name__ == ‘__main__’:</dt>
-<dd><p class="first">config = Experiment(‘demo’, Config).init()</p>
+<dl>
+<dt>if __name__ == ‘__main__’:</dt><dd><p>config = Experiment(‘demo’, Config).init()</p>
 <p>env = Realm(config, <a href="#id3"><span class="problematic" id="id4">*</span></a>args)
 obs, rewards, dones, infos = env.reset()</p>
-<dl class="last docutils">
-<dt>while not done:</dt>
-<dd><p class="first">input, _ = io.inputs(obs, rewards, dones, <a href="#id5"><span class="problematic" id="id6">*</span></a>args)
+<dl>
+<dt>while not done:</dt><dd><p>input, _ = io.inputs(obs, rewards, dones, <a href="#id5"><span class="problematic" id="id6">*</span></a>args)
 output   = somePolicy(input)</p>
-<p class="last">actions = io.outputs(output)
+<p>actions = io.outputs(output)
 obs, rewards, dones, info = env.step(actions)</p>
 </dd>
 </dl>
@@ -254,19 +249,17 @@ obs, rewards, dones, info = env.step(actions)</p>
 <p>from forge.blade.core.realm import Realm
 from experiments import Experiment, Config
 import torch</p>
-<dl class="docutils">
-<dt>if __name__ == ‘__main__’:</dt>
-<dd><p class="first">config = Experiment(‘demo’, Config).init()</p>
+<dl>
+<dt>if __name__ == ‘__main__’:</dt><dd><p>config = Experiment(‘demo’, Config).init()</p>
 <p>env = Realm(config, <a href="#id7"><span class="problematic" id="id8">*</span></a>args)
 obs, rewards, dones, infos = env.reset()</p>
-<dl class="last docutils">
-<dt>policy = torch.nn.Sequential(</dt>
-<dd>ethyr.Input(<a href="#id9"><span class="problematic" id="id10">*</span></a>args),
-ethyr.Output(<a href="#id11"><span class="problematic" id="id12">*</span></a>args)</dd>
-<dt>while not done:</dt>
-<dd><p class="first">input, _ = io.inputs(obs, rewards, dones, <a href="#id13"><span class="problematic" id="id14">*</span></a>args)
+<dl>
+<dt>policy = torch.nn.Sequential(</dt><dd><p>ethyr.Input(<a href="#id9"><span class="problematic" id="id10">*</span></a>args),
+ethyr.Output(<a href="#id11"><span class="problematic" id="id12">*</span></a>args)</p>
+</dd>
+<dt>while not done:</dt><dd><p>input, _ = io.inputs(obs, rewards, dones, <a href="#id13"><span class="problematic" id="id14">*</span></a>args)
 output   = policy(input)</p>
-<p class="last">actions = io.outputs(output)
+<p>actions = io.outputs(output)
 obs, rewards, dones, info = env.step(actions)</p>
 </dd>
 </dl>
@@ -284,27 +277,26 @@ obs, rewards, dones, info = env.step(actions)</p>
 <p>&#64;ray.remote
 class Sword:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>def __init__(self, idx):</dt>
-<dd>self.idx = idx</dd>
-<dt>def step(self):</dt>
-<dd>time.sleep(1)
-return self.idx</dd>
+<div><dl class="simple">
+<dt>def __init__(self, idx):</dt><dd><p>self.idx = idx</p>
+</dd>
+<dt>def step(self):</dt><dd><p>time.sleep(1)
+return self.idx</p>
+</dd>
 </dl>
 </div></blockquote>
-<dl class="docutils">
-<dt>class God:</dt>
-<dd><dl class="first last docutils">
-<dt>def __init__(self, n=5):</dt>
-<dd>self.disciples = [Sword.remote(i) for i in range(n)]</dd>
-<dt>def step(self):</dt>
-<dd>clientData = ray.get([d.step.remote() for d in self.disciples])
-print(clientData) #[0, 1, 2, 3, 4]</dd>
+<dl class="simple">
+<dt>class God:</dt><dd><dl class="simple">
+<dt>def __init__(self, n=5):</dt><dd><p>self.disciples = [Sword.remote(i) for i in range(n)]</p>
+</dd>
+<dt>def step(self):</dt><dd><p>clientData = ray.get([d.step.remote() for d in self.disciples])
+print(clientData) #[0, 1, 2, 3, 4]</p>
+</dd>
 </dl>
 </dd>
-<dt>if __name__ == ‘__main__’:</dt>
-<dd>ray.init()
-God().step()</dd>
+<dt>if __name__ == ‘__main__’:</dt><dd><p>ray.init()
+God().step()</p>
+</dd>
 </dl>
 <p>Ascend enables us to do all of this without manually writing loops over hardware:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
@@ -315,27 +307,26 @@ import ray, time</p>
 <p>&#64;ray.remote
 class Sword:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>def __init__(self, idx):</dt>
-<dd>self.idx = idx</dd>
-<dt>def step(self):</dt>
-<dd>time.sleep(1)
-return self.idx</dd>
+<div><dl class="simple">
+<dt>def __init__(self, idx):</dt><dd><p>self.idx = idx</p>
+</dd>
+<dt>def step(self):</dt><dd><p>time.sleep(1)
+return self.idx</p>
+</dd>
 </dl>
 </div></blockquote>
-<dl class="docutils">
-<dt>class God(Ascend):</dt>
-<dd><dl class="first last docutils">
-<dt>def __init__(self, n=5):</dt>
-<dd>super().__init__(Sword, n)</dd>
-<dt>def step(self):</dt>
-<dd>clientData = super().step()
-print(clientData) #[0, 1, 2, 3, 4]</dd>
+<dl class="simple">
+<dt>class God(Ascend):</dt><dd><dl class="simple">
+<dt>def __init__(self, n=5):</dt><dd><p>super().__init__(Sword, n)</p>
+</dd>
+<dt>def step(self):</dt><dd><p>clientData = super().step()
+print(clientData) #[0, 1, 2, 3, 4]</p>
+</dd>
 </dl>
 </dd>
-<dt>if __name__ == ‘__main__’:</dt>
-<dd>ray.init()
-God().step()</dd>
+<dt>if __name__ == ‘__main__’:</dt><dd><p>ray.init()
+God().step()</p>
+</dd>
 </dl>
 <p>The source is only a few hundred lines and isn’t very useful in toy examples. Ascend really shines in more complex environments that already have too many moving parts:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
@@ -346,42 +337,42 @@ import ray, time</p>
 <p>&#64;ray.remote
 class Sword(Ascend):</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>def __init__(self, idx):</dt>
-<dd>super().__init__(None, 0)
-self.idx = idx</dd>
+<div><dl class="simple">
+<dt>def __init__(self, idx):</dt><dd><p>super().__init__(None, 0)
+self.idx = idx</p>
+</dd>
 </dl>
 <p>&#64;runtime
 def step(self, coef, bias):</p>
 <blockquote>
-<div>time.sleep(1)
-return coef*self.idx + bias</div></blockquote>
+<div><p>time.sleep(1)
+return coef*self.idx + bias</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>class God(Ascend):</dt>
-<dd><dl class="first docutils">
-<dt>def __init__(self, n=5):</dt>
-<dd>super().__init__(Sword, n)</dd>
-<dt>def update(self):</dt>
-<dd>time.sleep(1)</dd>
+</div></blockquote>
+<dl>
+<dt>class God(Ascend):</dt><dd><dl class="simple">
+<dt>def __init__(self, n=5):</dt><dd><p>super().__init__(Sword, n)</p>
+</dd>
+<dt>def update(self):</dt><dd><p>time.sleep(1)</p>
+</dd>
 </dl>
 <p>&#64;runtime
 def step(self):</p>
-<blockquote class="last">
-<div><dl class="docutils">
-<dt>asyncHandles = super().distrib(</dt>
-<dd>2,
+<blockquote>
+<div><dl class="simple">
+<dt>asyncHandles = super().distrib(</dt><dd><p>2,
 [4, 3, 2, 1, 0],
-shard=(False, True))</dd>
+shard=(False, True))</p>
+</dd>
 </dl>
 <p>self.update()
 clientData = super().sync(asyncHandles)
 print(clientData) #[4, 5, 6, 7, 8]</p>
 </div></blockquote>
 </dd>
-<dt>if __name__ == ‘__main__’:</dt>
-<dd>ray.init()
-God().step()</dd>
+<dt>if __name__ == ‘__main__’:</dt><dd><p>ray.init()
+God().step()</p>
+</dd>
 </dl>
 <p>Like before, we have a server interacting with five remote clients. This time, the <em>coef</em> argument is shared among clients while the <em>bias</em> argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side <em>update()</em> function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code. In a full research environment, we have found it an indispensable tool. Welcome, Ascendant!</p>
 </div>
@@ -391,6 +382,15 @@ God().step()</dd>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ideology.html" class="btn btn-neutral float-right" title="Ideology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="overview.html" class="btn btn-neutral float-left" title="Welcome to the Platform!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -693,7 +693,7 @@ God().step()</dd>
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

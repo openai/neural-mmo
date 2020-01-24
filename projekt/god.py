@@ -9,7 +9,7 @@ from forge.blade import core
 from forge.blade.lib.log import BlobSummary 
 
 from forge.trinity.ascend import Ascend, runtime, Log
-from forge.blade.io import io
+from forge.blade import io
 
 import projekt
 
@@ -123,7 +123,7 @@ class God(Ascend):
       #Preprocess obs
       clientData, nUpdates = io.inputs(
          self.obs, self.rewards, self.dones, 
-         self.clientHash, self.config, serialize=True)
+         self.config, self.clientHash)
 
       #Handle possible end of batch
       backward = self.batch(nUpdates)

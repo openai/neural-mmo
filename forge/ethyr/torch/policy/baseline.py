@@ -4,6 +4,7 @@ import torch
 from torch import nn
 
 from forge.ethyr.torch import policy
+from forge.ethyr.torch import io
 
 class IO(nn.Module):
     def __init__(self, config):
@@ -13,8 +14,8 @@ class IO(nn.Module):
          config: A Configuration object
       '''
       super().__init__()
-      self.input  = Input(config, policy.TaggedInput, Attributes, Entities)
-      self.output = Output(config)
+      self.input  = io.Input(config, policy.TaggedInput, Attributes, Entities)
+      self.output = io.Output(config)
 
 class Attributes(policy.Attention):
     def __init__(self, config):

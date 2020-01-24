@@ -20,20 +20,11 @@
   <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'1.3',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -44,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="autodoc/modules.html" />
-    <link rel="prev" title="Neural MMO v1.3" href="contents.html" /> 
+    <link rel="next" title="Quickstart" href="neural-mmo.html" />
+    <link rel="prev" title="Neural MMO v1.3" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -59,7 +50,7 @@
           
 
           
-            <a href="contents.html" class="icon icon-home"> Neural MMO
+            <a href="index.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -112,6 +103,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-the-io-api"> The IO API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-distributed-computation-with-ascend"> Distributed computation with Ascend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -130,7 +126,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="contents.html">Neural MMO</a>
+          <a href="index.html">Neural MMO</a>
         
       </nav>
 
@@ -159,7 +155,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="contents.html">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
       <li> Welcome to the Platform!</li>
     
@@ -194,36 +190,36 @@
 <div class="section" id="ags-overview">
 <h1><img alt="ags" src="_images/ags1.png" /> Overview<a class="headerlink" href="#ags-overview" title="Permalink to this headline">¶</a></h1>
 <p><strong>Agents that scale to the complexity of the real world</strong> is one statement of general intelligence. A key perspective of this project is to decouple this task into research and engineering subproblems that, taken together, equal the original objective. The project is divided into four modules along these lines. See Ideology if you find this sort of macro view interesting.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Engineering</th>
-<th class="head">Research</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Engineering</p></th>
+<th class="head"><p>Research</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><img alt="earth" src="_images/earth_thumbnail1.png" /> Blade</td>
-<td><img alt="water" src="_images/water_thumbnail1.png" /> Trinity</td>
+<tbody>
+<tr class="row-even"><td><p><img alt="earth" src="_images/earth_thumbnail.png" /> Blade</p></td>
+<td><p><img alt="water" src="_images/water_thumbnail.png" /> Trinity</p></td>
 </tr>
-<tr class="row-odd"><td><img alt="fire" src="_images/fire_thumbnail1.png" />  Embyr</td>
-<td><img alt="air" src="_images/air_thumbnail1.png" /> Ethyr</td>
+<tr class="row-odd"><td><p><img alt="fire" src="_images/fire_thumbnail.png" />  Embyr</p></td>
+<td><p><img alt="air" src="_images/air_thumbnail.png" /> Ethyr</p></td>
 </tr>
 </tbody>
 </table>
 <div class="section" id="research">
 <h2>Research<a class="headerlink" href="#research" title="Permalink to this headline">¶</a></h2>
 <p><strong>Agents that scale to the complexity of their environment</strong></p>
-<p><img alt="water" src="_images/water_thumbnail1.png" /> Trinity: Three layer synchronous + asynchronous distributed computation framework based on Ray and Ascend</p>
-<p><img alt="air" src="_images/air_thumbnail1.png" /> Ethyr: Research utilities and prebuilt models. Acts as a “contrib” – submit PRs with your own tools!</p>
+<p><img alt="water" src="_images/water_thumbnail.png" /> Trinity: Three layer synchronous + asynchronous distributed computation framework based on Ray and Ascend</p>
+<p><img alt="air" src="_images/air_thumbnail.png" /> Ethyr: Research utilities and prebuilt models. Acts as a “contrib” – submit PRs with your own tools!</p>
 </div>
 <div class="section" id="engineering">
 <h2>Engineering<a class="headerlink" href="#engineering" title="Permalink to this headline">¶</a></h2>
 <p><strong>Environments that scale to the complexity of the real world</strong></p>
-<p><img alt="earth" src="_images/earth_thumbnail1.png" /> Blade: The core game environment including the extended OpenAI Gym external API</p>
-<p><img alt="fire" src="_images/fire_thumbnail1.png" /> Embyr: 3D Unity3D based game client. Maintained as an independent <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">repository</a> and not used during training.</p>
+<p><img alt="earth" src="_images/earth_thumbnail.png" /> Blade: The core game environment including the extended OpenAI Gym external API</p>
+<p><img alt="fire" src="_images/fire_thumbnail.png" /> Embyr: 3D Unity3D based game client. Maintained as an independent <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">repository</a> and not used during training.</p>
 </div>
 </div>
 <div class="section" id="ags-quickstart">
@@ -265,64 +261,95 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<p>If you leave it running, you will see the reward steadily increasing. The baseline model gets to &gt;23 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.</p>
+<p>If you leave it running, you will see the reward steadily increasing. The baseline model gets to &gt;27 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.</p>
 </div>
 <div class="section" id="the-io-api">
 <h2>The IO API<a class="headerlink" href="#the-io-api" title="Permalink to this headline">¶</a></h2>
 <p>On the surface, Neural MMO follows the OpenAI Gym API:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.blade.core.realm</span> <span class="kn">import</span> <span class="n">Realm</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core environment and configuration</span>
+<span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
 <span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="c1">#Define an experiment configuration</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">TEST</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-   <span class="n">env</span> <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-   <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="c1">#Initialize the environment and policy</span>
+<span class="n">env</span>                        <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
-   <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-      <span class="n">actions</span> <span class="o">=</span> <span class="n">somePolicy</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-      <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+<span class="c1">#Run policy</span>
+<span class="n">actions</span> <span class="o">=</span> <span class="n">somePolicy</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+
+<span class="c1">#Submit actions</span>
+<span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+
+<span class="c1">#(s, a, r) tuple + rollout boundaries</span>
+<span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>However, the actual contents of <em>obs, rewards, dones, info</em> is nonstandard by necessity. Gym isn’t built for multiagent environments – and certainly not for ones with complex hierarchical observation and action spaces. You’re free to develop your own methods for handling these, but we’ve already done all that work for you. Let’s make use of the core IO libraries:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.blade.core.realm</span> <span class="kn">import</span> <span class="n">Realm</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
+<span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">forge.blade.io</span> <span class="kn">import</span> <span class="n">io</span>
+</span>
+<span class="c1">#Demo baselines</span>
 <span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="c1">#Define an experiment configuration</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">TEST</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-   <span class="n">env</span> <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-   <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="c1">#Initialize the environment and policy</span>
+<span class="n">env</span>                        <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
-   <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-      <span class="nb">input</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-      <span class="n">output</span>   <span class="o">=</span> <span class="n">somePolicy</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="c1">#Process observations</span>
+<span class="hll"><span class="n">packet</span><span class="p">,</span> <span class="n">_</span>       <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</span>
+<span class="c1">#Run policy (fills packet object)</span>
+<span class="n">somePolicy</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
 
-      <span class="n">actions</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-      <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+<span class="c1">#Select actions</span>
+<span class="hll"><span class="n">actions</span>      <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+</span>
+<span class="c1">#Submit actions</span>
+<span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+
+<span class="c1">#(s, a, r) tuple + rollout boundaries</span>
+<span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We’re almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that <em>somePolicy</em> must handle hierarchical data and variable action spaces. Let’s use the Ethyr prebuilt IO modules:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.blade.core.realm</span> <span class="kn">import</span> <span class="n">Realm</span>
+<p>We’re almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that <em>somePolicy</em> must handle hierarchical data and variable action spaces. Ethyr provides prebuilt IO networks:</p>
+<p><img alt="io" src="_images/io.svg" /></p>
+<p>This pair of attentional networks is responsible for flattening the input space and indexing the variable length action space. In particular, <em>a</em> is an embedding layer, <em>f</em> and <em>g</em> are soft attention subnetworks, and <em>h</em> is a hard attention subnetwork. You can read more about these in the v1.3 whitepaper. Let’s use these modules to make this example runnable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
+<span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
+<span class="kn">from</span> <span class="nn">forge.blade.io</span> <span class="kn">import</span> <span class="n">io</span>
+
+<span class="c1">#Demo baselines</span>
 <span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
-<span class="kn">import</span> <span class="nn">torch</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">forge.ethyr.torch.policy</span> <span class="kn">import</span> <span class="n">baseline</span>
+</span>
+<span class="c1">#Define an experiment configuration</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">TEST</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="c1">#Initialize the environment and policy</span>
+<span class="n">env</span>                        <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="hll"><span class="n">policy</span>                     <span class="o">=</span> <span class="n">baseline</span><span class="o">.</span><span class="n">IO</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</span>
+<span class="c1">#Process observations</span>
+<span class="n">packet</span><span class="p">,</span> <span class="n">_</span>       <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="hll"><span class="n">flat</span><span class="p">,</span> <span class="n">lookup</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+</span>
+<span class="c1">#Select actions</span>
+<span class="hll"><span class="n">policy</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">flat</span><span class="p">,</span> <span class="n">lookup</span><span class="p">)</span>
+</span><span class="n">actions</span>      <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
 
-   <span class="n">env</span> <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-   <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="c1">#Submit actions</span>
+<span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
 
-   <span class="n">policy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-      <span class="n">ethyr</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span>
-      <span class="n">ethyr</span><span class="o">.</span><span class="n">Output</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-
-   <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-      <span class="nb">input</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-      <span class="n">output</span>   <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
-
-      <span class="n">actions</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-      <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+<span class="c1">#(s, a, r) tuple + rollout boundaries</span>
+<span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And there you have it! You can insert your own model between the input and output networks without having to deal with nonstandard structured data. However, this only covers the forward pass. We haven’t discussed rollout collection, training, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo.</p>
@@ -355,8 +382,8 @@
 </pre></div>
 </div>
 <p>Ascend enables us to do all of this without manually writing loops over hardware:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.trinity.ascend</span> <span class="kn">import</span> <span class="n">Ascend</span>
-<span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">from</span> <span class="nn">forge.trinity.ascend</span> <span class="kn">import</span> <span class="n">Ascend</span>
+</span><span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
 
 <span class="nd">@ray.remote</span>
 <span class="k">class</span> <span class="nc">Sword</span><span class="p">:</span>
@@ -367,13 +394,13 @@
       <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span>
 
-<span class="k">class</span> <span class="nc">God</span><span class="p">(</span><span class="n">Ascend</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Sword</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-
+<span class="hll"><span class="k">class</span> <span class="nc">God</span><span class="p">(</span><span class="n">Ascend</span><span class="p">):</span>
+</span>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="hll">      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Sword</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+</span>
    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[0, 1, 2, 3, 4]</span>
+<span class="hll">      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span>      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[0, 1, 2, 3, 4]</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
    <span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
@@ -381,8 +408,8 @@
 </pre></div>
 </div>
 <p>The source is only a few hundred lines and isn’t very useful in toy examples. Ascend really shines in more complex environments that already have too many moving parts:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">forge.trinity.ascend</span> <span class="kn">import</span> <span class="n">Ascend</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">waittime</span>
-<span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">from</span> <span class="nn">forge.trinity.ascend</span> <span class="kn">import</span> <span class="n">Ascend</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">waittime</span>
+</span><span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
 
 <span class="nd">@ray.remote</span>
 <span class="k">class</span> <span class="nc">Sword</span><span class="p">(</span><span class="n">Ascend</span><span class="p">):</span>
@@ -390,8 +417,8 @@
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
 
-   <span class="nd">@runtime</span>
-   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">bias</span><span class="p">):</span>
+<span class="hll">   <span class="nd">@runtime</span>
+</span>   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">bias</span><span class="p">):</span>
       <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">coef</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+</span> <span class="n">bias</span>
 
@@ -402,23 +429,26 @@
    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-   <span class="nd">@runtime</span>
-   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">asyncHandles</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">distrib</span><span class="p">(</span>
-            <span class="mi">2</span><span class="p">,</span>
-            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="n">shard</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
-
+<span class="hll">   <span class="nd">@runtime</span>
+</span>   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll">      <span class="n">asyncHandles</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">distrib</span><span class="p">(</span>
+</span><span class="hll">            <span class="mi">2</span><span class="p">,</span>
+</span><span class="hll">            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span class="hll">            <span class="n">shard</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
+</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span><span class="n">asyncHandles</span><span class="p">)</span>
-      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[4, 5, 6, 7, 8]</span>
+<span class="hll">      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span><span class="n">asyncHandles</span><span class="p">)</span>
+</span>      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[4, 5, 6, 7, 8]</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
    <span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
    <span class="n">God</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Like before, we have a server interacting with five remote clients. This time, the <em>coef</em> argument is shared among clients while the <em>bias</em> argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side <em>update()</em> function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code. In a full research environment, we have found it an indispensable tool. Welcome, Ascendant!</p>
+<p>Like before, we have a server interacting with five remote clients. This time, the <em>coef</em> argument is shared among clients while the <em>bias</em> argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side <em>update()</em> function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code.</p>
+<p>In the full Neural MMO environment, we use three infrastructure layers, each of which subclasses Ascend:</p>
+<p><img alt="infra" src="_images/infra.svg" /></p>
+<p>This simulates the traditional MMO computation paradigm in a research setting. Specifically, we run a cluster of servers, each of which simulates a copy of the environment and distributes agent computations among multiple remote clients. Ascend allows us to implement this framework pythonically in only a few lines of code.</p>
 </div>
 </div>
 <div class="section" id="ags-namesake">
@@ -428,48 +458,44 @@
 <div class="section" id="ags-version-history">
 <h1><img alt="ags" src="_images/ags1.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference external" href="https://github.com/openai/neural-mmo">OpenAI</a> only hosts v1.0. My <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">personal Github</a> hosts the latest version in <em>master</em> and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.</p>
-<dl class="docutils">
-<dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a></dt>
-<dd><ul class="first last simple">
-<li>Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.preprocess and IO.postprocess functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.</li>
-<li>Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.</li>
-<li>Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks – our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.</li>
-<li>Embyr: Agents now display additional information overhead, such as when they are immune to attacks or when they have been frozen in place.</li>
-<li>A reasonable 8-population baseline model trained on 12 (old) CPU cores in a day.</li>
-<li>Improved and expanded official documentation</li>
-<li>New tutorials covering distributed computation and the IO API</li>
-<li>The Discord has grown to 80+! Join for active development updates, the quickest support, and community discussions.</li>
+<dl class="simple">
+<dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a></dt><dd><ul class="simple">
+<li><p>Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.preprocess and IO.postprocess functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.</p></li>
+<li><p>Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.</p></li>
+<li><p>Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks – our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.</p></li>
+<li><p>Embyr: Agents now display additional information overhead, such as when they are immune to attacks or when they have been frozen in place.</p></li>
+<li><p>A reasonable 8-population baseline model trained on 12 (old) CPU cores in a day.</p></li>
+<li><p>Improved and expanded official documentation</p></li>
+<li><p>New tutorials covering distributed computation and the IO API</p></li>
+<li><p>The Discord has grown to 80+! Join for active development updates, the quickest support, and community discussions.</p></li>
 </ul>
 </dd>
-<dt><strong>v1.2:</strong> Unity Client and Skilling | <a class="reference external" href="https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing">[Update Slide Deck]</a></dt>
-<dd><ul class="first last simple">
-<li>Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.</li>
-<li>Trinity: Major new infrastructure API: Ascend – a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc… Ascend implements a single infrastructure “layer” object with all the same features and more. Trinity is still around and functions identically – it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.</li>
-<li>Ethyr: Streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 preferred environment placement, which places the environment server side and only communicates serialized observations and actions – not full rollouts. Expect further changes in the next update – IO is the single most technically complex aspect of this project and has the largest impact on performance.</li>
-<li>Embyr: Focus of this update. Full client rewrite in Unity3D with improved visuals, UI, and controls. The new client makes visualizing policies and tracking down bugs substantially easier. As the environment progresses towards a more complete MMO, development entirely in THREE.js was impractical. This update will also speed up environment development by easing integration into the front end.</li>
-<li>Baseline model is improved but still weak. This is largely a compute issue. I expect the final model to be relatively efficient to train, but I’m currently low on processing power for running parallel experiments. I’ll be regaining cluster access soon.</li>
-<li>Official documentation has been updated accordingly</li>
-<li>20+ people have joined the Discord. I’ve started posting frequent dev updates and thoughts here.</li>
+<dt><strong>v1.2:</strong> Unity Client and Skilling | <a class="reference external" href="https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing">[Update Slide Deck]</a></dt><dd><ul class="simple">
+<li><p>Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.</p></li>
+<li><p>Trinity: Major new infrastructure API: Ascend – a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc… Ascend implements a single infrastructure “layer” object with all the same features and more. Trinity is still around and functions identically – it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.</p></li>
+<li><p>Ethyr: Streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 preferred environment placement, which places the environment server side and only communicates serialized observations and actions – not full rollouts. Expect further changes in the next update – IO is the single most technically complex aspect of this project and has the largest impact on performance.</p></li>
+<li><p>Embyr: Focus of this update. Full client rewrite in Unity3D with improved visuals, UI, and controls. The new client makes visualizing policies and tracking down bugs substantially easier. As the environment progresses towards a more complete MMO, development entirely in THREE.js was impractical. This update will also speed up environment development by easing integration into the front end.</p></li>
+<li><p>Baseline model is improved but still weak. This is largely a compute issue. I expect the final model to be relatively efficient to train, but I’m currently low on processing power for running parallel experiments. I’ll be regaining cluster access soon.</p></li>
+<li><p>Official documentation has been updated accordingly</p></li>
+<li><p>20+ people have joined the Discord. I’ve started posting frequent dev updates and thoughts here.</p></li>
 </ul>
 </dd>
-<dt><strong>v1.1:</strong> Infrastructure and API rework, official documentation and Discord | <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">[Update Slide Deck]</a></dt>
-<dd><ul class="first last simple">
-<li>Blade: Merge Native and VecEnv environment API. New API is closer to Gym</li>
-<li>Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.</li>
-<li>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</li>
-<li>Official github.io documentation and API reference</li>
-<li>Official Discord</li>
-<li>End to end training source. There is also a pretrained model, but it’s just a weak single population foraging baseline around 2.5x of random reward. I’m currently between cluster access – once I get my hands on some better hardware, I’ll retune hyperparameters for the new demo model.</li>
+<dt><strong>v1.1:</strong> Infrastructure and API rework, official documentation and Discord | <a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">[Update Slide Deck]</a></dt><dd><ul class="simple">
+<li><p>Blade: Merge Native and VecEnv environment API. New API is closer to Gym</p></li>
+<li><p>Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.</p></li>
+<li><p>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</p></li>
+<li><p>Official github.io documentation and API reference</p></li>
+<li><p>Official Discord</p></li>
+<li><p>End to end training source. There is also a pretrained model, but it’s just a weak single population foraging baseline around 2.5x of random reward. I’m currently between cluster access – once I get my hands on some better hardware, I’ll retune hyperparameters for the new demo model.</p></li>
 </ul>
 </dd>
-<dt><strong>v1.0:</strong> Initial OpenAI environment release</dt>
-<dd><ul class="first last simple">
-<li>Blade: Base environment with foraging and combat</li>
-<li>Embyr: THREE.js web client</li>
-<li>Trinity: CPU based distributed training infrastructure</li>
-<li>Ethyr: Contrib library of research utilities</li>
-<li>Basic project-level documentation</li>
-<li>End to end training source and a pretrained model</li>
+<dt><strong>v1.0:</strong> Initial OpenAI environment release <a class="reference external" href="https://openai.com/blog/neural-mmo/">[Blog]</a> <a class="reference external" href="https://arxiv.org/pdf/1903.00784.pdf">[Paper]</a></dt><dd><ul class="simple">
+<li><p>Blade: Base environment with foraging and combat</p></li>
+<li><p>Embyr: THREE.js web client</p></li>
+<li><p>Trinity: CPU based distributed training infrastructure</p></li>
+<li><p>Ethyr: Contrib library of research utilities</p></li>
+<li><p>Basic project-level documentation</p></li>
+<li><p>End to end training source and a pretrained model</p></li>
 </ul>
 </dd>
 </dl>
@@ -481,22 +507,20 @@
 <div class="section" id="ags-failure-modes">
 <h2><img alt="ags" src="_images/ags1.png" /> Failure Modes<a class="headerlink" href="#ags-failure-modes" title="Permalink to this headline">¶</a></h2>
 <p>Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.</p>
-<dl class="docutils">
-<dt>We are currently aware of three failure cases for the project:</dt>
-<dd><ul class="first last simple">
-<li>Computational infeasibility</li>
-<li>“Agents that scale to their environment” is too hard</li>
-<li>“Environments that scale to the real world” is too hard</li>
+<dl class="simple">
+<dt>We are currently aware of three failure cases for the project:</dt><dd><ul class="simple">
+<li><p>Computational infeasibility</p></li>
+<li><p>“Agents that scale to their environment” is too hard</p></li>
+<li><p>“Environments that scale to the real world” is too hard</p></li>
 </ul>
 </dd>
 </dl>
 <p>The first failure case is a serious risk, but is shared among all areas of the field. This project is not uniquely compute intensive – in fact, it is one of few environments where it is straightforward to train reasonable policies on a single CPU. If scale is the main issue here, it is likely shared among most if not all other approaches.</p>
-<dl class="docutils">
-<dt>The second problem is probably most familiar to researchers as exploration. Given a cold start, how can agents bootstrap both to better policies and to better exploration strategies? This is a hard problem, but it is unlikely to kill the project because:</dt>
-<dd><ul class="first last simple">
-<li>This is independently an important problem that many researchers are already working on already</li>
-<li>The environment of this project is designed collaboratively to assist agents early on in learning, rather than adversarially as a hard benchmark</li>
-<li><a class="reference external" href="https://blog.openai.com/openai-five/">Recent</a> <a class="reference external" href="https://blog.openai.com/learning-dexterity/">projects</a> have demonstrated success at scale.</li>
+<dl class="simple">
+<dt>The second problem is probably most familiar to researchers as exploration. Given a cold start, how can agents bootstrap both to better policies and to better exploration strategies? This is a hard problem, but it is unlikely to kill the project because:</dt><dd><ul class="simple">
+<li><p>This is independently an important problem that many researchers are already working on already</p></li>
+<li><p>The environment of this project is designed collaboratively to assist agents early on in learning, rather than adversarially as a hard benchmark</p></li>
+<li><p><a class="reference external" href="https://blog.openai.com/openai-five/">Recent</a> <a class="reference external" href="https://blog.openai.com/learning-dexterity/">projects</a> have demonstrated success at scale.</p></li>
 </ul>
 </dd>
 </dl>
@@ -524,7 +548,7 @@
 <div class="section" id="ags-assets">
 <h1><img alt="ags" src="_images/ags1.png" /> Assets<a class="headerlink" href="#ags-assets" title="Permalink to this headline">¶</a></h1>
 <p>Some assets used in this project belong to <a class="reference external" href="https://www.jagex.com/en-GB/">Jagex</a>, the creators of Runescape, such as</p>
-<p><img alt="ags" src="_images/ags1.png" /> <img alt="earth" src="_images/earth_thumbnail1.png" /> <img alt="water" src="_images/water_thumbnail1.png" /> <img alt="fire" src="_images/fire_thumbnail1.png" /> <img alt="air" src="_images/air_thumbnail1.png" /></p>
+<p><img alt="ags" src="_images/ags1.png" /> <img alt="earth" src="_images/earth_thumbnail.png" /> <img alt="water" src="_images/water_thumbnail.png" /> <img alt="fire" src="_images/fire_thumbnail.png" /> <img alt="air" src="_images/air_thumbnail.png" /></p>
 <p>We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research – however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents, represented by three neurons.</p>
 <p><img alt="red" src="_images/neuralRED.png" /> <img alt="blue" src="_images/neuralBLUE.png" /> <img alt="green" src="_images/neuralGREEN.png" /> <img alt="fuchsia" src="_images/neuralFUCHSIA.png" /> <img alt="orange" src="_images/neuralORANGE.png" /> <img alt="mint" src="_images/neuralMINT.png" /> <img alt="purple" src="_images/neuralPURPLE.png" /> <img alt="spring" src="_images/neuralSPRING.png" /> <img alt="yellow" src="_images/neuralYELLOW.png" /> <img alt="cyan" src="_images/neuralCYAN.png" /> <img alt="magenta" src="_images/neuralMAGENTA.png" /> <img alt="sky" src="_images/neuralSKY.png" /></p>
 </div>
@@ -537,10 +561,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="autodoc/modules.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="neural-mmo.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="contents.html" class="btn btn-neutral float-left" title="Neural MMO v1.3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Neural MMO v1.3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -845,7 +869,7 @@
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

@@ -19,6 +19,9 @@
 .. |magenta| image:: docs/source/resource/neuralMAGENTA.png
 .. |sky| image:: docs/source/resource/neuralSKY.png
 
+.. |io| image:: docs/source/resource/io.svg
+.. |infra| image:: docs/source/resource/infra.svg
+
 |env|
 
 .. #####################################
@@ -122,7 +125,7 @@ Now we can train a model:
 
    python Forge.py
 
-If you leave it running, you will see the reward steadily increasing. The baseline model gets to >23 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
+If you leave it running, you will see the reward steadily increasing. The baseline model gets to >27 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
 
 The IO API
 ----------
@@ -131,63 +134,98 @@ On the surface, Neural MMO follows the OpenAI Gym API:
 
 .. code-block:: python
 
-  from forge.blade.core.realm import Realm
+  #Core environment and configuration
+  from forge.blade.core import Realm
   from experiments import Experiment, Config
 
-  if __name__ == '__main__':
-     config = Experiment('demo', Config).init()
+  #Define an experiment configuration
+  config = Experiment('demo', Config).init(TEST=True)
 
-     env = Realm(config, *args)
-     obs, rewards, dones, infos = env.reset()
+  #Initialize the environment and policy
+  env                        = Realm(config)
+  obs, rewards, dones, infos = env.reset()
 
-     while not done:
-        actions = somePolicy(obs)
-        obs, rewards, dones, info = env.step(actions)
+  #Run policy
+  actions = somePolicy(packet)
+
+  #Submit actions
+  nxtObs, rewards, dones, info = env.step(actions)
+
+  #(s, a, r) tuple + rollout boundaries
+  print(obs, actions, rewards, dones)
 
 However, the actual contents of *obs, rewards, dones, info* is nonstandard by necessity. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces. You're free to develop your own methods for handling these, but we've already done all that work for you. Let's make use of the core IO libraries:
 
 .. code-block:: python
+  :emphasize-lines: 3,16,22
 
-  from forge.blade.core.realm import Realm
+  #Core API
+  from forge.blade.core import Realm
+  from forge.blade.io import io
+
+  #Demo baselines
   from experiments import Experiment, Config
 
-  if __name__ == '__main__':
-     config = Experiment('demo', Config).init()
+  #Define an experiment configuration
+  config = Experiment('demo', Config).init(TEST=True)
 
-     env = Realm(config, *args)
-     obs, rewards, dones, infos = env.reset()
+  #Initialize the environment and policy
+  env                        = Realm(config)
+  obs, rewards, dones, infos = env.reset()
 
-     while not done:
-        input, _ = io.inputs(obs, rewards, dones, *args)
-        output   = somePolicy(input)
+  #Process observations
+  packet, _       = io.inputs(obs, rewards, dones, config)
 
-        actions = io.outputs(output)
-        obs, rewards, dones, info = env.step(actions)
+  #Run policy (fills packet object)
+  somePolicy(packet)
 
-We're almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that *somePolicy* must handle hierarchical data and variable action spaces. Let's use the Ethyr prebuilt IO modules:
+  #Select actions
+  actions      = io.outputs(packet)
+
+  #Submit actions
+  nxtObs, rewards, dones, info = env.step(actions)
+
+  #(s, a, r) tuple + rollout boundaries
+  print(obs, actions, rewards, dones)
+
+We're almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that *somePolicy* must handle hierarchical data and variable action spaces. Ethyr provides prebuilt IO networks:
+
+|io|
+
+This pair of attentional networks is responsible for flattening the input space and indexing the variable length action space. In particular, *a* is an embedding layer, *f* and *g* are soft attention subnetworks, and *h* is a hard attention subnetwork. You can read more about these in the v1.3 whitepaper. Let's use these modules to make this example runnable:
 
 .. code-block:: python
+  :emphasize-lines: 7,15,19,22
 
-  from forge.blade.core.realm import Realm
+  #Core API
+  from forge.blade.core import Realm
+  from forge.blade.io import io
+
+  #Demo baselines
   from experiments import Experiment, Config
-  import torch
+  from forge.ethyr.torch.policy import baseline
 
-  if __name__ == '__main__':
-     config = Experiment('demo', Config).init()
+  #Define an experiment configuration
+  config = Experiment('demo', Config).init(TEST=True)
 
-     env = Realm(config, *args)
-     obs, rewards, dones, infos = env.reset()
+  #Initialize the environment and policy
+  env                        = Realm(config)
+  obs, rewards, dones, infos = env.reset()
+  policy                     = baseline.IO(config)
 
-     policy = torch.nn.Sequential(
-        ethyr.Input(*args),
-        ethyr.Output(*args)
+  #Process observations
+  packet, _       = io.inputs(obs, rewards, dones, config)
+  flat, lookup = policy.input(packet)
 
-     while not done:
-        input, _ = io.inputs(obs, rewards, dones, *args)
-        output   = policy(input)
+  #Select actions
+  policy.output(packet, flat, lookup)
+  actions      = io.outputs(packet)
 
-        actions = io.outputs(output)
-        obs, rewards, dones, info = env.step(actions)
+  #Submit actions
+  nxtObs, rewards, dones, info = env.step(actions)
+
+  #(s, a, r) tuple + rollout boundaries
+  print(obs, actions, rewards, dones)
 
 And there you have it! You can insert your own model between the input and output networks without having to deal with nonstandard structured data. However, this only covers the forward pass. We haven't discussed rollout collection, training, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo.
 
@@ -224,6 +262,7 @@ Ascend is a lightweight wrapper on top of the excellent Ray distributed computin
 Ascend enables us to do all of this without manually writing loops over hardware:
 
 .. code-block:: python
+  :emphasize-lines: 1,13,15,18
 
   from forge.trinity.ascend import Ascend
   import ray, time
@@ -252,6 +291,7 @@ Ascend enables us to do all of this without manually writing loops over hardware
 The source is only a few hundred lines and isn't very useful in toy examples. Ascend really shines in more complex environments that already have too many moving parts:
 
 .. code-block:: python
+  :emphasize-lines: 1,10,22,24,25,26,27,30
 
   from forge.trinity.ascend import Ascend, runtime, waittime
   import ray, time
@@ -289,7 +329,13 @@ The source is only a few hundred lines and isn't very useful in toy examples. As
      ray.init()
      God().step()
 
-Like before, we have a server interacting with five remote clients. This time, the *coef* argument is shared among clients while the *bias* argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side *update()* function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code. In a full research environment, we have found it an indispensable tool. Welcome, Ascendant!
+Like before, we have a server interacting with five remote clients. This time, the *coef* argument is shared among clients while the *bias* argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side *update()* function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code.
+
+In the full Neural MMO environment, we use three infrastructure layers, each of which subclasses Ascend:
+
+|infra|
+
+This simulates the traditional MMO computation paradigm in a research setting. Specifically, we run a cluster of servers, each of which simulates a copy of the environment and distributes agent computations among multiple remote clients. Ascend allows us to implement this framework pythonically in only a few lines of code.
 
 |ags| Namesake
 ##############
@@ -328,7 +374,7 @@ The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My `person
    - Official Discord
    - End to end training source. There is also a pretrained model, but it's just a weak single population foraging baseline around 2.5x of random reward. I'm currently between cluster access -- once I get my hands on some better hardware, I'll retune hyperparameters for the new demo model.
 
-**v1.0:** Initial OpenAI environment release
+**v1.0:** Initial OpenAI environment release `[Blog] <https://openai.com/blog/neural-mmo/>`_ `[Paper] <https://arxiv.org/pdf/1903.00784.pdf>`_
    - Blade: Base environment with foraging and combat
    - Embyr: THREE.js web client
    - Trinity: CPU based distributed training infrastructure

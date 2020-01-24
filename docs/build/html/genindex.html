@@ -21,20 +21,11 @@
   <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'1.3',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -58,7 +49,7 @@
           
 
           
-            <a href="contents.html" class="icon icon-home"> Neural MMO
+            <a href="index.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -99,6 +90,11 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-the-io-api"> The IO API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural-mmo.html#ags-distributed-computation-with-ascend"> Distributed computation with Ascend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -117,7 +113,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="contents.html">Neural MMO</a>
+          <a href="index.html">Neural MMO</a>
         
       </nav>
 
@@ -146,7 +142,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="contents.html">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
       <li>Index</li>
     
@@ -311,6 +307,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.failHandshake">failHandshake() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
 </li>
+      <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.fire">fire() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
+</li>
       <li><a href="autodoc/forge.blade.lib.ray.html#forge.blade.lib.ray.flush_redis_unsafe">flush_redis_unsafe() (in module forge.blade.lib.ray)</a>
 </li>
       <li><a href="autodoc/forge.blade.lib.ray.html#forge.blade.lib.ray.flush_task_and_object_metadata_unsafe">flush_task_and_object_metadata_unsafe() (in module forge.blade.lib.ray)</a>
@@ -457,6 +455,8 @@
 </li>
       <li><a href="autodoc/forge.ethyr.torch.policy.attention.html#module-forge.ethyr.torch.policy.attention">forge.ethyr.torch.policy.attention (module)</a>
 </li>
+      <li><a href="autodoc/forge.ethyr.torch.policy.baseline.html#module-forge.ethyr.torch.policy.baseline">forge.ethyr.torch.policy.baseline (module)</a>
+</li>
       <li><a href="autodoc/forge.ethyr.torch.policy.conv.html#module-forge.ethyr.torch.policy.conv">forge.ethyr.torch.policy.conv (module)</a>
 </li>
       <li><a href="autodoc/forge.ethyr.torch.policy.embed.html#module-forge.ethyr.torch.policy.embed">forge.ethyr.torch.policy.embed (module)</a>
@@ -497,13 +497,11 @@
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.WSServerFactory.getConnectionCount">getConnectionCount() (forge.embyr.twistedserver.WSServerFactory method)</a>
 </li>
-      <li><a href="autodoc/forge.ethyr.torch.param.html#forge.ethyr.torch.param.getGrads">getGrads() (in module forge.ethyr.torch.param)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/forge.ethyr.torch.param.html#forge.ethyr.torch.param.getParameters">getParameters() (in module forge.ethyr.torch.param)</a>
+      <li><a href="autodoc/forge.ethyr.torch.param.html#forge.ethyr.torch.param.getGrads">getGrads() (in module forge.ethyr.torch.param)</a>
 </li>
-      <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Realm.getStim">getStim() (forge.blade.core.realm.Realm method)</a>
+      <li><a href="autodoc/forge.ethyr.torch.param.html#forge.ethyr.torch.param.getParameters">getParameters() (in module forge.ethyr.torch.param)</a>
 </li>
       <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Realm.getStims">getStims() (forge.blade.core.realm.Realm method)</a>
 </li>
@@ -615,6 +613,10 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.off">off() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
+</li>
+      <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.on">on() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
+</li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onAutoPingTimeout">onAutoPingTimeout() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onClose">onClose() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
@@ -633,10 +635,10 @@
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onMessage">onMessage() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
 </li>
-      <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onMessageBegin">onMessageBegin() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onMessageBegin">onMessageBegin() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
+</li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onMessageEnd">onMessageEnd() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.onMessageFrame">onMessageFrame() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
@@ -745,6 +747,8 @@
 </li>
       <li><a href="autodoc/forge.ethyr.torch.save.html#forge.ethyr.torch.save.Resetter">Resetter (class in forge.ethyr.torch.save)</a>
 </li>
+      <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Realm.reward">reward() (forge.blade.core.realm.Realm method)</a>
+</li>
       <li><a href="autodoc/forge.trinity.ascend.html#forge.trinity.ascend.runtime">runtime() (in module forge.trinity.ascend)</a>
 </li>
   </ul></td>
@@ -785,6 +789,8 @@
 </li>
       <li><a href="autodoc/forge.blade.io.serial.html#forge.blade.io.serial.Serial">Serial (class in forge.blade.io.serial)</a>
 </li>
+      <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.set_valid_events">set_valid_events() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
+</li>
       <li><a href="autodoc/forge.ethyr.torch.param.html#forge.ethyr.torch.param.setGrads">setGrads() (in module forge.ethyr.torch.param)</a>
 </li>
   </ul></td>
@@ -799,8 +805,12 @@
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.GodswordServerProtocol.setTrackTimings">setTrackTimings() (forge.embyr.twistedserver.GodswordServerProtocol method)</a>
 </li>
-      <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Spawner.spawn">spawn() (forge.blade.core.realm.Spawner method)</a>
+      <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Realm.spawn">spawn() (forge.blade.core.realm.Realm method)</a>
+
+      <ul>
+        <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Spawner.spawn">(forge.blade.core.realm.Spawner method)</a>
 </li>
+      </ul></li>
       <li><a href="autodoc/forge.blade.core.realm.html#forge.blade.core.realm.Spawner">Spawner (class in forge.blade.core.realm)</a>
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.WSServerFactory.startFactory">startFactory() (forge.embyr.twistedserver.WSServerFactory method)</a>
@@ -875,7 +885,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/forge.ethyr.torch.model.html#forge.ethyr.torch.model.Model.weights">weights (forge.ethyr.torch.model.Model attribute)</a>
+      <li><a href="autodoc/forge.ethyr.torch.model.html#forge.ethyr.torch.model.Model.weights">weights() (forge.ethyr.torch.model.Model property)</a>
 </li>
       <li><a href="autodoc/forge.embyr.twistedserver.html#forge.embyr.twistedserver.WSServerFactory">WSServerFactory (class in forge.embyr.twistedserver)</a>
 </li>
@@ -1198,7 +1208,7 @@
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

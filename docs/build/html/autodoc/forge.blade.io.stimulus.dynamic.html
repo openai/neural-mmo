@@ -20,20 +20,11 @@
   <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../',
-              VERSION:'1.3',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -59,7 +50,7 @@
           
 
           
-            <a href="../contents.html" class="icon icon-home"> Neural MMO
+            <a href="../index.html" class="icon icon-home"> Neural MMO
           
 
           
@@ -100,6 +91,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html#ags-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html#ags-the-io-api"> The IO API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html#ags-distributed-computation-with-ascend"> Distributed computation with Ascend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -117,6 +113,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
@@ -136,7 +133,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../contents.html">Neural MMO</a>
+          <a href="../index.html">Neural MMO</a>
         
       </nav>
 
@@ -165,7 +162,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../contents.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
           <li><a href="modules.html">API Reference</a> &raquo;</li>
         
@@ -200,49 +197,45 @@
 <span id="forge-blade-io-stimulus-dynamic-module"></span><h1>forge.blade.io.stimulus.dynamic module<a class="headerlink" href="#module-forge.blade.io.stimulus.dynamic" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus">
-<em class="property">class </em><code class="descclassname">forge.blade.io.stimulus.dynamic.</code><code class="descname">Stimulus</code><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">Stimulus</code><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Static IO class used for interacting with game observations</p>
 <p>The environment returns game objects in observations.
 This class assembles them into usable data packets</p>
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>obs</em>, <em>lookup</em>, <em>static</em>, <em>obj</em>, <em>*args</em>, <em>key</em>, <em>serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">lookup</em>, <em class="sig-param">static</em>, <em class="sig-param">obj</em>, <em class="sig-param">*args</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pull attributes from game and serialize names</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.entity">
-<code class="descname">entity</code><span class="sig-paren">(</span><em>env</em>, <em>ent</em>, <em>key</em>, <em>serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for player objects. Always returns self first</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>inp</em>, <em>env</em>, <em>ent</em>, <em>serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">inp</em>, <em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility for preprocessing game observations</p>
 <p>Built to be semi-automatic and only require small updates
 for large new classes of observations</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>config</strong> – A configuration object</li>
-<li><strong>inp</strong> – An IO object specifying observations</li>
-<li><strong>env</strong> – Local environment observation</li>
-<li><strong>ent</strong> – Local entity observation</li>
-<li><strong>serialize</strong> – (bool) Whether to serialize the IO object data</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – A configuration object</p></li>
+<li><p><strong>inp</strong> – An IO object specifying observations</p></li>
+<li><p><strong>env</strong> – Local environment observation</p></li>
+<li><p><strong>ent</strong> – Local entity observation</p></li>
+<li><p><strong>serialize</strong> – (bool) Whether to serialize the IO object data</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.tile">
-<code class="descname">tile</code><span class="sig-paren">(</span><em>env</em>, <em>ent</em>, <em>key</em>, <em>serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tile</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for tile objects</p>
 </dd></dl>
 
@@ -250,7 +243,7 @@ for large new classes of observations</p>
 
 <dl class="function">
 <dt id="forge.blade.io.stimulus.dynamic.camel">
-<code class="descclassname">forge.blade.io.stimulus.dynamic.</code><code class="descname">camel</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.camel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">camel</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.camel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a string to camel case</p>
 </dd></dl>
 
@@ -572,7 +565,7 @@ for large new classes of observations</p>
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

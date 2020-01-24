@@ -10,8 +10,8 @@ from torch import nn
 from forge import trinity
 
 from forge.ethyr.torch import policy
+from forge.ethyr.torch.policy import baseline
 from forge.ethyr.torch import param
-from forge.ethyr.torch import io
 
 class Hidden(nn.Module):
    def __init__(self, config):
@@ -53,7 +53,7 @@ class Policy(nn.Module):
       super().__init__()
       self.config = config
 
-      self.IO     = IO(config)
+      self.IO     = baseline.IO(config)
 
       self.policy = nn.ModuleList([
             Hidden(config) for _ in range(config.NPOP)])
@@ -74,10 +74,9 @@ class Policy(nn.Module):
 
       #Run the main hidden network with unshared population and value weights
       hidden, values = self.hidden(packet, observationTensor)
-      #hidden, values = self.policy[0](observationTensor)
 
       #Run the output network
-      self.IO.output(packet, values, hidden, entityLookup, manager)
+      self.IO.output(packet, hidden, entityLookup, values,  manager)
 
    def hidden(self, packet, state):
       '''Population-specific hidden network and value function

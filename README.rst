@@ -19,6 +19,7 @@
 .. |magenta| image:: docs/source/resource/neuralMAGENTA.png
 .. |sky| image:: docs/source/resource/neuralSKY.png
 
+.. |header| image:: docs/source/resource/header.svg
 .. |io| image:: docs/source/resource/io.svg
 .. |infra| image:: docs/source/resource/infra.svg
 
@@ -154,7 +155,11 @@ On the surface, Neural MMO follows the OpenAI Gym API:
   #(s, a, r) tuple + rollout boundaries
   print(obs, actions, rewards, dones)
 
-However, the actual contents of *obs, rewards, dones, info* is nonstandard by necessity. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces. You're free to develop your own methods for handling these, but we've already done all that work for you. Let's make use of the core IO libraries:
+However, the actual contents of *obs, rewards, dones, info* is nonstandard by necessity. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces:
+
+|header|
+
+You're free to develop your own methods for handling these, but we've already done all that work for you. Let's make use of the core IO libraries:
 
 .. code-block:: python
   :emphasize-lines: 3,16,22

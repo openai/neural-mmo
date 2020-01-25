@@ -287,7 +287,9 @@
 <span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>However, the actual contents of <em>obs, rewards, dones, info</em> is nonstandard by necessity. Gym isn’t built for multiagent environments – and certainly not for ones with complex hierarchical observation and action spaces. You’re free to develop your own methods for handling these, but we’ve already done all that work for you. Let’s make use of the core IO libraries:</p>
+<p>However, the actual contents of <em>obs, rewards, dones, info</em> is nonstandard by necessity. Gym isn’t built for multiagent environments – and certainly not for ones with complex hierarchical observation and action spaces:</p>
+<p><img alt="header" src="_images/header.svg" /></p>
+<p>You’re free to develop your own methods for handling these, but we’ve already done all that work for you. Let’s make use of the core IO libraries:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
 <span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
 <span class="hll"><span class="kn">from</span> <span class="nn">forge.blade.io</span> <span class="kn">import</span> <span class="n">io</span>

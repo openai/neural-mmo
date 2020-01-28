@@ -445,7 +445,7 @@
 </div>
 <p>Like before, we have a server interacting with five remote clients. This time, the <em>coef</em> argument is shared among clients while the <em>bias</em> argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side <em>update()</em> function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code.</p>
 <p>In the full Neural MMO environment, we use three infrastructure layers, each of which subclasses Ascend:</p>
-<p><img alt="infra" src="_images/infra.svg" /></p>
+<p><a href="#id6"><span class="problematic" id="id7">|infra|</span></a></p>
 <p>This simulates the traditional MMO computation paradigm in a research setting. Specifically, we run a cluster of servers, each of which simulates a copy of the environment and distributes agent computations among multiple remote clients. Ascend allows us to implement this framework pythonically in only a few lines of code.</p>
 </div>
 </div>
@@ -457,7 +457,7 @@
 <h1><img alt="ags" src="_images/ags.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference external" href="https://github.com/openai/neural-mmo">OpenAI</a> only hosts v1.0. My <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">personal Github</a> hosts the latest version in <em>master</em> and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.</p>
 <dl class="simple">
-<dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a></dt><dd><ul class="simple">
+<dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a> <a class="reference download internal" download="" href="_downloads/3cd7722d5cc9e4be13e54868ee7dafe1/nmmo_v1-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">[Paper]</span></code></a></dt><dd><ul class="simple">
 <li><p>Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.preprocess and IO.postprocess functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.</p></li>
 <li><p>Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.</p></li>
 <li><p>Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks – our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.</p></li>
@@ -487,7 +487,7 @@
 <li><p>End to end training source. There is also a pretrained model, but it’s just a weak single population foraging baseline around 2.5x of random reward. I’m currently between cluster access – once I get my hands on some better hardware, I’ll retune hyperparameters for the new demo model.</p></li>
 </ul>
 </dd>
-<dt><strong>v1.0:</strong> Initial OpenAI environment release <a class="reference external" href="https://openai.com/blog/neural-mmo/">[Blog]</a> <a class="reference external" href="https://arxiv.org/pdf/1903.00784.pdf">[Paper]</a></dt><dd><ul class="simple">
+<dt><strong>v1.0:</strong> Initial OpenAI environment release | <a class="reference external" href="https://openai.com/blog/neural-mmo/">[Blog]</a> <a class="reference external" href="https://arxiv.org/pdf/1903.00784.pdf">[Paper]</a></dt><dd><ul class="simple">
 <li><p>Blade: Base environment with foraging and combat</p></li>
 <li><p>Embyr: THREE.js web client</p></li>
 <li><p>Trinity: CPU based distributed training infrastructure</p></li>

@@ -21,7 +21,6 @@
 
 .. |header| image:: docs/source/resource/header.svg
 .. |io| image:: docs/source/resource/io.svg
-.. |infra| image:: docs/source/resource/infra.svg
 
 |env|
 
@@ -354,7 +353,7 @@ In formal publications, we refer to our project simply as a (the first) "Neural 
 
 The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My `personal Github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
 
-**v1.3:** Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_
+**v1.3:** Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_ :download:`[Paper] <docs/source/resource/nmmo_v1-3.pdf>`
    - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.preprocess and IO.postprocess functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
    - Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.
    - Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks -- our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.
@@ -381,7 +380,7 @@ The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My `person
    - Official Discord
    - End to end training source. There is also a pretrained model, but it's just a weak single population foraging baseline around 2.5x of random reward. I'm currently between cluster access -- once I get my hands on some better hardware, I'll retune hyperparameters for the new demo model.
 
-**v1.0:** Initial OpenAI environment release `[Blog] <https://openai.com/blog/neural-mmo/>`_ `[Paper] <https://arxiv.org/pdf/1903.00784.pdf>`_
+**v1.0:** Initial OpenAI environment release | `[Blog] <https://openai.com/blog/neural-mmo/>`_ `[Paper] <https://arxiv.org/pdf/1903.00784.pdf>`_
    - Blade: Base environment with foraging and combat
    - Embyr: THREE.js web client
    - Trinity: CPU based distributed training infrastructure

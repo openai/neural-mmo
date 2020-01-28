@@ -38,7 +38,7 @@ Neural MMO is a massively multiagent AI research environment inspired by Massive
 
 **1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ tutorials
 
-**2:** Skim the :mod:`~forge.blade.core.api.Realm` (environment) and :mod:`~forge.blade.io.io` modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
+**2:** Skim the :mod:`~forge.blade.core.api.Realm`/:mod:`~forge.blade.io.io`/:mod:`~forge.trinity.api.Ascend` modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
 
 **3:** Hack on your own projects using the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
 
@@ -168,7 +168,7 @@ You're free to develop your own methods for handling these, but we've already do
 
   #Core API
   from forge.blade.core import Realm
-  from forge.blade.io import io
+  from forge.blade import IO
 
   #Demo baselines
   from experiments import Experiment, Config
@@ -181,13 +181,13 @@ You're free to develop your own methods for handling these, but we've already do
   obs, rewards, dones, infos = env.reset()
 
   #Process observations
-  packet, _       = io.inputs(obs, rewards, dones, config)
+  packet, _ = IO.inputs(obs, rewards, dones, config)
 
   #Run policy (fills packet object)
   somePolicy(packet)
 
   #Select actions
-  actions      = io.outputs(packet)
+  actions   = IO.outputs(packet)
 
   #Submit actions
   nxtObs, rewards, dones, info = env.step(actions)
@@ -206,7 +206,7 @@ This pair of attentional networks is responsible for flattening the input space 
 
   #Core API
   from forge.blade.core import Realm
-  from forge.blade.io import io
+  from forge.blade import IO
 
   #Demo baselines
   from experiments import Experiment, Config
@@ -221,12 +221,12 @@ This pair of attentional networks is responsible for flattening the input space 
   policy                     = baseline.IO(config)
 
   #Process observations
-  packet, _       = io.inputs(obs, rewards, dones, config)
+  packet, _    = IO.inputs(obs, rewards, dones, config)
   flat, lookup = policy.input(packet)
 
   #Select actions
   policy.output(packet, flat, lookup)
-  actions      = io.outputs(packet)
+  actions      = IO.outputs(packet)
 
   #Submit actions
   nxtObs, rewards, dones, info = env.step(actions)
@@ -323,13 +323,13 @@ The source is only a few hundred lines and isn't very useful in toy examples. As
 
      @runtime
      def step(self):
-        asyncHandles = super().distrib(
+        asyncHandles = super().distribute(
               2,
               [4, 3, 2, 1, 0],
               shard=(False, True))
 
         self.update()
-        clientData = super().sync(asyncHandles)
+        clientData = super().synchronize(asyncHandles)
         print(clientData) #[4, 5, 6, 7, 8]
 
   if __name__ == '__main__':

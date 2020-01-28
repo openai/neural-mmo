@@ -9,6 +9,7 @@ forge.trinity package
 
 .. toctree::
 
+   forge.trinity.api
    forge.trinity.ascend
    forge.trinity.timed
    forge.trinity.trinity

@@ -113,7 +113,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
@@ -201,9 +200,14 @@
 <p>High level I/O class for abstracting game state and action selection</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="forge.blade.io.io.inputs">
-<code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">inputs</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">rewards</em>, <em class="sig-param">dones</em>, <em class="sig-param">config</em>, <em class="sig-param">clientHash=None</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.inputs" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="forge.blade.io.io.IO">
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">IO</code><a class="headerlink" href="#forge.blade.io.io.IO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Core IO API for pre/postprocessing environment data</p>
+<dl class="method">
+<dt id="forge.blade.io.io.IO.inputs">
+<code class="sig-name descname">inputs</code><span class="sig-paren">(</span><em class="sig-param">rewards</em>, <em class="sig-param">dones</em>, <em class="sig-param">config</em>, <em class="sig-param">clientHash=None</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.IO.inputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Core Input library for preprocessing, batching, and serializing
 environment observations and data for use in training and inference.</p>
 <dl class="field-list simple">
@@ -250,9 +254,9 @@ as long as you obey the function spec but may get internal errors
 if you try to hack the IOPacket structure.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="forge.blade.io.io.outputs">
-<code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">outputs</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">atnDict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.outputs" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="forge.blade.io.io.IO.outputs">
+<code class="sig-name descname">outputs</code><span class="sig-paren">(</span><em class="sig-param">atnDict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.IO.outputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Core Output library for postprocessing flat agent decisions into
 structured action argument lists</p>
 <dl class="field-list simple">
@@ -288,6 +292,8 @@ multiple calls (format below). None upon first call.</p></li>
 <dd class="field-odd"><p>defaultdict&lt;defaultdict&lt;list&gt;&gt;</p>
 </dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

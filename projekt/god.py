@@ -9,7 +9,7 @@ from forge.blade import core
 from forge.blade.lib.log import BlobSummary 
 
 from forge.trinity.ascend import Ascend, runtime, Log
-from forge.blade import io
+from forge.blade import IO
 
 import projekt
 
@@ -110,7 +110,7 @@ class God(Ascend):
 
       return self.backward
  
-   def distrib(self, weights):
+   def distribute(self, weights):
       '''Shards input data across clients using the Ascend async API
 
       Args:
@@ -121,7 +121,7 @@ class God(Ascend):
       '''
 
       #Preprocess obs
-      clientData, nUpdates = io.inputs(
+      clientData, nUpdates = IO.inputs(
          self.obs, self.rewards, self.dones, 
          self.config, self.clientHash)
 
@@ -129,9 +129,9 @@ class God(Ascend):
       backward = self.batch(nUpdates)
 
       #Shard entities across clients
-      return super().distrib(clientData, weights, backward, shard=(1, 0, 0))
+      return super().distribute(clientData, weights, backward, shard=(1, 0, 0))
 
-   def sync(self, rets):
+   def synchronize(self, rets):
       '''Aggregates output data across shards with the Ascend async API
 
       Args:
@@ -141,9 +141,9 @@ class God(Ascend):
          atnDict: Dictionary of actions to be submitted to the environment
       '''
       atnDict, gradList, blobList = None, [], []
-      for obs, grads, blobs in super().sync(rets):
+      for obs, grads, blobs in super().synchronize(rets):
          #Process outputs
-         atnDict = io.outputs(obs, atnDict)
+         atnDict = IO.outputs(obs, atnDict)
 
          #Collect update
          if self.backward:

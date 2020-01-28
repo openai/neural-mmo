@@ -182,7 +182,7 @@
 <p>Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs). The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.</p>
 <p><strong>Getting Started:</strong> Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:</p>
 <p><strong>1:</strong> Read the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#">Quickstart</a> tutorials</p>
-<p><strong>2:</strong> Skim the <a class="reference internal" href="autodoc/forge.blade.core.api.html#forge.blade.core.api.Realm" title="forge.blade.core.api.Realm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Realm</span></code></a> (environment) and <a class="reference internal" href="autodoc/forge.blade.io.io.html#module-forge.blade.io.io" title="forge.blade.io.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">io</span></code></a> modules of the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html">API Reference</a></p>
+<p><strong>2:</strong> Skim the <a class="reference internal" href="autodoc/forge.blade.core.api.html#forge.blade.core.api.Realm" title="forge.blade.core.api.Realm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Realm</span></code></a>/<a class="reference internal" href="autodoc/forge.blade.io.io.html#module-forge.blade.io.io" title="forge.blade.io.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">io</span></code></a>/<a class="reference internal" href="autodoc/forge.trinity.api.html#forge.trinity.api.Ascend" title="forge.trinity.api.Ascend"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Ascend</span></code></a> modules of the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html">API Reference</a></p>
 <p><strong>3:</strong> Hack on your own projects using the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/tree/master/projekt">/projekt</a> demo model as starter code</p>
 <p><strong>4:</strong> Join our <a class="reference external" href="https://discord.gg/BkMmFUC">Discord community</a> for help and discussion!</p>
 <p><strong>5:</strong> Contribute to the platform! Neural MMO is an active open source project</p>
@@ -293,7 +293,7 @@
 <p>You’re free to develop your own methods for handling these, but we’ve already done all that work for you. Let’s make use of the core IO libraries:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
 <span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">forge.blade.io</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">forge.blade</span> <span class="kn">import</span> <span class="n">IO</span>
 </span>
 <span class="c1">#Demo baselines</span>
 <span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
@@ -306,13 +306,13 @@
 <span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
 <span class="c1">#Process observations</span>
-<span class="hll"><span class="n">packet</span><span class="p">,</span> <span class="n">_</span>       <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="hll"><span class="n">packet</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 </span>
 <span class="c1">#Run policy (fills packet object)</span>
 <span class="n">somePolicy</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
 
 <span class="c1">#Select actions</span>
-<span class="hll"><span class="n">actions</span>      <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+<span class="hll"><span class="n">actions</span>   <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
 </span>
 <span class="c1">#Submit actions</span>
 <span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
@@ -326,7 +326,7 @@
 <p>This pair of attentional networks is responsible for flattening the input space and indexing the variable length action space. In particular, <em>a</em> is an embedding layer, <em>f</em> and <em>g</em> are soft attention subnetworks, and <em>h</em> is a hard attention subnetwork. You can read more about these in the v1.3 whitepaper. Let’s use these modules to make this example runnable:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
 <span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
-<span class="kn">from</span> <span class="nn">forge.blade.io</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">forge.blade</span> <span class="kn">import</span> <span class="n">IO</span>
 
 <span class="c1">#Demo baselines</span>
 <span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
@@ -341,12 +341,12 @@
 <span class="hll"><span class="n">policy</span>                     <span class="o">=</span> <span class="n">baseline</span><span class="o">.</span><span class="n">IO</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </span>
 <span class="c1">#Process observations</span>
-<span class="n">packet</span><span class="p">,</span> <span class="n">_</span>       <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="n">packet</span><span class="p">,</span> <span class="n">_</span>    <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 <span class="hll"><span class="n">flat</span><span class="p">,</span> <span class="n">lookup</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
 </span>
 <span class="c1">#Select actions</span>
 <span class="hll"><span class="n">policy</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">flat</span><span class="p">,</span> <span class="n">lookup</span><span class="p">)</span>
-</span><span class="n">actions</span>      <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+</span><span class="n">actions</span>      <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
 
 <span class="c1">#Submit actions</span>
 <span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
@@ -434,13 +434,13 @@
 
 <span class="hll">   <span class="nd">@runtime</span>
 </span>   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="hll">      <span class="n">asyncHandles</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">distrib</span><span class="p">(</span>
+<span class="hll">      <span class="n">asyncHandles</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">distribute</span><span class="p">(</span>
 </span><span class="hll">            <span class="mi">2</span><span class="p">,</span>
 </span><span class="hll">            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
 </span><span class="hll">            <span class="n">shard</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
 </span>
       <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-<span class="hll">      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span><span class="n">asyncHandles</span><span class="p">)</span>
+<span class="hll">      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">synchronize</span><span class="p">(</span><span class="n">asyncHandles</span><span class="p">)</span>
 </span>      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[4, 5, 6, 7, 8]</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.neural-mmo-client.twistedserver module &mdash; Neural MMO 1.3 documentation</title>
+  <title>forge.trinity.api module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.trinity package" href="forge.trinity.html" />
-    <link rel="prev" title="forge.neural-mmo-client namespace" href="forge.neural-mmo-client.html" /> 
+    <link rel="next" title="forge.trinity.ascend module" href="forge.trinity.ascend.html" />
+    <link rel="prev" title="forge.trinity package" href="forge.trinity.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -104,11 +104,13 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">forge.neural-mmo-client.twistedserver module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">forge.trinity.api module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.ascend.html">forge.trinity.ascend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.timed.html">forge.trinity.timed module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.trinity.html">forge.trinity.trinity module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
@@ -163,15 +165,15 @@
         
           <li><a href="forge.html">forge package</a> &raquo;</li>
         
-          <li><a href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a> &raquo;</li>
+          <li><a href="forge.trinity.html">forge.trinity package</a> &raquo;</li>
         
-      <li>forge.neural-mmo-client.twistedserver module</li>
+      <li>forge.trinity.api module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/autodoc/forge.neural-mmo-client.twistedserver.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/autodoc/forge.trinity.api.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -184,8 +186,179 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="forge-neural-mmo-client-twistedserver-module">
-<h1>forge.neural-mmo-client.twistedserver module<a class="headerlink" href="#forge-neural-mmo-client-twistedserver-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-forge.trinity.api">
+<span id="forge-trinity-api-module"></span><h1>forge.trinity.api module<a class="headerlink" href="#module-forge.trinity.api" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="forge.trinity.api.waittime">
+<code class="sig-prename descclassname">forge.trinity.api.</code><code class="sig-name descname">waittime</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.waittime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ascend performance profiling decorator. Apply to methods of Ascend
+subclasses that are purely waiting for remotes to synchronize</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.trinity.api.runtime">
+<code class="sig-prename descclassname">forge.trinity.api.</code><code class="sig-name descname">runtime</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.runtime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ascend performance profiling decorator. Apply to top-level methods of
+Ascend subclasses that performing expensive computations within the
+current infrastructure (hardware) layer.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="forge.trinity.api.Ascend">
+<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.api.</code><code class="sig-name descname">Ascend</code><span class="sig-paren">(</span><em class="sig-param">disciple</em>, <em class="sig-param">n</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This module is a stub reference to the Ascend core that documents
+the external API. Ascend is a featherweight Ray wrapper for persistent,
+multilevel, synchronous + asynchronous computation that works with pdb
+(local mode). Internal docs available at <a class="reference internal" href="forge.trinity.ascend.html#module-forge.trinity.ascend" title="forge.trinity.ascend"><code class="xref py py-mod docutils literal notranslate"><span class="pre">forge.trinity.ascend</span></code></a></p>
+<dl class="method">
+<dt id="forge.trinity.api.Ascend.distribute">
+<code class="sig-name descname">distribute</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">shard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend.distribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously invoke the step method of all remote disciples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – <p>List of arguments to broadcast to all disciples. Shared
+arguments may have any type. Sharded arguments must be wrapped
+in a dictionary specifying target client shards:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="mi">0</span><span class="p">:</span> <span class="n">data_for_shard_0</span><span class="p">,</span>
+   <span class="mi">1</span><span class="p">:</span> <span class="n">data_for_shard_1</span><span class="p">,</span>
+   <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>shard</strong> – <p>A boolean mask (list) of the same length as <em>args</em>
+specifying which arguments to shard:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span><span class="p">:</span> <span class="n">shard</span> <span class="n">the</span> <span class="n">current</span> <span class="n">argument</span> <span class="n">across</span> <span class="n">remote</span> <span class="n">clients</span>
+<span class="kc">False</span><span class="p">:</span> <span class="n">share</span> <span class="n">the</span> <span class="n">current</span> <span class="n">argument</span> <span class="n">across</span> <span class="n">remote</span> <span class="n">clients</span>
+</pre></div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>rets:</dt><dd><p>A list of async step return handles from remote disciples</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.api.Ascend.synchronize">
+<code class="sig-name descname">synchronize</code><span class="sig-paren">(</span><em class="sig-param">rets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend.synchronize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronizes asynchronous returns from <em>distribute</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rets</strong> – list of async handles returned from distribute</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>rets:</dt><dd><p>A list of returns from all disciples</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.api.Ascend.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">shard=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronously invoke the step method of all remote disciples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Arguments to broadcast to all disciples. See <em>distribute</em></p></li>
+<li><p><strong>shard</strong> – A boolean mask. See <em>distribute</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>rets:</dt><dd><p>A list of returns from all disciples</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.api.Ascend.discipleLogs">
+<code class="sig-name descname">discipleLogs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend.discipleLogs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging objects from all disciples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>logs:</dt><dd><p>A list of disciple logs</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.api.Ascend.localize">
+<code class="sig-name descname">localize</code><span class="sig-paren">(</span><em class="sig-param">remote</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend.localize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable remote functions to be called without explicitly specifying
+func.remote</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – Function to localize</p></li>
+<li><p><strong>remote</strong> – True if <em>func</em> is remote, False otherwise</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>f:</dt><dd><p>A localized function (f or f.remote)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.api.Ascend.isRemote">
+<code class="sig-name descname">isRemote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.api.Ascend.isRemote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an object is a remote Ray instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>isRemote:</dt><dd><p>True if <em>obj</em> is remote, False otherwise</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -196,10 +369,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.trinity.html" class="btn btn-neutral float-right" title="forge.trinity package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.trinity.ascend.html" class="btn btn-neutral float-right" title="forge.trinity.ascend module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="forge.neural-mmo-client.html" class="btn btn-neutral float-left" title="forge.neural-mmo-client namespace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.trinity.html" class="btn btn-neutral float-left" title="forge.trinity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

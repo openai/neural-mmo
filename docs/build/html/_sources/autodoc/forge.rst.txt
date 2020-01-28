@@ -12,5 +12,4 @@ forge package
    forge.blade
    forge.embyr
    forge.ethyr
-   forge.neural-mmo-client
    forge.trinity

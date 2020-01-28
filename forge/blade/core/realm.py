@@ -80,8 +80,8 @@ class Spawner:
 
 class Realm(Timed):
    '''This module is the core Neural MMO environment and only 
-   document internal API. External documentation is available
-   at :mod:`forge.blade.core.api`'''
+   documents the internal API. External documentation is available
+   at :mod:`forge.blade.core.ascend`'''
    def __init__(self, config, idx=0):
       super().__init__()
       self.spawner   = Spawner(config)

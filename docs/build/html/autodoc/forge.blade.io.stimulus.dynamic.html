@@ -117,6 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -195,6 +196,12 @@
             
   <div class="section" id="module-forge.blade.io.stimulus.dynamic">
 <span id="forge-blade-io-stimulus-dynamic-module"></span><h1>forge.blade.io.stimulus.dynamic module<a class="headerlink" href="#module-forge.blade.io.stimulus.dynamic" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="forge.blade.io.stimulus.dynamic.camel">
+<code class="sig-prename descclassname">forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">camel</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.camel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string to camel case</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus">
 <em class="property">class </em><code class="sig-prename descclassname">forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">Stimulus</code><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus" title="Permalink to this definition">¶</a></dt>
@@ -202,18 +209,6 @@
 <p>Static IO class used for interacting with game observations</p>
 <p>The environment returns game objects in observations.
 This class assembles them into usable data packets</p>
-<dl class="method">
-<dt id="forge.blade.io.stimulus.dynamic.Stimulus.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">lookup</em>, <em class="sig-param">static</em>, <em class="sig-param">obj</em>, <em class="sig-param">*args</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pull attributes from game and serialize names</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.io.stimulus.dynamic.Stimulus.entity">
-<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Internal processor for player objects. Always returns self first</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.process">
 <code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">inp</em>, <em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
@@ -223,7 +218,7 @@ for large new classes of observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> – A configuration object</p></li>
+<li><p><strong>config</strong> – An environment configuration object</p></li>
 <li><p><strong>inp</strong> – An IO object specifying observations</p></li>
 <li><p><strong>env</strong> – Local environment observation</p></li>
 <li><p><strong>ent</strong> – Local entity observation</p></li>
@@ -234,17 +229,23 @@ for large new classes of observations</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="forge.blade.io.stimulus.dynamic.Stimulus.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">lookup</em>, <em class="sig-param">static</em>, <em class="sig-param">obj</em>, <em class="sig-param">*args</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pull attributes from game and serialize names</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.tile">
 <code class="sig-name descname">tile</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for tile objects</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="forge.blade.io.stimulus.dynamic.Stimulus.entity">
+<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal processor for player objects. Always returns self first</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="forge.blade.io.stimulus.dynamic.camel">
-<code class="sig-prename descclassname">forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">camel</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.camel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string to camel case</p>
 </dd></dl>
 
 </div>

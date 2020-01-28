@@ -117,6 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -194,6 +195,102 @@
   <div class="section" id="module-forge.blade.io.io">
 <span id="forge-blade-io-io-module"></span><h1>forge.blade.io.io module<a class="headerlink" href="#module-forge.blade.io.io" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
+<dt id="forge.blade.io.io.IOPacket">
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">IOPacket</code><a class="headerlink" href="#forge.blade.io.io.IOPacket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>High level I/O class for abstracting game state and action selection</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.blade.io.io.inputs">
+<code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">inputs</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">rewards</em>, <em class="sig-param">dones</em>, <em class="sig-param">config</em>, <em class="sig-param">clientHash=None</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Core Input library for preprocessing, batching, and serializing
+environment observations and data for use in training and inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obs</strong> – A list of observations as specified by
+<a class="reference internal" href="forge.blade.core.api.html#forge.blade.core.api.Realm.step" title="forge.blade.core.api.Realm.step"><code class="xref py py-func docutils literal notranslate"><span class="pre">step()</span></code></a></p></li>
+<li><p><strong>rewards</strong> – A list of rewards as specified by
+<a class="reference internal" href="forge.blade.core.api.html#forge.blade.core.api.Realm.step" title="forge.blade.core.api.Realm.step"><code class="xref py py-func docutils literal notranslate"><span class="pre">step()</span></code></a></p></li>
+<li><p><strong>dones</strong> – A list of “done” (agent/episode termination signals) as
+specified by <a class="reference internal" href="forge.blade.core.api.html#forge.blade.core.api.Realm.step" title="forge.blade.core.api.Realm.step"><code class="xref py py-func docutils literal notranslate"><span class="pre">step()</span></code></a></p></li>
+<li><p><strong>config</strong> – An environment <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Config" title="forge.blade.core.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a>
+object used to specify game parameters</p></li>
+<li><p><strong>clientHash</strong> – An integer-integer hash function operating over entity
+IDs for sharded training (e.g. specifies which shard each agent
+belongs to when using multiple remote clients per server). If not
+specified, no sharding is performed.</p></li>
+<li><p><strong>serialize</strong> – Boolean specifying whether to serialize environment observations.
+This should only be set to False for debugging purposes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>clientData:</dt><dd><p>IOPacket objects populated with structued obs/rewards/dones data
+required for efficient inference and training. Keys correspond to
+the indices of remote shards/clients. If clientHash is None (e.g.
+sharding is disabled), this return value will instead be a single
+IOPacket object instead of a defaultdict of them.</p>
+</dd>
+<dt>nUpdates:</dt><dd><p>The total number of agent observations returned by obs.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(defaultdict&lt;IOPacket&gt;, int)</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>IOPacket objects are fairly complex and abstract preprocessing,
+batching, and serialization. Type checking the contents of
+obs/rewards/dones is difficult and slow. You should have no issues
+as long as you obey the function spec but may get internal errors
+if you try to hack the IOPacket structure.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.blade.io.io.outputs">
+<code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">outputs</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">atnDict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Core Output library for postprocessing flat agent decisions into
+structured action argument lists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obs</strong> – A list of observations as specified by
+<a class="reference internal" href="forge.blade.core.api.html#forge.blade.core.api.Realm.step" title="forge.blade.core.api.Realm.step"><code class="xref py py-func docutils literal notranslate"><span class="pre">step()</span></code></a></p></li>
+<li><p><strong>atnDict</strong> – Accumulated using the returned atnDict of this function across
+multiple calls (format below). None upon first call.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl>
+<dt>atnDict:</dt><dd><p>Populated dictionary of actions of format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="n">ent_1</span><span class="p">:</span> <span class="p">{</span>
+      <span class="n">action_1</span><span class="p">:</span> <span class="p">[</span><span class="n">arg_1</span><span class="p">,</span> <span class="n">arg_2</span><span class="p">],</span>
+      <span class="n">action_2</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+      <span class="o">...</span>
+   <span class="p">},</span>
+   <span class="n">ent_2</span><span class="p">:</span> <span class="p">{</span>
+      <span class="o">...</span>
+   <span class="p">},</span>
+   <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>defaultdict&lt;defaultdict&lt;list&gt;&gt;</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
 <dt id="forge.blade.io.io.Lookup">
 <em class="property">class </em><code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">Lookup</code><a class="headerlink" href="#forge.blade.io.io.Lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -205,18 +302,6 @@
 <dd><p>Add entries to the table</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.blade.io.io.inputs">
-<code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">inputs</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">rewards</em>, <em class="sig-param">dones</em>, <em class="sig-param">config</em>, <em class="sig-param">clientHash=None</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.inputs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Preprocess inputs</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.blade.io.io.outputs">
-<code class="sig-prename descclassname">forge.blade.io.io.</code><code class="sig-name descname">outputs</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">atnDict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.io.outputs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Postprocess outputs</p>
 </dd></dl>
 
 </div>

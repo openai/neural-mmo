@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -205,17 +206,6 @@ model initialization, optimization, and logging.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="forge.ethyr.torch.model.Model.checkpoint">
-<code class="sig-name descname">checkpoint</code><span class="sig-paren">(</span><em class="sig-param">opt</em>, <em class="sig-param">lifetime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.checkpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the model to checkpoint</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>reward</strong> – Mean reward of the model</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="forge.ethyr.torch.model.Model.load">
 <code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">opt</em>, <em class="sig-param">best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a model from file</p>
@@ -223,6 +213,17 @@ model initialization, optimization, and logging.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>best</strong> (<em>bool</em>) – Whether to load the best (True)
 or most recent (False) checkpoint</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.ethyr.torch.model.Model.checkpoint">
+<code class="sig-name descname">checkpoint</code><span class="sig-paren">(</span><em class="sig-param">opt</em>, <em class="sig-param">lifetime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the model to checkpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reward</strong> – Mean reward of the model</p>
 </dd>
 </dl>
 </dd></dl>

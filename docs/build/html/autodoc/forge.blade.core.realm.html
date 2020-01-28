@@ -117,6 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -201,21 +202,46 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="forge.blade.core.realm.Realm">
-<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.realm.</code><code class="sig-name descname">Realm</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">idx=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="forge.trinity.ascend.html#forge.trinity.ascend.Timed" title="forge.trinity.ascend.Timed"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.trinity.ascend.Timed</span></code></a></p>
-<p>Neural MMO Environment</p>
+<dt id="forge.blade.core.realm.Spawner">
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.realm.</code><code class="sig-name descname">Spawner</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Spawner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manager class responsible for agent spawning logic</p>
 <dl class="method">
-<dt id="forge.blade.core.realm.Realm.act">
-<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">actions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.act" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute agent actions</p>
+<dt id="forge.blade.core.realm.Spawner.spawn">
+<code class="sig-name descname">spawn</code><span class="sig-paren">(</span><em class="sig-param">realm</em>, <em class="sig-param">iden</em>, <em class="sig-param">pop</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Spawner.spawn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an entity to the given environment</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>actions</strong> – A dictionary of agent actions</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>realm</strong> – An environment Realm object</p></li>
+<li><p><strong>iden</strong> – An identifier index to assign to the new agent</p></li>
+<li><p><strong>pop</strong> – A population index to assign to the new agent</p></li>
+<li><p><strong>name</strong> – A string to prepend to iden as an agent name</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="forge.blade.core.realm.Spawner.cull">
+<code class="sig-name descname">cull</code><span class="sig-paren">(</span><em class="sig-param">pop</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Spawner.cull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrement the agent counter for the specified population</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pop</strong> – A population index</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="forge.blade.core.realm.Realm">
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.realm.</code><code class="sig-name descname">Realm</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">idx=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="forge.trinity.ascend.html#forge.trinity.ascend.Timed" title="forge.trinity.ascend.Timed"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.trinity.ascend.Timed</span></code></a></p>
+<p>This module is the core Neural MMO environment and only
+document internal API. External documentation is available
+at <a class="reference internal" href="forge.blade.core.api.html#module-forge.blade.core.api" title="forge.blade.core.api"><code class="xref py py-mod docutils literal notranslate"><span class="pre">forge.blade.core.api</span></code></a></p>
 <dl class="method">
 <dt id="forge.blade.core.realm.Realm.clientData">
 <code class="sig-name descname">clientData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.clientData" title="Permalink to this definition">¶</a></dt>
@@ -231,26 +257,52 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.blade.core.realm.Realm.cullDead">
-<code class="sig-name descname">cullDead</code><span class="sig-paren">(</span><em class="sig-param">dead</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.cullDead" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the specified list of agents</p>
+<dt id="forge.blade.core.realm.Realm.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">actions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute agent actions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dead</strong> – A list of dead agent IDs to remove</p>
+<dd class="field-odd"><p><strong>actions</strong> – A dictionary of agent actions</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.blade.core.realm.Realm.getStims">
-<code class="sig-name descname">getStims</code><span class="sig-paren">(</span><em class="sig-param">packets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.getStims" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets agent stimuli from the environment</p>
+<dt id="forge.blade.core.realm.Realm.prioritize">
+<code class="sig-name descname">prioritize</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.prioritize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorders actions according to their priorities</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>packets</strong> – A dictionary of Packet objects</p>
+<dd class="field-odd"><p><strong>decisions</strong> – A dictionary of agent actions</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The packet dictionary populated with agent data</p>
+<dd class="field-even"><p>Repriotized actions</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only saves the first action of each priority</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.blade.core.realm.Realm.stepEnv">
+<code class="sig-name descname">stepEnv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.stepEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Advances the environment</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.blade.core.realm.Realm.stepEnts">
+<code class="sig-name descname">stepEnts</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.stepEnts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Advance agents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decisions</strong> – A dictionary of agent actions</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>State-reward-done packets
+dones   : A list of dead agent IDs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>packets</p>
 </dd>
 </dl>
 </dd></dl>
@@ -276,132 +328,26 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.blade.core.realm.Realm.prioritize">
-<code class="sig-name descname">prioritize</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.prioritize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reorders actions according to their priorities</p>
+<dt id="forge.blade.core.realm.Realm.cullDead">
+<code class="sig-name descname">cullDead</code><span class="sig-paren">(</span><em class="sig-param">dead</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.cullDead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the specified list of agents</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>decisions</strong> – A dictionary of agent actions</p>
+<dd class="field-odd"><p><strong>dead</strong> – A list of dead agent IDs to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.blade.core.realm.Realm.getStims">
+<code class="sig-name descname">getStims</code><span class="sig-paren">(</span><em class="sig-param">packets</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.getStims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets agent stimuli from the environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>packets</strong> – A dictionary of Packet objects</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Repriotized actions</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Only saves the first action of each priority</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.realm.Realm.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stub for conformity with Gym. Calls step({}).</p>
-<p>The environment is persistent. Reset it only
-once upon initialization to obtain initial
-observations. If you must experiment with
-short lived environment instances, instantiate
-a new Realm instead of calling reset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Output of self.step({})</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>data</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.realm.Realm.reward">
-<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">entID</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.reward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the environment protocol for rewarding agents
-Override to specify custom reward behavior</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>floating point reward value</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>reward</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Default behavior returns only zero. You will need to interpret
-the “done” signal as a -1 during rollout collection</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.realm.Realm.spawn">
-<code class="sig-name descname">spawn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.spawn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the environment protocol for adding players
-Override to specify custom spawning behavior</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A unique entity ID
-pop    : A population membership ID
-prefix : A string prepended to agent names</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>entID</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This fomulation is useful for population based research, as it
-allows one to specify per-agent or per-population policies</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.realm.Realm.stepEnts">
-<code class="sig-name descname">stepEnts</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.stepEnts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Advance agents</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>decisions</strong> – A dictionary of agent actions</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>State-reward-done packets
-dones   : A list of dead agent IDs</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>packets</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.realm.Realm.stepEnv">
-<code class="sig-name descname">stepEnv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.stepEnv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Advances the environment</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="forge.blade.core.realm.Spawner">
-<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.realm.</code><code class="sig-name descname">Spawner</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Spawner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manager class responsible for agent spawning logic</p>
-<dl class="method">
-<dt id="forge.blade.core.realm.Spawner.cull">
-<code class="sig-name descname">cull</code><span class="sig-paren">(</span><em class="sig-param">pop</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Spawner.cull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decrement the agent counter for the specified population</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pop</strong> – A population index</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.realm.Spawner.spawn">
-<code class="sig-name descname">spawn</code><span class="sig-paren">(</span><em class="sig-param">realm</em>, <em class="sig-param">iden</em>, <em class="sig-param">pop</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Spawner.spawn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds an entity to the given environment</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>realm</strong> – An environment Realm object</p></li>
-<li><p><strong>iden</strong> – An identifier index to assign to the new agent</p></li>
-<li><p><strong>pop</strong> – A population index to assign to the new agent</p></li>
-<li><p><strong>name</strong> – A string to prepend to iden as an agent name</p></li>
-</ul>
+<dd class="field-even"><p>The packet dictionary populated with agent data</p>
 </dd>
 </dl>
 </dd></dl>

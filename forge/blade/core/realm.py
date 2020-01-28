@@ -79,15 +79,10 @@ class Spawner:
          del self.pops[pop]
 
 class Realm(Timed):
-   '''Neural MMO Environment'''
+   '''This module is the core Neural MMO environment and only 
+   document internal API. External documentation is available
+   at :mod:`forge.blade.core.api`'''
    def __init__(self, config, idx=0):
-      '''
-      Args:
-
-         config : A Config specification object
-         args   : Hook for command line arguments
-         idx    : Index of the map file to load
-      '''
       super().__init__()
       self.spawner   = Spawner(config)
       self.world     = core.Env(config, idx)
@@ -99,6 +94,48 @@ class Realm(Timed):
 
       self.entID     = 1
       self.tick      = 0
+
+   ###################################################################
+   ### Internal API (+ constructor) documented at forge.blade.core.api
+   ### This is mainly to avoid dealing with decorated method doc gen
+
+   @runtime
+   def step(self, decisions):
+      self.tick += 1
+
+      #Spawn an ent
+      iden, pop, name = self.spawn()
+      assert iden is not None
+
+      self.spawner.spawn(self, iden, pop, name)
+      packets, dead = self.stepEnts(decisions)
+
+      self.stepEnv()
+      packets = self.getStims(packets)
+
+      #Conform to gym
+      stims   = [p.stim   for p in packets.values()]
+      rewards = [p.reward for p in packets.values()]
+      dones   = dead
+
+      return stims, rewards, dones, None
+
+   def reset(self):
+      err = 'Neural MMO is persistent and may only be reset once upon initialization'
+      assert self.tick == 0, err
+      return self.step({})
+
+   def reward(self, entID):
+      return 0
+
+   def spawn(self):
+      pop        =  hash(str(self.entID)) % self.config.NPOP
+      self.entID += 1
+
+      return self.entID, pop, 'Neural_'
+
+   ### End Internal API
+   ###################################################################
 
    def clientData(self):
       '''Data packet used by the renderer
@@ -115,37 +152,6 @@ class Realm(Timed):
 
       return packet
 
-   def spawn(self):
-      '''Specifies the environment protocol for adding players
-      Override to specify custom spawning behavior
-
-      Returns:
-         entID  : A unique entity ID
-         pop    : A population membership ID
-         prefix : A string prepended to agent names
-
-      Notes:
-         This fomulation is useful for population based research, as it
-         allows one to specify per-agent or per-population policies'''
-
-      pop        =  hash(str(self.entID)) % self.config.NPOP
-      self.entID += 1
-
-      return self.entID, pop, 'Neural_'
-
-   def reward(self, entID):
-      '''Specifies the environment protocol for rewarding agents
-      Override to specify custom reward behavior
-
-      Returns:
-         reward: floating point reward value
-
-      Notes:
-         Default behavior returns only zero. You will need to interpret
-         the "done" signal as a -1 during rollout collection'''
-
-      return 0
- 
    def act(self, actions):
       '''Execute agent actions
       
@@ -266,53 +272,5 @@ class Realm(Timed):
          packets[entID].stim = (stim, ent)
 
       return packets
-
-   @runtime
-   def step(self, decisions):
-      '''Take actions for all agents and return new observations
-
-      Args:
-         decisions: A dictionary of agent decisions
-
-      Returns:
-         observations : A list of local game state observations of form (env, ent) for each agent where "env" is a grid of game tile objects and "ent" is a game entity object representing the current agent. Use forge.io libraries for preprocessing.
-         reward       : A list of rewards for each agent (floating point or None)
-         dones        : A set of IDs corresponding to agents that have died during the past game tick
-         info         : None -- provided for conformity with OpenAI Gym
-      '''
-      self.tick += 1
-
-      #Spawn an ent
-      iden, pop, name = self.spawn()
-      assert iden is not None
-
-      self.spawner.spawn(self, iden, pop, name)
-      packets, dead = self.stepEnts(decisions)
-
-      self.stepEnv()
-      packets = self.getStims(packets)
-
-      #Conform to gym
-      stims   = [p.stim   for p in packets.values()]
-      rewards = [p.reward for p in packets.values()]
-      dones   = dead
-
-      return stims, rewards, dones, None
-
-   def reset(self):
-      '''Stub for conformity with Gym. Calls step({}).
-
-      The environment is persistent. Reset it only
-      once upon initialization to obtain initial
-      observations. If you must experiment with
-      short lived environment instances, instantiate
-      a new Realm instead of calling reset.
-
-      Returns:
-         data: Output of self.step({})
-      '''
-      err = 'Neural MMO is persistent and may only be reset once upon initialization'
-      assert self.tick == 0, err
-      return self.step({})
 
 

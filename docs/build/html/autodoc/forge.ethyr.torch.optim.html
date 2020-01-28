@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -189,6 +190,13 @@
   <div class="section" id="module-forge.ethyr.torch.optim">
 <span id="forge-ethyr-torch-optim-module"></span><h1>forge.ethyr.torch.optim module<a class="headerlink" href="#module-forge.ethyr.torch.optim" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="forge.ethyr.torch.optim.merge">
+<code class="sig-prename descclassname">forge.ethyr.torch.optim.</code><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">rollouts</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.optim.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges all collected rollouts for batched
+compatibility with optim.backward</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="forge.ethyr.torch.optim.backward">
 <code class="sig-prename descclassname">forge.ethyr.torch.optim.</code><code class="sig-name descname">backward</code><span class="sig-paren">(</span><em class="sig-param">rollouts</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.optim.backward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes gradients from a list of rollouts</p>
@@ -212,13 +220,6 @@ entropy: Entropy bonus</p>
 <dd class="field-odd"><p>reward</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.ethyr.torch.optim.merge">
-<code class="sig-prename descclassname">forge.ethyr.torch.optim.</code><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">rollouts</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.optim.merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merges all collected rollouts for batched
-compatibility with optim.backward</p>
 </dd></dl>
 
 </div>

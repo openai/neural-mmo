@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -191,24 +192,15 @@
 <em class="property">class </em><code class="sig-prename descclassname">forge.embyr.twistedserver.</code><code class="sig-name descname">GodswordServerProtocol</code><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.twisted.websocket.WebSocketServerProtocol</span></code></p>
 <dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.beginMessage">
-<code class="sig-name descname">beginMessage</code><span class="sig-paren">(</span><em class="sig-param">isBinary=False</em>, <em class="sig-param">doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.beginMessage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessage()</span></code></p>
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onOpen">
+<code class="sig-name descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onOpen()</span></code></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.beginMessageFrame">
-<code class="sig-name descname">beginMessageFrame</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.beginMessageFrame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessageFrame()</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.connectionLost">
-<code class="sig-name descname">connectionLost</code><span class="sig-paren">(</span><em class="sig-param">reason</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called when the connection is shut down.</p>
-<p>Clear any circular references here, and any external references
-to this Protocol.  The connection has been closed.</p>
-<p>&#64;type reason: L{twisted.python.failure.Failure}</p>
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onClose">
+<code class="sig-name descname">onClose</code><span class="sig-paren">(</span><em class="sig-param">wasClean</em>, <em class="sig-param">code=None</em>, <em class="sig-param">reason=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onClose()</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -221,6 +213,52 @@ this is called once the connection to the server has been
 established; for servers, this is called after an accept() call
 stops blocking and a socket has been received.  If you need to
 send any greeting or initial message, do it here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.connectionLost">
+<code class="sig-name descname">connectionLost</code><span class="sig-paren">(</span><em class="sig-param">reason</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection is shut down.</p>
+<p>Clear any circular references here, and any external references
+to this Protocol.  The connection has been closed.</p>
+<p>&#64;type reason: L{twisted.python.failure.Failure}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onMessage">
+<code class="sig-name descname">onMessage</code><span class="sig-paren">(</span><em class="sig-param">packet</em>, <em class="sig-param">isBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onConnect">
+<code class="sig-name descname">onConnect</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback fired during WebSocket opening handshake when new WebSocket client
+connection is about to be established.</p>
+<p>When you want to accept the connection, return the accepted protocol
+from list of WebSocket (sub)protocols provided by client or <cite>None</cite> to
+speak no specific one or when the client protocol list was empty.</p>
+<p>You may also return a pair of <cite>(protocol, headers)</cite> to send additional
+HTTP headers, with <cite>headers</cite> being a dictionary of key-values.</p>
+<p>Throw <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.types.ConnectionDeny</span></code> when you don’t want
+to accept the WebSocket connection request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.beginMessage">
+<code class="sig-name descname">beginMessage</code><span class="sig-paren">(</span><em class="sig-param">isBinary=False</em>, <em class="sig-param">doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.beginMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.embyr.twistedserver.GodswordServerProtocol.beginMessageFrame">
+<code class="sig-name descname">beginMessageFrame</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.beginMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessageFrame()</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -369,12 +407,6 @@ did not reply in time to our ping. We drop the connection.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onClose">
-<code class="sig-name descname">onClose</code><span class="sig-paren">(</span><em class="sig-param">wasClean</em>, <em class="sig-param">code=None</em>, <em class="sig-param">reason=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onClose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onClose()</span></code></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.onCloseFrame">
 <code class="sig-name descname">onCloseFrame</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">reasonRaw</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onCloseFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callback when a Close frame was received. The default implementation answers by
@@ -400,25 +432,6 @@ So we drop the connection, but set self.wasClean = False.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onConnect">
-<code class="sig-name descname">onConnect</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onConnect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Callback fired during WebSocket opening handshake when new WebSocket client
-connection is about to be established.</p>
-<p>When you want to accept the connection, return the accepted protocol
-from list of WebSocket (sub)protocols provided by client or <cite>None</cite> to
-speak no specific one or when the client protocol list was empty.</p>
-<p>You may also return a pair of <cite>(protocol, headers)</cite> to send additional
-HTTP headers, with <cite>headers</cite> being a dictionary of key-values.</p>
-<p>Throw <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.types.ConnectionDeny</span></code> when you don’t want
-to accept the WebSocket connection request.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.onFrameBegin">
 <code class="sig-name descname">onFrameBegin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onFrameBegin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Begin of receive new frame.</p>
@@ -434,12 +447,6 @@ to accept the WebSocket connection request.</p>
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.onFrameEnd">
 <code class="sig-name descname">onFrameEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onFrameEnd" title="Permalink to this definition">¶</a></dt>
 <dd><p>End of frame received.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onMessage">
-<code class="sig-name descname">onMessage</code><span class="sig-paren">(</span><em class="sig-param">packet</em>, <em class="sig-param">isBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessage()</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -476,12 +483,6 @@ to accept the WebSocket connection request.</p>
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.onMessageFrameEnd">
 <code class="sig-name descname">onMessageFrameEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onMessageFrameEnd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameEnd()</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.onOpen">
-<code class="sig-name descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onOpen()</span></code></p>
 </dd></dl>
 
 <dl class="method">

@@ -113,6 +113,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -188,6 +189,32 @@
   <div class="section" id="module-forge.trinity.ascend">
 <span id="forge-trinity-ascend-module"></span><h1>forge.trinity.ascend module<a class="headerlink" href="#module-forge.trinity.ascend" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
+<dt id="forge.trinity.ascend.Timed">
+<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">Timed</code><a class="headerlink" href="#forge.trinity.ascend.Timed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Performance timing superclass</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="forge.trinity.ascend.Log">
+<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param">runTime</em>, <em class="sig-param">waitTime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Performance logging superclass</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.trinity.ascend.waittime">
+<code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">waittime</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.waittime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performance profiling decorator</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.trinity.ascend.runtime">
+<code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">runtime</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.runtime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performance profiling decorator</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="forge.trinity.ascend.Ascend">
 <em class="property">class </em><code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">Ascend</code><span class="sig-paren">(</span><em class="sig-param">disciple</em>, <em class="sig-param">n</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#forge.trinity.ascend.Timed" title="forge.trinity.ascend.Timed"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.trinity.ascend.Timed</span></code></a></p>
@@ -207,20 +234,6 @@ steps remote workers without waiting for returns
 <p class="rubric">Notes</p>
 <p>Works with pdb while using Ray local mode</p>
 <dl class="method">
-<dt id="forge.trinity.ascend.Ascend.discipleLogs">
-<code class="sig-name descname">discipleLogs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.discipleLogs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logging data from all disciples</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A list of disciple logs</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>logs</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="forge.trinity.ascend.Ascend.distrib">
 <code class="sig-name descname">distrib</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">shard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.distrib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asynchronous wrapper around the step function of remote disciples</p>
@@ -236,40 +249,6 @@ steps remote workers without waiting for returns
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>rets</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.trinity.ascend.Ascend.isRemote">
-<code class="sig-name descname">isRemote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.isRemote" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if an object is remote</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(bool) Whether an object is remote</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>isRemote</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.trinity.ascend.Ascend.localize">
-<code class="sig-name descname">localize</code><span class="sig-paren">(</span><em class="sig-param">remote</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.localize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts to the correct local/remote function version</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> – Function to localize</p></li>
-<li><p><strong>remote</strong> – Whether f is remote</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A localized function (f or f.remote)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>f</p>
 </dd>
 </dl>
 </dd></dl>
@@ -295,32 +274,54 @@ function of all remote disciples</p>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="forge.trinity.ascend.Ascend.discipleLogs">
+<code class="sig-name descname">discipleLogs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.discipleLogs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging data from all disciples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of disciple logs</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>logs</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="forge.trinity.ascend.Log">
-<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param">runTime</em>, <em class="sig-param">waitTime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Log" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Performance logging superclass</p>
+<dl class="method">
+<dt id="forge.trinity.ascend.Ascend.localize">
+<code class="sig-name descname">localize</code><span class="sig-paren">(</span><em class="sig-param">remote</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.localize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts to the correct local/remote function version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> – Function to localize</p></li>
+<li><p><strong>remote</strong> – Whether f is remote</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A localized function (f or f.remote)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>f</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="forge.trinity.ascend.Timed">
-<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">Timed</code><a class="headerlink" href="#forge.trinity.ascend.Timed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Performance timing superclass</p>
+<dl class="method">
+<dt id="forge.trinity.ascend.Ascend.isRemote">
+<code class="sig-name descname">isRemote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.Ascend.isRemote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an object is remote</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(bool) Whether an object is remote</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>isRemote</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="forge.trinity.ascend.runtime">
-<code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">runtime</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.runtime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performance profiling decorator</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.trinity.ascend.waittime">
-<code class="sig-prename descclassname">forge.trinity.ascend.</code><code class="sig-name descname">waittime</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.ascend.waittime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performance profiling decorator</p>
 </dd></dl>
 
 </div>

@@ -48,7 +48,7 @@ class Stimulus:
       for large new classes of observations
 
       Args:
-         config    : A configuration object
+         config    : An environment configuration object
          inp       : An IO object specifying observations
          env       : Local environment observation
          ent       : Local entity observation

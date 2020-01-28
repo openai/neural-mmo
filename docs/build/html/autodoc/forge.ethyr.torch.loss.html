@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -189,29 +190,6 @@
   <div class="section" id="module-forge.ethyr.torch.loss">
 <span id="forge-ethyr-torch-loss-module"></span><h1>forge.ethyr.torch.loss module<a class="headerlink" href="#module-forge.ethyr.torch.loss" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="forge.ethyr.torch.loss.PG">
-<code class="sig-prename descclassname">forge.ethyr.torch.loss.</code><code class="sig-name descname">PG</code><span class="sig-paren">(</span><em class="sig-param">pi</em>, <em class="sig-param">atn</em>, <em class="sig-param">val</em>, <em class="sig-param">returns</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.PG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes losses for the policy gradient algorithm</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pi</strong> – Logit tensor (network outputs, pre softmax)</p></li>
-<li><p><strong>atn</strong> – Index tensor of selected actions</p></li>
-<li><p><strong>val</strong> – Value tensor</p></li>
-<li><p><strong>return</strong> – Return tensor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Policy loss
-entLoss : Entropy loss</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>polLoss</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="forge.ethyr.torch.loss.advantage">
 <code class="sig-prename descclassname">forge.ethyr.torch.loss.</code><code class="sig-name descname">advantage</code><span class="sig-paren">(</span><em class="sig-param">returns</em>, <em class="sig-param">val</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.advantage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a mean centered advantage function
@@ -228,26 +206,6 @@ using a value function baseline.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>advantage</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.ethyr.torch.loss.entropyLoss">
-<code class="sig-prename descclassname">forge.ethyr.torch.loss.</code><code class="sig-name descname">entropyLoss</code><span class="sig-paren">(</span><em class="sig-param">prob</em>, <em class="sig-param">logProb</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.entropyLoss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entropy computation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob</strong> – Probability tensor</p></li>
-<li><p><strong>logProb</strong> – Log probability tensor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Mean entropy</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>entropy</p>
 </dd>
 </dl>
 </dd></dl>
@@ -289,6 +247,49 @@ using a value function baseline.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.ethyr.torch.loss.entropyLoss">
+<code class="sig-prename descclassname">forge.ethyr.torch.loss.</code><code class="sig-name descname">entropyLoss</code><span class="sig-paren">(</span><em class="sig-param">prob</em>, <em class="sig-param">logProb</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.entropyLoss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy computation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> – Probability tensor</p></li>
+<li><p><strong>logProb</strong> – Log probability tensor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Mean entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>entropy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.ethyr.torch.loss.PG">
+<code class="sig-prename descclassname">forge.ethyr.torch.loss.</code><code class="sig-name descname">PG</code><span class="sig-paren">(</span><em class="sig-param">pi</em>, <em class="sig-param">atn</em>, <em class="sig-param">val</em>, <em class="sig-param">returns</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.loss.PG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes losses for the policy gradient algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pi</strong> – Logit tensor (network outputs, pre softmax)</p></li>
+<li><p><strong>atn</strong> – Index tensor of selected actions</p></li>
+<li><p><strong>val</strong> – Value tensor</p></li>
+<li><p><strong>return</strong> – Return tensor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Policy loss
+entLoss : Entropy loss</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>polLoss</p>
 </dd>
 </dl>
 </dd></dl>

@@ -14,6 +14,7 @@ forge.blade.core package
 
 .. toctree::
 
+   forge.blade.core.api
    forge.blade.core.config
    forge.blade.core.env
    forge.blade.core.map

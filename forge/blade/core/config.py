@@ -7,6 +7,7 @@ from collections import defaultdict
 from itertools import chain
 
 class Config:
+   '''An environment configuration object'''
    #ROOT = '/data/scratch/jsuarez/neural-mmo/resource/maps/procedural/map'
    ROOT = os.path.join(os.getcwd(), 'resource/maps/procedural/map')
    SUFFIX = '/map.tmx'

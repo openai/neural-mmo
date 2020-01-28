@@ -36,15 +36,17 @@ Neural MMO is a massively multiagent AI research environment inspired by Massive
 
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-**1:** Check out the `Quickstart Guide <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_
+**1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ tutorials
 
-**2:** Skim the `Documentation <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
+**2:** Skim the :mod:`~forge.blade.core.api.Realm` (environment) and :mod:`~forge.blade.io.io` modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
 
-**3:** Get familiar with the end-to-end demo in `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_
+**3:** Hack on your own projects using the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
 
-**4:** Join our `Discord community <https://discord.gg/BkMmFUC>`_ for help and discussion! **This is also the best way to contact me**
+**4:** Join our `Discord community <https://discord.gg/BkMmFUC>`_ for help and discussion!
 
-**5:** Contribute to the platform! Neural MMO is an active open source project -- I actively review issues and PRs
+**5:** Contribute to the platform! Neural MMO is an active open source project
+
+I actively review issues and pull requests. **Discord is the best way to contact me**
 
 |ags| Overview
 ##############
@@ -114,7 +116,7 @@ Next, we will get familiar with the baseline parameters and train a model from s
    TEST = False
    BEST = False
 
-Our baseline was trained on a 12 core machine. Your CPU probably does not have this many. To use 4 cores instead:
+Our baseline was trained on a 12 core machine. Your CPU probably has fewer cores. To use 4 cores instead:
 
 .. code-block:: python
 
@@ -126,7 +128,7 @@ Now we can train a model:
 
    python Forge.py
 
-If you leave it running, you will see the reward steadily increasing. The baseline model gets to >27 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
+If you leave it running, you will see the reward steadily increasing. The baseline model gets to >28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
 
 The IO API
 ----------

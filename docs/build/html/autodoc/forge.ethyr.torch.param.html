@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -189,23 +190,34 @@
   <div class="section" id="module-forge.ethyr.torch.param">
 <span id="forge-ethyr-torch-param-module"></span><h1>forge.ethyr.torch.param module<a class="headerlink" href="#module-forge.ethyr.torch.param" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="forge.ethyr.torch.param.getGrads">
-<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">getGrads</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">warn=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.getGrads" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the gradients of the ann</p>
+<dt id="forge.ethyr.torch.param.zeroGrads">
+<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">zeroGrads</code><span class="sig-paren">(</span><em class="sig-param">ann</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.zeroGrads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zeros out gradients</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ann</strong> – The model to get gradients from</p></li>
-<li><p><strong>warn</strong> (<em>bool</em>) – Whether to warn when gradients are None.
-This is a common red flag that there is something
-wrong with the network or training</p></li>
-</ul>
+<dd class="field-odd"><p><strong>ann</strong> – a model</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of gradients</p>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.ethyr.torch.param.setParameters">
+<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">setParameters</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">meanVec</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.setParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the parameters of the ann</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>meanVec</strong> – A list of parameters</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ret</p>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="forge.ethyr.torch.param.setGrads">
+<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">setGrads</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">grads</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.setGrads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the gradients of the ann</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>grads</strong> – A list of gradients</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,34 +240,23 @@ wrong with the network or training</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="forge.ethyr.torch.param.setGrads">
-<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">setGrads</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">grads</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.setGrads" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the gradients of the ann</p>
+<dt id="forge.ethyr.torch.param.getGrads">
+<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">getGrads</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">warn=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.getGrads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the gradients of the ann</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>grads</strong> – A list of gradients</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ann</strong> – The model to get gradients from</p></li>
+<li><p><strong>warn</strong> (<em>bool</em>) – Whether to warn when gradients are None.
+This is a common red flag that there is something
+wrong with the network or training</p></li>
+</ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.ethyr.torch.param.setParameters">
-<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">setParameters</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">meanVec</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.setParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the parameters of the ann</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>meanVec</strong> – A list of parameters</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of gradients</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="forge.ethyr.torch.param.zeroGrads">
-<code class="sig-prename descclassname">forge.ethyr.torch.param.</code><code class="sig-name descname">zeroGrads</code><span class="sig-paren">(</span><em class="sig-param">ann</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.param.zeroGrads" title="Permalink to this definition">¶</a></dt>
-<dd><p>Zeros out gradients</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ann</strong> – a model</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ret</p>
 </dd>
 </dl>
 </dd></dl>

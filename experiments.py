@@ -51,10 +51,10 @@ class Config(config.Config):
    #30: Stale data: 23.33 :) works :)
    #31: No entropy
    ###############################Train/test mode settings
-   DEBUG     = True             #Whether to run with debug settings
-   LOAD      = False            #Load model from file?
-   BEST      = False            #If loading, most recent or highest lifetime?
-   TEST      = False            #Update the model during run?
+   DEBUG     = False            #Whether to run with debug settings
+   LOAD      = True            #Load model from file?
+   BEST      = True            #If loading, most recent or highest lifetime?
+   TEST      = True            #Update the model during run?
 
    ###############################Distributed infrastructure config
    NGOD    = 12                 #Number of environment servers

@@ -33,7 +33,6 @@ class Pantheon(Ascend):
       self.net = Model(projekt.Policy, config)
       self.net.printParams()
 
-
    @runtime
    def step(self):
       '''Broadcasts updated weights to server level God optimizer nodes.

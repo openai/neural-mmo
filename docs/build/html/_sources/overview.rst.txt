@@ -32,13 +32,13 @@
 |ags| Welcome to the Platform!
 ##############################
 
-Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs). The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.
+Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs) `[Demo] <https://youtu.be/DkHopV1RSxw>`_. The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.
 
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
 **1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ tutorials
 
-**2:** Skim the :mod:`~forge.blade.core.api.Realm`/:mod:`~forge.blade.io.io`/:mod:`~forge.trinity.api.Ascend` modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
+**2:** Skim the :mod:`~forge.blade.core.api.Realm`/:mod:`~forge.blade.io.io.IO`/:mod:`~forge.trinity.api.Ascend` modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
 
 **3:** Hack on your own projects using the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
 
@@ -82,7 +82,7 @@ Engineering
 |ags| Quickstart
 ################
 
-**Installation:** The master branch will always contain the latest stable version. *Users should not fork cowboy branches.* These are hyperagressive dev branches for contributors. They are not bleeding edge builds and may be flammable.
+**Installation:** The master branch will always contain the latest stable version. Each previous version release is archieved in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
 
 .. code-block:: python
 
@@ -441,13 +441,31 @@ While our environment is nowhere near the level of complexity of a real MMO yet,
 |ags| Authorship, License, Disclaimer
 #####################################
 
-I, `Joseph Suarez <https://github.com/jsuarez5341>`_, began this project independently and am the author of the environment code base, which I continued developing at OpenAI. There, Yilun Du assisted with running experiments and particularly in setting up tournaments for the v1.0 release. Phillip Isola and Igor Mordatch have been invaluable collaborators and advisers through v1.0. I continued working on the environment independently thereafter. The environment has since been my main project; I released v1.1 and v1.2 of both the environment and client independently. I am continuing development as an EECS PhD student at MIT under Phillip Isola until someone convinces me that there is a better way to solve AGI.
+I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development at least for the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
-The v1.0 environment is registered to OpenAI and available under the MIT license. v1.1 and v1.2 are derivative works. There is a smaller original code base and game kernel that I (Joseph Suarez) retain ownership of, along with associated ideas. I created these before my employment.
+2019 (fall): Neural MMO development continues at MIT. as the main project of my PhD
+- I am continuing my role as the primary developer
+- Phillip Isola resumes project oversight as my adviser
+- We are beginning to get open source contributions
 
-The legacy THREE.js client was developed independently as a collaboration between myself and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and is available under the MIT license.
+2018 (fall): Independent development results in v1.1 and v1.2:
+- I ran the project solo. These versions are derivative works and are MIT sublicensed in my name
 
-Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, or anyone else involved in the project.
+2018 (spring): Neural MMO development continues during a 6-month internship at OpenAI, culminating in the v1.0 environment (MIT licensed to OpenAI) and THREE.js client (MIT licensed to Joseph Suarez and Clare Zhu) release:
+- I continued my role as the primary developer
+- Yilun Du assisted with running experiments and particularly in setting up tournaments for the v1.0 release
+- Phillip Isola and Igor Mordatch managed and advised the project
+- The v1.0 environment is registered to OpenAI and available under the MIT license
+- The legacy THREE.js client was developed independently as a collaboration between myself and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and is available under the MIT license
+
+2017 (summer): Neural MMO development begins:
+- I (`Joseph Suarez <https://github.com/jsuarez5341>`_) started Neural MMO as an independent side project
+- I (Joseph Suarez) retain ownership of this smaller original code base and game kernel, along with associated ideas. I created these before my affiliations with OpenAI and MIT
+
+Open source contributors, listed by time since latest contribution. Discord handle have been used for individuals who have not granted explicit permission to display their real names:
+- Jack Garbus: Major contributions to the logging framework, feedback on the documentation and tutorials
+- @tdimeola: Feedback on the documentation and tutorials
+- @cehinson: Mac build of the Unity3D client
 
 |ags| Assets
 ############

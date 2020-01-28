@@ -10,8 +10,6 @@ projekt package
 .. toctree::
 
    projekt.ann
-   projekt.combatFormulas
    projekt.god
    projekt.pantheon
    projekt.sword
-   projekt.visualize

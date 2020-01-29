@@ -1,64 +1,62 @@
+'''Action decision module'''
+
 from pdb import set_trace as T
 import numpy as np
-
-from collections import defaultdict
 
 import torch
 from torch import nn
 
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
-from forge.blade.io import Action as Static
-from forge.blade.io.action import static as action
 
-from forge.ethyr.io import Action as Dynamic
-from forge.ethyr.io.utils import pack, unpack
-
-from forge.blade.entity.player import Player
-
-class NetTree(nn.Module):
-   '''Network responsible for selecting actions
-
-   Args:
-      config: A Config object
-   '''
+class Output(nn.Module):
    def __init__(self, config):
+      '''Network responsible for selecting actions
+
+      Args:
+         config: A Config object
+      '''
       super().__init__()
       self.config = config
       self.h = config.HIDDEN
 
-      self.net = VariableDiscreteAction(
-               self.config, self.h, self.h)
+      self.net = DiscreteAction(self.config, self.h, self.h)
+      #self.net = FlatAction(self.config, self.h, self.h)
 
    def names(self, nameMap, args):
-      return np.array([nameMap[e] for e in args])
+      '''Lookup argument indices from name mapping'''
+      return np.array([nameMap.get(e) for e in args])
 
-   def forward(self, stim, actions, embed):
-      nameMap, embed = embed
-      atnTensor, atnTensorLens, atnLens, atnLenLens = actions
-
-      batch, nAtn, nArgs, nAtnArg, keyDim = atnTensor.shape
-      atnTensor = atnTensor.reshape(-1, keyDim)
-
-      targs = [tuple(e) for e in atnTensor]
-      names = self.names(nameMap, targs)
-      targs = embed[names]
-      targs = targs.view(batch, nAtn, nArgs, nAtnArg, -1)
-
-      #Sum the atn and arg embedding to make a key dim
-      targs = targs.sum(-2)
+   def forward(self, obs, observationTensor, entityLookup, 
+         values=None, manager=None):
+      '''Populates an IO object with actions in-place                         
+                                                                              
+      Args:                                                                   
+         obs               : An IO object specifying observations
+         vals              : A value prediction for each agent
+         observationTensor : A fixed size observation representation
+         entityLookup      : A fixed size representation of each entity
+         manager           : A RolloutManager object
+      ''' 
+      observationTensor = observationTensor.unsqueeze(-2)
       
-      #The dot prod net does not match dims.
-      stim = stim.unsqueeze(1).unsqueeze(1)
-      atns, atnsIdx = self.net(stim, targs, atnLens)
+      for atn, action in obs.atn.actions.items():
+         for arg, data in action.arguments.items():
+            #Perform forward pass
+            tensor, lens  = data
+            targs         = torch.stack([entityLookup[e] for e in tensor])
+            atns, atnsIdx = self.net(observationTensor, targs, lens)
 
-      if self.config.TEST:
-         atns = atns.detach()
+            #Gen Atn_Arg style names for backward pass
+            name = '_'.join([atn.__name__, arg.__name__])
+            if not self.config.TEST:
+               manager.collectOutputs(name, obs.keys, atns, atnsIdx, values)
 
-      atns = [unpack(atn, l) for atn, l in zip(atns, atnLens)]
-
-      outList = (atns, atnsIdx)
-      return outList
+            #Convert from local index over atns to
+            #absolute index into entity lookup table
+            idxs = atnsIdx.cpu().numpy().tolist()
+            idxs = [t[a] for t, a in zip(tensor, idxs)]
+            obs.atn.actions[atn].arguments[arg] = idxs
 
 class Action(nn.Module):
    '''Head for selecting an action'''
@@ -66,20 +64,16 @@ class Action(nn.Module):
       xIdx = functional.classify(x, mask)
       return x, xIdx
 
-class ConstDiscreteAction(Action):
-   '''Head for making a discrete selection from
-   a constant number of candidate actions'''
-   def __init__(self, config, h, ydim):
+class FlatAction(Action):
+   def __init__(self, config, xdim, h):
       super().__init__()
-      self.net = torch.nn.Linear(h, ydim)
+      self.net = nn.Linear(xdim, 4)
 
-   def forward(self, stim):
-      x = self.net(stim)
-      if len(x.shape) > 1:
-         x = x.squeeze(-2)
+   def forward(self, stim, args, lens):
+      x = self.net(stim).squeeze(1)
       return super().forward(x)
 
-class VariableDiscreteAction(Action):
+class DiscreteAction(Action):
    '''Head for making a discrete selection from
    a variable number of candidate actions'''
    def __init__(self, config, xdim, h):
@@ -94,6 +88,8 @@ class VariableDiscreteAction(Action):
 
       inds = torch.arange(maxLen).expand_as(x)
       mask = inds < lens 
+      x, xIdx = super().forward(x, mask)
 
-      return super().forward(x, mask)
+      x = [e[:l] for e, l in zip(x, lens)]
+      return x, xIdx
 

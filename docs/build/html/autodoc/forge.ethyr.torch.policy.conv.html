@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.policy.conv module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.ethyr.torch.policy.conv module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="forge.ethyr.torch.policy.embed module" href="forge.ethyr.torch.policy.embed.html" />
-    <link rel="prev" title="forge.ethyr.torch.policy.attention module" href="forge.ethyr.torch.policy.attention.html" /> 
+    <link rel="prev" title="forge.ethyr.torch.policy.baseline module" href="forge.ethyr.torch.policy.baseline.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,8 +83,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -94,13 +100,13 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -181,7 +187,7 @@
 <span id="forge-ethyr-torch-policy-conv-module"></span><h1>forge.ethyr.torch.policy.conv module<a class="headerlink" href="#module-forge.ethyr.torch.policy.conv" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="forge.ethyr.torch.policy.conv.Conv2d">
-<code class="descclassname">forge.ethyr.torch.policy.conv.</code><code class="descname">Conv2d</code><span class="sig-paren">(</span><em>fIn</em>, <em>fOut</em>, <em>k</em>, <em>stride=1</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.policy.conv.Conv2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">forge.ethyr.torch.policy.conv.</code><code class="sig-name descname">Conv2d</code><span class="sig-paren">(</span><em class="sig-param">fIn</em>, <em class="sig-param">fOut</em>, <em class="sig-param">k</em>, <em class="sig-param">stride=1</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.policy.conv.Conv2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>torch Conv2d with same padding</p>
 </dd></dl>
 
@@ -198,7 +204,7 @@
         <a href="forge.ethyr.torch.policy.embed.html" class="btn btn-neutral float-right" title="forge.ethyr.torch.policy.embed module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="forge.ethyr.torch.policy.attention.html" class="btn btn-neutral float-left" title="forge.ethyr.torch.policy.attention module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.ethyr.torch.policy.baseline.html" class="btn btn-neutral float-left" title="forge.ethyr.torch.policy.baseline module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -207,7 +213,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>
@@ -503,7 +509,7 @@
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

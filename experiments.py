@@ -13,53 +13,76 @@ class Config(config.Config):
    All parameters can also be overridden at run time.
    See Forge.py for an example'''
 
-   MODELDIR = 'resource/exps' #Where to store models
-   DEBUG    = False           #Whether to run with debug settings
+   ###############################Saving and logging locations
+   MODELDIR  = 'resource/exps'  #Where to store models
+   HOST      = 'localhost'      #Host for client
+   STAT_FILE = 'run_stats.txt'  #Run statistics log file
+   DEVICE    = 'cpu'            #Hardware specification
 
-   LOAD = True  #Load model from file?
-   BEST = False #If loading, most recent or highest lifetime?
-   TEST = True  #Update the model during run?
+   ###############################Train/test mode settings
+   DEBUG     = False            #Whether to run with debug settings
+   LOAD      = True             #Load model from file?
+   BEST      = True             #If loading, most recent or highest lifetime?
+   TEST      = True             #Update the model during run?
 
-   #Typically overriden in Forge.py
-   NENT = 1  #Maximum population size
-   NPOP = 1  #Number of populations
+   ###############################Distributed infrastructure config
+   NGOD    = 12                 #Number of environment servers
+   NSWORD  = 1                  #Number of clients per server
+   NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 
-   NATN    = 1    #Number of actions taken by the network (deprecated)
-   ENTROPY = 0.01 #Entropy bonus for policy gradient loss
+   _ = 16384
+   CLUSTER_UPDATES = _          #Number of samples per optim
+   SERVER_UPDATES  = _ // NGOD  #step at each hardware layer
 
-   HIDDEN  = 128  #Model embedding dimension
-   EMBED   = 16   #Model hidden dimension
+   ###############################Population and network sizes
+   NENT    = 128                #Maximum population size
+   NPOP    = 8                  #Number of populations
+
+   HIDDEN  = 32                 #Model embedding dimension
+   EMBED   = 32                 #Model hidden dimension
  
-   NGOD   = 6 #Number of environment servers
-   NSWORD = 1 #Number of clients per server
+   ###############################Gradient based optimization parameters
+   LR         = 3e-4            #Learning rate
+   DECAY      = 1e-5            #Weight decay
+   GRAD_CLIP  = 5.0             #Gradient absolute value clip threshold
+   GAMMA      = 0.95            #Reward discount factor
+   LAMBDA     = 0.96            #GAE discount factor
+   HORIZON    = 8               #GAE horizon
+   PG_WEIGHT  = 1.0             #Policy gradient loss weighting
+   VAL_WEIGHT = 0.5             #Value function loss weighting
+   ENTROPY    = 0.025           #Entropy bonus strength
 
-   #Number of experience steps before
-   #syncronizing at each hardware layer
-   CLUSTER_UPDATES = 4096
-   SERVER_UPDATES  = CLUSTER_UPDATES / NGOD
-   CLIENT_UPDATES  = 128
+   ###############################Per agent logging settings
+   SAVE_BLOBS = False           #Log at all? (IO/comms intensive)
+   BLOB_FRAC  = 0.1             #What fraction of blobs to log?
 
-   #Hardware specification
-   DEVICE = 'cpu:0'
+   ###############################Experimental population based training
+   ###############################parameters -- not currently used
+   POPOPT   = False             #Whether to enable
+   PERMPOPS = 4                 #Number of permutations
+   PERMVAL  = 1e-2              #Permutation strength
 
-   #Gradient based optimization parameters
-   LR         = 1e-3
-   DECAY      = 1e-5
-   VAL_WEIGHT = 0.25
+   ############################################LOGGING parameters
+   LOG         = False                       #Whether to enable data logging
+   LOAD_EXP    = False                       #Whether to load from file
+   NAME        = 'log'                       #Name of file to load/log to
+   HISTORY_LEN = 0                           #Length of graph history
+   TITLE       = 'Neural MMO Training Curve' #Graph title
+   XAXIS       = 'Training Epoch'            #Label of xaxis data values
+   YLABEL      = 'Agent Lifetime'            #Label of data values
+   TITLE       = 'Neural MMO Data'            #Title of graph
+   SCALES      = [1, 10, 100, 1000]          #Plot time scale
 
-   #Experimental population based training parameters
-   #Disabled and not currently functional -- avoid modification
-   POPOPT   = False
-   PERMPOPS = 4
-   PERMVAL  = 1e-2
-
-   #Debug params
+   #Parameter overrides for debugging
    if DEBUG:
-      HIDDEN  = 2
-      EMBED   = 2
-      EPOCHUPDATES = 2**8
-      SYNCUPDATES  = 2**4
+      NGOD = 1
+      NSWORD = 1
 
+      HIDDEN  = 4
+      EMBED   = 4
+
+      CLUSTER_UPDATES = 128
+      SERVER_UPDATES  = CLUSTER_UPDATES
 
 class Experiment:
    '''Manages file structure for experiments'''
@@ -80,6 +103,10 @@ class Experiment:
       self.MODELDIR = os.path.join(ROOT, 'model')
       self.config = conf
       self.name = name
+
+      #Remove old stats file
+      path = os.path.join(self.MODELDIR, conf.STAT_FILE)
+      with open(path, 'w') as f: pass
 
    def init(self, **kwargs):
       assert 'MODELDIR' not in kwargs 

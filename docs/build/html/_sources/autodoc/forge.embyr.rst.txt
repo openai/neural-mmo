@@ -4,5 +4,9 @@ forge.embyr namespace
 
 .. toctree::
 
-   forge.embyr.twistedserver
+   forge.embyr.neural-mmo-client
 
+
+.. toctree::
+
+   forge.embyr.twistedserver

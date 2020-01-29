@@ -23,6 +23,9 @@ def setParameters(ann, meanVec):
    Args:
       meanVec: A list of parameters
    '''
+   if meanVec is None:
+      return
+
    ind = 0
    for e in ann.parameters():
       shape = e.size()
@@ -55,7 +58,7 @@ def getParameters(ann):
    '''
    ret = []
    for e in ann.parameters():
-      ret += e.data.view(-1).numpy().tolist()
+      ret += e.data.cpu().view(-1).numpy().tolist()
    return ret
 
 def getGrads(ann, warn=True):

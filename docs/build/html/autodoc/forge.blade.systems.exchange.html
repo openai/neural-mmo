@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.blade.systems.exchange module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.blade.systems.exchange module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -83,8 +83,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -105,6 +111,7 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -183,11 +190,11 @@
 <span id="forge-blade-systems-exchange-module"></span><h1>forge.blade.systems.exchange module<a class="headerlink" href="#module-forge.blade.systems.exchange" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.blade.systems.exchange.PQ">
-<em class="property">class </em><code class="descclassname">forge.blade.systems.exchange.</code><code class="descname">PQ</code><span class="sig-paren">(</span><em>maxsize=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.systems.exchange.</code><code class="sig-name descname">PQ</code><span class="sig-paren">(</span><em class="sig-param">maxsize=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">queue.PriorityQueue</span></code></p>
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.empty">
-<code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.empty" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the queue is empty, False otherwise (not reliable!).</p>
 <p>This method is likely to be removed at some point.  Use qsize() == 0
 as a direct substitute, but be aware that either approach risks a race
@@ -199,7 +206,7 @@ completed, the preferred technique is to use the join() method.</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.full">
-<code class="descname">full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.full" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.full" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the queue is full, False otherwise (not reliable!).</p>
 <p>This method is likely to be removed at some point.  Use qsize() &gt;= n
 as a direct substitute, but be aware that either approach risks a race
@@ -209,7 +216,7 @@ qsize() can be used.</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>block=True</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">block=True</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove and return an item from the queue.</p>
 <p>If optional args ‘block’ is true and ‘timeout’ is None (the default),
 block if necessary until an item is available. If ‘timeout’ is
@@ -222,7 +229,7 @@ in that case).</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.get_nowait">
-<code class="descname">get_nowait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.get_nowait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_nowait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.get_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove and return an item from the queue without blocking.</p>
 <p>Only get an item if one is immediately available. Otherwise
 raise the Empty exception.</p>
@@ -230,7 +237,7 @@ raise the Empty exception.</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.join">
-<code class="descname">join</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.join" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">join</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks until all items in the Queue have been gotten and processed.</p>
 <p>The count of unfinished tasks goes up whenever an item is added to the
 queue. The count goes down whenever a consumer thread calls task_done()
@@ -240,7 +247,7 @@ to indicate the item was retrieved and all work on it is complete.</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.put">
-<code class="descname">put</code><span class="sig-paren">(</span><em>item</em>, <em>block=True</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.put" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param">item</em>, <em class="sig-param">block=True</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put an item into the queue.</p>
 <p>If optional args ‘block’ is true and ‘timeout’ is None (the default),
 block if necessary until a free slot is available. If ‘timeout’ is
@@ -253,7 +260,7 @@ is ignored in that case).</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.put_nowait">
-<code class="descname">put_nowait</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.put_nowait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">put_nowait</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.put_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put an item into the queue without blocking.</p>
 <p>Only enqueue the item if a free slot is immediately available.
 Otherwise raise the Full exception.</p>
@@ -261,13 +268,13 @@ Otherwise raise the Full exception.</p>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.qsize">
-<code class="descname">qsize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.qsize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">qsize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.qsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the approximate size of the queue (not reliable!).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.blade.systems.exchange.PQ.task_done">
-<code class="descname">task_done</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.task_done" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">task_done</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.systems.exchange.PQ.task_done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate that a formerly enqueued task is complete.</p>
 <p>Used by Queue consumer threads.  For each get() used to fetch a task,
 a subsequent call to task_done() tells the queue that the processing
@@ -303,7 +310,7 @@ placed in the queue.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>
@@ -599,7 +606,7 @@ placed in the queue.</p>
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

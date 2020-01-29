@@ -1,0 +1,33 @@
+attrs:
+   Figure:
+      background_fill_color: "#001818"
+      border_fill_color: "#001818"
+      outline_line_color: "#001818"
+   Grid:
+      grid_line_color: "#008888"
+      grid_line_dash: [6, 4]
+      grid_line_alpha: 0.3
+      grid_line_width: 1.1
+   Title:
+      text_color: "#008888"
+      text_font_size: "20pt"
+      align: "center"
+   Axis:
+      axis_line_color: "#008888"
+      axis_label_text_color: "#008888"
+      axis_label_text_font_size: "14pt"
+      major_label_text_font_size: "12pt"
+      major_tick_line_color: "#008888"
+      minor_tick_line_color: "#008888"
+      major_label_text_color: "#008888"
+   Legend:
+      background_fill_color: "#001010"
+      background_fill_alpha: 0.5
+      inactive_fill_color: "#001818"
+      border_line_color: "#008888"
+      border_line_width: 1
+      border_line_alpha: 0.5
+      label_text_color: "#008888"
+      label_text_font_size: "8pt"
+      click_policy: "hide"
+      location: "bottom_left"

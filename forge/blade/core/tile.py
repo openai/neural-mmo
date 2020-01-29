@@ -1,10 +1,16 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.io import Stimulus
+from forge.blade.io.stimulus.hook import StimHook
+from forge.blade.io.stimulus.static import Stimulus
 
-class Tile:
+def camel(string):
+   return string[0].lower() + string[1:]
+
+class Tile(StimHook):
+   SERIAL = 1
    def __init__(self, config, mat, r, c, nCounts, tex):
+      super().__init__(Stimulus.Tile, config)
       self.r, self.c = r, c
       self.mat = mat()
       self.ents = {}
@@ -12,12 +18,6 @@ class Tile:
       self.capacity = self.mat.capacity
       self.counts = np.zeros(nCounts)
       self.tex = tex
-
-      self.inputs(config)
-
-   def inputs(self, config):
-      for name, cls in Stimulus.Tile:
-         setattr(self, cls.name, cls(config))
 
    @property
    def serial(self):
@@ -35,6 +35,7 @@ class Tile:
       if (not self.static and 
             np.random.rand() < self.mat.respawnProb):
          self.capacity += 1
+
       #Try inserting a pass
       if self.static:
          self.state = self.mat

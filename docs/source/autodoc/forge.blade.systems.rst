@@ -2,9 +2,14 @@ forge.blade.systems package
 ===========================
 
 .. automodule:: forge.blade.systems
-    :members:
-    :inherited-members:
-    :show-inheritance:
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+
+   forge.blade.systems.visualizer
 
 
 .. toctree::
@@ -18,4 +23,3 @@ forge.blade.systems package
    forge.blade.systems.inventory
    forge.blade.systems.recipe
    forge.blade.systems.skill
-

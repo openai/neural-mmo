@@ -1,75 +1,144 @@
-from pdb import set_trace as T
-import numpy as np
+from pdb import set_trace as TT
 
-from itertools import chain 
 from collections import defaultdict
+import numpy as np
 
 from forge.blade.lib.log import Blob
 
+class Output:
+   def __init__(self, atnArgKey, atnLogits, atnIdx, value):
+      '''Data structure specifying a chosen action
+
+      Args:
+         atnArgKey : Action-Argument formatted string                           
+         atnLogits : Action logits                                              
+         atnsIdx   : Argument indices sampled from logits                       
+         value     : Value function prediction  
+      '''
+      self.atnArgKey = atnArgKey
+      self.atnLogits = atnLogits
+      self.atnIdx    = atnIdx      
+      self.value     = value
+
 class Rollout:
-   '''Rollout object used internally by RolloutManager'''
-   def __init__(self):
-      self.keys, self.obs      = [], []
-      self.stims, self.actions = [], []
-      self.rewards, self.dones = [], []
-      self.outs, self.vals     = [], []
+   def __init__(self, config):
+      '''Rollout object used internally by RolloutManager
+
+      Args:
+         config: A configuration object
+      '''
+      self.actions = defaultdict(list)
+      self.values  = []
+      self.rewards = []
 
       self.done = False
-      self.time = 0
+      self.time = -1
 
       #Logger
-      self.blob = None
+      self.config  = config
+      self.blob    = None
 
    def __len__(self):
-      #assert self.time == len(self.stims)
-      return self.blob.lifetime
-
-   def discount(self, gamma=0.99):
-      '''Applies standard gamma discounting to the given trajectory
-      
-      Args:
-         rewards: List of rewards
-         gamma: Discount factor
+      '''Length of a rollout
 
       Returns:
-         Discounted list of rewards
+         lifetime: Number of timesteps the agent has survived
       '''
-      rets, N = [], len(self.rewards)
-      discounts = np.array([gamma**i for i in range(N)])
-      rewards = np.array(self.rewards)
-      for idx in range(N):
-         rets.append(sum(rewards[idx:]*discounts[:N-idx]))
-      return rets
+      return self.blob.lifetime
 
-   def inputs(self, inputs):
-      '''Process observation data'''
-      self.stims.append(inputs)
-      
-      reward, done = inputs.reward, inputs.done
-      
-      if reward is not None:
+   def inputs(self, reward, key):
+      '''Collects input data to internal buffers
+
+      Args:
+         reward : The reward received by the agent for its last action
+         key    : The ID associated with the agent
+      '''
+      #Also check if blob is not none. This prevents
+      #recording the first reward of a partial trajectory
+      if reward is not None and self.blob is not None:
          self.rewards.append(reward)
-      if done is not None:
-         self.dones.append(done)
-      if done:
-         self.done = True
 
       if self.blob is None:
-         self.blob = Blob(inputs.entID, inputs.annID)
-
-   def outputs(self, output):
-      '''Process output action/reward/done data'''
-      self.actions.append(output.action)
-      self.vals.append(output.value)
-      self.outs.append(output.out)
+         annID, entID = key
+         self.blob = Blob(entID, annID)
 
       self.time += 1
-      self.blob.update()
+      self.blob.inputs(reward)
+
+   def outputs(self, atnArgKey, atnLogits, atnIdx, value):
+      '''Collects output data to internal buffers
+
+      Args:
+         atnArgKey : Action-Argument formatted string                           
+         atnLogits : Action logits                                              
+         atnsIdx   : Argument indices sampled from logits                       
+         value     : Value function prediction  
+      '''
+      if len(self.actions[self.time]) == 0:
+         self.blob.outputs(float(value))
+         self.values.append(value)
+
+      output = Output(atnArgKey, atnLogits, atnIdx, value)
+      self.actions[self.time].append(output)
 
    def finish(self):
       '''Called internally once the full rollout has been collected'''
-      assert self.rewards[-1] == -1
-      self.returns  = self.discount()
-      self.lifespan = len(self.rewards)
+      self.rewards.append(-1)
+      self.blob.inputs(-1)
 
-      self.blob.value  = np.mean([float(e) for e in self.vals])
+      #self.returns     = self.gae(self.config.GAMMA, self.config.LAMBDA, self.config.HORIZON)
+      self.returns     = self.discount(self.config.GAMMA)
+      self.lifespan    = len(self.rewards)
+
+      self.blob.finish()
+
+   def gae(self, gamma, lamb, H):
+      '''Applies generalized advantage estimation to the given trajectory
+      
+      Args:
+         gamma: Reward discount factor
+         gamma: GAE discount factor
+
+      Returns:
+         rewards: Discounted list of rewards
+      '''
+      r = self.rewards
+      V = self.values
+
+      L = len(r)
+      returns = []
+      for t in range(L):
+         At, T = 0, min(L-t-1, H)
+         for i in range(T):
+            tt      = t + i
+            deltaT  =  r[tt] + gamma*V[tt+1] - V[tt]
+            At      += deltaT * (gamma*lamb)**i
+
+         for out in self.actions[t]:
+            out.returns = At
+            
+         returns.append(At)
+
+      return returns
+
+   def discount(self, gamma):
+      '''Applies standard gamma discounting to the given trajectory
+      
+      Args:
+         gamma: Reward discount factor
+
+      Returns:
+         rewards: Discounted list of rewards
+      '''
+      rets, N   = [], len(self.rewards)
+      discounts = np.array([gamma**i for i in range(N)])
+      rewards   = np.array(self.rewards)
+
+      for idx in range(N):
+         R_i = sum(rewards[idx:]*discounts[:N-idx])
+         for out in self.actions[idx]:
+            out.returns = R_i 
+         
+         rets.append(R_i)
+
+      return rets

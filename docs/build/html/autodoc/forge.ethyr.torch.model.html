@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.model module &mdash; Neural MMO 1.1 documentation</title>
+  <title>forge.ethyr.torch.model module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -83,8 +83,14 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../neural-mmo.html"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ideology.html"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -94,13 +100,13 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.io.html">forge.ethyr.io package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -179,7 +185,7 @@
 <span id="forge-ethyr-torch-model-module"></span><h1>forge.ethyr.torch.model module<a class="headerlink" href="#module-forge.ethyr.torch.model" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.ethyr.torch.model.Model">
-<em class="property">class </em><code class="descclassname">forge.ethyr.torch.model.</code><code class="descname">Model</code><span class="sig-paren">(</span><em>ann</em>, <em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">forge.ethyr.torch.model.</code><code class="sig-name descname">Model</code><span class="sig-paren">(</span><em class="sig-param">ann</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Model manager class</p>
 <p>Convenience class wrapping saving/loading,
@@ -194,19 +200,8 @@ model initialization, optimization, and logging.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="forge.ethyr.torch.model.Model.checkpoint">
-<code class="descname">checkpoint</code><span class="sig-paren">(</span><em>opt</em>, <em>reward</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.checkpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the model to checkpoint</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>reward</strong> – Mean reward of the model</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="forge.ethyr.torch.model.Model.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>opt</em>, <em>best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">opt</em>, <em class="sig-param">best=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a model from file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -216,15 +211,26 @@ or most recent (False) checkpoint</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="forge.ethyr.torch.model.Model.nParams">
-<code class="descname">nParams</code><a class="headerlink" href="#forge.ethyr.torch.model.Model.nParams" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="forge.ethyr.torch.model.Model.checkpoint">
+<code class="sig-name descname">checkpoint</code><span class="sig-paren">(</span><em class="sig-param">opt</em>, <em class="sig-param">lifetime</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the model to checkpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reward</strong> – Mean reward of the model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.ethyr.torch.model.Model.printParams">
+<code class="sig-name descname">printParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.ethyr.torch.model.Model.printParams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the number of model parameters</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="forge.ethyr.torch.model.Model.weights">
-<code class="descname">weights</code><a class="headerlink" href="#forge.ethyr.torch.model.Model.weights" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">weights</code><a class="headerlink" href="#forge.ethyr.torch.model.Model.weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get model parameters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -257,7 +263,7 @@ or most recent (False) checkpoint</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Joseph Suarez
+        &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>
@@ -553,7 +559,7 @@ or most recent (False) checkpoint</p>
       }
 
     a:link {
-      color: teal;
+      color: lime;
     }
 
     /* visited link */

@@ -2,9 +2,9 @@ forge.blade.lib package
 =======================
 
 .. automodule:: forge.blade.lib
-    :members:
-    :inherited-members:
-    :show-inheritance:
+   :members:
+   :inherited-members:
+   :show-inheritance:
 
 
 .. toctree::
@@ -17,4 +17,3 @@ forge.blade.lib package
    forge.blade.lib.ray
    forge.blade.lib.stattrak
    forge.blade.lib.utils
-

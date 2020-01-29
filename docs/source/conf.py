@@ -29,11 +29,11 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 # -- Project information -----------------------------------------------------
 
 project = 'Neural MMO'
-copyright = '2019, Joseph Suarez'
+copyright = '2020, Joseph Suarez'
 author = 'Joseph Suarez'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1'
+release = '1.3'
 
 # -- General configuration ---------------------------------------------------
 
@@ -45,6 +45,9 @@ extensions = [
       'sphinx.ext.coverage', 
       'sphinx.ext.napoleon',
    ]
+
+#Don't sort method names
+autodoc_member_order = 'bysource'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -69,3 +72,6 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+#Readable code theme
+pygments_style = 'monokai'

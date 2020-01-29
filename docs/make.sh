@@ -6,6 +6,10 @@ make clean
 #  imported-members (pollutes with inhereted garbage)
 
 SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../forge/ -fMe --implicit-namespaces -o source/autodoc/
+SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../projekt/ -fMe --implicit-namespaces -o source/autodoc/
+
+#Manually merged forge and projekt folders
+cp modules.rst source/autodoc/
 
 #Strip bad headers
 for f in source/autodoc/*.rst; do\

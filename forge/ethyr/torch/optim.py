@@ -36,40 +36,24 @@ class ManualSGD(optim.SGD):
 def merge(rollouts):
    '''Merges all collected rollouts for batched
    compatibility with optim.backward'''
-
-   outs = {'value': [], 'return': [],
-         'action': defaultdict(lambda: defaultdict(list))}
+   n = 0
+   outs = defaultdict(lambda: defaultdict(list))
    for rollout in rollouts.values():
       for idx in range(rollout.time):
-         try:
-            key, atn, out = rollout.outs[idx]
-         except:
-            print(rollout.time)
-            print(len(rollout))
-            print(len(rollout.returns))
-            print(len(rollout.outs))
-            print('----')
-            T()
-           
-         val = rollout.vals[idx]
-         ret = rollout.returns[idx]
+         for out in rollout.actions[idx]:
+            if len(out.atnLogits) == 1:
+               continue
+            outk = outs[out.atnArgKey]
+            outk['atns'].append(out.atnLogits)
+            outk['idxs'].append(out.atnIdx)
+            outk['vals'].append(out.value)
+            outk['rets'].append(out.returns)
+            n += 1
 
-         outs['value'].append(val)
-         outs['return'].append(ret)
-
-         #Going to have to change to key by atn type (move, attk, etc)
-         for k, packet in enumerate(zip(key, out, atn)):
-            _, o, a = packet
-            #k = tuple([k])
-            outk = outs['action'][k]
-            outk['atns'].append(o)
-            outk['idxs'].append(a)
-            outk['vals'].append(val)
-            outk['rets'].append(ret)
-   return outs
+   return outs, n
 
 
-def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
+def backward(rollouts, config):
    '''Computes gradients from a list of rollouts
 
    Args:
@@ -85,24 +69,28 @@ def backward(rollouts, valWeight=0.5, entWeight=0, device='cpu'):
       valLoss: Value loss
       entropy: Entropy bonus      
    '''
-   outs = merge(rollouts)
-   pg, entropy, attackentropy = 0, 0, 0
-   for k, out in outs['action'].items():
+   device = config.DEVICE
+   outs, n = merge(rollouts)
+   pgLoss, valLoss, entLoss = 0, 0, 0
+   for k, out in outs.items():
       atns = out['atns']
-      vals = torch.stack(out['vals']).to(device)
+      vals = torch.stack(out['vals'])
       idxs = torch.tensor(out['idxs']).to(device)
-      rets = torch.tensor(out['rets']).to(device).view(-1, 1)
-      l, e = loss.PG(atns, idxs, vals, rets)
-      pg += l
-      entropy += e
+      rets = torch.tensor(out['rets']).view(-1, 1).to(device)
 
-   returns = torch.stack(outs['value']).to(device)
-   values  = torch.tensor(outs['return']).to(device).view(-1, 1)
-   valLoss = loss.valueLoss(values, returns)
-   totLoss = pg + valWeight*valLoss + entWeight*entropy
+      l, v, e = loss.PG(atns, idxs, vals, rets)
+
+      #Averaging results in no learning. Need to retune LR?
+      pgLoss  += l# / n
+      valLoss += v# / n
+      entLoss += e# / n
+
+   totLoss = (
+         config.PG_WEIGHT*pgLoss + 
+         config.VAL_WEIGHT*valLoss + 
+         config.ENTROPY*entLoss)
 
    totLoss.backward(retain_graph=True)
-   reward = np.mean(outs['return'])
 
-   return reward, vals.mean(), pg, valLoss, entropy
+   return pgLoss, valLoss, entLoss
 

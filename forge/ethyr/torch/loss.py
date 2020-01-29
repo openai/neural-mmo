@@ -17,7 +17,7 @@ def advantage(returns, val):
       vals: Tensor of value function outpus
 
    Returns:
-      Advantage estimate tensor
+      advantage: Advantage estimate tensor
    '''
    A = returns - val
    adv = A
@@ -36,7 +36,7 @@ def policyLoss(logProb, atn, adv):
       adv: Advantage estimate tensor
 
    Returns:
-      Mean policy gradient loss
+      loss: Mean policy gradient loss
    '''
    pgLoss = -logProb.gather(1, atn.view(-1, 1))
    return (pgLoss * adv).mean()
@@ -49,7 +49,7 @@ def valueLoss(val, returns):
       returns: Return tensor
 
    Returns:
-      Mean value loss
+      value: Mean value loss
    '''
    return (0.5 * (val - returns) **2).mean()
 
@@ -57,11 +57,11 @@ def entropyLoss(prob, logProb):
    '''Entropy computation
    
    Args:
-      prob: Probability tensor
-      logProb: Log probability tensor
+      prob    : Probability tensor
+      logProb : Log probability tensor
    
    Returns:
-      Mean entropy 
+      entropy: Mean entropy 
    '''
    loss = (prob * logProb)
    loss[torch.isnan(loss)] = 0
@@ -72,15 +72,15 @@ def PG(pi, atn, val, returns):
    '''Computes losses for the policy gradient algorithm
    
    Args:
-      pi: Logit tensor (network outputs, pre softmax)
-      atn: Index tensor of selected actions
-      val: Value tensor
-      return: Return tensor 
+      pi     : Logit tensor (network outputs, pre softmax)
+      atn    : Index tensor of selected actions
+      val    : Value tensor
+      return : Return tensor 
    
    Returns:
-      polLoss, entLoss: Policy and entropy losses 
+      polLoss : Policy loss
+      entLoss : Entropy loss
    '''
-   #Atns are wrong
    prob = [F.softmax(e, dim=-1) for e in pi]
    logProb = [F.log_softmax(e, dim=-1) for e in pi]
 
@@ -90,10 +90,10 @@ def PG(pi, atn, val, returns):
    adv = advantage(returns, val)
    polLoss = policyLoss(logProb, atn, adv)
    entLoss = entropyLoss(prob, logProb)
-   return polLoss, entLoss
+   valLoss = valueLoss(val, returns)
+   return polLoss, valLoss, entLoss
 
-#A bit stale--not currently used because
-#Vanilla PG is equivalent with 1 update per minibatch
+#Not currently used because Vanilla PG is equivalent with 1 update/minbatch
 class PPO(nn.Module):
    def forward(self, pi, v, atn, returns):
       prob, logProb = F.softmax(pi, dim=1), F.log_softmax(pi, dim=1)
@@ -105,8 +105,12 @@ class PPO(nn.Module):
       adv = adv.detach()
 
       #Clipped ratio loss
-      prob, probOld, logProb = F.softmax(pi, dim=1), F.softmax(piOld, dim=1), F.log_softmax(pi, dim=1)
-      atnProb, atnProbOld = prob.gather(1, atn), probOld.gather(1, atn)
+      prob    = F.softmax(pi, dim=1)
+      probOld = F.softmax(piOld, dim=1)
+      logProb = F.log_softmax(pi, dim=1)
+
+      atnProb    = prob.gather(1, atn)
+      atnProbOld = probOld.gather(1, atn)
 
       ratio = atnProb / (atnProbOld + 1e-6)
       surr1 = ratio*adv

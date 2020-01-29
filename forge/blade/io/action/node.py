@@ -14,6 +14,8 @@ class NodeType(Enum):
    VARIABLE  = auto() #Variable argument
 
 class Node:
+   SERIAL = 2
+
    @staticproperty
    def edges():
       return []

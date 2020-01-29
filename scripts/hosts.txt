@@ -1,0 +1,9 @@
+### Do not change the line structure of this file ###
+#
+# Master node
+MASTER_IP
+#
+# Worker nodes
+WORKER_1_IP
+WORKER_2_IP
+...

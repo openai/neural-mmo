@@ -6,6 +6,8 @@ import time
 from collections import defaultdict
 from torch.nn.parameter import Parameter
 
+from forge.blade.lib.log import Quill
+
 from forge.ethyr.torch import save
 from forge.ethyr.torch.optim import ManualAdam
 from forge.ethyr.torch.param import setParameters, getParameters
@@ -19,23 +21,25 @@ class GradientOptimizer:
          lr=self.config.LR, weight_decay=self.config.DECAY)
 
    #Grads and clip
-   def step(self, gradList, logs):
+   def step(self, grads, logs):
       '''Clip the provided gradients and step the optimizer
 
       Args:
          gradList: a list of gradients
       '''
-      grad = np.array(gradList)
-      grad = np.mean(grad, 0)
-      grad = np.clip(grad, -5, 5)
+      grads = np.mean(grads, 0)
+      print('Gradient magnitude: ', np.sqrt(np.sum(grads**2)))
+      mag = self.config.GRAD_CLIP
+      grads = np.clip(grads, -mag, mag)
 
-      gradAry = torch.Tensor(grad)
-      self.opt.step(gradAry)
+      gradTensor = torch.Tensor(grads)
+      self.opt.step(gradTensor)
 
       self.net.syncParameters()
 
    def load(self, opt):
       self.opt.load_state_dict(opt.opt.state_dict())
+      return self
 
 class PopulationOptimizer:
    def __init__(self, model, config):
@@ -90,6 +94,24 @@ class Model:
       self.parameters = Parameter(torch.Tensor(
             np.array(getParameters(self.net))))
 
+      #Have been experimenting with population based
+      #training. Nothing stable yet -- advise avoiding
+      if config.POPOPT:
+         self.opt = PopulationOptimizer(self, config)
+      else:
+         self.opt = GradientOptimizer(self, config)
+
+      if config.LOAD or config.BEST:
+         self.load(self.opt, config.BEST)
+
+   def step(self, recvs, blobs, log, lifetime):
+      if self.config.TEST:
+         return
+
+      self.opt.step(recvs, blobs)
+      perf, _ = self.checkpoint(self.opt, lifetime)
+      return perf
+
    def load(self, opt, best=False):
       '''Load a model from file
 
@@ -100,18 +122,17 @@ class Model:
       print('Loading model...')
       epoch = self.saver.load(opt, self.parameters, best)
       self.syncParameters()
+      return self
 
-   def checkpoint(self, opt, reward):
+   def checkpoint(self, opt, lifetime):
       '''Save the model to checkpoint
 
       Args:
          reward: Mean reward of the model
       '''
-      self.saver.checkpoint(self.parameters, opt, reward)
-      self.saver.print()
+      return self.saver.checkpoint(self.parameters, opt, lifetime)
 
-   @property
-   def nParams(self):
+   def printParams(self):
       '''Print the number of model parameters'''
       nParams = len(self.weights)
       print('#Params: ', str(nParams/1000), 'K')

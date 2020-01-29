@@ -1,71 +1,55 @@
 from pdb import set_trace as T
-import numpy as np
-import torch
-import time
 
 from collections import defaultdict
 
-import projekt
-from forge.ethyr.torch import save
 from forge.ethyr.torch import Model
-from forge.ethyr.torch.model import PopulationOptimizer, GradientOptimizer
-from forge.blade.lib.log import Quill, BlobLogs
-
-
+from forge.blade.lib.log import Quill, BlobSummary
 from forge.trinity.ascend import Ascend, runtime
 
+import projekt
+
 class Pantheon(Ascend):
-   '''Cluster level Pantheon API demo
+   '''Cluster level infrastructure layer
 
-   This cluster level module aggregrates
-   gradients across all server level optimizer
-   nodes and updates model weights using Adam.
+   This module aggregates gradients across all server level 
+   environments and updates model weights using Adam.
 
-   Also demonstrates logging and snapshotting
-   functionality through the Quill and Model
-   libraries, respectively.'''
+   It also demonstrates logging and snapshotting functionality 
+   through the Quill and Model libraries, respectively.'''
 
    def __init__(self, trinity, config, idx):
       '''Initializes a copy of the model, which keeps
-      track of a copy of the weights for the optimizer.'''
+      track of the weights for the optimizer.
+
+      Args:
+         trinity : A Trinity object as shown in __main__
+         config  : A Config object as shown in __main__
+         idx     : Unused hardware index
+      '''
       super().__init__(trinity.god, config.NGOD, trinity, config)
+      self.quill  = Quill(config)
       self.config = config
 
-      self.net = Model(projekt.ANN, config)
-
-      #Have been experimenting with population based
-      #training. Nothing stable yet -- advise avoiding
-      if config.POPOPT:
-         self.opt = PopulationOptimizer(self.net, config)
-      else:
-         self.opt = GradientOptimizer(self.net, config)
-
-      if config.LOAD or config.BEST:
-         self.net.load(self.opt, config.BEST)
-
-      self.quill = Quill(config.MODELDIR)
-      self.log = defaultdict(list)
-
-      self.tick = 0
-      self.net.nParams
+      self.net = Model(projekt.Policy, config)
+      self.net.printParams()
 
    @runtime
    def step(self):
-      '''Broadcasts updated weights to server level
-      God optimizer nodes. Performs an Adam step
-      once optimizers return a batch of gradients.''' 
-      
-      recvs = super().step(self.net.weights)
+      '''Broadcasts updated weights to server level God optimizer nodes.
+      Performs an Adam step once optimizers return a batch of gradients.
 
-      #Write logs using Quill
-      recvs, logs = list(zip(*recvs))
-      logs        = BlobLogs.merge(logs)
+      Returns:
+         perf  : Log message describing agent performance
+         stats : Log message describing data collected
+         log   : Dictionary of logs containing infrastructure usage data
+      ''' 
+      #Aggregate Blob logs as a BlobSummary
+      recvs             = super().step(self.net.weights)
+      recvs, blobs, log = list(zip(*recvs))
+      blobs = BlobSummary().add(blobs)
 
-      self.quill.scrawl(logs)
-      self.tick += 1
+      #Update/checkpoint model and write logs
+      stats, lifetime = self.quill.scrawl(blobs)
+      perf            = self.net.step(recvs, blobs, log, lifetime)
 
-      self.quill.print()
-      if not self.config.TEST:
-         lifetime = self.quill.latest()
-         self.opt.step(recvs, logs)
-         self.net.checkpoint(self.opt, lifetime)
+      return perf, stats, log

@@ -1,145 +1,109 @@
+'''Observation processing module'''
+
 from pdb import set_trace as T
 import numpy as np
 
-from collections import defaultdict
-
 import torch
 from torch import nn
-from torch.nn import functional as F
-from itertools import chain
 
-from forge.blade.io import Stimulus as StaticStimulus
-from forge.blade.io import Action as StaticAction
-from forge.ethyr.io import Serial, utils
-from forge.ethyr.torch.policy.embed import Input, TaggedInput, Embedding
+from forge.blade.io import stimulus, action
 
-class Lookup:
-   '''Lookup utility for indexing 
-   (name, data) pairs'''
-   def __init__(self):
-      self.names = []
-      self.data  = []
+class Input(nn.Module):
+   def __init__(self, config, embeddings, attributes, entities):
+      '''Network responsible for processing observations
 
-   def add(self, names, data):
-      '''Add entries to the table'''
-      self.names += names
-      self.data  += data
-
-   def table(self):
-      names, data = self.names, self.data
-      dat = dict(zip(names, data))
-      names = set(self.names)
-
-      idxs, data = {}, []
-      for idx, name in enumerate(names):
-         idxs[name] = idx
-         data.append(dat[name])
-
-      data = torch.cat(data)
-      assert len(idxs) == len(data)
-      return idxs, data
- 
-class Env(nn.Module):
-   '''Network responsible for processing observations
-
-   Args:
-      config: A Config object
-   '''
-   def __init__(self, config):
+      Args:
+         config     : A configuration object
+         embeddings : An attribute embedding module
+         attributes : An attribute attention module
+         entities   : An entity attention module
+      '''
       super().__init__()
+      h           = config.HIDDEN
+      self.device = config.DEVICE
       self.config = config
-      h = config.HIDDEN
-      self.h = h
+      self.h      = h
 
-      self.initSubnets(config)
+      #Assemble network modules
+      self.initEmbeddings(embeddings)
+      self.initAttributes(attributes)
+      self.initEntities(entities)
 
-      self.action = nn.Embedding(StaticAction.n, config.HIDDEN)
+      self.action = nn.Embedding(action.Static.n, config.HIDDEN)
 
-   def initSubnets(self, config, name=None):
+   def initEmbeddings(self, embedF):
       '''Initialize embedding networks'''
       emb  = nn.ModuleDict()
-      for name, subnet in StaticStimulus:
+      for name, subnet in stimulus.Static:
          name = '-'.join(name)
          emb[name] = nn.ModuleDict()
          for param, val in subnet:
             param = '-'.join(param)
-            emb[name][param] = TaggedInput(val(config), config)
+            emb[name][param] = embedF(val(self.config), self.config)
       self.emb = emb
 
-   def actions(self, lookup):
+   def initAttributes(self, attrF):
+      '''Initialize attribute networks'''
+      self.attributes = nn.ModuleDict()
+      for name, subnet in stimulus.Static:  
+         self.attributes['-'.join(name)] = attrF(self.config)
+
+   def initEntities(self, entF):
+      '''Initialize entity network'''
+      self.entities = entF(self.config) 
+
+   def actions(self, embeddings):
       '''Embed actions'''
-      for atn in StaticAction.actions:
-         #Brackets on atn.serial?
+      embed = []
+      for atn in action.Static.arguments:
          idx = torch.Tensor([atn.idx])
-         idx = idx.long().to(self.config.DEVICE)
+         idx = idx.long().to(self.device)
 
          emb = self.action(idx)
-         #Dirty hack -- remove duplicates
-         lookup.add([atn], [emb])
+         embed.append(emb)
 
-         key = Serial.key(atn)
-         #What to replace serial with here
-         lookup.add([key], [emb])
+      return torch.cat([embeddings, *embed])
 
-   def attrs(self, group, attn, subnet):
+   def attrs(self, name, attn, entities):
       '''Embed and pack attributes of each entity'''
       embeddings = []
-      for param, val in subnet.items():
+      for param, val in entities.attributes.items():
          param = '-'.join(param)
-         val = torch.Tensor(val).to(self.config.DEVICE)
-         emb = self.emb[group][param](val)
+         val = torch.Tensor(val).to(self.device)
+         emb = self.emb[name][param](val)
          embeddings.append(emb)
 
       embeddings = torch.stack(embeddings, -2)
 
       #Batch, ents, nattrs, hidden
-      embeddings = attn.emb(embeddings)
+      embeddings = attn(embeddings)
+      return embeddings
 
-      #Batch, ents, hidden
-      features   = attn.ent(embeddings)
+   def forward(self, inp):
+      '''Produces tensor representations from an IO object
 
-      return embeddings, features
+      Args:                                                                   
+         inp: An IO object specifying observations                      
 
-   #Okay. You have some issues
-   #Dimensions are batch, nEnts/tiles, nAttrs, hidden
-   #So you need to go down to 3 dims for 2nd tier
-   #batch, nEnts/tiles, hidden
-   #And down to batch, hidden for final tier
-   def forward(self, net, stims):
-      features, lookup = {}, Lookup()
-      self.actions(lookup)
- 
-      #Pack entities of each observation set
-      for group, stim in stims.items():
-         names, subnet = stim
-         embs, feats     = self.attrs(group, net.attns[group], subnet)
-         features[group] = feats
+      Returns:
+         observationTensor : A fixed size observation representation
+         entityLookup      : A fixed size representation of each entity
+      ''' 
+      observationTensor = []
+      embeddings        = []
 
-         #Unpack and flatten for embedding
-         lens = [len(e) for e in names]
-         vals = utils.unpack(embs, lens, dim=1)
-         for k, v in zip(names, vals):
-            v = v.split(1, dim=0)
-            lookup.add(k, v)
+      #Pack entities of each attribute set
+      for name, entities in inp.obs.entities.items():
+         embs = self.attrs(name, self.attributes[name], entities)
+         embeddings.append(embs)
 
+      #Pack entities of each observation
+      entityLookup = torch.cat(embeddings)
+      for objID, idxs in inp.obs.names.items():
+         emb = entityLookup[idxs]
+         obs = self.entities(emb)
+         observationTensor.append(obs)
 
-      k = [tuple([0]*Serial.KEYLEN)]
-      v = [v[-1] * 0]
-      lookup.add(k, v)
-
-      k = [tuple([-1]*Serial.KEYLEN)]
-      v = [v[-1] * 0]
-      lookup.add(k, v)
-   
-      #Concat feature block
-      feats = features 
-      features = list(features.values())
-      features = torch.stack(features, -2)
-
-      #Batch, group (tile/ent), hidden
-      features = net.attns['Meta'](features)#.squeeze(0)
-      
-      embed = lookup.table()
-      #embed = None
-      return features, embed
-
+      entityLookup      = self.actions(entityLookup)
+      observationTensor = torch.stack(observationTensor)
+      return observationTensor, entityLookup

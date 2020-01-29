@@ -70,7 +70,7 @@ class Config(config.Config):
    TITLE       = 'Neural MMO Training Curve' #Graph title
    XAXIS       = 'Training Epoch'            #Label of xaxis data values
    YLABEL      = 'Agent Lifetime'            #Label of data values
-   TITLE       = 'NeuralMMO Data'            #Title of graph
+   TITLE       = 'Neural MMO Data'            #Title of graph
    SCALES      = [1, 10, 100, 1000]          #Plot time scale
 
    #Parameter overrides for debugging

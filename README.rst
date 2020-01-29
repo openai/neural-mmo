@@ -21,6 +21,7 @@
 
 .. |header| image:: docs/source/resource/header.svg
 .. |io| image:: docs/source/resource/io.svg
+.. |infra| image:: docs/source/resource/infra.svg
 .. |train| image:: docs/source/resource/train.png
 
 |env|
@@ -122,7 +123,7 @@ Our baseline was trained on a 12 core machine. Your CPU probably has fewer cores
 
    NGOD = 4
 
-Now we can train a model:
+You may also want to reduce the batch size (CLUSTER_UPDATES). Now we can train a model:
 
 .. code-block:: python
 
@@ -132,7 +133,7 @@ If you leave it running, you will see the reward steadily increasing:
 
 |train|
 
-This training curve was produced using the (beta) logging library. The baseline model gets to >28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
+This smoothed training curve was produced using the (beta) logging library. The baseline model gets to >28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. As a sanity check, agents typically learn not to run into lava first, as indicated by the steep initial learning curve slope.
 
 The IO API
 ----------
@@ -359,7 +360,7 @@ In formal publications, we refer to our project simply as a (the first) "Neural 
 The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My `personal Github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
 
 **v1.3:** Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_ :download:`[Paper] <docs/source/resource/nmmo_v1-3.pdf>`
-   - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.preprocess and IO.postprocess functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
+   - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
    - Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.
    - Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks -- our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.
    - Embyr: Agents now display additional information overhead, such as when they are immune to attacks or when they have been frozen in place.
@@ -445,31 +446,31 @@ While our environment is nowhere near the level of complexity of a real MMO yet,
 |ags| Authorship, License, Disclaimer
 #####################################
 
-I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development at least for the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
+I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
 2019 (fall): Neural MMO development continues at MIT. as the main project of my PhD
-- I am continuing my role as the primary developer
-- Phillip Isola resumes project oversight as my adviser
-- We are beginning to get open source contributions
+   - I am continuing my role as the primary developer
+   - **Phillip Isola** resumes project oversight as my adviser
+   - We are beginning to get open source contributions
 
 2018 (fall): Independent development results in v1.1 and v1.2:
-- I ran the project solo. These versions are derivative works and are MIT sublicensed in my name
+   - I ran the project solo. These versions are derivative works and are MIT sublicensed in my name
 
-2018 (spring): Neural MMO development continues during a 6-month internship at OpenAI, culminating in the v1.0 environment (MIT licensed to OpenAI) and THREE.js client (MIT licensed to Joseph Suarez and Clare Zhu) release:
-- I continued my role as the primary developer
-- Yilun Du assisted with running experiments and particularly in setting up tournaments for the v1.0 release
-- Phillip Isola and Igor Mordatch managed and advised the project
-- The v1.0 environment is registered to OpenAI and available under the MIT license
-- The legacy THREE.js client was developed independently as a collaboration between myself and Clare Zhu. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and is available under the MIT license
+2018 (spring): Neural MMO development continues during a 6-month internship at **OpenAI**, culminating in the v1.0 environment (MIT licensed to **OpenAI**) and THREE.js client (MIT licensed to **Joseph Suarez** and **Clare Zhu**) release:
+   - I continued my role as the primary developer
+   - **Yilun Du** assisted with running experiments and particularly in setting up tournaments for the v1.0 release
+   - **Phillip Isola** and **Igor Mordatch** managed and advised the project
+   - The v1.0 environment is registered to **OpenAI** and available under the MIT license
+   - The legacy THREE.js client was developed independently as a collaboration between myself and **Clare Zhu**. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and is available under the MIT license
 
 2017 (summer): Neural MMO development begins:
-- I (`Joseph Suarez <https://github.com/jsuarez5341>`_) started Neural MMO as an independent side project
-- I (Joseph Suarez) retain ownership of this smaller original code base and game kernel, along with associated ideas. I created these before my affiliations with OpenAI and MIT
+   - I (`Joseph Suarez <https://github.com/jsuarez5341>`_) started Neural MMO as an independent side project
+   - I (**Joseph Suarez**) retain ownership of this smaller original code base and game kernel, along with associated ideas. I created these before my affiliations with OpenAI and MIT
 
 Open source contributors, listed by time since latest contribution. Discord handle have been used for individuals who have not granted explicit permission to display their real names:
-- Jack Garbus: Major contributions to the logging framework, feedback on the documentation and tutorials
-- @tdimeola: Feedback on the documentation and tutorials
-- @cehinson: Mac build of the Unity3D client
+   - **Jack Garbus:** Major contributions to the logging framework, feedback on the documentation and tutorials
+   - **@tdimeola:** Feedback on the documentation and tutorials
+   - **@cehinson:** Mac build of the Unity3D client
 
 |ags| Assets
 ############

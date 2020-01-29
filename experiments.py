@@ -16,7 +16,7 @@ class Config(config.Config):
    ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
-   STAT_FILE = 'stats37.txt'    #Run statistics log file
+   STAT_FILE = 'run_stats.txt'  #Run statistics log file
    DEVICE    = 'cpu'            #Hardware specification
 
    ###############################Train/test mode settings

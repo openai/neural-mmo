@@ -31,14 +31,26 @@ from forge.ethyr.torch import Model
 from experiments import Experiment, Config
 from projekt import Pantheon, God, Sword, Policy
 
-def parseArgs():
+def parseArgs(config):
    '''Processes command line arguments'''
    parser = argparse.ArgumentParser('Projekt Godsword')
    parser.add_argument('--ray', type=str, default='default', 
          help='Ray mode (local/default/remote)')
    parser.add_argument('--render', action='store_true', default=False, 
          help='Render env')
-   return parser.parse_args()
+   parser.add_argument('--log', action="store_true",
+         help='Log data on visualizer exit. Default file is timestamp, filename overwrite with --name')
+   parser.add_argument('--name', default='log',
+         help='Name of file to save json data to')
+   parser.add_argument('--load-exp', action="store_true",
+         help='Loads saved json into visualizer with name specified by --name')
+
+   args               = parser.parse_args()
+   config.LOG         = args.log
+   config.LOAD_EXP    = args.load_exp
+   config.NAME        = args.name
+
+   return args
 
 def render(trinity, config, args):
    """Runs the environment with rendering enabled. To pull
@@ -81,7 +93,7 @@ if __name__ == '__main__':
    #Trinity specifies Cluster-Server-Core infra modules
    config  = Experiment('pop', Config).init()
    trinity = Trinity(Pantheon, God, Sword)
-   args    = parseArgs()
+   args    = parseArgs(config)
 
    #Blocking call: switches execution to a
    #Web Socket Server module

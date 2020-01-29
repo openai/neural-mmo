@@ -21,6 +21,7 @@
 
 .. |header| image:: docs/source/resource/header.svg
 .. |io| image:: docs/source/resource/io.svg
+.. |train| image:: docs/source/resource/train.png
 
 |env|
 
@@ -127,7 +128,11 @@ Now we can train a model:
 
    python Forge.py
 
-If you leave it running, you will see the reward steadily increasing. The baseline model gets to >28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
+If you leave it running, you will see the reward steadily increasing:
+
+|train|
+
+This training curve was produced using the (beta) logging library. The baseline model gets to >28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. Learning not to run into lava is a good sanity check.
 
 The IO API
 ----------

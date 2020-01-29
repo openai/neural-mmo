@@ -13,48 +13,17 @@ class Config(config.Config):
    All parameters can also be overridden at run time.
    See Forge.py for an example'''
 
-   #Top experiment is 1 pop, bottom is 8
-   #Top is on vision 35
    ###############################Saving and logging locations
    MODELDIR  = 'resource/exps'  #Where to store models
    HOST      = 'localhost'      #Host for client
-   STAT_FILE = 'stats34.txt'    #Run statistics log file
+   STAT_FILE = 'stats37.txt'    #Run statistics log file
    DEVICE    = 'cpu'            #Hardware specification
 
-   #All run defaults: 12 gods, 16384 batch
-   #0: 5e-3 ent (sanity) 18.72
-   #1: 1e-2 ent: 16.66
-   #2: 2.5e-2: 17.91
-   #3: 5e-2: 17.58
-   #4: 1e-1: 16.85
-   #7: 12 god sanity with double batch and 1e-3 ent
-   #8: 5e-3 ent
-   #9: 2e-4 ent
-   #10: 1e-3 ent, fc-relu-fc hidden
-   #All run defaults: 12 gods, 16384 batch, 2.5e-2 entropy
-   #11: 1 pop: 17.95
-   #12: 1 pop, old dotrelublock, remove hidden net, 18.20
-   #13: 1 pop, remove hidden net, 18.09
-   #14: orig hypers (batch doubled)
-   #16: orig hypers, same fucking network, orig stupid retain_gradients and stale data because why the hell not? 15.68
-   #17: Above but fixed the input net (conv and fc were flipped, so was conving over ents). Note that there was no normalization in orig 15.01
-   #18: Orig net with new hypers. Consistency isnt going to cut it: 18.22
-   #19: 8 pops: 18.23
-   #20: discount 0.98: 17.77
-   #21: discount 0.90: 17.56
-   #22: discount 0.95: 8.108, avg optim vals
-   #23: Non mean centered val func. discount 0.95, avg optim vals: 8.293
-   #24: Non mean centered val func, no avg optim vals: 18.04
-   #25: Fix reward partial trajs, discount .95, no avg: 18.15
-   #26: GAE: 8.084
-   #29: Discount; sanity
-   #30: Stale data: 23.33 :) works :)
-   #31: No entropy
    ###############################Train/test mode settings
    DEBUG     = False            #Whether to run with debug settings
-   LOAD      = True            #Load model from file?
-   BEST      = True            #If loading, most recent or highest lifetime?
-   TEST      = True            #Update the model during run?
+   LOAD      = True             #Load model from file?
+   BEST      = True             #If loading, most recent or highest lifetime?
+   TEST      = True             #Update the model during run?
 
    ###############################Distributed infrastructure config
    NGOD    = 12                 #Number of environment servers
@@ -92,6 +61,17 @@ class Config(config.Config):
    POPOPT   = False             #Whether to enable
    PERMPOPS = 4                 #Number of permutations
    PERMVAL  = 1e-2              #Permutation strength
+
+   ############################################LOGGING parameters
+   LOG         = False                       #Whether to enable data logging
+   LOAD_EXP    = False                       #Whether to load from file
+   NAME        = 'log'                       #Name of file to load/log to
+   HISTORY_LEN = 0                           #Length of graph history
+   TITLE       = 'Neural MMO Training Curve' #Graph title
+   XAXIS       = 'Training Epoch'            #Label of xaxis data values
+   YLABEL      = 'Agent Lifetime'            #Label of data values
+   TITLE       = 'NeuralMMO Data'            #Title of graph
+   SCALES      = [1, 10, 100, 1000]          #Plot time scale
 
    #Parameter overrides for debugging
    if DEBUG:

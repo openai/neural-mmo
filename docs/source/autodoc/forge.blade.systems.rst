@@ -9,6 +9,11 @@ forge.blade.systems package
 
 .. toctree::
 
+   forge.blade.systems.visualizer
+
+
+.. toctree::
+
    forge.blade.systems.ai
    forge.blade.systems.combat
    forge.blade.systems.droptable

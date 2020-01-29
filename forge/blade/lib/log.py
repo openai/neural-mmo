@@ -10,7 +10,7 @@ import json, pickle
 import time
 import ray
 
-from forge.blade.core.market.new_visualizer import Middleman, Market, BokehServer
+from forge.blade.systems import visualizer
 
 class Logger:                                                                 
    def __init__(self, middleman):                                             
@@ -131,10 +131,10 @@ class Quill:
       except:
          pass
 
-      #middleman   = Middleman.remote()                                        
-      #self.logger = Logger(middleman)                                         
-      #visualizer  = BokehServer.remote(middleman, self.logger.items)          
-
+      if config.LOG:
+         middleman   = visualizer.Middleman.remote()
+         self.logger = Logger(middleman)
+         vis         = visualizer.BokehServer.remote(middleman, self.config)
  
    def timestamp(self):
       cur = time.time()

@@ -19,7 +19,7 @@
 .. |magenta| image:: docs/source/resource/neuralMAGENTA.png
 .. |sky| image:: docs/source/resource/neuralSKY.png
 
-.. |header| figure:: docs/source/resource/header.png
+.. |header| image:: docs/source/resource/header.svg
 .. |io| image:: docs/source/resource/io.svg
 .. |infra| image:: docs/source/resource/infra.svg
 .. |train| image:: docs/source/resource/train.png

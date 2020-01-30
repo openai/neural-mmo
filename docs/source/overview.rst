@@ -37,7 +37,7 @@ Neural MMO `[Demo Video] <https://youtu.be/DkHopV1RSxw>`_ `[Github] <https://git
 
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-**1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#>`_ tutorials
+**1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_ tutorials
 
 **2:** Skim the `Environment <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.api.html#forge.blade.core.api.Realm>`_, `IO <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.io.io.html#forge.blade.io.io.IO>`_, and `Infrastructure <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.api.html#forge.trinity.api.Ascend>`_ modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
 

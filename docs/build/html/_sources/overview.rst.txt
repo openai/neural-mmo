@@ -464,7 +464,7 @@ I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the primary author of N
    - The legacy THREE.js client was developed independently as a collaboration between myself and **Clare Zhu**. It was originally created as follow-up work for the paper and blog post, but we ended up merging it in. This is also the reason that the project is split into two repositories. It is registered to us jointly and is available under the MIT license
 
 2017 (summer): Neural MMO development begins:
-   - I (`Joseph Suarez <https://github.com/jsuarez5341>`_) started Neural MMO as an independent side project
+   - I started Neural MMO as an independent side project
    - I (**Joseph Suarez**) retain ownership of this smaller original code base and game kernel, along with associated ideas. I created these before my affiliations with OpenAI and MIT
 
 Open source contributors, listed by time since latest contribution. Discord handle have been used for individuals who have not granted explicit permission to display their real names:

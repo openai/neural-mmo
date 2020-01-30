@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; Neural MMO 1.3 documentation</title>
+  <title>forge.embyr.neural-mmo-client.twistedserver module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge package" href="forge.html" />
-    <link rel="prev" title="Welcome to the Platform!" href="../overview.html" /> 
+    <link rel="next" title="forge.embyr.twistedserver module" href="forge.embyr.twistedserver.html" />
+    <link rel="prev" title="forge.embyr.neural-mmo-client namespace" href="forge.embyr.neural-mmo-client.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,8 +94,18 @@
 </ul>
 <p class="caption"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="forge.html">forge package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="forge.embyr.neural-mmo-client.html">forge.embyr.neural-mmo-client namespace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.embyr.twistedserver.html">forge.embyr.twistedserver module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
@@ -144,13 +154,21 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>API Reference</li>
+          <li><a href="modules.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="forge.html">forge package</a> &raquo;</li>
+        
+          <li><a href="forge.embyr.html">forge.embyr namespace</a> &raquo;</li>
+        
+          <li><a href="forge.embyr.neural-mmo-client.html">forge.embyr.neural-mmo-client namespace</a> &raquo;</li>
+        
+      <li>forge.embyr.neural-mmo-client.twistedserver module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/autodoc/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/autodoc/forge.embyr.neural-mmo-client.twistedserver.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -163,124 +181,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="forge.html">forge package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="forge.blade.html">forge.blade package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.core.html">forge.blade.core package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.market.html">forge.blade.core.market namespace</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.api.html">forge.blade.core.api module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.config.html">forge.blade.core.config module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.env.html">forge.blade.core.env module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.map.html">forge.blade.core.map module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.realm.html">forge.blade.core.realm module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.core.tile.html">forge.blade.core.tile module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.entity.html">forge.blade.entity package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.entity.npc.html">forge.blade.entity.npc package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.entity.entity.html">forge.blade.entity.entity module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.entity.player.html">forge.blade.entity.player module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.hook.html">forge.blade.hook package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.hook.item.html">forge.blade.hook.item module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.hook.modules.html">forge.blade.hook.modules module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.io.html">forge.blade.io package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.action.html">forge.blade.io.action package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.stimulus.html">forge.blade.io.stimulus package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.io.html">forge.blade.io.io module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.serial.html">forge.blade.io.serial module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.utils.html">forge.blade.io.utils module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.item.html">forge.blade.item package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.armor.html">forge.blade.item.armor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.food.html">forge.blade.item.food module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.item.html">forge.blade.item.item module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.knife.html">forge.blade.item.knife module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.ore.html">forge.blade.item.ore module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.rawfish.html">forge.blade.item.rawfish module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.rawmeat.html">forge.blade.item.rawmeat module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.sword.html">forge.blade.item.sword module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.tool.html">forge.blade.item.tool module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.lib.html">forge.blade.lib package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.comms.html">forge.blade.lib.comms module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.enums.html">forge.blade.lib.enums module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.log.html">forge.blade.lib.log module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.multiset.html">forge.blade.lib.multiset module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.priorityqueue.html">forge.blade.lib.priorityqueue module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.ray.html">forge.blade.lib.ray module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.stattrak.html">forge.blade.lib.stattrak module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.utils.html">forge.blade.lib.utils module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.blade.systems.html">forge.blade.systems package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.visualizer.html">forge.blade.systems.visualizer namespace</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.ai.html">forge.blade.systems.ai module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.combat.html">forge.blade.systems.combat module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.droptable.html">forge.blade.systems.droptable module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.equipment.html">forge.blade.systems.equipment module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.exchange.html">forge.blade.systems.exchange module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.experience.html">forge.blade.systems.experience module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.inventory.html">forge.blade.systems.inventory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.recipe.html">forge.blade.systems.recipe module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.skill.html">forge.blade.systems.skill module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forge.embyr.neural-mmo-client.html">forge.embyr.neural-mmo-client namespace</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.embyr.neural-mmo-client.twistedserver.html">forge.embyr.neural-mmo-client.twistedserver module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.embyr.twistedserver.html">forge.embyr.twistedserver module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.manager.html">forge.ethyr.experience.manager module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.rollout.html">forge.ethyr.experience.rollout module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.io.html">forge.ethyr.torch.io package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.policy.html">forge.ethyr.torch.policy package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.loss.html">forge.ethyr.torch.loss module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.model.html">forge.ethyr.torch.model module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.optim.html">forge.ethyr.torch.optim module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.param.html">forge.ethyr.torch.param module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.save.html">forge.ethyr.torch.save module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.torch.utils.html">forge.ethyr.torch.utils module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forge.trinity.api.html">forge.trinity.api module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.trinity.ascend.html">forge.trinity.ascend module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.trinity.timed.html">forge.trinity.timed module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.trinity.trinity.html">forge.trinity.trinity module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="projekt.html">projekt package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="projekt.ann.html">projekt.ann module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.god.html">projekt.god module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.pantheon.html">projekt.pantheon module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.sword.html">projekt.sword module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+  <div class="section" id="forge-embyr-neural-mmo-client-twistedserver-module">
+<h1>forge.embyr.neural-mmo-client.twistedserver module<a class="headerlink" href="#forge-embyr-neural-mmo-client-twistedserver-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -291,10 +193,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.html" class="btn btn-neutral float-right" title="forge package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.embyr.twistedserver.html" class="btn btn-neutral float-right" title="forge.embyr.twistedserver module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../overview.html" class="btn btn-neutral float-left" title="Welcome to the Platform!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.embyr.neural-mmo-client.html" class="btn btn-neutral float-left" title="forge.embyr.neural-mmo-client namespace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

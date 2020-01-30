@@ -35,11 +35,17 @@
 
 Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs) `[Demo] <https://youtu.be/DkHopV1RSxw>`_. The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.
 
+.. raw:: html
+
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+        <iframe src="https://www.youtube.com/watch?v=DkHopV1RSxw&feature=youtu.be" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+    </div>
+
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-**1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/neural-mmo.html#>`_ tutorials
+**1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#>`_ tutorials
 
-**2:** Skim the :mod:`~forge.blade.core.api.Realm`/:mod:`~forge.blade.io.io.IO`/:mod:`~forge.trinity.api.Ascend` modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
+**2:** Skim the `Environment <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.api.html#forge.blade.core.api.Realm>`_, `IO <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.io.io.html#forge.blade.io.io.IO>`_, and `Infrastructure <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.api.html#forge.trinity.api.Ascend>`_ modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
 
 **3:** Hack on your own projects using the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
 

@@ -486,6 +486,6 @@ We currently use them for flavor as an homage to the game that inspired the proj
 |ags| Additional Resources
 ##########################
 
-`[Neural MMO Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>'_
+`[Neural MMO Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>`_
 
 

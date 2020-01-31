@@ -482,3 +482,10 @@ Some assets used in this project belong to `Jagex <https://www.jagex.com/en-GB/>
 We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research -- however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents, represented by three neurons.
 
 |red| |blue| |green| |fuchsia| |orange| |mint| |purple| |spring| |yellow| |cyan| |magenta| |sky|
+
+|ags| Additional Resources
+##########################
+
+`[Neural MMO Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>'_
+
+

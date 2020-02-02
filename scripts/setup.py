@@ -3,7 +3,7 @@ import os
 
 #Install python requirements
 print('Installing requirements')
-os.system('pip3 install -r scripts/requirements.txt')
+os.system('pip install -r scripts/requirements.txt')
 
 #Download the Unity client
 print('Downloading Embyr client')

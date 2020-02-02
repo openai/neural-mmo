@@ -222,13 +222,12 @@
 <div class="section" id="ags-quickstart">
 <h1><img alt="ags" src="_images/ags.png" /> Quickstart<a class="headerlink" href="#ags-quickstart" title="Permalink to this headline">¶</a></h1>
 <p><strong>Installation:</strong> The master branch will always contain the latest stable version. Each previous version release is archieved in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Download the Neural MMO environment</span>
-<span class="c1">#We assume a Python 3.7+ setup with Anaconda pip</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ensure python 3.7.x with Anacona pip</span>
+<span class="c1">#You may also need to install gcc on a fresh OS</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="n">pip</span>
 
-<span class="c1">#Installation options:</span>
-<span class="c1">#   --no-client:   Omit the Embyr 3D Unity client</span>
-<span class="c1">#   --virtual-env: Install in a virtual env</span>
+<span class="c1">#Download the Neural MMO environment</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
 <span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
 
 <span class="c1">#Run the pretrained demo model to test the installation</span>
@@ -460,7 +459,7 @@
 <h1><img alt="ags" src="_images/ags.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference external" href="https://github.com/openai/neural-mmo">OpenAI</a> only hosts v1.0. My <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">personal Github</a> hosts the latest version in <em>master</em> and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.</p>
 <dl class="simple">
-<dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a> <a class="reference download internal" download="" href="_downloads/3cd7722d5cc9e4be13e54868ee7dafe1/nmmo_v1-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">[Paper]</span></code></a></dt><dd><ul class="simple">
+<dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a> <a class="reference download internal" download="" href="_downloads/678fff0b60d6baed773028514368c0ec/nmmo_v1-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">[Paper]</span></code></a></dt><dd><ul class="simple">
 <li><p>Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.</p></li>
 <li><p>Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.</p></li>
 <li><p>Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks – our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.</p></li>

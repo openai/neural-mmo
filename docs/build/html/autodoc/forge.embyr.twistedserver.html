@@ -104,6 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
@@ -298,22 +299,6 @@ error response and then drop the connection.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.fire">
-<code class="sig-name descname">fire</code><span class="sig-paren">(</span><em class="sig-param">event</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.fire" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fire a particular event.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>event</strong> – the event to fire. All other args and kwargs are
-passed on to the handler(s) for the event.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a Deferred/Future gathering all async results from
-all handlers and/or parent handlers.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="forge.embyr.twistedserver.GodswordServerProtocol.get_channel_id">
 <code class="sig-name descname">get_channel_id</code><span class="sig-paren">(</span><em class="sig-param">channel_id_type='tls-unique'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.get_channel_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.wamp.interfaces.ITransport.get_channel_id()</span></code></p>
@@ -360,38 +345,6 @@ self.logOctets == True.</p>
 <dd><p>Make a connection to a transport and a server.</p>
 <p>This sets the ‘transport’ attribute of this Protocol, and calls the
 connectionMade() callback.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.off">
-<code class="sig-name descname">off</code><span class="sig-paren">(</span><em class="sig-param">event=None</em>, <em class="sig-param">handler=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.off" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop listening for a single event, or all events.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>event</strong> – if None, remove all listeners. Otherwise, remove
-listeners for the single named event.</p></li>
-<li><p><strong>handler</strong> – if None, remove all handlers for the named
-event; otherwise remove just the given handler.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.on">
-<code class="sig-name descname">on</code><span class="sig-paren">(</span><em class="sig-param">event</em>, <em class="sig-param">handler</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.on" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a handler for an event.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>event</strong> – the name of the event</p></li>
-<li><p><strong>handler</strong> – a callable thats invoked when .fire() is
-called for this events. Arguments will be whatever are given
-to .fire()</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -658,17 +611,6 @@ upgrade to WebSocket header (and option serverStatus is True).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – Turn time tracking on/off.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.embyr.twistedserver.GodswordServerProtocol.set_valid_events">
-<code class="sig-name descname">set_valid_events</code><span class="sig-paren">(</span><em class="sig-param">valid_events=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.embyr.twistedserver.GodswordServerProtocol.set_valid_events" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>valid_events</strong> – if non-None, .on() or .fire() with an event
-not listed in valid_events raises an exception.</p>
 </dd>
 </dl>
 </dd></dl>

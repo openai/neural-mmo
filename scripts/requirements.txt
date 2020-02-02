@@ -1,24 +1,24 @@
 #Ray infra
-ray>=0.7.6
-cloudpickle>=0.8.1
-setproctitle>=1.1.10
-service-identity>=18.1.0
-redis>=3.2.1
+ray==0.8.1
+cloudpickle==1.2.2
+setproctitle==1.1.10
+service-identity==18.1.0
+redis==3.4.0
 
 #Terrain maps
-opensimplex>=0.2
-PyTMX>=3.21.7
+opensimplex==0.2
+PyTMX==3.21.7
 
 #Client server deps
-autobahn>=19.3.3
-Twisted>=19.2.0
+autobahn==19.3.3
+Twisted==19.2.0
 
 #PyTorch
-torch>=1.2.0
-torchvision>=0.4.0
+torch==1.4.0
+torchvision==0.5.0
 
 #Other deps -- should
 #be covered by conda
-numpy>=1.16.3
-matplotlib>=3.1.0
+numpy==1.17.2
+matplotlib==3.1.1
 

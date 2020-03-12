@@ -4,7 +4,7 @@ matplotlib==2.1.2
 noise==1.2.2
 numpy==1.16.0
 opensimplex==0.2
-psutil==5.6.0
+psutil==5.6.6
 PyTMX==3.21.5
 pygame==1.9.4
 ray==0.6.2

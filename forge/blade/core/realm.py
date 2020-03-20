@@ -215,7 +215,7 @@ class Realm(Timed):
       for entID in decisions.keys():
          ent    = self.desciples[entID]
          if self.postmortem(ent, dead):
-            dones.add(ent.serial)
+            dones.add(ent)
          else:
             packets[entID].reward = self.reward(entID)
             packets[entID].stim = ent

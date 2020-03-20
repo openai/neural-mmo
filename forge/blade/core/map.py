@@ -22,7 +22,7 @@ def loadTiled(config, fPath, tiles, nCounts):
 
 class Map:
    def __init__(self, config, idx):
-      print('Loading Map: ', idx)
+      #print('Loading Map: ', idx)
       self.updateList = set()
       self.config = config
       self.nCounts = config.NPOP

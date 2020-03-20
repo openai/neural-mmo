@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 from collections import defaultdict
 
+import time
 import numpy as np
 import ray
 
@@ -24,7 +25,7 @@ class Config(core.Config):
    NPOP    = 8
 
    NREALM  = 256
-   NWORKER = 4
+   NWORKER = 96
 
    EMBED   = 32
    HIDDEN  = 64
@@ -79,6 +80,7 @@ class Optim:
    def __init__(self, config):
       self.config = config
       self.net    = Policy(config).eval()
+      self.workers = [Worker.remote(config) for _ in range(config.NWORKER)]
 
    def run(self):
       config = self.config
@@ -86,11 +88,15 @@ class Optim:
          params = param.getParameters(self.net)
          params = np.array(params)
          returns = []
-         for _ in range(config.NWORKER):
-            worker = Worker.remote(config)
-            ret    = worker.run.remote(params)
+
+         t = time.time()
+         for worker in self.workers:
+            worker.reset.remote()
+            ret = worker.run.remote(params)
             returns.append(ret)
          data = ray.get(returns)
+         t = time.time() - t
+
          returns = []
          for dat in data:
             returns += dat
@@ -103,18 +109,21 @@ class Optim:
             noise = reward * np.random.randn(len(params))
             grad += noise
          
-         print('Reward: {:.2f}'.format(np.mean(rewards)))
+         print('Time: {}, Reward: {:.2f}'.format(t, np.mean(rewards)))
          grad = grad / len(data)
-         params += 0.01 * grad
+         params -= 0.0001 * grad
          param.setParameters(self.net, params)
             
 
 @ray.remote
 class Worker:
    def __init__(self, config):
-      idx = np.random.randint(config.NREALM)
-      self.net = Policy(config).eval()
-      self.env = Realm(config, idx)
+      self.config = config
+
+   def reset(self):
+      idx = np.random.randint(self.config.NREALM)
+      self.net = Policy(self.config).eval()
+      self.env = Realm(self.config, idx)
 
    def run(self, params):
       ents, obs, rewards, dones = self.env.reset()
@@ -129,7 +138,7 @@ class Worker:
             #Perturbed rollout. Should salt the entID per realm
             np.random.seed(ent.entID)
             noise = np.random.randn(len(params))
-            param.setParameters(self.net,  params + 0.01*noise)
+            param.setParameters(self.net, params + 0.01*noise)
             atn = self.net(ob)
 
             #Postprocess actions

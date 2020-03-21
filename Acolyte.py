@@ -4,6 +4,7 @@ from collections import defaultdict
 import time
 import numpy as np
 import ray
+import gym
 
 from forge.blade import core
 from forge.blade.lib.ray import init
@@ -25,7 +26,7 @@ class Config(core.Config):
    NPOP    = 8
 
    NREALM  = 256
-   NWORKER = 96
+   NWORKER = 12
 
    EMBED   = 32
    HIDDEN  = 64
@@ -34,12 +35,12 @@ class Config(core.Config):
    OPTIM_STEPS = 128
 
 class Policy(nn.Module):
-   def __init__(self, config):
+   def __init__(self, config, xDim, yDim):
       super().__init__()
-      self.embed  = nn.Linear(492, config.EMBED)
+      self.embed  = nn.Linear(xDim, config.EMBED)
       self.hidden = nn.Linear(config.EMBED, config.HIDDEN)
       #self.hidden  = nn.LSTM(config.EMBED, config.HIDDEN)
-      self.action = nn.Linear(config.HIDDEN, 4)
+      self.action = nn.Linear(config.HIDDEN, yDim)
 
    def forward(self, x):
       x = torch.tensor(x).float()
@@ -76,11 +77,35 @@ class Realm(core.Realm):
 
       return ents, stims, rewards, dones
 
+class ToyEnv:
+   def __init__(self, sz=2):
+      self.reset()
+
+   def reset(self):
+      self.sz  = sz 
+      self.pos = 0
+      return None, self.pos, 0
+
+   def step(self, decisions):
+      assert 0 in decisions
+      atn = decisions[0]
+      if atn == Move.Left:
+         self.pos -= 1
+      else:
+         self.pos += 1 
+
+      reward = 0
+      if self.pos == self.sz:
+         reward = 1
+         done   = True
+
+      return None, self.pos, reward, done
+
 class Optim:
    def __init__(self, config):
-      self.config = config
-      self.net    = Policy(config).eval()
-      self.workers = [Worker.remote(config) for _ in range(config.NWORKER)]
+      self.config  = config
+      self.net     = Policy(config, 4, 2).eval()
+      self.workers = [ToyWorker.remote(config) for _ in range(config.NWORKER)]
 
    def run(self):
       config = self.config
@@ -111,9 +136,50 @@ class Optim:
          
          print('Time: {}, Reward: {:.2f}'.format(t, np.mean(rewards)))
          grad = grad / len(data)
-         params -= 0.0001 * grad
+         params += 0.0001 * grad
          param.setParameters(self.net, params)
             
+@ray.remote
+class ToyWorker:
+   def __init__(self, config):
+      self.config = config
+
+   def reset(self):
+      self.net = Policy(self.config, 4, 2).eval()
+      self.env = gym.make('CartPole-v0')
+
+   def run(self, params):
+      returns = []
+      rewards = []
+
+      reset = True
+      done  = False
+
+      for _ in range(config.OPTIM_STEPS):
+         if done:
+            returns.append((seed, sum(rewards)))
+            reset   = True
+            rewards = []
+
+         if reset:
+            reset = False
+            ob    = self.env.reset()
+            seed  = np.random.randint(1, 10000000)
+
+            np.random.seed(seed)
+            noise = np.random.randn(len(params))
+            param.setParameters(self.net, params + 0.05*noise)
+
+         #Obtain actions
+         atn = self.net(ob)
+         distribution = Categorical(logits=atn)
+         atn = distribution.sample()
+
+         #Step environment
+         ob, reward, done, _ = self.env.step(int(atn))
+         rewards.append(reward)
+
+      return returns
 
 @ray.remote
 class Worker:
@@ -122,7 +188,7 @@ class Worker:
 
    def reset(self):
       idx = np.random.randint(self.config.NREALM)
-      self.net = Policy(self.config).eval()
+      self.net = Policy(self.config, 492, 4).eval()
       self.env = Realm(self.config, idx)
 
    def run(self, params):

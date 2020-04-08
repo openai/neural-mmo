@@ -5,6 +5,7 @@ import os
 import gym
 import time
 from matplotlib import pyplot as plt
+import glob
 
 import ray
 from ray import rllib
@@ -39,6 +40,7 @@ class Config(core.Config):
 class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
       super().__init__(config, idx)
+      self.lifetimes = []
 
    def reset(self):
       #assert self.tick == 0
@@ -79,7 +81,12 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
          preprocessed[ent.entID]        = (0*np.array(s)).tolist()
          preprocessedDones[ent.entID]   = True
          preprocessedRewards[ent.entID] = -1
-         print(ent.history.timeAlive.val)
+
+         self.lifetimes.append(ent.history.timeAlive.val)
+         if len(self.lifetimes) >= 2000:
+            lifetime = np.mean(self.lifetimes)
+            self.lifetimes = []
+            print('Lifetime: {}'.format(lifetime))
 
       return preprocessed, preprocessedRewards, preprocessedDones, {}
 
@@ -87,7 +94,6 @@ def env_creator(args):
    return Realm(Config(), idx=0)
 
 def gen_policy(env, i):
-
    obs    = gym.spaces.Box(
          low=0.0, high=1.0, shape=(489,), dtype=np.float32)
    atns   = gym.spaces.Discrete(4)
@@ -100,23 +106,61 @@ def gen_policy(env, i):
  
    return (None, obs, atns, params)
 
-def renderRollout():
-   nAgents = 2
-   done    = False
-   obs     = env.reset()
-   while not done:
-      env.render()
-      time.sleep(0.6)
+class SanePPOTrainer(ppo.PPOTrainer):
+   def __init__(self, env, path, config):
+      super().__init__(env=env, config=config)
+      self.saveDir = path
 
+   def save(self):
+      return super().save(self.saveDir)
+
+   def restore(self):
+      path = self.saveDir
+      #For some reason, rllib saves checkpoint_idx/checkpoint_idx
+      for i in range(2):
+         path        = os.path.join(path, '*')
+         checkpoints = glob.glob(path)
+         path        = max(checkpoints)
+      path = path.split('.')[0]
+      super().restore(path)
+
+def train(trainer):
+   epoch = 0
+   while True:
+       stats = trainer.train()
+       trainer.save()
+
+       nSteps = stats['info']['num_steps_trained']
+       nTrajs = -sum(stats['hist_stats']['policy_policy_0_reward'])
+       length = nSteps / nTrajs
+       print('Epoch: {}, Reward: {}'.format(epoch, length ))
+
+       #if epoch % 5 == 0:
+       #   renderRollout()
+       epoch += 1
+
+class Evaluator:
+   def __init__(self, env, trainer):
+      self.trainer = trainer
+
+      self.env     = env
+      self.obs     = env.reset()
+      self.done    = {}
+
+   def run(self):
+      from forge.embyr.twistedserver import Application
+      Application(self.env, self.tick)
+
+   def tick(self):
       atns = {}
-      for agentID in range(nAgents):
-         atns[agentID] = trainer.compute_action(obs[agentID],
-               policy_id='policy_{}'.format(agentID))
+      for agentID, ob in self.obs.items():
+         if agentID in self.done and self.done[agentID]:
+            continue
+         atns[agentID] = trainer.compute_action(self.obs[agentID],
+               policy_id='policy_{}'.format(0))
 
-      obs, rewards, done, _ = env.step(atns)
-      done = done['__all__']
-   plt.close()
-
+      self.obs, rewards, self.done, _ = self.env.step(atns)
+ 
 if __name__ == '__main__':
    ray.init(local_mode=False)
 
@@ -126,7 +170,8 @@ if __name__ == '__main__':
    policies = {"policy_{}".format(i): gen_policy(env, i) for i in range(1)}
    keys     = list(policies.keys())
 
-   trainer = ppo.PPOTrainer(env="custom", config={
+   trainer = SanePPOTrainer(env="custom", path='experiment', config={
+      'use_pytorch': True,
       'no_done_at_end': True,
       "multiagent": {
          "policies": policies,
@@ -134,14 +179,8 @@ if __name__ == '__main__':
       },
    })
 
-   epoch = 0
-   while True:
-       stats = trainer.train()
-       nSteps = stats['info']['num_steps_trained']
-       nTrajs = -sum(stats['hist_stats']['policy_policy_0_reward'])
-       length = nSteps / nTrajs
-       print('Epoch: {}, Reward: {}'.format(epoch, length ))
+   trainer.restore()
+   #train(trainer)
+   Evaluator(env, trainer).run()
 
-       #if epoch % 5 == 0:
-       #   renderRollout()
-       epoch += 1
+

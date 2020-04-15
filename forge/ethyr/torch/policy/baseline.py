@@ -1,4 +1,4 @@
-
+from pdb import set_trace as T
 
 import torch
 from torch import nn
@@ -27,7 +27,7 @@ class Attributes(policy.Attention):
       super().__init__(config.EMBED, config.HIDDEN)
 
 class Entities(nn.Module):
-    def __init__(self, config):
+   def __init__(self, config):
       '''Attentional network over entities
 
       Args:
@@ -36,6 +36,7 @@ class Entities(nn.Module):
       super().__init__()
       self.device = config.DEVICE
       h = config.HIDDEN
+      self.h = h
       #self.targDim = 250*h
 
       self.conv = nn.Conv2d(h, h, 3)
@@ -45,17 +46,19 @@ class Entities(nn.Module):
       self.fc2  = nn.Linear(2*h, h)
       self.attn = policy.Attention(config.EMBED, config.HIDDEN)
 
-    def forward(self, x):
-      conv = x[-225:].view(1, 15, 15, -1).permute(0, 3, 1, 2)
+   def forward(self, x):
+      batch = x.shape[0]
+      conv = x[:, -225:].view(-1, 15, 15, self.h).permute(0, 3, 1, 2)
+
       conv = self.conv(conv)
       conv = self.pool(conv)
-      conv = conv.view(-1)
+      conv = conv.view(batch, -1)
       conv = self.fc1(conv)
 
-      attn = x[:-225]
+      attn = x[:, :-225]
       attn = self.attn(attn)
 
-      x = torch.cat((attn, conv))
+      x = torch.cat((attn, conv), dim=-1)
       x = self.fc2(x)
 
       #x = x.view(-1)

@@ -7,6 +7,8 @@ import torch
 from torch import nn
 
 from forge.blade.io import stimulus, action
+from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.io.stimulus import node
 
 class Input(nn.Module):
    def __init__(self, config, embeddings, attributes, entities):
@@ -52,7 +54,7 @@ class Input(nn.Module):
       '''Initialize entity network'''
       self.entities = entF(self.config) 
 
-   def actions(self, embeddings):
+   def actions(self):
       '''Embed actions'''
       embed = []
       for atn in action.Static.arguments:
@@ -62,21 +64,24 @@ class Input(nn.Module):
          emb = self.action(idx)
          embed.append(emb)
 
-      return torch.cat([embeddings, *embed])
+      return torch.cat(embed)
 
    def attrs(self, name, attn, entities):
       '''Embed and pack attributes of each entity'''
       embeddings = []
-      for param, val in entities.attributes.items():
-         param = '-'.join(param)
-         val = torch.Tensor(val).to(self.device)
-         emb = self.emb[name][param](val)
+      attrs = Stimulus.dict()[name]
+      #Slow probably
+      for param, val in attrs:
+         val = [e[param] for e in entities]
+         val = torch.cat(val).to(self.device)
+         emb = self.emb[name]['-'.join(param)](val[:, 0])
          embeddings.append(emb)
 
       embeddings = torch.stack(embeddings, -2)
 
       #Batch, ents, nattrs, hidden
       embeddings = attn(embeddings)
+      embeddings = embeddings.unsqueeze(0)
       return embeddings
 
    def forward(self, inp):
@@ -84,26 +89,25 @@ class Input(nn.Module):
 
       Args:                                                                   
          inp: An IO object specifying observations                      
+         
 
       Returns:
          observationTensor : A fixed size observation representation
          entityLookup      : A fixed size representation of each entity
       ''' 
-      observationTensor = []
-      embeddings        = []
 
       #Pack entities of each attribute set
-      for name, entities in inp.obs.entities.items():
+      embeddings, entityLookup = [], {}
+      for name, entities in inp.items():
+         name = name[0] #Temp hack
          embs = self.attrs(name, self.attributes[name], entities)
+         entityLookup[name] = embs
          embeddings.append(embs)
 
-      #Pack entities of each observation
-      entityLookup = torch.cat(embeddings)
-      for objID, idxs in inp.obs.names.items():
-         emb = entityLookup[idxs]
-         obs = self.entities(emb)
-         observationTensor.append(obs)
+      entityLookup['Fixed'] = self.actions()
 
-      entityLookup      = self.actions(entityLookup)
-      observationTensor = torch.stack(observationTensor)
-      return observationTensor, entityLookup
+      #Pack entities of each observation
+      embeddings   = torch.cat(embeddings, dim=-2)
+      obsTensor    = self.entities(embeddings)
+
+      return obsTensor, entityLookup

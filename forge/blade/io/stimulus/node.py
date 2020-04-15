@@ -8,7 +8,8 @@ class Flat:
 
 class Stim:
    default = 0
-   max = float('inf')
+   #max = float('inf')
+   max = 1000
    min = 0
 
    def __init__(self, config):
@@ -117,5 +118,5 @@ class Continuous(Stim):
 
    def get(self, *args):
       self.asserts(self.val)
-      return self.norm()
+      return np.array([self.norm()])
 

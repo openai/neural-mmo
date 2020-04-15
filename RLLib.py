@@ -1,23 +1,35 @@
 from pdb import set_trace as T
 import numpy as np
 
+import torch
+from torch import nn
+
 import os
 import gym
+from gym import spaces
 import time
 from matplotlib import pyplot as plt
 import glob
 
 import ray
 from ray import rllib
+from ray.rllib.models import ModelCatalog
 from ray.tune import run_experiments
-from ray.tune.registry import register_trainable, register_env
+from ray.tune import registry
 import ray.rllib.agents.ppo.ppo as ppo
+from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
+from ray.rllib.models import preprocessors
 import argparse
+
+from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.io.stimulus import node
+from forge.blade.io import stimulus
 
 from forge.blade import core
 from forge.blade.lib.ray import init
 from forge.blade.io.action import static as action
 from forge.ethyr.torch import param
+from forge.ethyr.torch.policy.baseline import IO
 
 def oneHot(i, n):
    vec = [0 for _ in range(n)]
@@ -32,19 +44,40 @@ class Config(core.Config):
    NWORKER = 12
 
    EMBED   = 32
-   HIDDEN  = 64
+   HIDDEN  = 32
    WINDOW  = 4
 
    OPTIM_STEPS = 128
+   DEVICE      = 'cpu'
+
+class Preprocessor(preprocessors.NoPreprocessor):
+   pass
+
+class Policy(TorchModelV2, nn.Module):
+   def __init__(self, *args, **kwargs):
+      TorchModelV2.__init__(self, *args, **kwargs)
+      nn.Module.__init__(self)
+
+      self.io = IO(Config)
+
+   def forward(self, input_dict, state, seq_lens):
+      obs           = input_dict['obs']
+      state, lookup = self.io.input(obs)
+      atns  = self.io.output(state, lookup)
+      return atns
 
 class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
       super().__init__(config, idx)
       self.lifetimes = []
-
+           
    def reset(self):
       #assert self.tick == 0
       return self.step({})[0]
+
+   def preprocess(env, ent):
+      pass
+      
       
    '''Example environment overrides'''
    def step(self, decisions):
@@ -63,22 +96,16 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
          n = conf.STIM
          s = []
 
-         for i in range(n-conf.WINDOW, n+conf.WINDOW+1):
-            for j in range(n-conf.WINDOW, n+conf.WINDOW+1):
-               tile = env[i, j]
-               s += oneHot(tile.mat.index, 6)
+         obs = stimulus.Dynamic.process(self.config, env, ent, True)
 
-         s.append(ent.resources.health.val / ent.resources.health.max)
-         s.append(ent.resources.food.val   / ent.resources.food.max)
-         s.append(ent.resources.water.val  / ent.resources.water.max)
-
-         preprocessed[ent.entID] = s
+         preprocessed[ent.entID] = obs
          preprocessedRewards[ent.entID] = 0
          preprocessedDones[ent.entID]   = False
          preprocessedDones['__all__']   = self.tick % 200 == 0
 
       for ent in dones:
-         preprocessed[ent.entID]        = (0*np.array(s)).tolist()
+         #Why is there a final obs? Zero this?
+         preprocessed[ent.entID]        = obs
          preprocessedDones[ent.entID]   = True
          preprocessedRewards[ent.entID] = -1
 
@@ -94,9 +121,26 @@ def env_creator(args):
    return Realm(Config(), idx=0)
 
 def gen_policy(env, i):
-   obs    = gym.spaces.Box(
-         low=0.0, high=1.0, shape=(489,), dtype=np.float32)
-   atns   = gym.spaces.Discrete(4)
+   obs, entityDict  = {}, {}
+   for entity, attrList in Stimulus:
+      attrDict = {}
+      for attr, val in attrList:
+         if issubclass(val, node.Discrete):
+            #attrDict[attr] = spaces.Discrete(val.range)
+            attrDict[attr] = spaces.Discrete(100)
+         elif issubclass(val, node.Continuous):
+            #attrDict[attr] = spaces.Box(low=val.min, high=val.max, shape=(1,))
+            attrDict[attr] = spaces.Box(low=-1000, high=1000, shape=(1,))
+      entityDict[entity] = spaces.Dict(attrDict)
+
+   key  = tuple(['Tile'])
+   obs[key] = spaces.Tuple([entityDict[key] for _ in range(225)])
+
+   key  = tuple(['Entity'])
+   obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
+
+   obs  = spaces.Dict(obs)
+   atns = gym.spaces.Discrete(4)
 
    params = {
                "agent_id": i,
@@ -162,9 +206,11 @@ class Evaluator:
       self.obs, rewards, self.done, _ = self.env.step(atns)
  
 if __name__ == '__main__':
-   ray.init(local_mode=False)
+   ray.init(local_mode=True)
 
-   register_env("custom", env_creator)
+   ModelCatalog.register_custom_model('test_model', Policy)
+   ModelCatalog.register_custom_preprocessor('test_preprocessor', Preprocessor)
+   registry.register_env("custom", env_creator)
    env      = env_creator({})
 
    policies = {"policy_{}".format(i): gen_policy(env, i) for i in range(1)}
@@ -173,14 +219,18 @@ if __name__ == '__main__':
    trainer = SanePPOTrainer(env="custom", path='experiment', config={
       'use_pytorch': True,
       'no_done_at_end': True,
+      'model': {
+         'custom_model': 'test_model',
+         #'custom_preprocessor': 'test_preprocessor'
+      },
       "multiagent": {
          "policies": policies,
          "policy_mapping_fn": ray.tune.function(lambda i: 'policy_0')
       },
    })
 
-   trainer.restore()
-   #train(trainer)
-   Evaluator(env, trainer).run()
+   #trainer.restore()
+   train(trainer)
+   #Evaluator(env, trainer).run()
 
 

@@ -6,6 +6,8 @@ import numpy as np
 import torch
 from torch import nn
 
+from forge.blade.io.action import static
+
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
 
@@ -27,8 +29,7 @@ class Output(nn.Module):
       '''Lookup argument indices from name mapping'''
       return np.array([nameMap.get(e) for e in args])
 
-   def forward(self, obs, observationTensor, entityLookup, 
-         values=None, manager=None):
+   def forward(self, obs, lookup):
       '''Populates an IO object with actions in-place                         
                                                                               
       Args:                                                                   
@@ -38,7 +39,9 @@ class Output(nn.Module):
          entityLookup      : A fixed size representation of each entity
          manager           : A RolloutManager object
       ''' 
-      observationTensor = observationTensor.unsqueeze(-2)
+      for atn in static.Action.edges:
+         for arg in atn.edges:
+            T() 
       
       for atn, action in obs.atn.actions.items():
          for arg, data in action.arguments.items():

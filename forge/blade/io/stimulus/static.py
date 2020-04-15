@@ -126,7 +126,7 @@ class Stimulus(Config):
             self.max = config.NENT
 
          def get(self, tile, r, c):
-            return len(tile.ents)
+            return np.array([len(tile.ents)])
 
       class Index(node.Discrete):
          def init(self, config):

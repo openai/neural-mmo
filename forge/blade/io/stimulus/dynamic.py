@@ -41,7 +41,7 @@ class Stimulus:
 
    The environment returns game objects in observations.
    This class assembles them into usable data packets'''
-   def process(config, inp, env, ent, serialize=True):
+   def process(config, env, ent, serialize=True):
       '''Utility for preprocessing game observations
 
       Built to be semi-automatic and only require small updates
@@ -56,41 +56,40 @@ class Stimulus:
       '''
 
       #Static handles
-      Stimulus.funcNames = 'Entity Tile'.split()
-      Stimulus.functions = [Stimulus.entity, Stimulus.tile]
-      Stimulus.static  = Static.dict()
+      Stimulus.functions = [Stimulus.tile, Stimulus.entity]
+      Stimulus.static    = dict(Static)
 
-      for key, f in zip(Stimulus.funcNames, Stimulus.functions):
-         f(inp, env, ent, key, serialize)
+      stim = {}
+      keys = list(Stimulus.static.keys())
+      for key, f in zip(keys, Stimulus.functions):
+         stim[key] = f(env, ent, key, serialize)
 
-   def add(inp, obs, lookup, static, obj, *args, key, serialize=False):
+      return stim
+
+   def add(static, obj, *args, key, serialize=False):
       '''Pull attributes from game and serialize names'''
+      stim = {}
       for name, attr in static:
          val = obj
          for n in name:
             val = val.__dict__[camel(n)]
          val = val.get(*args)
-         obs.attributes[name].append(val)
+         stim[name] = val
 
-      #Serialize names
-      lookupKey = obj
-      if serialize:
-         objKey = Serial.key(obj)
-         key    = Serial.key(key)
-         lookupKey = key + objKey
+      return stim
 
-      idx = lookup.add(lookupKey, orig=obj)
-      inp.obs.names[key].append(idx)
-
-   def tile(inp, env, ent, key, serialize=False):
+   def tile(env, ent, key, serialize=False):
       '''Internal processor for tile objects'''
+      stim = []
       static = Stimulus.static[key]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
-            Stimulus.add(inp, inp.obs.entities[key], inp.lookup,
-               static, tile, tile, r, c, key=ent, serialize=serialize)
+            s = Stimulus.add(static, tile, tile, r, c,
+                  key=ent, serialize=serialize)
+            stim.append(s)
+      return stim
 
-   def entity(inp, env, ent, key, serialize=False):
+   def entity(env, ent, key, serialize=False):
       '''Internal processor for player objects. Always returns self first'''
       ents = []
       static = Stimulus.static[key]
@@ -100,9 +99,22 @@ class Stimulus:
      
       ents = sorted(ents, key=lambda e: e is ent, reverse=True)
 
+      stim = []
       for e in ents:
-         Stimulus.add(inp, inp.obs.entities[key], inp.lookup,
-            static, e, ent, e, key=ent, serialize=serialize)
+         s = Stimulus.add(static, e, ent, e, key=ent, serialize=serialize)
+         stim.append(s)
+
+      nop = s
+      for key, val in s.items():
+         if type(val) == np.ndarray:
+            nop[key] = np.array([0])
+         else:
+            nop[key] = 0
+
+      while len(stim) < 20:
+         stim.append(nop)
+
+      return stim
 
       '''
       ents = []

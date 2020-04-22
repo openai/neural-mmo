@@ -25,11 +25,16 @@ from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.stimulus import node
 from forge.blade.io import stimulus
 
+from forge.blade import lib
 from forge.blade import core
 from forge.blade.lib.ray import init
 from forge.blade.io.action import static as action
 from forge.ethyr.torch import param
-from forge.ethyr.torch.policy.baseline import IO
+#from forge.ethyr.torch.policy.baseline import IO
+from forge.ethyr.torch import policy
+from forge.ethyr.torch.policy import baseline
+from forge.ethyr.torch import io
+from forge.ethyr.torch import utils
 
 def oneHot(i, n):
    vec = [0 for _ in range(n)]
@@ -45,26 +50,34 @@ class Config(core.Config):
 
    EMBED   = 32
    HIDDEN  = 32
-   WINDOW  = 4
+   STIM    = 4
+   WINDOW  = 9
+   #WINDOW  = 15
 
    OPTIM_STEPS = 128
    DEVICE      = 'cpu'
-
-class Preprocessor(preprocessors.NoPreprocessor):
-   pass
 
 class Policy(TorchModelV2, nn.Module):
    def __init__(self, *args, **kwargs):
       TorchModelV2.__init__(self, *args, **kwargs)
       nn.Module.__init__(self)
 
-      self.io = IO(Config)
+      #self.io = IO(Config)
+      self.input = io.Input(Config, policy.TaggedInput,
+            baseline.Attributes, baseline.Entities)
+      self.output = nn.Linear(Config.HIDDEN, 4)
+      self.valueF = nn.Linear(Config.HIDDEN, 1)
 
    def forward(self, input_dict, state, seq_lens):
       obs           = input_dict['obs']
-      state, lookup = self.io.input(obs)
-      atns  = self.io.output(state, lookup)
-      return atns
+      state, lookup = self.input(obs)
+      #atns  = self.io.output(state, lookup)
+      atns          = self.output(state)
+      self.value    = self.valueF(state).squeeze(1)
+      return atns, []
+
+   def value_function(self):
+      return self.value
 
 class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
@@ -101,7 +114,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
          preprocessed[ent.entID] = obs
          preprocessedRewards[ent.entID] = 0
          preprocessedDones[ent.entID]   = False
-         preprocessedDones['__all__']   = self.tick % 200 == 0
+         preprocessedDones['__all__']   = False #self.tick % 200 == 0
 
       for ent in dones:
          #Why is there a final obs? Zero this?
@@ -110,7 +123,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
          preprocessedRewards[ent.entID] = -1
 
          self.lifetimes.append(ent.history.timeAlive.val)
-         if len(self.lifetimes) >= 2000:
+         if len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             self.lifetimes = []
             print('Lifetime: {}'.format(lifetime))
@@ -127,14 +140,15 @@ def gen_policy(env, i):
       for attr, val in attrList:
          if issubclass(val, node.Discrete):
             #attrDict[attr] = spaces.Discrete(val.range)
-            attrDict[attr] = spaces.Discrete(100)
+            #attrDict[attr] = spaces.Discrete(100)
+            attrDict[attr] = spaces.Box(low=-1000, high=1000, shape=(1,))
          elif issubclass(val, node.Continuous):
             #attrDict[attr] = spaces.Box(low=val.min, high=val.max, shape=(1,))
             attrDict[attr] = spaces.Box(low=-1000, high=1000, shape=(1,))
       entityDict[entity] = spaces.Dict(attrDict)
 
    key  = tuple(['Tile'])
-   obs[key] = spaces.Tuple([entityDict[key] for _ in range(225)])
+   obs[key] = spaces.Tuple([entityDict[key] for _ in range(Config.WINDOW**2)])
 
    key  = tuple(['Entity'])
    obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
@@ -156,16 +170,16 @@ class SanePPOTrainer(ppo.PPOTrainer):
       self.saveDir = path
 
    def save(self):
-      return super().save(self.saveDir)
+      savedir = super().save(self.saveDir)
+      with open('experiment/path.txt', 'w') as f:
+         f.write(savedir)
+      print('Saved to: {}'.format(savedir))
+      return savedir
 
    def restore(self):
-      path = self.saveDir
-      #For some reason, rllib saves checkpoint_idx/checkpoint_idx
-      for i in range(2):
-         path        = os.path.join(path, '*')
-         checkpoints = glob.glob(path)
-         path        = max(checkpoints)
-      path = path.split('.')[0]
+      with open('experiment/path.txt') as f:
+         path = f.read()
+      print('Loading from: {}'.format(path))
       super().restore(path)
 
 def train(trainer):
@@ -175,12 +189,7 @@ def train(trainer):
        trainer.save()
 
        nSteps = stats['info']['num_steps_trained']
-       nTrajs = -sum(stats['hist_stats']['policy_policy_0_reward'])
-       length = nSteps / nTrajs
-       print('Epoch: {}, Reward: {}'.format(epoch, length ))
-
-       #if epoch % 5 == 0:
-       #   renderRollout()
+       print('Epoch: {}, Samples: {}'.format(epoch, nSteps))
        epoch += 1
 
 class Evaluator:
@@ -206,28 +215,50 @@ class Evaluator:
       self.obs, rewards, self.done, _ = self.env.step(atns)
  
 if __name__ == '__main__':
-   ray.init(local_mode=True)
+   #lib.ray.init(Config, 'local')
+   ray.init(local_mode=False)
 
    ModelCatalog.register_custom_model('test_model', Policy)
-   ModelCatalog.register_custom_preprocessor('test_preprocessor', Preprocessor)
    registry.register_env("custom", env_creator)
    env      = env_creator({})
 
    policies = {"policy_{}".format(i): gen_policy(env, i) for i in range(1)}
    keys     = list(policies.keys())
 
-   trainer = SanePPOTrainer(env="custom", path='experiment', config={
-      'use_pytorch': True,
-      'no_done_at_end': True,
+   '''
       'model': {
          'custom_model': 'test_model',
-         #'custom_preprocessor': 'test_preprocessor'
-      },
+       },
+   '''
+   '''
+   Epoch: 50, Samples: 204000
+   (pid=12436) Lifetime: 27.006
+   (pid=12430) Lifetime: 26.223
+   (pid=12435) Lifetime: 26.427
+   (pid=12433) Lifetime: 26.382
+   '''
+
+
+   #Note: you are on rllib 0.8.2. 0.8.4 seems to break some stuff
+   #Note: sample_batch_size and rollout_fragment_length are overriden
+   #by 'complete_episodes'
+   #'batch_mode': 'complete_episodes',
+   #Do not need 'no_done_at_end': True because horizon is inf
+   trainer = SanePPOTrainer(env="custom", path='experiment', config={
+      'num_workers': 4,
+      'sample_batch_size': 100,
+      'train_batch_size': 4000,
+      'sgd_minibatch_size': 128,
+      'num_sgd_iter': 1,
+      'use_pytorch': True,
+      'horizon': np.inf,
+      'soft_horizon': True, 
       "multiagent": {
          "policies": policies,
          "policy_mapping_fn": ray.tune.function(lambda i: 'policy_0')
       },
    })
+   utils.modelSize(trainer.get_policy('policy_0').model)
 
    #trainer.restore()
    train(trainer)

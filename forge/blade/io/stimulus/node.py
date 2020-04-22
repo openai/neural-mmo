@@ -93,12 +93,17 @@ class Discrete(Stim):
       return ary
 
    def norm(self):
-      val = self.val - self.min
+      val = self.val# - self.min
       assert val == int(val)
       return int(val)
 
    def get(self, *args):
       self.asserts(self.val)
+      return np.array([self.norm()])
+
+      #No norm needed for discrete vars. Below is for
+      #current hack where RLLIB treats everything as continuous
+      #The default preprocessor won't norm, so we can still embed
       return self.norm()
 
 class Continuous(Stim):
@@ -111,7 +116,7 @@ class Continuous(Stim):
       val = self.val - self.min
       if self.range == float('inf'):
          return self.scaled(val)
-      return val / self.range - 0.5
+      return 2*(val / self.range - 0.5)
 
    def scaled(self, val):
       return self.scale * val

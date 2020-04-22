@@ -72,16 +72,18 @@ class Input(nn.Module):
       attrs = Stimulus.dict()[name]
       #Slow probably
       for param, val in attrs:
-         val = [e[param] for e in entities]
-         val = torch.cat(val).to(self.device)
-         emb = self.emb[name]['-'.join(param)](val[:, 0])
+         val = [e[param].squeeze(-1) for e in entities]
+         #val = torch.cat(val).to(self.device)
+         val = torch.stack(val, 1).to(self.device)
+         emb = self.emb[name]['-'.join(param)](val)
          embeddings.append(emb)
 
+      #Construct: Batch, ents, nattrs, hidden
       embeddings = torch.stack(embeddings, -2)
 
-      #Batch, ents, nattrs, hidden
+      #Construct: Batch, ents, hidden
       embeddings = attn(embeddings)
-      embeddings = embeddings.unsqueeze(0)
+
       return embeddings
 
    def forward(self, inp):

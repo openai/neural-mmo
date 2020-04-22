@@ -41,21 +41,21 @@ class Entities(nn.Module):
 
       self.conv = nn.Conv2d(h, h, 3)
       self.pool = nn.MaxPool2d(2)
-      self.fc1 = nn.Linear(h*6*6, h)
+      self.fc1 = nn.Linear(h*3*3, h)
 
       self.fc2  = nn.Linear(2*h, h)
       self.attn = policy.Attention(config.EMBED, config.HIDDEN)
 
    def forward(self, x):
       batch = x.shape[0]
-      conv = x[:, -225:].view(-1, 15, 15, self.h).permute(0, 3, 1, 2)
+      conv = x[:, -81:].view(-1, 9, 9, self.h).permute(0, 3, 1, 2)
 
       conv = self.conv(conv)
       conv = self.pool(conv)
       conv = conv.view(batch, -1)
       conv = self.fc1(conv)
 
-      attn = x[:, :-225]
+      attn = x[:, :-81]
       attn = self.attn(attn)
 
       x = torch.cat((attn, conv), dim=-1)

@@ -73,6 +73,7 @@ class Stimulus:
          val = obj
          for n in name:
             val = val.__dict__[camel(n)]
+
          val = val.get(*args)
          stim[name] = val
 

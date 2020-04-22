@@ -31,7 +31,7 @@ class ScaledDotProductAttention(nn.Module):
    def forward(self, Q, K, V):
       Kt  = K.transpose(-2, -1)
       QK  = torch.matmul(Q, Kt)
-      QK  = torch.softmax(QK / self.scale, dim=-2)
+      QK  = torch.softmax(QK / self.scale, dim=-1)
       QKV = torch.matmul(QK, V)
       return QKV
 
@@ -70,6 +70,26 @@ class Attention(nn.Module):
          attn, _ = torch.max(attn, dim=-2)
 
       return attn
+
+class MultiAttention(nn.Module):
+   def __init__(self, xDim, yDim, flat=True):
+      super().__init__()
+      self.attn = torch.nn.MultiheadAttention(xDim, 4)
+
+   def forward(self, q):
+      shape = q.shape
+      batch       = shape[:-2]
+      seq, hidden = shape[-2:]
+
+      q = q.view(-1, seq, hidden)
+      q = q.permute(1, 0, 2)
+
+      out, weights = self.attn(q, q, q)
+      out, _       = torch.max(out, dim=0)
+      out          = out.transpose(0, 1).contiguous()
+      out          = out.view(*batch, hidden)
+
+      return out
 
 class FactorizedAttention(nn.Module):
    def __init__(self, xDim, yDim, h, flat=True):

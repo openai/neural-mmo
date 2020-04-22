@@ -39,7 +39,7 @@ class Stimulus(Config):
 
             def get(self, ent, ref):
                val = int(ent is ref)
-               return self.asserts(val)
+               return np.array([self.asserts(val)])
 
          class Population(node.Discrete):
             def init(self, config):
@@ -53,7 +53,7 @@ class Stimulus(Config):
 
             def get(self, ent, ref):
                val = self.val - ref.base.r.val
-               return self.asserts(val)
+               return np.array([self.asserts(val)])
     
          class C(node.Discrete):
             def init(self, config):
@@ -62,7 +62,7 @@ class Stimulus(Config):
 
             def get(self, ent, ref):
                val = self.val - ref.base.c.val
-               return self.asserts(val)
+               return np.array([self.asserts(val)])
 
       #Historical stats
       class History(Config, node.Flat):
@@ -133,7 +133,7 @@ class Stimulus(Config):
             self.max = config.NTILE
 
          def get(self, tile, r, c):
-            return tile.state.index
+            return np.array([tile.state.index])
 
       '''
       class Position(node.Discrete):
@@ -149,12 +149,12 @@ class Stimulus(Config):
             self.max = config.WINDOW
 
          def get(self, tile, r, c):
-            return r
+            return np.array([r])
  
       class CRel(node.Discrete):
          def init(self, config):
             self.max = config.WINDOW
 
          def get(self, tile, r, c):
-            return c
+            return np.array([c])
 

@@ -146,7 +146,7 @@ class DotReluBlock(nn.Module):
          h, layers, postRelu=False)
    
    def forward(self, k, v):
-      k = self.key(k)
+      k = self.key(k).unsqueeze(-2)
       v = self.val(v)
       x = torch.sum(k * v, -1)
       return x

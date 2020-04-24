@@ -1,10 +1,14 @@
 from pdb import set_trace as T
 import numpy as np
 
+from forge.blade.entity.player import Player
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
 from forge.blade.systems import combat
+
+class Fixed:
+   pass
 
 #ActionRoot
 class Action(Node):
@@ -72,6 +76,8 @@ class Move(Node):
       return True
 
 class Direction(Node):
+   argType = Fixed
+
    @staticproperty
    def edges():
       return [North, South, East, West]
@@ -145,6 +151,7 @@ class Attack(Node):
       return dmg
 
 class Style(Node):
+   argType = Fixed
    @staticproperty
    def edges():
       return [Melee, Range, Mage]
@@ -154,6 +161,7 @@ class Style(Node):
 
 
 class Target(Node):
+   argType = Player 
    def args(stim, entity, config):
       return Attack.inRange(entity, stim, config, config.MELEERANGE)
 

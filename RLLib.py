@@ -28,7 +28,7 @@ from forge.blade.io import stimulus
 from forge.blade import lib
 from forge.blade import core
 from forge.blade.lib.ray import init
-from forge.blade.io.action import static as action
+from forge.blade.io.action import static as StaticAction
 from forge.ethyr.torch import param
 #from forge.ethyr.torch.policy.baseline import IO
 from forge.ethyr.torch import policy
@@ -54,6 +54,8 @@ class Config(core.Config):
    WINDOW  = 9
    #WINDOW  = 15
 
+   ENT_OBS = 20
+
    OPTIM_STEPS = 128
    DEVICE      = 'cpu'
 
@@ -65,14 +67,18 @@ class Policy(TorchModelV2, nn.Module):
       #self.io = IO(Config)
       self.input = io.Input(Config, policy.TaggedInput,
             baseline.Attributes, baseline.Entities)
-      self.output = nn.Linear(Config.HIDDEN, 4)
+      self.output = io.Output(Config)
+      #self.output = nn.Linear(Config.HIDDEN, 4)
       self.valueF = nn.Linear(Config.HIDDEN, 1)
 
    def forward(self, input_dict, state, seq_lens):
       obs           = input_dict['obs']
       state, lookup = self.input(obs)
-      #atns  = self.io.output(state, lookup)
-      atns          = self.output(state)
+      atns          = self.output(state, lookup)
+
+      from forge.blade.io.action import static
+      atns =  atns[static.Move][static.Direction]
+      #atns          = self.output(state)
       self.value    = self.valueF(state).squeeze(1)
       return atns, []
 
@@ -96,8 +102,8 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
    def step(self, decisions):
       #Postprocess actions
       for entID, atn in decisions.items():
-         arg = action.Direction.edges[atn]
-         decisions[entID] = {action.Move: [arg]}
+         arg = StaticAction.Direction.edges[atn]
+         decisions[entID] = {StaticAction.Move: [arg]}
 
       stims, rewards, dones, _ = super().step(decisions)
       preprocessed        = {}
@@ -139,12 +145,11 @@ def gen_policy(env, i):
       attrDict = {}
       for attr, val in attrList:
          if issubclass(val, node.Discrete):
-            #attrDict[attr] = spaces.Discrete(val.range)
-            #attrDict[attr] = spaces.Discrete(100)
-            attrDict[attr] = spaces.Box(low=-1000, high=1000, shape=(1,))
+            attrDict[attr] = spaces.Box(
+                  low=0, high=val(Config()).range, shape=(1,))
          elif issubclass(val, node.Continuous):
-            #attrDict[attr] = spaces.Box(low=val.min, high=val.max, shape=(1,))
-            attrDict[attr] = spaces.Box(low=-1000, high=1000, shape=(1,))
+            attrDict[attr] = spaces.Box(
+                  low=-1, high=1, shape=(1,))
       entityDict[entity] = spaces.Dict(attrDict)
 
    key  = tuple(['Tile'])
@@ -226,11 +231,6 @@ if __name__ == '__main__':
    keys     = list(policies.keys())
 
    '''
-      'model': {
-         'custom_model': 'test_model',
-       },
-   '''
-   '''
    Epoch: 50, Samples: 204000
    (pid=12436) Lifetime: 27.006
    (pid=12430) Lifetime: 26.223
@@ -257,6 +257,9 @@ if __name__ == '__main__':
          "policies": policies,
          "policy_mapping_fn": ray.tune.function(lambda i: 'policy_0')
       },
+      'model': {
+         'custom_model': 'test_model',
+       },
    })
    utils.modelSize(trainer.get_policy('policy_0').model)
 

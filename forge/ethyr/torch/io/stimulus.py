@@ -9,6 +9,7 @@ from torch import nn
 from forge.blade.io import stimulus, action
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.stimulus import node
+from forge.blade.io.action.static import Fixed
 
 class Input(nn.Module):
    def __init__(self, config, embeddings, attributes, entities):
@@ -106,7 +107,7 @@ class Input(nn.Module):
          entityLookup[name] = embs
          embeddings.append(embs)
 
-      entityLookup['Fixed'] = self.actions()
+      entityLookup[Fixed.__name__] = self.actions()
 
       #Pack entities of each observation
       embeddings   = torch.cat(embeddings, dim=-2)

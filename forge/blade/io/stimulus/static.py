@@ -68,13 +68,14 @@ class Stimulus(Config):
       class History(Config, node.Flat):
          class Damage(node.Continuous):
             def init(self, config):
+               #This scale may eventually be too high
                self.default = None
-               self.scale = 0.01
+               self.scale = 0.05
 
          class TimeAlive(node.Continuous):
             def init(self, config):
                self.default = 0
-               self.scale = 0.01
+               self.scale = 0.001
 
       #Resources
       class Resources(Config, node.Flat):
@@ -126,7 +127,10 @@ class Stimulus(Config):
             self.max = config.NENT
 
          def get(self, tile, r, c):
-            return np.array([len(tile.ents)])
+            #Hack to include super norm to [-1, 1]
+            self._val = len(tile.ents)
+            val = float(super().get())
+            return np.array([val])
 
       class Index(node.Discrete):
          def init(self, config):

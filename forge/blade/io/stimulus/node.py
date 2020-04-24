@@ -8,8 +8,7 @@ class Flat:
 
 class Stim:
    default = 0
-   #max = float('inf')
-   max = 1000
+   max = np.inf
    min = 0
 
    def __init__(self, config):
@@ -114,14 +113,18 @@ class Continuous(Stim):
    def norm(self):
       assert self.val >= self.min and self.val <= self.max
       val = self.val - self.min
-      if self.range == float('inf'):
-         return self.scaled(val)
-      return 2*(val / self.range - 0.5)
+      if self.range == np.inf:
+         val = self.scaled(val)
+      else:
+         val = 2*(val / self.range) - 1
+      assert val >= -1 and val <= 1
+      return val
 
    def scaled(self, val):
       return self.scale * val
 
    def get(self, *args):
       self.asserts(self.val)
-      return np.array([self.norm()])
+      val = self.norm()
+      return np.array([val])
 

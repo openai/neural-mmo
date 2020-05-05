@@ -11,6 +11,8 @@ import time
 from matplotlib import pyplot as plt
 import glob
 
+from collections import defaultdict
+
 import ray
 from ray import rllib
 from ray.rllib.models import ModelCatalog
@@ -21,8 +23,15 @@ from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from ray.rllib.models import preprocessors
 import argparse
 
+from ray.rllib.models.torch.torch_action_dist import TorchMultiActionDistribution, TorchCategorical, TorchDiagGaussian
+from ray.rllib.utils.space_utils import flatten_space
+from ray.rllib.utils import try_import_tree
+
+import torch
+
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.stimulus import node
+from forge.blade.io.action.static import Action
 from forge.blade.io import stimulus
 
 from forge.blade import lib
@@ -74,13 +83,36 @@ class Policy(TorchModelV2, nn.Module):
    def forward(self, input_dict, state, seq_lens):
       obs           = input_dict['obs']
       state, lookup = self.input(obs)
-      atns          = self.output(state, lookup)
+      logits        = self.output(state, lookup)
 
-      from forge.blade.io.action import static
-      atns =  atns[static.Move][static.Direction]
-      #atns          = self.output(state)
+      #from forge.blade.io.action import static
+      #logits = atns[static.Move][static.Direction]
       self.value    = self.valueF(state).squeeze(1)
-      return atns, []
+
+      flatLogits = []
+      inputLens = []
+      childDistributions=[]
+      space = actionSpace()
+      for atnKey, atn in space.spaces.items():
+         for argKey, arg in atn.spaces.items():
+            arg = logits[atnKey][argKey]
+            flatLogits.append(arg)
+            inputLens.append(arg.size(-1))
+            childDistributions.append(TorchCategorical)
+
+      flatLogits = torch.cat(flatLogits, dim=1)
+
+      distrib = TorchMultiActionDistribution(
+         flatLogits,
+         model=self,
+         child_distributions=childDistributions,
+         input_lens=inputLens,
+         action_space=actionSpace()) 
+
+      atns = distrib.sample()
+      tree = try_import_tree()
+      flat = tree.flatten(atns)
+      return flatLogits, []
 
    def value_function(self):
       return self.value
@@ -101,21 +133,41 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
    '''Example environment overrides'''
    def step(self, decisions):
       #Postprocess actions
-      for entID, atn in decisions.items():
-         arg = StaticAction.Direction.edges[atn]
-         decisions[entID] = {StaticAction.Move: [arg]}
+      for entID in list(decisions.keys()):
+         style, target, direction = decisions[entID]
+         atn = {}
 
+         atn[StaticAction.Move]   = {
+               StaticAction.Direction:
+                     StaticAction.Direction.edges[direction]
+            }
+
+         #Note: you are not masking over padded agents yet.
+         #This will make learning attacks very hard
+         ents = self.raw[entID][('Entity',)]
+         if target < len(ents):
+            atn[StaticAction.Attack] = {
+                  StaticAction.Style:
+                        StaticAction.Style.edges[style],
+                  StaticAction.Target:
+                        ents[target]
+               }
+         
+         decisions[entID] = atn
+      
       stims, rewards, dones, _ = super().step(decisions)
       preprocessed        = {}
       preprocessedRewards = {}
       preprocessedDones   = {}
+      self.raw = {}
       for idx, stim in enumerate(stims):
          env, ent = stim
          conf = self.config
          n = conf.STIM
          s = []
 
-         obs = stimulus.Dynamic.process(self.config, env, ent, True)
+         obs, self.raw[ent.entID] = stimulus.Dynamic.process(
+               self.config, env, ent, True)
 
          preprocessed[ent.entID] = obs
          preprocessedRewards[ent.entID] = 0
@@ -139,6 +191,20 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
 def env_creator(args):
    return Realm(Config(), idx=0)
 
+def actionSpace():
+   atns = defaultdict(dict)
+   for atn in Action.edges:
+      for arg in atn.edges:
+         n = len(arg.edges)
+         #Quick hack for testing
+         if arg.__name__ == 'Target': 
+            atns[atn.__name__][arg.__name__] = gym.spaces.Discrete(20)
+         else:
+            atns[atn.__name__][arg.__name__] = gym.spaces.Discrete(n)
+      atns[atn.__name__] = spaces.Dict(atns[atn.__name__])
+   atns = spaces.Dict(atns)
+   return atns
+
 def gen_policy(env, i):
    obs, entityDict  = {}, {}
    for entity, attrList in Stimulus:
@@ -159,8 +225,9 @@ def gen_policy(env, i):
    obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
 
    obs  = spaces.Dict(obs)
-   atns = gym.spaces.Discrete(4)
-
+   atns = actionSpace()
+   atns = spaces.Tuple(flatten_space(atns))
+   #atns = gym.spaces.Discrete(4)
    params = {
                "agent_id": i,
                "obs_space_dict": obs,
@@ -208,20 +275,24 @@ class Evaluator:
    def run(self):
       from forge.embyr.twistedserver import Application
       Application(self.env, self.tick)
+      self.tick()
 
    def tick(self):
       atns = {}
       for agentID, ob in self.obs.items():
          if agentID in self.done and self.done[agentID]:
             continue
-         atns[agentID] = trainer.compute_action(self.obs[agentID],
+
+         atn = trainer.compute_action(self.obs[agentID],
                policy_id='policy_{}'.format(0))
+         
+         atns[agentID] = [int(e) for e in atn]
 
       self.obs, rewards, self.done, _ = self.env.step(atns)
  
 if __name__ == '__main__':
-   #lib.ray.init(Config, 'local')
-   ray.init(local_mode=False)
+   lib.ray.init(Config, 'local')
+   #ray.init(local_mode=True)
 
    ModelCatalog.register_custom_model('test_model', Policy)
    registry.register_env("custom", env_creator)
@@ -246,7 +317,7 @@ if __name__ == '__main__':
    #Do not need 'no_done_at_end': True because horizon is inf
    trainer = SanePPOTrainer(env="custom", path='experiment', config={
       'num_workers': 4,
-      'sample_batch_size': 100,
+      'rollout_fragment_length': 100,
       'train_batch_size': 4000,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
@@ -255,7 +326,7 @@ if __name__ == '__main__':
       'soft_horizon': True, 
       "multiagent": {
          "policies": policies,
-         "policy_mapping_fn": ray.tune.function(lambda i: 'policy_0')
+         "policy_mapping_fn": lambda i: 'policy_0'
       },
       'model': {
          'custom_model': 'test_model',
@@ -264,7 +335,7 @@ if __name__ == '__main__':
    utils.modelSize(trainer.get_policy('policy_0').model)
 
    #trainer.restore()
-   train(trainer)
-   #Evaluator(env, trainer).run()
+   #train(trainer)
+   Evaluator(env, trainer).run()
 
 

@@ -57,7 +57,9 @@ class Output(nn.Module):
             #lens = [cands.shape[1] for e in range(cands.shape[0])]
             lens  = None
             logits = self.net(obs, cands, lens)
-            rets[atn][arg] = logits
+            #String names for RLlib for now
+            rets[atn.__name__][arg.__name__] = logits
+
       return rets
       
 class Action(nn.Module):

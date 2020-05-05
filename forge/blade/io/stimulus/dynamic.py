@@ -36,12 +36,13 @@ class Stimulus:
 
       index = 0
       stim  = {}
+      raw   = {}
       ent.stim = defaultdict(list)
       keys = list(Stimulus.static.keys())
       for key, f in zip(keys, Stimulus.functions):
-         stim[key] = f(env, ent, key, config)
+         stim[key], raw[key] = f(env, ent, key, config)
 
-      return stim
+      return stim, raw
 
    def add(static, obj, *args, key):
       '''Pull attributes from game and serialize names'''
@@ -65,20 +66,24 @@ class Stimulus:
    def tile(env, ent, key, config):
       '''Internal processor for tile objects'''
       stim = []
+      raw = []
       static = Stimulus.static[key]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
+            raw.append(tile)
             s = Stimulus.add(static, tile, tile, r, c,
                   key=ent)
             ent.stim[type(tile)].append(tile)
             stim.append(s)
-      return stim
+      return stim, raw
 
    def entity(env, ent, key, config):
       '''Internal processor for player objects. Always returns self first'''
+      raw = []
       static, stim = Stimulus.static[key], deque()
       for tile in env.ravel():
          for e in tile.ents.values():
+            raw.append(e)
             s = Stimulus.add(static, e, ent, e, key=ent)
             ent.stim[type(e)].append(e)
             if ent is e:
@@ -91,4 +96,4 @@ class Stimulus:
       while len(stim) < config.ENT_OBS:
          stim.append(nop)
 
-      return stim
+      return stim, raw

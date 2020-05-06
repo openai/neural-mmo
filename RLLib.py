@@ -51,6 +51,7 @@ def oneHot(i, n):
    return vec
 
 class Config(core.Config):
+   SIMPLE  = True
    NENT    = 256
    NPOP    = 8
 
@@ -58,12 +59,14 @@ class Config(core.Config):
    NWORKER = 12
 
    EMBED   = 32
-   HIDDEN  = 32
+   HIDDEN  = 64
    STIM    = 4
    WINDOW  = 9
    #WINDOW  = 15
 
-   ENT_OBS = 20
+   #Set this high enough that you can always attack
+   #Probably should sort by distance
+   ENT_OBS = 10
 
    OPTIM_STEPS = 128
    DEVICE      = 'cpu'
@@ -73,13 +76,23 @@ class Policy(TorchModelV2, nn.Module):
       TorchModelV2.__init__(self, *args, **kwargs)
       nn.Module.__init__(self)
 
-      self.input = io.Input(Config, policy.TaggedInput,
-            baseline.Attributes, baseline.Entities)
-      self.output = io.Output(Config)
-      self.valueF = nn.Linear(Config.HIDDEN, 1)
+      if Config.SIMPLE:
+         self.fc     = nn.Linear(564, 4)
+         self.valueF = nn.Linear(564, 1)
+      else:
+         self.input = io.Input(Config, policy.TaggedInput,
+               baseline.Attributes, baseline.Entities)
+         self.output = io.Output(Config)
+         self.valueF = nn.Linear(Config.HIDDEN, 1)
 
    def forward(self, input_dict, state, seq_lens):
       obs           = input_dict['obs']
+
+      if Config.SIMPLE:
+         obs           = input_dict['obs_flat']
+         self.value    = self.valueF(obs).squeeze(1)
+         return self.fc(obs), []
+ 
       state, lookup = self.input(obs)
       logits        = self.output(state, lookup)
 
@@ -137,9 +150,12 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
             continue
 
          atn = decisions[entID]
-         style     = int(atn['Attack']['Style'])
-         target    = int(atn['Attack']['Target'])
-         direction = int(atn['Move']['Direction'])
+         if Config.SIMPLE:
+            direction = atn
+         else:
+            style     = int(atn['Attack']['Style'])
+            target    = int(atn['Attack']['Target'])
+            direction = int(atn['Move']['Direction'])
 
          atn = {}
          atn[StaticAction.Move]   = {
@@ -149,15 +165,16 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
 
          #Note: you are not masking over padded agents yet.
          #This will make learning attacks very hard
-         ents = self.raw[entID][('Entity',)]
-         if target < len(ents):
-            atn[StaticAction.Attack] = {
-                  StaticAction.Style:
-                        StaticAction.Style.edges[style],
-                  StaticAction.Target:
-                        ents[target]
-               }
-         
+         if not Config.SIMPLE:
+            ents = self.raw[entID][('Entity',)]
+            if target < len(ents):
+               atn[StaticAction.Attack] = {
+                     StaticAction.Style:
+                           StaticAction.Style.edges[style],
+                     StaticAction.Target:
+                           ents[target]
+                  }
+            
          decisions[entID] = atn
       
       obs, rewards, dones, _ = super().step(decisions)
@@ -208,7 +225,10 @@ def gen_policy(env, i):
    obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
 
    obs    = spaces.Dict(obs)
-   atns   = actionSpace()
+   if Config.SIMPLE:
+      atns   = spaces.Discrete(4)
+   else:
+      atns   = actionSpace()
    params = {
                "agent_id": i,
                "obs_space_dict": obs,

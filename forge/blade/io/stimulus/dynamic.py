@@ -16,7 +16,7 @@ class Stimulus:
 
    The environment returns game objects in observations.
    This class assembles them into usable data packets'''
-   def process(config, env, ent, serialize=True):
+   def process(config, env, ent):
       '''Utility for preprocessing game observations
 
       Built to be semi-automatic and only require small updates

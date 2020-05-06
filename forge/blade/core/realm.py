@@ -4,16 +4,10 @@ from collections import defaultdict
 from itertools import chain
 
 from forge.blade import entity, core
+from forge.blade.io import stimulus
+
 from forge.blade.lib.enums import Palette
 from forge.trinity.ascend import runtime, Timed
-
-class Packet():
-   '''Wrapper for state, reward, done signals'''
-   def __init__(self):
-      '''Instantiates packet data'''
-      self.stim   = None
-      self.reward = None
-      self.done   = None
 
 class Spawner:
    '''Manager class responsible for agent spawning logic'''
@@ -108,17 +102,12 @@ class Realm(Timed):
       assert iden is not None
 
       self.spawner.spawn(self, iden, pop, name)
-      packets, dead = self.stepEnts(decisions)
+      self.stepEnts(decisions)
 
       self.stepEnv()
-      packets = self.getStims(packets)
+      obs, rewards, dones = self.getStims()
 
-      #Conform to gym
-      stims   = [p.stim   for p in packets.values()]
-      rewards = [p.reward for p in packets.values()]
-      dones   = dead
-
-      return stims, rewards, dones, None
+      return obs, rewards, dones, {}
 
    def reset(self):
       err = 'Neural MMO is persistent and may only be reset once upon initialization'
@@ -126,6 +115,8 @@ class Realm(Timed):
       return self.step({})
 
    def reward(self, entID):
+      if entID in self.dead:
+         return -1
       return 0
 
    def spawn(self):
@@ -210,18 +201,13 @@ class Realm(Timed):
       self.act(actions)
 
       #Finally cull dead. This will enable MAD melee
-      dead, dones = set(), set()
-      packets     = defaultdict(Packet)
-      for entID in decisions.keys():
-         ent    = self.desciples[entID]
-         if self.postmortem(ent, dead):
-            dones.add(ent)
-         else:
-            packets[entID].reward = self.reward(entID)
-            packets[entID].stim = ent
+      dead = set()
+      for entID, ent in self.desciples.items():
+         self.postmortem(ent, dead)
 
+      self.dead = dead
       self.cullDead(dead)
-      return packets, dones
+      return dead
 
    def postmortem(self, ent, dead):
       '''Add agent to the graveyard if it is dead
@@ -233,9 +219,8 @@ class Realm(Timed):
       Returns:
          bool: Whether the agent is dead
       '''
-      entID = ent.entID
       if not ent.base.alive:
-         dead.add(entID)
+         dead.add(ent)
          return True
       return False
 
@@ -245,16 +230,16 @@ class Realm(Timed):
       Args: 
          dead: A list of dead agent IDs to remove
       '''
-      for entID in dead:
-         ent  = self.desciples[entID]
-         r, c = ent.base.pos
+      for ent in dead:
+         r, c  = ent.base.pos
+         entID = ent.entID
 
          self.world.env.tiles[r, c].delEnt(entID)
          self.spawner.cull(ent.annID)
 
          del self.desciples[entID]
 
-   def getStims(self, packets):
+   def getStims(self):
       '''Gets agent stimuli from the environment
 
       Args:
@@ -263,14 +248,28 @@ class Realm(Timed):
       Returns:
          The packet dictionary populated with agent data
       '''
+      self.raw = {}
+      obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.desciples.items():
          r, c = ent.base.pos
          tile = self.world.env.tiles[r, c].tex
          stim = self.world.env.stim(
                 ent.base.pos, self.config.STIM)
 
-         packets[entID].stim = (stim, ent)
+         obs[entID], self.raw[entID] = stimulus.Dynamic.process(
+               self.config, stim, ent)
+         ob = obs[entID]
 
-      return packets
+         rewards[entID] = self.reward(entID)
+         dones[entID]   = False
+
+      for ent in self.dead:
+         #Why do we have to provide an ob for the last timestep?
+         #Currently just copying one over
+         rewards[ent.entID] = self.reward(entID)
+         dones[ent.entID]   = True
+         obs[ent.entID]     = ob
+
+      return obs, rewards, dones
 
 

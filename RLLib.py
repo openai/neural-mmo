@@ -73,11 +73,9 @@ class Policy(TorchModelV2, nn.Module):
       TorchModelV2.__init__(self, *args, **kwargs)
       nn.Module.__init__(self)
 
-      #self.io = IO(Config)
       self.input = io.Input(Config, policy.TaggedInput,
             baseline.Attributes, baseline.Entities)
       self.output = io.Output(Config)
-      #self.output = nn.Linear(Config.HIDDEN, 4)
       self.valueF = nn.Linear(Config.HIDDEN, 1)
 
    def forward(self, input_dict, state, seq_lens):
@@ -85,8 +83,6 @@ class Policy(TorchModelV2, nn.Module):
       state, lookup = self.input(obs)
       logits        = self.output(state, lookup)
 
-      #from forge.blade.io.action import static
-      #logits = atns[static.Move][static.Direction]
       self.value    = self.valueF(state).squeeze(1)
 
       flatLogits = []
@@ -126,17 +122,26 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       #assert self.tick == 0
       return self.step({})[0]
 
-   def preprocess(env, ent):
-      pass
-      
-      
    '''Example environment overrides'''
    def step(self, decisions):
       #Postprocess actions
+      '''
+      if len(decisions) > 0:
+         print(   
+               decisions.keys(),
+               self.desciples.keys(),
+               [e.entID for e in self.dead])
+      '''
       for entID in list(decisions.keys()):
-         style, target, direction = decisions[entID]
-         atn = {}
+         if entID in self.dead:
+            continue
 
+         atn = decisions[entID]
+         style     = int(atn['Attack']['Style'])
+         target    = int(atn['Attack']['Target'])
+         direction = int(atn['Move']['Direction'])
+
+         atn = {}
          atn[StaticAction.Move]   = {
                StaticAction.Direction:
                      StaticAction.Direction.edges[direction]
@@ -155,38 +160,16 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
          
          decisions[entID] = atn
       
-      stims, rewards, dones, _ = super().step(decisions)
-      preprocessed        = {}
-      preprocessedRewards = {}
-      preprocessedDones   = {}
-      self.raw = {}
-      for idx, stim in enumerate(stims):
-         env, ent = stim
-         conf = self.config
-         n = conf.STIM
-         s = []
+      obs, rewards, dones, _ = super().step(decisions)
 
-         obs, self.raw[ent.entID] = stimulus.Dynamic.process(
-               self.config, env, ent, True)
-
-         preprocessed[ent.entID] = obs
-         preprocessedRewards[ent.entID] = 0
-         preprocessedDones[ent.entID]   = False
-         preprocessedDones['__all__']   = False #self.tick % 200 == 0
-
-      for ent in dones:
-         #Why is there a final obs? Zero this?
-         preprocessed[ent.entID]        = obs
-         preprocessedDones[ent.entID]   = True
-         preprocessedRewards[ent.entID] = -1
-
+      for ent in self.dead:
          self.lifetimes.append(ent.history.timeAlive.val)
          if len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             self.lifetimes = []
             print('Lifetime: {}'.format(lifetime))
 
-      return preprocessed, preprocessedRewards, preprocessedDones, {}
+      return obs, rewards, dones, {}
 
 def env_creator(args):
    return Realm(Config(), idx=0)
@@ -224,10 +207,8 @@ def gen_policy(env, i):
    key  = tuple(['Entity'])
    obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
 
-   obs  = spaces.Dict(obs)
-   atns = actionSpace()
-   atns = spaces.Tuple(flatten_space(atns))
-   #atns = gym.spaces.Discrete(4)
+   obs    = spaces.Dict(obs)
+   atns   = actionSpace()
    params = {
                "agent_id": i,
                "obs_space_dict": obs,
@@ -285,13 +266,13 @@ class Evaluator:
 
          atn = trainer.compute_action(self.obs[agentID],
                policy_id='policy_{}'.format(0))
+         atns[agentID] = atn
          
-         atns[agentID] = [int(e) for e in atn]
-
       self.obs, rewards, self.done, _ = self.env.step(atns)
  
 if __name__ == '__main__':
-   lib.ray.init(Config, 'local')
+   #lib.ray.init(Config, 'local')
+   lib.ray.init(Config, 'default') 
    #ray.init(local_mode=True)
 
    ModelCatalog.register_custom_model('test_model', Policy)
@@ -335,7 +316,7 @@ if __name__ == '__main__':
    utils.modelSize(trainer.get_policy('policy_0').model)
 
    #trainer.restore()
-   #train(trainer)
-   Evaluator(env, trainer).run()
+   train(trainer)
+   #Evaluator(env, trainer).run()
 
 

@@ -266,7 +266,7 @@ class Realm(Timed):
       for ent in self.dead:
          #Why do we have to provide an ob for the last timestep?
          #Currently just copying one over
-         rewards[ent.entID] = self.reward(entID)
+         rewards[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = ob
 

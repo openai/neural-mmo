@@ -58,7 +58,7 @@ class Config(core.Config):
    NREALM  = 256
    NWORKER = 12
 
-   EMBED   = 32
+   EMBED   = 64
    HIDDEN  = 64
    STIM    = 4
    WINDOW  = 9
@@ -66,7 +66,7 @@ class Config(core.Config):
 
    #Set this high enough that you can always attack
    #Probably should sort by distance
-   ENT_OBS = 10
+   ENT_OBS = 20
 
    OPTIM_STEPS = 128
    DEVICE      = 'cpu'
@@ -76,22 +76,30 @@ class Policy(TorchModelV2, nn.Module):
       TorchModelV2.__init__(self, *args, **kwargs)
       nn.Module.__init__(self)
 
+      '''
       if Config.SIMPLE:
-         self.fc     = nn.Linear(564, 4)
-         self.valueF = nn.Linear(564, 1)
-      else:
-         self.input = io.Input(Config, policy.TaggedInput,
-               baseline.Attributes, baseline.Entities)
-         self.output = io.Output(Config)
-         self.valueF = nn.Linear(Config.HIDDEN, 1)
+         self.fc1     = nn.Linear(2688, 256)
+         self.fc2     = nn.Linear(256, 256)
+         self.logits  = nn.Linear(256, 4)
+         self.valueF = nn.Linear(256, 1)
+      '''
+      self.input = io.Input(Config, policy.TaggedInput,
+            baseline.Attributes, baseline.Entities)
+      self.output = io.Output(Config)
+      self.valueF = nn.Linear(Config.HIDDEN, 1)
 
    def forward(self, input_dict, state, seq_lens):
       obs           = input_dict['obs']
 
+      '''
       if Config.SIMPLE:
-         obs           = input_dict['obs_flat']
-         self.value    = self.valueF(obs).squeeze(1)
-         return self.fc(obs), []
+         x           = input_dict['obs_flat']
+         x = torch.tanh(self.fc1(x))
+         x = torch.tanh(self.fc2(x))
+         atn = self.logits(x)
+         self.value    = self.valueF(x).squeeze(1)
+         return atn, []
+      '''
  
       state, lookup = self.input(obs)
       logits        = self.output(state, lookup)
@@ -150,12 +158,9 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
             continue
 
          atn = decisions[entID]
-         if Config.SIMPLE:
-            direction = atn
-         else:
-            style     = int(atn['Attack']['Style'])
-            target    = int(atn['Attack']['Target'])
-            direction = int(atn['Move']['Direction'])
+         style     = int(atn['Attack']['Style'])
+         target    = int(atn['Attack']['Target'])
+         direction = int(atn['Move']['Direction'])
 
          atn = {}
          atn[StaticAction.Move]   = {
@@ -165,20 +170,38 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
 
          #Note: you are not masking over padded agents yet.
          #This will make learning attacks very hard
-         if not Config.SIMPLE:
-            ents = self.raw[entID][('Entity',)]
-            if target < len(ents):
-               atn[StaticAction.Attack] = {
-                     StaticAction.Style:
-                           StaticAction.Style.edges[style],
-                     StaticAction.Target:
-                           ents[target]
-                  }
+         ents = self.raw[entID][('Entity',)]
+         if target < len(ents):
+            atn[StaticAction.Attack] = {
+                  StaticAction.Style:
+                        StaticAction.Style.edges[style],
+                  StaticAction.Target:
+                        ents[target]
+               }
             
          decisions[entID] = atn
       
       obs, rewards, dones, _ = super().step(decisions)
 
+      '''
+      if Config.SIMPLE:
+         preprocessed        = {}
+         for idx, ob in obs.items():
+            s = []
+
+            for tile in ob[('Tile',)]:
+               s += oneHot(tile[('Index',)], 6)
+
+            ent = ob[('Entity'),][0]
+         
+            s.append(float(ent[('Resources', 'Health')]))
+            s.append(float(ent[('Resources', 'Food')]))
+            s.append(float(ent[('Resources', 'Water')]))
+
+            preprocessed[idx] = s
+         obs = preprocessed
+      '''
+               
       for ent in self.dead:
          self.lifetimes.append(ent.history.timeAlive.val)
          if len(self.lifetimes) >= 1000:
@@ -211,8 +234,11 @@ def gen_policy(env, i):
       attrDict = {}
       for attr, val in attrList:
          if issubclass(val, node.Discrete):
+            #if Config.SIMPLE:
+            #attrDict[attr] = spaces.Discrete(val(Config()).range)
+            #else:
             attrDict[attr] = spaces.Box(
-                  low=0, high=val(Config()).range, shape=(1,))
+                     low=0, high=val(Config()).range, shape=(1,))
          elif issubclass(val, node.Continuous):
             attrDict[attr] = spaces.Box(
                   low=-1, high=1, shape=(1,))
@@ -225,10 +251,14 @@ def gen_policy(env, i):
    obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
 
    obs    = spaces.Dict(obs)
+   atns   = actionSpace()
+   '''
    if Config.SIMPLE:
-      atns   = spaces.Discrete(4)
-   else:
-      atns   = actionSpace()
+      atns = spaces.Discrete(4)
+      #obs  = spaces.Box(low=-1.0, high=1.0,
+      #      shape=(489,), dtype=np.float32)
+   '''
+
    params = {
                "agent_id": i,
                "obs_space_dict": obs,
@@ -292,8 +322,9 @@ class Evaluator:
  
 if __name__ == '__main__':
    #lib.ray.init(Config, 'local')
-   lib.ray.init(Config, 'default') 
+   #lib.ray.init(Config, 'default') 
    #ray.init(local_mode=True)
+   ray.init()
 
    ModelCatalog.register_custom_model('test_model', Policy)
    registry.register_env("custom", env_creator)
@@ -335,7 +366,7 @@ if __name__ == '__main__':
    })
    utils.modelSize(trainer.get_policy('policy_0').model)
 
-   #trainer.restore()
+   trainer.restore()
    train(trainer)
    #Evaluator(env, trainer).run()
 

@@ -46,7 +46,7 @@ class Stimulus(Config):
                self.default = None
                self.max = config.NPOP
 
-         class R(node.Discrete):
+         class R(node.Continuous):
             def init(self, config):
                self.min = -config.STIM
                self.max = config.STIM
@@ -55,7 +55,8 @@ class Stimulus(Config):
                val = self.val - ref.base.r.val
                return np.array([self.asserts(val)])
     
-         class C(node.Discrete):
+         #You made this continuous
+         class C(node.Continuous):
             def init(self, config):
                self.min = -config.STIM
                self.max = config.STIM
@@ -108,9 +109,10 @@ class Stimulus(Config):
 
          class Wilderness(node.Continuous):
             def init(self, config):
-               self.default = -1
+               #You set a low max here
+               self.default = -1 
                self.min     = -1
-               self.max     = 126
+               self.max     = 10
 
    class Tile(Config):
       #A multiplicative interaction between pos and index

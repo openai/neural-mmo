@@ -36,7 +36,7 @@ class Stim:
 
    def asserts(self, val):
       if val is not None:
-         assert val >= self.min and val <= self.max
+         assert val >= self.min and val <= self.max, str(self) + ': ' + str(val)
       return val
  
    def update(self, val):
@@ -99,6 +99,7 @@ class Discrete(Stim):
    def get(self, *args):
       self.asserts(self.val)
       return np.array([self.norm()])
+      return self.norm()
 
       #No norm needed for discrete vars. Below is for
       #current hack where RLLIB treats everything as continuous

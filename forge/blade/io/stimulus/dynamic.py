@@ -57,10 +57,10 @@ class Stimulus:
 
       return stim
 
-   def nop(static):
+   def nop(template):
       stim = {}
-      for name, attr in static:
-         stim[name] = np.array([0]) 
+      for name, attr in template.items():
+         stim[name] = template[name] * 0
       return stim
 
    def tile(env, ent, key, config):
@@ -92,7 +92,7 @@ class Stimulus:
                stim.append(s)
 
       stim = list(stim)[:config.ENT_OBS]
-      nop = Stimulus.nop(static)
+      nop = Stimulus.nop(s)
       while len(stim) < config.ENT_OBS:
          stim.append(nop)
 

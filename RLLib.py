@@ -138,6 +138,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
       super().__init__(config, idx)
       self.lifetimes = []
+      self.nEpisodes = 0
            
    def reset(self):
       #assert self.tick == 0
@@ -146,13 +147,6 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
    '''Example environment overrides'''
    def step(self, decisions):
       #Postprocess actions
-      '''
-      if len(decisions) > 0:
-         print(   
-               decisions.keys(),
-               self.desciples.keys(),
-               [e.entID for e in self.dead])
-      '''
       for entID in list(decisions.keys()):
          if entID in self.dead:
             continue
@@ -180,29 +174,15 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
                }
             
          decisions[entID] = atn
-      
+
       obs, rewards, dones, _ = super().step(decisions)
 
-      '''
-      if Config.SIMPLE:
-         preprocessed        = {}
-         for idx, ob in obs.items():
-            s = []
-
-            for tile in ob[('Tile',)]:
-               s += oneHot(tile[('Index',)], 6)
-
-            ent = ob[('Entity'),][0]
-         
-            s.append(float(ent[('Resources', 'Health')]))
-            s.append(float(ent[('Resources', 'Food')]))
-            s.append(float(ent[('Resources', 'Water')]))
-
-            preprocessed[idx] = s
-         obs = preprocessed
-      '''
-               
       for ent in self.dead:
+         self.nEpisodes += 1
+         if self.nEpisodes >= 100:
+            dones['__all__'] = True
+            self.nEpisodes   = 0
+
          self.lifetimes.append(ent.history.timeAlive.val)
          if len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
@@ -324,6 +304,7 @@ if __name__ == '__main__':
    #lib.ray.init(Config, 'local')
    #lib.ray.init(Config, 'default') 
    #ray.init(local_mode=True)
+   torch.set_num_threads(1)
    ray.init()
 
    ModelCatalog.register_custom_model('test_model', Policy)
@@ -347,15 +328,19 @@ if __name__ == '__main__':
    #by 'complete_episodes'
    #'batch_mode': 'complete_episodes',
    #Do not need 'no_done_at_end': True because horizon is inf
+   #no_done_at_end is per agent
+   #   'rollout_fragment_length': 100,
    trainer = SanePPOTrainer(env="custom", path='experiment', config={
       'num_workers': 4,
-      'rollout_fragment_length': 100,
+      'num_gpus': 1,
       'train_batch_size': 4000,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
       'use_pytorch': True,
+      'batch_mode': 'complete_episodes',
       'horizon': np.inf,
-      'soft_horizon': True, 
+      'soft_horizon': False, 
+      'no_done_at_end': False,
       "multiagent": {
          "policies": policies,
          "policy_mapping_fn": lambda i: 'policy_0'
@@ -366,7 +351,7 @@ if __name__ == '__main__':
    })
    utils.modelSize(trainer.get_policy('policy_0').model)
 
-   trainer.restore()
+   #trainer.restore()
    train(trainer)
    #Evaluator(env, trainer).run()
 

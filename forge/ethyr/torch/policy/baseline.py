@@ -14,7 +14,7 @@ class IO(nn.Module):
          config: A Configuration object
       '''
       super().__init__()
-      self.input  = io.Input(config, policy.TaggedInput, Attributes, Entities)
+      self.input  = io.Input(config, policy.Input, Attributes, Entities)
       self.output = io.Output(config)
 
 class Attributes(policy.Attention):
@@ -34,7 +34,6 @@ class Entities(nn.Module):
          config: A Configuration object
       '''
       super().__init__()
-      self.device = config.DEVICE
       h = config.HIDDEN
       self.h = h
       #self.targDim = 250*h
@@ -52,7 +51,7 @@ class Entities(nn.Module):
 
       conv = self.conv(conv)
       conv = self.pool(conv)
-      conv = conv.view(batch, -1)
+      conv = conv.reshape(batch, -1)
       conv = self.fc1(conv)
 
       attn = x[:, :-81]

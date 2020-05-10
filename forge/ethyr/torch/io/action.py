@@ -25,6 +25,7 @@ class Output(nn.Module):
       self.h = config.HIDDEN
 
       self.net = DiscreteAction(self.config, self.h, self.h)
+      self.arg = nn.Embedding(static.Action.n, self.h)
       #self.net = FlatAction(self.config, self.h, self.h)
 
    def names(self, nameMap, args):
@@ -45,9 +46,10 @@ class Output(nn.Module):
       for atn in static.Action.edges:
          for arg in atn.edges:
             if arg.argType == static.Fixed:
-               idxs  = [e.idx for e in arg.edges]
-               cands = lookup[static.Fixed.__name__][idxs]
                batch = obs.shape[0]
+               idxs  = [e.idx for e in arg.edges]
+               #cands = lookup[static.Fixed.__name__][idxs]
+               cands = self.arg.weight[idxs]
                cands = cands.repeat(batch, 1, 1)
                #Fixed arg
             else:

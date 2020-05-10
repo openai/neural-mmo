@@ -69,7 +69,6 @@ class Config(core.Config):
    ENT_OBS = 20
 
    OPTIM_STEPS = 128
-   DEVICE      = 'cpu'
 
 class Policy(TorchModelV2, nn.Module):
    def __init__(self, *args, **kwargs):
@@ -83,7 +82,7 @@ class Policy(TorchModelV2, nn.Module):
          self.logits  = nn.Linear(256, 4)
          self.valueF = nn.Linear(256, 1)
       '''
-      self.input = io.Input(Config, policy.TaggedInput,
+      self.input = io.Input(Config, policy.Input,
             baseline.Attributes, baseline.Entities)
       self.output = io.Output(Config)
       self.valueF = nn.Linear(Config.HIDDEN, 1)
@@ -294,6 +293,8 @@ class Evaluator:
          if agentID in self.done and self.done[agentID]:
             continue
 
+         #RLlib bug here -- you have to modify their Policy line
+         #169 to not return action instead of [action]
          atn = trainer.compute_action(self.obs[agentID],
                policy_id='policy_{}'.format(0))
          atns[agentID] = atn
@@ -347,12 +348,12 @@ if __name__ == '__main__':
       },
       'model': {
          'custom_model': 'test_model',
-       },
+      },
    })
    utils.modelSize(trainer.get_policy('policy_0').model)
 
-   #trainer.restore()
-   train(trainer)
-   #Evaluator(env, trainer).run()
+   trainer.restore()
+   #train(trainer)
+   Evaluator(env, trainer).run()
 
 

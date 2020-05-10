@@ -23,7 +23,6 @@ class Input(nn.Module):
       '''
       super().__init__()
       h           = config.HIDDEN
-      self.device = config.DEVICE
       self.config = config
       self.h      = h
 
@@ -32,7 +31,7 @@ class Input(nn.Module):
       self.initAttributes(attributes)
       self.initEntities(entities)
 
-      self.action = nn.Embedding(action.Static.n, config.HIDDEN)
+      #self.action = nn.Embedding(action.Static.n, config.HIDDEN)
 
    def initEmbeddings(self, embedF):
       '''Initialize embedding networks'''
@@ -74,8 +73,7 @@ class Input(nn.Module):
       #Slow probably
       for param, val in attrs:
          val = [e[param].squeeze(-1) for e in entities]
-         #val = torch.cat(val).to(self.device)
-         val = torch.stack(val, 1).to(self.device)
+         val = torch.stack(val, 1)
          emb = self.emb[name]['-'.join(param)](val)
          embeddings.append(emb)
 
@@ -107,7 +105,7 @@ class Input(nn.Module):
          entityLookup[name] = embs
          embeddings.append(embs)
 
-      entityLookup[Fixed.__name__] = self.actions()
+      #entityLookup[Fixed.__name__] = self.actions()
 
       #Pack entities of each observation
       embeddings   = torch.cat(embeddings, dim=-2)

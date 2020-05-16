@@ -26,6 +26,7 @@ import argparse
 from ray.rllib.models.torch.torch_action_dist import TorchMultiActionDistribution, TorchCategorical, TorchDiagGaussian
 from ray.rllib.utils.space_utils import flatten_space
 from ray.rllib.utils import try_import_tree
+#from ray.rllib.models import extra_spaces
 
 import torch
 
@@ -45,6 +46,7 @@ from forge.ethyr.torch.policy import baseline
 from forge.ethyr.torch import io
 from forge.ethyr.torch import utils
 
+
 def oneHot(i, n):
    vec = [0 for _ in range(n)]
    vec[i] = 1
@@ -57,6 +59,7 @@ class Config(core.Config):
 
    NREALM  = 256
    NWORKER = 12
+   NMAPS   = 256
 
    EMBED   = 64
    HIDDEN  = 64
@@ -135,12 +138,18 @@ class Policy(TorchModelV2, nn.Module):
 
 class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
-      super().__init__(config, idx)
+      self.config = config
+      self.idx = idx
       self.lifetimes = []
-      self.nEpisodes = 0
-           
+      self.initialized = False
+          
    def reset(self):
-      #assert self.tick == 0
+      assert not self.initialized
+      self.initialized = True
+      n = self.config.NMAPS
+      idx = np.random.randint(n)
+
+      super().__init__(self.config, idx)
       return self.step({})[0]
 
    '''Example environment overrides'''
@@ -177,11 +186,6 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       obs, rewards, dones, _ = super().step(decisions)
 
       for ent in self.dead:
-         self.nEpisodes += 1
-         if self.nEpisodes >= 100:
-            dones['__all__'] = True
-            self.nEpisodes   = 0
-
          self.lifetimes.append(ent.history.timeAlive.val)
          if len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
@@ -323,6 +327,7 @@ if __name__ == '__main__':
    (pid=12433) Lifetime: 26.382
    '''
 
+   #28 at 50
 
    #Note: you are on rllib 0.8.2. 0.8.4 seems to break some stuff
    #Note: sample_batch_size and rollout_fragment_length are overriden
@@ -331,14 +336,17 @@ if __name__ == '__main__':
    #Do not need 'no_done_at_end': True because horizon is inf
    #no_done_at_end is per agent
    #   'rollout_fragment_length': 100,
+   #'num_gpus_per_worker': 1,
    trainer = SanePPOTrainer(env="custom", path='experiment', config={
       'num_workers': 4,
       'num_gpus': 1,
+      'num_envs_per_worker': 1,
       'train_batch_size': 4000,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
       'use_pytorch': True,
-      'batch_mode': 'complete_episodes',
+      'rollout_fragment_length': 100,
+      #'batch_mode': 'complete_episodes',
       'horizon': np.inf,
       'soft_horizon': False, 
       'no_done_at_end': False,
@@ -353,7 +361,7 @@ if __name__ == '__main__':
    utils.modelSize(trainer.get_policy('policy_0').model)
 
    trainer.restore()
-   #train(trainer)
-   Evaluator(env, trainer).run()
+   train(trainer)
+   #Evaluator(env, trainer).run()
 
 

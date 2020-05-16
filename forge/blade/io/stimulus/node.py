@@ -118,7 +118,7 @@ class Continuous(Stim):
          val = self.scaled(val)
       else:
          val = 2*(val / self.range) - 1
-      assert val >= -1 and val <= 1
+      assert val >= -1 and val <= 1, self
       return val
 
    def scaled(self, val):

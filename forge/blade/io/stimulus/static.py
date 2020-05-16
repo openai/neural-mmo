@@ -71,12 +71,12 @@ class Stimulus(Config):
             def init(self, config):
                #This scale may eventually be too high
                self.default = None
-               self.scale = 0.05
+               self.scale = 0.01
 
          class TimeAlive(node.Continuous):
             def init(self, config):
                self.default = 0
-               self.scale = 0.001
+               self.scale = 0.00001
 
       #Resources
       class Resources(Config, node.Flat):

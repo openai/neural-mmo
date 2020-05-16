@@ -142,6 +142,15 @@ class Attack(Node):
          entity.history.attack = None
          return
 
+      rng     = style.attackRange
+      start   = np.array(entity.base.pos)
+      end     = np.array(targ.base.pos)
+      dif     = np.abs(start - end)
+
+      if np.max(dif) > rng:
+         entity.history.attack = None
+         return 
+
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:
          targ.status.freeze.update(3)
@@ -163,13 +172,15 @@ class Style(Node):
 class Target(Node):
    argType = Player 
    def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config, config.MELEERANGE)
+      #Should pass max range?
+      return Attack.inRange(entity, stim, config, None)
 
 class Melee(Node):
    priority = 1
    nodeType = NodeType.ACTION
    index = 0
    freeze=False
+   attackRange = 1
 
    def skill(entity):
       return entity.skills.melee
@@ -179,6 +190,7 @@ class Range(Node):
    nodeType = NodeType.ACTION
    index = 1
    freeze=False
+   attackRange = 4
 
    def skill(entity):
       return entity.skills.range
@@ -188,6 +200,7 @@ class Mage(Node):
    nodeType = NodeType.ACTION
    index = 2
    freeze=True
+   attackRange = 3
 
    def skill(entity):
       return entity.skills.mage

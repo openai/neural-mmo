@@ -57,12 +57,6 @@ class Stimulus:
 
       return stim
 
-   def nop(template):
-      stim = {}
-      for name, attr in template.items():
-         stim[name] = template[name] * 0
-      return stim
-
    def tile(env, ent, key, config):
       '''Internal processor for tile objects'''
       stim = []
@@ -91,9 +85,7 @@ class Stimulus:
             else:
                stim.append(s)
 
+      #Should sort before truncate
       stim = list(stim)[:config.ENT_OBS]
-      nop = Stimulus.nop(s)
-      while len(stim) < config.ENT_OBS:
-         stim.append(nop)
 
       return stim, raw

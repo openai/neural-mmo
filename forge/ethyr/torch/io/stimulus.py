@@ -11,6 +11,8 @@ from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.stimulus import node
 from forge.blade.io.action.static import Fixed
 
+from ray.rllib.models.repeated_values import RepeatedValues
+
 class Input(nn.Module):
    def __init__(self, config, embeddings, attributes, entities):
       '''Network responsible for processing observations
@@ -72,9 +74,15 @@ class Input(nn.Module):
       attrs = Stimulus.dict()[name]
       #Slow probably
       for param, val in attrs:
-         val = [e[param].squeeze(-1) for e in entities]
-         val = torch.stack(val, 1)
-         emb = self.emb[name]['-'.join(param)](val)
+         if type(entities) == RepeatedValues:
+            val    = entities.values[param].squeeze(-1)
+            embNet = self.emb[name]['-'.join(param)]
+            emb    = embNet(val) 
+         else:
+            val = [e[param].squeeze(-1) for e in entities]
+            val = torch.stack(val, 1)
+            emb = self.emb[name]['-'.join(param)](val)
+
          embeddings.append(emb)
 
       #Construct: Batch, ents, nattrs, hidden

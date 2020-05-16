@@ -26,7 +26,7 @@ import argparse
 from ray.rllib.models.torch.torch_action_dist import TorchMultiActionDistribution, TorchCategorical, TorchDiagGaussian
 from ray.rllib.utils.space_utils import flatten_space
 from ray.rllib.utils import try_import_tree
-#from ray.rllib.models import extra_spaces
+from ray.rllib.models import extra_spaces
 
 import torch
 
@@ -54,6 +54,7 @@ def oneHot(i, n):
 
 class Config(core.Config):
    SIMPLE  = True
+   RENDER  = False
    NENT    = 256
    NPOP    = 8
 
@@ -78,13 +79,6 @@ class Policy(TorchModelV2, nn.Module):
       TorchModelV2.__init__(self, *args, **kwargs)
       nn.Module.__init__(self)
 
-      '''
-      if Config.SIMPLE:
-         self.fc1     = nn.Linear(2688, 256)
-         self.fc2     = nn.Linear(256, 256)
-         self.logits  = nn.Linear(256, 4)
-         self.valueF = nn.Linear(256, 1)
-      '''
       self.input = io.Input(Config, policy.Input,
             baseline.Attributes, baseline.Entities)
       self.output = io.Output(Config)
@@ -93,16 +87,6 @@ class Policy(TorchModelV2, nn.Module):
    def forward(self, input_dict, state, seq_lens):
       obs           = input_dict['obs']
 
-      '''
-      if Config.SIMPLE:
-         x           = input_dict['obs_flat']
-         x = torch.tanh(self.fc1(x))
-         x = torch.tanh(self.fc2(x))
-         atn = self.logits(x)
-         self.value    = self.valueF(x).squeeze(1)
-         return atn, []
-      '''
- 
       state, lookup = self.input(obs)
       logits        = self.output(state, lookup)
 
@@ -138,16 +122,13 @@ class Policy(TorchModelV2, nn.Module):
 
 class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
-      self.config = config
-      self.idx = idx
+      self.config    = config
       self.lifetimes = []
-      self.initialized = False
           
    def reset(self):
-      assert not self.initialized
-      self.initialized = True
-      n = self.config.NMAPS
-      idx = np.random.randint(n)
+      n              = self.config.NMAPS
+      idx            = np.random.randint(n)
+      self.nEpisodes = 0
 
       super().__init__(self.config, idx)
       return self.step({})[0]
@@ -186,11 +167,16 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       obs, rewards, dones, _ = super().step(decisions)
 
       for ent in self.dead:
+         self.nEpisodes += 1
+         if not self.config.RENDER and self.nEpisodes >= 100:
+            dones['__all__'] = True
+            self.nEpisodes   = 0
+
          self.lifetimes.append(ent.history.timeAlive.val)
          if len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
-            self.lifetimes = []
             print('Lifetime: {}'.format(lifetime))
+            self.lifetimes = []
 
       return obs, rewards, dones, {}
 
@@ -229,18 +215,14 @@ def gen_policy(env, i):
 
    key  = tuple(['Tile'])
    obs[key] = spaces.Tuple([entityDict[key] for _ in range(Config.WINDOW**2)])
+   #obs[key] = extra_spaces.Repeated(entityDict[key], max_len=Config.WINDOW**2)
 
    key  = tuple(['Entity'])
-   obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
+   #obs[key] = spaces.Tuple([entityDict[key] for _ in range(20)])
+   obs[key] = extra_spaces.Repeated(entityDict[key], max_len=20)
 
    obs    = spaces.Dict(obs)
    atns   = actionSpace()
-   '''
-   if Config.SIMPLE:
-      atns = spaces.Discrete(4)
-      #obs  = spaces.Box(low=-1.0, high=1.0,
-      #      shape=(489,), dtype=np.float32)
-   '''
 
    params = {
                "agent_id": i,
@@ -280,7 +262,9 @@ def train(trainer):
 
 class Evaluator:
    def __init__(self, env, trainer):
-      self.trainer = trainer
+      Config.RENDER = True
+
+      self.trainer  = trainer
 
       self.env     = env
       self.obs     = env.reset()
@@ -306,9 +290,6 @@ class Evaluator:
       self.obs, rewards, self.done, _ = self.env.step(atns)
  
 if __name__ == '__main__':
-   #lib.ray.init(Config, 'local')
-   #lib.ray.init(Config, 'default') 
-   #ray.init(local_mode=True)
    torch.set_num_threads(1)
    ray.init()
 
@@ -319,24 +300,10 @@ if __name__ == '__main__':
    policies = {"policy_{}".format(i): gen_policy(env, i) for i in range(1)}
    keys     = list(policies.keys())
 
-   '''
-   Epoch: 50, Samples: 204000
-   (pid=12436) Lifetime: 27.006
-   (pid=12430) Lifetime: 26.223
-   (pid=12435) Lifetime: 26.427
-   (pid=12433) Lifetime: 26.382
-   '''
-
-   #28 at 50
-
-   #Note: you are on rllib 0.8.2. 0.8.4 seems to break some stuff
    #Note: sample_batch_size and rollout_fragment_length are overriden
    #by 'complete_episodes'
-   #'batch_mode': 'complete_episodes',
    #Do not need 'no_done_at_end': True because horizon is inf
-   #no_done_at_end is per agent
-   #   'rollout_fragment_length': 100,
-   #'num_gpus_per_worker': 1,
+   #No_done_at_end is per agent
    trainer = SanePPOTrainer(env="custom", path='experiment', config={
       'num_workers': 4,
       'num_gpus': 1,
@@ -345,8 +312,8 @@ if __name__ == '__main__':
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
       'use_pytorch': True,
-      'rollout_fragment_length': 100,
-      #'batch_mode': 'complete_episodes',
+      #'rollout_fragment_length': 100,
+      'batch_mode': 'complete_episodes',
       'horizon': np.inf,
       'soft_horizon': False, 
       'no_done_at_end': False,
@@ -361,7 +328,7 @@ if __name__ == '__main__':
    utils.modelSize(trainer.get_policy('policy_0').model)
 
    trainer.restore()
-   train(trainer)
-   #Evaluator(env, trainer).run()
+   #train(trainer)
+   Evaluator(env, trainer).run()
 
 

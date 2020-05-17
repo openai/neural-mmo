@@ -190,7 +190,7 @@ class Range(Node):
    nodeType = NodeType.ACTION
    index = 1
    freeze=False
-   attackRange = 4
+   attackRange = 3
 
    def skill(entity):
       return entity.skills.range
@@ -200,7 +200,7 @@ class Mage(Node):
    nodeType = NodeType.ACTION
    index = 2
    freeze=True
-   attackRange = 3
+   attackRange = 4
 
    def skill(entity):
       return entity.skills.mage

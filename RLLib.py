@@ -328,7 +328,7 @@ if __name__ == '__main__':
       'num_sgd_iter': 1,
       'use_pytorch': True,
       #'batch_mode': 'complete_episodes',
-      'horizon': np.inf,
+     'horizon': np.inf,
       'soft_horizon': False, 
       'no_done_at_end': False,
       "multiagent": {

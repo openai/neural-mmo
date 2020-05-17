@@ -26,7 +26,7 @@ class Config(config.Config):
    TEST      = True             #Update the model during run?
 
    ###############################Distributed infrastructure config
-   NGOD    = 12                 #Number of environment servers
+   NGOD    = 1#2                 #Number of environment servers
    NSWORD  = 1                  #Number of clients per server
    NCORE   = NGOD*(NSWORD + 1)  #Total number of cores
 

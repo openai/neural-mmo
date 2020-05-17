@@ -66,7 +66,7 @@ class Map:
       env = np.array([e.state.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)
       return env
-     
+
    def genEnv(self, fName):
       tiles = dict((mat.value.tex, mat.value) for mat in enums.Material)
       self.tiles = loadTiled(self.config, fName, tiles, self.nCounts)

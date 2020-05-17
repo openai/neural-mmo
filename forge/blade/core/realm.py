@@ -1,11 +1,17 @@
 from pdb import set_trace as T
+import numpy as np
 
 from collections import defaultdict
 from itertools import chain
+from copy import deepcopy
 
 from forge.blade import entity, core
 from forge.blade.lib.enums import Palette
 from forge.trinity.ascend import runtime, Timed
+
+def valToRGB(x):
+    '''x in range [0, 1]'''
+    return np.array([1-x, x, 0])
 
 class Packet():
    '''Wrapper for state, reward, done signals'''
@@ -61,7 +67,8 @@ class Spawner:
       r, c = ent.base.pos
       realm.desciples[ent.entID] = ent
       realm.world.env.tiles[r, c].addEnt(iden, ent)
-      realm.world.env.tiles[r, c].counts[ent.base.population.val] += 1
+      realm.world.env.tiles[r, c].count.value += 1
+      realm.world.env.tiles[r, c].count._color += np.array(ent.base.color.rgb)
 
    def cull(self, pop):
       '''Decrement the agent counter for the specified population
@@ -88,6 +95,7 @@ class Realm(Timed):
       self.world     = core.Env(config, idx)
       self.env       = self.world.env
 
+      self.globalValues = None
       self.config    = config
       self.worldIdx  = idx
       self.desciples = {}
@@ -100,8 +108,26 @@ class Realm(Timed):
    ### This is mainly to avoid dealing with decorated method doc gen
 
    @runtime
-   def step(self, decisions):
+   def step(self, decisions, values={}, attn={}):
       self.tick += 1
+
+      #Overlay data
+      for entID, val in values.items():
+         r, c = self.desciples[entID].base.pos
+         self.world.env.tiles[r, c].value.value = val
+
+      for tile in self.world.env.tiles.ravel():
+          tile.attention.value = 0
+          tile.attention._color *= 0
+
+      for entity, gameObjs in attn.items():
+         rgb = np.array(entity.base.color.rgb) / 255
+         for obj, val in gameObjs.items():
+             if type(obj).__name__ == 'Tile':
+                r, c = obj.r, obj.c
+                #rgb = valToRGB(np.clip(val, 0, 1))
+                self.world.env.tiles[r, c].attention.value  = val
+                self.world.env.tiles[r, c].attention._color += rgb * val
 
       #Spawn an ent
       iden, pop, name = self.spawn()
@@ -147,9 +173,10 @@ class Realm(Timed):
             'environment': self.world.env,
             'entities': dict((k, v.packet()) 
                for k, v in self.desciples.items()),
-            'values': []
+            'globalValues': self.globalValues
             }
 
+      #np.random.rand(80, 80, 3),
       return packet
 
    def act(self, actions):
@@ -273,4 +300,38 @@ class Realm(Timed):
 
       return packets
 
+   def setGlobalValues(self, values):
+      self.globalValues = values
+
+   def getValStim(self):
+      config  = self.config
+      R, C    = self.world.env.tiles.shape
+      B       = config.BORDER
+
+      entID   = 1
+      pop     = 0
+      name    = "Value"
+      color   = (255, 255, 255)
+
+      stims   = []
+      rewards = []
+      dones   = {}
+      for r in range(B-1, R-B):
+         for c in range(B-1, C-B):
+            pos   = tuple([r, c])
+            ent   = entity.Player(config, entID, pop, name, color)
+
+            ent.base.r.update(r)
+            ent.base.c.update(c)
+
+            self.world.env.tiles[r, c].addEnt(entID, ent)
+            stim = self.world.env.stim(pos, self.config.STIM)
+            stim = deepcopy(stim)
+            self.world.env.tiles[r, c].delEnt(entID)
+
+            stims.append((stim, ent))
+            rewards.append(0)
+            entID += 1
+            
+      return stims, rewards, dones, None
 

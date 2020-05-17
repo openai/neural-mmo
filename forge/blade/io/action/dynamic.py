@@ -42,7 +42,10 @@ class Action:
                if type(arg) is not type: #Entity reference
                   key = entKey + key
 
-               idx = inp.lookup.data[key]
+               try:
+                  idx = inp.lookup.data[key]
+               except:
+                  T()
                idxs.append(idx)
 
             inp.atn.actions[root].arguments[args].append(np.array(idxs))

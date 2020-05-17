@@ -42,6 +42,8 @@ class IOPacket:
       self.atn    = AtnData()
       self.lookup  = Lookup()
 
+      self.attn   = defaultdict(lambda: defaultdict(float))
+
       self.keys    = []
       self.rewards = []
       self.dones   = []
@@ -151,7 +153,7 @@ class IO:
 
       return inputs, n
 
-   def outputs(obs, atnDict=None):
+   def outputs(obs, atnDict=None, values=None, attn=None):
       '''Core Output library for postprocessing flat agent decisions into
       structured action argument lists
 
@@ -182,6 +184,23 @@ class IO:
       #Initialize output dictionary
       if atnDict is None:
          atnDict = defaultdict(lambda: defaultdict(list))
+      if values is None:
+         values = {}
+      if attn is None:
+         attn = defaultdict(lambda: defaultdict(float))
+
+      #This is using short tuple keys. You probably want flat keys with reverse lookup
+      for key, val in obs.values.items():
+         annID, entID  = key
+         values[entID] = val
+
+      for entKey, val in obs.attn.items():
+         backKey = obs.lookup.data[entKey+entKey]
+         entity  = obs.lookup.back[backKey]
+         for key, v in val.items():
+            gameObj       = obs.lookup.back[key]
+            attn[entity][gameObj] = v
+ 
 
       #Reverse format lookup over actions
       names = list(obs.obs.names.keys())
@@ -192,7 +211,7 @@ class IO:
                a = obs.lookup.reverse(a)
                atnDict[entID][atn].append(a)
 
-      return atnDict 
+      return atnDict, values, attn
 
 class Lookup:
    '''Lookup utility for indexing 

@@ -94,14 +94,17 @@ class Input(nn.Module):
 
       #Pack entities of each attribute set
       for name, entities in inp.obs.entities.items():
-         embs = self.attrs(name, self.attributes[name], entities)
+         embs, _ = self.attrs(name, self.attributes[name], entities)
          embeddings.append(embs)
 
       #Pack entities of each observation
       entityLookup = torch.cat(embeddings)
       for objID, idxs in inp.obs.names.items():
-         emb = entityLookup[idxs]
-         obs = self.entities(emb)
+         emb        = entityLookup[idxs]
+         obs, attns = self.entities(emb)
+         for idx, attn in zip(idxs, attns):
+             assert idx not in inp.attn[objID]
+             inp.attn[objID][idx] = attn
          observationTensor.append(obs)
 
       entityLookup      = self.actions(entityLookup)

@@ -31,9 +31,12 @@ class ScaledDotProductAttention(nn.Module):
    def forward(self, Q, K, V):
       Kt  = K.transpose(-2, -1)
       QK  = torch.matmul(Q, Kt)
-      QK  = torch.softmax(QK / self.scale, dim=-2)
+      #Original is attending over hidden dims?
+      #QK  = torch.softmax(QK / self.scale, dim=-2)
+      QK    = torch.softmax(QK / self.scale, dim=-1)
+      score = torch.sum(QK, -2)
       QKV = torch.matmul(QK, V)
-      return QKV
+      return QKV, score
 
 class MultiLinear(nn.Module):
    def __init__(self, xDim, yDim, n):
@@ -64,12 +67,12 @@ class Attention(nn.Module):
       K = self.K(q)
       V = self.V(q)
 
-      attn = self.attention(Q, K, V)
+      attn, scores = self.attention(Q, K, V)
 
       if self.flat:
          attn, _ = torch.max(attn, dim=-2)
 
-      return attn
+      return attn, scores
 
 class FactorizedAttention(nn.Module):
    def __init__(self, xDim, yDim, h, flat=True):

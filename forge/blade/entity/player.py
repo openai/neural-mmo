@@ -38,7 +38,8 @@ class Base(StimHook):
 
       #Update counts
       r, c = self.pos
-      world.env.tiles[r, c].counts[self.population.val] += 1
+      world.env.tiles[r, c].count.value  += 1
+      world.env.tiles[r, c].count._color += np.array(self.color.rgb)
 
    @property
    def pos(self):

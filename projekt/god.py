@@ -11,6 +11,8 @@ from forge.blade.lib.log import BlobSummary
 from forge.trinity.ascend import Ascend, runtime, Log
 from forge.blade import IO
 
+from forge.ethyr.torch.param import setParameters
+
 import projekt
 
 class Realm(core.Realm):
@@ -109,6 +111,26 @@ class God(Ascend):
          self.nUpdates = 0
 
       return self.backward
+
+   def values(self, weights):
+      print('Computing value map...')
+      obs, rewards, dones, _ = self.env.getValStim()
+      packet, _ = IO.inputs(obs, rewards, dones, self.config)
+      net = projekt.Policy(self.config)
+      setParameters(net, weights)
+      net(packet, None)
+      atnDict, values, attn = IO.outputs(packet)
+      
+      R, C = self.env.world.env.tiles.shape
+      globalValues = np.zeros((R, C))
+      for env, ent in obs:
+         r, c = ent.base.pos
+         globalValues[r, c] = values[ent.entID]
+         #dist = np.sqrt((r/40-1)**2 + (c/40-1)**2)
+         #globalValues[r, c] = dist
+
+      self.env.setGlobalValues(globalValues)
+      print('Value map computed')
  
    def distribute(self, weights):
       '''Shards input data across clients using the Ascend async API
@@ -141,16 +163,17 @@ class God(Ascend):
          atnDict: Dictionary of actions to be submitted to the environment
       '''
       atnDict, gradList, blobList = None, [], []
+      values, attn = None, None
       for obs, grads, blobs in super().synchronize(rets):
          #Process outputs
-         atnDict = IO.outputs(obs, atnDict)
+         atnDict, values, attn = IO.outputs(obs, atnDict, values, attn)
 
          #Collect update
          if self.backward:
             self.grads.append(grads)
             self.blobs.add([blobs])
 
-      return atnDict
+      return atnDict, values, attn
 
    @runtime
    def step(self, recv):
@@ -186,8 +209,8 @@ class God(Ascend):
          recv: Upstream data from the cluster (in this case, a param vector)
       '''
       #Make decisions
-      actions = super().step(recv)
+      actions, values, attn = super().step(recv)
 
       #Step the environment and all agents at once.
       #The environment handles action priotization etc.
-      self.obs, self.rewards, self.dones, _ = self.env.step(actions)
+      self.obs, self.rewards, self.dones, _ = self.env.step(actions, values, attn)

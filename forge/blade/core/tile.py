@@ -7,6 +7,15 @@ from forge.blade.io.stimulus.static import Stimulus
 def camel(string):
    return string[0].lower() + string[1:]
 
+class ColorValuePair:
+    def __init__(self):
+        self._color = np.zeros(3)
+        self.value  = 0
+
+    @property
+    def color(self):
+        return self._color.tolist()
+
 class Tile(StimHook):
    SERIAL = 1
    def __init__(self, config, mat, r, c, nCounts, tex):
@@ -16,8 +25,11 @@ class Tile(StimHook):
       self.ents = {}
       self.state = mat()
       self.capacity = self.mat.capacity
-      self.counts = np.zeros(nCounts)
       self.tex = tex
+
+      self.count     = ColorValuePair()
+      self.attention = ColorValuePair()
+      self.value     = ColorValuePair()
 
    @property
    def serial(self):

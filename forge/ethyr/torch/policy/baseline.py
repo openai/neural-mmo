@@ -1,4 +1,4 @@
-
+import numpy as np
 
 import torch
 from torch import nn
@@ -46,6 +46,7 @@ class Entities(nn.Module):
       self.attn = policy.Attention(config.EMBED, config.HIDDEN)
 
     def forward(self, x):
+      scores = np.random.rand(x.shape[0])
       conv = x[-225:].view(1, 15, 15, -1).permute(0, 3, 1, 2)
       conv = self.conv(conv)
       conv = self.pool(conv)
@@ -53,7 +54,7 @@ class Entities(nn.Module):
       conv = self.fc1(conv)
 
       attn = x[:-225]
-      attn = self.attn(attn)
+      attn, _ = self.attn(attn)
 
       x = torch.cat((attn, conv))
       x = self.fc2(x)
@@ -62,5 +63,5 @@ class Entities(nn.Module):
       #pad = torch.zeros(self.targDim - len(x)).to(self.device)
       #x = torch.cat([x, pad])
       #x = self.fc(x)
-      return x
+      return x, scores
 

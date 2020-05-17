@@ -74,6 +74,7 @@ class Policy(nn.Module):
 
       #Run the main hidden network with unshared population and value weights
       hidden, values = self.hidden(packet, observationTensor)
+      packet.values = dict((key, val) for key, val in zip(packet.keys, values.numpy().ravel().tolist()))
 
       #Run the output network
       self.IO.output(packet, hidden, entityLookup, values,  manager)

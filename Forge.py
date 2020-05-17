@@ -80,6 +80,7 @@ def render(trinity, config, args):
    god   = trinity.god.remote(trinity, config, idx=0)
    model = Model(Policy, config).load(None, config.BEST).weights
    env   = god.getEnv.remote()
+   god.values.remote(model)
    god.tick.remote(model)
 
    #Start a websocket server for rendering. This requires

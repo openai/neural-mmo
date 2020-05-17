@@ -56,7 +56,7 @@ class Config(core.Config):
    SIMPLE  = True
    RENDER  = False
    NENT    = 256
-   NPOP    = 8
+   NPOP    = 1
 
    NREALM  = 256
    NWORKER = 12
@@ -79,18 +79,29 @@ class Policy(TorchModelV2, nn.Module):
       TorchModelV2.__init__(self, *args, **kwargs)
       nn.Module.__init__(self)
 
-      self.input = io.Input(Config, policy.Input,
+      self.input  = io.Input(Config, policy.Input,
             baseline.Attributes, baseline.Entities)
+      #self.hidden = nn.GRUCell(Config.HIDDEN, Config.HIDDEN)
       self.output = io.Output(Config)
       self.valueF = nn.Linear(Config.HIDDEN, 1)
 
+   '''
+   def get_initial_state(self):
+      state = self.valueF.weight.new(
+         1, Config.HIDDEN).zero_().squeeze(1)
+      return state
+   '''
+
    def forward(self, input_dict, state, seq_lens):
-      obs           = input_dict['obs']
+      #state = state[0].reshape(-1, Config.HIDDEN)
+      obs   = input_dict['obs']
 
-      state, lookup = self.input(obs)
-      logits        = self.output(state, lookup)
-
-      self.value    = self.valueF(state).squeeze(1)
+      obs, lookup = self.input(obs)
+      #state       = self.hidden(obs, state)
+      #logits      = self.output(state, lookup)
+      #logits      = self.valueF(state, lookup)
+      logits      = self.output(obs, lookup)
+      self.value  = self.valueF(obs).squeeze(1)
 
       flatLogits = []
       inputLens = []
@@ -105,6 +116,7 @@ class Policy(TorchModelV2, nn.Module):
 
       flatLogits = torch.cat(flatLogits, dim=1)
 
+      '''
       distrib = TorchMultiActionDistribution(
          flatLogits,
          model=self,
@@ -115,7 +127,9 @@ class Policy(TorchModelV2, nn.Module):
       atns = distrib.sample()
       tree = try_import_tree()
       flat = tree.flatten(atns)
+      '''
       return flatLogits, []
+      #return flatLogits, [state]
 
    def value_function(self):
       return self.value
@@ -123,12 +137,11 @@ class Policy(TorchModelV2, nn.Module):
 class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config, idx=0):
       self.config    = config
-      self.lifetimes = []
           
    def reset(self):
       n              = self.config.NMAPS
       idx            = np.random.randint(n)
-      self.nEpisodes = 0
+      self.lifetimes = []
 
       super().__init__(self.config, idx)
       return self.step({})[0]
@@ -167,16 +180,11 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       obs, rewards, dones, _ = super().step(decisions)
 
       for ent in self.dead:
-         self.nEpisodes += 1
-         if not self.config.RENDER and self.nEpisodes >= 100:
-            dones['__all__'] = True
-            self.nEpisodes   = 0
-
          self.lifetimes.append(ent.history.timeAlive.val)
-         if len(self.lifetimes) >= 1000:
+         if not self.config.RENDER and len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             print('Lifetime: {}'.format(lifetime))
-            self.lifetimes = []
+            dones['__all__'] = True
 
       return obs, rewards, dones, {}
 
@@ -284,11 +292,16 @@ class Evaluator:
          #RLlib bug here -- you have to modify their Policy line
          #169 to not return action instead of [action]
          atn = trainer.compute_action(self.obs[agentID],
-               policy_id='policy_{}'.format(0))
+               policy_id='policy_{}'.format(agentID % Config.NPOP))
          atns[agentID] = atn
          
       self.obs, rewards, self.done, _ = self.env.step(atns)
  
+
+#Bugged combat: 34-38
+#Fixed combat: 34
+#Random maps: 30
+#8 populations 1 map: 17 after 60 epochs
 if __name__ == '__main__':
    torch.set_num_threads(1)
    ray.init()
@@ -297,7 +310,8 @@ if __name__ == '__main__':
    registry.register_env("custom", env_creator)
    env      = env_creator({})
 
-   policies = {"policy_{}".format(i): gen_policy(env, i) for i in range(1)}
+   policies = {"policy_{}".format(i):
+         gen_policy(env, i) for i in range(Config.NPOP)}
    keys     = list(policies.keys())
 
    #Note: sample_batch_size and rollout_fragment_length are overriden
@@ -309,17 +323,17 @@ if __name__ == '__main__':
       'num_gpus': 1,
       'num_envs_per_worker': 1,
       'train_batch_size': 4000,
+      'rollout_fragment_length': 100,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
       'use_pytorch': True,
-      #'rollout_fragment_length': 100,
-      'batch_mode': 'complete_episodes',
+      #'batch_mode': 'complete_episodes',
       'horizon': np.inf,
       'soft_horizon': False, 
       'no_done_at_end': False,
       "multiagent": {
          "policies": policies,
-         "policy_mapping_fn": lambda i: 'policy_0'
+         "policy_mapping_fn": lambda i: 'policy_{}'.format(i%Config.NPOP)
       },
       'model': {
          'custom_model': 'test_model',

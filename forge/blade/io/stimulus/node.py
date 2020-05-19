@@ -8,7 +8,7 @@ class Flat:
 
 class Stim:
    default = 0
-   max = float('inf')
+   max = np.inf
    min = 0
 
    def __init__(self, config):
@@ -36,7 +36,7 @@ class Stim:
 
    def asserts(self, val):
       if val is not None:
-         assert val >= self.min and val <= self.max
+         assert val >= self.min and val <= self.max, str(self) + ': ' + str(val)
       return val
  
    def update(self, val):
@@ -92,12 +92,18 @@ class Discrete(Stim):
       return ary
 
    def norm(self):
-      val = self.val - self.min
+      val = self.val# - self.min
       assert val == int(val)
       return int(val)
 
    def get(self, *args):
       self.asserts(self.val)
+      return np.array([self.norm()])
+      return self.norm()
+
+      #No norm needed for discrete vars. Below is for
+      #current hack where RLLIB treats everything as continuous
+      #The default preprocessor won't norm, so we can still embed
       return self.norm()
 
 class Continuous(Stim):
@@ -108,14 +114,18 @@ class Continuous(Stim):
    def norm(self):
       assert self.val >= self.min and self.val <= self.max
       val = self.val - self.min
-      if self.range == float('inf'):
-         return self.scaled(val)
-      return val / self.range - 0.5
+      if self.range == np.inf:
+         val = self.scaled(val)
+      else:
+         val = 2*(val / self.range) - 1
+      assert val >= -1 and val <= 1, self
+      return val
 
    def scaled(self, val):
       return self.scale * val
 
    def get(self, *args):
       self.asserts(self.val)
-      return self.norm()
+      val = self.norm()
+      return np.array([val])
 

@@ -1,10 +1,14 @@
 from pdb import set_trace as T
 import numpy as np
 
+from forge.blade.entity.player import Player
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
 from forge.blade.systems import combat
+
+class Fixed:
+   pass
 
 #ActionRoot
 class Action(Node):
@@ -72,6 +76,8 @@ class Move(Node):
       return True
 
 class Direction(Node):
+   argType = Fixed
+
    @staticproperty
    def edges():
       return [North, South, East, West]
@@ -136,6 +142,15 @@ class Attack(Node):
          entity.history.attack = None
          return
 
+      rng     = style.attackRange
+      start   = np.array(entity.base.pos)
+      end     = np.array(targ.base.pos)
+      dif     = np.abs(start - end)
+
+      if np.max(dif) > rng:
+         entity.history.attack = None
+         return 
+
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:
          targ.status.freeze.update(3)
@@ -145,6 +160,7 @@ class Attack(Node):
       return dmg
 
 class Style(Node):
+   argType = Fixed
    @staticproperty
    def edges():
       return [Melee, Range, Mage]
@@ -154,14 +170,17 @@ class Style(Node):
 
 
 class Target(Node):
+   argType = Player 
    def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config, config.MELEERANGE)
+      #Should pass max range?
+      return Attack.inRange(entity, stim, config, None)
 
 class Melee(Node):
    priority = 1
    nodeType = NodeType.ACTION
    index = 0
    freeze=False
+   attackRange = 1
 
    def skill(entity):
       return entity.skills.melee
@@ -171,6 +190,7 @@ class Range(Node):
    nodeType = NodeType.ACTION
    index = 1
    freeze=False
+   attackRange = 3
 
    def skill(entity):
       return entity.skills.range
@@ -180,6 +200,7 @@ class Mage(Node):
    nodeType = NodeType.ACTION
    index = 2
    freeze=True
+   attackRange = 4
 
    def skill(entity):
       return entity.skills.mage

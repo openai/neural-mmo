@@ -3,8 +3,12 @@
 from pdb import set_trace as T
 import numpy as np
 
+from collections import defaultdict
+
 import torch
 from torch import nn
+
+from forge.blade.io.action import static
 
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
@@ -21,14 +25,14 @@ class Output(nn.Module):
       self.h = config.HIDDEN
 
       self.net = DiscreteAction(self.config, self.h, self.h)
+      self.arg = nn.Embedding(static.Action.n, self.h)
       #self.net = FlatAction(self.config, self.h, self.h)
 
    def names(self, nameMap, args):
       '''Lookup argument indices from name mapping'''
       return np.array([nameMap.get(e) for e in args])
 
-   def forward(self, obs, observationTensor, entityLookup, 
-         values=None, manager=None):
+   def forward(self, obs, lookup):
       '''Populates an IO object with actions in-place                         
                                                                               
       Args:                                                                   
@@ -38,26 +42,28 @@ class Output(nn.Module):
          entityLookup      : A fixed size representation of each entity
          manager           : A RolloutManager object
       ''' 
-      observationTensor = observationTensor.unsqueeze(-2)
+      rets = defaultdict(dict)
+      for atn in static.Action.edges:
+         for arg in atn.edges:
+            if arg.argType == static.Fixed:
+               batch = obs.shape[0]
+               idxs  = [e.idx for e in arg.edges]
+               #cands = lookup[static.Fixed.__name__][idxs]
+               cands = self.arg.weight[idxs]
+               cands = cands.repeat(batch, 1, 1)
+               #Fixed arg
+            else:
+               #Temp hack, rename
+               cands = lookup['Entity']
+
+            #lens = [cands.shape[1] for e in range(cands.shape[0])]
+            lens  = None
+            logits = self.net(obs, cands, lens)
+            #String names for RLlib for now
+            rets[atn.__name__][arg.__name__] = logits
+
+      return rets
       
-      for atn, action in obs.atn.actions.items():
-         for arg, data in action.arguments.items():
-            #Perform forward pass
-            tensor, lens  = data
-            targs         = torch.stack([entityLookup[e] for e in tensor])
-            atns, atnsIdx = self.net(observationTensor, targs, lens)
-
-            #Gen Atn_Arg style names for backward pass
-            name = '_'.join([atn.__name__, arg.__name__])
-            if not self.config.TEST:
-               manager.collectOutputs(name, obs.keys, atns, atnsIdx, values)
-
-            #Convert from local index over atns to
-            #absolute index into entity lookup table
-            idxs = atnsIdx.cpu().numpy().tolist()
-            idxs = [t[a] for t, a in zip(tensor, idxs)]
-            obs.atn.actions[atn].arguments[arg] = idxs
-
 class Action(nn.Module):
    '''Head for selecting an action'''
    def forward(self, x, mask=None):
@@ -82,14 +88,18 @@ class DiscreteAction(Action):
 
    def forward(self, stim, args, lens):
       x = self.net(stim, args)
+      return x
 
+      '''
       lens      = torch.LongTensor(lens).unsqueeze(-1)
       n, maxLen = x.shape[0], x.shape[-1]
 
       inds = torch.arange(maxLen).expand_as(x)
       mask = inds < lens 
-      x, xIdx = super().forward(x, mask)
+      '''
+      #Un-None and fix this mask. Need to fix dims
+      x, xIdx = super().forward(x, mask=None)
 
-      x = [e[:l] for e, l in zip(x, lens)]
+      #x = [e[:l] for e, l in zip(x, lens)]
       return x, xIdx
 

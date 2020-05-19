@@ -208,6 +208,7 @@ class Player():
    def act(self, world, atnArgs):
       #Right now we only support one arg. So *args for future update
       atn, args = atnArgs
+      args = args.values()
       atn.call(world, self, *args)
 
 

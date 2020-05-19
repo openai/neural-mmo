@@ -11,6 +11,7 @@ class ColorValuePair:
     def __init__(self):
         self._color = np.zeros(3)
         self.value  = 0
+        self.updates = 0
 
     @property
     def color(self):

@@ -39,7 +39,6 @@ class TaggedInput(nn.Module):
    def __init__(self, cls, config):
       super().__init__()
       self.config = config
-      self.device = config.DEVICE
       h           = config.EMBED
 
       self.embed  = Input(cls, config)

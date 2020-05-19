@@ -7,6 +7,11 @@ import torch
 from torch import nn
 
 from forge.blade.io import stimulus, action
+from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.io.stimulus import node
+from forge.blade.io.action.static import Fixed
+
+#from ray.rllib.models.repeated_values import RepeatedValues
 
 class Input(nn.Module):
    def __init__(self, config, embeddings, attributes, entities):
@@ -20,7 +25,6 @@ class Input(nn.Module):
       '''
       super().__init__()
       h           = config.HIDDEN
-      self.device = config.DEVICE
       self.config = config
       self.h      = h
 
@@ -29,7 +33,7 @@ class Input(nn.Module):
       self.initAttributes(attributes)
       self.initEntities(entities)
 
-      self.action = nn.Embedding(action.Static.n, config.HIDDEN)
+      #self.action = nn.Embedding(action.Static.n, config.HIDDEN)
 
    def initEmbeddings(self, embedF):
       '''Initialize embedding networks'''
@@ -52,7 +56,7 @@ class Input(nn.Module):
       '''Initialize entity network'''
       self.entities = entF(self.config) 
 
-   def actions(self, embeddings):
+   def actions(self):
       '''Embed actions'''
       embed = []
       for atn in action.Static.arguments:
@@ -62,21 +66,31 @@ class Input(nn.Module):
          emb = self.action(idx)
          embed.append(emb)
 
-      return torch.cat([embeddings, *embed])
+      return torch.cat(embed)
 
    def attrs(self, name, attn, entities):
       '''Embed and pack attributes of each entity'''
       embeddings = []
-      for param, val in entities.attributes.items():
-         param = '-'.join(param)
-         val = torch.Tensor(val).to(self.device)
-         emb = self.emb[name][param](val)
+      attrs = Stimulus.dict()[name]
+      #Slow probably
+      for param, val in attrs:
+         #if type(entities) == RepeatedValues:
+         #   val    = entities.values[param].squeeze(-1)
+         #   embNet = self.emb[name]['-'.join(param)]
+         #   emb    = embNet(val) 
+         #else:
+         val = [e[param].squeeze(-1) for e in entities]
+         val = torch.stack(val, 1)
+         emb = self.emb[name]['-'.join(param)](val)
+
          embeddings.append(emb)
 
+      #Construct: Batch, ents, nattrs, hidden
       embeddings = torch.stack(embeddings, -2)
 
-      #Batch, ents, nattrs, hidden
-      embeddings = attn(embeddings)
+      #Construct: Batch, ents, hidden
+      embeddings, scores = attn(embeddings)
+
       return embeddings
 
    def forward(self, inp):
@@ -84,29 +98,25 @@ class Input(nn.Module):
 
       Args:                                                                   
          inp: An IO object specifying observations                      
+         
 
       Returns:
          observationTensor : A fixed size observation representation
          entityLookup      : A fixed size representation of each entity
       ''' 
-      observationTensor = []
-      embeddings        = []
 
       #Pack entities of each attribute set
-      for name, entities in inp.obs.entities.items():
-         embs, _ = self.attrs(name, self.attributes[name], entities)
+      embeddings, entityLookup = [], {}
+      for name, entities in inp.items():
+         name = name[0] #Temp hack
+         embs = self.attrs(name, self.attributes[name], entities)
+         entityLookup[name] = embs
          embeddings.append(embs)
 
-      #Pack entities of each observation
-      entityLookup = torch.cat(embeddings)
-      for objID, idxs in inp.obs.names.items():
-         emb        = entityLookup[idxs]
-         obs, attns = self.entities(emb)
-         for idx, attn in zip(idxs, attns):
-             assert idx not in inp.attn[objID]
-             inp.attn[objID][idx] = attn
-         observationTensor.append(obs)
+      #entityLookup[Fixed.__name__] = self.actions()
 
-      entityLookup      = self.actions(entityLookup)
-      observationTensor = torch.stack(observationTensor)
-      return observationTensor, entityLookup
+      #Pack entities of each observation
+      embeddings   = torch.cat(embeddings, dim=-2)
+      obsTensor, attn = self.entities(embeddings)
+
+      return obsTensor, entityLookup, attn

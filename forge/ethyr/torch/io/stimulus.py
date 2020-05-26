@@ -74,14 +74,12 @@ class Input(nn.Module):
       attrs = Stimulus.dict()[name]
       #Slow probably
       for param, val in attrs:
-         #if type(entities) == RepeatedValues:
-         #   val    = entities.values[param].squeeze(-1)
-         #   embNet = self.emb[name]['-'.join(param)]
-         #   emb    = embNet(val) 
-         #else:
-         val = [e[param].squeeze(-1) for e in entities]
-         val = torch.stack(val, 1)
-         emb = self.emb[name]['-'.join(param)](val)
+         val    = entities.values[param].squeeze(-1)
+         embNet = self.emb[name]['-'.join(param)]
+         emb    = embNet(val) 
+         #val = [e[param].squeeze(-1) for e in entities]
+         #val = torch.stack(val, 1)
+         #emb = self.emb[name]['-'.join(param)](val)
 
          embeddings.append(emb)
 

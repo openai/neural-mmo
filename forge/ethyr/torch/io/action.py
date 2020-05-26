@@ -7,7 +7,6 @@ from collections import defaultdict
 
 import torch
 from torch import nn
-
 from forge.blade.io.action import static
 
 from forge.ethyr.torch.policy import attention
@@ -60,7 +59,8 @@ class Output(nn.Module):
             lens  = None
             logits = self.net(obs, cands, lens)
             #String names for RLlib for now
-            rets[atn.__name__][arg.__name__] = logits
+            #rets[atn.__name__][arg.__name__] = logits
+            rets[atn][arg] = logits
 
       return rets
       

@@ -15,6 +15,7 @@ forge.blade.io package
 
 .. toctree::
 
+   forge.blade.io.comparable
    forge.blade.io.io
    forge.blade.io.serial
    forge.blade.io.utils

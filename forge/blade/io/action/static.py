@@ -171,6 +171,11 @@ class Style(Node):
 
 class Target(Node):
    argType = Player 
+
+   @classmethod
+   def N(cls, config):
+      return config.ENT_OBS
+
    def args(stim, entity, config):
       #Should pass max range?
       return Attack.inRange(entity, stim, config, None)

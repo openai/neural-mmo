@@ -109,7 +109,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
@@ -207,7 +206,7 @@
 This class assembles them into usable data packets</p>
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.process">
-<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">inp</em>, <em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">serialize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility for preprocessing game observations</p>
 <p>Built to be semi-automatic and only require small updates
 for large new classes of observations</p>
@@ -226,19 +225,19 @@ for large new classes of observations</p>
 
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">lookup</em>, <em class="sig-param">static</em>, <em class="sig-param">obj</em>, <em class="sig-param">*args</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">*args</em>, <em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pull attributes from game and serialize names</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.tile">
-<code class="sig-name descname">tile</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tile</code><span class="sig-paren">(</span><em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for tile objects</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="forge.blade.io.stimulus.dynamic.Stimulus.entity">
-<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">serialize=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param">ent</em>, <em class="sig-param">key</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for player objects. Always returns self first</p>
 </dd></dl>
 
@@ -295,19 +294,27 @@ for large new classes of observations</p>
     
 
   <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+    }
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
-      background: #000e0e;
+      background: var(--background);
     }
     /* Sidebar */
     .wy-nav-side {
-      background: #001818;
+      background: var(--foreground);
     }
     .wy-nav-content {
-      background: #000e0e;
+      background: var(--background);
     }
     .wy-nav-content-wrap {
-      background: #001818;
+      background: var(--foreground);
     }
 
     .wy-table-responsive table td, .wy-table-responsive table th {
@@ -326,7 +333,7 @@ for large new classes of observations</p>
     }
 
     .row-even {
-      background: #00ffff;
+      background: var(--accent);
     }
 
     /* Top line */
@@ -341,26 +348,26 @@ for large new classes of observations</p>
     /*Don't even think about changing this.
     Spent 3 hours pulling this from an rtd bitbucket PR*/ 
     wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
-      background-color: #001818;
+      background-color: var(--foreground);
     }
 
     wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
-      background-color: #000e0e;
+      background-color: var(--background);
     }
 
     /* Outer table */
     .wy-table-bordered-all, .rst-content table.docutils {
       border: 1px solid #0f0;
-        border-top-color: #00ffff;
+        border-top-color: var(--accent);
         border-top-style: solid;
         border-top-width: 1px;
-        border-right-color: #00ffff;
+        border-right-color: var(--accent);
         border-right-style: solid;
         border-right-width: 1px;
-        border-bottom-color: #00ffff;
+        border-bottom-color: var(--accent);
         border-bottom-style: solid;
         border-bottom-width: 1px;
-        border-left-color: #00ffff;
+        border-left-color: var(--accent);
         border-left-style: solid;
         border-left-width: 1px;
         border-image-outset: 0;
@@ -391,11 +398,11 @@ for large new classes of observations</p>
 
     /* ****** Start selection for left sidebar ****** */
     .wy-menu-vertical li.current{
-      background: #001818;
+      background: var(--foreground);
     }
 
     .wy-menu-vertical li.toctree-l1.current > a{
-      background: #001818;
+      background: var(--foreground);
       border-top-color: lime;
       border-top-style: solid;
       border-top-width: 3px;
@@ -406,16 +413,16 @@ for large new classes of observations</p>
     }
 
     .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
-      border-top-color: #00ffff;
+      border-top-color: var(--accent);
       border-top-style: solid;
       border-top-width: 1px;
-      border-right-color: #00ffff;
+      border-right-color: var(--accent);
       border-right-style: solid;
       border-right-width: 1px;
-      border-bottom-color: #00ffff;
+      border-bottom-color: var(--accent);
       border-bottom-style: solid;
       border-bottom-width: 1px;
-      border-left-color: #00ffff;
+      border-left-color: var(--accent);
       border-left-style: solid;
       border-left-width: 1px;
       border-image-outset: 0;
@@ -427,24 +434,24 @@ for large new classes of observations</p>
 
     .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
       display: block;
-      background: #00bbbb;
+      background: var(--accent);
       padding: .4045em 4.045em;
     }
 
     .wy-menu-vertical li.toctree-l2.current > a {
-      background: #001818;
+      background: var(--foreground);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
       display: block;
-      background: #001818;
+      background: var(--foreground);
       padding: .4045em 5.663em;
     }
 
     .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
       display: block;
-      background: #001818;
+      background: var(--foreground);
       padding: .4045em 4.045em;
     }
 
@@ -457,46 +464,46 @@ for large new classes of observations</p>
       margin-top: 6px;
       font-size: 90%;
       line-height: normal;
-      background: #001818;
-      color: #00bbbb;
-      border-top: solid 6px #005050;
+      background: var(--foreground);
+      color: var(--accent);
+      border-top: solid 6px var(--accent);
       padding: 6px;
       position: relative;
     }
 
     /* ****** Start Code Blocks ****** */
     .highlight-python {
-      background: #00ffff;
-      border: #00ffff;
+      background: var(--accent);
+      border: var(--accent);
     }
 
     .highlight {
-      background: #001818;
-      color: #00bbbb;
+      background: var(--foreground);
+      color: var(--accent);
     }
     /* ****** End Code Blocks ****** */
 
     /* Buttons */
     .btn-neutral {
-      background-color: #005050 !important;
-      color: #00ffff !important;
+      background-color: var(--accent) !important;
+      color: var(--accent) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
-      background-color: #005050 !important;
-      color: #00ffff !important;
+      background-color: var(--accent) !important;
+      color: var(--accent) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
       margin-bottom: 6px;
-      border-left: solid 0px #00000;
-      background: #001818;
-      color: #00bbbb;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--title);
       }
 
     code, .rst-content tt, .rst-content code {
-      background-color: #001818;
+      background-color: var(--foreground);
       border-top-width: 0px;
       border-bottom-width: 0px;
       border-left-width: 0px;
@@ -504,15 +511,15 @@ for large new classes of observations</p>
     }
 
     .rst-content dl:not(.docutils) dl dt {
-      border-left-color: #001818;
+      border-left-color: var(--background);
     }
 
     .rst-content tt, .rst-content tt, .rst-content code {
-      color: #00bbbb;
+      color: var(--title);
     }
 
     .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
-      color:#00bbbb;
+      color: var(--title);
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
@@ -524,13 +531,13 @@ for large new classes of observations</p>
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #001818;
+      border-right: solid 1px #000e0e;
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
        color: 
-       #00bbbb;
+       var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;
@@ -539,26 +546,26 @@ for large new classes of observations</p>
     }
 
     footer {
-      color: #005050;
+      color: var(--accent);
     }
 
     p {
-      color: #00bbbb;
+      color: var(--text);
     }
     h1 {
-      color: lime;
+      color: var(--title);
     }
 
     h2 {
-      color: aqua;
+      color: var(--title);
     }
 
     h3 {
-      color: teal;
+      color: var(--title);
     }
 
     h4 {
-      color: blue;
+      color: var(--title);
     }
 
     ul {
@@ -578,13 +585,21 @@ for large new classes of observations</p>
       }
 
     a:link {
+      color: var(--text);
+    }
+
+    a:visited {
+      color: var(--text);
+    }
+
+    a:hover {
       color: lime;
     }
 
-    /* visited link */
-    a:visited {
+    a:active {
       color: lime;
     }
+
 
   </style>
 

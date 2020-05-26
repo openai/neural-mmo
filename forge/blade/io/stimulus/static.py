@@ -30,7 +30,10 @@ class Stimulus(Config):
       return { k[0] : v for k, v in dict(Stimulus).items()}
 
    class Entity(Config):
-      #Base data
+      @staticmethod
+      def N(config):
+         return config.ENT_OBS
+
       class Base(Config, node.Flat):
          class Self(node.Discrete):
             def init(self, config):
@@ -123,7 +126,10 @@ class Stimulus(Config):
 
       #   def get(self, tile, r, c):
       #      return (r*15+c)*tile.state.index
-     
+      @staticmethod
+      def N(config):
+         return config.WINDOW**2
+
       class NEnts(node.Continuous):
          def init(self, config):
             self.max = config.NENT

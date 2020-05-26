@@ -1,12 +1,14 @@
 from pdb import set_trace as T
 import numpy as np
+import gym
 
 from forge.blade.lib.utils import classproperty
+from forge.blade.io.comparable import TypeCompare
 
 class Flat:
    pass
 
-class Stim:
+class Stim(metaclass=TypeCompare):
    default = 0
    max = np.inf
    min = 0
@@ -82,6 +84,11 @@ class Stim:
       return self.val >= other
 
 class Discrete(Stim):
+   def __init__(self, config):
+      super().__init__(config)      
+      self.space = gym.spaces.Box(
+            low=0, high=self.range, shape=(1,))
+
    @property
    def range(self):
       return self.max - self.min + 1
@@ -107,6 +114,11 @@ class Discrete(Stim):
       return self.norm()
 
 class Continuous(Stim):
+   def __init__(self, config):
+      super().__init__(config)      
+      self.space = gym.spaces.Box(
+            low=-1, high=1, shape=(1,))
+
    @property
    def range(self):
       return self.max - self.min

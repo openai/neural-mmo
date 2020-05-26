@@ -37,13 +37,11 @@ Neural MMO `[Demo Video] <https://youtu.be/DkHopV1RSxw>`_ `[Github] <https://git
 
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-**1:** Read the `Quickstart <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_ tutorials
+**1:** Read the `[Quickstart] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_ tutorials
 
-**2:** Skim the `Environment <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.api.html#forge.blade.core.api.Realm>`_, `IO <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.io.io.html#forge.blade.io.io.IO>`_, and `Infrastructure <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.trinity.api.html#forge.trinity.api.Ascend>`_ modules of the `API Reference <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/modules.html>`_
+**3:** Hack on your own projects using the `[/projekt] <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
 
-**3:** Hack on your own projects using the `/projekt <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
-
-**4:** Join our `Discord community <https://discord.gg/BkMmFUC>`_ for help and discussion!
+**4:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion!
 
 **5:** Contribute to the platform! Neural MMO is an active open source project
 
@@ -53,13 +51,6 @@ I actively review issues and pull requests. **Discord is the best way to contact
 ##############
 
 **Agents that scale to the complexity of the real world** is one statement of general intelligence. A key perspective of this project is to decouple this task into research and engineering subproblems that, taken together, equal the original objective. The project is divided into four modules along these lines. See Ideology if you find this sort of macro view interesting.
-
-===============  ===============
-Engineering      Research
-===============  ===============
-|earth| Blade    |water| Trinity
-|fire|  Embyr    |air| Ethyr
-===============  ===============
 
 Research
 --------
@@ -77,7 +68,7 @@ Engineering
 
 |earth| Blade: The core game environment including the extended OpenAI Gym external API
 
-|fire| Embyr: 3D Unity3D based game client. Maintained as an independent `repository <https://github.com/jsuarez5341/neural-mmo-client>`_ and not used during training.
+|fire| Embyr: 3D Unity3D based game client. Maintained as an independent `[repository] <https://github.com/jsuarez5341/neural-mmo-client>`_ and not used during training.
 
 
 |ags| Quickstart
@@ -356,7 +347,7 @@ In formal publications, we refer to our project simply as a (the first) "Neural 
 |ags| Version History
 #####################
 
-The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My `personal Github <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
+The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.0. My personal `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
 
 **v1.3:** Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_ :download:`[Paper] <docs/source/resource/nmmo_v1-3.pdf>`
    - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
@@ -396,7 +387,7 @@ The `OpenAI <https://github.com/openai/neural-mmo>`_ only hosts v1.0. My `person
 |ags| Ideology
 ##############
 
-The dual problem formulation mentioned in the Quickstart guide is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this `Two Pager <https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing>`_ for a more thorough overview of the project approach and objective.
+The dual problem formulation mentioned in the Quickstart guide is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this `[Two Pager] <https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing>`_ for a more thorough overview of the project approach and objective.
 
 The discussion of failure modes below is mostly intended to dissuade skepticism, which thus far I've found correlates perfectly with lack of familiarity with MMOs. If you are very familiar with MMOs + current AI research and are still skeptical, please contact me on the Discord -- I'd love to hear your views.
 
@@ -415,13 +406,13 @@ The first failure case is a serious risk, but is shared among all areas of the f
 The second problem is probably most familiar to researchers as exploration. Given a cold start, how can agents bootstrap both to better policies and to better exploration strategies? This is a hard problem, but it is unlikely to kill the project because:
   * This is independently an important problem that many researchers are already working on already
   * The environment of this project is designed collaboratively to assist agents early on in learning, rather than adversarially as a hard benchmark
-  * `Recent <https://blog.openai.com/openai-five/>`_ `projects <https://blog.openai.com/learning-dexterity/>`_ have demonstrated success at scale.
+  * `[Recent] <https://blog.openai.com/openai-five/>`_ `projects <https://blog.openai.com/learning-dexterity/>`_ have demonstrated success at scale.
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 
 .. image:: docs/source/resource/quests.png
   :alt: Quest Map
-`Source <https://www.reddit.com/user/Gamez_X>`_
+`[Source] <https://www.reddit.com/user/Gamez_X>`_
 
 Actually, it's a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:
 
@@ -430,13 +421,13 @@ Actually, it's a quest map of Runescape, a particular MMO that our environment i
 
 .. image:: docs/source/resource/equipment.png
   :alt: Equipment
-`Source <https://www.jagex.com/en-GB/>`_
+`[Source] <https://www.jagex.com/en-GB/>`_
 
 In a massive open world:
 
 .. image:: docs/source/resource/map.png
   :alt: GameMap
-`Source <https://www.jagex.com/en-GB/>`_
+`[Source] <https://www.jagex.com/en-GB/>`_
 
 The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy--especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.
 
@@ -445,7 +436,7 @@ While our environment is nowhere near the level of complexity of a real MMO yet,
 |ags| Authorship, License, Disclaimer
 #####################################
 
-I, `Joseph Suarez <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
+I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
 2019 (fall): Neural MMO development continues at MIT. as the main project of my PhD
    - I am continuing my role as the primary developer
@@ -474,7 +465,7 @@ Open source contributors, listed by time since latest contribution. Discord hand
 |ags| Assets
 ############
 
-Some assets used in this project belong to `Jagex <https://www.jagex.com/en-GB/>`_, the creators of Runescape, such as
+Some assets used in this project belong to `[Jagex] <https://www.jagex.com/en-GB/>`_, the creators of Runescape, such as
 
 |ags| |earth| |water| |fire| |air|
 

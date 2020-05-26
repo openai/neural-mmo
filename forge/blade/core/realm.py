@@ -312,6 +312,10 @@ class Realm(Timed):
 
       return obs, rewards, dones
 
+   @property
+   def size(self):
+      return self.world.env.tiles.shape
+
    def setGlobalValues(self, values):
       self.globalValues = values
 

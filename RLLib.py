@@ -57,7 +57,7 @@ def oneHot(i, n):
 
 class Config(core.Config):
    #Program level args
-   COMPUTE_GLOBAL_VALUES = False
+   COMPUTE_GLOBAL_VALUES = True
    RENDER                = False
 
    NENT    = 256
@@ -158,25 +158,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
 
          ents = self.raw[entID][('Entity',)]
          for atn, args in decisions[entID].items():
-            '''
-            if atn == 'Move':
-               atn = StaticAction.Move
-            elif atn == 'Attack':
-               atn = StaticAction.Attack
-            else:
-               assert False, '{}: Invalid action'.format(atn)
-            '''
             for arg, val in args.items():
-               '''
-               if arg == 'Direction':
-                  arg = StaticAction.Direction
-               elif arg == 'Style':
-                  arg = StaticAction.Style
-               elif arg == 'Target':
-                  arg = StaticAction.Target
-               else:
-                  assert False, '{}: Invalid argument'.format(arg)
-               '''
                val = int(val)
                if len(arg.edges) > 0:
                   actions[entID][atn][arg] = arg.edges[val]
@@ -251,15 +233,30 @@ class Evaluator:
    def run(self):
       from forge.embyr.twistedserver import Application
       Application(self.env, self.tick)
-      self.tick()
 
+   #Compute actions and overlays for a single timestep
+   def tick(self):
+      atns, values, attns = {}, {}, defaultdict(dict)
+      for agentID, ob in self.obs.items():
+         if agentID in self.done and self.done[agentID]:
+            continue
+
+         ent = self.env.desciples[agentID]
+         atns[agentID], model = self.action(agentID, ent, ob)
+         values[agentID] = float(model.value)
+
+         tiles  = self.env.raw[agentID][('Tile',)]
+         for tile, a in zip(tiles, model.attn):
+            attns[ent][tile] = float(a)
+
+      self.obs, rewards, self.done, _ = self.env.step(atns, values, attns)
+ 
    #Compute actions for a single agent
-   def action(self, agentID, mock=False):
+   def action(self, agentID, ent, obs, mock=False):
       idx      = 0 if mock else agentID % self.config.NPOP
       policyID = self.trainer.policyID(idx)
 
       model = self.trainer.model(policyID)
-      ent   = self.env.desciples[agentID]
  
       init  = mock or not hasattr(ent, 'state')
       if init:
@@ -270,30 +267,13 @@ class Evaluator:
       #RLlib bug here -- you have to modify their Policy line
       #169 to not return action instead of [action]
       atns, state, _ = trainer.compute_action(
-            self.obs[agentID], policy_id=policyID, state=state)
+            obs, policy_id=policyID, state=state)
 
       if not mock:
          ent.state = state
 
       return atns, model
-
-   #Compute actions and overlays for a single timestep
-   def tick(self):
-      atns, values, attns = {}, {}, defaultdict(dict)
-      for agentID, ob in self.obs.items():
-         if agentID in self.done and self.done[agentID]:
-            continue
-
-         atns[agentID], model = self.action(agentID)
-         values[agentID] = float(model.value)
-
-         entity = self.env.desciples[agentID]
-         tiles  = self.env.raw[agentID][('Tile',)]
-         for tile, a in zip(tiles, model.attn):
-            attns[entity][tile] = float(a)
-
-      self.obs, rewards, self.done, _ = self.env.step(atns, values, attns)
-   
+  
    #Compute a global value function map. This requires ~6400 forward
    #passes and a ton of environment deep copy operations, which will 
    #take several minutes. You can disable this computation in the config
@@ -309,7 +289,7 @@ class Evaluator:
          env, ent   = stim
          r, c       = ent.base.pos
 
-         atn, model   = self.action(agentID, mock=False)
+         atn, model   = self.action(ent.entID, ent, obs, mock=True)
          values[r, c] = float(model.value)
  
       self.env.setGlobalValues(values)
@@ -334,32 +314,6 @@ def actionSpace(config):
          n = arg.N(config)
          atns[atn][arg] = gym.spaces.Discrete(n)
    return atns
-
-'''
-#Neural MMO observation space
-def observationSpace(config):
-   obs = {}
-   for entity, attrList in Stimulus:
-      n = attrList.N(config)
-      attrDict = {}
-      for attr, val in attrList:
-         attrDict[attr] = val(config).space
-         print(attr, attrDict[attr].low, attrDict[attr].high)
-      attrDict = spaces.Dict(attrDict)
-      obs[entity] = extra_spaces.Repeated(attrDict, max_len=n)
-   return spaces.Dict(obs)
-
-#Neural MMO action space
-def actionSpace(config):
-   atns = defaultdict(dict)
-   for atn in Action.edges:
-      for arg in atn.edges:
-         n = arg.N(config)
-         atns[atn.__name__][arg.__name__] = gym.spaces.Discrete(n)
-         print(arg, atns[atn.__name__][arg.__name__])
-      atns[atn.__name__] = spaces.Dict(atns[atn.__name__])
-   return spaces.Dict(atns)
-'''
 
 #Generate RLlib policy
 def gen_policy(config, i):
@@ -394,10 +348,10 @@ if __name__ == '__main__':
 
    #Instantiate monolithic RLlib Trainer object.
    trainer = SanePPOTrainer(env="custom", path='experiment', config={
-      'num_workers': 4,
+      'num_workers': 5,
       'num_gpus': 1,
       'num_envs_per_worker': 1,
-      'train_batch_size': 4000,
+      'train_batch_size': 5000,
       'rollout_fragment_length': 100,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
@@ -421,6 +375,6 @@ if __name__ == '__main__':
    #Print model size
    utils.modelSize(trainer.defaultModel())
 
-   #trainer.restore()
-   trainer.train()
-   #Evaluator(trainer, env_creator({'config': config}), config).run()
+   trainer.restore()
+   #trainer.train()
+   Evaluator(trainer, env_creator({'config': config}), config).run()

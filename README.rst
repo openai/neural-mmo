@@ -33,19 +33,15 @@
 |ags| Welcome to the Platform!
 ##############################
 
-Neural MMO `[Demo Video] <https://youtu.be/DkHopV1RSxw>`_ `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs). The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.
+Neural MMO `[Demo Video] <https://youtu.be/DkHopV1RSxw>`_ `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. The long-term goal of our platform is to enable artificial agents to scale to real world intelligence.  Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.
 
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-**1:** Read the `[Quickstart] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_ tutorials
+**1:** Dive into the `[Quickstart Guide] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_
 
-**3:** Hack on your own projects using the `[/projekt] <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
+**2:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion. **This is the best way to contact me**
 
-**4:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion!
-
-**5:** Contribute to the platform! Neural MMO is an active open source project
-
-I actively review issues and pull requests. **Discord is the best way to contact me**
+**3:** Hack on your own projects and contribute back. Neural MMO is fully open-source; I actively review issues and pull requests.
 
 |ags| Overview
 ##############
@@ -349,6 +345,39 @@ In formal publications, we refer to our project simply as a (the first) "Neural 
 
 The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.0. My personal `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
 
+**v1.4:** RLlib Support and Overlays | `[Update Slide Deck] <https://docs.google.com/presentation/d/141zRKszdBBEfxmdYWa-QMPmY7uM64trxrF7LBB5OIVg/edit?usp=sharing>`_
+   - Blade: Minor API changes have been made for compatibility with Gym and RLlib
+      - Environment reset method now returns only obs instead of (obs, rewards, dones, infos)
+      - Environment obs and dones are now both dictionaries keyed by agent ids rather than agent game objects
+      - The IO modules from v1.3 now delegates batching to the user, e.g. RLlib. As such, several potential sources of error have been removed
+      - A bug allowing agents to use melee combat from farther away than intended has been fixed
+      - Minor range and damage balancing has been performed across all three combat styles
+   - Trinity: This module has been temporarily shelved
+      - Core functionality has been ported to RLlib in collaboration with the developers
+      - We are working with the RLlib developers to add additional features essential to the long-term scalability of Neural MMO
+      - The Trinity/Ascend namespace will likely be revived in later infrastructure expansions. For now, the stability of RLlib makes delegating infrastructure pragmatic to enable us to focus on environment development, baseline models, and research
+   - Ethyr: Proper NN building blocks for complex worlds
+      - Streamlined IO, memory, and attention modules for use in building PyTorch policies
+      - A high-quality pretrained baseline reproducible at the scale of a single desktop
+   - Embyr: Overlay shaders for visualizing learned policies
+      - Pressing tilde now brings up an in-game console
+      - A help menu lists several shader options for visualizing exploration, attention, and learned value functions
+      - Shaders are rendered over the environment in real-time with partial transparency
+      - It is no longer necessary to start the client and server in a particular order
+      - The client no longer needs to be relaunched when the server restarts
+      - Agents now turn smoothly towards their direction of movement and targeted adversaries
+      - A graphical bug causing some agent attacks to render at ground level has been fixed
+      - Moved twistedserver.py into the main neural-mmo repository to better separate client and server
+      - Confirmed working on Ubuntu, MacOS, and WSL Linux with a Windows client
+   - /projekt: Demo code fully rewritten for RLlib
+      - The new demo is much shorter, approximately 400 lines of code
+      - State-of-the-art Transformer + LSTM based policy trained with distributed PPO
+      - Batched GPU evaluation for real-time rendering
+      - Trains in a few hours on a reasonably good desktop (5 rollout worker cores, 1 underutilized GTX 1080Ti GPU)
+      - To avoid introducing RLlib into the base environment as a hard dependency, we provide a small wrapper class over Realm using RLlib's environment types
+      - Migrated from a pip requirements.txt to Poetry for streamlined dependency management
+      - We have migrated configuration to Google Fire for improved command line argument parsing
+
 **v1.3:** Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_ :download:`[Paper] <docs/source/resource/nmmo_v1-3.pdf>`
    - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
    - Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.
@@ -477,5 +506,3 @@ We currently use them for flavor as an homage to the game that inspired the proj
 ##########################
 
 `[Neural MMO Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>`_
-
-

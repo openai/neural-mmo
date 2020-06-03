@@ -1,28 +1,10 @@
 from pdb import set_trace as T
 import numpy as np
 
-import inspect
-
 from forge.blade.io.stimulus import node
+from forge.blade.io.comparable import IterableTypeCompare
 
-#Makes private attributes read only
-class InnerClassIterable(type):
-   def __iter__(cls):
-      stack = list(cls.__dict__.items())
-      while len(stack) > 0:
-         name, attr = stack.pop()
-         if type(name) != tuple:
-            name = tuple([name])
-         if not inspect.isclass(attr):
-            continue
-         if issubclass(attr, node.Flat):
-            for n, a in attr.__dict__.items():
-               n = name + tuple([n]) 
-               stack.append((n, a))
-            continue
-         yield name, attr
-
-class Config(metaclass=InnerClassIterable):
+class Config(metaclass=IterableTypeCompare):
    pass
 
 class Stimulus(Config):
@@ -32,7 +14,7 @@ class Stimulus(Config):
    class Entity(Config):
       @staticmethod
       def N(config):
-         return config.ENT_OBS
+         return config.N_AGENT_OBS
 
       class Base(Config, node.Flat):
          class Self(node.Discrete):

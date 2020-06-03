@@ -1,7 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.entity.player import Player
+from forge.blade.entity import Player
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
@@ -174,7 +174,7 @@ class Target(Node):
 
    @classmethod
    def N(cls, config):
-      return config.ENT_OBS
+      return config.N_AGENT_OBS
 
    def args(stim, entity, config):
       #Should pass max range?

@@ -3,6 +3,8 @@ import numpy as np
 
 from collections import defaultdict
 
+from forge.blade.io.stimulus.static import Stimulus
+
 class Evaluator:
    def __init__(self, trainer, env, config):
       self.obs   = env.reset()
@@ -19,10 +21,10 @@ class Evaluator:
 
    #Start a persistent Twisted environment server
    def run(self):
+      '''Rendering launches a Twisted WebSocket server with a fixed
+      tick rate. This is a blocking call; the server will handle 
+      environment execution using the provided tick function.'''
       from forge.embyr.twistedserver import Application
-      self.tick()
-      self.tick()
-      self.tick()
       Application(self.env, self.tick)
 
    #Compute actions and overlays for a single timestep
@@ -41,11 +43,10 @@ class Evaluator:
 
       #Update values, and attention
       for idx, agentID in enumerate(self.obs):
-         ent       = self.env.desciples[agentID]
-
-         values[agentID] = float(model.value[idx])
-         tiles  = self.env.raw[agentID][('Tile',)]
-         for tile, a in zip(tiles, model.attn[idx]):
+         tiles           = self.env.raw[agentID][Stimulus.Tile]
+         values[agentID] = float(model.value_function()[idx])
+         ent             = self.env.desciples[agentID]
+         for tile, a in zip(tiles, model.attention()[idx]):
             attns[ent][tile] = float(a)
 
       #Reformat actions
@@ -69,12 +70,15 @@ class Evaluator:
 
       print('Computing value map...')
       values = np.zeros(self.env.size)
+      model  = self.trainer.get_policy('policy_0').model
       for obs, stim in self.env.getValStim():
          env, ent   = stim
          r, c       = ent.base.pos
 
-         atn, model   = self.action(ent.entID, ent, obs, mock=True)
-         values[r, c] = float(model.value)
+         atns, self.state, _ = self.trainer.compute_actions(
+               self.obs, state=self.state, policy_id='policy_0')
+
+         values[r, c] = float(model.value_function())
 
       self.env.setGlobalValues(values)
       print('Value map computed')

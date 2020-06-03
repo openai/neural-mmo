@@ -2,7 +2,7 @@ from pdb import set_trace as T
 
 from enum import Enum, auto
 from forge.blade.lib.utils import staticproperty
-from forge.blade.io.comparable import TypeCompare
+from forge.blade.io.comparable import IterableTypeCompare
 
 class NodeType(Enum):
    #Tree edges
@@ -14,7 +14,7 @@ class NodeType(Enum):
    CONSTANT  = auto() #Constant argument
    VARIABLE  = auto() #Variable argument
 
-class Node(metaclass=TypeCompare):
+class Node(metaclass=IterableTypeCompare):
    SERIAL = 2
 
    @staticproperty

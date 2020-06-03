@@ -3,12 +3,12 @@ import numpy as np
 import gym
 
 from forge.blade.lib.utils import classproperty
-from forge.blade.io.comparable import TypeCompare
+from forge.blade.io.comparable import IterableTypeCompare
 
 class Flat:
    pass
 
-class Stim(metaclass=TypeCompare):
+class Stim(metaclass=IterableTypeCompare):
    default = 0
    max = np.inf
    min = 0
@@ -87,7 +87,9 @@ class Discrete(Stim):
    def __init__(self, config):
       super().__init__(config)      
       self.space = gym.spaces.Box(
-            low=0, high=self.range, shape=(1,))
+            low=np.float32(0.0),
+            high=np.float32(self.range),
+            shape=(1,))
 
    @property
    def range(self):
@@ -109,7 +111,7 @@ class Discrete(Stim):
       return self.norm()
 
       #No norm needed for discrete vars. Below is for
-      #current hack where RLLIB treats everything as continuous
+      #current hack where RLlib treats everything as continuous
       #The default preprocessor won't norm, so we can still embed
       return self.norm()
 
@@ -117,7 +119,9 @@ class Continuous(Stim):
    def __init__(self, config):
       super().__init__(config)      
       self.space = gym.spaces.Box(
-            low=-1, high=1, shape=(1,))
+            low=np.float32(-1.0),
+            high=np.float32(1.0),
+            shape=(1,))
 
    @property
    def range(self):

@@ -1,18 +1,6 @@
 '''Main file for neural-mmo/projekt demo
 
-In lieu of a simplest possible working example, I
-have chosen to provide a fully featured copy of my
-own research code. Neural MMO is persistent with 
-large and variably sized agent populations -- 
-features not present in smaller scale environments.
-This causes differences in the training loop setup
-that are fundamentally necessary in order to maintain
-computational efficiency. As such, it is most useful
-to begin by considering this full example.
-
-I have done my best to structure the demo code
-heirarchically. Reading only pantheon, god, and sword 
-in /projeckt will give you a basic sense of the training
+/projeckt will give you a basic sense of the training
 loop, infrastructure, and IO modules for handling input 
 and output spaces. From there, you can either use the 
 prebuilt IO networks in PyTorch to start training your 
@@ -20,89 +8,100 @@ own models immediately or dive deeper into the
 infrastructure and IO code.'''
 
 #My favorite debugging macro
-from pdb import set_trace as T 
+from pdb import set_trace as T
 
-import argparse
+from fire import Fire
+import sys
 
-from forge.blade import lib
-from forge.trinity import Trinity
-from forge.ethyr.torch import Model
+import numpy as np
+import torch
 
-from experiments import Experiment, Config
-from projekt import Pantheon, God, Sword, Policy
+import ray
+from ray import rllib
 
-def parseArgs(config):
-   '''Processes command line arguments'''
-   parser = argparse.ArgumentParser('Projekt Godsword')
-   parser.add_argument('--ray', type=str, default='default', 
-         help='Ray mode (local/default/remote)')
-   parser.add_argument('--render', action='store_true', default=False, 
-         help='Render env')
-   parser.add_argument('--log', action="store_true",
-         help='Log data on visualizer exit. Default file is timestamp, filename overwrite with --name')
-   parser.add_argument('--name', default='log',
-         help='Name of file to save json data to')
-   parser.add_argument('--load-exp', action="store_true",
-         help='Loads saved json into visualizer with name specified by --name')
+from forge.ethyr.torch import utils
 
-   args               = parser.parse_args()
-   config.LOG         = args.log
-   config.LOAD_EXP    = args.load_exp
-   config.NAME        = args.name
+import projekt
+from projekt import realm, rlutils
 
-   return args
+#Instantiate a new environment
+def createEnv(config):
+   return projekt.Realm(config)
 
-def render(trinity, config, args):
-   """Runs the environment with rendering enabled. To pull
-   up the Unity client, run ./client.sh in another shell.
+#Map agentID to policyID -- requires config global
+def mapPolicy(agentID):
+   return 'policy_{}'.format(agentID % config.NPOLICIES)
 
-   Args:
-      trinity : A Trinity object as shown in __main__
-      config  : A Config object as shown in __main__
-      args    : Command line arguments from argparse
+#Generate RLlib policies
+def createPolicies(config):
+   obs      = projekt.realm.observationSpace(config)
+   atns     = projekt.realm.actionSpace(config)
+   policies = {}
 
-   Notes:
-      Rendering launches a WebSocket server with a fixed tick
-      rate. This is a blocking call; the server will handle 
-      environment execution using the provided tick function.
-   """
+   for i in range(config.NPOLICIES):
+      params = {
+            "agent_id": i,
+            "obs_space_dict": obs,
+            "act_space_dict": atns}
+      key           = mapPolicy(i)
+      policies[key] = (None, obs, atns, params)
 
-   #Prevent accidentally overwriting the trained model
-   config.LOAD = True
-   config.TEST = True
-   config.BEST = True
-
-   #Init infra in local mode
-   lib.ray.init(config, 'local')
-
-   #Instantiate environment and load the model,
-   #Pass the tick thunk to a twisted WebSocket server
-   god   = trinity.god.remote(trinity, config, idx=0)
-   model = Model(Policy, config).load(None, config.BEST).weights
-   env   = god.getEnv.remote()
-   god.values.remote(model)
-   god.tick.remote(model)
-
-   #Start a websocket server for rendering. This requires
-   #forge/embyr, which is automatically downloaded from
-   #jsuarez5341/neural-mmo-client in scripts/setup.sh
-   from forge.embyr.twistedserver import Application
-   Application(env, god.tick.remote)
+   return policies
 
 if __name__ == '__main__':
-   #Experiment + command line args specify configuration
-   #Trinity specifies Cluster-Server-Core infra modules
-   config  = Experiment('pop', Config).init()
-   trinity = Trinity(Pantheon, God, Sword)
-   args    = parseArgs(config)
+   #Setup ray
+   torch.set_num_threads(1)
+   ray.init()
+   
+   #Built config with CLI overrides
+   config = projekt.Config()
+   if len(sys.argv) > 1:
+      sys.argv.insert(1, 'override')
+      Fire(config)
 
-   #Blocking call: switches execution to a
-   #Web Socket Server module
-   if args.render:
-      render(trinity, config, args)
+   #RLlib registry
+   rllib.models.ModelCatalog.register_custom_model(
+         'test_model', projekt.Policy)
+   ray.tune.registry.register_env("custom", createEnv)
 
-   #Train until AGI emerges
-   trinity.init(config, args)
-   while True:
-      log = trinity.step()
-      print(log)
+   #Create policies
+   policies  = createPolicies(config)
+
+   #Instantiate monolithic RLlib Trainer object.
+   trainer = rlutils.SanePPOTrainer(
+         env="custom", path='experiment', config={
+      'num_workers': 4,
+      'num_gpus': 1,
+      'num_envs_per_worker': 1,
+      'train_batch_size': 4000,
+      'rollout_fragment_length': 100,
+      'sgd_minibatch_size': 128,
+      'num_sgd_iter': 1,
+      'use_pytorch': True,
+      'horizon': np.inf,
+      'soft_horizon': False, 
+      'no_done_at_end': False,
+      'env_config': {
+         'config': config
+      },
+      'multiagent': {
+         "policies": policies,
+         "policy_mapping_fn": mapPolicy
+      },
+      'model': {
+         'custom_model': 'test_model',
+         'custom_options': {'config': config}
+      },
+   })
+
+   #Print model size
+   utils.modelSize(trainer.defaultModel())
+
+   if config.LOAD_MODEL:
+      trainer.restore()
+
+   if config.RENDER:
+      env = env_creator({'config': config})
+      projekt.Evaluator(trainer, env, config).run()
+   else:
+      trainer.train()

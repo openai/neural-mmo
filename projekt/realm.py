@@ -5,7 +5,8 @@ from collections import defaultdict
 import gym
 
 from ray import rllib
-from ray.rllib.models import extra_spaces
+
+from ray.rllib.models.extra_spaces import Repeated
 
 from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
@@ -32,7 +33,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
          if entID in self.dead:
             continue
 
-         ents = self.raw[entID][('Entity',)]
+         ents = self.raw[entID][Stimulus.Entity]
          for atn, args in decisions[entID].items():
             for arg, val in args.items():
                val = int(val)
@@ -45,34 +46,74 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
                else:
                   actions[entID][atn][arg] = ents[0]
 
-      obs, rewards, dones, _ = super().step(actions, values, attns)
+      obs, rewards, dones, infos = super().step(actions, values, attns)
 
       for ent in self.dead:
-         self.lifetimes.append(ent.history.timeAlive.val)
+         lifetime = ent.history.timeAlive.val
+         self.lifetimes.append(lifetime)
+         infos[ent.entID] = {'lifetime': lifetime}
          if not self.config.RENDER and len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             print('Lifetime: {}'.format(lifetime))
             dones['__all__'] = True
 
-      return obs, rewards, dones, {}
+      return obs, rewards, dones, infos
+
+#To be integrated into RLlib
+class FlexDict(gym.spaces.Dict):
+   """Gym Dictionary with arbitrary keys"""
+   def __init__(self, spaces=None, **spaces_kwargs):
+      err = 'Use either Dict(spaces=dict(...)) or Dict(foo=x, bar=z)'
+      assert (spaces is None) or (not spaces_kwargs), err
+
+      if spaces is None:
+         spaces = spaces_kwargs
+
+      self.spaces = spaces
+      for space in spaces.values():
+         self.assertSpace(space)
+
+      # None for shape and dtype, since it'll require special handling
+      self.np_random = None
+      self.shape     = None
+      self.dtype     = None
+      self.seed()
+
+   def assertSpace(self, space):
+      err = 'Values of the dict should be instances of gym.Space'
+      assert isinstance(space, gym.spaces.Space), err
+
+   def sample(self):
+      return dict([(k, space.sample())
+            for k, space in self.spaces.items()])
+
+   def __getitem__(self, key):
+      return self.spaces[key]
+
+   def __setitem__(self, key, space):
+      self.assertSpace(space)
+      self.spaces[key] = space
+
+   def __repr__(self):
+      return "FlexDict(" + ", ". join([str(k) + ":" + str(s) for k, s in self.spaces.items()]) + ")"
 
 #Neural MMO observation space
 def observationSpace(config):
-   obs = extra_spaces.FlexDict({})
-   for entity, attrList in sorted(Stimulus):
-      attrDict = extra_spaces.FlexDict({})
-      for attr, val in sorted(attrList):
-         attrDict[attr] = val(config).space
-      n = attrList.N(config)
-      obs[entity] = extra_spaces.Repeated(attrDict, max_len=n)
+   obs = FlexDict({})
+   for entity in sorted(Stimulus.values()):
+      attrDict = FlexDict({})
+      for attr in sorted(entity.values()):
+         attrDict[attr] = attr(config).space
+      n           = entity.N(config)
+      obs[entity] = Repeated(attrDict, max_len=n)
    return obs
 
 #Neural MMO action space
 def actionSpace(config):
-   atns = extra_spaces.FlexDict(defaultdict(extra_spaces.FlexDict))
+   atns = FlexDict(defaultdict(FlexDict))
    for atn in sorted(Action.edges):
       for arg in sorted(atn.edges):
-         n = arg.N(config)
+         n              = arg.N(config)
          atns[atn][arg] = gym.spaces.Discrete(n)
    return atns
 

@@ -6,7 +6,45 @@ import os
 from collections import defaultdict
 from itertools import chain
 
-class Config:
+class StaticIterable(type):
+   def __iter__(cls):
+      stack = list(cls.__dict__.items())
+      for name, attr in cls.__dict__.items():
+         if name == '__module__':
+            continue
+         if name.startswith('__'):
+            break
+         yield name, attr
+
+class Template(metaclass=StaticIterable):
+   def __init__(self):
+      self.data = {}
+      cls       = type(self)
+
+      #Set defaults from static properties
+      for k, v in cls:
+         self.set(k, v)
+
+   def override(self, **kwargs):
+      for k, v in kwargs.items():
+         err = 'CLI argument: {} is not a Config property'.format(k)
+         assert hasattr(self, k), err
+         self.set(k, v)
+
+   def set(self, k, v):
+      setattr(self, k, v)
+      self.data[k] = v
+
+   def print(self):
+      keyLen = 0
+      for k in self.data.keys():
+         keyLen = max(keyLen, len(k))
+
+      print('Configuration')
+      for k, v in self.data.items():
+         print('   {:{}s}: {}'.format(k, keyLen, v))
+
+class Config(Template):
    '''An environment configuration object'''
    ROOT = os.path.join(os.getcwd(), 'resource/maps/procedural/map')
    SUFFIX = '/map.tmx'
@@ -39,10 +77,6 @@ class Config:
    MELEERANGE = 1
    RANGERANGE = 2
    MAGERANGE  = 3
-
-   def __init__(self, **kwargs):
-      for k, v in kwargs.items():
-         setattr(self, k, v)
 
    def SPAWN(self):
       R, C = Config.R, Config.C

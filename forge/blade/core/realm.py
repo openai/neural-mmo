@@ -339,11 +339,10 @@ class Realm(Timed):
             ent.base.c.update(c)
 
             self.world.env.tiles[r, c].addEnt(entID, ent)
-            stim = self.world.env.stim(pos, self.config.STIM)
-            stim = deepcopy(stim)
+            stim   = self.world.env.stim(pos, self.config.STIM)
+            obs, _ = stimulus.Dynamic.process(self.config, stim, ent)
             self.world.env.tiles[r, c].delEnt(entID)
 
-            obs, _ = stimulus.Dynamic.process(self.config, stim, ent)
             stims.append((obs, (stim, ent)))
             entID += 1
             

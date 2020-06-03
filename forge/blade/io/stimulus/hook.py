@@ -1,3 +1,5 @@
+from pdb import set_trace as T
+
 class StimHook:                                                               
    def __init__(self, meta, config):                                          
       self.meta = meta                                                        
@@ -6,16 +8,14 @@ class StimHook:
       self.inputs(meta, config)                                               
                                                                               
    def inputs(self, cls, config):                                             
-      for name, c in cls:                                                     
+      for _, c in cls:                                                     
          self.__dict__[c.name] = c(config)                                    
                                                                               
    def outputs(self, config):                                                 
       data = {}                                                               
       for name, cls in self.meta:                                             
-         assert type(name) == tuple and len(name) == 1                        
-         name       = name[0].lower()                                         
-         attr       = self.__dict__[cls.name]                                 
-         data[name] = attr.packet()                                           
+         attr           = self.__dict__[cls.name]
+         data[cls.name] = attr.packet()                                           
                                                                               
       return data                                                             
                                                                               

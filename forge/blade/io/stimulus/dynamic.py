@@ -5,7 +5,6 @@ import time
 from collections import defaultdict, deque
 
 from forge.blade.io.stimulus.static import Stimulus as Static
-from forge.blade.io.serial import Serial
 
 def camel(string):
    '''Convert a string to camel case'''
@@ -24,67 +23,64 @@ class Stimulus:
 
       Args:
          config    : An environment configuration object
-         inp       : An IO object specifying observations
          env       : Local environment observation
          ent       : Local entity observation
-         serialize : (bool) Whether to serialize the IO object data
       '''
 
       #Static handles
-      Stimulus.functions = [Stimulus.tile, Stimulus.entity]
-      Stimulus.static    = dict(Static)
+      functions = [Stimulus.tile, Stimulus.entity]
+      static    = [Static.Tile, Static.Entity]
 
       index = 0
       stim  = {}
       raw   = {}
       ent.stim = defaultdict(list)
-      keys = list(Stimulus.static.keys())
-      for key, f in zip(keys, Stimulus.functions):
-         stim[key], raw[key] = f(env, ent, key, config)
+      for func, stat in zip(functions, static):
+         stim[stat], raw[stat] = func(env, ent, stat, config)
 
       return stim, raw
 
-   def add(static, obj, *args, key):
-      '''Pull attributes from game and serialize names'''
+   def add(static, obj, config, args):
+      '''Pull attributes from game'''
       stim = {}
       for name, attr in static:
          val = obj
          for n in name:
             val = val.__dict__[camel(n)]
-
-         val = val.get(*args)
-         stim[name] = val
-
+         stim[attr] = val.get(*args)
       return stim
 
    def nop(template):
       stim = {}
-      for name, attr in template.items():
-         stim[name] = template[name] * 0
+      for attr in template:
+         stim[attr] = np.zeros(1)
       return stim
 
-   def tile(env, ent, key, config):
+   def tile(env, ent, static, config):
       '''Internal processor for tile objects'''
       stim = []
       raw = []
-      static = Stimulus.static[key]
       for r, row in enumerate(env):
          for c, tile in enumerate(row):
             raw.append(tile)
-            s = Stimulus.add(static, tile, tile, r, c,
-                  key=ent)
+            args = [tile, r, c]
+            s = Stimulus.add(static, tile, config, args)
+            s = dict(sorted(s.items()))
             ent.stim[type(tile)].append(tile)
             stim.append(s)
       return stim, raw
 
-   def entity(env, ent, key, config):
+   def entity(env, ent, static, config):
       '''Internal processor for player objects. Always returns self first'''
       raw = []
-      static, stim = Stimulus.static[key], deque()
+      stim = deque()
       for tile in env.ravel():
          for e in tile.ents.values():
             raw.append(e)
-            s = Stimulus.add(static, e, ent, e, key=ent)
+            args = [ent, e]
+            s = Stimulus.add(static, e, config, args)
+            s = dict(sorted(s.items()))
+
             ent.stim[type(e)].append(e)
             if ent is e:
                stim.appendleft(s)
@@ -92,9 +88,6 @@ class Stimulus:
                stim.append(s)
 
       #Should sort before truncate
-      stim = list(stim)[:config.ENT_OBS]
-      nop = Stimulus.nop(s)
-      while len(stim) < config.ENT_OBS:
-         stim.append(nop)
-
+      #Remember to also sort raw_obs
+      stim = list(stim)[:config.N_AGENT_OBS]
       return stim, raw

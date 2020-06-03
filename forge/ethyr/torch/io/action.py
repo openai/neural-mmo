@@ -7,7 +7,9 @@ from collections import defaultdict
 
 import torch
 from torch import nn
+
 from forge.blade.io.action import static
+from forge.blade.io.stimulus.static import Stimulus
 
 from forge.ethyr.torch.policy import attention
 from forge.ethyr.torch.policy import functional
@@ -53,7 +55,7 @@ class Output(nn.Module):
                #Fixed arg
             else:
                #Temp hack, rename
-               cands = lookup['Entity']
+               cands = lookup[Stimulus.Entity]
 
             #lens = [cands.shape[1] for e in range(cands.shape[0])]
             lens  = None

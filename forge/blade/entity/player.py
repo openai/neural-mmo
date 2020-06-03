@@ -6,7 +6,6 @@ from forge.blade.lib.enums import Material, Neon
 
 from forge.blade.io.stimulus.hook import StimHook
 from forge.blade.io.stimulus.static import Stimulus
-from forge.blade.io.action import static as action
 
 from forge.blade.systems.skill import Skills
 from forge.blade.systems.inventory import Inventory
@@ -65,11 +64,13 @@ class History(StimHook):
    def update(self, ent, world, actions):
       self.damage.update(None)
       self.actions = actions
+
+      #No way around this circular import I can see :/
+      from forge.blade.io.action import static as action
       key = action.Attack
 
       self.timeAlive.increment()
 
-      #need to rekey this
       if key in actions:
          self.attack, self.targ = actions[key]
          #self.mapAttack()

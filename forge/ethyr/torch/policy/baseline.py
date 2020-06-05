@@ -1,4 +1,4 @@
-from pdb import set_trace as T
+from pdb import set_trace as TT
 import numpy as np
 
 import torch
@@ -88,7 +88,9 @@ class Recurrent(Simple):
    def __init__(self, config):
       '''Recurrent baseline model'''
       super().__init__(config)
-      self.lstm   = nn.LSTM(config.HIDDEN, config.HIDDEN)
+      self.lstm   = policy.BatchFirstLSTM(
+            input_size=config.HIDDEN,
+            hidden_size=config.HIDDEN)
 
    #Note: seemingly redundant transposes are required to convert between 
    #Pytorch (seq_len, batch, hidden) <-> RLlib (batch, seq_len, hidden)
@@ -96,30 +98,29 @@ class Recurrent(Simple):
       #Attentional input preprocessor and batching
       hidden, _ = super().hidden(obs)
       config    = self.config
-      batch     = len(lens)
       h, c      = state
 
-      #Pack (padded_seq x batch, hidden) -> (padded_seq, batch, hidden)
-      hidden        = hidden.view(batch, -1, config.HIDDEN).transpose(0, 1)
-      hidden        = rnn.pack_padded_sequence(
-                        hidden, lens, enforce_sorted=False)
+      TB = hidden.size(0) #Padded batch of size (seq x batch)
+      B  = len(lens)      #Sequence fragment time length
+      T  = TB // B        #Trajectory batch size
+      H  = config.HIDDEN  #Hidden state size
 
-      #Permute (batch, 1?, hidden) -> (1, batch, hidden)
-      h             = h.view(batch, -1, config.HIDDEN).transpose(0, 1)
-      c             = c.view(batch, -1, config.HIDDEN).transpose(0, 1)
+      #Pack (batch x seq, hidden) -> (batch, seq, hidden)
+      hidden        = rnn.pack_padded_sequence(
+                         input=hidden.view(B, T, H),
+                         lengths=lens,
+                         enforce_sorted=False,
+                         batch_first=True)
 
       #Main recurrent network
-      hidden, state = self.lstm(hidden, [h, c])
+      hidden, state = self.lstm(hidden, state)
 
-      #Permute (1, batch, hidden) -> (batch, 1, hidden)
-      h             = state[0].transpose(0, 1)
-      c             = state[1].transpose(0, 1)
+      #Unpack (batch, seq, hidden) -> (batch x seq, hidden)
+      hidden, _     = rnn.pad_packed_sequence(
+                         sequence=hidden,
+                         batch_first=True)
 
-      #Unpack (padded_seq, batch, hidden) -> (padded_seq x batch, hidden)
-      hidden, _     = rnn.pad_packed_sequence(hidden)
-      hidden        = hidden.transpose(0, 1).reshape(-1, config.HIDDEN)
-
-      return hidden, [h, c]
+      return hidden.reshape(TB, H), state
 
 class Attentional(Base):
    def __init__(self, config):

@@ -38,7 +38,7 @@ class Evaluator:
             del self.obs[agentID]
            
       #Compute batch of actions
-      atns, self.state, _ = self.trainer.compute_actions(
+      actions, self.state, _ = self.trainer.compute_actions(
             self.obs, state=self.state, policy_id='policy_0')
 
       #Update values, and attention
@@ -48,13 +48,6 @@ class Evaluator:
          ent             = self.env.desciples[agentID]
          for tile, a in zip(tiles, model.attention()[idx]):
             attns[ent][tile] = float(a)
-
-      #Reformat actions
-      actions = defaultdict(lambda: defaultdict(dict))
-      for atn, args in atns.items():
-         for arg, vals in args.items():
-            for idx, agentID in enumerate(self.obs):
-               actions[agentID][atn][arg] = vals[idx]
 
       #Step the environment
       self.obs, rewards, self.done, _ = self.env.step(actions, values, attns)
@@ -69,16 +62,19 @@ class Evaluator:
          return
 
       print('Computing value map...')
-      values = np.zeros(self.env.size)
-      model  = self.trainer.get_policy('policy_0').model
-      for obs, stim in self.env.getValStim():
-         env, ent   = stim
-         r, c       = ent.base.pos
+      values     = np.zeros(self.env.size)
+      model      = self.trainer.get_policy('policy_0').model
+      obs, stims = self.env.getValStim()
 
-         atns, self.state, _ = self.trainer.compute_actions(
-               self.obs, state=self.state, policy_id='policy_0')
+      #Compute actions to populate model value function
+      self.trainer.compute_actions(obs, state={}, policy_id='policy_0')
 
-         values[r, c] = float(model.value_function())
+      for agentID in obs.keys():
+         env, ent = stims[agentID]
+         atn      = obs[agentID]
+         r, c     = ent.base.pos
+
+         values[r, c] = float(model.value_function()[agentID])
 
       self.env.setGlobalValues(values)
       print('Value map computed')

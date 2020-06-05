@@ -101,7 +101,7 @@ if __name__ == '__main__':
       trainer.restore()
 
    if config.RENDER:
-      env = env_creator({'config': config})
+      env = createEnv({'config': config})
       projekt.Evaluator(trainer, env, config).run()
    else:
       trainer.train()

@@ -2,9 +2,9 @@ from forge.blade import core
 
 class Config(core.Config):
    #Program level args
-   COMPUTE_GLOBAL_VALUES = False
-   LOAD_MODEL            = False
-   RENDER                = False
+   COMPUTE_GLOBAL_VALUES = True
+   LOAD_MODEL            = True
+   RENDER                = True
 
    POPULATIONS_SHARE_POLICIES = True
    NPOLICIES = 1 if POPULATIONS_SHARE_POLICIES else NPOP

@@ -324,12 +324,12 @@ class Realm(Timed):
       R, C    = self.world.env.tiles.shape
       B       = config.BORDER
 
-      entID   = 1
+      entID   = 0
       pop     = 0
       name    = "Value"
       color   = (255, 255, 255)
 
-      stims   = []
+      observations, stims = {}, {}
       for r in range(B-1, R-B):
          for c in range(B-1, C-B):
             pos   = tuple([r, c])
@@ -343,7 +343,8 @@ class Realm(Timed):
             obs, _ = stimulus.Dynamic.process(self.config, stim, ent)
             self.world.env.tiles[r, c].delEnt(entID)
 
-            stims.append((obs, (stim, ent)))
+            observations[entID] = obs
+            stims[entID] = (stim, ent)
             entID += 1
             
-      return stims
+      return observations, stims

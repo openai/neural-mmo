@@ -41,6 +41,43 @@ class SanePPOTrainer(ppo.PPOTrainer):
           print('Epoch: {}, Samples: {}'.format(epoch, nSteps))
           epoch += 1
 
+
+   #In rllib.utils.space_utils in next patch
+   def unbatch(batches_struct):
+       """Converts input from (nested) struct of batches to batch of structs.
+
+       Input: Struct of different batches (each batch has size=3):
+           {"a": [1, 2, 3], "b": ([4, 5, 6], [7.0, 8.0, 9.0])}
+       Output: Batch (list) of structs (each of these structs representing a
+           single action):
+           [
+               {"a": 1, "b": (4, 7.0)},  <- action 1
+               {"a": 2, "b": (5, 8.0)},  <- action 2
+               {"a": 3, "b": (6, 9.0)},  <- action 3
+           ]
+
+       Args:
+           batches_struct (any): The struct of component batches. Each leaf item
+               in this struct represents the batch for a single component
+               (in case struct is tuple/dict).
+               Alternatively, `batches_struct` may also simply be a batch of
+               primitives (non tuple/dict).
+
+       Returns:
+           List[struct[components]]: The list of rows. Each item
+               in the returned list represents a single (maybe complex) struct.
+       """
+       flat_batches = tree.flatten(batches_struct)
+
+       out = []
+       for batch_pos in range(len(flat_batches[0])):
+           out.append(
+               tree.unflatten_as(
+                   batches_struct,
+                   [flat_batches[i][batch_pos]
+                    for i in range(len(flat_batches))]))
+       return out
+
    #To be integrated into RLlib and thus formatted using
    #their project's conventions
    def compute_actions(self,
@@ -118,6 +155,11 @@ class SanePPOTrainer(ppo.PPOTrainer):
             explore=explore,
             timestep=self.global_vars["timestep"])
 
+        #Unbatch actions for the environment
+        atns, actions = unbatch(actions), {}
+        for key, atn in zip(observations, atns):
+           actions[key] = atn    
+
         #Unbatch states into a dict
         unbatched_states = {}
         for idx, agent_id in enumerate(observations):
@@ -128,4 +170,42 @@ class SanePPOTrainer(ppo.PPOTrainer):
             return actions, unbatched_states, infos
         else:
             return actions
+
+from ray.rllib.utils import try_import_tree
+tree = try_import_tree()
+#In rllib.utils.space_utils in next patch
+def unbatch(batches_struct):
+    """Converts input from (nested) struct of batches to batch of structs.
+
+    Input: Struct of different batches (each batch has size=3):
+        {"a": [1, 2, 3], "b": ([4, 5, 6], [7.0, 8.0, 9.0])}
+    Output: Batch (list) of structs (each of these structs representing a
+        single action):
+        [
+            {"a": 1, "b": (4, 7.0)},  <- action 1
+            {"a": 2, "b": (5, 8.0)},  <- action 2
+            {"a": 3, "b": (6, 9.0)},  <- action 3
+        ]
+
+    Args:
+        batches_struct (any): The struct of component batches. Each leaf item
+            in this struct represents the batch for a single component
+            (in case struct is tuple/dict).
+            Alternatively, `batches_struct` may also simply be a batch of
+            primitives (non tuple/dict).
+
+    Returns:
+        List[struct[components]]: The list of rows. Each item
+            in the returned list represents a single (maybe complex) struct.
+    """
+    flat_batches = tree.flatten(batches_struct)
+
+    out = []
+    for batch_pos in range(len(flat_batches[0])):
+        out.append(
+            tree.unflatten_as(
+                batches_struct,
+                [flat_batches[i][batch_pos]
+                 for i in range(len(flat_batches))]))
+    return out
 

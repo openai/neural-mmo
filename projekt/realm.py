@@ -6,7 +6,7 @@ import gym
 
 from ray import rllib
 
-from ray.rllib.models.extra_spaces import Repeated
+from ray.rllib.utils.spaces.simplex import Repeated, FlexDict
 
 from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
@@ -58,44 +58,6 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
             dones['__all__'] = True
 
       return obs, rewards, dones, infos
-
-#To be integrated into RLlib
-class FlexDict(gym.spaces.Dict):
-   """Gym Dictionary with arbitrary keys"""
-   def __init__(self, spaces=None, **spaces_kwargs):
-      err = 'Use either Dict(spaces=dict(...)) or Dict(foo=x, bar=z)'
-      assert (spaces is None) or (not spaces_kwargs), err
-
-      if spaces is None:
-         spaces = spaces_kwargs
-
-      self.spaces = spaces
-      for space in spaces.values():
-         self.assertSpace(space)
-
-      # None for shape and dtype, since it'll require special handling
-      self.np_random = None
-      self.shape     = None
-      self.dtype     = None
-      self.seed()
-
-   def assertSpace(self, space):
-      err = 'Values of the dict should be instances of gym.Space'
-      assert isinstance(space, gym.spaces.Space), err
-
-   def sample(self):
-      return dict([(k, space.sample())
-            for k, space in self.spaces.items()])
-
-   def __getitem__(self, key):
-      return self.spaces[key]
-
-   def __setitem__(self, key, space):
-      self.assertSpace(space)
-      self.spaces[key] = space
-
-   def __repr__(self):
-      return "FlexDict(" + ", ". join([str(k) + ":" + str(s) for k, s in self.spaces.items()]) + ")"
 
 #Neural MMO observation space
 def observationSpace(config):

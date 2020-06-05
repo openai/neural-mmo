@@ -14,11 +14,11 @@ from forge.ethyr.torch.policy import baseline
 from projekt.realm import actionSpace
 
 class Policy(RecurrentNetwork):
-   def __init__(self, *args, config=None, **kwargs):
+   def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
-      self.space  = actionSpace(config).spaces
-      self.model  = baseline.Recurrent(config)
-      self.config = config
+      self.config = args[3]['custom_model_config']['config']
+      self.space  = actionSpace(self.config).spaces
+      self.model  = baseline.Recurrent(self.config)
 
    #Initial hidden state for RLlib Trainer
    def get_initial_state(self):

@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "nmmo"
+version = "1.4"
+description = "A massively multiagent environment for artificial intelligence research"
+authors = ["Joseph Suarez"]
+license = "MIT License"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+ray = "0.8.5"
+cloudpickle = "1.2.2"
+setproctitle = "1.1.10"
+service_identity = "18.1.0"
+redis = "3.4.0"
+opensimplex = "0.2"
+PyTMX = "3.21.7"
+autobahn = "19.3.3"
+Twisted = "19.2.0"
+torch = "1.5.0"
+numpy = "1.17.2"
+matplotlib = "3.1.3"
+gym = "0.17.1"
+bokeh = "1.3.4"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

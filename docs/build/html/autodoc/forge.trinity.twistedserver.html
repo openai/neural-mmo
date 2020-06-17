@@ -1,0 +1,1140 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>forge.trinity.twistedserver module &mdash; Neural MMO 1.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="forge.trinity.trinity module" href="forge.trinity.trinity.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html"> User API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html#ags-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.api.html">forge.trinity.api module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.ascend.html">forge.trinity.ascend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.timed.html">forge.trinity.timed module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.trinity.trinity.html">forge.trinity.trinity module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">forge.trinity.twistedserver module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api.html"> User API</a> &raquo;</li>
+        
+          <li><a href="forge.html">forge package</a> &raquo;</li>
+        
+          <li><a href="forge.trinity.html">forge.trinity package</a> &raquo;</li>
+        
+      <li>forge.trinity.twistedserver module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/autodoc/forge.trinity.twistedserver.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-forge.trinity.twistedserver">
+<span id="forge-trinity-twistedserver-module"></span><h1>forge.trinity.twistedserver module<a class="headerlink" href="#module-forge.trinity.twistedserver" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol">
+<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.twistedserver.</code><code class="sig-name descname">GodswordServerProtocol</code><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.twisted.websocket.WebSocketServerProtocol</span></code></p>
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onOpen">
+<code class="sig-name descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onOpen()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onClose">
+<code class="sig-name descname">onClose</code><span class="sig-paren">(</span><em class="sig-param">wasClean</em>, <em class="sig-param">code=None</em>, <em class="sig-param">reason=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onClose()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.connectionMade">
+<code class="sig-name descname">connectionMade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.connectionMade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when a connection is made.</p>
+<p>This may be considered the initializer of the protocol, because
+it is called when the connection is completed.  For clients,
+this is called once the connection to the server has been
+established; for servers, this is called after an accept() call
+stops blocking and a socket has been received.  If you need to
+send any greeting or initial message, do it here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.connectionLost">
+<code class="sig-name descname">connectionLost</code><span class="sig-paren">(</span><em class="sig-param">reason</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection is shut down.</p>
+<p>Clear any circular references here, and any external references
+to this Protocol.  The connection has been closed.</p>
+<p>&#64;type reason: L{twisted.python.failure.Failure}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessage">
+<code class="sig-name descname">onMessage</code><span class="sig-paren">(</span><em class="sig-param">packet</em>, <em class="sig-param">isBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onConnect">
+<code class="sig-name descname">onConnect</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback fired during WebSocket opening handshake when new WebSocket client
+connection is about to be established.</p>
+<p>When you want to accept the connection, return the accepted protocol
+from list of WebSocket (sub)protocols provided by client or <cite>None</cite> to
+speak no specific one or when the client protocol list was empty.</p>
+<p>You may also return a pair of <cite>(protocol, headers)</cite> to send additional
+HTTP headers, with <cite>headers</cite> being a dictionary of key-values.</p>
+<p>Throw <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.types.ConnectionDeny</span></code> when you don’t want
+to accept the WebSocket connection request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.beginMessage">
+<code class="sig-name descname">beginMessage</code><span class="sig-paren">(</span><em class="sig-param">isBinary=False</em>, <em class="sig-param">doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.beginMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.beginMessageFrame">
+<code class="sig-name descname">beginMessageFrame</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.beginMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.consumeData">
+<code class="sig-name descname">consumeData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.consumeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume buffered (incoming) data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.dataReceived">
+<code class="sig-name descname">dataReceived</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.dataReceived" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called whenever data is received.</p>
+<p>Use this method to translate to a higher-level message.  Usually, some
+callback will be made upon the receipt of each complete protocol
+message.</p>
+<dl class="simple">
+<dt>&#64;param data: a string of indeterminate length.  Please keep in mind</dt><dd><p>that you will probably need to buffer some data, as partial
+(or multiple) protocol messages may be received!  I recommend
+that unit tests for protocols call through to this method with
+differing chunk sizes, down to one byte at a time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.dropConnection">
+<code class="sig-name descname">dropConnection</code><span class="sig-paren">(</span><em class="sig-param">abort=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.dropConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop the underlying TCP connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.endMessage">
+<code class="sig-name descname">endMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.endMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.endMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.failHandshake">
+<code class="sig-name descname">failHandshake</code><span class="sig-paren">(</span><em class="sig-param">reason</em>, <em class="sig-param">code=400</em>, <em class="sig-param">responseHeaders=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.failHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>During opening handshake the client request was invalid, we send a HTTP
+error response and then drop the connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.get_channel_id">
+<code class="sig-name descname">get_channel_id</code><span class="sig-paren">(</span><em class="sig-param">channel_id_type='tls-unique'</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.get_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.wamp.interfaces.ITransport.get_channel_id()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.logPrefix">
+<code class="sig-name descname">logPrefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.logPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a prefix matching the class name, to identify log messages
+related to this protocol instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.logRxFrame">
+<code class="sig-name descname">logRxFrame</code><span class="sig-paren">(</span><em class="sig-param">frameHeader</em>, <em class="sig-param">payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.logRxFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after WebSocket frame has been received and decoded,
+but only when self.logFrames == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.logRxOctets">
+<code class="sig-name descname">logRxOctets</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.logRxOctets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after raw octets have been received, but only when
+self.logOctets == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.logTxFrame">
+<code class="sig-name descname">logTxFrame</code><span class="sig-paren">(</span><em class="sig-param">frameHeader</em>, <em class="sig-param">payload</em>, <em class="sig-param">repeatLength</em>, <em class="sig-param">chopsize</em>, <em class="sig-param">sync</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.logTxFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after WebSocket frame has been encoded and sent, but
+only when self.logFrames == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.logTxOctets">
+<code class="sig-name descname">logTxOctets</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sync</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.logTxOctets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after raw octets have been sent, but only when
+self.logOctets == True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.makeConnection">
+<code class="sig-name descname">makeConnection</code><span class="sig-paren">(</span><em class="sig-param">transport</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.makeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a connection to a transport and a server.</p>
+<p>This sets the ‘transport’ attribute of this Protocol, and calls the
+connectionMade() callback.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onAutoPingTimeout">
+<code class="sig-name descname">onAutoPingTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onAutoPingTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>When doing automatic ping/pongs to detect broken connection, the peer
+did not reply in time to our ping. We drop the connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onCloseFrame">
+<code class="sig-name descname">onCloseFrame</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">reasonRaw</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onCloseFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback when a Close frame was received. The default implementation answers by
+sending a Close when no Close was sent before. Otherwise it drops
+the TCP connection either immediately (when we are a server) or after a timeout
+(when we are a client and expect the server to drop the TCP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<em>int</em>) – Close status code, if there was one (<code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProtocol</span></code>.CLOSE_STATUS_CODE_*).</p></li>
+<li><p><strong>reasonRaw</strong> (<em>bytes</em>) – Close reason (when present, a status code MUST have been also be present).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onCloseHandshakeTimeout">
+<code class="sig-name descname">onCloseHandshakeTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onCloseHandshakeTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We expected the peer to respond to us initiating a close handshake. It didn’t
+respond (in time self.closeHandshakeTimeout) with a close response frame though.
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onFrameBegin">
+<code class="sig-name descname">onFrameBegin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onFrameBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin of receive new frame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onFrameData">
+<code class="sig-name descname">onFrameData</code><span class="sig-paren">(</span><em class="sig-param">payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>New data received within frame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onFrameEnd">
+<code class="sig-name descname">onFrameEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onFrameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>End of frame received.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessageBegin">
+<code class="sig-name descname">onMessageBegin</code><span class="sig-paren">(</span><em class="sig-param">isBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessageBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageBegin()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessageEnd">
+<code class="sig-name descname">onMessageEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessageEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageEnd()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrame">
+<code class="sig-name descname">onMessageFrame</code><span class="sig-paren">(</span><em class="sig-param">payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameBegin">
+<code class="sig-name descname">onMessageFrameBegin</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameBegin()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameData">
+<code class="sig-name descname">onMessageFrameData</code><span class="sig-paren">(</span><em class="sig-param">payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameData()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameEnd">
+<code class="sig-name descname">onMessageFrameEnd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameEnd()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onOpenHandshakeTimeout">
+<code class="sig-name descname">onOpenHandshakeTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onOpenHandshakeTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We expected the peer to complete the opening handshake with to us.
+It didn’t do so (in time self.openHandshakeTimeout).
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onPing">
+<code class="sig-name descname">onPing</code><span class="sig-paren">(</span><em class="sig-param">payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onPing()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onPong">
+<code class="sig-name descname">onPong</code><span class="sig-paren">(</span><em class="sig-param">payload</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onPong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onPong()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.onServerConnectionDropTimeout">
+<code class="sig-name descname">onServerConnectionDropTimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.onServerConnectionDropTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We (a client) expected the peer (a server) to drop the connection,
+but it didn’t (in time self.serverConnectionDropTimeout).
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.processControlFrame">
+<code class="sig-name descname">processControlFrame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.processControlFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a completely received control frame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.processData">
+<code class="sig-name descname">processData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.processData" title="Permalink to this definition">¶</a></dt>
+<dd><p>After WebSocket handshake has been completed, this procedure will do
+all subsequent processing of incoming bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.processHandshake">
+<code class="sig-name descname">processHandshake</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.processHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process WebSocket opening handshake request from client.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.processProxyConnect">
+<code class="sig-name descname">processProxyConnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.processProxyConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process proxy connect.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.registerProducer">
+<code class="sig-name descname">registerProducer</code><span class="sig-paren">(</span><em class="sig-param">producer</em>, <em class="sig-param">streaming</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.registerProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a Twisted producer with this protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>producer</strong> (<em>object</em>) – A Twisted push or pull producer.</p></li>
+<li><p><strong>streaming</strong> (<em>bool</em>) – Producer type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendClose">
+<code class="sig-name descname">sendClose</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">reason=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendClose()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendCloseFrame">
+<code class="sig-name descname">sendCloseFrame</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">reasonUtf8=None</em>, <em class="sig-param">isReply=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendCloseFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a close frame and update protocol state. Note, that this is
+an internal method which deliberately allows not send close
+frame with invalid payload.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendData">
+<code class="sig-name descname">sendData</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sync=False</em>, <em class="sig-param">chopsize=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for self.transport.write which allows to give a chopsize.
+When asked to chop up writing to TCP stream, we write only chopsize
+octets and then give up control to select() in underlying reactor so
+that bytes get onto wire immediately. Note that this is different from
+and unrelated to WebSocket data message fragmentation. Note that this
+is also different from the TcpNoDelay option which can be set on the
+socket.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendFrame">
+<code class="sig-name descname">sendFrame</code><span class="sig-paren">(</span><em class="sig-param">opcode</em>, <em class="sig-param">payload=b''</em>, <em class="sig-param">fin=True</em>, <em class="sig-param">rsv=0</em>, <em class="sig-param">mask=None</em>, <em class="sig-param">payload_len=None</em>, <em class="sig-param">chopsize=None</em>, <em class="sig-param">sync=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send out frame. Normally only used internally via sendMessage(),
+sendPing(), sendPong() and sendClose().</p>
+<p>This method deliberately allows to send invalid frames (that is frames
+invalid per-se, or frames invalid because of protocol state). Other
+than in fuzzing servers, calling methods will ensure that no invalid
+frames are sent.</p>
+<p>In addition, this method supports explicit specification of payload
+length. When payload_len is given, it will always write that many
+octets to the stream. It’ll wrap within payload, resending parts of
+that when more octets were requested The use case is again for fuzzing
+server which want to sent increasing amounts of payload data to peers
+without having to construct potentially large messages themselves.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendHtml">
+<code class="sig-name descname">sendHtml</code><span class="sig-paren">(</span><em class="sig-param">html</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendHtml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send HTML page HTTP response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendHttpErrorResponse">
+<code class="sig-name descname">sendHttpErrorResponse</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">reason</em>, <em class="sig-param">responseHeaders=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendHttpErrorResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send out HTTP error response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendMessage">
+<code class="sig-name descname">sendMessage</code><span class="sig-paren">(</span><em class="sig-param">payload</em>, <em class="sig-param">isBinary=False</em>, <em class="sig-param">fragmentSize=None</em>, <em class="sig-param">sync=False</em>, <em class="sig-param">doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrame">
+<code class="sig-name descname">sendMessageFrame</code><span class="sig-paren">(</span><em class="sig-param">payload</em>, <em class="sig-param">sync=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrameData">
+<code class="sig-name descname">sendMessageFrameData</code><span class="sig-paren">(</span><em class="sig-param">payload</em>, <em class="sig-param">sync=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessageFrameData()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendPing">
+<code class="sig-name descname">sendPing</code><span class="sig-paren">(</span><em class="sig-param">payload=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPing()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendPong">
+<code class="sig-name descname">sendPong</code><span class="sig-paren">(</span><em class="sig-param">payload=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendPong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPong()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendPreparedMessage">
+<code class="sig-name descname">sendPreparedMessage</code><span class="sig-paren">(</span><em class="sig-param">preparedMsg</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendPreparedMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPreparedMessage()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendRedirect">
+<code class="sig-name descname">sendRedirect</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendRedirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send HTTP Redirect (303) response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.sendServerStatus">
+<code class="sig-name descname">sendServerStatus</code><span class="sig-paren">(</span><em class="sig-param">redirectUrl=None</em>, <em class="sig-param">redirectAfter=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.sendServerStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to send out server status/version upon receiving a HTTP/GET without
+upgrade to WebSocket header (and option serverStatus is True).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.setTrackTimings">
+<code class="sig-name descname">setTrackTimings</code><span class="sig-paren">(</span><em class="sig-param">enable</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.setTrackTimings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable tracking of detailed timings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – Turn time tracking on/off.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.succeedHandshake">
+<code class="sig-name descname">succeedHandshake</code><span class="sig-paren">(</span><em class="sig-param">res</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.succeedHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback after onConnect() returns successfully. Generates the response for the handshake.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.GodswordServerProtocol.unregisterProducer">
+<code class="sig-name descname">unregisterProducer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.GodswordServerProtocol.unregisterProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregister Twisted producer with this protocol.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="forge.trinity.twistedserver.WSServerFactory">
+<em class="property">class </em><code class="sig-prename descclassname">forge.trinity.twistedserver.</code><code class="sig-name descname">WSServerFactory</code><span class="sig-paren">(</span><em class="sig-param">ip</em>, <em class="sig-param">realm</em>, <em class="sig-param">step</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.twisted.websocket.WebSocketServerFactory</span></code></p>
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.buildProtocol">
+<code class="sig-name descname">buildProtocol</code><span class="sig-paren">(</span><em class="sig-param">addr</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.buildProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of a subclass of Protocol.</p>
+<p>The returned instance will handle input on an incoming server
+connection, and an attribute “factory” pointing to the creating
+factory.</p>
+<p>Alternatively, L{None} may be returned to immediately close the
+new connection.</p>
+<p>Override this method to alter how Protocol instances get created.</p>
+<p>&#64;param addr: an object implementing L{twisted.internet.interfaces.IAddress}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.doStart">
+<code class="sig-name descname">doStart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.doStart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure startFactory is called.</p>
+<p>Users should not call this function themselves!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.doStop">
+<code class="sig-name descname">doStop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.doStop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure stopFactory is called.</p>
+<p>Users should not call this function themselves!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.forProtocol">
+<em class="property">classmethod </em><code class="sig-name descname">forProtocol</code><span class="sig-paren">(</span><em class="sig-param">protocol</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.forProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a factory for the given protocol.</p>
+<p>It sets the C{protocol} attribute and returns the constructed factory
+instance.</p>
+<p>&#64;param protocol: A L{Protocol} subclass</p>
+<p>&#64;param args: Positional arguments for the factory.</p>
+<p>&#64;param kwargs: Keyword arguments for the factory.</p>
+<p>&#64;return: A L{Factory} instance wired up to C{protocol}.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.getConnectionCount">
+<code class="sig-name descname">getConnectionCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.getConnectionCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get number of currently connected clients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int – Number of currently connected clients.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.logPrefix">
+<code class="sig-name descname">logPrefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.logPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe this factory for log messages.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.prepareMessage">
+<code class="sig-name descname">prepareMessage</code><span class="sig-paren">(</span><em class="sig-param">payload</em>, <em class="sig-param">isBinary=False</em>, <em class="sig-param">doNotCompress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.prepareMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare a WebSocket message. This can be later sent on multiple
+instances of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.WebSocketProtocol</span></code> using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">autobahn.websocket.WebSocketProtocol.sendPreparedMessage()</span></code>.</p>
+<p>By doing so, you can avoid the (small) overhead of framing the
+<em>same</em> payload into WebSocket messages multiple times when that
+same payload is to be sent out on multiple connections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>payload</strong> (<em>bytes</em>) – The message payload.</p></li>
+<li><p><strong>isBinary</strong> (<em>bool</em>) – <cite>True</cite> iff payload is binary, else the payload must be
+UTF-8 encoded text.</p></li>
+<li><p><strong>doNotCompress</strong> (<em>bool</em>) – Iff <cite>True</cite>, never compress this message. This
+only applies when WebSocket compression has been negotiated on the
+WebSocket connection. Use when you know the payload incompressible
+(e.g. encrypted or already compressed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>obj – An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.PreparedMessage</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.trinity.twistedserver.WSServerFactory.protocol">
+<code class="sig-name descname">protocol</code><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.WebSocketServerProtocol</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.resetProtocolOptions">
+<code class="sig-name descname">resetProtocolOptions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.resetProtocolOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketServerChannelFactory.resetProtocolOptions()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.setProtocolOptions">
+<code class="sig-name descname">setProtocolOptions</code><span class="sig-paren">(</span><em class="sig-param">versions=None</em>, <em class="sig-param">webStatus=None</em>, <em class="sig-param">utf8validateIncoming=None</em>, <em class="sig-param">maskServerFrames=None</em>, <em class="sig-param">requireMaskedClientFrames=None</em>, <em class="sig-param">applyMask=None</em>, <em class="sig-param">maxFramePayloadSize=None</em>, <em class="sig-param">maxMessagePayloadSize=None</em>, <em class="sig-param">autoFragmentSize=None</em>, <em class="sig-param">failByDrop=None</em>, <em class="sig-param">echoCloseCodeReason=None</em>, <em class="sig-param">openHandshakeTimeout=None</em>, <em class="sig-param">closeHandshakeTimeout=None</em>, <em class="sig-param">tcpNoDelay=None</em>, <em class="sig-param">perMessageCompressionAccept=None</em>, <em class="sig-param">autoPingInterval=None</em>, <em class="sig-param">autoPingTimeout=None</em>, <em class="sig-param">autoPingSize=None</em>, <em class="sig-param">serveFlashSocketPolicy=None</em>, <em class="sig-param">flashSocketPolicy=None</em>, <em class="sig-param">allowedOrigins=None</em>, <em class="sig-param">allowNullOrigin=False</em>, <em class="sig-param">maxConnections=None</em>, <em class="sig-param">trustXForwardedFor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.setProtocolOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketServerChannelFactory.setProtocolOptions()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.setSessionParameters">
+<code class="sig-name descname">setSessionParameters</code><span class="sig-paren">(</span><em class="sig-param">url=None</em>, <em class="sig-param">protocols=None</em>, <em class="sig-param">server=None</em>, <em class="sig-param">headers=None</em>, <em class="sig-param">externalPort=None</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.setSessionParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketServerChannelFactory.setSessionParameters()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.startFactory">
+<code class="sig-name descname">startFactory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.startFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will be called before I begin listening on a Port or Connector.</p>
+<p>It will only be called once, even if the factory is connected
+to multiple ports.</p>
+<p>This can be used to perform ‘unserialization’ tasks that
+are best put off until things are actually running, such
+as connecting to a database, opening files, etcetera.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.trinity.twistedserver.WSServerFactory.stopFactory">
+<code class="sig-name descname">stopFactory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.trinity.twistedserver.WSServerFactory.stopFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will be called before I stop listening on all Ports/Connectors.</p>
+<p>This can be overridden to perform ‘shutdown’ tasks such as disconnecting
+database connections, closing files, etc.</p>
+<p>It will be called, for example, before an application shuts down,
+if it was connected to a port. User code should not call this function
+directly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="forge.trinity.trinity.html" class="btn btn-neutral float-left" title="forge.trinity.trinity module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--accent);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--title);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+    }
+
+    h2 {
+      color: var(--title);
+    }
+
+    h3 {
+      color: var(--title);
+    }
+
+    h4 {
+      color: var(--title);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: cyan; /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--text);
+    }
+
+    a:visited {
+      color: var(--text);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

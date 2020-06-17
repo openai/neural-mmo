@@ -1,4 +1,4 @@
-Neural MMO v1.3
+Neural MMO v1.4
 ###############
 
 .. toctree::
@@ -9,6 +9,12 @@ Neural MMO v1.3
 
 .. toctree::
    :maxdepth: 8
-   :caption: API Reference:
+   :caption: Developer Guide:
 
-   autodoc/modules
+   devguide
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Documentation:
+
+   autodoc/api

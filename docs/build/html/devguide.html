@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Foreword &mdash; Neural MMO 1.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User API" href="autodoc/api.html" />
+    <link rel="prev" title="Welcome to the Platform!" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Neural MMO
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html"> Welcome to the Platform!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-namesake"> Namesake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html"> User API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html#ags-developer-api"> Developer API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Neural MMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li> Foreword</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/devguide.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ags-foreword">
+<h1><img alt="ags" src="_images/ags1.png" /> Foreword<a class="headerlink" href="#ags-foreword" title="Permalink to this headline">¶</a></h1>
+<p>The formal User API is new as of v1.4. This means we’ve just gotten public functionality to the point where it’s relatively stable and wont change too much from update to update. The internals are still moving fast and subject to constant refactoring and reworking. This up-front engineering cost is essential to the long-term success of the project and more or less makes it impossible to have a stable developer API for the time being.</p>
+<p>That said, we are working on stabilizing and exposing small sections of the API and do expect to have a reasonable developer guide at some point. Neural MMO is fully open source and in no way limited to experienced reinforcement learning researchers. We also need full-stack software engineers and game designers/programmers/technical artists, among others. The purpose of this section in its current form is to provide a starting point for those interested in contributing to the platform. If you think something is missing, let me know on Discord.</p>
+</div>
+<div class="section" id="ags-before-you-start">
+<h1><img alt="ags" src="_images/ags1.png" /> Before You Start<a class="headerlink" href="#ags-before-you-start" title="Permalink to this headline">¶</a></h1>
+<p>Neural MMO is open source by traditional measures – good PRs get merged. In practice, more is required. Neural MMO is neither a pure research nor software engineering endeavor; long-term success requires that people from a variety of skill backgrounds to be able to meaningfully contribute. Here’s how you can help:</p>
+<p><strong>Research Science:</strong> We need better baseline models and algorithms. The largest likely improvement will come from rewriting the baseline model to be fully attentional. It should be possible to express the input, hidden, and output networks as Transformer modules. I’ve done some preliminary work and have a decent Attentional baseline, but it needs some tuning and also doesn’t incorporate attention at every layer. Note that the above is intended for contributors who want to improve the base platform. We also support collaborations with researchers who want to use Neural MMO as a platform for more creative explorations into multiagent communication, population-based algorithms, emergent communication, etc. Come chat on Discord.</p>
+<p><strong>Research Engineering:</strong> The single hardest engineering challenge in Neural MMO lies between the model and the environment. Our IO processing allows us to modify the environment observation and action spaces without having to manually rewrite networks. Currently, we only support discrete and continuous observations and discrete fixed and variable length actions. We would like to expand support to include vector-values observations and actions, as well as continous values actions. We also need peripheral research utilities – better model versioning, versioning, and troubleshooting tools.</p>
+<p><strong>Software Engineering:</strong> The Neural MMO core is nothing more than a traditional game with a few extra design decisions to support efficiency and simplicity as a research environment. Research on Neural MMO is fundamentally limited by the simplicity of the environment – more complex game mechanics give agents more systems to learn and interact with. We need more content: item and inventory systems, player communication, trade, PvE, interesting terrain generation, etc.</p>
+<p><strong>Game Development:</strong> The server-side code can be handled more or less by traditional software engineering. Game designers and programmers would be helpful there, but experienced Unity developers would probably be more helpful on the client side. The Neural MMO client is currently limited to relatively small maps that are assembled from 3D tiles in what is probably the stupidest way possible. We need scalable systems for handling large maps and large numbers of agents. As the game and rendering logic are separated, we also need to keep up with features being added to the server.</p>
+<p><strong>Technical Artwork:</strong> The models, animations, UIs, and other assets used in the client are good by research environment standard but amateur otherwise. We need help improving all aspects of the client visuals</p>
+<p><strong>Technical Writing:</strong> The website docs could use improvement – assistance in editing is greatly appreciated.</p>
+<p><strong>Other:</strong> If you have other relevent skills and can improve a portion of this project, we welcome your help. Come chat on Discord about how you can get involved if you don’t fit into one of the buckets above or come from a multidisciplinary background.</p>
+</div>
+<div class="section" id="ags-tech-stack">
+<h1><img alt="ags" src="_images/ags1.png" /> Tech Stack<a class="headerlink" href="#ags-tech-stack" title="Permalink to this headline">¶</a></h1>
+<p><strong>High-Level:</strong> The server is written in Python 3.7. The client is a Unity3D project written in C#. The client is not required for training and is only used for rendering visualizations. These two layers communicate with each other through a Twisted WebSocket server. The documentation is written in Sphinx.</p>
+<p><strong>Server:</strong> Broken into four modules as described in the User Guide. The biggest chunck of code is responsible for the environment game logic, as well as general purpose observation and action processing required for the OpenAI Gym derivative User API. The baselines are PyTorch models and our demo training code uses RLlib. The environment itself does not depend on PyTorch or RLlib (and shouldn’t), but they are more or less mandatory if you want an out-of-the-box experience. There isn’t a way around this with current frameworks. No frameworks currently support automatic input/output network definitions from complex Gym spaces. The best we could do is to replicate the current design in other frameworks (e.g. TensorFlow). That is too much work for me to do as an individual for too little benefit, but if you want to implement a TensorFlow port, go ahead and I’ll merge to forge/ethyr/tensorflow.</p>
+<p>As of v1.4, we use a slightly customized GoogleFire wrapper for environment and experiment configuration files (pure python with nice CLI support) and Poetry for dependency management and installlation</p>
+<p><strong>Client:</strong> The v1.0 client was written in THREE.js. Since then, we have migrated to Unity3D with a C# code base. The terrain is made of a large number of snappable 3D tiles modeled in Blender. The only significant library we use outside of base Unity is websocket-sharp for communicating with the server.</p>
+<p><strong>Documentation:</strong> We use Sphinx to autogenerate documentation. The User API is created manually in docs/source/public. The Developer API is a dump of all doctrings using Sphinx Autodoc. The website template is defined in source/_templates and is a reskinned readthedocs.io theme.</p>
+</div>
+<div class="section" id="ags-versioning">
+<h1><img alt="ags" src="_images/ags1.png" /> Versioning<a class="headerlink" href="#ags-versioning" title="Permalink to this headline">¶</a></h1>
+<p>We assume Python 3.7+ with the packages listed in the Poetry install, minus Pytorch/RLlib which are only required for the baseline models. Note that this means:</p>
+<ol class="arabic simple">
+<li><p>Dicts are assumed sorted by insertion order</p></li>
+<li><p>No walrus := operator</p></li>
+</ol>
+</div>
+<div class="section" id="ags-style">
+<h1><img alt="ags" src="_images/ags1.png" /> Style<a class="headerlink" href="#ags-style" title="Permalink to this headline">¶</a></h1>
+<p>Deviations from PEP:</p>
+<ol class="arabic simple">
+<li><p>3 space indents</p></li>
+<li><p>Lines cut at 78 characters</p></li>
+</ol>
+<p>Unit tests at the User API level and a basic linter will be required as the project scales. We currently have neither of these. For the time being, verify that your commits do not break the demo policy + renderer. Larger patches should run the training code overnight to ensure agents still learn similar behaviors.</p>
+<p>The Neural MMO: <a class="reference external" href="https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing">[Style Guide]</a> provides canonical colorschemes for the website, figures, and presentations. It is not designed for traditional light-on-dark publications – arXiv and conference papers should significantly downplay fonts/colors to avoid overly high-contrast figures.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="autodoc/api.html" class="btn btn-neutral float-right" title="User API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="overview.html" class="btn btn-neutral float-left" title="Welcome to the Platform!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--accent);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--title);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+    }
+
+    h2 {
+      color: var(--title);
+    }
+
+    h3 {
+      color: var(--title);
+    }
+
+    h4 {
+      color: var(--title);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: cyan; /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--text);
+    }
+
+    a:visited {
+      color: var(--text);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

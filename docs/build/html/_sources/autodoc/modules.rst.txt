@@ -1,8 +1,7 @@
-API Reference
-#############
+projekt
+=======
 
 .. toctree::
    :maxdepth: 4
 
-   forge
    projekt

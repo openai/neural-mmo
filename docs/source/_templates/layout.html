@@ -10,6 +10,11 @@
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
     }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
       background: var(--background);
@@ -194,13 +199,13 @@
     /* Buttons */
     .btn-neutral {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
@@ -231,7 +236,7 @@
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -239,13 +244,12 @@
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #000e0e;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       var(--title);
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;

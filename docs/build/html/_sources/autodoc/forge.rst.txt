@@ -10,6 +10,5 @@ forge package
 .. toctree::
 
    forge.blade
-   forge.embyr
    forge.ethyr
    forge.trinity

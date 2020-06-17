@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.blade.io.action.dynamic module" href="forge.blade.io.action.dynamic.html" />
+    <link rel="next" title="forge.blade.io.action.node module" href="forge.blade.io.action.node.html" />
     <link rel="prev" title="forge.blade.io package" href="forge.blade.io.html" /> 
 </head>
 
@@ -86,16 +86,26 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-additional-resources"> Additional Resources</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html"> User API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html#ags-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="forge.blade.html">forge.blade package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.core.html">forge.blade.core package</a></li>
@@ -107,12 +117,10 @@
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.html">forge.blade.systems package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -160,7 +168,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="modules.html">API Reference</a> &raquo;</li>
+          <li><a href="api.html"> User API</a> &raquo;</li>
         
           <li><a href="forge.html">forge package</a> &raquo;</li>
         
@@ -191,7 +199,6 @@
 <span id="forge-blade-io-action-package"></span><h1>forge.blade.io.action package<a class="headerlink" href="#module-forge.blade.io.action" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="forge.blade.io.action.dynamic.html">forge.blade.io.action.dynamic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forge.blade.io.action.node.html">forge.blade.io.action.node module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forge.blade.io.action.static.html">forge.blade.io.action.static module</a></li>
 </ul>
@@ -206,7 +213,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.blade.io.action.dynamic.html" class="btn btn-neutral float-right" title="forge.blade.io.action.dynamic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="forge.blade.io.action.node.html" class="btn btn-neutral float-right" title="forge.blade.io.action.node module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="forge.blade.io.html" class="btn btn-neutral float-left" title="forge.blade.io package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -255,6 +262,11 @@
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
     }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
       background: var(--background);
@@ -439,13 +451,13 @@
     /* Buttons */
     .btn-neutral {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
@@ -476,7 +488,7 @@
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -484,13 +496,12 @@
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #000e0e;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       var(--title);
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;

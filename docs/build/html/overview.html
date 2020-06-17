@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="autodoc/modules.html" />
-    <link rel="prev" title="Neural MMO v1.3" href="index.html" /> 
+    <link rel="next" title="Foreword" href="devguide.html" />
+    <link rel="prev" title="Neural MMO v1.4" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,23 +91,33 @@
 <li class="toctree-l1"><a class="reference internal" href="#ags-quickstart"> Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-tutorials"> Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#training-from-scratch">Training from scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-rendering-and-overlays"> Rendering and Overlays</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-io-api">The IO API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#distributed-computation-with-ascend">Distributed computation with Ascend</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-ideology"> Ideology</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ags-failure-modes"> Failure Modes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#ags-additional-resources"> Additional Resources</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="autodoc/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html"> User API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html#ags-developer-api"> Developer API</a></li>
 </ul>
 
             
@@ -172,273 +182,218 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p><img alt="env" src="_images/splash.png" /></p>
+  <p><img alt="env" src="_images/v1-4_splash.png" />
+<img alt="red" src="_images/neuralRED.png" /> <img alt="blue" src="_images/neuralBLUE.png" /> <img alt="green" src="_images/neuralGREEN.png" /> <img alt="fuchsia" src="_images/neuralFUCHSIA.png" /> <img alt="orange" src="_images/neuralORANGE.png" /> <img alt="mint" src="_images/neuralMINT.png" /> <img alt="purple" src="_images/neuralPURPLE.png" /> <img alt="spring" src="_images/neuralSPRING.png" /> <img alt="yellow" src="_images/neuralYELLOW.png" /> <img alt="cyan" src="_images/neuralCYAN.png" /> <img alt="magenta" src="_images/neuralMAGENTA.png" /> <img alt="sky" src="_images/neuralSKY.png" /> <img alt="red" src="_images/neuralRED.png" /> <img alt="blue" src="_images/neuralBLUE.png" /> <img alt="green" src="_images/neuralGREEN.png" /> <img alt="fuchsia" src="_images/neuralFUCHSIA.png" /> <img alt="orange" src="_images/neuralORANGE.png" /> <img alt="mint" src="_images/neuralMINT.png" /> <img alt="purple" src="_images/neuralPURPLE.png" /> <img alt="spring" src="_images/neuralSPRING.png" /> <img alt="yellow" src="_images/neuralYELLOW.png" /> <img alt="cyan" src="_images/neuralCYAN.png" /> <img alt="magenta" src="_images/neuralMAGENTA.png" /> <img alt="sky" src="_images/neuralSKY.png" /></p>
 <div class="section" id="ags-welcome-to-the-platform">
-<h1><img alt="ags" src="_images/ags.png" /> Welcome to the Platform!<a class="headerlink" href="#ags-welcome-to-the-platform" title="Permalink to this headline">¶</a></h1>
-<p>Neural MMO <a class="reference external" href="https://youtu.be/DkHopV1RSxw">[Demo Video]</a> <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">[Github]</a> is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs). The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.</p>
+<h1><img alt="ags" src="_images/ags1.png" /> Welcome to the Platform!<a class="headerlink" href="#ags-welcome-to-the-platform" title="Permalink to this headline">¶</a></h1>
+<p>Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO <a class="reference external" href="https://youtu.be/DkHopV1RSxw">[Demo Video]</a> <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">[Github]</a> is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games – self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.</p>
 <p><strong>Getting Started:</strong> Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:</p>
-<p><strong>1:</strong> Read the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart">[Quickstart]</a> tutorials</p>
-<p><strong>3:</strong> Hack on your own projects using the <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/tree/master/projekt">[/projekt]</a> demo model as starter code</p>
-<p><strong>4:</strong> Join our <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a> community for help and discussion!</p>
-<p><strong>5:</strong> Contribute to the platform! Neural MMO is an active open source project</p>
-<p>I actively review issues and pull requests. <strong>Discord is the best way to contact me</strong></p>
+<p><strong>1:</strong> Work through the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart">[Quickstart Guide]</a> and familiarize yourself with the <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.realm.html">[Realm API]</a></p>
+<p><strong>2:</strong> Join our <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a> community for help and discussion. <strong>This is the best way to contact me</strong></p>
+<p><strong>3:</strong> Develop your own fork and contribute your features to the platform. Neural MMO is fully open-source – to succeed long-term, we will need the help of talented researchers, software engineers, game designers, and technical artists. I actively review issues and pull requests.</p>
 </div>
 <div class="section" id="ags-overview">
-<h1><img alt="ags" src="_images/ags.png" /> Overview<a class="headerlink" href="#ags-overview" title="Permalink to this headline">¶</a></h1>
-<p><strong>Agents that scale to the complexity of the real world</strong> is one statement of general intelligence. A key perspective of this project is to decouple this task into research and engineering subproblems that, taken together, equal the original objective. The project is divided into four modules along these lines. See Ideology if you find this sort of macro view interesting.</p>
+<h1><img alt="ags" src="_images/ags1.png" /> Overview<a class="headerlink" href="#ags-overview" title="Permalink to this headline">¶</a></h1>
+<p><strong>Agents that scale to the complexity of the real world</strong> is one statement of artificial general intelligence. We propose a Dual Subproblem reformulation that cleanly segments this objective into concrete and approachable research and engineering tasks. The project is divided into two research and two engineering modules along these lines – see <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-ideology">[Ideology]</a> if you find this sort of macro view interesting.</p>
 <div class="section" id="research">
 <h2>Research<a class="headerlink" href="#research" title="Permalink to this headline">¶</a></h2>
 <p><strong>Agents that scale to the complexity of their environment</strong></p>
-<p><img alt="water" src="_images/water_thumbnail.png" /> Trinity: Three layer synchronous + asynchronous distributed computation framework based on Ray and Ascend</p>
-<p><img alt="air" src="_images/air_thumbnail.png" /> Ethyr: Research utilities and prebuilt models. Acts as a “contrib” – submit PRs with your own tools!</p>
+<p><img alt="water" src="_images/water_thumbnail.png" /> Trinity: Distributed computation framework based on Ray+RLlib</p>
+<p><img alt="air" src="_images/air_thumbnail.png" /> Ethyr: Baseline models and research utility contrib – submit PRs with your own tools!</p>
 </div>
 <div class="section" id="engineering">
 <h2>Engineering<a class="headerlink" href="#engineering" title="Permalink to this headline">¶</a></h2>
 <p><strong>Environments that scale to the complexity of the real world</strong></p>
-<p><img alt="earth" src="_images/earth_thumbnail.png" /> Blade: The core game environment including the extended OpenAI Gym external API</p>
-<p><img alt="fire" src="_images/fire_thumbnail.png" /> Embyr: 3D Unity3D based game client. Maintained as an independent <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo-client">[repository]</a> and not used during training.</p>
+<p><img alt="earth" src="_images/earth_thumbnail.png" /> Blade: Core game environment and extended OpenAI Gym external API</p>
+<p><img alt="fire" src="_images/fire_thumbnail.png" /> Embyr: 3D Unity game client for test-time visualization</p>
 </div>
 </div>
 <div class="section" id="ags-quickstart">
-<h1><img alt="ags" src="_images/ags.png" /> Quickstart<a class="headerlink" href="#ags-quickstart" title="Permalink to this headline">¶</a></h1>
-<p><strong>Installation:</strong> The master branch will always contain the latest stable version. Each previous version release is archieved in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ensure python 3.7.x with Anacona pip</span>
+<h1><img alt="ags" src="_images/ags1.png" /> Quickstart<a class="headerlink" href="#ags-quickstart" title="Permalink to this headline">¶</a></h1>
+<p>The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Install dependencies with Poetry (python 3.7.x)</span>
 <span class="c1">#You may also need to install gcc on a fresh OS</span>
-<span class="n">conda</span> <span class="n">install</span> <span class="n">pip</span>
+<span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">poetry</span><span class="o">/</span><span class="n">poetry</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">get</span><span class="o">-</span><span class="n">poetry</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="o">&amp;&amp;</span> <span class="n">source</span> <span class="o">~/.</span><span class="n">poetry</span><span class="o">/</span><span class="n">env</span> <span class="o">&amp;&amp;</span> <span class="n">poetry</span> <span class="n">install</span>
 
 <span class="c1">#Download the Neural MMO environment</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
-<span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1">#Download the Neural MMO client -- not required for training</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span> <span class="o">&amp;&amp;</span> <span class="n">mv</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span> <span class="n">forge</span><span class="o">/</span><span class="n">embyr</span>
 
 <span class="c1">#Run the pretrained demo model to test the installation</span>
-<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">render</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">load</span><span class="o">=</span><span class="n">recurrent_baseline</span> <span class="o">--</span><span class="n">render</span>
 
 <span class="c1">#Open the client in a separate terminal</span>
-<span class="c1">#You will need to rerun this if you restart the environment</span>
+<span class="c1">#Server precomputations take ~30 seconds before connecting</span>
 <span class="o">./</span><span class="n">client</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="ags-tutorials">
-<h1><img alt="ags" src="_images/ags.png" /> Tutorials<a class="headerlink" href="#ags-tutorials" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="_images/ags1.png" /> Tutorials<a class="headerlink" href="#ags-tutorials" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="training-from-scratch">
 <h2>Training from scratch<a class="headerlink" href="#training-from-scratch" title="Permalink to this headline">¶</a></h2>
-<p>Next, we will get familiar with the baseline parameters and train a model from scratch. Open up experiments.py, which contains all of the training configuration options. First, we’ll disable the test mode flags:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">LOAD</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">TEST</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">BEST</span> <span class="o">=</span> <span class="bp">False</span>
+<p>Next, we will get familiar with the baseline parameters and train a model from scratch. Open up projekt/config.py, which contains all of the training configuration options. You can either edit defaults here or override individual parameters using command line arguments. To train a baseline, simply run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">LOAD_MODEL</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">--</span><span class="n">RENDER</span><span class="o">=</span><span class="bp">False</span>
 </pre></div>
 </div>
-<p>Our baseline was trained on a 12 core machine. Your CPU probably has fewer cores. To use 4 cores instead:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NGOD</span> <span class="o">=</span> <span class="mi">4</span>
-</pre></div>
+<p>You can reduce batch size if you are running out of memory or disable CUDA if you don’t have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores &#64;3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:</p>
+<img alt="_images/train.png" src="_images/train.png" />
+<p>As a sanity check, your agents should have learned not to run into lava after a few epochs, around 20 average lifetime. The trained baseline models range with 30-40 average lifetime fully trained. However, individual agents may live much longer – we have seen &gt;10000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better – the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.</p>
 </div>
-<p>You may also want to reduce the batch size (CLUSTER_UPDATES). Now we can train a model:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span>
-</pre></div>
 </div>
-<p>If you leave it running, you will see the reward steadily increasing:</p>
-<p><img alt="train" src="_images/train.png" /></p>
-<p>This smoothed training curve was produced using the (beta) logging library. The baseline model gets to &gt;28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. As a sanity check, agents typically learn not to run into lava first, as indicated by the steep initial learning curve slope.</p>
-</div>
+<div class="section" id="ags-rendering-and-overlays">
+<h1><img alt="ags" src="_images/ags1.png" /> Rendering and Overlays<a class="headerlink" href="#ags-rendering-and-overlays" title="Permalink to this headline">¶</a></h1>
+<p>Embyr is the Neural MMO renderer. It is written in C# using Unity3D and functions much like an MMO game client: rather than directly simulating game logic, it renders the current game state from packets communicated by the Neural MMO server over a Twisted WebSocket. This design cuts out the overhead of running a bulky game engine during training and also enables us to keep the environment in pure Python for faster development. Embyr is maintained in a separate repository for historical reasons as well as because it is large and not required on remote servers during distributed training. Agents advance various foraging and combat skills by collecting food and water and engaging in fights with other agents:</p>
+<img alt="_images/v1-4_combat.png" src="_images/v1-4_combat.png" />
+<p>The client ships with an in-game console (press tilde ~ to toggle) stocked with prebuilt overlays for visualizing various aspects of the learned policy. To view an agent’s skill levels or follow it with the camera, simply click on it:</p>
+<img alt="_images/v1-4_ui.png" src="_images/v1-4_ui.png" />
+<p>The counts overlay renders a heatmap of agent exploration in real time:</p>
+<img alt="_images/v1-4_counts.png" src="_images/v1-4_counts.png" />
+<p>The attention overlay renders egocentric heatmaps of each agent’s attention weightings in real time:</p>
+<img alt="_images/v1-4_attention.png" src="_images/v1-4_attention.png" />
+<p>The values overlay renders a heatmap of the agent’s learned value function in real time:</p>
+<img alt="_images/v1-4_values.png" src="_images/v1-4_values.png" />
+<p>The globalValues overlay hallucinates an agent on each cell and computes the value function for that agent with no other agents on the map and all resources present. This requires a forward pass for each of the ~3600 tiles in the environment. The overlay is precomputed once during server initialization (~30 seconds) and may be disabled in projekt/config.py for faster startup:</p>
+<img alt="_images/v1-4_globalValues.png" src="_images/v1-4_globalValues.png" />
 <div class="section" id="the-io-api">
 <h2>The IO API<a class="headerlink" href="#the-io-api" title="Permalink to this headline">¶</a></h2>
-<p>On the surface, Neural MMO follows the OpenAI Gym API:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core environment and configuration</span>
-<span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
-<span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
+<p>OpenAI Gym supports standard definitions for structured, mixed discrete/continuous observation and action (input/output or IO) spaces. However, there are a few issues:</p>
+<ol class="arabic simple">
+<li><p>OpenAI Gym has a couple of blind spots surrounding dictionary and repeated set observations</p></li>
+<li><p>The existence of structured IO spaces does not imply a corresponding neural architecture for processing them</p></li>
+</ol>
+<p>Neural MMO resolves both of these problems out of the box. We have worked with the RLlib developers to augment OpenAI Gym’s <em>spaces</em> API with two new structure objects, <em>Repeated</em> and <em>FlexDict</em>.</p>
+<p>Additionally, we have implemented substantially general procedural generation code that automatically fits attentional PyTorch architectures to the given IO spaces. These will be subject to minor tweaks from update to update but should remain structurally stable from update to update. The high-level concept is to model observations of sets of entities, each of which is a set of attributes:</p>
+<img alt="_images/header.svg" src="_images/header.svg" /><p>Entity embeddings are created by attending over attributes, and the observation is flattened to a fixed-length embedding by attenting over entity embeddings. Actions are similarly defined by targeting entity embeddings with attention. The diagram below summarizes this process – see the <a class="reference external" href="https://arxiv.org/abs/2001.12004">[Neural MMO v1.3 white paper]</a> for details</p>
+<img alt="_images/io.svg" src="_images/io.svg" /><p>Our Baseline models include an abstract <em>Base</em> model that instantiates our IO modules but defers the hidden network to subclasses:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+      <span class="o">...</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">input</span>  <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">embeddings</span><span class="o">=</span><span class="n">policy</span><span class="o">.</span><span class="n">BiasedInput</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">policy</span><span class="o">.</span><span class="n">Attention</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">valueF</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">HIDDEN</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="c1">#Define an experiment configuration</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">TEST</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Implement this method in a subclass&#39;</span><span class="p">)</span>
 
-<span class="c1">#Initialize the environment and policy</span>
-<span class="n">env</span>                        <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-
-<span class="c1">#Run policy</span>
-<span class="n">actions</span> <span class="o">=</span> <span class="n">somePolicy</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
-
-<span class="c1">#Submit actions</span>
-<span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
-
-<span class="c1">#(s, a, r) tuple + rollout boundaries</span>
-<span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+      <span class="n">entityLookup</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+      <span class="n">hidden</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">(</span><span class="n">entityLookup</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">lens</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">value</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valueF</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">actions</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">entityLookup</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">actions</span><span class="p">,</span> <span class="n">state</span>
 </pre></div>
 </div>
-<p>However, the actual contents of <em>obs, rewards, dones, info</em> is nonstandard by necessity. Gym isn’t built for multiagent environments – and certainly not for ones with complex hierarchical observation and action spaces:</p>
-<p><img alt="header" src="_images/header.svg" /></p>
-<p>You’re free to develop your own methods for handling these, but we’ve already done all that work for you. Let’s make use of the core IO libraries:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
-<span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">forge.blade</span> <span class="kn">import</span> <span class="n">IO</span>
-</span>
-<span class="c1">#Demo baselines</span>
-<span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
+<p>Custom models work by defining new subnetworks and overriding the <em>hidden</em> method. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Simple</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+      <span class="sd">&#39;&#39;&#39;Simple baseline model with flat subnetworks&#39;&#39;&#39;</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+      <span class="n">h</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">HIDDEN</span>
 
-<span class="c1">#Define an experiment configuration</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">TEST</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">conv</span>   <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pool</span>   <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">fc</span>     <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
 
-<span class="c1">#Initialize the environment and policy</span>
-<span class="n">env</span>                        <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">proj</span>   <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">attend</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">Attention</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
 
-<span class="c1">#Process observations</span>
-<span class="hll"><span class="n">packet</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
-</span>
-<span class="c1">#Run policy (fills packet object)</span>
-<span class="n">somePolicy</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+      <span class="c1">#Attentional agent embedding</span>
+      <span class="n">agents</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attend</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="n">Stimulus</span><span class="o">.</span><span class="n">Entity</span><span class="p">])</span>
 
-<span class="c1">#Select actions</span>
-<span class="hll"><span class="n">actions</span>   <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
-</span>
-<span class="c1">#Submit actions</span>
-<span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+      <span class="c1">#Convolutional tile embedding</span>
+      <span class="n">tiles</span>     <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="n">Stimulus</span><span class="o">.</span><span class="n">Tile</span><span class="p">]</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="c1">#(s, a, r) tuple + rollout boundaries</span>
-<span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
+      <span class="n">w</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">WINDOW</span>
+      <span class="n">batch</span>  <span class="o">=</span> <span class="n">tiles</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="n">hidden</span> <span class="o">=</span> <span class="n">tiles</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="n">tiles</span>  <span class="o">=</span> <span class="n">tiles</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="n">tiles</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">tiles</span><span class="p">)</span>
+      <span class="n">tiles</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="n">tiles</span><span class="p">)</span>
+      <span class="n">tiles</span>  <span class="o">=</span> <span class="n">tiles</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">tiles</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">tiles</span><span class="p">)</span>
+
+      <span class="n">hidden</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">agents</span><span class="p">,</span> <span class="n">tiles</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">state</span>
 </pre></div>
 </div>
-<p>We’re almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that <em>somePolicy</em> must handle hierarchical data and variable action spaces. Ethyr provides prebuilt IO networks:</p>
-<p><img alt="io" src="_images/io.svg" /></p>
-<p>This pair of attentional networks is responsible for flattening the input space and indexing the variable length action space. In particular, <em>a</em> is an embedding layer, <em>f</em> and <em>g</em> are soft attention subnetworks, and <em>h</em> is a hard attention subnetwork. You can read more about these in the v1.3 whitepaper. Let’s use these modules to make this example runnable:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Core API</span>
-<span class="kn">from</span> <span class="nn">forge.blade.core</span> <span class="kn">import</span> <span class="n">Realm</span>
-<span class="kn">from</span> <span class="nn">forge.blade</span> <span class="kn">import</span> <span class="n">IO</span>
-
-<span class="c1">#Demo baselines</span>
-<span class="kn">from</span> <span class="nn">experiments</span> <span class="kn">import</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">Config</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">forge.ethyr.torch.policy</span> <span class="kn">import</span> <span class="n">baseline</span>
-</span>
-<span class="c1">#Define an experiment configuration</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s1">&#39;demo&#39;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">TEST</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-<span class="c1">#Initialize the environment and policy</span>
-<span class="n">env</span>                        <span class="o">=</span> <span class="n">Realm</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="hll"><span class="n">policy</span>                     <span class="o">=</span> <span class="n">baseline</span><span class="o">.</span><span class="n">IO</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-</span>
-<span class="c1">#Process observations</span>
-<span class="n">packet</span><span class="p">,</span> <span class="n">_</span>    <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
-<span class="hll"><span class="n">flat</span><span class="p">,</span> <span class="n">lookup</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
-</span>
-<span class="c1">#Select actions</span>
-<span class="hll"><span class="n">policy</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">flat</span><span class="p">,</span> <span class="n">lookup</span><span class="p">)</span>
-</span><span class="n">actions</span>      <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">outputs</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
-
-<span class="c1">#Submit actions</span>
-<span class="n">nxtObs</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
-
-<span class="c1">#(s, a, r) tuple + rollout boundaries</span>
-<span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>And there you have it! You can insert your own model between the input and output networks without having to deal with nonstandard structured data. However, this only covers the forward pass. We haven’t discussed rollout collection, training, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo.</p>
-</div>
-<div class="section" id="distributed-computation-with-ascend">
-<h2>Distributed computation with Ascend<a class="headerlink" href="#distributed-computation-with-ascend" title="Permalink to this headline">¶</a></h2>
-<p>Ascend is a lightweight wrapper on top of the excellent Ray distributed computing library. The core paradigm is to model each <em>layer</em> of hardware – cluster, server, core – by subclassing the Ascend object. Let’s first implement a remote client (Sword) without using Ascend. In order to keep track of several remote clients, we will also create a server (God).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
-
-<span class="nd">@ray.remote</span>
-<span class="k">class</span> <span class="nc">Sword</span><span class="p">:</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
-
-   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span>
-
-<span class="k">class</span> <span class="nc">God</span><span class="p">:</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">disciples</span> <span class="o">=</span> <span class="p">[</span><span class="n">Sword</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-
-   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">clientData</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">disciples</span><span class="p">])</span>
-      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[0, 1, 2, 3, 4]</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-   <span class="n">God</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Ascend enables us to do all of this without manually writing loops over hardware:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">from</span> <span class="nn">forge.trinity.ascend</span> <span class="kn">import</span> <span class="n">Ascend</span>
-</span><span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
-
-<span class="nd">@ray.remote</span>
-<span class="k">class</span> <span class="nc">Sword</span><span class="p">:</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
-
-   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span>
-
-<span class="hll"><span class="k">class</span> <span class="nc">God</span><span class="p">(</span><span class="n">Ascend</span><span class="p">):</span>
-</span>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-<span class="hll">      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Sword</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-</span>
-   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="hll">      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-</span>      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[0, 1, 2, 3, 4]</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-   <span class="n">God</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>The source is only a few hundred lines and isn’t very useful in toy examples. Ascend really shines in more complex environments that already have too many moving parts:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">from</span> <span class="nn">forge.trinity.ascend</span> <span class="kn">import</span> <span class="n">Ascend</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">waittime</span>
-</span><span class="kn">import</span> <span class="nn">ray</span><span class="o">,</span> <span class="nn">time</span>
-
-<span class="nd">@ray.remote</span>
-<span class="k">class</span> <span class="nc">Sword</span><span class="p">(</span><span class="n">Ascend</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
-
-<span class="hll">   <span class="nd">@runtime</span>
-</span>   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">bias</span><span class="p">):</span>
-      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">coef</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+</span> <span class="n">bias</span>
-
-<span class="k">class</span> <span class="nc">God</span><span class="p">(</span><span class="n">Ascend</span><span class="p">):</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Sword</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-
-   <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="hll">   <span class="nd">@runtime</span>
-</span>   <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="hll">      <span class="n">asyncHandles</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">distribute</span><span class="p">(</span>
-</span><span class="hll">            <span class="mi">2</span><span class="p">,</span>
-</span><span class="hll">            <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-</span><span class="hll">            <span class="n">shard</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
-</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-<span class="hll">      <span class="n">clientData</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">synchronize</span><span class="p">(</span><span class="n">asyncHandles</span><span class="p">)</span>
-</span>      <span class="k">print</span><span class="p">(</span><span class="n">clientData</span><span class="p">)</span> <span class="c1">#[4, 5, 6, 7, 8]</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-   <span class="n">God</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Like before, we have a server interacting with five remote clients. This time, the <em>coef</em> argument is shared among clients while the <em>bias</em> argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side <em>update()</em> function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code.</p>
-<p>In the full Neural MMO environment, we use three infrastructure layers, each of which subclasses Ascend:</p>
-<p><img alt="infra" src="_images/infra.svg" /></p>
-<p>This simulates the traditional MMO computation paradigm in a research setting. Specifically, we run a cluster of servers, each of which simulates a copy of the environment and distributes agent computations among multiple remote clients. Ascend allows us to implement this framework pythonically in only a few lines of code.</p>
+<p>You can write your own PyTorch models using the same template. Or, if you prefer, you can use our IO subnetworks directly, as is done in our <em>Base</em> class. Neural MMO’s IO spaces themselves are framework agnostic, but if you want to train in e.g. TensorFlow, you will have to write analogous IO networks.</p>
 </div>
 </div>
 <div class="section" id="ags-namesake">
-<h1><img alt="ags" src="_images/ags.png" /> Namesake<a class="headerlink" href="#ags-namesake" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="_images/ags1.png" /> Namesake<a class="headerlink" href="#ags-namesake" title="Permalink to this headline">¶</a></h1>
 <p>In formal publications, we refer to our project simply as a (the first) “Neural MMO.” Internally and informally, we call it “Projekt: Godsword” (God-Sword). The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called godswords. The latter is a particularly good model for AI environments; the former is more of a soft flavor inspiration.</p>
 </div>
-<div class="section" id="ags-version-history">
-<h1><img alt="ags" src="_images/ags.png" /> Version History<a class="headerlink" href="#ags-version-history" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ags-patch-notes-version-history">
+<h1><img alt="ags" src="_images/ags1.png" /> Patch Notes + Version History<a class="headerlink" href="#ags-patch-notes-version-history" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference external" href="https://github.com/openai/neural-mmo">[OpenAI]</a> repository only hosts v1.0. My personal <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">[Github]</a> hosts the latest version in <em>master</em> and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.</p>
 <dl class="simple">
+<dt><strong>v1.4:</strong> RLlib Support and Overlays | <a class="reference external" href="https://docs.google.com/presentation/d/141zRKszdBBEfxmdYWa-QMPmY7uM64trxrF7LBB5OIVg/edit?usp=sharing">[Update Slide Deck]</a></dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Blade: Minor API changes have been made for compatibility with Gym and RLlib</dt><dd><ul>
+<li><p>Environment reset method now returns only obs instead of (obs, rewards, dones, infos)</p></li>
+<li><p>Environment obs and dones are now both dictionaries keyed by agent ids rather than agent game objects</p></li>
+<li><p>The IO modules from v1.3 now delegates batching to the user, e.g. RLlib. As such, several potential sources of error have been removed</p></li>
+<li><p>A bug allowing agents to use melee combat from farther away than intended has been fixed</p></li>
+<li><p>Minor range and damage balancing has been performed across all three combat styles</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Trinity: This module has been temporarily shelved</dt><dd><ul>
+<li><p>Core functionality has been ported to RLlib in collaboration with the developers</p></li>
+<li><p>We are working with the RLlib developers to add additional features essential to the long-term scalability of Neural MMO</p></li>
+<li><p>The Trinity/Ascend namespace will likely be revived in later infrastructure expansions. For now, the stability of RLlib makes delegating infrastructure pragmatic to enable us to focus on environment development, baseline models, and research</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Ethyr: Proper NN building blocks for complex worlds</dt><dd><ul>
+<li><p>Streamlined IO, memory, and attention modules for use in building PyTorch policies</p></li>
+<li><p>A high-quality pretrained baseline reproducible at the scale of a single desktop</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Embyr: Overlay shaders for visualizing learned policies</dt><dd><ul>
+<li><p>Pressing tilde now brings up an in-game console</p></li>
+<li><p>A help menu lists several shader options for visualizing exploration, attention, and learned value functions</p></li>
+<li><p>Shaders are rendered over the environment in real-time with partial transparency</p></li>
+<li><p>It is no longer necessary to start the client and server in a particular order</p></li>
+<li><p>The client no longer needs to be relaunched when the server restarts</p></li>
+<li><p>Agents now turn smoothly towards their direction of movement and targeted adversaries</p></li>
+<li><p>A graphical bug causing some agent attacks to render at ground level has been fixed</p></li>
+<li><p>Moved twistedserver.py into the main neural-mmo repository to better separate client and server</p></li>
+<li><p>Confirmed working on Ubuntu, MacOS, and WSL Linux with a Windows client</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>/projekt: Demo code fully rewritten for RLlib</dt><dd><ul>
+<li><p>The new demo is much shorter, approximately 400 lines of code</p></li>
+<li><p>State-of-the-art Transformer + LSTM based policy trained with distributed PPO</p></li>
+<li><p>Batched GPU evaluation for real-time rendering</p></li>
+<li><p>Trains in a few hours on a reasonably good desktop (5 rollout worker cores, 1 underutilized GTX 1080Ti GPU)</p></li>
+<li><p>To avoid introducing RLlib into the base environment as a hard dependency, we provide a small wrapper class over Realm using RLlib’s environment types</p></li>
+<li><p>Migrated from a pip requirements.txt to Poetry for streamlined dependency management</p></li>
+<li><p>We have migrated configuration to Google Fire for improved command line argument parsing</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 <dt><strong>v1.3:</strong> Prebuilt IO Libraries | <a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">[Update Slide Deck]</a> <a class="reference download internal" download="" href="_downloads/678fff0b60d6baed773028514368c0ec/nmmo_v1-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">[Paper]</span></code></a></dt><dd><ul class="simple">
 <li><p>Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.</p></li>
 <li><p>Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.</p></li>
@@ -481,11 +436,11 @@
 </dl>
 </div>
 <div class="section" id="ags-ideology">
-<h1><img alt="ags" src="_images/ags.png" /> Ideology<a class="headerlink" href="#ags-ideology" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="_images/ags1.png" /> Ideology<a class="headerlink" href="#ags-ideology" title="Permalink to this headline">¶</a></h1>
 <p>The dual problem formulation mentioned in the Quickstart guide is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this <a class="reference external" href="https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing">[Two Pager]</a> for a more thorough overview of the project approach and objective.</p>
 <p>The discussion of failure modes below is mostly intended to dissuade skepticism, which thus far I’ve found correlates perfectly with lack of familiarity with MMOs. If you are very familiar with MMOs + current AI research and are still skeptical, please contact me on the Discord – I’d love to hear your views.</p>
 <div class="section" id="ags-failure-modes">
-<h2><img alt="ags" src="_images/ags.png" /> Failure Modes<a class="headerlink" href="#ags-failure-modes" title="Permalink to this headline">¶</a></h2>
+<h2><img alt="ags" src="_images/ags1.png" /> Failure Modes<a class="headerlink" href="#ags-failure-modes" title="Permalink to this headline">¶</a></h2>
 <p>Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.</p>
 <dl class="simple">
 <dt>We are currently aware of three failure cases for the project:</dt><dd><ul class="simple">
@@ -519,10 +474,15 @@
 </div>
 </div>
 <div class="section" id="ags-authorship-license-disclaimer">
-<h1><img alt="ags" src="_images/ags.png" /> Authorship, License, Disclaimer<a class="headerlink" href="#ags-authorship-license-disclaimer" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="_images/ags1.png" /> Authorship, License, Disclaimer<a class="headerlink" href="#ags-authorship-license-disclaimer" title="Permalink to this headline">¶</a></h1>
 <p>I, <a class="reference external" href="https://github.com/jsuarez5341">[Joseph Suarez]</a>, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.</p>
 <dl class="simple">
-<dt>2019 (fall): Neural MMO development continues at MIT. as the main project of my PhD</dt><dd><ul class="simple">
+<dt>2020 (spring): v1.3 and v1.4 releases</dt><dd><ul class="simple">
+<li><p>Neural MMO v1.3 presented as an Extended Abstract at AAMAS 2020</p></li>
+<li><p>Neural MMO v1.3-prerelease presented at a casual seminar in NeosVR</p></li>
+</ul>
+</dd>
+<dt>2019 (fall): Neural MMO development continues at MIT as the main project of my PhD</dt><dd><ul class="simple">
 <li><p>I am continuing my role as the primary developer</p></li>
 <li><p><strong>Phillip Isola</strong> resumes project oversight as my adviser</p></li>
 <li><p>We are beginning to get open source contributions</p></li>
@@ -554,15 +514,11 @@
 </dl>
 </div>
 <div class="section" id="ags-assets">
-<h1><img alt="ags" src="_images/ags.png" /> Assets<a class="headerlink" href="#ags-assets" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="_images/ags1.png" /> Assets<a class="headerlink" href="#ags-assets" title="Permalink to this headline">¶</a></h1>
 <p>Some assets used in this project belong to <a class="reference external" href="https://www.jagex.com/en-GB/">[Jagex]</a>, the creators of Runescape, such as</p>
-<p><img alt="ags" src="_images/ags.png" /> <img alt="earth" src="_images/earth_thumbnail.png" /> <img alt="water" src="_images/water_thumbnail.png" /> <img alt="fire" src="_images/fire_thumbnail.png" /> <img alt="air" src="_images/air_thumbnail.png" /></p>
+<p><img alt="ags" src="_images/ags1.png" /> <img alt="earth" src="_images/earth_thumbnail.png" /> <img alt="water" src="_images/water_thumbnail.png" /> <img alt="fire" src="_images/fire_thumbnail.png" /> <img alt="air" src="_images/air_thumbnail.png" /></p>
 <p>We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research – however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents, represented by three neurons.</p>
 <p><img alt="red" src="_images/neuralRED.png" /> <img alt="blue" src="_images/neuralBLUE.png" /> <img alt="green" src="_images/neuralGREEN.png" /> <img alt="fuchsia" src="_images/neuralFUCHSIA.png" /> <img alt="orange" src="_images/neuralORANGE.png" /> <img alt="mint" src="_images/neuralMINT.png" /> <img alt="purple" src="_images/neuralPURPLE.png" /> <img alt="spring" src="_images/neuralSPRING.png" /> <img alt="yellow" src="_images/neuralYELLOW.png" /> <img alt="cyan" src="_images/neuralCYAN.png" /> <img alt="magenta" src="_images/neuralMAGENTA.png" /> <img alt="sky" src="_images/neuralSKY.png" /></p>
-</div>
-<div class="section" id="ags-additional-resources">
-<h1><img alt="ags" src="_images/ags.png" /> Additional Resources<a class="headerlink" href="#ags-additional-resources" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing">[Neural MMO Style Guide]</a></p>
 </div>
 
 
@@ -573,10 +529,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="autodoc/modules.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="devguide.html" class="btn btn-neutral float-right" title="Foreword" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Neural MMO v1.3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Neural MMO v1.4" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -622,6 +578,11 @@
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
     }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
       background: var(--background);
@@ -806,13 +767,13 @@
     /* Buttons */
     .btn-neutral {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
@@ -843,7 +804,7 @@
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -851,13 +812,12 @@
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #000e0e;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       var(--title);
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;

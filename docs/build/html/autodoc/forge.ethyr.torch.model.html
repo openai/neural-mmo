@@ -86,19 +86,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-additional-resources"> Additional Resources</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html"> User API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html#ags-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
@@ -107,7 +116,6 @@
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -155,7 +163,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="modules.html">API Reference</a> &raquo;</li>
+          <li><a href="api.html"> User API</a> &raquo;</li>
         
           <li><a href="forge.html">forge package</a> &raquo;</li>
         
@@ -301,6 +309,11 @@ or most recent (False) checkpoint</p>
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
     }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
       background: var(--background);
@@ -485,13 +498,13 @@ or most recent (False) checkpoint</p>
     /* Buttons */
     .btn-neutral {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
@@ -522,7 +535,7 @@ or most recent (False) checkpoint</p>
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -530,13 +543,12 @@ or most recent (False) checkpoint</p>
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #000e0e;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       var(--title);
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;

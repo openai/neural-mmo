@@ -9,7 +9,9 @@ projekt package
 
 .. toctree::
 
-   projekt.ann
-   projekt.god
-   projekt.pantheon
-   projekt.sword
+   projekt.config
+   projekt.evaluator
+   projekt.experiments
+   projekt.policy
+   projekt.realm
+   projekt.rlutils

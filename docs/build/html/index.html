@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Neural MMO v1.3 &mdash; Neural MMO 1.3 documentation</title>
+  <title>Neural MMO v1.4 &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -85,16 +85,25 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-overview"> Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-quickstart"> Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-additional-resources"> Additional Resources</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="autodoc/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html"> User API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html#ags-developer-api"> Developer API</a></li>
 </ul>
 
             
@@ -140,7 +149,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Neural MMO v1.3</li>
+      <li>Neural MMO v1.4</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -159,8 +168,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="neural-mmo-v1-3">
-<h1>Neural MMO v1.3<a class="headerlink" href="#neural-mmo-v1-3" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="neural-mmo-v1-4">
+<h1>Neural MMO v1.4<a class="headerlink" href="#neural-mmo-v1-4" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
@@ -173,25 +182,50 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-quickstart"> Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-tutorials"> Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#training-from-scratch">Training from scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#the-io-api">The IO API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#distributed-computation-with-ascend">Distributed computation with Ascend</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#ags-failure-modes"> Failure Modes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-additional-resources"> Additional Resources</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="autodoc/modules.html">API Reference</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#ags-style"> Style</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html"> User API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autodoc/forge.blade.core.realm.html">forge.blade.core.realm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autodoc/forge.blade.core.config.html">forge.blade.core.config module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="autodoc/api.html#ags-developer-api"> Developer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autodoc/projekt.html">projekt package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.config.html">projekt.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.evaluator.html">projekt.evaluator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.experiments.html">projekt.experiments module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.policy.html">projekt.policy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.realm.html">projekt.realm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.rlutils.html">projekt.rlutils module</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="autodoc/forge.html">forge package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autodoc/forge.blade.html">forge.blade package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.blade.core.html">forge.blade.core package</a><ul>
@@ -226,7 +260,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.blade.io.html">forge.blade.io package</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="autodoc/forge.blade.io.action.html">forge.blade.io.action package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="autodoc/forge.blade.io.action.dynamic.html">forge.blade.io.action.dynamic module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.blade.io.action.node.html">forge.blade.io.action.node module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.blade.io.action.static.html">forge.blade.io.action.static module</a></li>
 </ul>
@@ -239,8 +272,6 @@
 </ul>
 </li>
 <li class="toctree-l5"><a class="reference internal" href="autodoc/forge.blade.io.comparable.html">forge.blade.io.comparable module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="autodoc/forge.blade.io.io.html">forge.blade.io.io module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="autodoc/forge.blade.io.serial.html">forge.blade.io.serial module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="autodoc/forge.blade.io.utils.html">forge.blade.io.utils module</a></li>
 </ul>
 </li>
@@ -286,10 +317,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="autodoc/forge.embyr.html">forge.embyr namespace</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="autodoc/forge.embyr.twistedserver.html">forge.embyr.twistedserver module</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="autodoc/forge.ethyr.html">forge.ethyr package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.ethyr.experience.html">forge.ethyr.experience package</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="autodoc/forge.ethyr.experience.manager.html">forge.ethyr.experience.manager module</a></li>
@@ -309,6 +336,7 @@
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.embed.html">forge.ethyr.torch.policy.embed module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.functional.html">forge.ethyr.torch.policy.functional module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.linear.html">forge.ethyr.torch.policy.linear module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.recurrent.html">forge.ethyr.torch.policy.recurrent module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="autodoc/forge.ethyr.torch.policy.transformer.html">forge.ethyr.torch.policy.transformer module</a></li>
 </ul>
 </li>
@@ -327,15 +355,9 @@
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.trinity.ascend.html">forge.trinity.ascend module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.trinity.timed.html">forge.trinity.timed module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="autodoc/forge.trinity.trinity.html">forge.trinity.trinity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autodoc/forge.trinity.twistedserver.html">forge.trinity.twistedserver module</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="autodoc/projekt.html">projekt package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.ann.html">projekt.ann module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.god.html">projekt.god module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.pantheon.html">projekt.pantheon module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="autodoc/projekt.sword.html">projekt.sword module</a></li>
 </ul>
 </li>
 </ul>
@@ -399,6 +421,11 @@
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
     }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
       background: var(--background);
@@ -583,13 +610,13 @@
     /* Buttons */
     .btn-neutral {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
@@ -620,7 +647,7 @@
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -628,13 +655,12 @@
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #000e0e;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       var(--title);
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;

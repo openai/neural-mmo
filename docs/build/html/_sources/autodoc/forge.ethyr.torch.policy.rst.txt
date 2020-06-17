@@ -15,4 +15,5 @@ forge.ethyr.torch.policy package
    forge.ethyr.torch.policy.embed
    forge.ethyr.torch.policy.functional
    forge.ethyr.torch.policy.linear
+   forge.ethyr.torch.policy.recurrent
    forge.ethyr.torch.policy.transformer

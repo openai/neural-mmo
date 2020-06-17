@@ -1,5 +1,5 @@
 .. |ags| image:: docs/source/resource/ags.png
-.. |env| image:: docs/source/resource/splash.png
+.. |env| image:: docs/source/resource/v1-4_splash.png
 
 .. |air| image:: docs/source/resource/air_thumbnail.png
 .. |earth| image:: docs/source/resource/earth_thumbnail.png
@@ -19,335 +19,242 @@
 .. |magenta| image:: docs/source/resource/neuralMAGENTA.png
 .. |sky| image:: docs/source/resource/neuralSKY.png
 
-.. |header| image:: docs/source/resource/header.svg
-.. |io| image:: docs/source/resource/io.svg
-.. |infra| image:: docs/source/resource/infra.svg
-.. |train| image:: docs/source/resource/train.png
-
 |env|
+|red| |blue| |green| |fuchsia| |orange| |mint| |purple| |spring| |yellow| |cyan| |magenta| |sky| |red| |blue| |green| |fuchsia| |orange| |mint| |purple| |spring| |yellow| |cyan| |magenta| |sky|
 
-.. #####################################
+.. #############################################################################################################
 .. WARNING: Do NOT edit the overview.rst. That file gets copied from the root README.rst and will be overwritten
-.. #####################################
+.. #############################################################################################################
 
 |ags| Welcome to the Platform!
 ##############################
 
-Neural MMO `[Demo Video] <https://youtu.be/DkHopV1RSxw>`_ `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ is a massively multiagent AI research environment inspired by Massively Multiplayer Online Role Playing Games (MMORPGS or MMOs). The long-term goal of our platform is to enable artificial agents to scale to real world intelligence. MMOs are complete macrocosms featuring thousands of agents per persistent world, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high stakes single and team based conflict. Simulating the physical processes of evolution on Earth is computationally infeasible, but we can construct a reasonable and efficient facsimile: we consider MMOs the best proxy for the real world among human games.
+Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO `[Demo Video] <https://youtu.be/DkHopV1RSxw>`_ `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
 
 **Getting Started:** Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
 
-**1:** Read the `[Quickstart] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_ tutorials
+**1:** Work through the `[Quickstart Guide] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-quickstart>`_ and familiarize yourself with the `[Realm API] <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.realm.html>`_
 
-**3:** Hack on your own projects using the `[/projekt] <https://github.com/jsuarez5341/neural-mmo/tree/master/projekt>`_ demo model as starter code
+**2:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion. **This is the best way to contact me**
 
-**4:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion!
-
-**5:** Contribute to the platform! Neural MMO is an active open source project
-
-I actively review issues and pull requests. **Discord is the best way to contact me**
+**3:** Develop your own fork and contribute your features to the platform. Neural MMO is fully open-source -- to succeed long-term, we will need the help of talented researchers, software engineers, game designers, and technical artists. I actively review issues and pull requests.
 
 |ags| Overview
 ##############
 
-**Agents that scale to the complexity of the real world** is one statement of general intelligence. A key perspective of this project is to decouple this task into research and engineering subproblems that, taken together, equal the original objective. The project is divided into four modules along these lines. See Ideology if you find this sort of macro view interesting.
+**Agents that scale to the complexity of the real world** is one statement of artificial general intelligence. We propose a Dual Subproblem reformulation that cleanly segments this objective into concrete and approachable research and engineering tasks. The project is divided into two research and two engineering modules along these lines -- see `[Ideology] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-ideology>`_ if you find this sort of macro view interesting.
 
 Research
 --------
 
 **Agents that scale to the complexity of their environment**
 
-|water| Trinity: Three layer synchronous + asynchronous distributed computation framework based on Ray and Ascend
+|water| Trinity: Distributed computation framework based on Ray+RLlib
 
-|air| Ethyr: Research utilities and prebuilt models. Acts as a "contrib" -- submit PRs with your own tools!
+|air| Ethyr: Baseline models and research utility contrib -- submit PRs with your own tools!
 
 Engineering
 -----------
 
 **Environments that scale to the complexity of the real world**
 
-|earth| Blade: The core game environment including the extended OpenAI Gym external API
+|earth| Blade: Core game environment and extended OpenAI Gym external API
 
-|fire| Embyr: 3D Unity3D based game client. Maintained as an independent `[repository] <https://github.com/jsuarez5341/neural-mmo-client>`_ and not used during training.
-
+|fire| Embyr: 3D Unity game client for test-time visualization
 
 |ags| Quickstart
 ################
 
-**Installation:** The master branch will always contain the latest stable version. Each previous version release is archieved in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
+The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
 
 .. code-block:: python
 
-   #Ensure python 3.7.x with Anacona pip
+   #Install dependencies with Poetry (python 3.7.x)
    #You may also need to install gcc on a fresh OS
-   conda install pip
+   curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && source ~/.poetry/env && poetry install
 
    #Download the Neural MMO environment
    git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
-   python scripts/setup.py
+
+   #Download the Neural MMO client -- not required for training
+   git clone https://github.com/jsuarez5341/neural-mmo-client && mv neural-mmo-client forge/embyr
 
    #Run the pretrained demo model to test the installation
-   python Forge.py --render
+   python Forge.py --load=recurrent_baseline --render
 
    #Open the client in a separate terminal
-   #You will need to rerun this if you restart the environment
+   #Server precomputations take ~30 seconds before connecting
    ./client.sh
 
 |ags| Tutorials
-###########################
+###############
 
 Training from scratch
 ---------------------
 
-Next, we will get familiar with the baseline parameters and train a model from scratch. Open up experiments.py, which contains all of the training configuration options. First, we'll disable the test mode flags:
+Next, we will get familiar with the baseline parameters and train a model from scratch. Open up projekt/config.py, which contains all of the training configuration options. You can either edit defaults here or override individual parameters using command line arguments. To train a baseline, simply run:
 
 .. code-block:: python
 
-   LOAD = False
-   TEST = False
-   BEST = False
+   python Forge.py --LOAD_MODEL=False, --RENDER=False
 
-Our baseline was trained on a 12 core machine. Your CPU probably has fewer cores. To use 4 cores instead:
+You can reduce batch size if you are running out of memory or disable CUDA if you don't have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores @3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:
 
-.. code-block:: python
+.. image:: docs/source/resource/train.png
 
-   NGOD = 4
+As a sanity check, your agents should have learned not to run into lava after a few epochs, around 20 average lifetime. The trained baseline models range with 30-40 average lifetime fully trained. However, individual agents may live much longer -- we have seen >10000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better -- the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.
 
-You may also want to reduce the batch size (CLUSTER_UPDATES). Now we can train a model:
+|ags| Rendering and Overlays
+############################
 
-.. code-block:: python
+Embyr is the Neural MMO renderer. It is written in C# using Unity3D and functions much like an MMO game client: rather than directly simulating game logic, it renders the current game state from packets communicated by the Neural MMO server over a Twisted WebSocket. This design cuts out the overhead of running a bulky game engine during training and also enables us to keep the environment in pure Python for faster development. Embyr is maintained in a separate repository for historical reasons as well as because it is large and not required on remote servers during distributed training. Agents advance various foraging and combat skills by collecting food and water and engaging in fights with other agents:
 
-   python Forge.py
+.. image:: docs/source/resource/v1-4_combat.png
 
-If you leave it running, you will see the reward steadily increasing:
+The client ships with an in-game console (press tilde ~ to toggle) stocked with prebuilt overlays for visualizing various aspects of the learned policy. To view an agent's skill levels or follow it with the camera, simply click on it:
 
-|train|
+.. image:: docs/source/resource/v1-4_ui.png
 
-This smoothed training curve was produced using the (beta) logging library. The baseline model gets to >28 average lifetime after training for several days on 12 cores. Once you are satisfied, enable testing flags and run with rendering enabled to view learned policies. As a sanity check, agents typically learn not to run into lava first, as indicated by the steep initial learning curve slope.
+The counts overlay renders a heatmap of agent exploration in real time:
+
+.. image:: docs/source/resource/v1-4_counts.png
+
+The attention overlay renders egocentric heatmaps of each agent's attention weightings in real time:
+
+.. image:: docs/source/resource/v1-4_attention.png
+
+The values overlay renders a heatmap of the agent's learned value function in real time:
+
+.. image:: docs/source/resource/v1-4_values.png
+
+The globalValues overlay hallucinates an agent on each cell and computes the value function for that agent with no other agents on the map and all resources present. This requires a forward pass for each of the ~3600 tiles in the environment. The overlay is precomputed once during server initialization (~30 seconds) and may be disabled in projekt/config.py for faster startup:
+
+.. image:: docs/source/resource/v1-4_globalValues.png
 
 The IO API
 ----------
 
-On the surface, Neural MMO follows the OpenAI Gym API:
+OpenAI Gym supports standard definitions for structured, mixed discrete/continuous observation and action (input/output or IO) spaces. However, there are a few issues:
+
+1. OpenAI Gym has a couple of blind spots surrounding dictionary and repeated set observations
+
+2. The existence of structured IO spaces does not imply a corresponding neural architecture for processing them
+
+Neural MMO resolves both of these problems out of the box. We have worked with the RLlib developers to augment OpenAI Gym's *spaces* API with two new structure objects, *Repeated* and *FlexDict*.
+
+Additionally, we have implemented substantially general procedural generation code that automatically fits attentional PyTorch architectures to the given IO spaces. These will be subject to minor tweaks from update to update but should remain structurally stable from update to update. The high-level concept is to model observations of sets of entities, each of which is a set of attributes:
+
+.. image:: docs/source/resource/header.svg
+
+Entity embeddings are created by attending over attributes, and the observation is flattened to a fixed-length embedding by attenting over entity embeddings. Actions are similarly defined by targeting entity embeddings with attention. The diagram below summarizes this process -- see the `[Neural MMO v1.3 white paper] <https://arxiv.org/abs/2001.12004>`_ for details
+
+.. image:: docs/source/resource/io.svg
+
+Our Baseline models include an abstract *Base* model that instantiates our IO modules but defers the hidden network to subclasses:
 
 .. code-block:: python
 
-  #Core environment and configuration
-  from forge.blade.core import Realm
-  from experiments import Experiment, Config
+   class Base(nn.Module):
+      def __init__(self, config):
+         ...
+         self.output = io.Output(config)
+         self.input  = io.Input(config,
+               embeddings=policy.BiasedInput,
+               attributes=policy.Attention)
+         self.valueF = nn.Linear(config.HIDDEN, 1)
 
-  #Define an experiment configuration
-  config = Experiment('demo', Config).init(TEST=True)
+      def hidden(self, obs, state=None, lens=None):
+         raise NotImplementedError('Implement this method in a subclass')
 
-  #Initialize the environment and policy
-  env                        = Realm(config)
-  obs, rewards, dones, infos = env.reset()
+      def forward(self, obs, state=None, lens=None):
+         entityLookup  = self.input(obs)
+         hidden, state = self.hidden(entityLookup, state, lens)
+         self.value    = self.valueF(hidden).squeeze(1)
+         actions       = self.output(hidden, entityLookup)
+         return actions, state
 
-  #Run policy
-  actions = somePolicy(packet)
-
-  #Submit actions
-  nxtObs, rewards, dones, info = env.step(actions)
-
-  #(s, a, r) tuple + rollout boundaries
-  print(obs, actions, rewards, dones)
-
-However, the actual contents of *obs, rewards, dones, info* is nonstandard by necessity. Gym isn't built for multiagent environments -- and certainly not for ones with complex hierarchical observation and action spaces:
-
-|header|
-
-You're free to develop your own methods for handling these, but we've already done all that work for you. Let's make use of the core IO libraries:
-
-.. code-block:: python
-  :emphasize-lines: 3,16,22
-
-  #Core API
-  from forge.blade.core import Realm
-  from forge.blade import IO
-
-  #Demo baselines
-  from experiments import Experiment, Config
-
-  #Define an experiment configuration
-  config = Experiment('demo', Config).init(TEST=True)
-
-  #Initialize the environment and policy
-  env                        = Realm(config)
-  obs, rewards, dones, infos = env.reset()
-
-  #Process observations
-  packet, _ = IO.inputs(obs, rewards, dones, config)
-
-  #Run policy (fills packet object)
-  somePolicy(packet)
-
-  #Select actions
-  actions   = IO.outputs(packet)
-
-  #Submit actions
-  nxtObs, rewards, dones, info = env.step(actions)
-
-  #(s, a, r) tuple + rollout boundaries
-  print(obs, actions, rewards, dones)
-
-We're almost done. The IO API handles batching, normalization, and serialization. The only remaining issue is that *somePolicy* must handle hierarchical data and variable action spaces. Ethyr provides prebuilt IO networks:
-
-|io|
-
-This pair of attentional networks is responsible for flattening the input space and indexing the variable length action space. In particular, *a* is an embedding layer, *f* and *g* are soft attention subnetworks, and *h* is a hard attention subnetwork. You can read more about these in the v1.3 whitepaper. Let's use these modules to make this example runnable:
-
-.. code-block:: python
-  :emphasize-lines: 7,15,19,22
-
-  #Core API
-  from forge.blade.core import Realm
-  from forge.blade import IO
-
-  #Demo baselines
-  from experiments import Experiment, Config
-  from forge.ethyr.torch.policy import baseline
-
-  #Define an experiment configuration
-  config = Experiment('demo', Config).init(TEST=True)
-
-  #Initialize the environment and policy
-  env                        = Realm(config)
-  obs, rewards, dones, infos = env.reset()
-  policy                     = baseline.IO(config)
-
-  #Process observations
-  packet, _    = IO.inputs(obs, rewards, dones, config)
-  flat, lookup = policy.input(packet)
-
-  #Select actions
-  policy.output(packet, flat, lookup)
-  actions      = IO.outputs(packet)
-
-  #Submit actions
-  nxtObs, rewards, dones, info = env.step(actions)
-
-  #(s, a, r) tuple + rollout boundaries
-  print(obs, actions, rewards, dones)
-
-And there you have it! You can insert your own model between the input and output networks without having to deal with nonstandard structured data. However, this only covers the forward pass. We haven't discussed rollout collection, training, or any population based methods. For a fully featured and well documented example, hop over to /projekt in the environment repo.
-
-Distributed computation with Ascend
------------------------------------
-
-Ascend is a lightweight wrapper on top of the excellent Ray distributed computing library. The core paradigm is to model each *layer* of hardware -- cluster, server, core -- by subclassing the Ascend object. Let's first implement a remote client (Sword) without using Ascend. In order to keep track of several remote clients, we will also create a server (God).
+Custom models work by defining new subnetworks and overriding the *hidden* method. For example:
 
 .. code-block:: python
 
-  import ray, time
+   class Simple(Base):
+      def __init__(self, config):
+         '''Simple baseline model with flat subnetworks'''
+         super().__init__(config)
+         h = config.HIDDEN
 
-  @ray.remote
-  class Sword:
-     def __init__(self, idx):
-        self.idx = idx
+         self.conv   = nn.Conv2d(h, h, 3)
+         self.pool   = nn.MaxPool2d(2)
+         self.fc     = nn.Linear(h*3*3, h)
 
-     def step(self):
-        time.sleep(1)
-        return self.idx
+         self.proj   = nn.Linear(2*h, h)
+         self.attend = policy.Attention(self.embed, h)
 
-  class God:
-     def __init__(self, n=5):
-        self.disciples = [Sword.remote(i) for i in range(n)]
+      def hidden(self, obs, state=None, lens=None):
+         #Attentional agent embedding
+         agents, _ = self.attend(obs[Stimulus.Entity])
 
-     def step(self):
-        clientData = ray.get([d.step.remote() for d in self.disciples])
-        print(clientData) #[0, 1, 2, 3, 4]
+         #Convolutional tile embedding
+         tiles     = obs[Stimulus.Tile]
+         self.attn = torch.norm(tiles, p=2, dim=-1)
 
-  if __name__ == '__main__':
-     ray.init()
-     God().step()
+         w      = self.config.WINDOW
+         batch  = tiles.size(0)
+         hidden = tiles.size(2)
+         tiles  = tiles.reshape(batch, w, w, hidden).permute(0, 3, 1, 2)
+         tiles  = self.conv(tiles)
+         tiles  = self.pool(tiles)
+         tiles  = tiles.reshape(batch, -1)
+         tiles  = self.fc(tiles)
 
-Ascend enables us to do all of this without manually writing loops over hardware:
+         hidden = torch.cat((agents, tiles), dim=-1)
+         hidden = self.proj(hidden)
+         return hidden, state
 
-.. code-block:: python
-  :emphasize-lines: 1,13,15,18
-
-  from forge.trinity.ascend import Ascend
-  import ray, time
-
-  @ray.remote
-  class Sword:
-     def __init__(self, idx):
-        self.idx = idx
-
-     def step(self):
-        time.sleep(1)
-        return self.idx
-
-  class God(Ascend):
-     def __init__(self, n=5):
-        super().__init__(Sword, n)
-
-     def step(self):
-        clientData = super().step()
-        print(clientData) #[0, 1, 2, 3, 4]
-
-  if __name__ == '__main__':
-     ray.init()
-     God().step()
-
-The source is only a few hundred lines and isn't very useful in toy examples. Ascend really shines in more complex environments that already have too many moving parts:
-
-.. code-block:: python
-  :emphasize-lines: 1,10,22,24,25,26,27,30
-
-  from forge.trinity.ascend import Ascend, runtime, waittime
-  import ray, time
-
-  @ray.remote
-  class Sword(Ascend):
-     def __init__(self, idx):
-        super().__init__(None, 0)
-        self.idx = idx
-
-     @runtime
-     def step(self, coef, bias):
-        time.sleep(1)
-        return coef*self.idx + bias
-
-  class God(Ascend):
-     def __init__(self, n=5):
-        super().__init__(Sword, n)
-
-     def update(self):
-        time.sleep(1)
-
-     @runtime
-     def step(self):
-        asyncHandles = super().distribute(
-              2,
-              [4, 3, 2, 1, 0],
-              shard=(False, True))
-
-        self.update()
-        clientData = super().synchronize(asyncHandles)
-        print(clientData) #[4, 5, 6, 7, 8]
-
-  if __name__ == '__main__':
-     ray.init()
-     God().step()
-
-Like before, we have a server interacting with five remote clients. This time, the *coef* argument is shared among clients while the *bias* argument is sharded among them. Additionally, we are using the computation time of the clients to perform additional work in the server side *update()* function. And we are also logging performance statistics, specifically time spent performing useful computation vs time spent waiting, for both layers. The Neural MMO demo has a third infrastructure layer for the cluster. Even in this toy example, Ascend is saving us quite a bit of code.
-
-In the full Neural MMO environment, we use three infrastructure layers, each of which subclasses Ascend:
-
-|infra|
-
-This simulates the traditional MMO computation paradigm in a research setting. Specifically, we run a cluster of servers, each of which simulates a copy of the environment and distributes agent computations among multiple remote clients. Ascend allows us to implement this framework pythonically in only a few lines of code.
+You can write your own PyTorch models using the same template. Or, if you prefer, you can use our IO subnetworks directly, as is done in our *Base* class. Neural MMO's IO spaces themselves are framework agnostic, but if you want to train in e.g. TensorFlow, you will have to write analogous IO networks.
 
 |ags| Namesake
 ##############
 
 In formal publications, we refer to our project simply as a (the first) "Neural MMO." Internally and informally, we call it "Projekt: Godsword" (God-Sword). The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called godswords. The latter is a particularly good model for AI environments; the former is more of a soft flavor inspiration.
 
-|ags| Version History
-#####################
+|ags| Patch Notes + Version History
+###################################
 
 The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.0. My personal `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
+
+**v1.4:** RLlib Support and Overlays | `[Update Slide Deck] <https://docs.google.com/presentation/d/141zRKszdBBEfxmdYWa-QMPmY7uM64trxrF7LBB5OIVg/edit?usp=sharing>`_
+   - Blade: Minor API changes have been made for compatibility with Gym and RLlib
+      - Environment reset method now returns only obs instead of (obs, rewards, dones, infos)
+      - Environment obs and dones are now both dictionaries keyed by agent ids rather than agent game objects
+      - The IO modules from v1.3 now delegates batching to the user, e.g. RLlib. As such, several potential sources of error have been removed
+      - A bug allowing agents to use melee combat from farther away than intended has been fixed
+      - Minor range and damage balancing has been performed across all three combat styles
+   - Trinity: This module has been temporarily shelved
+      - Core functionality has been ported to RLlib in collaboration with the developers
+      - We are working with the RLlib developers to add additional features essential to the long-term scalability of Neural MMO
+      - The Trinity/Ascend namespace will likely be revived in later infrastructure expansions. For now, the stability of RLlib makes delegating infrastructure pragmatic to enable us to focus on environment development, baseline models, and research
+   - Ethyr: Proper NN building blocks for complex worlds
+      - Streamlined IO, memory, and attention modules for use in building PyTorch policies
+      - A high-quality pretrained baseline reproducible at the scale of a single desktop
+   - Embyr: Overlay shaders for visualizing learned policies
+      - Pressing tilde now brings up an in-game console
+      - A help menu lists several shader options for visualizing exploration, attention, and learned value functions
+      - Shaders are rendered over the environment in real-time with partial transparency
+      - It is no longer necessary to start the client and server in a particular order
+      - The client no longer needs to be relaunched when the server restarts
+      - Agents now turn smoothly towards their direction of movement and targeted adversaries
+      - A graphical bug causing some agent attacks to render at ground level has been fixed
+      - Moved twistedserver.py into the main neural-mmo repository to better separate client and server
+      - Confirmed working on Ubuntu, MacOS, and WSL Linux with a Windows client
+   - /projekt: Demo code fully rewritten for RLlib
+      - The new demo is much shorter, approximately 400 lines of code
+      - State-of-the-art Transformer + LSTM based policy trained with distributed PPO
+      - Batched GPU evaluation for real-time rendering
+      - Trains in a few hours on a reasonably good desktop (5 rollout worker cores, 1 underutilized GTX 1080Ti GPU)
+      - To avoid introducing RLlib into the base environment as a hard dependency, we provide a small wrapper class over Realm using RLlib's environment types
+      - Migrated from a pip requirements.txt to Poetry for streamlined dependency management
+      - We have migrated configuration to Google Fire for improved command line argument parsing
 
 **v1.3:** Prebuilt IO Libraries | `[Update Slide Deck] <https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing>`_ :download:`[Paper] <docs/source/resource/nmmo_v1-3.pdf>`
    - Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.
@@ -438,7 +345,11 @@ While our environment is nowhere near the level of complexity of a real MMO yet,
 
 I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
-2019 (fall): Neural MMO development continues at MIT. as the main project of my PhD
+2020 (spring): v1.3 and v1.4 releases
+   - Neural MMO v1.3 presented as an Extended Abstract at AAMAS 2020
+   - Neural MMO v1.3-prerelease presented at a casual seminar in NeosVR
+
+2019 (fall): Neural MMO development continues at MIT as the main project of my PhD
    - I am continuing my role as the primary developer
    - **Phillip Isola** resumes project oversight as my adviser
    - We are beginning to get open source contributions
@@ -472,10 +383,3 @@ Some assets used in this project belong to `[Jagex] <https://www.jagex.com/en-GB
 We currently use them for flavor as an homage to the game that inspired the project. We believe these fall under fair use as a not-for-profit project for the advancement of artificial intelligence research -- however, we are more than happy to remove them upon request. We do own the 2D and 3D files for agents, represented by three neurons.
 
 |red| |blue| |green| |fuchsia| |orange| |mint| |purple| |spring| |yellow| |cyan| |magenta| |sky|
-
-|ags| Additional Resources
-##########################
-
-`[Neural MMO Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>`_
-
-

@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.blade.core.env module" href="forge.blade.core.env.html" />
-    <link rel="prev" title="forge.blade.core.api module" href="forge.blade.core.api.html" /> 
+    <link rel="next" title="projekt package" href="projekt.html" />
+    <link rel="prev" title="forge.blade.core.realm module" href="forge.blade.core.realm.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,16 +86,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-additional-resources"> Additional Resources</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Developer Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="api.html"> User API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="forge.blade.core.realm.html">forge.blade.core.realm module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">forge.blade.core.config module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html#ags-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="forge.blade.html">forge.blade package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="forge.blade.core.html">forge.blade.core package</a></li>
@@ -107,12 +121,10 @@
 <li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.html">forge.blade.systems package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
 </ul>
@@ -160,13 +172,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="modules.html">API Reference</a> &raquo;</li>
-        
-          <li><a href="forge.html">forge package</a> &raquo;</li>
-        
-          <li><a href="forge.blade.html">forge.blade package</a> &raquo;</li>
-        
-          <li><a href="forge.blade.core.html">forge.blade.core package</a> &raquo;</li>
+          <li><a href="api.html"> User API</a> &raquo;</li>
         
       <li>forge.blade.core.config module</li>
     
@@ -191,9 +197,144 @@
 <span id="forge-blade-core-config-module"></span><h1>forge.blade.core.config module<a class="headerlink" href="#module-forge.blade.core.config" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="forge.blade.core.config.Config">
-<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.config.</code><code class="sig-name descname">Config</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.config.Config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.config.</code><code class="sig-name descname">Config</code><a class="headerlink" href="#forge.blade.core.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Template</span></code></p>
 <p>An environment configuration object</p>
+<p>Global constants are defined as static class variables. You can override
+any Config variable using standard CLI syntax (e.g. –NENT=128).</p>
+<p class="rubric">Notes</p>
+<p>We use Google Fire internally to replace standard manual argparse
+definitions for each Config property. This means you can subclass
+Config to add new static attributes – CLI definitions will be
+generated automatically.</p>
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.NAME_PREFIX">
+<code class="sig-name descname">NAME_PREFIX</code><em class="property"> = 'Neural_'</em><a class="headerlink" href="#forge.blade.core.config.Config.NAME_PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prefix used in agent names displayed by the client</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.STIM">
+<code class="sig-name descname">STIM</code><em class="property"> = 7</em><a class="headerlink" href="#forge.blade.core.config.Config.STIM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of tiles an agent can see in any direction</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.WINDOW">
+<code class="sig-name descname">WINDOW</code><em class="property"> = 15</em><a class="headerlink" href="#forge.blade.core.config.Config.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.NENT">
+<code class="sig-name descname">NENT</code><em class="property"> = 256</em><a class="headerlink" href="#forge.blade.core.config.Config.NENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of agents spawnable in the environment</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.NPOP">
+<code class="sig-name descname">NPOP</code><em class="property"> = 8</em><a class="headerlink" href="#forge.blade.core.config.Config.NPOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of distinct populations spawnable in the environment</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.RESOURCE">
+<code class="sig-name descname">RESOURCE</code><em class="property"> = 10</em><a class="headerlink" href="#forge.blade.core.config.Config.RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial level and capacity for Hunting + Fishing resource skills</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.HEALTH">
+<code class="sig-name descname">HEALTH</code><em class="property"> = 10</em><a class="headerlink" href="#forge.blade.core.config.Config.HEALTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial Constitution level and agent health</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.HEALTH_REGEN_THRESHOLD">
+<code class="sig-name descname">HEALTH_REGEN_THRESHOLD</code><em class="property"> = 0.5</em><a class="headerlink" href="#forge.blade.core.config.Config.HEALTH_REGEN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of maximum resource capacity required to regen health</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.RESOURCE_RESTORE">
+<code class="sig-name descname">RESOURCE_RESTORE</code><em class="property"> = 0.5</em><a class="headerlink" href="#forge.blade.core.config.Config.RESOURCE_RESTORE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of maximum capacity restored upon collecting a resource</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.HEALTH_RESTORE">
+<code class="sig-name descname">HEALTH_RESTORE</code><em class="property"> = 0.1</em><a class="headerlink" href="#forge.blade.core.config.Config.HEALTH_RESTORE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of health restored per tick when above half food+water</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.XP_SCALE">
+<code class="sig-name descname">XP_SCALE</code><em class="property"> = 10</em><a class="headerlink" href="#forge.blade.core.config.Config.XP_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skill level progression speed as a multiplier of typical MMOs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.CONSTITUTION_XP_SCALE">
+<code class="sig-name descname">CONSTITUTION_XP_SCALE</code><em class="property"> = 2</em><a class="headerlink" href="#forge.blade.core.config.Config.CONSTITUTION_XP_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplier on top of XP_SCALE for the Constitution skill</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.COMBAT_XP_SCALE">
+<code class="sig-name descname">COMBAT_XP_SCALE</code><em class="property"> = 4</em><a class="headerlink" href="#forge.blade.core.config.Config.COMBAT_XP_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplier on top of XP_SCALE for Combat skills</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.IMMUNE">
+<code class="sig-name descname">IMMUNE</code><em class="property"> = 10</em><a class="headerlink" href="#forge.blade.core.config.Config.IMMUNE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ticks an agent cannot be damaged after spawning</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.MELEE_RANGE">
+<code class="sig-name descname">MELEE_RANGE</code><em class="property"> = 1</em><a class="headerlink" href="#forge.blade.core.config.Config.MELEE_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Range of attacks using the Melee skill</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.RANGE_RANGE">
+<code class="sig-name descname">RANGE_RANGE</code><em class="property"> = 3</em><a class="headerlink" href="#forge.blade.core.config.Config.RANGE_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Range of attacks using the Range skill</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.MAGE_RANGE">
+<code class="sig-name descname">MAGE_RANGE</code><em class="property"> = 4</em><a class="headerlink" href="#forge.blade.core.config.Config.MAGE_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Range of attacks using the Mage skill</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="forge.blade.core.config.Config.FREEZE_TIME">
+<code class="sig-name descname">FREEZE_TIME</code><em class="property"> = 3</em><a class="headerlink" href="#forge.blade.core.config.Config.FREEZE_TIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ticks successful Mage attacks freeze a target</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="forge.blade.core.config.Config.SPAWN">
+<code class="sig-name descname">SPAWN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.config.Config.SPAWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -206,10 +347,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.blade.core.env.html" class="btn btn-neutral float-right" title="forge.blade.core.env module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="projekt.html" class="btn btn-neutral float-right" title="projekt package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="forge.blade.core.api.html" class="btn btn-neutral float-left" title="forge.blade.core.api module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="forge.blade.core.realm.html" class="btn btn-neutral float-left" title="forge.blade.core.realm module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -255,6 +396,11 @@
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
     }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
       background: var(--background);
@@ -439,13 +585,13 @@
     /* Buttons */
     .btn-neutral {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
       background-color: var(--accent) !important;
-      color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
@@ -476,7 +622,7 @@
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -484,13 +630,12 @@
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #000e0e;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       var(--title);
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;

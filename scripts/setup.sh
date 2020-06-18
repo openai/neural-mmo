@@ -1,5 +1,4 @@
 echo "Running Neural MMO setup"
-echo "Ensure you have gcc installed and go grab a coffee"
 echo "This may take a few minutes..."
 
 if $1 == "--SERVER_ONLY"

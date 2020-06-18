@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.blade.core.api module &mdash; Neural MMO 1.3 documentation</title>
+  <title>projekt.overlay module &mdash; Neural MMO 1.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="forge.blade.core.env module" href="forge.blade.core.env.html" />
-    <link rel="prev" title="forge.blade.core.market.visualizer module" href="forge.blade.core.market.visualizer.html" /> 
+    <link rel="next" title="projekt.policy module" href="projekt.policy.html" />
+    <link rel="prev" title="projekt.experiments module" href="projekt.experiments.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -102,27 +102,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../devguide.html#ags-style"> Style</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html"> User API</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="api.html#ags-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="forge.blade.html">forge.blade package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="forge.blade.core.html">forge.blade.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.entity.html">forge.blade.entity package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.hook.html">forge.blade.hook package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.io.html">forge.blade.io package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.item.html">forge.blade.item package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.lib.html">forge.blade.lib package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="forge.blade.systems.html">forge.blade.systems package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#ags-developer-api"> Developer API</a></li>
 </ul>
 
             
@@ -170,19 +152,15 @@
         
           <li><a href="api.html"> User API</a> &raquo;</li>
         
-          <li><a href="forge.html">forge package</a> &raquo;</li>
+          <li><a href="projekt.html">projekt package</a> &raquo;</li>
         
-          <li><a href="forge.blade.html">forge.blade package</a> &raquo;</li>
-        
-          <li><a href="forge.blade.core.html">forge.blade.core package</a> &raquo;</li>
-        
-      <li>forge.blade.core.api module</li>
+      <li>projekt.overlay module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/autodoc/forge.blade.core.api.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/autodoc/projekt.overlay.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -195,157 +173,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-forge.blade.core.api">
-<span id="forge-blade-core-api-module"></span><h1>forge.blade.core.api module<a class="headerlink" href="#module-forge.blade.core.api" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="forge.blade.core.api.Realm">
-<em class="property">class </em><code class="sig-prename descclassname">forge.blade.core.api.</code><code class="sig-name descname">Realm</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">idx=0</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.api.Realm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This module is a stub reference to the core Neural MMO environment
-(Realm) that documents the external API. NMMO conforms to the OpenAI Gym
-API function signatures, but argument/return contents are different in
-order to support additional environment features (e.g. persistence,
-multi/variable agent populations, hierarchical observation/action spaces,
-etc.). Internal docs available at <a class="reference internal" href="forge.blade.core.realm.html#module-forge.blade.core.realm" title="forge.blade.core.realm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">forge.blade.core.realm</span></code></a></p>
-<dl class="method">
-<dt id="forge.blade.core.api.Realm.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.api.Realm.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simulates one game tick of the Neural MMO server</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>decisions</strong> – <p>A dictionary of entity (agent) action choices of format:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="n">ent_1</span><span class="p">:</span> <span class="p">{</span>
-      <span class="n">action_1</span><span class="p">:</span> <span class="p">[</span><span class="n">arg_1</span><span class="p">,</span> <span class="n">arg_2</span><span class="p">],</span>
-      <span class="n">action_2</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
-      <span class="o">...</span>
-   <span class="p">},</span>
-   <span class="n">ent_2</span><span class="p">:</span> <span class="p">{</span>
-      <span class="o">...</span>
-   <span class="p">},</span>
-   <span class="o">...</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Structuring actions in this form is handled for
-you by <code class="xref py py-mod docutils literal notranslate"><span class="pre">forge.blade.core.io.io</span></code>’</p>
-</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl>
-<dt>observations:</dt><dd><p>A list of observations for each agent of format:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
-   <span class="p">(</span><span class="n">env_1</span><span class="p">,</span> <span class="n">ent_1</span><span class="p">),</span>
-   <span class="p">(</span><span class="n">env_2</span><span class="p">,</span> <span class="n">ent_2</span><span class="p">),</span>
-   <span class="o">...</span>
-<span class="p">]</span>
-</pre></div>
-</div>
-<p>Where <em>env_i</em> is a local grid crop of tiles centered on the
-i’th agent and <em>ent_i</em> is the i’th agent. These are raw game
-object for usage with the forge.io api.</p>
-</dd>
-<dt>reward:</dt><dd><p>A list of rewards for each agent. Rewards are either
-floating point values or <em>None</em>. A value of <em>None</em> indicates either
-that the agent spawned this game tick (timestep), hence no action
-has been taken to generate a reward, or that the agent has died.
-The value of done will specify the latter case. By default,
-<em>0</em> will be returned for all non-<em>None</em> values.</p>
-</dd>
-<dt>dones:</dt><dd><p>A set of entIDs corresponding to agents that have died
-during the past game tick. It is up to the user to interpret
-these as episode bounds during rollout collection, as well as
-to append an episode termination reward (e.g. -1) if desired.</p>
-</dd>
-<dt>info:</dt><dd><p>Provided only for conformity with OpenAI Gym.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(list, list, set, None)</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>It is possible to specify invalid action combinations, such as
-two movements or two attacks. In this case, one will be selected
-arbitrarily from each incompatible set. This also means that it is
-possible to specify empty action sets, in which case the agent will
-still consume resources but otherwise take no action.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.api.Realm.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.api.Realm.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call exactly once upon environment initialization to obtain the
-first set of observations. Neural MMO is persistent: it does not
-provide a reset method after initialization. Episode bounds are
-instead specified by agent lifetimes. If you must experiment with
-short-lived environment instances, simply instantiate a new Realm.
-This method internally does nothing more than call self.step({}).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(observations, rewards, dones, info) as documented by step()</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.api.Realm.reward">
-<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">entID</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.api.Realm.reward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the environment protocol for rewarding agents. You can
-override this method to specify custom reward behavior with full
-access to the environment state via self.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>reward:</dt><dd><p>The reward for the actions on the previous timestep of the
-entity identified by entID.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float or None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Reward value will be None upon agent spawn (first game tick alive)
-and upon death. You will need to interpret the “done” signal
-during rollout collection (e.g. as -1).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="forge.blade.core.api.Realm.spawn">
-<code class="sig-name descname">spawn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.api.Realm.spawn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the protocol for adding agents to the environment. You can
-override this method to specify custom spawning behavior with full
-access to the environment state via self.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>entID:</dt><dd><p>An integer used to uniquely identify the entity</p>
-</dd>
-<dt>popID:</dt><dd><p>An integer used to identity membership within a population</p>
-</dd>
-<dt>prefix:</dt><dd><p>The agent will be named prefix + entID</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(int, int, str)</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This API hook is mainly intended for population-based research. In
-particular, it allows you to define behavior that selectively
-spawns agents into particular populations based on the current game
-state – for example, current population sizes or performance.</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="projekt-overlay-module">
+<h1>projekt.overlay module<a class="headerlink" href="#projekt-overlay-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -356,10 +185,10 @@ state – for example, current population sizes or performance.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="forge.blade.core.env.html" class="btn btn-neutral float-right" title="forge.blade.core.env module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="projekt.policy.html" class="btn btn-neutral float-right" title="projekt.policy module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="forge.blade.core.market.visualizer.html" class="btn btn-neutral float-left" title="forge.blade.core.market.visualizer module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="projekt.experiments.html" class="btn btn-neutral float-left" title="projekt.experiments module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

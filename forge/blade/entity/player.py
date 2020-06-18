@@ -37,8 +37,7 @@ class Base(StimHook):
 
       #Update counts
       r, c = self.pos
-      world.env.tiles[r, c].count.value  += 1
-      world.env.tiles[r, c].count._color += np.array(self.color.rgb)
+      world.env.tiles[r, c].counts[self.population.val] += 1
 
    @property
    def pos(self):
@@ -151,9 +150,6 @@ class Player():
       self.history   = History(config)
       #self.inventory = Inventory(config)
       #self.chat      = Chat(config)
-
-      #What the hell is this?
-      #self._index = 1
 
    #Note: does not stack damage, but still applies to health
    def applyDamage(self, dmg, style):

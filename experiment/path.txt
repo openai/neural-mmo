@@ -1,1 +1,1 @@
-experiment/checkpoint_247/checkpoint-247
+experiment/checkpoint_recurrent/checkpoint-247

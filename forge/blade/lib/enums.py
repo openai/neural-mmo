@@ -142,10 +142,10 @@ class Neon:
 
    def color12():
       return (
-              Neon.RED, Neon.ORANGE, Neon.YELLOW,
-              Neon.GREEN, Neon.MINT, Neon.CYAN,
+              Neon.CYAN, Neon.MINT, Neon.GREEN,
               Neon.BLUE, Neon.PURPLE, Neon.MAGENTA,
-              Neon.FUCHSIA, Neon.SPRING, Neon.SKY)
+              Neon.FUCHSIA, Neon.SPRING, Neon.SKY,
+              Neon.RED, Neon.ORANGE, Neon.YELLOW)
 
    def rand12():
       twelveColor = color12()

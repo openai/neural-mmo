@@ -13,6 +13,7 @@ forge.blade.lib package
    forge.blade.lib.enums
    forge.blade.lib.log
    forge.blade.lib.multiset
+   forge.blade.lib.overlay
    forge.blade.lib.priorityqueue
    forge.blade.lib.ray
    forge.blade.lib.stattrak

@@ -6,7 +6,8 @@ import gym
 
 from ray import rllib
 
-from ray.rllib.utils.spaces.simplex import Repeated, FlexDict
+from ray.rllib.utils.spaces.repeated import Repeated
+from ray.rllib.utils.spaces.flexdict import FlexDict
 
 from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
@@ -16,16 +17,17 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
 
-   def reset(self):
+   def reset(self, idx=None):
       n   = self.config.NMAPS
-      idx = np.random.randint(n)
+      if idx is None:
+         idx = np.random.randint(n)
 
       self.lifetimes = []
       super().__init__(self.config, idx)
       return self.step({})[0]
 
    '''Example environment overrides'''
-   def step(self, decisions, values={}, attns={}):
+   def step(self, decisions):
       #Postprocess actions
       actions = {}
       for entID in list(decisions.keys()):
@@ -46,7 +48,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
                else:
                   actions[entID][atn][arg] = ents[0]
 
-      obs, rewards, dones, infos = super().step(actions, values, attns)
+      obs, rewards, dones, infos = super().step(actions)
 
       for ent in self.dead:
          lifetime = ent.history.timeAlive.val

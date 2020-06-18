@@ -3,7 +3,7 @@ from forge.blade import core
 class Config(core.Config):
    #Program level args
    COMPUTE_GLOBAL_VALUES = True
-   LOAD_MODEL            = True
+   LOAD_MODEL            = True 
    RENDER                = True
 
    POPULATIONS_SHARE_POLICIES = True

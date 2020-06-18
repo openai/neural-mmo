@@ -18,7 +18,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
    def restore(self):
       with open('experiment/path.txt') as f:
-         path = f.read()
+         path = f.read().splitlines()[0]
       print('Loading from: {}'.format(path))
       super().restore(path)
 

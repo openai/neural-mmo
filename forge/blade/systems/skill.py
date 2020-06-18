@@ -49,14 +49,15 @@ class Skills:
          skill.update(ent, world)
 
    def applyDamage(self, dmg, style):
-      scale = self.config.XPSCALE
-      self.constitution.exp += scale * dmg * 2
-   
+      config = self.config
+      scale  = config.XP_SCALE
+      self.constitution.exp += scale * dmg * config.CONSTITUTION_XP_SCALE
+
       skill = self.__dict__[style]
-      skill.exp += scale * dmg * 4
+      skill.exp += scale * dmg * config.COMBAT_XP_SCALE
 
    def receiveDamage(self, dmg):
-      scale = self.config.XPSCALE
+      scale = self.config.XP_SCALE
       self.constitution.exp += scale * dmg * 2
       self.defense.exp      += scale * dmg * 4
 
@@ -99,15 +100,20 @@ class Constitution(CombatSkill):
       water  = ent.resources.water
 
       health.max = self.level
-      
-      #Heal if above half resources
-      if food.val > food.max // 2 and water.val > water.max // 2:
-         restore = np.floor(self.level * self.config.HEALTHRESTORE)
+      config     = self.config
+
+      #Heal if above fractional resource threshold
+      foodThresh  = food.val  > config.HEALTH_REGEN_THRESHOLD * food.max
+      waterThresh = water.val > config.HEALTH_REGEN_THRESHOLD * water.max
+
+      if foodThresh and waterThresh:
+         restore = np.floor(self.level * self.config.HEALTH_RESTORE)
          restore = min(health.missing, restore)
          health.increment(restore)
 
       if food.val <= 0:
          health.decrement()
+
       if water.val <= 0:
          health.decrement()
 
@@ -161,11 +167,11 @@ class Fishing(HarvestingSkill):
       if Material.WATER.value not in ai.adjacentMats(world.env, ent.base.pos):
          return
 
-      restore = np.floor(self.level * self.config.RESOURCERESTORE)
+      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
       restore = min(water.missing, restore)
       water.increment(restore)
 
-      scale = self.config.XPSCALE
+      scale = self.config.XP_SCALE
       self.exp += scale * restore;
 
 class Hunting(HarvestingSkill):
@@ -183,11 +189,11 @@ class Hunting(HarvestingSkill):
             not world.env.harvest(r, c)):
          return
 
-      restore = np.floor(self.level * self.config.RESOURCERESTORE)
+      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
       restore = min(food.missing, restore)
       food.increment(restore)
 
-      scale = self.config.XPSCALE
+      scale = self.config.XP_SCALE
       self.exp += scale * restore;
 
 class Mining(HarvestingSkill): pass

@@ -13,9 +13,10 @@ from forge.ethyr.torch.policy import baseline
 
 from projekt.realm import actionSpace
 
-class Policy(RecurrentNetwork):
+class Policy(RecurrentNetwork, nn.Module):
    def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
+      nn.Module.__init__(self)
       self.config = args[3]['custom_model_config']['config']
       self.space  = actionSpace(self.config).spaces
       self.model  = baseline.Recurrent(self.config)

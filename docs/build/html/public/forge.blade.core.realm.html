@@ -183,7 +183,7 @@ but any framework that supports RLlib’s fairly popular environment API and
 extended OpenAI gym.spaces observation/action definitions works as well.</p>
 <dl class="method">
 <dt>
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">decisions</em>, <em class="sig-param">values={}</em>, <em class="sig-param">attn={}</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span></dt>
 <dd><p>OpenAI Gym API step function simulating one game tick or timestep</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -376,20 +376,6 @@ changes you may have made to this method when comparing to the baselines</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>tuple(int, int)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">setGlobalValues</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span></dt>
-<dd><p>Sets self.globalValues = values</p>
-<p>This variable is included in client data passed to the renderer and is
-typically used to send value maps computed using getValStim to the
-client in order to render as an overlay.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>values</strong> – A map-sized (self.size) array of floating point values</p>
 </dd>
 </dl>
 </dd></dl>

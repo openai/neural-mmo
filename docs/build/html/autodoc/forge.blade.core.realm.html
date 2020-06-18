@@ -257,7 +257,7 @@ but any framework that supports RLlib’s fairly popular environment API and
 extended OpenAI gym.spaces observation/action definitions works as well.</p>
 <dl class="method">
 <dt id="forge.blade.core.realm.Realm.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">decisions</em>, <em class="sig-param">values={}</em>, <em class="sig-param">attn={}</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">decisions</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>OpenAI Gym API step function simulating one game tick or timestep</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -551,9 +551,9 @@ changes you may have made to this method when comparing to the baselines</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="forge.blade.core.realm.Realm.setGlobalValues">
-<code class="sig-name descname">setGlobalValues</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.setGlobalValues" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets self.globalValues = values</p>
+<dt id="forge.blade.core.realm.Realm.registerOverlay">
+<code class="sig-name descname">registerOverlay</code><span class="sig-paren">(</span><em class="sig-param">overlay</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#forge.blade.core.realm.Realm.registerOverlay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers an overlay to be sent to the client</p>
 <p>This variable is included in client data passed to the renderer and is
 typically used to send value maps computed using getValStim to the
 client in order to render as an overlay.</p>

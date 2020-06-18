@@ -24,8 +24,7 @@ class Action(Node):
       return len(Action.arguments)
 
    def args(stim, entity, config):
-      return Static.edges
-
+      return Static.edges 
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
    def hook():
@@ -142,7 +141,7 @@ class Attack(Node):
          entity.history.attack = None
          return
 
-      rng     = style.attackRange
+      rng     = style.attackRange(world.config)
       start   = np.array(entity.base.pos)
       end     = np.array(targ.base.pos)
       dif     = np.abs(start - end)
@@ -153,10 +152,8 @@ class Attack(Node):
 
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze.update(3)
+         targ.status.freeze.update(world.config.FREEZE_TIME)
 
-      #entity.applyDamage(dmg, style.__name__.lower())
-      #targ.receiveDamage(dmg)
       return dmg
 
 class Style(Node):
@@ -185,7 +182,9 @@ class Melee(Node):
    nodeType = NodeType.ACTION
    index = 0
    freeze=False
-   attackRange = 1
+
+   def attackRange(config):
+      return config.MELEE_RANGE
 
    def skill(entity):
       return entity.skills.melee
@@ -195,7 +194,9 @@ class Range(Node):
    nodeType = NodeType.ACTION
    index = 1
    freeze=False
-   attackRange = 3
+
+   def attackRange(config):
+      return config.RANGE_RANGE
 
    def skill(entity):
       return entity.skills.range
@@ -205,7 +206,9 @@ class Mage(Node):
    nodeType = NodeType.ACTION
    index = 2
    freeze=True
-   attackRange = 4
+
+   def attackRange(config):
+      return config.MAGE_RANGE
 
    def skill(entity):
       return entity.skills.mage

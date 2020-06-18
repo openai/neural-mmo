@@ -126,8 +126,8 @@ class Attentional(Base):
    def __init__(self, config):
       '''Transformer-based baseline model'''
       super().__init__(config)
-      self.agents = nn.TransformerEncoderLayer(d_model=config.HIDDEN, nhead=8)
-      self.tiles  = nn.TransformerEncoderLayer(d_model=config.HIDDEN, nhead=8)
+      self.agents = nn.TransformerEncoderLayer(d_model=config.HIDDEN, nhead=4)
+      self.tiles  = nn.TransformerEncoderLayer(d_model=config.HIDDEN, nhead=4)
       self.proj   = nn.Linear(2*config.HIDDEN, config.HIDDEN)
 
    def hidden(self, obs, state=None, lens=None):

@@ -80,73 +80,11 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.packet['ent'] = entities
 
         gameMap = environment.np().tolist()
-        self.packet['map'] = gameMap
-
-        counts, attention, values = [], [], []
-        countColors = []
-        for tileList in environment.tiles:
-           counts.append([])
-           countColors.append([])
-           attention.append([])
-           values.append([])
-           for tile in tileList:
-              counts[-1].append(tile.count.value)
-              countColors[-1].append(tile.count.color)
-              
-              attention[-1].append(tile.attention.value)
-              values[-1].append(tile.value.value)
-
-        counts    = self.visCounts(counts, countColors)
-        attention = self.visVals(attention)
-        values    = self.visVals(values)
-        globalValues = self.visVals(data['globalValues'])
-
-        self.packet['counts']    = (counts / (np.max(counts))).tolist()
-        self.packet['attention'] = attention.tolist()
-        self.packet['values']    = values.tolist()
-        self.packet['globalValues'] = globalValues.tolist()
+        self.packet['overlay'] = data['overlay']
+        self.packet['map']     = gameMap
 
         packet = json.dumps(self.packet).encode('utf8')
         self.sendMessage(packet, False)
-
-    #Todo: would be nicer to move this into the javascript,
-    #But it would possibly have to go straight into the shader
-    def visVals(self, vals, nStd=2):
-      vals = np.array(vals)
-      R, C = vals.shape
-      ary  = np.zeros((R, C, 3))
-      vStats = vals[vals != 0]
-      vMean = np.mean(vStats)
-      vStd  = np.std(vStats)
-      for r in range(R):
-        for c in range(C):
-           val = vals[r, c]
-           if val != 0:
-              val = (val - vMean) / (nStd * vStd)
-              val = np.clip(val+1, 0, 2)/2
-              ary[r, c] = [1-val, val, 0]
-      return ary
-
-    def visCounts(self, counts, colors, nStd=2):
-      counts = np.array(counts)
-      colors = np.array(colors)
-      R, C = counts.shape
-      ary  = np.zeros((R, C, 3))
-      vStats = counts[counts!= 0]
-      vMean = np.mean(vStats)
-      vStd  = np.std(vStats)
-      for r in range(R):
-        for c in range(C):
-           val = counts[r, c]
-           color = colors[r, c]
-           if val != 0:
-              val = (val - vMean) / (nStd * vStd)
-              val = np.clip(val+1, 0, 2)/2
-              mmax = np.max(color)
-              if mmax > 1:
-                  color = color / mmax
-              ary[r, c] = val * color
-      return ary
 
 class WSServerFactory(WebSocketServerFactory):
     def __init__(self, ip, realm, step):

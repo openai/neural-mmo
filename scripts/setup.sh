@@ -1,7 +1,8 @@
 echo "Running Neural MMO setup"
 echo "This may take a few minutes..."
 
-if $1 == "--SERVER_ONLY"
+if [$1 == "--SERVER_ONLY"]
+then
    echo "You have chosen not to install the graphical rendering client"
 else
    echo "Installing Neural MMO Client (Unity3D)..."

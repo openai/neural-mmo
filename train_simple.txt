@@ -1,0 +1,1549 @@
+Epoch: 0, Samples: 4000
+(pid=2149) Lifetime: 6.974
+(pid=2148) Lifetime: 7.241
+(pid=2148) Lifetime: 7.235764235764235
+(pid=2144) Lifetime: 7.127
+(pid=2144) Lifetime: 7.127872127872128
+(pid=2147) Lifetime: 6.989
+Saved to: experiment/checkpoint_2/checkpoint-2
+Epoch: 1, Samples: 8000
+(pid=2149) Lifetime: 6.907
+(pid=2148) Lifetime: 6.822
+(pid=2147) Lifetime: 7.09
+(pid=2144) Lifetime: 7.239
+(pid=2144) Lifetime: 7.251748251748252
+(pid=2147) 2020-06-07 22:38:01,404  WARNING sampler.py:591 -- More than 1002 observations for 90 env steps are buffered in the sampler. If this is more than you expected, check that that you set a horizon on your environment correctly and that it terminates at some point. Note: In multi-agent environments, `rollout_fragment_length` sets the batch size based on environment steps, not the steps of individual agents, which can result in unexpectedly large batches. Also, you may be in evaluation waiting for your Env to terminate (batch_mode=`complete_episodes`). Make sure it does at some point.
+Saved to: experiment/checkpoint_3/checkpoint-3
+Epoch: 2, Samples: 12000
+(pid=2149) Lifetime: 9.22
+(pid=2149) Lifetime: 9.217782217782219
+(pid=2148) Lifetime: 9.699
+(pid=2147) Lifetime: 9.478
+(pid=2144) Lifetime: 9.264
+Saved to: experiment/checkpoint_4/checkpoint-4
+Epoch: 3, Samples: 16000
+(pid=2147) Lifetime: 12.296
+(pid=2149) Lifetime: 14.155
+(pid=2148) Lifetime: 13.293
+(pid=2144) Lifetime: 12.659
+Saved to: experiment/checkpoint_5/checkpoint-5
+Epoch: 4, Samples: 20000
+(pid=2149) Lifetime: 16.433
+(pid=2148) Lifetime: 15.77
+(pid=2147) Lifetime: 15.851
+(pid=2144) Lifetime: 16.516
+(pid=2144) Lifetime: 16.533466533466534
+Saved to: experiment/checkpoint_6/checkpoint-6
+Epoch: 5, Samples: 24000
+(pid=2149) Lifetime: 17.258
+(pid=2147) Lifetime: 17.079
+(pid=2147) Lifetime: 17.083916083916083
+(pid=2144) Lifetime: 17.272
+(pid=2144) Lifetime: 17.27172827172827
+(pid=2148) Lifetime: 17.932
+Saved to: experiment/checkpoint_7/checkpoint-7
+Epoch: 6, Samples: 28000
+(pid=2149) Lifetime: 18.753
+(pid=2149) Lifetime: 18.736263736263737
+(pid=2147) Lifetime: 18.584
+(pid=2144) Lifetime: 18.534
+(pid=2148) Lifetime: 19.099
+(pid=2148) Lifetime: 19.08091908091908
+Saved to: experiment/checkpoint_8/checkpoint-8
+Epoch: 7, Samples: 32000
+(pid=2147) Lifetime: 19.7
+(pid=2144) Lifetime: 20.064
+(pid=2149) Lifetime: 19.762
+(pid=2149) Lifetime: 19.755244755244757
+(pid=2149) Lifetime: 19.775449101796408
+(pid=2148) Lifetime: 18.88
+Saved to: experiment/checkpoint_9/checkpoint-9
+Epoch: 8, Samples: 36000
+(pid=2149) Lifetime: 19.544
+(pid=2144) Lifetime: 18.803
+(pid=2144) Lifetime: 18.8011988011988
+(pid=2148) Lifetime: 19.513
+(pid=2147) Lifetime: 20.691
+Saved to: experiment/checkpoint_10/checkpoint-10
+Epoch: 9, Samples: 40000
+(pid=2147) Lifetime: 19.515
+(pid=2147) Lifetime: 19.51848151848152
+(pid=2149) Lifetime: 19.452
+(pid=2144) Lifetime: 21.235
+(pid=2148) Lifetime: 19.303
+Saved to: experiment/checkpoint_11/checkpoint-11
+Epoch: 10, Samples: 44000
+(pid=2149) Lifetime: 21.413
+(pid=2147) Lifetime: 20.703
+(pid=2144) Lifetime: 21.312
+(pid=2148) Lifetime: 21.47
+Saved to: experiment/checkpoint_12/checkpoint-12
+Epoch: 11, Samples: 48000
+(pid=2149) Lifetime: 20.75
+(pid=2149) Lifetime: 20.743256743256744
+(pid=2147) Lifetime: 22.064
+(pid=2144) Lifetime: 21.113
+(pid=2148) Lifetime: 21.369
+(pid=2148) Lifetime: 21.361638361638363
+Saved to: experiment/checkpoint_13/checkpoint-13
+Epoch: 12, Samples: 52000
+(pid=2147) Lifetime: 21.39
+(pid=2147) Lifetime: 21.38161838161838
+(pid=2149) Lifetime: 22.415
+(pid=2149) Lifetime: 22.415584415584416
+(pid=2149) Lifetime: 22.415169660678643
+(pid=2149) Lifetime: 22.40777666999003
+(pid=2144) Lifetime: 21.493
+(pid=2148) Lifetime: 20.257
+Saved to: experiment/checkpoint_14/checkpoint-14
+Epoch: 13, Samples: 56000
+(pid=2147) Lifetime: 22.826
+(pid=2149) Lifetime: 20.931
+(pid=2149) Lifetime: 20.924075924075925
+(pid=2144) Lifetime: 21.46
+(pid=2148) Lifetime: 20.795
+Saved to: experiment/checkpoint_15/checkpoint-15
+Epoch: 14, Samples: 60000
+(pid=2147) Lifetime: 22.897
+(pid=2149) Lifetime: 22.748
+(pid=2149) Lifetime: 22.74025974025974
+(pid=2144) Lifetime: 21.792
+(pid=2144) Lifetime: 21.796203796203795
+(pid=2148) Lifetime: 22.475
+Saved to: experiment/checkpoint_16/checkpoint-16
+Epoch: 15, Samples: 64000
+(pid=2147) Lifetime: 22.106
+(pid=2149) Lifetime: 23.329
+(pid=2148) Lifetime: 20.874
+(pid=2144) Lifetime: 22.624
+(pid=2144) Lifetime: 22.616383616383615
+(pid=2144) Lifetime: 22.610778443113773
+(pid=2144) Lifetime: 22.60219341974078
+Saved to: experiment/checkpoint_17/checkpoint-17
+Epoch: 16, Samples: 68000
+(pid=2147) Lifetime: 22.77
+(pid=2147) Lifetime: 22.762237762237763
+(pid=2149) Lifetime: 22.464
+(pid=2144) Lifetime: 22.863
+(pid=2148) Lifetime: 20.639
+(pid=2148) Lifetime: 20.641358641358643
+Saved to: experiment/checkpoint_18/checkpoint-18
+Epoch: 17, Samples: 72000
+(pid=2147) Lifetime: 20.886
+(pid=2149) Lifetime: 24.172
+(pid=2144) Lifetime: 22.078
+(pid=2144) Lifetime: 22.06993006993007
+(pid=2148) Lifetime: 22.512
+Saved to: experiment/checkpoint_19/checkpoint-19
+Epoch: 18, Samples: 76000
+(pid=2147) Lifetime: 21.654
+(pid=2148) Lifetime: 21.091
+(pid=2149) Lifetime: 24.827
+(pid=2144) Lifetime: 22.455
+(pid=2144) Lifetime: 22.45154845154845
+Saved to: experiment/checkpoint_20/checkpoint-20
+Epoch: 19, Samples: 80000
+(pid=2147) Lifetime: 22.981
+(pid=2149) Lifetime: 20.955
+(pid=2149) Lifetime: 20.966033966033965
+(pid=2148) Lifetime: 21.562
+(pid=2148) Lifetime: 21.557442557442556
+(pid=2148) Lifetime: 21.550898203592816
+(pid=2144) Lifetime: 22.745
+Saved to: experiment/checkpoint_21/checkpoint-21
+Epoch: 20, Samples: 84000
+(pid=2147) Lifetime: 23.805
+(pid=2147) Lifetime: 23.7992007992008
+(pid=2149) Lifetime: 22.247
+(pid=2148) Lifetime: 22.414
+(pid=2144) Lifetime: 23.447
+(pid=2144) Lifetime: 23.445554445554446
+(pid=2144) Lifetime: 23.454091816367267
+Saved to: experiment/checkpoint_22/checkpoint-22
+Epoch: 21, Samples: 88000
+(pid=2147) Lifetime: 22.257
+(pid=2147) Lifetime: 22.25074925074925
+(pid=2149) Lifetime: 24.961
+(pid=2148) Lifetime: 22.083
+(pid=2144) Lifetime: 22.785
+(pid=2144) Lifetime: 22.77922077922078
+Saved to: experiment/checkpoint_23/checkpoint-23
+Epoch: 22, Samples: 92000
+(pid=2147) Lifetime: 23.754
+(pid=2149) Lifetime: 23.536
+(pid=2148) Lifetime: 23.842
+(pid=2144) Lifetime: 22.799
+Saved to: experiment/checkpoint_24/checkpoint-24
+Epoch: 23, Samples: 96000
+(pid=2147) Lifetime: 23.518
+(pid=2147) Lifetime: 23.51048951048951
+(pid=2147) Lifetime: 23.51197604790419
+(pid=2148) Lifetime: 24.172
+(pid=2144) Lifetime: 22.226
+(pid=2149) Lifetime: 23.161
+Saved to: experiment/checkpoint_25/checkpoint-25
+Epoch: 24, Samples: 100000
+(pid=2147) Lifetime: 23.413
+(pid=2149) Lifetime: 22.063
+(pid=2148) Lifetime: 22.334
+(pid=2144) Lifetime: 21.43
+(pid=2144) Lifetime: 21.433566433566433
+Saved to: experiment/checkpoint_26/checkpoint-26
+Epoch: 25, Samples: 104000
+(pid=2147) Lifetime: 25.255
+(pid=2147) Lifetime: 25.24775224775225
+(pid=2148) Lifetime: 25.856
+(pid=2148) Lifetime: 25.85014985014985
+(pid=2144) Lifetime: 23.289
+(pid=2149) Lifetime: 25.789
+Saved to: experiment/checkpoint_27/checkpoint-27
+Epoch: 26, Samples: 108000
+(pid=2147) Lifetime: 22.28
+(pid=2148) Lifetime: 23.114
+(pid=2148) Lifetime: 23.106893106893107
+(pid=2149) Lifetime: 22.79
+(pid=2149) Lifetime: 22.783216783216783
+(pid=2144) Lifetime: 24.543
+(pid=2144) Lifetime: 24.536463536463536
+Saved to: experiment/checkpoint_28/checkpoint-28
+Epoch: 27, Samples: 112000
+(pid=2147) Lifetime: 23.315
+(pid=2148) Lifetime: 23.13
+(pid=2148) Lifetime: 23.121878121878122
+(pid=2149) Lifetime: 24.733
+(pid=2144) Lifetime: 23.479
+(pid=2144) Lifetime: 23.47252747252747
+Saved to: experiment/checkpoint_29/checkpoint-29
+Epoch: 28, Samples: 116000
+(pid=2147) Lifetime: 25.635
+(pid=2144) Lifetime: 24.182
+(pid=2144) Lifetime: 24.17782217782218
+(pid=2148) Lifetime: 25.171
+(pid=2148) Lifetime: 25.164835164835164
+(pid=2149) Lifetime: 24.044
+Saved to: experiment/checkpoint_30/checkpoint-30
+Epoch: 29, Samples: 120000
+(pid=2147) Lifetime: 24.782
+(pid=2147) Lifetime: 24.773226773226774
+(pid=2148) Lifetime: 20.994
+(pid=2144) Lifetime: 24.792
+(pid=2144) Lifetime: 24.786213786213786
+(pid=2149) Lifetime: 23.36
+Saved to: experiment/checkpoint_31/checkpoint-31
+Epoch: 30, Samples: 124000
+(pid=2147) Lifetime: 27.912
+(pid=2147) Lifetime: 27.902097902097903
+(pid=2148) Lifetime: 24.081
+(pid=2149) Lifetime: 25.726
+(pid=2149) Lifetime: 25.72027972027972
+(pid=2144) Lifetime: 25.799
+(pid=2144) Lifetime: 25.7982017982018
+Saved to: experiment/checkpoint_32/checkpoint-32
+Epoch: 31, Samples: 128000
+(pid=2147) Lifetime: 23.887
+(pid=2148) Lifetime: 25.235
+(pid=2148) Lifetime: 25.22977022977023
+(pid=2144) Lifetime: 24.763
+(pid=2149) Lifetime: 25.97
+(pid=2149) Lifetime: 25.97902097902098
+Saved to: experiment/checkpoint_33/checkpoint-33
+Epoch: 32, Samples: 132000
+(pid=2147) Lifetime: 26.363
+(pid=2147) Lifetime: 26.35764235764236
+(pid=2148) Lifetime: 26.085
+(pid=2148) Lifetime: 26.07792207792208
+(pid=2144) Lifetime: 26.008
+(pid=2149) Lifetime: 23.821
+Saved to: experiment/checkpoint_34/checkpoint-34
+Epoch: 33, Samples: 136000
+(pid=2147) Lifetime: 25.807
+(pid=2148) Lifetime: 23.659
+(pid=2144) Lifetime: 24.638
+(pid=2149) Lifetime: 24.175
+Saved to: experiment/checkpoint_35/checkpoint-35
+Epoch: 34, Samples: 140000
+(pid=2148) Lifetime: 26.085
+(pid=2148) Lifetime: 26.074925074925076
+(pid=2147) Lifetime: 28.46
+(pid=2144) Lifetime: 24.806
+(pid=2144) Lifetime: 24.803196803196805
+(pid=2149) Lifetime: 24.398
+(pid=2149) Lifetime: 24.388611388611388
+Saved to: experiment/checkpoint_36/checkpoint-36
+Epoch: 35, Samples: 144000
+(pid=2148) Lifetime: 24.335
+(pid=2147) Lifetime: 25.634
+(pid=2147) Lifetime: 25.626373626373628
+(pid=2147) Lifetime: 25.62874251497006
+(pid=2149) Lifetime: 24.4
+(pid=2144) Lifetime: 28.05
+(pid=2144) Lifetime: 28.04095904095904
+(pid=2144) Lifetime: 28.073852295409182
+Saved to: experiment/checkpoint_37/checkpoint-37
+Epoch: 36, Samples: 148000
+(pid=2148) Lifetime: 25.619
+(pid=2148) Lifetime: 25.628371628371628
+(pid=2147) Lifetime: 25.09
+(pid=2149) Lifetime: 25.35
+(pid=2144) Lifetime: 24.978
+(pid=2144) Lifetime: 24.977022977022976
+Saved to: experiment/checkpoint_38/checkpoint-38
+Epoch: 37, Samples: 152000
+(pid=2148) Lifetime: 24.899
+(pid=2147) Lifetime: 23.771
+(pid=2147) Lifetime: 23.766233766233768
+(pid=2147) Lifetime: 23.756487025948104
+(pid=2147) Lifetime: 23.791625124626123
+(pid=2149) Lifetime: 26.294
+(pid=2149) Lifetime: 26.284715284715286
+(pid=2144) Lifetime: 26.031
+(pid=2144) Lifetime: 26.01898101898102
+Saved to: experiment/checkpoint_39/checkpoint-39
+Epoch: 38, Samples: 156000
+(pid=2148) Lifetime: 25.266
+(pid=2147) Lifetime: 26.644
+(pid=2149) Lifetime: 26.287
+(pid=2149) Lifetime: 26.277722277722276
+(pid=2149) Lifetime: 26.28243512974052
+(pid=2144) Lifetime: 27.051
+Saved to: experiment/checkpoint_40/checkpoint-40
+Epoch: 39, Samples: 160000
+(pid=2148) Lifetime: 24.681
+(pid=2147) Lifetime: 24.351
+(pid=2147) Lifetime: 24.347652347652346
+(pid=2149) Lifetime: 24.29
+(pid=2144) Lifetime: 23.67
+Saved to: experiment/checkpoint_41/checkpoint-41
+Epoch: 40, Samples: 164000
+(pid=2148) Lifetime: 24.133
+(pid=2147) Lifetime: 26.695
+(pid=2149) Lifetime: 27.381
+(pid=2144) Lifetime: 24.58
+Saved to: experiment/checkpoint_42/checkpoint-42
+Epoch: 41, Samples: 168000
+(pid=2148) Lifetime: 25.004
+(pid=2148) Lifetime: 24.999000999000998
+(pid=2147) Lifetime: 26.466
+(pid=2147) Lifetime: 26.45954045954046
+(pid=2149) Lifetime: 26.52
+(pid=2144) Lifetime: 23.402
+Saved to: experiment/checkpoint_43/checkpoint-43
+Epoch: 42, Samples: 172000
+(pid=2148) Lifetime: 24.215
+(pid=2149) Lifetime: 25.6
+(pid=2149) Lifetime: 25.594405594405593
+(pid=2147) Lifetime: 28.24
+(pid=2144) Lifetime: 23.749
+Saved to: experiment/checkpoint_44/checkpoint-44
+Epoch: 43, Samples: 176000
+(pid=2148) Lifetime: 27.011
+(pid=2148) Lifetime: 27.003996003996004
+(pid=2149) Lifetime: 22.319
+(pid=2147) Lifetime: 26.303
+(pid=2147) Lifetime: 26.29270729270729
+Saved to: experiment/checkpoint_45/checkpoint-45
+Epoch: 44, Samples: 180000
+(pid=2144) Lifetime: 27.659
+(pid=2144) Lifetime: 27.64235764235764
+(pid=2148) Lifetime: 29.68
+Saved to: experiment/checkpoint_46/checkpoint-46
+Epoch: 45, Samples: 184000
+(pid=2149) Lifetime: 26.166
+(pid=2149) Lifetime: 26.15884115884116
+(pid=2149) Lifetime: 26.146706586826348
+(pid=2147) Lifetime: 26.009
+(pid=2147) Lifetime: 26.03996003996004
+(pid=2144) Lifetime: 29.147
+(pid=2144) Lifetime: 29.13086913086913
+Saved to: experiment/checkpoint_47/checkpoint-47
+Epoch: 46, Samples: 188000
+(pid=2148) Lifetime: 25.477
+(pid=2147) Lifetime: 23.006
+(pid=2149) Lifetime: 25.044
+(pid=2149) Lifetime: 25.045954045954048
+(pid=2144) Lifetime: 26.875
+(pid=2144) Lifetime: 26.867132867132867
+(pid=2144) Lifetime: 26.89121756487026
+Saved to: experiment/checkpoint_48/checkpoint-48
+Epoch: 47, Samples: 192000
+(pid=2148) Lifetime: 30.584
+(pid=2148) Lifetime: 30.603396603396604
+(pid=2149) Lifetime: 24.794
+(pid=2147) Lifetime: 28.135
+(pid=2147) Lifetime: 28.12087912087912
+(pid=2144) Lifetime: 25.463
+Saved to: experiment/checkpoint_49/checkpoint-49
+Epoch: 48, Samples: 196000
+(pid=2148) Lifetime: 27.14
+(pid=2149) Lifetime: 27.539
+(pid=2147) Lifetime: 24.839
+(pid=2144) Lifetime: 27.229
+Saved to: experiment/checkpoint_50/checkpoint-50
+Epoch: 49, Samples: 200000
+(pid=2148) Lifetime: 22.84
+(pid=2149) Lifetime: 27.189
+(pid=2147) Lifetime: 29.852
+(pid=2144) Lifetime: 24.19
+(pid=2144) Lifetime: 24.185814185814184
+Saved to: experiment/checkpoint_51/checkpoint-51
+Epoch: 50, Samples: 204000
+(pid=2148) Lifetime: 24.02
+(pid=2148) Lifetime: 24.02897102897103
+(pid=2149) Lifetime: 24.198
+(pid=2147) Lifetime: 27.26
+(pid=2144) Lifetime: 27.223
+Saved to: experiment/checkpoint_52/checkpoint-52
+Epoch: 51, Samples: 208000
+(pid=2148) Lifetime: 27.127
+(pid=2149) Lifetime: 26.807
+(pid=2149) Lifetime: 26.795204795204796
+(pid=2149) Lifetime: 26.7874251497006
+(pid=2147) Lifetime: 26.854
+(pid=2144) Lifetime: 28.814
+Saved to: experiment/checkpoint_53/checkpoint-53
+Epoch: 52, Samples: 212000
+(pid=2148) Lifetime: 25.652
+(pid=2149) Lifetime: 26.918
+(pid=2147) Lifetime: 27.717
+(pid=2147) Lifetime: 27.71228771228771
+(pid=2147) Lifetime: 27.70359281437126
+(pid=2144) Lifetime: 25.663
+Saved to: experiment/checkpoint_54/checkpoint-54
+Epoch: 53, Samples: 216000
+(pid=2148) Lifetime: 24.836
+(pid=2149) Lifetime: 29.547
+(pid=2147) Lifetime: 28.333
+(pid=2147) Lifetime: 28.32067932067932
+(pid=2147) Lifetime: 28.32634730538922
+(pid=2144) Lifetime: 23.591
+(pid=2144) Lifetime: 23.587412587412587
+Saved to: experiment/checkpoint_55/checkpoint-55
+Epoch: 54, Samples: 220000
+(pid=2148) Lifetime: 27.953
+(pid=2149) Lifetime: 24.004
+(pid=2147) Lifetime: 29.242
+(pid=2144) Lifetime: 29.028
+Saved to: experiment/checkpoint_56/checkpoint-56
+Epoch: 55, Samples: 224000
+(pid=2148) Lifetime: 26.764
+(pid=2149) Lifetime: 27.385
+(pid=2149) Lifetime: 27.38961038961039
+(pid=2149) Lifetime: 27.37924151696607
+(pid=2147) Lifetime: 28.73
+(pid=2144) Lifetime: 27.876
+Saved to: experiment/checkpoint_57/checkpoint-57
+Epoch: 56, Samples: 228000
+(pid=2148) Lifetime: 26.512
+(pid=2149) Lifetime: 25.917
+(pid=2147) Lifetime: 25.706
+(pid=2144) Lifetime: 27.265
+Saved to: experiment/checkpoint_58/checkpoint-58
+Epoch: 57, Samples: 232000
+(pid=2148) Lifetime: 25.03
+(pid=2148) Lifetime: 25.06793206793207
+(pid=2148) Lifetime: 25.06187624750499
+(pid=2149) Lifetime: 26.83
+(pid=2149) Lifetime: 26.861138861138862
+(pid=2144) Lifetime: 23.809
+(pid=2147) Lifetime: 23.972
+Saved to: experiment/checkpoint_59/checkpoint-59
+Epoch: 58, Samples: 236000
+(pid=2148) Lifetime: 26.478
+(pid=2149) Lifetime: 27.611
+(pid=2144) Lifetime: 26.172
+(pid=2144) Lifetime: 26.162837162837164
+(pid=2147) Lifetime: 27.793
+Saved to: experiment/checkpoint_60/checkpoint-60
+Epoch: 59, Samples: 240000
+(pid=2148) Lifetime: 24.34
+(pid=2149) Lifetime: 23.617
+(pid=2147) Lifetime: 23.234
+(pid=2147) Lifetime: 23.225774225774227
+(pid=2144) Lifetime: 26.037
+Saved to: experiment/checkpoint_61/checkpoint-61
+Epoch: 60, Samples: 244000
+(pid=2148) Lifetime: 26.282
+(pid=2149) Lifetime: 27.56
+(pid=2147) Lifetime: 25.147
+(pid=2144) Lifetime: 27.325
+Saved to: experiment/checkpoint_62/checkpoint-62
+Epoch: 61, Samples: 248000
+(pid=2148) Lifetime: 27.435
+(pid=2148) Lifetime: 27.441558441558442
+(pid=2149) Lifetime: 28.222
+(pid=2149) Lifetime: 28.21978021978022
+(pid=2147) Lifetime: 26.233
+(pid=2147) Lifetime: 26.226773226773226
+(pid=2147) Lifetime: 26.235528942115767
+(pid=2144) Lifetime: 26.103
+Saved to: experiment/checkpoint_63/checkpoint-63
+Epoch: 62, Samples: 252000
+(pid=2148) Lifetime: 24.608
+(pid=2148) Lifetime: 24.6013986013986
+(pid=2148) Lifetime: 24.619760479041915
+(pid=2149) Lifetime: 25.027
+(pid=2147) Lifetime: 27.136
+(pid=2147) Lifetime: 27.124875124875125
+(pid=2147) Lifetime: 27.119760479041915
+(pid=2144) Lifetime: 29.686
+(pid=2144) Lifetime: 29.67132867132867
+Saved to: experiment/checkpoint_64/checkpoint-64
+Epoch: 63, Samples: 256000
+(pid=2148) Lifetime: 24.579
+(pid=2148) Lifetime: 24.57242757242757
+(pid=2149) Lifetime: 29.668
+(pid=2149) Lifetime: 29.706293706293707
+(pid=2147) Lifetime: 26.047
+(pid=2144) Lifetime: 27.443
+Saved to: experiment/checkpoint_65/checkpoint-65
+Epoch: 64, Samples: 260000
+(pid=2148) Lifetime: 24.056
+(pid=2149) Lifetime: 28.174
+(pid=2147) Lifetime: 23.296
+(pid=2147) Lifetime: 23.291708291708293
+(pid=2144) Lifetime: 24.769
+Saved to: experiment/checkpoint_66/checkpoint-66
+Epoch: 65, Samples: 264000
+(pid=2148) Lifetime: 27.774
+(pid=2149) Lifetime: 29.079
+(pid=2147) Lifetime: 27.611
+(pid=2144) Lifetime: 28.186
+Saved to: experiment/checkpoint_67/checkpoint-67
+Epoch: 66, Samples: 268000
+(pid=2148) Lifetime: 28.813
+(pid=2148) Lifetime: 28.802197802197803
+(pid=2148) Lifetime: 28.788423153692616
+(pid=2149) Lifetime: 26.765
+(pid=2147) Lifetime: 31.416
+(pid=2147) Lifetime: 31.503496503496503
+(pid=2144) Lifetime: 28.608
+(pid=2144) Lifetime: 28.5974025974026
+(pid=2144) Lifetime: 28.589820359281436
+Saved to: experiment/checkpoint_68/checkpoint-68
+Epoch: 67, Samples: 272000
+(pid=2148) Lifetime: 25.891
+(pid=2148) Lifetime: 25.906093906093908
+(pid=2148) Lifetime: 25.89920159680639
+(pid=2148) Lifetime: 25.893320039880358
+(pid=2149) Lifetime: 29.381
+(pid=2147) Lifetime: 28.236
+(pid=2147) Lifetime: 28.24975024975025
+(pid=2147) Lifetime: 28.238522954091817
+(pid=2144) Lifetime: 26.436
+Saved to: experiment/checkpoint_69/checkpoint-69
+Epoch: 68, Samples: 276000
+(pid=2148) Lifetime: 26.845
+(pid=2149) Lifetime: 30.0
+(pid=2149) Lifetime: 30.01898101898102
+(pid=2147) Lifetime: 25.352
+(pid=2144) Lifetime: 28.069
+(pid=2144) Lifetime: 28.065934065934066
+Saved to: experiment/checkpoint_70/checkpoint-70
+Epoch: 69, Samples: 280000
+(pid=2148) Lifetime: 28.371
+(pid=2149) Lifetime: 25.499
+(pid=2147) Lifetime: 29.805
+(pid=2144) Lifetime: 26.883
+(pid=2144) Lifetime: 26.874125874125873
+Saved to: experiment/checkpoint_71/checkpoint-71
+Epoch: 70, Samples: 284000
+(pid=2148) Lifetime: 25.5
+(pid=2148) Lifetime: 25.492507492507492
+(pid=2149) Lifetime: 25.833
+(pid=2147) Lifetime: 24.16
+(pid=2144) Lifetime: 28.887
+Saved to: experiment/checkpoint_72/checkpoint-72
+Epoch: 71, Samples: 288000
+(pid=2148) Lifetime: 28.956
+(pid=2149) Lifetime: 29.214
+(pid=2149) Lifetime: 29.1998001998002
+(pid=2149) Lifetime: 29.216566866267463
+(pid=2149) Lifetime: 29.218344965104684
+(pid=2147) Lifetime: 27.674
+(pid=2144) Lifetime: 28.644
+(pid=2144) Lifetime: 28.64035964035964
+Saved to: experiment/checkpoint_73/checkpoint-73
+Epoch: 72, Samples: 292000
+(pid=2148) Lifetime: 29.492
+(pid=2148) Lifetime: 29.48151848151848
+(pid=2147) Lifetime: 26.627
+(pid=2149) Lifetime: 32.688
+(pid=2144) Lifetime: 25.714
+Saved to: experiment/checkpoint_74/checkpoint-74
+Epoch: 73, Samples: 296000
+(pid=2148) Lifetime: 27.644
+(pid=2148) Lifetime: 27.633366633366634
+(pid=2148) Lifetime: 27.64071856287425
+(pid=2148) Lifetime: 27.636091724825523
+(pid=2149) Lifetime: 28.474
+(pid=2149) Lifetime: 28.663336663336665
+(pid=2147) Lifetime: 28.598
+(pid=2147) Lifetime: 28.61838161838162
+(pid=2144) Lifetime: 27.667
+(pid=2144) Lifetime: 27.714285714285715
+(pid=2144) Lifetime: 27.730538922155688
+Saved to: experiment/checkpoint_75/checkpoint-75
+Epoch: 74, Samples: 300000
+(pid=2148) Lifetime: 28.818
+(pid=2149) Lifetime: 24.395
+(pid=2149) Lifetime: 24.388611388611388
+(pid=2147) Lifetime: 27.27
+(pid=2144) Lifetime: 29.092
+Saved to: experiment/checkpoint_76/checkpoint-76
+Epoch: 75, Samples: 304000
+(pid=2148) Lifetime: 24.853
+(pid=2149) Lifetime: 29.289
+(pid=2147) Lifetime: 27.897
+(pid=2144) Lifetime: 28.869
+Saved to: experiment/checkpoint_77/checkpoint-77
+Epoch: 76, Samples: 308000
+(pid=2148) Lifetime: 26.367
+(pid=2147) Lifetime: 27.481
+(pid=2149) Lifetime: 30.506
+(pid=2144) Lifetime: 26.206
+Saved to: experiment/checkpoint_78/checkpoint-78
+Epoch: 77, Samples: 312000
+(pid=2148) Lifetime: 26.213
+(pid=2148) Lifetime: 26.202797202797203
+(pid=2147) Lifetime: 32.111
+(pid=2149) Lifetime: 30.494
+(pid=2144) Lifetime: 26.333
+(pid=2144) Lifetime: 26.326673326673326
+(pid=2144) Lifetime: 26.322355289421157
+Saved to: experiment/checkpoint_79/checkpoint-79
+Epoch: 78, Samples: 316000
+(pid=2148) Lifetime: 26.281
+(pid=2147) Lifetime: 29.936
+(pid=2149) Lifetime: 30.632
+(pid=2144) Lifetime: 26.788
+Saved to: experiment/checkpoint_80/checkpoint-80
+Epoch: 79, Samples: 320000
+(pid=2148) Lifetime: 28.03
+(pid=2147) Lifetime: 25.079
+(pid=2144) Lifetime: 26.721
+(pid=2149) Lifetime: 28.238
+Saved to: experiment/checkpoint_81/checkpoint-81
+Epoch: 80, Samples: 324000
+(pid=2148) Lifetime: 28.645
+(pid=2148) Lifetime: 28.636363636363637
+(pid=2147) Lifetime: 27.937
+(pid=2149) Lifetime: 31.146
+Saved to: experiment/checkpoint_82/checkpoint-82
+Epoch: 81, Samples: 328000
+(pid=2144) Lifetime: 31.986
+(pid=2148) Lifetime: 31.025
+(pid=2148) Lifetime: 31.015984015984017
+Saved to: experiment/checkpoint_83/checkpoint-83
+Epoch: 82, Samples: 332000
+(pid=2147) Lifetime: 25.939
+(pid=2147) Lifetime: 25.925074925074924
+(pid=2147) Lifetime: 25.917165668662676
+(pid=2149) Lifetime: 29.679
+(pid=2144) Lifetime: 30.127
+(pid=2148) Lifetime: 28.588
+Saved to: experiment/checkpoint_84/checkpoint-84
+Epoch: 83, Samples: 336000
+(pid=2147) Lifetime: 25.475
+(pid=2149) Lifetime: 30.415
+(pid=2144) Lifetime: 30.223
+Saved to: experiment/checkpoint_85/checkpoint-85
+Epoch: 84, Samples: 340000
+(pid=2148) Lifetime: 28.117
+(pid=2149) Lifetime: 23.577
+(pid=2147) Lifetime: 30.838
+(pid=2147) Lifetime: 30.826173826173825
+(pid=2147) Lifetime: 30.815369261477045
+(pid=2147) Lifetime: 30.81655034895314
+(pid=2144) Lifetime: 29.708
+Saved to: experiment/checkpoint_86/checkpoint-86
+Epoch: 85, Samples: 344000
+(pid=2148) Lifetime: 28.744
+(pid=2149) Lifetime: 24.693
+(pid=2147) Lifetime: 29.115
+(pid=2144) Lifetime: 28.892
+Saved to: experiment/checkpoint_87/checkpoint-87
+Epoch: 86, Samples: 348000
+(pid=2148) Lifetime: 28.233
+(pid=2149) Lifetime: 28.431
+(pid=2147) Lifetime: 27.989
+(pid=2147) Lifetime: 27.99100899100899
+(pid=2144) Lifetime: 28.779
+(pid=2144) Lifetime: 28.768231768231768
+(pid=2144) Lifetime: 28.75948103792415
+Saved to: experiment/checkpoint_88/checkpoint-88
+Epoch: 87, Samples: 352000
+(pid=2148) Lifetime: 28.387
+(pid=2149) Lifetime: 30.355
+(pid=2149) Lifetime: 30.344655344655344
+(pid=2149) Lifetime: 30.331337325349303
+(pid=2147) Lifetime: 30.223
+(pid=2144) Lifetime: 32.914
+(pid=2144) Lifetime: 32.9020979020979
+Saved to: experiment/checkpoint_89/checkpoint-89
+Epoch: 88, Samples: 356000
+(pid=2148) Lifetime: 28.007
+(pid=2149) Lifetime: 28.923
+(pid=2147) Lifetime: 29.482
+(pid=2144) Lifetime: 26.467
+Saved to: experiment/checkpoint_90/checkpoint-90
+Epoch: 89, Samples: 360000
+(pid=2148) Lifetime: 28.353
+(pid=2148) Lifetime: 28.36863136863137
+(pid=2147) Lifetime: 30.076
+(pid=2149) Lifetime: 29.511
+(pid=2149) Lifetime: 29.506493506493506
+(pid=2149) Lifetime: 29.522954091816366
+(pid=2144) Lifetime: 25.354
+Saved to: experiment/checkpoint_91/checkpoint-91
+Epoch: 90, Samples: 364000
+(pid=2148) Lifetime: 27.905
+(pid=2147) Lifetime: 30.542
+(pid=2147) Lifetime: 30.52747252747253
+(pid=2149) Lifetime: 32.939
+(pid=2144) Lifetime: 30.732
+(pid=2144) Lifetime: 30.73026973026973
+Saved to: experiment/checkpoint_92/checkpoint-92
+Epoch: 91, Samples: 368000
+(pid=2148) Lifetime: 29.042
+(pid=2148) Lifetime: 29.052947052947054
+(pid=2147) Lifetime: 29.821
+(pid=2149) Lifetime: 30.846
+(pid=2144) Lifetime: 31.915
+Saved to: experiment/checkpoint_93/checkpoint-93
+Epoch: 92, Samples: 372000
+(pid=2148) Lifetime: 29.741
+(pid=2147) Lifetime: 29.543
+(pid=2149) Lifetime: 32.987
+(pid=2144) Lifetime: 33.921
+(pid=2144) Lifetime: 33.925074925074924
+Saved to: experiment/checkpoint_94/checkpoint-94
+Epoch: 93, Samples: 376000
+(pid=2148) Lifetime: 29.089
+(pid=2147) Lifetime: 27.513
+(pid=2149) Lifetime: 27.739
+(pid=2144) Lifetime: 29.854
+Saved to: experiment/checkpoint_95/checkpoint-95
+Epoch: 94, Samples: 380000
+(pid=2148) Lifetime: 31.989
+(pid=2147) Lifetime: 29.425
+(pid=2147) Lifetime: 29.412587412587413
+(pid=2149) Lifetime: 31.478
+(pid=2144) Lifetime: 33.127
+(pid=2144) Lifetime: 33.196803196803195
+Saved to: experiment/checkpoint_96/checkpoint-96
+Epoch: 95, Samples: 384000
+(pid=2148) Lifetime: 30.051
+(pid=2147) Lifetime: 29.094
+(pid=2147) Lifetime: 29.116883116883116
+(pid=2147) Lifetime: 29.112774451097806
+(pid=2149) Lifetime: 27.268
+(pid=2144) Lifetime: 28.788
+(pid=2144) Lifetime: 28.79020979020979
+Saved to: experiment/checkpoint_97/checkpoint-97
+Epoch: 96, Samples: 388000
+(pid=2148) Lifetime: 28.354
+(pid=2147) Lifetime: 30.025
+(pid=2147) Lifetime: 30.070929070929072
+(pid=2149) Lifetime: 30.263
+(pid=2149) Lifetime: 30.244755244755243
+(pid=2144) Lifetime: 30.771
+Saved to: experiment/checkpoint_98/checkpoint-98
+Epoch: 97, Samples: 392000
+(pid=2148) Lifetime: 30.096
+(pid=2147) Lifetime: 26.614
+(pid=2149) Lifetime: 27.754
+(pid=2144) Lifetime: 30.094
+(pid=2144) Lifetime: 30.08891108891109
+Saved to: experiment/checkpoint_99/checkpoint-99
+Epoch: 98, Samples: 396000
+(pid=2148) Lifetime: 31.42
+(pid=2147) Lifetime: 30.539
+(pid=2149) Lifetime: 29.285
+(pid=2149) Lifetime: 29.283716283716284
+(pid=2144) Lifetime: 28.67
+Saved to: experiment/checkpoint_100/checkpoint-100
+Epoch: 99, Samples: 400000
+(pid=2148) Lifetime: 29.712
+(pid=2148) Lifetime: 29.71228771228771
+(pid=2147) Lifetime: 29.803
+(pid=2147) Lifetime: 29.786213786213786
+(pid=2147) Lifetime: 29.78243512974052
+(pid=2149) Lifetime: 29.499
+(pid=2144) Lifetime: 30.279
+(pid=2144) Lifetime: 30.263736263736263
+Saved to: experiment/checkpoint_101/checkpoint-101
+Epoch: 100, Samples: 404000
+(pid=2148) Lifetime: 28.645
+(pid=2148) Lifetime: 28.635364635364635
+(pid=2147) Lifetime: 32.234
+(pid=2144) Lifetime: 29.96
+(pid=2149) Lifetime: 33.632
+Saved to: experiment/checkpoint_102/checkpoint-102
+Epoch: 101, Samples: 408000
+(pid=2148) Lifetime: 30.155
+(pid=2147) Lifetime: 31.201
+(pid=2149) Lifetime: 30.534
+(pid=2144) Lifetime: 29.349
+Saved to: experiment/checkpoint_103/checkpoint-103
+Epoch: 102, Samples: 412000
+(pid=2148) Lifetime: 32.33
+(pid=2147) Lifetime: 31.317
+(pid=2147) Lifetime: 31.2987012987013
+(pid=2149) Lifetime: 30.648
+(pid=2144) Lifetime: 30.042
+(pid=2144) Lifetime: 30.032967032967033
+(pid=2144) Lifetime: 30.01696606786427
+Saved to: experiment/checkpoint_104/checkpoint-104
+Epoch: 103, Samples: 416000
+(pid=2148) Lifetime: 29.834
+(pid=2148) Lifetime: 29.848151848151847
+(pid=2147) Lifetime: 31.234
+(pid=2144) Lifetime: 26.834
+(pid=2149) Lifetime: 29.224
+(pid=2149) Lifetime: 29.32867132867133
+(pid=2149) Lifetime: 29.332335329341316
+Saved to: experiment/checkpoint_105/checkpoint-105
+Epoch: 104, Samples: 420000
+(pid=2148) Lifetime: 29.362
+(pid=2147) Lifetime: 27.337
+(pid=2147) Lifetime: 27.325674325674324
+(pid=2147) Lifetime: 27.317365269461078
+(pid=2149) Lifetime: 27.68
+(pid=2149) Lifetime: 27.66933066933067
+(pid=2144) Lifetime: 27.574
+Saved to: experiment/checkpoint_106/checkpoint-106
+Epoch: 105, Samples: 424000
+(pid=2148) Lifetime: 31.276
+(pid=2147) Lifetime: 33.086
+(pid=2147) Lifetime: 33.06893106893107
+(pid=2144) Lifetime: 27.496
+(pid=2149) Lifetime: 30.856
+Saved to: experiment/checkpoint_107/checkpoint-107
+Epoch: 106, Samples: 428000
+(pid=2148) Lifetime: 28.614
+(pid=2147) Lifetime: 26.958
+(pid=2144) Lifetime: 30.826
+(pid=2149) Lifetime: 31.647
+(pid=2149) Lifetime: 31.632367632367632
+Saved to: experiment/checkpoint_108/checkpoint-108
+Epoch: 107, Samples: 432000
+(pid=2148) Lifetime: 30.018
+(pid=2148) Lifetime: 30.003996003996004
+(pid=2147) Lifetime: 25.46
+(pid=2144) Lifetime: 27.729
+(pid=2144) Lifetime: 27.71828171828172
+(pid=2149) Lifetime: 32.063
+(pid=2149) Lifetime: 32.04695304695305
+(pid=2149) Lifetime: 32.03493013972056
+(pid=2149) Lifetime: 32.044865403788634
+Saved to: experiment/checkpoint_109/checkpoint-109
+Epoch: 108, Samples: 436000
+(pid=2148) Lifetime: 32.292
+(pid=2148) Lifetime: 32.32567432567433
+(pid=2148) Lifetime: 32.31137724550898
+(pid=2147) Lifetime: 26.124
+(pid=2144) Lifetime: 27.368
+(pid=2144) Lifetime: 27.374625374625374
+(pid=2144) Lifetime: 27.36127744510978
+(pid=2149) Lifetime: 31.029
+(pid=2149) Lifetime: 31.00999000999001
+Saved to: experiment/checkpoint_110/checkpoint-110
+Epoch: 109, Samples: 440000
+(pid=2148) Lifetime: 28.765
+(pid=2147) Lifetime: 33.672
+(pid=2144) Lifetime: 31.185
+(pid=2149) Lifetime: 28.589
+Saved to: experiment/checkpoint_111/checkpoint-111
+Epoch: 110, Samples: 444000
+(pid=2148) Lifetime: 30.544
+(pid=2147) Lifetime: 29.365
+(pid=2147) Lifetime: 29.355644355644355
+(pid=2149) Lifetime: 28.789
+(pid=2144) Lifetime: 32.579
+Saved to: experiment/checkpoint_112/checkpoint-112
+Epoch: 111, Samples: 448000
+(pid=2148) Lifetime: 30.596
+(pid=2148) Lifetime: 30.59140859140859
+(pid=2147) Lifetime: 32.084
+(pid=2144) Lifetime: 25.547
+(pid=2149) Lifetime: 29.699
+(pid=2149) Lifetime: 29.683316683316683
+(pid=2149) Lifetime: 29.67065868263473
+Saved to: experiment/checkpoint_113/checkpoint-113
+Epoch: 112, Samples: 452000
+(pid=2148) Lifetime: 30.942
+(pid=2147) Lifetime: 31.248
+(pid=2144) Lifetime: 28.999
+(pid=2149) Lifetime: 31.798
+Saved to: experiment/checkpoint_114/checkpoint-114
+Epoch: 113, Samples: 456000
+(pid=2148) Lifetime: 28.531
+(pid=2147) Lifetime: 30.028
+(pid=2144) Lifetime: 29.091
+(pid=2149) Lifetime: 31.911
+Saved to: experiment/checkpoint_115/checkpoint-115
+Epoch: 114, Samples: 460000
+(pid=2148) Lifetime: 28.778
+(pid=2147) Lifetime: 30.317
+(pid=2147) Lifetime: 30.321678321678323
+Saved to: experiment/checkpoint_116/checkpoint-116
+Epoch: 115, Samples: 464000
+(pid=2144) Lifetime: 30.737
+(pid=2144) Lifetime: 30.717282717282718
+(pid=2149) Lifetime: 30.242
+(pid=2149) Lifetime: 30.254745254745256
+(pid=2148) Lifetime: 30.542
+Saved to: experiment/checkpoint_117/checkpoint-117
+Epoch: 116, Samples: 468000
+(pid=2147) Lifetime: 29.506
+(pid=2144) Lifetime: 33.108
+(pid=2144) Lifetime: 33.13986013986014
+(pid=2149) Lifetime: 30.145
+(pid=2148) Lifetime: 28.638
+(pid=2148) Lifetime: 28.64035964035964
+Saved to: experiment/checkpoint_118/checkpoint-118
+Epoch: 117, Samples: 472000
+(pid=2147) Lifetime: 30.737
+(pid=2147) Lifetime: 30.738261738261738
+(pid=2147) Lifetime: 30.741516966067863
+(pid=2144) Lifetime: 30.758
+(pid=2149) Lifetime: 30.559
+Saved to: experiment/checkpoint_119/checkpoint-119
+Epoch: 118, Samples: 476000
+(pid=2148) Lifetime: 28.898
+(pid=2147) Lifetime: 30.217
+(pid=2144) Lifetime: 28.064
+(pid=2144) Lifetime: 28.054945054945055
+(pid=2149) Lifetime: 29.451
+(pid=2149) Lifetime: 29.522477522477523
+(pid=2149) Lifetime: 29.508982035928145
+Saved to: experiment/checkpoint_120/checkpoint-120
+Epoch: 119, Samples: 480000
+(pid=2148) Lifetime: 30.81
+(pid=2148) Lifetime: 30.793206793206792
+(pid=2147) Lifetime: 26.045
+(pid=2144) Lifetime: 30.056
+(pid=2149) Lifetime: 31.556
+Saved to: experiment/checkpoint_121/checkpoint-121
+Epoch: 120, Samples: 484000
+(pid=2148) Lifetime: 25.526
+(pid=2147) Lifetime: 29.735
+(pid=2147) Lifetime: 29.72827172827173
+(pid=2147) Lifetime: 29.711576846307384
+(pid=2144) Lifetime: 32.829
+(pid=2149) Lifetime: 27.244
+(pid=2149) Lifetime: 27.243756243756245
+Saved to: experiment/checkpoint_122/checkpoint-122
+Epoch: 121, Samples: 488000
+(pid=2148) Lifetime: 31.844
+(pid=2147) Lifetime: 26.646
+(pid=2147) Lifetime: 26.662337662337663
+(pid=2149) Lifetime: 31.499
+(pid=2149) Lifetime: 31.560439560439562
+(pid=2144) Lifetime: 29.555
+Saved to: experiment/checkpoint_123/checkpoint-123
+Epoch: 122, Samples: 492000
+(pid=2148) Lifetime: 32.996
+(pid=2148) Lifetime: 32.97802197802198
+(pid=2148) Lifetime: 32.99500998003992
+(pid=2147) Lifetime: 30.512
+(pid=2149) Lifetime: 26.944
+(pid=2144) Lifetime: 32.9
+(pid=2144) Lifetime: 32.887112887112885
+(pid=2144) Lifetime: 32.880239520958085
+Saved to: experiment/checkpoint_124/checkpoint-124
+Epoch: 123, Samples: 496000
+(pid=2148) Lifetime: 30.337
+(pid=2147) Lifetime: 25.49
+(pid=2149) Lifetime: 28.606
+(pid=2144) Lifetime: 33.431
+Saved to: experiment/checkpoint_125/checkpoint-125
+Epoch: 124, Samples: 500000
+(pid=2148) Lifetime: 28.004
+(pid=2147) Lifetime: 35.86
+(pid=2149) Lifetime: 27.691
+(pid=2144) Lifetime: 31.868
+Saved to: experiment/checkpoint_126/checkpoint-126
+Epoch: 125, Samples: 504000
+(pid=2148) Lifetime: 33.2
+(pid=2148) Lifetime: 33.20879120879121
+(pid=2147) Lifetime: 31.512
+(pid=2149) Lifetime: 30.049
+(pid=2149) Lifetime: 30.04095904095904
+(pid=2149) Lifetime: 30.026946107784433
+(pid=2144) Lifetime: 28.173
+(pid=2144) Lifetime: 28.183816183816184
+Saved to: experiment/checkpoint_127/checkpoint-127
+Epoch: 126, Samples: 508000
+(pid=2148) Lifetime: 30.47
+(pid=2148) Lifetime: 30.773226773226774
+(pid=2148) Lifetime: 30.793413173652695
+(pid=2148) Lifetime: 30.78963110667996
+(pid=2148) Lifetime: 30.78187250996016
+(pid=2147) Lifetime: 25.816
+(pid=2149) Lifetime: 30.507
+(pid=2144) Lifetime: 31.659
+(pid=2144) Lifetime: 31.645354645354644
+(pid=2144) Lifetime: 31.659680638722556
+Saved to: experiment/checkpoint_128/checkpoint-128
+Epoch: 127, Samples: 512000
+(pid=2148) Lifetime: 32.023
+(pid=2147) Lifetime: 30.818
+(pid=2149) Lifetime: 32.806
+(pid=2144) Lifetime: 32.048
+Saved to: experiment/checkpoint_129/checkpoint-129
+Epoch: 128, Samples: 516000
+(pid=2148) Lifetime: 31.478
+(pid=2147) Lifetime: 27.684
+(pid=2149) Lifetime: 30.126
+(pid=2144) Lifetime: 30.278
+Saved to: experiment/checkpoint_130/checkpoint-130
+Epoch: 129, Samples: 520000
+(pid=2148) Lifetime: 28.849
+(pid=2147) Lifetime: 32.913
+(pid=2149) Lifetime: 31.255
+(pid=2144) Lifetime: 29.446
+Saved to: experiment/checkpoint_131/checkpoint-131
+Epoch: 130, Samples: 524000
+(pid=2148) Lifetime: 24.851
+(pid=2148) Lifetime: 24.84715284715285
+(pid=2148) Lifetime: 24.836327345309382
+(pid=2147) Lifetime: 29.534
+(pid=2149) Lifetime: 29.376
+(pid=2144) Lifetime: 26.908
+Saved to: experiment/checkpoint_132/checkpoint-132
+Epoch: 131, Samples: 528000
+(pid=2148) Lifetime: 30.265
+(pid=2147) Lifetime: 33.587
+(pid=2149) Lifetime: 30.189
+(pid=2144) Lifetime: 30.37
+Saved to: experiment/checkpoint_133/checkpoint-133
+Epoch: 132, Samples: 532000
+(pid=2148) Lifetime: 30.03
+(pid=2147) Lifetime: 32.756
+(pid=2147) Lifetime: 32.739260739260736
+(pid=2147) Lifetime: 32.72654690618762
+(pid=2149) Lifetime: 31.488
+(pid=2144) Lifetime: 31.907
+Saved to: experiment/checkpoint_134/checkpoint-134
+Epoch: 133, Samples: 536000
+(pid=2148) Lifetime: 32.601
+(pid=2148) Lifetime: 32.61038961038961
+(pid=2147) Lifetime: 26.446
+(pid=2149) Lifetime: 27.778
+(pid=2144) Lifetime: 27.096
+Saved to: experiment/checkpoint_135/checkpoint-135
+Epoch: 134, Samples: 540000
+(pid=2148) Lifetime: 28.742
+(pid=2147) Lifetime: 33.039
+(pid=2149) Lifetime: 29.251
+(pid=2144) Lifetime: 29.676
+Saved to: experiment/checkpoint_136/checkpoint-136
+Epoch: 135, Samples: 544000
+(pid=2148) Lifetime: 27.886
+(pid=2147) Lifetime: 31.508
+(pid=2147) Lifetime: 31.501498501498503
+(pid=2149) Lifetime: 34.24
+(pid=2149) Lifetime: 34.22477522477522
+(pid=2144) Lifetime: 27.152
+Saved to: experiment/checkpoint_137/checkpoint-137
+Epoch: 136, Samples: 548000
+(pid=2148) Lifetime: 30.572
+(pid=2148) Lifetime: 30.557442557442556
+(pid=2147) Lifetime: 27.807
+(pid=2147) Lifetime: 27.804195804195803
+(pid=2147) Lifetime: 27.790419161676645
+(pid=2149) Lifetime: 30.303
+(pid=2144) Lifetime: 28.891
+(pid=2144) Lifetime: 28.876123876123877
+Saved to: experiment/checkpoint_138/checkpoint-138
+Epoch: 137, Samples: 552000
+(pid=2148) Lifetime: 34.915
+(pid=2149) Lifetime: 29.021
+(pid=2147) Lifetime: 33.625
+(pid=2147) Lifetime: 33.612387612387614
+(pid=2144) Lifetime: 29.445
+Saved to: experiment/checkpoint_139/checkpoint-139
+Epoch: 138, Samples: 556000
+(pid=2148) Lifetime: 30.852
+(pid=2147) Lifetime: 29.709
+(pid=2149) Lifetime: 30.936
+(pid=2144) Lifetime: 28.913
+Saved to: experiment/checkpoint_140/checkpoint-140
+Epoch: 139, Samples: 560000
+(pid=2148) Lifetime: 29.78
+(pid=2148) Lifetime: 29.77122877122877
+(pid=2147) Lifetime: 27.802
+(pid=2149) Lifetime: 29.125
+(pid=2144) Lifetime: 32.887
+Saved to: experiment/checkpoint_141/checkpoint-141
+Epoch: 140, Samples: 564000
+(pid=2148) Lifetime: 32.113
+(pid=2148) Lifetime: 32.10589410589411
+(pid=2147) Lifetime: 33.17
+(pid=2149) Lifetime: 29.697
+(pid=2149) Lifetime: 29.7012987012987
+(pid=2144) Lifetime: 35.062
+Saved to: experiment/checkpoint_142/checkpoint-142
+Epoch: 141, Samples: 568000
+(pid=2148) Lifetime: 32.266
+(pid=2148) Lifetime: 32.282717282717286
+(pid=2147) Lifetime: 32.029
+(pid=2147) Lifetime: 32.01798201798202
+(pid=2149) Lifetime: 29.882
+(pid=2144) Lifetime: 26.156
+Saved to: experiment/checkpoint_143/checkpoint-143
+Epoch: 142, Samples: 572000
+(pid=2148) Lifetime: 29.392
+(pid=2148) Lifetime: 29.376623376623378
+(pid=2149) Lifetime: 28.701
+(pid=2147) Lifetime: 32.085
+(pid=2144) Lifetime: 29.569
+Saved to: experiment/checkpoint_144/checkpoint-144
+Epoch: 143, Samples: 576000
+(pid=2148) Lifetime: 34.672
+(pid=2148) Lifetime: 34.66233766233766
+(pid=2149) Lifetime: 28.52
+(pid=2147) Lifetime: 31.74
+(pid=2144) Lifetime: 33.2
+(pid=2144) Lifetime: 33.1948051948052
+Saved to: experiment/checkpoint_145/checkpoint-145
+Epoch: 144, Samples: 580000
+(pid=2148) Lifetime: 25.449
+(pid=2148) Lifetime: 25.46153846153846
+(pid=2147) Lifetime: 30.659
+(pid=2149) Lifetime: 33.338
+(pid=2144) Lifetime: 26.74
+Saved to: experiment/checkpoint_146/checkpoint-146
+Epoch: 145, Samples: 584000
+(pid=2148) Lifetime: 31.859
+(pid=2148) Lifetime: 31.84115884115884
+(pid=2147) Lifetime: 29.364
+(pid=2149) Lifetime: 32.285
+(pid=2144) Lifetime: 31.857
+Saved to: experiment/checkpoint_147/checkpoint-147
+Epoch: 146, Samples: 588000
+(pid=2148) Lifetime: 27.627
+(pid=2148) Lifetime: 27.614385614385615
+(pid=2147) Lifetime: 33.679
+(pid=2147) Lifetime: 33.65734265734266
+(pid=2147) Lifetime: 33.64071856287425
+(pid=2147) Lifetime: 33.63409770687936
+(pid=2149) Lifetime: 29.75
+(pid=2144) Lifetime: 32.708
+Saved to: experiment/checkpoint_148/checkpoint-148
+Epoch: 147, Samples: 592000
+(pid=2148) Lifetime: 35.358
+(pid=2148) Lifetime: 35.336663336663335
+(pid=2148) Lifetime: 35.553892215568865
+(pid=2148) Lifetime: 35.53639082751745
+(pid=2149) Lifetime: 26.52
+(pid=2147) Lifetime: 26.09
+(pid=2147) Lifetime: 26.076923076923077
+(pid=2147) Lifetime: 26.07185628742515
+Saved to: experiment/checkpoint_149/checkpoint-149
+Epoch: 148, Samples: 596000
+(pid=2144) Lifetime: 29.828
+(pid=2148) Lifetime: 29.473
+(pid=2148) Lifetime: 29.45954045954046
+Saved to: experiment/checkpoint_150/checkpoint-150
+Epoch: 149, Samples: 600000
+(pid=2149) Lifetime: 32.033
+(pid=2149) Lifetime: 32.03696303696304
+(pid=2147) Lifetime: 34.395
+(pid=2144) Lifetime: 28.437
+Saved to: experiment/checkpoint_151/checkpoint-151
+Epoch: 150, Samples: 604000
+(pid=2148) Lifetime: 28.583
+(pid=2147) Lifetime: 26.126
+(pid=2149) Lifetime: 31.371
+(pid=2149) Lifetime: 31.36063936063936
+(pid=2144) Lifetime: 32.547
+(pid=2144) Lifetime: 32.532467532467535
+Saved to: experiment/checkpoint_152/checkpoint-152
+Epoch: 151, Samples: 608000
+(pid=2148) Lifetime: 34.161
+(pid=2148) Lifetime: 34.141858141858144
+(pid=2147) Lifetime: 29.919
+(pid=2149) Lifetime: 29.235
+(pid=2149) Lifetime: 29.218781218781217
+(pid=2144) Lifetime: 29.202
+Saved to: experiment/checkpoint_153/checkpoint-153
+Epoch: 152, Samples: 612000
+(pid=2148) Lifetime: 29.725
+(pid=2148) Lifetime: 29.738261738261738
+(pid=2147) Lifetime: 33.938
+(pid=2147) Lifetime: 33.91808191808192
+(pid=2149) Lifetime: 27.343
+(pid=2144) Lifetime: 30.168
+Saved to: experiment/checkpoint_154/checkpoint-154
+Epoch: 153, Samples: 616000
+(pid=2148) Lifetime: 29.269
+(pid=2148) Lifetime: 29.254745254745256
+(pid=2147) Lifetime: 31.739
+(pid=2149) Lifetime: 32.528
+(pid=2149) Lifetime: 32.52447552447553
+(pid=2144) Lifetime: 28.351
+Saved to: experiment/checkpoint_155/checkpoint-155
+Epoch: 154, Samples: 620000
+(pid=2148) Lifetime: 27.749
+(pid=2148) Lifetime: 27.738261738261738
+(pid=2147) Lifetime: 31.396
+(pid=2149) Lifetime: 33.908
+(pid=2144) Lifetime: 29.704
+Saved to: experiment/checkpoint_156/checkpoint-156
+Epoch: 155, Samples: 624000
+(pid=2148) Lifetime: 29.409
+(pid=2147) Lifetime: 29.143
+(pid=2149) Lifetime: 33.952
+(pid=2144) Lifetime: 27.73
+Saved to: experiment/checkpoint_157/checkpoint-157
+Epoch: 156, Samples: 628000
+(pid=2148) Lifetime: 28.918
+(pid=2148) Lifetime: 28.91008991008991
+(pid=2148) Lifetime: 28.914171656686626
+(pid=2147) Lifetime: 35.279
+(pid=2144) Lifetime: 30.431
+(pid=2149) Lifetime: 33.501
+Saved to: experiment/checkpoint_158/checkpoint-158
+Epoch: 157, Samples: 632000
+(pid=2148) Lifetime: 32.61
+(pid=2147) Lifetime: 28.886
+(pid=2147) Lifetime: 28.874125874125873
+(pid=2149) Lifetime: 29.905
+(pid=2144) Lifetime: 29.725
+Saved to: experiment/checkpoint_159/checkpoint-159
+Epoch: 158, Samples: 636000
+(pid=2148) Lifetime: 28.475
+(pid=2147) Lifetime: 33.857
+(pid=2149) Lifetime: 30.703
+(pid=2149) Lifetime: 30.684315684315685
+(pid=2144) Lifetime: 34.384
+Saved to: experiment/checkpoint_160/checkpoint-160
+Epoch: 159, Samples: 640000
+(pid=2148) Lifetime: 33.432
+(pid=2149) Lifetime: 33.392
+(pid=2147) Lifetime: 34.342
+(pid=2147) Lifetime: 34.323676323676324
+(pid=2147) Lifetime: 34.4251497005988
+(pid=2144) Lifetime: 31.919
+Saved to: experiment/checkpoint_161/checkpoint-161
+Epoch: 160, Samples: 644000
+(pid=2148) Lifetime: 35.76
+(pid=2148) Lifetime: 35.743256743256744
+(pid=2144) Lifetime: 31.282
+(pid=2149) Lifetime: 31.758
+(pid=2147) Lifetime: 33.852
+Saved to: experiment/checkpoint_162/checkpoint-162
+Epoch: 161, Samples: 648000
+(pid=2148) Lifetime: 29.479
+(pid=2147) Lifetime: 28.407
+(pid=2147) Lifetime: 28.415584415584416
+(pid=2144) Lifetime: 27.966
+(pid=2144) Lifetime: 27.972027972027973
+(pid=2149) Lifetime: 33.332
+Saved to: experiment/checkpoint_163/checkpoint-163
+Epoch: 162, Samples: 652000
+(pid=2148) Lifetime: 31.333
+(pid=2144) Lifetime: 31.028
+(pid=2147) Lifetime: 29.829
+(pid=2149) Lifetime: 31.935
+Saved to: experiment/checkpoint_164/checkpoint-164
+Epoch: 163, Samples: 656000
+(pid=2148) Lifetime: 30.732
+(pid=2148) Lifetime: 30.743256743256744
+(pid=2148) Lifetime: 30.74750499001996
+(pid=2144) Lifetime: 31.127
+(pid=2147) Lifetime: 33.123
+(pid=2147) Lifetime: 33.11188811188811
+(pid=2149) Lifetime: 35.431
+Saved to: experiment/checkpoint_165/checkpoint-165
+Epoch: 164, Samples: 660000
+(pid=2148) Lifetime: 34.117
+(pid=2144) Lifetime: 25.362
+(pid=2149) Lifetime: 31.715
+(pid=2147) Lifetime: 35.595
+(pid=2147) Lifetime: 35.604395604395606
+Saved to: experiment/checkpoint_166/checkpoint-166
+Epoch: 165, Samples: 664000
+(pid=2148) Lifetime: 34.157
+(pid=2144) Lifetime: 32.688
+(pid=2144) Lifetime: 32.785214785214784
+(pid=2149) Lifetime: 30.986
+(pid=2147) Lifetime: 34.051
+Saved to: experiment/checkpoint_167/checkpoint-167
+Epoch: 166, Samples: 668000
+(pid=2148) Lifetime: 36.745
+(pid=2144) Lifetime: 30.35
+(pid=2144) Lifetime: 30.346653346653348
+(pid=2149) Lifetime: 26.853
+(pid=2149) Lifetime: 26.843156843156844
+(pid=2147) Lifetime: 33.918
+Saved to: experiment/checkpoint_168/checkpoint-168
+Epoch: 167, Samples: 672000
+(pid=2148) Lifetime: 33.294
+(pid=2148) Lifetime: 33.28971028971029
+(pid=2144) Lifetime: 31.39
+(pid=2144) Lifetime: 31.38061938061938
+(pid=2149) Lifetime: 32.666
+(pid=2147) Lifetime: 30.096
+Saved to: experiment/checkpoint_169/checkpoint-169
+Epoch: 168, Samples: 676000
+(pid=2148) Lifetime: 29.891
+(pid=2144) Lifetime: 30.065
+(pid=2149) Lifetime: 30.26
+(pid=2149) Lifetime: 30.24775224775225
+(pid=2149) Lifetime: 30.260479041916167
+(pid=2147) Lifetime: 30.718
+Saved to: experiment/checkpoint_170/checkpoint-170
+Epoch: 169, Samples: 680000
+(pid=2148) Lifetime: 37.525
+(pid=2144) Lifetime: 27.468
+(pid=2144) Lifetime: 27.45954045954046
+(pid=2149) Lifetime: 28.385
+(pid=2147) Lifetime: 33.781
+Saved to: experiment/checkpoint_171/checkpoint-171
+Epoch: 170, Samples: 684000
+(pid=2148) Lifetime: 31.573
+(pid=2144) Lifetime: 34.223
+(pid=2149) Lifetime: 30.719
+(pid=2147) Lifetime: 33.222
+Saved to: experiment/checkpoint_172/checkpoint-172
+Epoch: 171, Samples: 688000
+(pid=2148) Lifetime: 33.386
+(pid=2144) Lifetime: 29.418
+(pid=2144) Lifetime: 29.4025974025974
+(pid=2144) Lifetime: 29.39121756487026
+(pid=2149) Lifetime: 31.576
+(pid=2147) Lifetime: 35.664
+(pid=2147) Lifetime: 35.645354645354644
+Saved to: experiment/checkpoint_173/checkpoint-173
+Epoch: 172, Samples: 692000
+(pid=2148) Lifetime: 32.613
+(pid=2148) Lifetime: 32.63236763236763
+(pid=2149) Lifetime: 31.549
+(pid=2144) Lifetime: 33.459
+(pid=2144) Lifetime: 33.44555444555444
+(pid=2144) Lifetime: 33.427145708582835
+(pid=2147) Lifetime: 34.275
+Saved to: experiment/checkpoint_174/checkpoint-174
+Epoch: 173, Samples: 696000
+(pid=2148) Lifetime: 31.503
+(pid=2149) Lifetime: 33.37
+(pid=2144) Lifetime: 35.035
+(pid=2147) Lifetime: 31.024
+(pid=2147) Lifetime: 31.01098901098901
+Saved to: experiment/checkpoint_175/checkpoint-175
+Epoch: 174, Samples: 700000
+(pid=2148) Lifetime: 30.231
+(pid=2148) Lifetime: 30.22077922077922
+(pid=2149) Lifetime: 31.71
+(pid=2144) Lifetime: 34.436
+(pid=2147) Lifetime: 29.221
+(pid=2147) Lifetime: 29.214785214785216
+Saved to: experiment/checkpoint_176/checkpoint-176
+Epoch: 175, Samples: 704000
+(pid=2148) Lifetime: 36.975
+(pid=2148) Lifetime: 36.95404595404595
+(pid=2144) Lifetime: 28.671
+(pid=2149) Lifetime: 31.942
+(pid=2147) Lifetime: 31.639
+Saved to: experiment/checkpoint_177/checkpoint-177
+Epoch: 176, Samples: 708000
+(pid=2148) Lifetime: 34.311
+(pid=2144) Lifetime: 35.909
+(pid=2144) Lifetime: 35.926073926073926
+(pid=2149) Lifetime: 35.589
+(pid=2149) Lifetime: 35.57542457542458
+(pid=2149) Lifetime: 35.55988023952096
+(pid=2147) Lifetime: 33.371
+(pid=2147) Lifetime: 33.354645354645356
+(pid=2147) Lifetime: 33.340319361277444
+(pid=2147) Lifetime: 33.32502492522433
+(pid=2147) Lifetime: 33.33466135458168
+Saved to: experiment/checkpoint_178/checkpoint-178
+Epoch: 177, Samples: 712000
+(pid=2148) Lifetime: 37.577
+(pid=2144) Lifetime: 28.021
+(pid=2149) Lifetime: 33.029
+(pid=2149) Lifetime: 33.00799200799201
+(pid=2147) Lifetime: 30.288
+Saved to: experiment/checkpoint_179/checkpoint-179
+Epoch: 178, Samples: 716000
+(pid=2148) Lifetime: 29.609
+(pid=2144) Lifetime: 34.108
+(pid=2149) Lifetime: 30.402
+Saved to: experiment/checkpoint_180/checkpoint-180
+Epoch: 179, Samples: 720000
+(pid=2147) Lifetime: 29.203
+(pid=2148) Lifetime: 31.643
+Saved to: experiment/checkpoint_181/checkpoint-181
+Epoch: 180, Samples: 724000
+(pid=2144) Lifetime: 33.012
+(pid=2149) Lifetime: 36.983
+(pid=2149) Lifetime: 36.96103896103896
+(pid=2147) Lifetime: 29.042
+Saved to: experiment/checkpoint_182/checkpoint-182
+Epoch: 181, Samples: 728000
+(pid=2148) Lifetime: 28.44
+(pid=2144) Lifetime: 32.499
+(pid=2149) Lifetime: 31.515
+(pid=2147) Lifetime: 30.078
+Saved to: experiment/checkpoint_183/checkpoint-183
+Epoch: 182, Samples: 732000
+(pid=2148) Lifetime: 35.504
+(pid=2148) Lifetime: 35.485514485514486
+(pid=2148) Lifetime: 35.474051896207584
+(pid=2144) Lifetime: 32.552
+(pid=2149) Lifetime: 31.018
+(pid=2147) Lifetime: 33.249
+Saved to: experiment/checkpoint_184/checkpoint-184
+Epoch: 183, Samples: 736000
+(pid=2148) Lifetime: 36.115
+(pid=2144) Lifetime: 30.894
+(pid=2149) Lifetime: 29.204
+(pid=2147) Lifetime: 30.121
+Saved to: experiment/checkpoint_185/checkpoint-185
+Epoch: 184, Samples: 740000
+(pid=2148) Lifetime: 31.584
+(pid=2149) Lifetime: 25.622
+(pid=2149) Lifetime: 25.613386613386613
+(pid=2149) Lifetime: 25.602794411177644
+(pid=2149) Lifetime: 25.60319042871386
+(pid=2144) Lifetime: 32.619
+(pid=2147) Lifetime: 31.887
+Saved to: experiment/checkpoint_186/checkpoint-186
+Epoch: 185, Samples: 744000
+(pid=2148) Lifetime: 31.668
+(pid=2148) Lifetime: 31.655344655344656
+(pid=2149) Lifetime: 29.162
+(pid=2149) Lifetime: 29.15984015984016
+(pid=2144) Lifetime: 31.79
+(pid=2147) Lifetime: 30.801
+Saved to: experiment/checkpoint_187/checkpoint-187
+Epoch: 186, Samples: 748000
+(pid=2148) Lifetime: 35.838
+(pid=2148) Lifetime: 35.83916083916084
+(pid=2149) Lifetime: 34.566
+(pid=2144) Lifetime: 33.048
+(pid=2147) Lifetime: 33.325
+(pid=2147) Lifetime: 33.31468531468531
+(pid=2147) Lifetime: 33.300399201596804
+Saved to: experiment/checkpoint_188/checkpoint-188
+Epoch: 187, Samples: 752000
+(pid=2148) Lifetime: 32.646
+(pid=2148) Lifetime: 32.62737262737263
+(pid=2148) Lifetime: 32.612774451097806
+(pid=2149) Lifetime: 29.068
+(pid=2149) Lifetime: 29.054945054945055
+(pid=2149) Lifetime: 29.0499001996008
+(pid=2144) Lifetime: 33.507
+(pid=2147) Lifetime: 30.888
+(pid=2147) Lifetime: 30.907092907092906
+Saved to: experiment/checkpoint_189/checkpoint-189
+Epoch: 188, Samples: 756000
+(pid=2148) Lifetime: 31.715
+(pid=2144) Lifetime: 30.096
+(pid=2149) Lifetime: 33.433
+(pid=2147) Lifetime: 37.009
+(pid=2147) Lifetime: 37.07292707292707
+Saved to: experiment/checkpoint_190/checkpoint-190
+Epoch: 189, Samples: 760000
+(pid=2148) Lifetime: 30.82
+(pid=2144) Lifetime: 27.786
+(pid=2149) Lifetime: 30.789
+(pid=2147) Lifetime: 32.944
+(pid=2147) Lifetime: 32.92807192807193
+Saved to: experiment/checkpoint_191/checkpoint-191
+Epoch: 190, Samples: 764000
+(pid=2148) Lifetime: 31.149
+(pid=2148) Lifetime: 31.14985014985015
+(pid=2148) Lifetime: 31.156686626746506
+(pid=2144) Lifetime: 34.134
+(pid=2144) Lifetime: 34.115884115884114
+(pid=2144) Lifetime: 34.14870259481038
+(pid=2149) Lifetime: 33.887
+(pid=2147) Lifetime: 26.193
+Saved to: experiment/checkpoint_192/checkpoint-192
+Epoch: 191, Samples: 768000
+(pid=2148) Lifetime: 34.402
+(pid=2148) Lifetime: 34.38861138861139
+(pid=2144) Lifetime: 32.689
+(pid=2149) Lifetime: 27.827
+(pid=2147) Lifetime: 33.641
+(pid=2147) Lifetime: 33.62637362637363
+Saved to: experiment/checkpoint_193/checkpoint-193
+Epoch: 192, Samples: 772000
+(pid=2148) Lifetime: 31.263
+(pid=2144) Lifetime: 34.929
+(pid=2149) Lifetime: 34.562
+(pid=2147) Lifetime: 32.513
+(pid=2147) Lifetime: 32.5014985014985
+(pid=2147) Lifetime: 32.4940119760479
+(pid=2147) Lifetime: 32.48354935194417
+Saved to: experiment/checkpoint_194/checkpoint-194
+Epoch: 193, Samples: 776000
+(pid=2148) Lifetime: 30.625
+(pid=2148) Lifetime: 30.60939060939061
+(pid=2144) Lifetime: 33.497
+(pid=2149) Lifetime: 33.249
+(pid=2147) Lifetime: 29.912
+Saved to: experiment/checkpoint_195/checkpoint-195
+Epoch: 194, Samples: 780000
+(pid=2148) Lifetime: 34.503
+(pid=2148) Lifetime: 34.53746253746254
+(pid=2149) Lifetime: 34.373
+(pid=2144) Lifetime: 35.506
+(pid=2144) Lifetime: 35.49150849150849
+(pid=2147) Lifetime: 32.145
+Saved to: experiment/checkpoint_196/checkpoint-196
+Epoch: 195, Samples: 784000
+(pid=2148) Lifetime: 31.264
+(pid=2144) Lifetime: 27.815
+(pid=2149) Lifetime: 32.239
+(pid=2147) Lifetime: 31.752
+Saved to: experiment/checkpoint_197/checkpoint-197
+Epoch: 196, Samples: 788000
+(pid=2144) Lifetime: 35.27
+(pid=2144) Lifetime: 35.24475524475525
+(pid=2148) Lifetime: 34.774
+(pid=2148) Lifetime: 34.76823176823177
+(pid=2149) Lifetime: 31.958
+(pid=2147) Lifetime: 35.32
+Saved to: experiment/checkpoint_198/checkpoint-198
+Epoch: 197, Samples: 792000
+(pid=2148) Lifetime: 36.238
+(pid=2144) Lifetime: 31.52
+(pid=2149) Lifetime: 31.64
+(pid=2147) Lifetime: 30.912
+Saved to: experiment/checkpoint_199/checkpoint-199
+Epoch: 198, Samples: 796000
+(pid=2148) Lifetime: 29.592
+(pid=2144) Lifetime: 33.911
+(pid=2149) Lifetime: 33.031
+(pid=2149) Lifetime: 33.01398601398601
+(pid=2149) Lifetime: 33.00099800399202
+(pid=2147) Lifetime: 27.096
+Saved to: experiment/checkpoint_200/checkpoint-200
+Epoch: 199, Samples: 800000
+(pid=2148) Lifetime: 32.607
+(pid=2148) Lifetime: 32.59240759240759
+(pid=2148) Lifetime: 32.57684630738523
+(pid=2144) Lifetime: 35.423
+(pid=2149) Lifetime: 34.618
+(pid=2147) Lifetime: 36.372
+Saved to: experiment/checkpoint_201/checkpoint-201
+Epoch: 200, Samples: 804000
+(pid=2148) Lifetime: 34.855
+(pid=2148) Lifetime: 34.84315684315684
+(pid=2144) Lifetime: 34.76
+(pid=2149) Lifetime: 30.995
+(pid=2149) Lifetime: 30.984015984015983
+(pid=2147) Lifetime: 35.984
+Saved to: experiment/checkpoint_202/checkpoint-202
+Epoch: 201, Samples: 808000
+(pid=2148) Lifetime: 29.239
+(pid=2149) Lifetime: 28.324
+(pid=2144) Lifetime: 31.011
+(pid=2147) Lifetime: 30.017
+

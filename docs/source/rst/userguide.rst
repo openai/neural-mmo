@@ -27,10 +27,10 @@ The master branch will always contain the latest stable version. Each previous v
    git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
 
    #Run the setup script.
-   python scrips/setup.py
+   python scripts/setup.py
 
    #Headless install (e.g. for remote training)
-   python scrips/setup.py --NO_SERVER
+   python scripts/setup.py --NO_SERVER
 
    #Run the pretrained demo model to test the installation
    python Forge.py

@@ -21,19 +21,19 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
         return MagicMock()
 
-MOCK_MODULES = ['torch', 'torch.autograd', 'torch.nn', 'torch.distributions', 'torch.nn.parameter']
+MOCK_MODULES = ['ray', 'ray.rllib', 'ray.rllib.utils', 'ray.rllib.utils.spaces', 'ray.rllib.utils.spaces.repeated', 'ray.rllib.utils.spaces.flexdict', 'torch', 'torch.autograd', 'torch.nn', 'torch.distributions', 'torch.nn.parameter']
 autodoc_mock_imports = ["torch"]
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Neural MMO'
+project = 'Neural MMO v1.4'
 copyright = '2020, Joseph Suarez'
 author = 'Joseph Suarez'
 
 # The full version, including alpha/beta/rc tags
-release = '1.3'
+release = '1.4'
 
 # -- General configuration ---------------------------------------------------
 

@@ -8,9 +8,6 @@ make clean
 SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../forge/ -fMe --implicit-namespaces -o source/autodoc/
 SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../projekt/ -fMe --implicit-namespaces -o source/autodoc/
 
-#Manually specify top level title and structure
-cp source/rst/api.rst source/autodoc/
-
 #Strip bad headers
 for f in source/autodoc/*.rst; do\
    python postprocess.py $f

@@ -1,4 +1,7 @@
+.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
+
+|env|
 
 |icon| User API
 ###############
@@ -34,6 +37,5 @@ The doctree below contains automatically generated documentation for the entire 
 .. toctree::
    :maxdepth: 4
 
-   projekt
-   forge
-
+   ../autodoc/projekt
+   ../autodoc/forge

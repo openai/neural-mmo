@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Demos &mdash; Neural MMO v1.4 1.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="User API" href="api.html" />
+    <link rel="prev" title="Abstract" href="userguide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.4
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-installation"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-getting-started"> Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-the-io-api"> The IO API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Update Materials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-presentations"> Presentations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-update-slides"> Update Slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-additional-links"> Additional Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html"> User API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#icon-developer-api"> Developer API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ideology</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html#icon-failure-modes"> Failure Modes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Administrative</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html#icon-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html#ags-namesake"> Namesake</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO v1.4</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li> Demos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/rst/updates.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p><img alt="env" src="../_images/v1-4_splash.png" /></p>
+<div class="section" id="icon-demos">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Demos<a class="headerlink" href="#icon-demos" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://youtu.be/y_f77u9vlLQ">Neural MMO v1.4: A Massively Multiagent Environment for AI Research</a></p>
+<p><a class="reference external" href="https://youtu.be/DkHopV1RSxw">Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks</a></p>
+<p><a class="reference external" href="https://s3-us-west-2.amazonaws.com/openai-assets/neural-mmo/neural_mmo_client_demo.mp4">Neural MMO v1.0: A Massively Multiagent Game Environment</a></p>
+<p><a class="reference external" href="https://youtu.be/tCo8CPHVtUE">Neural MMO Pre-1.0</a></p>
+</div>
+<div class="section" id="icon-publications">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Publications<a class="headerlink" href="#icon-publications" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf">Neural MMO v1.3: A Massively Multiagent Game Environmentfor Training and Evaluating Neural Networks</a> (AAMAS, 2020)</p>
+<p><a class="reference external" href="https://arxiv.org/abs/2001.12004">Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks</a> (arXiv, 2020)</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1903.00784">Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents</a> (arXiv, 2019)</p>
+<p><a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">Neural MMO: A Massively Multiagent Game Environment</a> (OpenAI Blog, 2019)</p>
+</div>
+<div class="section" id="icon-presentations">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Presentations<a class="headerlink" href="#icon-presentations" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://underline.io/lecture/167-neural-mmo-v1.3-a-massively-multiagent-game-environment-for-training-and-evaluating-neural-networks">Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks</a> (AAMAS 2020)</p>
+<p><a class="reference external" href="https://docs.google.com/presentation/d/1GLrvm9ShqDz5whoC0_LUhu0uxnefTQksuE9qc1hXfjg/edit?usp=sharing">[Slides]</a> <a class="reference external" href="https://youtu.be/8iPTrzhB9Yk?t=312">Neural MMO v1.3 Pre-release</a> (OxAI VR &amp; AI Virtual Seminar in NeosVR)</p>
+</div>
+<div class="section" id="icon-update-slides">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Update Slides<a class="headerlink" href="#icon-update-slides" title="Permalink to this headline">¶</a></h1>
+<p>Discontinued in v1.4+ – better demos and patch notes have made these obsolete.</p>
+<p><a class="reference external" href="https://docs.google.com/presentation/d/1tqm_Do9ph-duqqAlx3r9lI5Nbfb9yUfNEtXk1Qo4zSw/edit?usp=sharing">Neural MMO v1.3</a></p>
+<p><a class="reference external" href="https://docs.google.com/presentation/d/1G9fjYS6j8vZMfzCbB90T6ZmdyixTrQJQwZbs8l9HBVo/edit?usp=sharing">Neural MMO v1.2</a></p>
+<p><a class="reference external" href="https://docs.google.com/presentation/d/1EXvluWaaReb2_s5L28dOWqyxf6-fvAbtMcBbaMr-Aow/edit?usp=sharing">Neural MMO v1.1</a></p>
+</div>
+<div class="section" id="icon-additional-links">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Additional Links<a class="headerlink" href="#icon-additional-links" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing">Ideology</a> (Two-pager, whiskey material)</p>
+<p><a class="reference external" href="https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing">Style Guide</a> (Website and figure theme)</p>
+</div>
+<div class="section" id="icon-patch-notes-version-history">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Patch Notes + Version History<a class="headerlink" href="#icon-patch-notes-version-history" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference external" href="https://github.com/openai/neural-mmo">[OpenAI]</a> repository only hosts v1.0. My personal <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">[Github]</a> hosts the latest version in <em>master</em> and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.</p>
+<dl class="simple">
+<dt><strong>v1.4:</strong> RLlib Support and Overlays</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Blade: Minor API changes have been made for compatibility with Gym and RLlib</dt><dd><ul>
+<li><p>Environment reset method now returns only obs instead of (obs, rewards, dones, infos)</p></li>
+<li><p>Environment obs and dones are now both dictionaries keyed by agent ids rather than agent game objects</p></li>
+<li><p>The IO modules from v1.3 now delegates batching to the user, e.g. RLlib. As such, several potential sources of error have been removed</p></li>
+<li><p>A bug allowing agents to use melee combat from farther away than intended has been fixed</p></li>
+<li><p>Minor range and damage balancing has been performed across all three combat styles</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Trinity: This module has been temporarily shelved</dt><dd><ul>
+<li><p>Core functionality has been ported to RLlib in collaboration with the developers</p></li>
+<li><p>We are working with the RLlib developers to add additional features essential to the long-term scalability of Neural MMO</p></li>
+<li><p>The Trinity/Ascend namespace will likely be revived in later infrastructure expansions. For now, the stability of RLlib makes delegating infrastructure pragmatic to enable us to focus on environment development, baseline models, and research</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Ethyr: Proper NN building blocks for complex worlds</dt><dd><ul>
+<li><p>Streamlined IO, memory, and attention modules for use in building PyTorch policies</p></li>
+<li><p>A high-quality pretrained baseline reproducible at the scale of a single desktop</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Embyr: Overlay shaders for visualizing learned policies</dt><dd><ul>
+<li><p>Pressing tilde now brings up an in-game console</p></li>
+<li><p>A help menu lists several shader options for visualizing exploration, attention, and learned value functions</p></li>
+<li><p>Shaders are rendered over the environment in real-time with partial transparency</p></li>
+<li><p>It is no longer necessary to start the client and server in a particular order</p></li>
+<li><p>The client no longer needs to be relaunched when the server restarts</p></li>
+<li><p>Agents now turn smoothly towards their direction of movement and targeted adversaries</p></li>
+<li><p>A graphical bug causing some agent attacks to render at ground level has been fixed</p></li>
+<li><p>Moved twistedserver.py into the main neural-mmo repository to better separate client and server</p></li>
+<li><p>Confirmed working on Ubuntu, MacOS, and WSL Linux with a Windows client</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>/projekt: Demo code fully rewritten for RLlib</dt><dd><ul>
+<li><p>The new demo is much shorter, approximately 400 lines of code</p></li>
+<li><p>State-of-the-art Transformer + LSTM based policy trained with distributed PPO</p></li>
+<li><p>Batched GPU evaluation for real-time rendering</p></li>
+<li><p>Trains in a few hours on a reasonably good desktop (5 rollout worker cores, 1 underutilized GTX 1080Ti GPU)</p></li>
+<li><p>To avoid introducing RLlib into the base environment as a hard dependency, we provide a small wrapper class over Realm using RLlib’s environment types</p></li>
+<li><p>Migrated from a pip requirements.txt to Poetry for streamlined dependency management</p></li>
+<li><p>We have migrated configuration to Google Fire for improved command line argument parsing</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>v1.3:</strong> Prebuilt IO Libraries</dt><dd><ul class="simple">
+<li><p>Blade: We have improved and streamlined the previously unstable and difficult to use IO libraries and migrated them here. The new API provides framework-agnostic IO.inputs and IO.outputs functions that handle all batching, normalization, serialization. Combined with the prebuilt IO networks in Ethyr, these enable seamless interactions with an otherwise complex structured underlying environment interface. We have made corresponding extensions to the OpenAI Gym API to support variable length actions and arguments, as well as to better signal episode boundaries (e.g. agent deaths). The Quickstart guide has been updated to cover this new functionality as part of the core API.</p></li>
+<li><p>Trinity: Official support for sharding environment observations across multiple remote servers; performance and logging improvements.</p></li>
+<li><p>Ethyr: A Pytorch library for dynamically assembling hierarchical attention networks for processing NMMO IO spaces. We provide a few default attention modules, but users are also free to use their own building blocks – our library can handle any well defined PyTorch network. We have taken care to separate this PyTorch specific functionality from the core IO libraries in Blade: users should find it straightforward to extend our approach to TensorFlow and other deep learning frameworks.</p></li>
+<li><p>Embyr: Agents now display additional information overhead, such as when they are immune to attacks or when they have been frozen in place.</p></li>
+<li><p>A reasonable 8-population baseline model trained on 12 (old) CPU cores in a day.</p></li>
+<li><p>Improved and expanded official documentation</p></li>
+<li><p>New tutorials covering distributed computation and the IO API</p></li>
+<li><p>The Discord has grown to 80+! Join for active development updates, the quickest support, and community discussions.</p></li>
+</ul>
+</dd>
+<dt><strong>v1.2:</strong> Unity Client and Skilling</dt><dd><ul class="simple">
+<li><p>Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.</p></li>
+<li><p>Trinity: Major new infrastructure API: Ascend – a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc… Ascend implements a single infrastructure “layer” object with all the same features and more. Trinity is still around and functions identically – it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.</p></li>
+<li><p>Ethyr: Streamlined and simplified IO api. Experience manager classes have been redesigned around v1.2 preferred environment placement, which places the environment server side and only communicates serialized observations and actions – not full rollouts. Expect further changes in the next update – IO is the single most technically complex aspect of this project and has the largest impact on performance.</p></li>
+<li><p>Embyr: Focus of this update. Full client rewrite in Unity3D with improved visuals, UI, and controls. The new client makes visualizing policies and tracking down bugs substantially easier. As the environment progresses towards a more complete MMO, development entirely in THREE.js was impractical. This update will also speed up environment development by easing integration into the front end.</p></li>
+<li><p>Baseline model is improved but still weak. This is largely a compute issue. I expect the final model to be relatively efficient to train, but I’m currently low on processing power for running parallel experiments. I’ll be regaining cluster access soon.</p></li>
+<li><p>Official documentation has been updated accordingly</p></li>
+<li><p>20+ people have joined the Discord. I’ve started posting frequent dev updates and thoughts here.</p></li>
+</ul>
+</dd>
+<dt><strong>v1.1:</strong> Infrastructure and API rework, official documentation and Discord</dt><dd><ul class="simple">
+<li><p>Blade: Merge Native and VecEnv environment API. New API is closer to Gym</p></li>
+<li><p>Trinity: featherweight CPU + GPU infrastructure built on top of Ray and engineered for maximum flexibility. The differences between Rapid style training, tiered MPI gradient aggregation, and even the v1.0 CPU infrastructure are all minor usage details under Trinity.</p></li>
+<li><p>Ethyr: New IO api makes it easy to interact with the complex input and output spaces of the environment. Also includes a killer rollout manager with inbuilt batching and serialization for communication across hardware.</p></li>
+<li><p>Official github.io documentation and API reference</p></li>
+<li><p>Official Discord</p></li>
+<li><p>End to end training source. There is also a pretrained model, but it’s just a weak single population foraging baseline around 2.5x of random reward. I’m currently between cluster access – once I get my hands on some better hardware, I’ll retune hyperparameters for the new demo model.</p></li>
+</ul>
+</dd>
+<dt><strong>v1.0:</strong> Initial OpenAI environment release</dt><dd><ul class="simple">
+<li><p>Blade: Base environment with foraging and combat</p></li>
+<li><p>Embyr: THREE.js web client</p></li>
+<li><p>Trinity: CPU based distributed training infrastructure</p></li>
+<li><p>Ethyr: Contrib library of research utilities</p></li>
+<li><p>Basic project-level documentation</p></li>
+<li><p>End to end training source and a pretrained model</p></li>
+</ul>
+</dd>
+<dt><strong>v0.x:</strong> Private development</dt><dd><ul class="simple">
+<li><p>Personal-scale side project and early prototyping</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="User API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="userguide.html" class="btn btn-neutral float-left" title="Abstract" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Joseph Suarez
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+      --link:       #ffffff;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--text);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--text);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+    }
+
+    h2 {
+      color: var(--accent);
+    }
+
+    h3 {
+      color: var(--accent);
+    }
+
+    h4 {
+      color: var(--accent);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: var(--title); /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--link);
+    }
+
+    a:visited {
+      color: var(--link);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

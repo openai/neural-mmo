@@ -1,0 +1,7 @@
+Tick: 1, Time: 4.522, Lifetime: 6.588, Best: 6.588
+Updates:  (Total) 1634  |  (Epoch) 1634
+Rollouts: (Total) 248   |  (Epoch) 248
+        Pantheon         God              Sword            Realm            
+run  :: 3.56%  (0.16s)   82.67% (3.67s)   59.68% (2.65s)   3.42%  (0.15s)
+wait :: 96.44% (4.28s)   0.00%  (0.00s)   0.00%  (0.00s)   0.00%  (0.00s)
+

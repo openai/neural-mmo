@@ -1,4 +1,7 @@
+.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
+
+|env|
 
 |icon| Foreword
 ###############

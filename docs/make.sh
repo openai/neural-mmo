@@ -9,14 +9,12 @@ SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc .
 SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../projekt/ -fMe --implicit-namespaces -o source/autodoc/
 
 #Manually specify top level title and structure
-cp source/public/api.rst source/autodoc/
+cp source/rst/api.rst source/autodoc/
 
 #Strip bad headers
 for f in source/autodoc/*.rst; do\
    python postprocess.py $f
 done
-
-cp ../README.rst source/overview.rst
 
 make html
 

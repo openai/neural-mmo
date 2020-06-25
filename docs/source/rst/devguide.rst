@@ -1,14 +1,14 @@
-.. |ags| image:: docs/source/resource/ags.png
+.. |icon| image:: /resource/icon/icon_pixel.png
 
-|ags| Foreword
-##############
+|icon| Foreword
+###############
 
 The formal User API is new as of v1.4. This means we've just gotten public functionality to the point where it's relatively stable and wont change too much from update to update. The internals are still moving fast and subject to constant refactoring and reworking. This up-front engineering cost is essential to the long-term success of the project and more or less makes it impossible to have a stable developer API for the time being.
 
 That said, we are working on stabilizing and exposing small sections of the API and do expect to have a reasonable developer guide at some point. Neural MMO is fully open source and in no way limited to experienced reinforcement learning researchers. We also need full-stack software engineers and game designers/programmers/technical artists, among others. The purpose of this section in its current form is to provide a starting point for those interested in contributing to the platform. If you think something is missing, let me know on Discord.
 
-|ags| Before You Start
-######################
+|icon| Before You Start
+#######################
 
 Neural MMO is open source by traditional measures -- good PRs get merged. In practice, more is required. Neural MMO is neither a pure research nor software engineering endeavor; long-term success requires that people from a variety of skill backgrounds to be able to meaningfully contribute. Here's how you can help:
 
@@ -26,8 +26,8 @@ Neural MMO is open source by traditional measures -- good PRs get merged. In pra
 
 **Other:** If you have other relevent skills and can improve a portion of this project, we welcome your help. Come chat on Discord about how you can get involved if you don't fit into one of the buckets above or come from a multidisciplinary background.
 
-|ags| Tech Stack
-################
+|icon| Tech Stack
+#################
 
 **High-Level:** The server is written in Python 3.7. The client is a Unity3D project written in C#. The client is not required for training and is only used for rendering visualizations. These two layers communicate with each other through a Twisted WebSocket server. The documentation is written in Sphinx.
 
@@ -39,8 +39,8 @@ As of v1.4, we use a slightly customized GoogleFire wrapper for environment and 
 
 **Documentation:** We use Sphinx to autogenerate documentation. The User API is created manually in docs/source/public. The Developer API is a dump of all doctrings using Sphinx Autodoc. The website template is defined in source/_templates and is a reskinned readthedocs.io theme.
 
-|ags| Versioning
-################
+|icon| Versioning
+#################
 
 We assume Python 3.7+ with the packages listed in the Poetry install, minus Pytorch/RLlib which are only required for the baseline models. Note that this means:
 
@@ -48,8 +48,8 @@ We assume Python 3.7+ with the packages listed in the Poetry install, minus Pyto
 
 2. No walrus := operator
 
-|ags| Style
-###########
+|icon| Style
+############
 
 Deviations from PEP:
 

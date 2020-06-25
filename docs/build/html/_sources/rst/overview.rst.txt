@@ -1,26 +1,25 @@
+.. |env| image:: /resource/image/v1-4_splash.png
 
-.. |env| image:: docs/source/resource/image/v1-4_splash.png
+.. |icon| image:: /resource/icon/icon_pixel.png
 
-.. |icon| image:: docs/source/resource/icon/icon_pixel.png
+.. |ags| image:: /resource/icon/rs/ags.png
+.. |air| image:: /resource/icon/rs/air.png
+.. |earth| image:: /resource/icon/rs/earth.png
+.. |fire| image:: /resource/icon/rs/fire.png
+.. |water| image:: /resource/icon/rs/water.png
 
-.. |ags| image:: docs/source/resource/icon/rs/ags.png
-.. |air| image:: docs/source/resource/icon/rs/air.png
-.. |earth| image:: docs/source/resource/icon/rs/earth.png
-.. |fire| image:: docs/source/resource/icon/rs/fire.png
-.. |water| image:: docs/source/resource/icon/rs/water.png
-
-.. |red| image:: docs/source/resource/icon/agent/red.png
-.. |blue| image:: docs/source/resource/icon/agent/blue.png
-.. |green| image:: docs/source/resource/icon/agent/green.png
-.. |fuchsia| image:: docs/source/resource/icon/agent/fuchsia.png
-.. |orange| image:: docs/source/resource/icon/agent/orange.png
-.. |mint| image:: docs/source/resource/icon/agent/mint.png
-.. |purple| image:: docs/source/resource/icon/agent/purple.png
-.. |spring| image:: docs/source/resource/icon/agent/spring.png
-.. |yellow| image:: docs/source/resource/icon/agent/yellow.png
-.. |cyan| image:: docs/source/resource/icon/agent/cyan.png
-.. |magenta| image:: docs/source/resource/icon/agent/magenta.png
-.. |sky| image:: docs/source/resource/icon/agent/sky.png
+.. |red| image:: /resource/icon/agent/red.png
+.. |blue| image:: /resource/icon/agent/blue.png
+.. |green| image:: /resource/icon/agent/green.png
+.. |fuchsia| image:: /resource/icon/agent/fuchsia.png
+.. |orange| image:: /resource/icon/agent/orange.png
+.. |mint| image:: /resource/icon/agent/mint.png
+.. |purple| image:: /resource/icon/agent/purple.png
+.. |spring| image:: /resource/icon/agent/spring.png
+.. |yellow| image:: /resource/icon/agent/yellow.png
+.. |cyan| image:: /resource/icon/agent/cyan.png
+.. |magenta| image:: /resource/icon/agent/magenta.png
+.. |sky| image:: /resource/icon/agent/sky.png
 
 |env|
 
@@ -46,7 +45,7 @@ Progress in multiagent intelligence research is fundamentally limited by the com
 |icon| Overview
 ##############
 
-.. image:: docs/source/resource/figure/web/overview.svg
+.. image:: /resource/figure/web/overview.svg
 
 **Agents that scale to the complexity of the real world** is one statement of artificial general intelligence. We propose a Dual Subproblem reformulation that cleanly segments this objective into concrete and approachable research and engineering tasks. The project is divided into two research and two engineering modules along these lines -- see `[Ideology] <https://jsuarez5341.github.io/neural-mmo/build/html/overview.html#ags-ideology>`_ if you find this sort of macro view interesting.
 
@@ -69,7 +68,7 @@ Engineering
 |fire| Embyr: 3D Unity game client for test-time visualization
 
 |icon| Quickstart
-################
+#################
 
 The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
 
@@ -92,7 +91,7 @@ The master branch will always contain the latest stable version. Each previous v
    ./client.sh
 
 |icon| Publications
-##################
+###################
 
 `Neural MMO v1.3: A Massively Multiagent Game Environmentfor Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS, 2020)
 
@@ -103,7 +102,7 @@ The master branch will always contain the latest stable version. Each previous v
 `Neural MMO: A Massively Multiagent Game Environment <https://github.com/jsuarez5341/neural-mmo>`_ (OpenAI Blog, 2019)
 
 |icon| Demos
-###########
+############
 
 `Neural MMO v1.4: A Massively Multiagent Environment for AI Research <https://youtu.be/y_f77u9vlLQ>`_
 
@@ -116,7 +115,7 @@ The master branch will always contain the latest stable version. Each previous v
 `Neural MMO Pre-1.0 <https://youtu.be/tCo8CPHVtUE>`_
 
 |icon| Patch Notes + Version History
-###################################
+####################################
 
 The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.0. My personal `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
 
@@ -192,39 +191,39 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
    - Personal-scale side project and early prototyping
 
 |icon| Rendering and Overlays
-############################
+#############################
 
 Embyr is the Neural MMO renderer. It is written in C# using Unity3D and functions much like an MMO game client: rather than directly simulating game logic, it renders the current game state from packets communicated by the Neural MMO server over a Twisted WebSocket. This design cuts out the overhead of running a bulky game engine during training and also enables us to keep the environment in pure Python for faster development. Embyr is maintained in a separate repository for historical reasons as well as because it is large and not required on remote servers during distributed training. Agents advance various foraging and combat skills by collecting food and water and engaging in fights with other agents:
 
-.. image:: docs/source/resource/image/v1-4_combat.png
+.. image:: /resource/image/v1-4_combat.png
 
 To view an agent's skill levels or follow it with the camera, simply click on it:
 
-.. image:: docs/source/resource/image/v1-4_ui.png
+.. image:: /resource/image/v1-4_ui.png
 
 The client ships with an in-game console (press tilde ~ to toggle) stocked with prebuilt overlays for visualizing various aspects of the learned policy.
 
-.. image:: docs/source/resource/figure/web/overlays.svg
+.. image:: /resource/figure/web/overlays.svg
 
 
 The counts overlay renders a heatmap of agent exploration in real time:
 
-.. image:: docs/source/resource/image/v1-4_counts.png
+.. image:: /resource/image/v1-4_counts.png
 
 The attention overlay renders egocentric heatmaps of each agent's attention weightings in real time:
 
-.. image:: docs/source/resource/image/v1-4_attention.png
+.. image:: /resource/image/v1-4_attention.png
 
 The values overlay renders a heatmap of the agent's learned value function in real time:
 
-.. image:: docs/source/resource/image/v1-4_values.png
+.. image:: /resource/image/v1-4_values.png
 
 The globalValues overlay hallucinates an agent on each cell and computes the value function for that agent with no other agents on the map and all resources present. This requires a forward pass for each of the ~3600 tiles in the environment. The overlay is precomputed once during server initialization (~30 seconds) and may be disabled in projekt/config.py for faster startup:
 
-.. image:: docs/source/resource/image/v1-4_globalValues.png
+.. image:: /resource/image/v1-4_globalValues.png
 
 |icon| Tutorials
-###############
+################
 
 Training from scratch
 ---------------------
@@ -237,7 +236,7 @@ Next, we will get familiar with the baseline parameters and train a model from s
 
 You can reduce batch size if you are running out of memory or disable CUDA if you don't have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores @3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:
 
-.. image:: docs/source/resource/figure/web/train.png
+.. image:: /resource/figure/web/train.png
 
 As a sanity check, your agents should have learned not to run into lava after a few epochs, around 20 average lifetime. The trained baseline models range with 30-40 average lifetime fully trained. However, individual agents may live much longer -- we have seen >10000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better -- the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.
 
@@ -254,11 +253,11 @@ Neural MMO resolves both of these problems out of the box. We have worked with t
 
 Additionally, we have implemented substantially general procedural generation code that automatically fits attentional PyTorch architectures to the given IO spaces. These will be subject to minor tweaks from update to update but should remain structurally stable from update to update. The high-level concept is to model observations of sets of entities, each of which is a set of attributes:
 
-.. image:: docs/source/resource/figure/web/header.svg
+.. image:: /resource/figure/web/header.svg
 
 Entity embeddings are created by attending over attributes, and the observation is flattened to a fixed-length embedding by attenting over entity embeddings. Actions are similarly defined by targeting entity embeddings with attention. The diagram below summarizes this process -- see the `[Neural MMO v1.3 white paper] <https://arxiv.org/abs/2001.12004>`_ for details
 
-.. image:: docs/source/resource/figure/web/io.svg
+.. image:: /resource/figure/web/io.svg
 
 Our Baseline models include an abstract *Base* model that instantiates our IO modules but defers the hidden network to subclasses:
 
@@ -324,14 +323,14 @@ Custom models work by defining new subnetworks and overriding the *hidden* metho
 You can write your own PyTorch models using the same template. Or, if you prefer, you can use our IO subnetworks directly, as is done in our *Base* class. Neural MMO's IO spaces themselves are framework agnostic, but if you want to train in e.g. TensorFlow, you will have to write analogous IO networks.
 
 |icon| Ideology
-##############
+###############
 
 The dual problem formulation mentioned in the Quickstart guide is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this `[Two Pager] <https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing>`_ for a more thorough overview of the project approach and objective.
 
 The discussion of failure modes below is mostly intended to dissuade skepticism, which thus far I've found correlates perfectly with lack of familiarity with MMOs. If you are very familiar with MMOs + current AI research and are still skeptical, please contact me on the Discord -- I'd love to hear your views.
 
 |icon| Failure Modes
--------------------
+--------------------
 
 Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.
 
@@ -349,22 +348,22 @@ The second problem is probably most familiar to researchers as exploration. Give
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 
-.. image:: docs/source/resource/image/rs/quests.png
+.. image:: /resource/image/rs/quests.png
   :alt: Quest Map
 `[Source] <https://www.reddit.com/user/Gamez_X>`_
 
 Actually, it's a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:
 
-.. image:: docs/source/resource/image/rs/skills.png
+.. image:: /resource/image/rs/skills.png
   :alt: Skills
 
-.. image:: docs/source/resource/image/rs/equipment.png
+.. image:: /resource/image/rs/equipment.png
   :alt: Equipment
 `[Source] <https://www.jagex.com/en-GB/>`_
 
 In a massive open world:
 
-.. image:: docs/source/resource/image/rs/map.png
+.. image:: /resource/image/rs/map.png
   :alt: GameMap
 `[Source] <https://www.jagex.com/en-GB/>`_
 
@@ -373,7 +372,7 @@ The most complex class of games considered to date is MOBAs (Massive Online Batt
 While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.
 
 |icon| Authorship, License, Disclaimer
-#####################################
+######################################
 
 I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
@@ -406,7 +405,7 @@ Open source contributors, listed by time since latest contribution. Discord hand
    - **@cehinson:** Mac build of the Unity3D client
 
 |icon| Assets
-############
+#############
 
 Some assets used in this project belong to `[Jagex] <https://www.jagex.com/en-GB/>`_, the creators of Runescape, such as
 

@@ -1,7 +1,7 @@
-.. |ags| image:: docs/source/resource/ags.png
+.. |icon| image:: /resource/icon/icon_pixel.png
 
-|ags| Developer API
-###################
+|icon| Developer API
+####################
 
 The doctree below contains automatically generated documentation for the entire project. This is not intended for typical users but is a useful reference for Neural MMO developers and contributors. Neural MMO is fully open source and in no way limited to experienced reinforcment learning researchers. We also need full-stack software engineers and game designers/programmers/technical artists, among others (see the Developer Guide). A few tips and gotchas:
 

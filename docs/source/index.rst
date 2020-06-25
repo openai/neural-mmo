@@ -5,13 +5,13 @@ Neural MMO v1.4
    :maxdepth: 8
    :caption: User Guide:
 
-   overview
+   rst/overview
 
 .. toctree::
    :maxdepth: 8
    :caption: Developer Guide:
 
-   devguide
+   rst/devguide
 
 .. toctree::
    :maxdepth: 8

@@ -1,7 +1,7 @@
-.. |ags| image:: ../docs/source/resource/ags.png
+.. |icon| image:: /resource/icon/icon_pixel.png
 
-|ags| User API
-##############
+|icon| User API
+###############
 
 High-Level Features:
 
@@ -20,8 +20,8 @@ API Reference:
    forge.blade.core.realm
    forge.blade.core.config
 
-|ags| Developer API
-###################
+|icon| Developer API
+####################
 
 The doctree below contains automatically generated documentation for the entire project. This is not intended for typical users but is a useful reference for Neural MMO developers and contributors. We are currently working on a more thorough Developer Guide. In the meanwhile, here are a few tips and gotchas for folks looking to get involved:
 

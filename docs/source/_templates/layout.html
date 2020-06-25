@@ -9,6 +9,7 @@
       --text:       #bbbbbb;
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
+      --link:       #ffffff;
     }
 
     body {
@@ -178,7 +179,7 @@
       font-size: 90%;
       line-height: normal;
       background: var(--foreground);
-      color: var(--accent);
+      color: var(--title);
       border-top: solid 6px var(--accent);
       padding: 6px;
       position: relative;
@@ -212,7 +213,7 @@
       margin-bottom: 6px;
       border-left: solid 0px var(--foreground);
       background: var(--background);
-      color: var(--title);
+      color: var(--text);
       }
 
     code, .rst-content tt, .rst-content code {
@@ -269,15 +270,15 @@
     }
 
     h2 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     h3 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     h4 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     ul {
@@ -293,15 +294,15 @@
 
     li {
       content: "• ";
-      color: cyan; /* or whatever color you prefer */
+      color: var(--title); /* or whatever color you prefer */
       }
 
     a:link {
-      color: var(--text);
+      color: var(--link);
     }
 
     a:visited {
-      color: var(--text);
+      color: var(--link);
     }
 
     a:hover {

@@ -83,15 +83,17 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-demos"> Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#icon-assets"> Assets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Guide:</span></p>
 <ul>
@@ -254,6 +256,7 @@
       --text:       #bbbbbb;
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
+      --link:       #ffffff;
     }
 
     body {
@@ -423,7 +426,7 @@
       font-size: 90%;
       line-height: normal;
       background: var(--foreground);
-      color: var(--accent);
+      color: var(--title);
       border-top: solid 6px var(--accent);
       padding: 6px;
       position: relative;
@@ -457,7 +460,7 @@
       margin-bottom: 6px;
       border-left: solid 0px var(--foreground);
       background: var(--background);
-      color: var(--title);
+      color: var(--text);
       }
 
     code, .rst-content tt, .rst-content code {
@@ -514,15 +517,15 @@
     }
 
     h2 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     h3 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     h4 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     ul {
@@ -538,15 +541,15 @@
 
     li {
       content: "• ";
-      color: cyan; /* or whatever color you prefer */
+      color: var(--title); /* or whatever color you prefer */
       }
 
     a:link {
-      color: var(--text);
+      color: var(--link);
     }
 
     a:visited {
-      color: var(--text);
+      color: var(--link);
     }
 
     a:hover {

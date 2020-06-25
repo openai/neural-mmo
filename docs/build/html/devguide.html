@@ -83,15 +83,17 @@
               <p class="caption"><span class="caption-text">User Guide:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-overview"> Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-quickstart"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-tutorials"> Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-quickstart"> Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-demos"> Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-tutorials"> Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-ideology"> Ideology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html#icon-assets"> Assets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-patch-notes-version-history"> Patch Notes + Version History</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-ideology"> Ideology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html#ags-assets"> Assets</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Guide:</span></p>
 <ul class="current">
@@ -170,12 +172,12 @@
            <div itemprop="articleBody">
             
   <div class="section" id="ags-foreword">
-<h1><img alt="ags" src="_images/ags1.png" /> Foreword<a class="headerlink" href="#ags-foreword" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="docs/source/resource/ags.png" /> Foreword<a class="headerlink" href="#ags-foreword" title="Permalink to this headline">¶</a></h1>
 <p>The formal User API is new as of v1.4. This means we’ve just gotten public functionality to the point where it’s relatively stable and wont change too much from update to update. The internals are still moving fast and subject to constant refactoring and reworking. This up-front engineering cost is essential to the long-term success of the project and more or less makes it impossible to have a stable developer API for the time being.</p>
 <p>That said, we are working on stabilizing and exposing small sections of the API and do expect to have a reasonable developer guide at some point. Neural MMO is fully open source and in no way limited to experienced reinforcement learning researchers. We also need full-stack software engineers and game designers/programmers/technical artists, among others. The purpose of this section in its current form is to provide a starting point for those interested in contributing to the platform. If you think something is missing, let me know on Discord.</p>
 </div>
 <div class="section" id="ags-before-you-start">
-<h1><img alt="ags" src="_images/ags1.png" /> Before You Start<a class="headerlink" href="#ags-before-you-start" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="docs/source/resource/ags.png" /> Before You Start<a class="headerlink" href="#ags-before-you-start" title="Permalink to this headline">¶</a></h1>
 <p>Neural MMO is open source by traditional measures – good PRs get merged. In practice, more is required. Neural MMO is neither a pure research nor software engineering endeavor; long-term success requires that people from a variety of skill backgrounds to be able to meaningfully contribute. Here’s how you can help:</p>
 <p><strong>Research Science:</strong> We need better baseline models and algorithms. The largest likely improvement will come from rewriting the baseline model to be fully attentional. It should be possible to express the input, hidden, and output networks as Transformer modules. I’ve done some preliminary work and have a decent Attentional baseline, but it needs some tuning and also doesn’t incorporate attention at every layer. Note that the above is intended for contributors who want to improve the base platform. We also support collaborations with researchers who want to use Neural MMO as a platform for more creative explorations into multiagent communication, population-based algorithms, emergent communication, etc. Come chat on Discord.</p>
 <p><strong>Research Engineering:</strong> The single hardest engineering challenge in Neural MMO lies between the model and the environment. Our IO processing allows us to modify the environment observation and action spaces without having to manually rewrite networks. Currently, we only support discrete and continuous observations and discrete fixed and variable length actions. We would like to expand support to include vector-values observations and actions, as well as continous values actions. We also need peripheral research utilities – better model versioning, versioning, and troubleshooting tools.</p>
@@ -186,7 +188,7 @@
 <p><strong>Other:</strong> If you have other relevent skills and can improve a portion of this project, we welcome your help. Come chat on Discord about how you can get involved if you don’t fit into one of the buckets above or come from a multidisciplinary background.</p>
 </div>
 <div class="section" id="ags-tech-stack">
-<h1><img alt="ags" src="_images/ags1.png" /> Tech Stack<a class="headerlink" href="#ags-tech-stack" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="docs/source/resource/ags.png" /> Tech Stack<a class="headerlink" href="#ags-tech-stack" title="Permalink to this headline">¶</a></h1>
 <p><strong>High-Level:</strong> The server is written in Python 3.7. The client is a Unity3D project written in C#. The client is not required for training and is only used for rendering visualizations. These two layers communicate with each other through a Twisted WebSocket server. The documentation is written in Sphinx.</p>
 <p><strong>Server:</strong> Broken into four modules as described in the User Guide. The biggest chunck of code is responsible for the environment game logic, as well as general purpose observation and action processing required for the OpenAI Gym derivative User API. The baselines are PyTorch models and our demo training code uses RLlib. The environment itself does not depend on PyTorch or RLlib (and shouldn’t), but they are more or less mandatory if you want an out-of-the-box experience. There isn’t a way around this with current frameworks. No frameworks currently support automatic input/output network definitions from complex Gym spaces. The best we could do is to replicate the current design in other frameworks (e.g. TensorFlow). That is too much work for me to do as an individual for too little benefit, but if you want to implement a TensorFlow port, go ahead and I’ll merge to forge/ethyr/tensorflow.</p>
 <p>As of v1.4, we use a slightly customized GoogleFire wrapper for environment and experiment configuration files (pure python with nice CLI support) and Poetry for dependency management and installlation</p>
@@ -194,7 +196,7 @@
 <p><strong>Documentation:</strong> We use Sphinx to autogenerate documentation. The User API is created manually in docs/source/public. The Developer API is a dump of all doctrings using Sphinx Autodoc. The website template is defined in source/_templates and is a reskinned readthedocs.io theme.</p>
 </div>
 <div class="section" id="ags-versioning">
-<h1><img alt="ags" src="_images/ags1.png" /> Versioning<a class="headerlink" href="#ags-versioning" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="docs/source/resource/ags.png" /> Versioning<a class="headerlink" href="#ags-versioning" title="Permalink to this headline">¶</a></h1>
 <p>We assume Python 3.7+ with the packages listed in the Poetry install, minus Pytorch/RLlib which are only required for the baseline models. Note that this means:</p>
 <ol class="arabic simple">
 <li><p>Dicts are assumed sorted by insertion order</p></li>
@@ -202,7 +204,7 @@
 </ol>
 </div>
 <div class="section" id="ags-style">
-<h1><img alt="ags" src="_images/ags1.png" /> Style<a class="headerlink" href="#ags-style" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="ags" src="docs/source/resource/ags.png" /> Style<a class="headerlink" href="#ags-style" title="Permalink to this headline">¶</a></h1>
 <p>Deviations from PEP:</p>
 <ol class="arabic simple">
 <li><p>3 space indents</p></li>
@@ -268,6 +270,7 @@
       --text:       #bbbbbb;
       --title:      #00bbbb;
       --monochrome: #bbbbbb;
+      --link:       #ffffff;
     }
 
     body {
@@ -437,7 +440,7 @@
       font-size: 90%;
       line-height: normal;
       background: var(--foreground);
-      color: var(--accent);
+      color: var(--title);
       border-top: solid 6px var(--accent);
       padding: 6px;
       position: relative;
@@ -471,7 +474,7 @@
       margin-bottom: 6px;
       border-left: solid 0px var(--foreground);
       background: var(--background);
-      color: var(--title);
+      color: var(--text);
       }
 
     code, .rst-content tt, .rst-content code {
@@ -528,15 +531,15 @@
     }
 
     h2 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     h3 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     h4 {
-      color: var(--title);
+      color: var(--accent);
     }
 
     ul {
@@ -552,15 +555,15 @@
 
     li {
       content: "• ";
-      color: cyan; /* or whatever color you prefer */
+      color: var(--title); /* or whatever color you prefer */
       }
 
     a:link {
-      color: var(--text);
+      color: var(--link);
     }
 
     a:visited {
-      color: var(--text);
+      color: var(--link);
     }
 
     a:hover {

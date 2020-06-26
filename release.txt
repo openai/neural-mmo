@@ -1,9 +1,0 @@
-- Debug LSTM models #These work, attention would be nice
-- Refactor starter code #Mostly set
-- Trim old code
-- Google fire config #Mostly set
-- Poetry install # Final checks
-- Write new tutorials/docs
-- Smooth videos and screenshots #Done
-- Create PDF #Canceled, need patch notes
-- Canonicalize step overlay params 

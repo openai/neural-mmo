@@ -1,6 +1,6 @@
 
-.. |env| image:: docs/source/resource/image/v1-4_splash.png
-.. |icon| image:: docs/source/resource/icon/icon_pixel.png
+.. |env| image:: resource/image/v1-4_splash.png
+.. |icon| image:: resource/icon/icon_pixel.png
 
 |env|
 

@@ -1,1 +1,2 @@
-sudo apt-get install git, vim, curl, python3-is-python, python3-distutils python3-venv gcc python3-dev python3-pip
+sudo apt-get install curl gcc python3-distutils python3-venv python3-dev python3-pip
+sudo apt-get install python-is-python3 #Rename python=python3 on 20.0

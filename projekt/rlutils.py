@@ -16,9 +16,16 @@ class SanePPOTrainer(ppo.PPOTrainer):
       print('Saved to: {}'.format(savedir))
       return savedir
 
-   def restore(self):
-      with open('experiment/path.txt') as f:
-         path = f.read().splitlines()[0]
+   def restore(self, model):
+      if model is None:
+         print('Training from scratch...')
+         return
+      if model == 'current':
+         with open('experiment/path.txt') as f:
+            path = f.read().splitlines()[0]
+      else:
+         path = 'experiment/{}/checkpoint'.format(model)
+
       print('Loading from: {}'.format(path))
       super().restore(path)
 

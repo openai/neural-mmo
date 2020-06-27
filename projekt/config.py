@@ -1,27 +1,31 @@
 from forge.blade import core
 
 class Config(core.Config):
-   #Program level args
+   #Computing the global value map takes ~20 seconds
+   #Disabling this will speed up server start
    COMPUTE_GLOBAL_VALUES = True
-   LOAD_MODEL            = True 
-   RENDER                = True
 
-   POPULATIONS_SHARE_POLICIES = True
-   NPOLICIES = 1 if POPULATIONS_SHARE_POLICIES else NPOP
+   #Model to load. None will train from scratch
+   #"current" will resume training custom models
+   MODEL   = 'recurrent'
+   RENDER  = True
 
-   NENT      = 256
-   NPOP      = 1
+   NENT    = 256 #Maximum population size
+   NPOP    = 1   #Number of populations
+   NMAPS   = 256 #Number of game maps
 
-   NREALM  = 256
-   NWORKER = 12
-   NMAPS   = 256
-
-   #Set this high enough that you can always attack
-   #Probably should sort by distance
-   N_AGENT_OBS = 15
-
+   #Model dimensions
    EMBED   = 64
    HIDDEN  = 64
+
+   #Agent vision range
    STIM    = 4
-   WINDOW  = 9
-   #WINDOW  = 15
+   WINDOW  = 9  #Reduced from 15
+
+   #Maximum number of observed agents
+   N_AGENT_OBS = 15
+
+   #Whether to share weights across policies
+   #The 1.4 baselines use one policy
+   POPULATIONS_SHARE_POLICIES = True
+   NPOLICIES = 1 if POPULATIONS_SHARE_POLICIES else NPOP

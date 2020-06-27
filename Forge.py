@@ -96,9 +96,7 @@ if __name__ == '__main__':
 
    #Print model size
    utils.modelSize(trainer.defaultModel())
-
-   if config.LOAD_MODEL:
-      trainer.restore()
+   trainer.restore(config.MODEL)
 
    if config.RENDER:
       env = createEnv({'config': config})

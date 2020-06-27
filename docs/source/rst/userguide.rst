@@ -33,7 +33,7 @@ The master branch will always contain the latest stable version. Each previous v
    bash scripts/setup.sh
 
    #Headless install (e.g. for remote training)
-   bash scripts/setup.sh --NO_SERVER
+   bash scripts/setup.sh --SERVER_ONLY
 
    #Run the pretrained demo model to test the installation
    python Forge.py

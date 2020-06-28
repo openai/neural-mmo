@@ -6,7 +6,7 @@ authors = ["Joseph Suarez"]
 license = "MIT License"
 
 [tool.poetry.dependencies]
-python = "3.7.*"
+python = "3.8.*"
 cloudpickle = "1.2.2"
 setproctitle = "1.1.10"
 service_identity = "18.1.0"
@@ -27,7 +27,6 @@ tabulate = "^0.8.7"
 opencv-python = "^4.2.0"
 dm-tree = "^0.1.5"
 lz4 = "^3.1.0"
-ray = {path = "scripts/ray-0.9.0.dev0-cp37-cp37m-manylinux1_x86_64.whl"}
 
 [tool.poetry.dev-dependencies]
 

@@ -16,7 +16,7 @@ fi
 echo "Installing Poetry to manage dependencies..."
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 source ~/.poetry/env
-#poetry config virtualenvs.create false
+poetry config virtualenvs.create false
 
 echo "Installing dependencies with Poetry..."
 poetry install

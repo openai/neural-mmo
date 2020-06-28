@@ -1,6 +1,5 @@
-echo "Running Neural MMO setup"
-echo "This may take a few minutes..."
-echo "If you are on a VM, install basic utilities first (curl, python, git)"
+echo "Neural MMO setup; assumes Anaconda Python 3.7 and gcc"
+conda install pip
 
 if [[ $1 == "--SERVER_ONLY" ]]; then 
    echo "You have chosen not to install the graphical rendering client"
@@ -13,13 +12,6 @@ else
    exit 1
 fi
 
-#echo "Installing Poetry to manage dependencies..."
-#curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-#source ~/.poetry/env
-#poetry config virtualenvs.create false
-
-#echo "Installing dependencies with Poetry..."
-#poetry install
-
+#Install python packages
 pip install -r scripts/requirements.txt
 pip install -U scripts/ray-0.9.0.dev0-cp37-cp37m-manylinux1_x86_64.whl

@@ -27,6 +27,7 @@ tabulate = "^0.8.7"
 opencv-python = "^4.2.0"
 dm-tree = "^0.1.5"
 lz4 = "^3.1.0"
+ray = {path = "scripts/ray-0.9.0.dev0-cp38-cp38-manylinux1_x86_64.whl"}
 
 [tool.poetry.dev-dependencies]
 

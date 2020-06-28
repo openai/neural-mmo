@@ -26,13 +26,10 @@ The master branch will always contain the latest stable version. Each previous v
    #Download the Neural MMO environment
    git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
 
-   #If you are on a new container or are missing basic dependencies
-   bash scripts/vm.sh
-
-   #Run the setup script.
+   #Install Anaconda Python 3.7 and gcc before running the setup script
    bash scripts/setup.sh
 
-   #Headless install (e.g. for remote training)
+   #Optionally, you can exclude the client (e.g. for remote training)
    bash scripts/setup.sh --SERVER_ONLY
 
    #Run the pretrained demo model to test the installation

@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Demos" href="updates.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO v1.4
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Neural MMO v1.4
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -131,6 +133,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -169,7 +172,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li> Abstract</li>
     
@@ -202,14 +205,11 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Download the Neural MMO environment</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
 
-<span class="c1">#If you are on a new container or are missing basic dependencies</span>
-<span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">vm</span><span class="o">.</span><span class="n">sh</span>
-
-<span class="c1">#Run the setup script.</span>
+<span class="c1">#Install Anaconda Python 3.7 and gcc before running the setup script</span>
 <span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
 
-<span class="c1">#Headless install (e.g. for remote training)</span>
-<span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">NO_SERVER</span>
+<span class="c1">#Optionally, you can exclude the client (e.g. for remote training)</span>
+<span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">SERVER_ONLY</span>
 
 <span class="c1">#Run the pretrained demo model to test the installation</span>
 <span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span>
@@ -248,7 +248,7 @@
 <div class="section" id="icon-training-from-scratch">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Training from scratch<a class="headerlink" href="#icon-training-from-scratch" title="Permalink to this headline">¶</a></h1>
 <p>Next, we will get familiar with the baseline parameters and train a model from scratch. Open up projekt/config.py, which contains all of the training configuration options. You can either edit defaults here or override individual parameters using command line arguments. To train a baseline, simply run:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">LOAD_MODEL</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">--</span><span class="n">RENDER</span><span class="o">=</span><span class="bp">False</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">LOAD_MODEL</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">--</span><span class="n">RENDER</span><span class="o">=</span><span class="kc">False</span>
 </pre></div>
 </div>
 <p>You can reduce batch size if you are running out of memory or disable CUDA if you don’t have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores &#64;3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:</p>
@@ -291,10 +291,10 @@
             <span class="n">attributes</span><span class="o">=</span><span class="n">policy</span><span class="o">.</span><span class="n">Attention</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">valueF</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">HIDDEN</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-   <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Implement this method in a subclass&#39;</span><span class="p">)</span>
 
-   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="n">entityLookup</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
       <span class="n">hidden</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">(</span><span class="n">entityLookup</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">lens</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">value</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valueF</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -316,7 +316,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">proj</span>   <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">attend</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">Attention</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
 
-   <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lens</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="c1">#Attentional agent embedding</span>
       <span class="n">agents</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attend</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="n">Stimulus</span><span class="o">.</span><span class="n">Entity</span><span class="p">])</span>
 
@@ -361,11 +361,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -376,7 +384,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

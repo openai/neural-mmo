@@ -153,8 +153,8 @@ for i, seed in enumerate(seeds):
       pass
    terrain = grid(sz, sz, scale=scale, seed=seed)
    tiles = material(terrain, tex, sz, sz)
-   fractal(terrain, path+'fractal.png')
-   render(tiles, path+'map.png')
+   #fractal(terrain, path+'fractal.png')
+   #render(tiles, path+'map.png')
    index(tiles, path)
 
 

@@ -13,10 +13,13 @@ else
    exit 1
 fi
 
-echo "Installing Poetry to manage dependencies..."
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-source ~/.poetry/env
-poetry config virtualenvs.create false
+#echo "Installing Poetry to manage dependencies..."
+#curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+#source ~/.poetry/env
+#poetry config virtualenvs.create false
 
-echo "Installing dependencies with Poetry..."
-poetry install
+#echo "Installing dependencies with Poetry..."
+#poetry install
+
+pip install -r scripts/requirements.txt
+pip install -U scripts/ray-0.9.0.dev0-cp37-cp37m-manylinux1_x86_64.whl

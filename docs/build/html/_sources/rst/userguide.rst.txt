@@ -27,13 +27,14 @@ The master branch will always contain the latest stable version. Each previous v
    git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
 
    #Install Anaconda Python 3.7 and gcc before running the setup script
-   bash scripts/setup.sh
-
    #Optionally, you can exclude the client (e.g. for remote training)
+   bash scripts/setup.sh
    bash scripts/setup.sh --SERVER_ONLY
 
    #Run the pretrained demo model to test the installation
+   #You can run without GPU if you don't have CUDA, but expect low fps
    python Forge.py
+   CUDA_VISIBLE_DEVICES="" python Forge.py
 
    #Open the client in a separate terminal
    #Server precomputations take ~30 seconds before connecting

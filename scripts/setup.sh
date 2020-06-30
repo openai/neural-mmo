@@ -14,4 +14,10 @@ fi
 
 #Install python packages
 pip install -r scripts/requirements.txt
-pip install -U scripts/ray-0.9.0.dev0-cp37-cp37m-manylinux1_x86_64.whl
+
+#Install macOS or Linux specific wheel
+if [[ "$OSTYPE" == "darwin"* ]]; then
+   pip install -U scripts/ray-0.9.0.dev0-cp37-cp37m-macosx_10_13_intel.whl
+else
+   pip install -U scripts/ray-0.9.0.dev0-cp37-cp37m-manylinux1_x86_64.whl
+fi

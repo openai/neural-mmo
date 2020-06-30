@@ -189,14 +189,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p><img alt="env" src="resource/image/v1-4_splash.png" /></p>
+  <p><img alt="env" src="../_images/v1-4_splash.png" /></p>
 <div class="section" id="icon-abstract">
-<h1><img alt="icon" src="resource/icon/icon_pixel.png" /> Abstract<a class="headerlink" href="#icon-abstract" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Abstract<a class="headerlink" href="#icon-abstract" title="Permalink to this headline">¶</a></h1>
 <p>The dual problem formulation mentioned in the Quickstart guide is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this <a class="reference external" href="https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing">[Two Pager]</a> for a more thorough overview of the project approach and objective.</p>
 <p>The discussion of failure modes below is mostly intended to dissuade skepticism, which thus far I’ve found correlates perfectly with lack of familiarity with MMOs. If you are very familiar with MMOs + current AI research and are still skeptical, please contact me on the Discord – I’d love to hear your views.</p>
 </div>
 <div class="section" id="icon-failure-modes">
-<h1><img alt="icon" src="resource/icon/icon_pixel.png" /> Failure Modes<a class="headerlink" href="#icon-failure-modes" title="Permalink to this headline">¶</a></h1>
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Failure Modes<a class="headerlink" href="#icon-failure-modes" title="Permalink to this headline">¶</a></h1>
 <p>Evaluation can be somewhat difficult in our setting but is not a major blocker. For smaller experiments, we find population size and resource utilization to be reasonable metrics of success. For larger experiments with sufficient domain randomization, Tournaments (as described in the accompanying paper) allow for cross validation of approaches.</p>
 <dl class="simple">
 <dt>We are currently aware of three failure cases for the project:</dt><dd><ul class="simple">
@@ -216,14 +216,14 @@
 </dd>
 </dl>
 <p>The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:</p>
-<img alt="Quest Map" src="resource/image/rs/quests.png" />
+<img alt="Quest Map" src="../_images/quests.png" />
 <p><a class="reference external" href="https://www.reddit.com/user/Gamez_X">[Source]</a></p>
 <p>Actually, it’s a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:</p>
-<img alt="Skills" src="resource/image/rs/skills.png" />
-<img alt="Equipment" src="resource/image/rs/equipment.png" />
+<img alt="Skills" src="../_images/skills.png" />
+<img alt="Equipment" src="../_images/equipment.png" />
 <p><a class="reference external" href="https://www.jagex.com/en-GB/">[Source]</a></p>
 <p>In a massive open world:</p>
-<img alt="GameMap" src="resource/image/rs/map.png" />
+<img alt="GameMap" src="../_images/map.png" />
 <p><a class="reference external" href="https://www.jagex.com/en-GB/">[Source]</a></p>
 <p>The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy–especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.</p>
 <p>While our environment is nowhere near the level of complexity of a real MMO yet, it does contain key properties of persistence, population scale, and open-endedness. As agents begin to reach the ceiling of the current environment, we plan on continuing development to raise the ceiling.</p>

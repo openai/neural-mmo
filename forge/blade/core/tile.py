@@ -16,8 +16,9 @@ class Tile(StimHook):
       self.ents = {}
       self.state = mat()
       self.capacity = self.mat.capacity
-      self.counts = np.zeros(nCounts)
       self.tex = tex
+
+      self.counts = [0 for _ in range(config.NPOP)]
 
    @property
    def serial(self):

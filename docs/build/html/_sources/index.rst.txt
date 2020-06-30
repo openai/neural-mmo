@@ -1,14 +1,38 @@
-Neural MMO v1.3
-###############
+Index
+#####
 
 .. toctree::
    :maxdepth: 8
-   :caption: User Guide:
+   :caption: User Guide
 
-   overview
+   rst/userguide
 
 .. toctree::
    :maxdepth: 8
-   :caption: API Reference:
+   :caption: Update Materials
 
-   autodoc/modules
+   rst/updates
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Documentation
+
+   rst/api
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Developer Guide
+
+   rst/devguide
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Ideology
+
+   rst/ideology
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Administrative
+
+   rst/administrative

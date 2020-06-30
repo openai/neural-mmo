@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>forge.ethyr.torch.loss module &mdash; Neural MMO 1.3 documentation</title>
+  <title>forge.ethyr.torch.loss module &mdash; Neural MMO v1.4 1.4 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="forge.ethyr.torch.model module" href="forge.ethyr.torch.model.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Neural MMO v1.4
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -80,42 +82,66 @@
               
             
             
-              <p class="caption"><span class="caption-text">User Guide:</span></p>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html"> Welcome to the Platform!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-overview"> Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-quickstart"> Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-tutorials"> Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-namesake"> Namesake</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-version-history"> Version History</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-ideology"> Ideology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-authorship-license-disclaimer"> Authorship, License, Disclaimer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-assets"> Assets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html#ags-additional-resources"> Additional Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-installation"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-overview"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-getting-started"> Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-training-from-scratch"> Training from scratch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-the-io-api"> The IO API</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference:</span></p>
+<p class="caption"><span class="caption-text">Update Materials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html"> Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-presentations"> Presentations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-update-slides"> Update Slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-additional-links"> Additional Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="forge.html">forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="forge.blade.html">forge.blade package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forge.embyr.html">forge.embyr namespace</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="forge.ethyr.html">forge.ethyr package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="forge.ethyr.experience.html">forge.ethyr.experience package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="forge.ethyr.torch.html">forge.ethyr.torch package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="forge.neural-mmo-client.html">forge.neural-mmo-client namespace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forge.trinity.html">forge.trinity package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="projekt.html">projekt package</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-before-you-start"> Before You Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-versioning"> Versioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-style"> Style</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ideology</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/ideology.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/ideology.html#icon-failure-modes"> Failure Modes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Administrative</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html#icon-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html#ags-namesake"> Namesake</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -125,7 +151,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO</a>
+          <a href="../index.html">Neural MMO v1.4</a>
         
       </nav>
 
@@ -154,9 +180,9 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">API Reference</a> &raquo;</li>
+          <li><a href="../rst/api.html"> User API</a> &raquo;</li>
         
           <li><a href="forge.html">forge package</a> &raquo;</li>
         
@@ -312,11 +338,19 @@ entLoss : Entropy loss</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Joseph Suarez
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -327,7 +361,6 @@ entLoss : Entropy loss</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -341,19 +374,33 @@ entLoss : Entropy loss</p>
     
 
   <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+      --link:       #ffffff;
+    }
+
+    body {
+      color: var(--text);
+    }
+
     /* Sidebar header (and topbar for mobile) */
     .wy-side-nav-search, .wy-nav-top {
-      background: #000e0e;
+      background: var(--background);
     }
     /* Sidebar */
     .wy-nav-side {
-      background: #001818;
+      background: var(--foreground);
     }
     .wy-nav-content {
-      background: #000e0e;
+      background: var(--background);
     }
     .wy-nav-content-wrap {
-      background: #001818;
+      background: var(--foreground);
     }
 
     .wy-table-responsive table td, .wy-table-responsive table th {
@@ -372,7 +419,7 @@ entLoss : Entropy loss</p>
     }
 
     .row-even {
-      background: #00ffff;
+      background: var(--accent);
     }
 
     /* Top line */
@@ -387,26 +434,26 @@ entLoss : Entropy loss</p>
     /*Don't even think about changing this.
     Spent 3 hours pulling this from an rtd bitbucket PR*/ 
     wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
-      background-color: #001818;
+      background-color: var(--foreground);
     }
 
     wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
-      background-color: #000e0e;
+      background-color: var(--background);
     }
 
     /* Outer table */
     .wy-table-bordered-all, .rst-content table.docutils {
       border: 1px solid #0f0;
-        border-top-color: #00ffff;
+        border-top-color: var(--accent);
         border-top-style: solid;
         border-top-width: 1px;
-        border-right-color: #00ffff;
+        border-right-color: var(--accent);
         border-right-style: solid;
         border-right-width: 1px;
-        border-bottom-color: #00ffff;
+        border-bottom-color: var(--accent);
         border-bottom-style: solid;
         border-bottom-width: 1px;
-        border-left-color: #00ffff;
+        border-left-color: var(--accent);
         border-left-style: solid;
         border-left-width: 1px;
         border-image-outset: 0;
@@ -437,11 +484,11 @@ entLoss : Entropy loss</p>
 
     /* ****** Start selection for left sidebar ****** */
     .wy-menu-vertical li.current{
-      background: #001818;
+      background: var(--foreground);
     }
 
     .wy-menu-vertical li.toctree-l1.current > a{
-      background: #001818;
+      background: var(--foreground);
       border-top-color: lime;
       border-top-style: solid;
       border-top-width: 3px;
@@ -452,16 +499,16 @@ entLoss : Entropy loss</p>
     }
 
     .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
-      border-top-color: #00ffff;
+      border-top-color: var(--accent);
       border-top-style: solid;
       border-top-width: 1px;
-      border-right-color: #00ffff;
+      border-right-color: var(--accent);
       border-right-style: solid;
       border-right-width: 1px;
-      border-bottom-color: #00ffff;
+      border-bottom-color: var(--accent);
       border-bottom-style: solid;
       border-bottom-width: 1px;
-      border-left-color: #00ffff;
+      border-left-color: var(--accent);
       border-left-style: solid;
       border-left-width: 1px;
       border-image-outset: 0;
@@ -473,24 +520,24 @@ entLoss : Entropy loss</p>
 
     .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
       display: block;
-      background: #00bbbb;
+      background: var(--accent);
       padding: .4045em 4.045em;
     }
 
     .wy-menu-vertical li.toctree-l2.current > a {
-      background: #001818;
+      background: var(--foreground);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
       display: block;
-      background: #001818;
+      background: var(--foreground);
       padding: .4045em 5.663em;
     }
 
     .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
       display: block;
-      background: #001818;
+      background: var(--foreground);
       padding: .4045em 4.045em;
     }
 
@@ -503,46 +550,46 @@ entLoss : Entropy loss</p>
       margin-top: 6px;
       font-size: 90%;
       line-height: normal;
-      background: #001818;
-      color: #00bbbb;
-      border-top: solid 6px #005050;
+      background: var(--foreground);
+      color: var(--text);
+      border-top: solid 6px var(--accent);
       padding: 6px;
       position: relative;
     }
 
     /* ****** Start Code Blocks ****** */
     .highlight-python {
-      background: #00ffff;
-      border: #00ffff;
+      background: var(--accent);
+      border: var(--accent);
     }
 
     .highlight {
-      background: #001818;
-      color: #00bbbb;
+      background: var(--foreground);
+      color: var(--accent);
     }
     /* ****** End Code Blocks ****** */
 
     /* Buttons */
     .btn-neutral {
-      background-color: #005050 !important;
-      color: #00ffff !important;
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     /* Buttons */
     .btn-neutral:visited {
-      background-color: #005050 !important;
-      color: #00ffff !important;
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
     }
 
     .rst-content dl:not(.docutils) dl dt {
       margin-bottom: 6px;
-      border-left: solid 0px #00000;
-      background: #001818;
-      color: #00bbbb;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--text);
       }
 
     code, .rst-content tt, .rst-content code {
-      background-color: #001818;
+      background-color: var(--foreground);
       border-top-width: 0px;
       border-bottom-width: 0px;
       border-left-width: 0px;
@@ -550,19 +597,19 @@ entLoss : Entropy loss</p>
     }
 
     .rst-content dl:not(.docutils) dl dt {
-      border-left-color: #001818;
+      border-left-color: var(--background);
     }
 
     .rst-content tt, .rst-content tt, .rst-content code {
-      color: #00bbbb;
+      color: var(--title);
     }
 
     .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
-      color:#00bbbb;
+      color: var(--title);
     }
 
     .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
-      color:#00ff00;
+      color: var(--text);
     }
 
     .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
@@ -570,13 +617,12 @@ entLoss : Entropy loss</p>
     }
 
     .wy-menu-vertical li.current a {
-      border-right: solid 1px #001818;
+      border-right: solid 1px (--background);
       padding: .4045em 2.427em;
     }
 
     .wy-menu-vertical header, .wy-menu-vertical p.caption {
-       color: 
-       #00bbbb;
+       color: var(--title);
        line-height: 32px;
        font-weight: bold;
        text-transform: uppercase;
@@ -585,26 +631,26 @@ entLoss : Entropy loss</p>
     }
 
     footer {
-      color: #005050;
+      color: var(--accent);
     }
 
     p {
-      color: #00bbbb;
+      color: var(--text);
     }
     h1 {
-      color: lime;
+      color: var(--title);
     }
 
     h2 {
-      color: aqua;
+      color: var(--accent);
     }
 
     h3 {
-      color: teal;
+      color: var(--accent);
     }
 
     h4 {
-      color: blue;
+      color: var(--accent);
     }
 
     ul {
@@ -620,17 +666,25 @@ entLoss : Entropy loss</p>
 
     li {
       content: "• ";
-      color: cyan; /* or whatever color you prefer */
+      color: var(--title); /* or whatever color you prefer */
       }
 
     a:link {
+      color: var(--link);
+    }
+
+    a:visited {
+      color: var(--link);
+    }
+
+    a:hover {
       color: lime;
     }
 
-    /* visited link */
-    a:visited {
+    a:active {
       color: lime;
     }
+
 
   </style>
 

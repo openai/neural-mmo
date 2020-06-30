@@ -1,1 +1,5 @@
 *.pyc
+*.pth
+*.swo
+*.swp
+experiment/*

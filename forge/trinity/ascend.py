@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import ray, time
 
 from collections import defaultdict
+import functools
 
 class Timed:
    '''Performance timing superclass.
@@ -64,6 +65,7 @@ class Log:
       return ret
 
 def waittime(func):
+   @functools.wraps(func)
    def decorated(self, *args):
       t = time.time()
       ret = func(self, *args)
@@ -74,6 +76,7 @@ def waittime(func):
    return decorated
 
 def runtime(func):
+   @functools.wraps(func)
    def decorated(self, *args):
       t = time.time()
       ret = func(self, *args)

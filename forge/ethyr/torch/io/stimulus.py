@@ -7,9 +7,11 @@ import torch
 from torch import nn
 
 from forge.blade.io import stimulus, action
+from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.io.stimulus import node
 
 class Input(nn.Module):
-   def __init__(self, config, embeddings, attributes, entities):
+   def __init__(self, config, embeddings, attributes):
       '''Network responsible for processing observations
 
       Args:
@@ -19,64 +21,48 @@ class Input(nn.Module):
          entities   : An entity attention module
       '''
       super().__init__()
-      h           = config.HIDDEN
-      self.device = config.DEVICE
+      self.embed  = config.EMBED
+      self.hidden = config.HIDDEN
       self.config = config
-      self.h      = h
 
       #Assemble network modules
-      self.initEmbeddings(embeddings)
-      self.initAttributes(attributes)
-      self.initEntities(entities)
+      self.initSubnets(embeddings, attributes)
 
-      self.action = nn.Embedding(action.Static.n, config.HIDDEN)
+   def initSubnets(self, embedF, attrF):
+      '''Initialize embedding and attribute networks'''
+      embeddings = nn.ModuleDict()
+      attributes = nn.ModuleDict()
 
-   def initEmbeddings(self, embedF):
-      '''Initialize embedding networks'''
-      emb  = nn.ModuleDict()
-      for name, subnet in stimulus.Static:
-         name = '-'.join(name)
-         emb[name] = nn.ModuleDict()
-         for param, val in subnet:
-            param = '-'.join(param)
-            emb[name][param] = embedF(val(self.config), self.config)
-      self.emb = emb
+      for _, entity in stimulus.Static:
+         attributes[entity.__name__] = attrF(self.embed, self.hidden)
+         embeddings[entity.__name__] = nn.ModuleDict()
 
-   def initAttributes(self, attrF):
-      '''Initialize attribute networks'''
-      self.attributes = nn.ModuleDict()
-      for name, subnet in stimulus.Static:  
-         self.attributes['-'.join(name)] = attrF(self.config)
+         for _, attr in entity:
+            val = attr(self.config)
+            emb = embedF(val, self.config)
+            embeddings[entity.__name__][attr.__name__] = emb
 
-   def initEntities(self, entF):
-      '''Initialize entity network'''
-      self.entities = entF(self.config) 
+      self.embeddings = embeddings
+      self.attributes = attributes
 
-   def actions(self, embeddings):
-      '''Embed actions'''
-      embed = []
-      for atn in action.Static.arguments:
-         idx = torch.Tensor([atn.idx])
-         idx = idx.long().to(self.device)
-
-         emb = self.action(idx)
-         embed.append(emb)
-
-      return torch.cat([embeddings, *embed])
-
-   def attrs(self, name, attn, entities):
+   def attrs(self, entName, attn, entities):
       '''Embed and pack attributes of each entity'''
+      attrs      = Stimulus.dict()[entName]
       embeddings = []
-      for param, val in entities.attributes.items():
-         param = '-'.join(param)
-         val = torch.Tensor(val).to(self.device)
-         emb = self.emb[name][param](val)
+
+      #Slow probably
+      for attrName, attr in attrs:
+         val    = entities.values[attr].squeeze(-1)
+         embNet = self.embeddings[entName][attrName[-1]]
+         emb    = embNet(val) 
          embeddings.append(emb)
 
+      #Construct: Batch, ents, nattrs, hidden
       embeddings = torch.stack(embeddings, -2)
 
-      #Batch, ents, nattrs, hidden
-      embeddings = attn(embeddings)
+      #Construct: Batch, ents, hidden
+      embeddings, scores = attn(embeddings)
+
       return embeddings
 
    def forward(self, inp):
@@ -84,26 +70,18 @@ class Input(nn.Module):
 
       Args:                                                                   
          inp: An IO object specifying observations                      
+         
 
       Returns:
          observationTensor : A fixed size observation representation
          entityLookup      : A fixed size representation of each entity
       ''' 
-      observationTensor = []
-      embeddings        = []
 
       #Pack entities of each attribute set
-      for name, entities in inp.obs.entities.items():
+      entityLookup = {}
+      for cls, entities in inp.items():
+         name = cls.__name__
          embs = self.attrs(name, self.attributes[name], entities)
-         embeddings.append(embs)
+         entityLookup[cls] = embs
 
-      #Pack entities of each observation
-      entityLookup = torch.cat(embeddings)
-      for objID, idxs in inp.obs.names.items():
-         emb = entityLookup[idxs]
-         obs = self.entities(emb)
-         observationTensor.append(obs)
-
-      entityLookup      = self.actions(entityLookup)
-      observationTensor = torch.stack(observationTensor)
-      return observationTensor, entityLookup
+      return entityLookup

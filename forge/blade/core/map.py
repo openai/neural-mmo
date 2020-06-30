@@ -22,7 +22,7 @@ def loadTiled(config, fPath, tiles, nCounts):
 
 class Map:
    def __init__(self, config, idx):
-      print('Loading Map: ', idx)
+      #print('Loading Map: ', idx)
       self.updateList = set()
       self.config = config
       self.nCounts = config.NPOP
@@ -66,7 +66,7 @@ class Map:
       env = np.array([e.state.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)
       return env
-     
+
    def genEnv(self, fName):
       tiles = dict((mat.value.tex, mat.value) for mat in enums.Material)
       self.tiles = loadTiled(self.config, fName, tiles, self.nCounts)

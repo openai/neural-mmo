@@ -13,3 +13,4 @@ forge.trinity package
    forge.trinity.ascend
    forge.trinity.timed
    forge.trinity.trinity
+   forge.trinity.twistedserver

@@ -5,11 +5,11 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from forge.blade.io import stimulus, action
+from forge.blade.io import stimulus
 
-#Pytorch embedding wrapper that subtracts the min
 class Embedding(nn.Module):
    def __init__(self, var, dim):
+      '''Pytorch embedding wrapper that subtracts the min'''
       super().__init__()
       self.embed = torch.nn.Embedding(var.range, dim)
       self.min = var.min
@@ -17,9 +17,9 @@ class Embedding(nn.Module):
    def forward(self, x):
       return self.embed(x - self.min)
 
-#Embedding wrapper around discrete and continuous vals
 class Input(nn.Module):
    def __init__(self, cls, config):
+      '''Embedding wrapper around discrete and continuous vals'''
       super().__init__()
       self.cls = cls
       if isinstance(cls, stimulus.node.Discrete):
@@ -35,28 +35,14 @@ class Input(nn.Module):
       x = self.embed(x)
       return x
 
-class TaggedInput(nn.Module):
+class BiasedInput(nn.Module):
    def __init__(self, cls, config):
+      '''Adds a bias to nn.Embedding
+      This is useful for attentional models
+      to learn a sort of positional embedding'''
       super().__init__()
-      self.config = config
-      self.device = config.DEVICE
-      h           = config.EMBED
-
-      self.embed  = Input(cls, config)
-      self.tag    = torch.nn.Embedding(1, h)
-
-      self.proj = torch.nn.Linear(2*h, h)
+      self.bias  = torch.nn.Embedding(1, config.HIDDEN)
+      self.embed = Input(cls, config)
 
    def forward(self, x):
-      embed = self.embed(x)
-
-      tag = torch.LongTensor([0])
-      tag = tag.to(self.device)
-      tag = self.tag(tag)
-      tag = tag.expand_as(embed)
-
-      x = torch.cat((embed, tag), dim=-1)
-      x = self.proj(x)
-      return x
-
-
+      return self.embed(x) + self.bias.weight

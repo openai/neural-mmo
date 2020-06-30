@@ -1,2 +1,4 @@
 from .attention import Attention
-from .embed import TaggedInput
+from .recurrent import BatchFirstLSTM
+from .embed import BiasedInput 
+from .embed import Input

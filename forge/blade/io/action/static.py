@@ -1,10 +1,14 @@
 from pdb import set_trace as T
 import numpy as np
 
+from forge.blade.entity import Player
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.action.node import Node, NodeType
 from forge.blade.systems import combat
+
+class Fixed:
+   pass
 
 #ActionRoot
 class Action(Node):
@@ -20,8 +24,7 @@ class Action(Node):
       return len(Action.arguments)
 
    def args(stim, entity, config):
-      return Static.edges
-
+      return Static.edges 
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
    def hook():
@@ -72,6 +75,8 @@ class Move(Node):
       return True
 
 class Direction(Node):
+   argType = Fixed
+
    @staticproperty
    def edges():
       return [North, South, East, West]
@@ -136,15 +141,23 @@ class Attack(Node):
          entity.history.attack = None
          return
 
+      rng     = style.attackRange(world.config)
+      start   = np.array(entity.base.pos)
+      end     = np.array(targ.base.pos)
+      dif     = np.abs(start - end)
+
+      if np.max(dif) > rng:
+         entity.history.attack = None
+         return 
+
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze.update(3)
+         targ.status.freeze.update(world.config.FREEZE_TIME)
 
-      #entity.applyDamage(dmg, style.__name__.lower())
-      #targ.receiveDamage(dmg)
       return dmg
 
 class Style(Node):
+   argType = Fixed
    @staticproperty
    def edges():
       return [Melee, Range, Mage]
@@ -154,14 +167,24 @@ class Style(Node):
 
 
 class Target(Node):
+   argType = Player 
+
+   @classmethod
+   def N(cls, config):
+      return config.N_AGENT_OBS
+
    def args(stim, entity, config):
-      return Attack.inRange(entity, stim, config, config.MELEERANGE)
+      #Should pass max range?
+      return Attack.inRange(entity, stim, config, None)
 
 class Melee(Node):
    priority = 1
    nodeType = NodeType.ACTION
    index = 0
    freeze=False
+
+   def attackRange(config):
+      return config.MELEE_RANGE
 
    def skill(entity):
       return entity.skills.melee
@@ -172,6 +195,9 @@ class Range(Node):
    index = 1
    freeze=False
 
+   def attackRange(config):
+      return config.RANGE_RANGE
+
    def skill(entity):
       return entity.skills.range
 
@@ -180,6 +206,9 @@ class Mage(Node):
    nodeType = NodeType.ACTION
    index = 2
    freeze=True
+
+   def attackRange(config):
+      return config.MAGE_RANGE
 
    def skill(entity):
       return entity.skills.mage

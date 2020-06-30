@@ -7,6 +7,9 @@
 .. |fire| image:: /resource/icon/rs/fire.png
 .. |water| image:: /resource/icon/rs/water.png
 
+.. role:: python(code)
+    :language: python
+
 |env|
 
 |icon| Abstract
@@ -19,26 +22,40 @@ Progress in multiagent intelligence research is fundamentally limited by the com
 |icon| Installation
 ###################
 
-The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
+**Dependencies:** Anaconda Python 3.7.x and gcc. Tested for Ubuntu 16.04/18.04/20.04, macOS Catalina (10.15), and Windows 10.
+
+Ubuntu and macOS:
 
 .. code-block:: python
 
-   #Download the Neural MMO environment
+   #Download Neural MMO and run the pretrained demo model
    git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
-
-   #Install Anaconda Python 3.7 and gcc before running the setup script
-   #Optionally, you can exclude the client (e.g. for remote training)
    bash scripts/setup.sh
-   bash scripts/setup.sh --SERVER_ONLY
-
-   #Run the pretrained demo model to test the installation
-   #You can run without GPU if you don't have CUDA, but expect low fps
    python Forge.py
-   CUDA_VISIBLE_DEVICES="" python Forge.py
 
    #Open the client in a separate terminal
-   #Server precomputations take ~30 seconds before connecting
    ./client.sh
+
+Windows:
+
+.. code-block:: python
+
+   #Execute on WSL Ubuntu (dependencies required)
+   git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
+   bash scripts/setup.sh --SERVER_ONLY
+   python Forge.py
+
+   #Execute on Windows (dependencies not required)
+   git clone https://github.com/jsuarez5341/neural-mmo-client
+   neural-mmo-client/UnityClient/neural-mmo.exe
+
+**Troubleshooting:**
+  - Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with ``--COMPUTE_GLOBAL_VALUES=False``
+  - If PyTorch is not recognizing your GPU, you can run CPU only using ``CUDA_VISIBLE_DEVICES="" python Forge.py``, but expect low FPS.
+  - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.
+  - If none of the above work, post in #support on Discord
+
+**Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
 
 |icon| Overview
 ###############

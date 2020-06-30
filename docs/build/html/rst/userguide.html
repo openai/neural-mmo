@@ -225,7 +225,7 @@
 </div>
 <dl class="simple">
 <dt><strong>Troubleshooting:</strong></dt><dd><ul class="simple">
-<li><p>Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with <code class="docutils literal notranslate"><span class="pre">--COMPUTE_GLOBAL_VALUES=False</span></code></p></li>
+<li><p>Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with <code class="docutils literal notranslate"><span class="pre">--COMPUTE_GLOBAL_VALUES=False</span></code>. This will also fix most out-of-memory errors.</p></li>
 <li><p>If PyTorch is not recognizing your GPU, you can run CPU only using <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES=&quot;&quot;</span> <span class="pre">python</span> <span class="pre">Forge.py</span></code>, but expect low FPS.</p></li>
 <li><p>Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.</p></li>
 <li><p>If none of the above work, post in #support on Discord</p></li>

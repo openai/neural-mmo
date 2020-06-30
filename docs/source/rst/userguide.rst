@@ -50,7 +50,7 @@ Windows:
    neural-mmo-client/UnityClient/neural-mmo.exe
 
 **Troubleshooting:**
-  - Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with ``--COMPUTE_GLOBAL_VALUES=False``
+  - Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with ``--COMPUTE_GLOBAL_VALUES=False``. This will also fix most out-of-memory errors.
   - If PyTorch is not recognizing your GPU, you can run CPU only using ``CUDA_VISIBLE_DEVICES="" python Forge.py``, but expect low FPS.
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.
   - If none of the above work, post in #support on Discord

@@ -19,7 +19,14 @@ class Policy(RecurrentNetwork, nn.Module):
       nn.Module.__init__(self)
       self.config = args[3]['custom_model_config']['config']
       self.space  = actionSpace(self.config).spaces
-      self.model  = baseline.Recurrent(self.config)
+
+      #Select appropriate baseline model
+      if self.config.MODEL == 'attentional':
+         self.model  = baseline.Attentional(self.config)
+      elif self.config.MODEL == 'convolutional':
+         self.model  = baseline.Simple(self.config)
+      else:
+         self.model  = baseline.Recurrent(self.config)
 
    #Initial hidden state for RLlib Trainer
    def get_initial_state(self):

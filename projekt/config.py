@@ -6,6 +6,7 @@ class Config(core.Config):
    COMPUTE_GLOBAL_VALUES = True
 
    #Model to load. None will train from scratch
+   #Baselines: recurrent, attentional, convolutional 
    #"current" will resume training custom models
    MODEL   = 'recurrent'
    RENDER  = True

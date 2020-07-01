@@ -228,6 +228,7 @@
 <dt><strong>v1.4:</strong> RLlib Support and Overlays</dt><dd><ul class="simple">
 <li><dl class="simple">
 <dt>Blade: Minor API changes have been made for compatibility with Gym and RLlib</dt><dd><ul>
+<li><p>Exposed the registerOverlay() and getValStim() methods for writing custom overlays</p></li>
 <li><p>Environment reset method now returns only obs instead of (obs, rewards, dones, infos)</p></li>
 <li><p>Environment obs and dones are now both dictionaries keyed by agent ids rather than agent game objects</p></li>
 <li><p>The IO modules from v1.3 now delegates batching to the user, e.g. RLlib. As such, several potential sources of error have been removed</p></li>
@@ -239,6 +240,7 @@
 </li>
 <li><dl class="simple">
 <dt>Trinity: This module has been temporarily shelved</dt><dd><ul>
+<li><p>Now hosts the Twisted server code for interfacing with the client</p></li>
 <li><p>Core functionality has been ported to RLlib in collaboration with the developers</p></li>
 <li><p>We are working with the RLlib developers to add additional features essential to the long-term scalability of Neural MMO</p></li>
 <li><p>The Trinity/Ascend namespace will likely be revived in later infrastructure expansions. For now, the stability of RLlib makes delegating infrastructure pragmatic to enable us to focus on environment development, baseline models, and research</p></li>
@@ -256,7 +258,7 @@
 </li>
 <li><dl class="simple">
 <dt>Embyr: Overlay shaders for visualizing learned policies</dt><dd><ul>
-<li><p>Pressing tilde now brings up an in-game console</p></li>
+<li><p>Pressing tab now brings up an in-game console</p></li>
 <li><p>A help menu lists several shader options for visualizing exploration, attention, and learned value functions</p></li>
 <li><p>Shaders are rendered over the environment in real-time with partial transparency</p></li>
 <li><p>It is no longer necessary to start the client and server in a particular order</p></li>
@@ -264,19 +266,19 @@
 <li><p>Agents now turn smoothly towards their direction of movement and targeted adversaries</p></li>
 <li><p>A graphical bug causing some agent attacks to render at ground level has been fixed</p></li>
 <li><p>Moved twistedserver.py into the main neural-mmo repository to better separate client and server</p></li>
-<li><p>Confirmed working on Ubuntu, MacOS, and WSL Linux with a Windows client</p></li>
+<li><p>Confirmed working on Ubuntu, MacOS, and Windows + WSL</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>/projekt: Demo code fully rewritten for RLlib</dt><dd><ul>
-<li><p>The new demo is much shorter, approximately 400 lines of code</p></li>
-<li><p>State-of-the-art Transformer + LSTM based policy trained with distributed PPO</p></li>
+<li><p>The new demo is much shorter, approximately 250 lines of code</p></li>
+<li><p>State-of-the-art LSTM + self-attention based policy trained with distributed PPO</p></li>
 <li><p>Batched GPU evaluation for real-time rendering</p></li>
 <li><p>Trains in a few hours on a reasonably good desktop (5 rollout worker cores, 1 underutilized GTX 1080Ti GPU)</p></li>
 <li><p>To avoid introducing RLlib into the base environment as a hard dependency, we provide a small wrapper class over Realm using RLlib’s environment types</p></li>
-<li><p>Migrated from a pip requirements.txt to Poetry for streamlined dependency management</p></li>
+<li><p>Attempted to migrate from a pip requirements.txt to Poetry for streamlined dependency management, but Poetry is still too buggy at the present.</p></li>
 <li><p>We have migrated configuration to Google Fire for improved command line argument parsing</p></li>
 </ul>
 </dd>

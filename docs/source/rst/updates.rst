@@ -57,12 +57,14 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
 
 **v1.4:** RLlib Support and Overlays
    - Blade: Minor API changes have been made for compatibility with Gym and RLlib
+      - Exposed the registerOverlay() and getValStim() methods for writing custom overlays
       - Environment reset method now returns only obs instead of (obs, rewards, dones, infos)
       - Environment obs and dones are now both dictionaries keyed by agent ids rather than agent game objects
       - The IO modules from v1.3 now delegates batching to the user, e.g. RLlib. As such, several potential sources of error have been removed
       - A bug allowing agents to use melee combat from farther away than intended has been fixed
       - Minor range and damage balancing has been performed across all three combat styles
    - Trinity: This module has been temporarily shelved
+      - Now hosts the Twisted server code for interfacing with the client
       - Core functionality has been ported to RLlib in collaboration with the developers
       - We are working with the RLlib developers to add additional features essential to the long-term scalability of Neural MMO
       - The Trinity/Ascend namespace will likely be revived in later infrastructure expansions. For now, the stability of RLlib makes delegating infrastructure pragmatic to enable us to focus on environment development, baseline models, and research
@@ -70,7 +72,7 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
       - Streamlined IO, memory, and attention modules for use in building PyTorch policies
       - A high-quality pretrained baseline reproducible at the scale of a single desktop
    - Embyr: Overlay shaders for visualizing learned policies
-      - Pressing tilde now brings up an in-game console
+      - Pressing tab now brings up an in-game console
       - A help menu lists several shader options for visualizing exploration, attention, and learned value functions
       - Shaders are rendered over the environment in real-time with partial transparency
       - It is no longer necessary to start the client and server in a particular order
@@ -78,14 +80,14 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
       - Agents now turn smoothly towards their direction of movement and targeted adversaries
       - A graphical bug causing some agent attacks to render at ground level has been fixed
       - Moved twistedserver.py into the main neural-mmo repository to better separate client and server
-      - Confirmed working on Ubuntu, MacOS, and WSL Linux with a Windows client
+      - Confirmed working on Ubuntu, MacOS, and Windows + WSL
    - /projekt: Demo code fully rewritten for RLlib
-      - The new demo is much shorter, approximately 400 lines of code
-      - State-of-the-art Transformer + LSTM based policy trained with distributed PPO
+      - The new demo is much shorter, approximately 250 lines of code
+      - State-of-the-art LSTM + self-attention based policy trained with distributed PPO
       - Batched GPU evaluation for real-time rendering
       - Trains in a few hours on a reasonably good desktop (5 rollout worker cores, 1 underutilized GTX 1080Ti GPU)
       - To avoid introducing RLlib into the base environment as a hard dependency, we provide a small wrapper class over Realm using RLlib's environment types
-      - Migrated from a pip requirements.txt to Poetry for streamlined dependency management
+      - Attempted to migrate from a pip requirements.txt to Poetry for streamlined dependency management, but Poetry is still too buggy at the present.
       - We have migrated configuration to Google Fire for improved command line argument parsing
 
 **v1.3:** Prebuilt IO Libraries

@@ -144,6 +144,23 @@ The globalValues overlay hallucinates an agent on each cell and computes the val
 
 .. image:: /resource/image/v1-4_globalValues.png
 
+You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay is implemented as:
+
+.. code-block:: python
+
+   def values(self, obs):
+      '''Computes a local value function by painting tiles as agents
+      walk over them. This is fast and does not require additional
+      network forward passes'''
+      for idx, agentID in enumerate(obs):
+         r, c = self.realm.desciples[agentID].base.pos
+         self.valueMap[r, c] = float(self.model.value_function()[idx])
+
+      colorized = overlay.twoTone(self.valueMap)
+      self.realm.registerOverlay(colorized, 'values')
+
+Custom overlays can make full use of the current environment state, but note that this is not part of the official API. See /projekt/overlays.py for full implementations of the baseline overlays.
+
 |icon| The IO API
 #################
 

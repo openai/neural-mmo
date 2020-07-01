@@ -6,6 +6,8 @@ from collections import defaultdict
 from projekt.overlay import Overlays
 
 class Evaluator:
+   '''Test-time evaluation with communication to
+   the Unity3D client. Makes use of batched GPU inference'''
    def __init__(self, trainer, env, config):
       self.obs   = env.reset(idx=0)
       self.env   = env
@@ -20,7 +22,6 @@ class Evaluator:
       self.model    = self.trainer.get_policy('policy_0').model
       self.overlays = Overlays(env, self.model, trainer, config)
 
-   #Start a persistent Twisted environment server
    def run(self):
       '''Rendering launches a Twisted WebSocket server with a fixed
       tick rate. This is a blocking call; the server will handle 
@@ -28,8 +29,9 @@ class Evaluator:
       from forge.trinity.twistedserver import Application
       Application(self.env, self.tick)
 
-   #Compute actions and overlays for a single timestep
    def tick(self):
+      '''#Compute actions and overlays for a single timestep'''
+
       #Remove dead agents
       for agentID in self.done:
          if self.done[agentID]:

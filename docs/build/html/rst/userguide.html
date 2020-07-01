@@ -284,6 +284,20 @@
 <img alt="../_images/v1-4_values.png" src="../_images/v1-4_values.png" />
 <p>The globalValues overlay hallucinates an agent on each cell and computes the value function for that agent with no other agents on the map and all resources present. This requires a forward pass for each of the ~3600 tiles in the environment. The overlay is precomputed once during server initialization (~30 seconds) and may be disabled in projekt/config.py for faster startup:</p>
 <img alt="../_images/v1-4_globalValues.png" src="../_images/v1-4_globalValues.png" />
+<p>You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay is implemented as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
+   <span class="sd">&#39;&#39;&#39;Computes a local value function by painting tiles as agents</span>
+<span class="sd">   walk over them. This is fast and does not require additional</span>
+<span class="sd">   network forward passes&#39;&#39;&#39;</span>
+   <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">agentID</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">obs</span><span class="p">):</span>
+      <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">realm</span><span class="o">.</span><span class="n">desciples</span><span class="p">[</span><span class="n">agentID</span><span class="p">]</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">pos</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">valueMap</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value_function</span><span class="p">()[</span><span class="n">idx</span><span class="p">])</span>
+
+   <span class="n">colorized</span> <span class="o">=</span> <span class="n">overlay</span><span class="o">.</span><span class="n">twoTone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valueMap</span><span class="p">)</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">realm</span><span class="o">.</span><span class="n">registerOverlay</span><span class="p">(</span><span class="n">colorized</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Custom overlays can make full use of the current environment state, but note that this is not part of the official API. See /projekt/overlays.py for full implementations of the baseline overlays.</p>
 </div>
 <div class="section" id="icon-the-io-api">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> The IO API<a class="headerlink" href="#icon-the-io-api" title="Permalink to this headline">¶</a></h1>

@@ -18,6 +18,9 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       self.config = config['config']
 
    def reset(self, idx=None):
+      '''Enable us to reset the Neural MMO environment.
+      This is for training on limited-resource systems where
+      simply using one env map per core is not feasible'''
       n   = self.config.NMAPS
       if idx is None:
          idx = np.random.randint(n)
@@ -26,9 +29,8 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       super().__init__(self.config, idx)
       return self.step({})[0]
 
-   '''Example environment overrides'''
    def step(self, decisions):
-      #Postprocess actions
+      '''Action postprocessing; small wrapper to fit RLlib'''
       actions = {}
       for entID in list(decisions.keys()):
          actions[entID] = defaultdict(dict)
@@ -42,14 +44,13 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
                if len(arg.edges) > 0:
                   actions[entID][atn][arg] = arg.edges[val]
                elif val < len(ents):
-                  #Note: you are not masking over padded agents yet.
-                  #This will make learning attacks very hard
                   actions[entID][atn][arg] = ents[val]
                else:
                   actions[entID][atn][arg] = ents[0]
 
       obs, rewards, dones, infos = super().step(actions)
 
+      #Cull dead agaents
       for ent in self.dead:
          lifetime = ent.history.timeAlive.val
          self.lifetimes.append(lifetime)

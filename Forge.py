@@ -1,11 +1,10 @@
-'''Main file for neural-mmo/projekt demo
+'''Main file for the neural-mmo/projekt demo
 
 /projeckt will give you a basic sense of the training
 loop, infrastructure, and IO modules for handling input 
 and output spaces. From there, you can either use the 
 prebuilt IO networks in PyTorch to start training your 
-own models immediately or dive deeper into the 
-infrastructure and IO code.'''
+own models immediately or hack on the environment'''
 
 #My favorite debugging macro
 from pdb import set_trace as T

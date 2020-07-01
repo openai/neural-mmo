@@ -171,7 +171,7 @@ class Realm(Timed):
             implement the same extended gym.spaces API to do the same.
             
          rewards:
-            A dictionary of agent agent of format::
+            A dictionary of agent rewards of format::
 
                {
                   agent_1: reward_1,
@@ -187,7 +187,7 @@ class Realm(Timed):
             creating custom reward functions using full game state.
  
          dones:
-            A dictionary of agent agent of format::
+            A dictionary of agent done booleans of format::
 
                {
                   agent_1: done_1,

@@ -36,7 +36,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Demos" href="updates.html" />
+    <link rel="next" title="Video Demos" href="updates.html" />
     <link rel="prev" title="Index" href="../index.html" /> 
 </head>
 
@@ -98,7 +98,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Update Materials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="updates.html"> Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html"> Video Demos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="updates.html#icon-publications"> Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="updates.html#icon-presentations"> Presentations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="updates.html#icon-update-slides"> Update Slides</a></li>
@@ -284,7 +284,7 @@
 <img alt="../_images/v1-4_values.png" src="../_images/v1-4_values.png" />
 <p>The globalValues overlay hallucinates an agent on each cell and computes the value function for that agent with no other agents on the map and all resources present. This requires a forward pass for each of the ~3600 tiles in the environment. The overlay is precomputed once during server initialization (~30 seconds) and may be disabled in projekt/config.py for faster startup:</p>
 <img alt="../_images/v1-4_globalValues.png" src="../_images/v1-4_globalValues.png" />
-<p>You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay is implemented as:</p>
+<p>You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay in <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/blob/master/projekt/overlay.py">[/projekt/overlay.py]</a>  is implemented as:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
    <span class="sd">&#39;&#39;&#39;Computes a local value function by painting tiles as agents</span>
 <span class="sd">   walk over them. This is fast and does not require additional</span>
@@ -309,7 +309,7 @@
 <p>Neural MMO resolves both of these problems out of the box. We have worked with the RLlib developers to augment OpenAI Gym’s <em>spaces</em> API with two new structure objects, <em>Repeated</em> and <em>FlexDict</em>.</p>
 <p>Additionally, we have implemented substantially general procedural generation code that automatically fits attentional PyTorch architectures to the given IO spaces. These will be subject to minor tweaks from update to update but should remain structurally stable from update to update. The high-level concept is to model observations of sets of entities, each of which is a set of attributes:</p>
 <img alt="../_images/header.svg" src="../_images/header.svg" /><p>Entity embeddings are created by attending over attributes, and the observation is flattened to a fixed-length embedding by attenting over entity embeddings. Actions are similarly defined by targeting entity embeddings with attention. The diagram below summarizes this process – see the <a class="reference external" href="https://arxiv.org/abs/2001.12004">[Neural MMO v1.3 white paper]</a> for details</p>
-<img alt="../_images/io.svg" src="../_images/io.svg" /><p>Our Baseline models include an abstract <em>Base</em> model that instantiates our IO modules but defers the hidden network to subclasses:</p>
+<img alt="../_images/io.svg" src="../_images/io.svg" /><p>Our Baseline models include an abstract <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/blob/master/forge/ethyr/torch/policy/baseline.py">[Base]</a> model that instantiates our IO modules but defers the hidden network to subclasses:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
       <span class="o">...</span>
@@ -377,7 +377,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="updates.html" class="btn btn-neutral float-right" title="Demos" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="updates.html" class="btn btn-neutral float-right" title="Video Demos" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral float-left" title="Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -3,8 +3,8 @@
 
 |env|
 
-|icon| Demos
-############
+|icon| Video Demos
+##################
 
 `Neural MMO v1.4: A Massively Multiagent Environment for AI Research <https://youtu.be/y_f77u9vlLQ>`_
 

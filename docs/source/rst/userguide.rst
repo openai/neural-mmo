@@ -144,7 +144,7 @@ The globalValues overlay hallucinates an agent on each cell and computes the val
 
 .. image:: /resource/image/v1-4_globalValues.png
 
-You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay is implemented as:
+You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay in `[/projekt/overlay.py] <https://github.com/jsuarez5341/neural-mmo/blob/master/projekt/overlay.py>`_  is implemented as:
 
 .. code-block:: python
 
@@ -180,7 +180,7 @@ Entity embeddings are created by attending over attributes, and the observation 
 
 .. image:: /resource/figure/web/io.svg
 
-Our Baseline models include an abstract *Base* model that instantiates our IO modules but defers the hidden network to subclasses:
+Our Baseline models include an abstract `[Base] <https://github.com/jsuarez5341/neural-mmo/blob/master/forge/ethyr/torch/policy/baseline.py>`_ model that instantiates our IO modules but defers the hidden network to subclasses:
 
 .. code-block:: python
 

@@ -5,7 +5,7 @@ if [[ $1 == "--SERVER_ONLY" ]]; then
    echo "You have chosen not to install the graphical rendering client"
 elif [[ $1 == "" ]]; then
    echo "Installing Neural MMO Client (Unity3D)..."
-   git clone https://github.com/jsuarez5341/neural-mmo-client
+   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo-client
    mv neural-mmo-client forge/embyr
 else
    echo "Specify either --SERVER_ONLY or no argument"

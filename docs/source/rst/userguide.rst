@@ -29,7 +29,7 @@ Ubuntu and macOS:
 .. code-block:: python
 
    #Download Neural MMO and run the pretrained demo model
-   git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
+   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
    bash scripts/setup.sh
    python Forge.py
 
@@ -41,18 +41,19 @@ Windows + WSL:
 .. code-block:: python
 
    #Execute on WSL Ubuntu (dependencies required)
-   git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
+   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
    bash scripts/setup.sh --SERVER_ONLY
    python Forge.py
 
    #Execute on Windows (dependencies not required)
-   git clone https://github.com/jsuarez5341/neural-mmo-client
+   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo-client
    neural-mmo-client/UnityClient/neural-mmo.exe
 
 **Troubleshooting:**
   - Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with ``--COMPUTE_GLOBAL_VALUES=False``. This will also fix most out-of-memory errors.
   - If PyTorch is not recognizing your GPU, you can run CPU only using ``CUDA_VISIBLE_DEVICES="" python Forge.py``, but expect low FPS.
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.
+  - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time.
   - If none of the above work, post in #support on Discord
 
 **Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.

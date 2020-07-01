@@ -204,7 +204,7 @@
 <p><strong>Dependencies:</strong> Anaconda Python 3.7.x and gcc. Tested for Ubuntu 16.04/18.04/20.04, macOS Catalina (10.15), and Windows 10.</p>
 <p>Ubuntu and macOS:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Download Neural MMO and run the pretrained demo model</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
 <span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
 <span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span>
 
@@ -214,12 +214,12 @@
 </div>
 <p>Windows + WSL:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Execute on WSL Ubuntu (dependencies required)</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
 <span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">SERVER_ONLY</span>
 <span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span>
 
 <span class="c1">#Execute on Windows (dependencies not required)</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
 <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span><span class="o">/</span><span class="n">UnityClient</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">.</span><span class="n">exe</span>
 </pre></div>
 </div>
@@ -228,6 +228,7 @@
 <li><p>Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with <code class="docutils literal notranslate"><span class="pre">--COMPUTE_GLOBAL_VALUES=False</span></code>. This will also fix most out-of-memory errors.</p></li>
 <li><p>If PyTorch is not recognizing your GPU, you can run CPU only using <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES=&quot;&quot;</span> <span class="pre">python</span> <span class="pre">Forge.py</span></code>, but expect low FPS.</p></li>
 <li><p>Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.</p></li>
+<li><p>If you want full commit history, clone without <code class="docutils literal notranslate"><span class="pre">--depth=1</span></code> (including in scripts/setup.sh for the client). This flag is only included to cut down on download time.</p></li>
 <li><p>If none of the above work, post in #support on Discord</p></li>
 </ul>
 </dd>

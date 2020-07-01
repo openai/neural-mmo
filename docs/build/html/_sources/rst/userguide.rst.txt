@@ -36,7 +36,7 @@ Ubuntu and macOS:
    #Open the client in a separate terminal
    ./client.sh
 
-Windows:
+Windows + WSL:
 
 .. code-block:: python
 
@@ -104,13 +104,13 @@ Next, we will get familiar with the baseline parameters and train a model from s
 
 .. code-block:: python
 
-  python Forge.py --LOAD_MODEL=False, --RENDER=False
+  python Forge.py --RENDER=False --MODEL=None
 
 You can reduce batch size if you are running out of memory or disable CUDA if you don't have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores @3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:
 
 .. image:: /resource/figure/web/train.png
 
-As a sanity check, your agents should have learned not to run into lava after a few epochs, around 20 average lifetime. The trained baseline models range with 30-40 average lifetime fully trained. However, individual agents may live much longer -- we have seen >10000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better -- the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.
+As a sanity check, your agents should have learned not to run into lava after several epochs, around 20 average lifetime. The trained baseline models range within 30-40 average lifetime fully trained. However, individual agents may live much longer -- we have seen >10,000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better -- the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.
 
 |icon| Rendering and Overlays
 #############################

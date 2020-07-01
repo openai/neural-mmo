@@ -212,7 +212,7 @@
 <span class="o">./</span><span class="n">client</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
-<p>Windows:</p>
+<p>Windows + WSL:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Execute on WSL Ubuntu (dependencies required)</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
 <span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">SERVER_ONLY</span>
@@ -262,12 +262,12 @@
 <div class="section" id="icon-training-from-scratch">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Training from scratch<a class="headerlink" href="#icon-training-from-scratch" title="Permalink to this headline">¶</a></h1>
 <p>Next, we will get familiar with the baseline parameters and train a model from scratch. Open up projekt/config.py, which contains all of the training configuration options. You can either edit defaults here or override individual parameters using command line arguments. To train a baseline, simply run:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">LOAD_MODEL</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">--</span><span class="n">RENDER</span><span class="o">=</span><span class="kc">False</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">RENDER</span><span class="o">=</span><span class="kc">False</span> <span class="o">--</span><span class="n">MODEL</span><span class="o">=</span><span class="kc">None</span>
 </pre></div>
 </div>
 <p>You can reduce batch size if you are running out of memory or disable CUDA if you don’t have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores &#64;3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:</p>
 <img alt="../_images/train.png" src="../_images/train.png" />
-<p>As a sanity check, your agents should have learned not to run into lava after a few epochs, around 20 average lifetime. The trained baseline models range with 30-40 average lifetime fully trained. However, individual agents may live much longer – we have seen &gt;10000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better – the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.</p>
+<p>As a sanity check, your agents should have learned not to run into lava after several epochs, around 20 average lifetime. The trained baseline models range within 30-40 average lifetime fully trained. However, individual agents may live much longer – we have seen &gt;10,000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better – the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.</p>
 </div>
 <div class="section" id="icon-rendering-and-overlays">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Rendering and Overlays<a class="headerlink" href="#icon-rendering-and-overlays" title="Permalink to this headline">¶</a></h1>
@@ -465,6 +465,26 @@
       border-top-style: solid;
       border-top-width: 3px;
     }
+
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+
 
     /* ****** Begin Tables ****** */
 

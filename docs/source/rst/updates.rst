@@ -17,7 +17,7 @@
 |icon| Publications
 ###################
 
-`Neural MMO v1.3: A Massively Multiagent Game Environmentfor Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS, 2020)
+`Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS, 2020)
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://arxiv.org/abs/2001.12004>`_ (arXiv, 2020)
 

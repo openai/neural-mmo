@@ -108,7 +108,6 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">projekt package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="projekt.config.html">projekt.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projekt.evaluator.html">projekt.evaluator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="projekt.experiments.html">projekt.experiments module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projekt.overlay.html">projekt.overlay module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projekt.policy.html">projekt.policy module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projekt.realm.html">projekt.realm module</a></li>
@@ -210,7 +209,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="projekt.config.html">projekt.config module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="projekt.evaluator.html">projekt.evaluator module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="projekt.experiments.html">projekt.experiments module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="projekt.overlay.html">projekt.overlay module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="projekt.policy.html">projekt.policy module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="projekt.realm.html">projekt.realm module</a></li>
@@ -329,6 +327,26 @@
       border-top-style: solid;
       border-top-width: 3px;
     }
+
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+
 
     /* ****** Begin Tables ****** */
 

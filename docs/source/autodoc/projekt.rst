@@ -11,7 +11,6 @@ projekt package
 
    projekt.config
    projekt.evaluator
-   projekt.experiments
    projekt.overlay
    projekt.policy
    projekt.realm

@@ -328,7 +328,7 @@ interpretable under an extended OpenAI gym.spaces API. Our demo
 code shows how do to this in RLlib. Other frameworks must
 implement the same extended gym.spaces API to do the same.</p>
 </dd>
-<dt>rewards:</dt><dd><p>A dictionary of agent agent of format:</p>
+<dt>rewards:</dt><dd><p>A dictionary of agent rewards of format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="n">agent_1</span><span class="p">:</span> <span class="n">reward_1</span><span class="p">,</span>
    <span class="n">agent_2</span><span class="p">:</span> <span class="n">reward_2</span><span class="p">,</span>
@@ -342,7 +342,7 @@ reward_i is the reward of the i’th’ agent.</p>
 all other circumstances. Realm.hook provides an interface for
 creating custom reward functions using full game state.</p>
 </dd>
-<dt>dones:</dt><dd><p>A dictionary of agent agent of format:</p>
+<dt>dones:</dt><dd><p>A dictionary of agent done booleans of format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="n">agent_1</span><span class="p">:</span> <span class="n">done_1</span><span class="p">,</span>
    <span class="n">agent_2</span><span class="p">:</span> <span class="n">done_2</span><span class="p">,</span>

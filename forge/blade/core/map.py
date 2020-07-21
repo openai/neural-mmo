@@ -7,6 +7,7 @@ from forge.blade.lib import enums, utils
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from pytmx import TiledMap
+import time
 
 def loadTiled(config, fPath, tiles, nCounts):
     tm = TiledMap(fPath)
@@ -17,12 +18,12 @@ def loadTiled(config, fPath, tiles, nCounts):
     for w, h, dat in layer.tiles():
        f = dat[0]
        tex = f.split('/')[-1].split('.')[0]
+       t  = time.time()
        tilemap[h, w] = core.Tile(config, tiles[tex], h, w, nCounts, tex)
     return tilemap
 
 class Map:
    def __init__(self, config, idx):
-      #print('Loading Map: ', idx)
       self.updateList = set()
       self.config = config
       self.nCounts = config.NPOP

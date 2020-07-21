@@ -15,12 +15,14 @@ class Overlays:
       self.config  = config
       self.init    = True
 
+      self.window   = 64
       R, C          = realm.size
       self.valueMap = np.zeros((R, C))
       self.countMap = np.zeros((R, C, config.NPOP))
 
-   def register(self, obs):
+   def register(self, obs, pos):
       '''Compute overlays and send to the environment'''
+      self.pos = pos
       self.counts(obs)
       self.values(obs)
       self.attention(obs)
@@ -33,17 +35,21 @@ class Overlays:
       '''Computes a count-based exploration map by painting
       tiles as agents walk over them'''
       for entID, agent in self.realm.desciples.items():
-         pop  = agent.base.population.val
+         pop  = agent.base.population
          r, c = agent.base.pos
          self.countMap[r, c][pop] += 1
+
+      r, c = self.pos
+      w    = self.window
 
       colors    = self.realm.spawner.palette.colors
       colors    = np.array([colors[pop].rgb
             for pop in range(self.config.NPOP)])
-      colorized = self.countMap[..., None] * colors / 255
+
+      colorized = self.countMap[r-w:r+w, c-w:c+w, :, None] * colors / 255
       colorized = np.sum(colorized, -2)
 
-      countSum  = np.sum(self.countMap, -1)
+      countSum  = np.sum(self.countMap[r-w:r+w, c-w:c+w], -1)
       data      = overlay.preprocess(countSum)[..., None]
 
       countSum[countSum==0] = 1
@@ -59,7 +65,10 @@ class Overlays:
          r, c = self.realm.desciples[agentID].base.pos
          self.valueMap[r, c] = float(self.model.value_function()[idx])
 
-      colorized = overlay.twoTone(self.valueMap)
+      r, c = self.pos
+      w    = self.window
+
+      colorized = overlay.twoTone(self.valueMap[r-w:r+w, c-w:c+w])
       self.realm.registerOverlay(colorized, 'values')
 
    def globalValues(self, obs):
@@ -96,9 +105,16 @@ class Overlays:
          for tile, a in zip(tiles, self.model.attention()[idx]):
             attentions[tile].append(float(a))
 
-      data = np.zeros(self.realm.size)
-      for tile, attns in attentions.items():
-         data[tile.r, tile.c] = np.mean(attentions[tile])
+      r, c = self.pos
+      w    = self.window
+
+      data = np.zeros((2*w, 2*w))
+      tiles = self.realm.world.env.tiles[r-w:r+w, c-w:c+w]
+      for r, tList in enumerate(tiles):
+         for c, tile in enumerate(tList):
+            if tile not in attentions:
+               continue
+            data[r, c] = np.mean(attentions[tile])
 
       colorized = overlay.twoTone(data)
       self.realm.registerOverlay(colorized, 'attention')

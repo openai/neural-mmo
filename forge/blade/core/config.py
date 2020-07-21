@@ -60,9 +60,9 @@ class Config(Template):
    SUFFIX = '/map.tmx'
 
    NTILE  = 6 #Number of distinct tile types
-   SZ     = 62
-   BORDER = 9
-   R = C  = SZ + BORDER
+   R = C  = 1024
+   BORDER = 8*2 
+   SZ     = R - BORDER
 
    #Agent name
    NAME_PREFIX             = 'Neural_'
@@ -141,11 +141,8 @@ class Config(Template):
          position:
             The position (row, col) to spawn the given agent
       '''
-      R, C = Config.R, Config.C
-      spawn, border, sz = [], Config.BORDER, Config.SZ
-      spawn += [(border, border+i) for i in range(sz)]
-      spawn += [(border+i, border) for i in range(sz)]
-      spawn += [(R-1, border+i) for i in range(sz)]
-      spawn += [(border+i, C-1) for i in range(sz)]
-      idx = np.random.randint(0, len(spawn))
+      W     = 2 #Offset
+      R, C  = Config.R//2, Config.C//2
+      spawn = [(R+W, C+W), (R-W, C-W), (R+W, C-W), (R-W, C+W)]
+      idx   = np.random.randint(0, len(spawn))
       return spawn[idx]

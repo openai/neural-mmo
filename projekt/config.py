@@ -24,7 +24,7 @@ class Config(core.Config):
    WINDOW  = 9  #Reduced from 15
 
    #Maximum number of observed agents
-   N_AGENT_OBS = 15
+   N_AGENT_OBS = 100
 
    #Whether to share weights across policies
    #The 1.4 baselines use one policy

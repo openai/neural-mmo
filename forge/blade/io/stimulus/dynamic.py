@@ -46,8 +46,12 @@ class Stimulus:
       for name, attr in static:
          val = obj
          for n in name:
-            val = val.__dict__[camel(n)]
-         stim[attr] = val.get(*args)
+            try:
+               val = val.__dict__[camel(n)]
+            except:
+               T()
+
+         stim[attr] = attr(config).get(*args)
       return stim
 
    def nop(template):

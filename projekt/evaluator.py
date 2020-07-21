@@ -29,7 +29,7 @@ class Evaluator:
       from forge.trinity.twistedserver import Application
       Application(self.env, self.tick)
 
-   def tick(self):
+   def tick(self, pos):
       '''#Compute actions and overlays for a single timestep'''
 
       #Remove dead agents
@@ -42,7 +42,7 @@ class Evaluator:
             self.obs, state=self.state, policy_id='policy_0')
 
       #Compute overlay maps
-      self.overlays.register(self.obs)
+      self.overlays.register(self.obs, pos)
 
       #Step the environment
       self.obs, rewards, self.done, _ = self.env.step(actions)

@@ -99,23 +99,22 @@ class Constitution(CombatSkill):
       food   = ent.resources.food
       water  = ent.resources.water
 
-      health.max = self.level
-      config     = self.config
+      config = self.config
 
       #Heal if above fractional resource threshold
-      foodThresh  = food.val  > config.HEALTH_REGEN_THRESHOLD * food.max
-      waterThresh = water.val > config.HEALTH_REGEN_THRESHOLD * water.max
+      foodThresh  = food.val  > config.HEALTH_REGEN_THRESHOLD * ent.skills.hunting.level
+      waterThresh = water.val > config.HEALTH_REGEN_THRESHOLD * ent.skills.fishing.level
 
       if foodThresh and waterThresh:
          restore = np.floor(self.level * self.config.HEALTH_RESTORE)
-         restore = min(health.missing, restore)
-         health.increment(restore)
+         restore = min(self.level - health.val, restore)
+         health.val += restore
 
       if food.val <= 0:
-         health.decrement()
+         health.val -= 1
 
       if water.val <= 0:
-         health.decrement()
+         health.val -= 1
 
 class Melee(CombatSkill): pass
 class Range(CombatSkill): pass
@@ -160,16 +159,15 @@ class Fishing(HarvestingSkill):
       self.exp = self.expCalc.expAtLevel(config.RESOURCE)
 
    def update(self, ent, world):
-      water     = ent.resources.water
-      water.max = self.level
-      water.decrement()
+      water      = ent.resources.water
+      water.val -= 1
 
       if Material.WATER.value not in ai.adjacentMats(world.env, ent.base.pos):
          return
 
-      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
-      restore = min(water.missing, restore)
-      water.increment(restore)
+      restore    = np.floor(self.level * self.config.RESOURCE_RESTORE)
+      restore    = min(self.level - water.val, restore)
+      water.val += restore
 
       scale = self.config.XP_SCALE
       self.exp += scale * restore;
@@ -180,18 +178,17 @@ class Hunting(HarvestingSkill):
       self.exp = self.expCalc.expAtLevel(config.RESOURCE)
 
    def update(self, ent, world):
-      food     = ent.resources.food
-      food.max = self.level
-      food.decrement()
+      food      = ent.resources.food
+      food.val -= 1
 
       r, c = ent.base.pos
       if (type(world.env.tiles[r, c].mat) not in [Material.FOREST.value] or 
             not world.env.harvest(r, c)):
          return
 
-      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
-      restore = min(food.missing, restore)
-      food.increment(restore)
+      restore   = np.floor(self.level * self.config.RESOURCE_RESTORE)
+      restore   = min(self.level - food.val, restore)
+      food.val += restore
 
       scale = self.config.XP_SCALE
       self.exp += scale * restore;

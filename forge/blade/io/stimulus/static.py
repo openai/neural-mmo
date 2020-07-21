@@ -4,6 +4,20 @@ import numpy as np
 from forge.blade.io.stimulus import node
 from forge.blade.io.comparable import IterableTypeCompare
 
+from forge.blade import entity, core
+from forge.blade.core import tile
+
+def bind(gameCls):
+   def to(ioCls):
+      @property
+      def GAME_CLS():
+         return gameCls
+
+      ioCls.GAME_CLS = GAME_CLS
+      #ioCls.GAME_CLS = gameCls
+      return ioCls
+   return to 
+
 class Config(metaclass=IterableTypeCompare):
    pass
 
@@ -11,6 +25,7 @@ class Stimulus(Config):
    def dict():
       return { k[0] : v for k, v in dict(Stimulus).items()}
 
+   @bind(entity.Player)
    class Entity(Config):
       @staticmethod
       def N(config):
@@ -37,8 +52,8 @@ class Stimulus(Config):
                self.max = config.STIM
 
             def get(self, ent, ref):
-               val = self.val - ref.base.r.val
-               return np.array([self.asserts(val)])
+               self._val = ent.base.r - ref.base.r
+               return np.array([self.norm()])
     
          #You made this continuous
          class C(node.Continuous):
@@ -47,8 +62,8 @@ class Stimulus(Config):
                self.max = config.STIM
 
             def get(self, ent, ref):
-               val = self.val - ref.base.c.val
-               return np.array([self.asserts(val)])
+               self._val = ent.base.c - ref.base.c
+               return np.array([self.norm()])
 
       #Historical stats
       class History(Config, node.Flat):
@@ -99,15 +114,8 @@ class Stimulus(Config):
                self.min     = -1
                self.max     = 10
 
+   @bind(tile.Tile)
    class Tile(Config):
-      #A multiplicative interaction between pos and index
-      #is required at small training scale
-      #class PosIndex(node.Discrete):
-      #   def init(self, config):
-      #      self.max = config.NTILE*15*15
-
-      #   def get(self, tile, r, c):
-      #      return (r*15+c)*tile.state.index
       @staticmethod
       def N(config):
          return config.WINDOW**2
@@ -128,15 +136,6 @@ class Stimulus(Config):
 
          def get(self, tile, r, c):
             return np.array([tile.state.index])
-
-      '''
-      class Position(node.Discrete):
-         def init(self, config):
-            self.max = 9
-
-         def get(self, tile, r, c):
-            return r*3+c
-      '''
 
       class RRel(node.Discrete):
          def init(self, config):

@@ -52,7 +52,7 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
 
       #Cull dead agaents
       for ent in self.dead:
-         lifetime = ent.history.timeAlive.val
+         lifetime = ent.history.timeAlive
          self.lifetimes.append(lifetime)
          infos[ent.entID] = {'lifetime': lifetime}
          if not self.config.RENDER and len(self.lifetimes) >= 1000:

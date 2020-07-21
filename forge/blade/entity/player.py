@@ -4,26 +4,19 @@ from pdb import set_trace as T
 from forge.blade.systems import ai
 from forge.blade.lib.enums import Material, Neon
 
-from forge.blade.io.stimulus.hook import StimHook
-from forge.blade.io.stimulus.static import Stimulus
-
 from forge.blade.systems.skill import Skills
 from forge.blade.systems.inventory import Inventory
 
-class Base(StimHook):
+class Base:
    def __init__(self, config, iden, pop, name, color):
-      super().__init__(Stimulus.Entity.Base, config)
-
       self.name  = name + str(iden)
       self.color = color
+      self.self  = True
  
       self.alive = True
 
-      r, c = config.SPAWN()
-      self.r.update(r)
-      self.c.update(c)
-
-      self.population.update(pop)
+      self.r, self.c = config.SPAWN()
+      self.population = pop
 
    def update(self, ent, world, actions):
       if ent.resources.health.val <= 0:
@@ -37,38 +30,44 @@ class Base(StimHook):
 
       #Update counts
       r, c = self.pos
-      world.env.tiles[r, c].counts[self.population.val] += 1
+      world.env.tiles[r, c].counts[self.population] += 1
 
    @property
    def pos(self):
-      return self.r.val, self.c.val
+      return self.r, self.c
 
    def packet(self):
-      data = self.outputs(self.config)
+      #data = self.outputs(self.config)
 
-      data['name']     = self.name
-      data['color']    = self.color.packet()
+      data = {}
+      data['r']          = self.r
+      data['c']          = self.c
+      data['population'] = self.population
+      data['self']       = self.self
+      data['name']       = self.name
+      data['color']      = self.color.packet()
 
       return data
 
-class History(StimHook):
+class History:
    def __init__(self, config):
-      super().__init__(Stimulus.Entity.History, config)
+      self.timeAlive = 0
       self.actions = None
       self.attack  = None
+      self.damage = None
 
       self.attackMap = np.zeros((7, 7, 3)).tolist()
       self.lastPos = None
 
    def update(self, ent, world, actions):
-      self.damage.update(None)
+      self.damage = None
       self.actions = actions
 
       #No way around this circular import I can see :/
       from forge.blade.io.action import static as action
       key = action.Attack
 
-      self.timeAlive.increment()
+      self.timeAlive += 1
 
       if key in actions:
          self.attack, self.targ = actions[key]
@@ -93,7 +92,10 @@ class History(StimHook):
             self.attackMap[3+dr][3+dc][attackInd] += 1
 
    def packet(self):
-      data = self.outputs(self.config)
+      #data = self.outputs(self.config)
+      data = {}
+      data['damage']    = self.damage
+      data['timaAlive'] = self.timeAlive
 
       if self.attack is not None:  
          data['attack'] = self.attack
@@ -102,13 +104,35 @@ class History(StimHook):
          #      'target': self._attack.args.name}
 
       return data
+
+class Resource:
+    def __init__(self, val):
+        self.val = val
+        self.max = val
+
+    def packet(self):
+        return {
+                'val': self.val,
+                'max': self.max}
  
-class Resources(StimHook):
+#Todo: fix negative rollover
+class Resources:
    def __init__(self, config):
-      super().__init__(Stimulus.Entity.Resources, config)
+      self.health = Resource(config.HEALTH)
+      self.water  = Resource(config.RESOURCE)
+      self.food   = Resource(config.RESOURCE)
 
    def update(self, ent, world, actions):
-      pass
+      self.health.max = ent.skills.constitution.level
+      self.water.max  = ent.skills.fishing.level
+      self.food.max   = ent.skills.hunting.level
+
+   def packet(self):
+      data = {}
+      data['health'] = self.health.packet()
+      data['food']   = self.food.packet()
+      data['water']  = self.water.packet()
+      return data
 
 def wilderness(config, pos):
    rCent = config.R//2
@@ -121,16 +145,25 @@ def wilderness(config, pos):
    diff = max(diff // 3, -1)
    return diff
 
-class Status(StimHook):
+class Status:
    def __init__(self, config):
-      super().__init__(Stimulus.Entity.Status, config)
+      self.config = config
+      self.wilderness = -1
+      self.immune = 0
+      self.freeze = 0
 
    def update(self, ent, world, actions):
-      self.immune.decrement()
-      self.freeze.decrement()
+      self.immune = max(0, self.immune-1)
+      self.freeze = max(0, self.freeze-1)
    
-      lvl = wilderness(self.config, ent.base.pos)
-      self.wilderness.update(lvl)
+      self.wilderness = wilderness(self.config, ent.base.pos)
+
+   def packet(self):
+      data = {}
+      data['wilderness'] = self.wilderness
+      data['immune']     = self.immune
+      data['freeze']     = self.freeze
+      return data
 
 class Player():
    SERIAL = 0
@@ -153,17 +186,17 @@ class Player():
 
    #Note: does not stack damage, but still applies to health
    def applyDamage(self, dmg, style):
-      self.resources.food.increment(amt=dmg)
-      self.resources.water.increment(amt=dmg)
+      self.resources.food.val += dmg
+      self.resources.water.val += dmg
 
       self.skills.applyDamage(dmg, style)
       
    def receiveDamage(self, dmg):
-      self.resources.health.decrement(dmg)
-      self.resources.food.decrement(amt=dmg)
-      self.resources.water.decrement(amt=dmg)
+      self.resources.health.val -= dmg
+      self.resources.food.val   -= dmg
+      self.resources.water.val  -= dmg
 
-      self.history.damage.update(dmg)
+      self.history.damage = dmg
       self.skills.receiveDamage(dmg)
 
    @property

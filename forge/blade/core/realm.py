@@ -513,8 +513,8 @@ class Realm(Timed):
             pos   = tuple([r, c])
             ent   = entity.Player(config, entID, pop, name, color)
 
-            ent.base.r.update(r)
-            ent.base.c.update(c)
+            ent.base.r = r
+            ent.base.c = c
 
             self.world.env.tiles[r, c].addEnt(entID, ent)
             stim   = self.world.env.stim(pos, self.config.STIM)

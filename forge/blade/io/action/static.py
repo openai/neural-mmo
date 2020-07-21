@@ -56,8 +56,8 @@ class Move(Node):
       if entity.status.freeze > 0:
          return
 
-      entity.base.r.update(rNew)
-      entity.base.c.update(cNew)
+      entity.base.r = rNew
+      entity.base.c = cNew
       entID = entity.entID
       
       r, c = entity.history.lastPos
@@ -152,7 +152,7 @@ class Attack(Node):
 
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze.update(world.config.FREEZE_TIME)
+         targ.status.freeze = world.config.FREEZE_TIME
 
       return dmg
 

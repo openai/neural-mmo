@@ -38,13 +38,17 @@ class GodswordServerProtocol(WebSocketServerProtocol):
     def __init__(self):
         super().__init__()
         print("Created a server")
-        self.frame = 0
+        self.frame  = 0
         self.packet = {}
+
+        self.connected = False
+        self.pos       = None
 
     def onOpen(self):
         print("Opened connection to server")
 
     def onClose(self, wasClean, code=None, reason=None):
+        self.connected = False
         print('Connection closed')
 
     def connectionMade(self):
@@ -57,7 +61,12 @@ class GodswordServerProtocol(WebSocketServerProtocol):
 
     #Not used without player interaction
     def onMessage(self, packet, isBinary):
-        print("Message", packet)
+        self.connected = True
+        print("Server packet", packet)
+        packet    = packet.decode()
+        _, packet = packet.split(';') #Strip headeer
+        r, c      = packet.split(' ') #Split camera coords
+        self.pos  = [int(r), int(c)]
 
     def onConnect(self, request):
         print("WebSocket connection request: {}".format(request))
@@ -79,7 +88,14 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         environment = data['environment']
         self.packet['ent'] = entities
 
-        gameMap = environment.np().tolist()
+        gameMap = environment.np()
+        if not self.connected:
+            r, c    = self.pos
+            W       = self.WINDOW
+            gameMap = gameMap[r-W:r+W, c-W:c+W]
+
+        gameMap = gameMap.tolist()
+        #self.packet['overlay'] = {}
         self.packet['overlay'] = data['overlay']
         self.packet['map']     = gameMap
 
@@ -92,10 +108,11 @@ class WSServerFactory(WebSocketServerFactory):
         self.realm, self.step = realm, step
         self.clients = []
 
+        self.pos = [256, 256]
         self.tickRate = 0.6
         self.tick = 0
 
-        self.step()
+        self.step(self.pos)
         lc = LoopingCall(self.announce)
         lc.start(self.tickRate)
 
@@ -106,8 +123,10 @@ class WSServerFactory(WebSocketServerFactory):
 
         for client in self.clients:
             client.sendUpdate()
+            if client.pos is not None:
+                self.pos = client.pos
 
-        self.step()
+        self.step(self.pos)
 
     def clientConnectionMade(self, client):
         self.clients.append(client)

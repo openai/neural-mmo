@@ -1,24 +1,26 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.io.stimulus.hook import StimHook
-from forge.blade.io.stimulus.static import Stimulus
-
 def camel(string):
    return string[0].lower() + string[1:]
 
-class Tile(StimHook):
+class Tile:
    SERIAL = 1
    def __init__(self, config, mat, r, c, nCounts, tex):
-      super().__init__(Stimulus.Tile, config)
       self.r, self.c = r, c
+      self.rRel = self.cRel = None
       self.mat = mat()
       self.ents = {}
       self.state = mat()
       self.capacity = self.mat.capacity
       self.tex = tex
+      self.index = None
+      self.nEnts=None
 
-      self.counts = [0 for _ in range(config.NPOP)]
+      self.counts = config.NPOP * [0]
+
+   def packet(self):
+      data = {}
 
    @property
    def serial(self):

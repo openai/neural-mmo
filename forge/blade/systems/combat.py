@@ -51,7 +51,7 @@ def attack(entity, targ, skill):
    attackLevel  = skill.level
    defenseLevel = targ.skills.defense.level
 
-   if targ.status.immune.val > 0:
+   if targ.status.immune > 0:
       return
 
    dmg = 0

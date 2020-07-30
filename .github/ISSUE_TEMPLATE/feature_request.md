@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a feature for the Neural MMO environment of Unity3D Embyr client
+about: Request a feature for the Neural MMO environment of Unity3D Embyr client
 title: "[Feature Request]"
 labels: ''
 assignees: ''

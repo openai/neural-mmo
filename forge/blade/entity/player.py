@@ -141,9 +141,13 @@ def wilderness(config, pos):
    R = abs(pos[0] - rCent)
    C = abs(pos[1] - cCent)
 
-   diff = max(R, C) - 7
-   diff = max(diff // 3, -1)
-   return diff
+   #Circle crop with 0 starting at 10 squares from
+   #center and increasing one level every 5 tiles
+   wild = np.sqrt(R**2 + C**2)
+   wild = (wild - 10) // 5
+   wild = np.clip(wild, -1, 99)
+
+   return wild
 
 class Status:
    def __init__(self, config):
@@ -169,6 +173,7 @@ class Player():
    SERIAL = 0
    def __init__(self, config, iden, pop, name='', color=None):
       self.config = config
+      self.repr   = None
 
       #Identifiers
       self.entID = iden 
@@ -186,15 +191,15 @@ class Player():
 
    #Note: does not stack damage, but still applies to health
    def applyDamage(self, dmg, style):
-      self.resources.food.val += dmg
-      self.resources.water.val += dmg
+      self.resources.food.val  = max(0, self.resources.food.val + dmg)
+      self.resources.water.val = max(0, self.resources.water.val + dmg)
 
       self.skills.applyDamage(dmg, style)
       
    def receiveDamage(self, dmg):
-      self.resources.health.val -= dmg
-      self.resources.food.val   -= dmg
-      self.resources.water.val  -= dmg
+      self.resources.health.val = max(0, self.resources.health.val - dmg)
+      self.resources.food.val   = max(0, self.resources.food.val - dmg)
+      self.resources.water.val  = max(0, self.resources.water.val - dmg)
 
       self.history.damage = dmg
       self.skills.receiveDamage(dmg)

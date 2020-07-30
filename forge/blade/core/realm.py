@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
+import time
 
 from collections import defaultdict
 from itertools import chain
@@ -105,7 +106,6 @@ class Realm(Timed):
       super().__init__()
       self.spawner   = Spawner(config)
       self.world     = core.Env(config, idx)
-      self.env       = self.world.env
 
       self.globalValues = None
       self.config    = config
@@ -299,7 +299,8 @@ class Realm(Timed):
             'environment': self.world.env,
             'entities': dict((k, v.packet())
                for k, v in self.desciples.items()),
-            'overlay': self.overlay
+            'overlay': self.overlay,
+            'pos': self.overlayPos
             }
       return packet
 
@@ -339,8 +340,6 @@ class Realm(Timed):
       #Stats
       self.world.step(ents, [])
       self.world.env.step()
-
-      self.env = self.world.env.np()
 
    def stepEnts(self, decisions):
       '''Advance agents

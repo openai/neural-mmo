@@ -63,6 +63,7 @@ class Map:
                ret[r-rt, c-cl] = 0
       return ret
 
+   #This constant re-encode is slow
    def np(self):
       env = np.array([e.state.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)

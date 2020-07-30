@@ -42,16 +42,20 @@ class Stimulus:
 
    def add(static, obj, config, args):
       '''Pull attributes from game'''
-      stim = {}
-      for name, attr in static:
-         val = obj
-         for n in name:
-            try:
-               val = val.__dict__[camel(n)]
-            except:
-               T()
+      #Cache observation representation
+      if obj.repr is None:
+          obj.repr = {}
+          for name, attr in static:
+             val = obj
+             for n in name:
+                val = val.__dict__[camel(n)]
 
-         stim[attr] = attr(config).get(*args)
+             obj.repr[attr] = attr(config)
+
+      stim = {}
+      for name, attr in obj.repr.items():
+         stim[name] = attr.get(*args)
+
       return stim
 
    def nop(template):

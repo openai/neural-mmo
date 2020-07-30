@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from forge.blade.lib import overlay
 from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.entity import player
 
 class Overlays:
    def __init__(self, realm, model, trainer, config):
@@ -15,7 +16,7 @@ class Overlays:
       self.config  = config
       self.init    = True
 
-      self.window   = 64
+      self.window   = 128
       R, C          = realm.size
       self.valueMap = np.zeros((R, C))
       self.countMap = np.zeros((R, C, config.NPOP))
@@ -26,10 +27,13 @@ class Overlays:
       self.counts(obs)
       self.values(obs)
       self.attention(obs)
+      self.wilderness(obs)
 
       if self.config.COMPUTE_GLOBAL_VALUES or self.init:
          self.globalValues(obs)
          self.init = False
+
+      self.realm.overlayPos = pos
  
    def counts(self, obs):
       '''Computes a count-based exploration map by painting
@@ -50,7 +54,7 @@ class Overlays:
       colorized = np.sum(colorized, -2)
 
       countSum  = np.sum(self.countMap[r-w:r+w, c-w:c+w], -1)
-      data      = overlay.preprocess(countSum)[..., None]
+      data      = overlay.norm(countSum)[..., None]
 
       countSum[countSum==0] = 1
       colorized = colorized * data / countSum[..., None]
@@ -118,3 +122,16 @@ class Overlays:
 
       colorized = overlay.twoTone(data)
       self.realm.registerOverlay(colorized, 'attention')
+
+   def wilderness(self, obs):
+      '''Computes the local wilderness level'''
+      R, C = self.pos
+      w    = self.window
+
+      data = np.zeros((2*w, 2*w))
+      for r in range(R-w, R+w):
+         for c in range(C-w, C+w):
+            data[r-R+w, c-C+w] = player.wilderness(self.config, (r, c))
+
+      colorized = overlay.twoTone(data, preprocess='clip', invert=True, periods=5)
+      self.realm.registerOverlay(colorized, 'wilderness')

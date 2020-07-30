@@ -123,8 +123,8 @@ class Attack(Node):
 
                selfLevel = combat.level(entity.skills)
                targLevel = combat.level(e.skills)
-               #if abs(selfLevel - targLevel) <= minWilderness:
-               rets.add(e)
+               if abs(selfLevel - targLevel) <= minWilderness:
+                  rets.add(e)
       rets = list(rets)
       return rets
 
@@ -134,21 +134,33 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(world, entity, style, targ):
-      entity.history.attack = {}
-      entity.history.attack['target'] = targ.entID
-      entity.history.attack['style'] = style.__name__
+      entity.history.attack = None
+
+      #Check if self targeted
       if entity.entID == targ.entID:
-         entity.history.attack = None
          return
 
+      #Check wilderness level
+      wilderness = min(entity.status.wilderness, targ.status.wilderness)
+      selfLevel  = combat.level(entity.skills)
+      targLevel  = combat.level(targ.skills)
+
+      if abs(selfLevel - targLevel) > wilderness:
+         return
+
+      #Check attack range
       rng     = style.attackRange(world.config)
       start   = np.array(entity.base.pos)
       end     = np.array(targ.base.pos)
       dif     = np.abs(start - end)
 
       if np.max(dif) > rng:
-         entity.history.attack = None
          return 
+      
+      #Execute attack
+      entity.history.attack = {}
+      entity.history.attack['target'] = targ.entID
+      entity.history.attack['style'] = style.__name__
 
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:

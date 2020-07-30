@@ -41,14 +41,16 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.frame  = 0
         self.packet = {}
 
-        self.connected = False
-        self.pos       = None
+        #"connected" is already used by WSSP
+        self.isConnected = False
+        self.pos = [512, 512]
+        self.WINDOW = 128
 
     def onOpen(self):
         print("Opened connection to server")
 
     def onClose(self, wasClean, code=None, reason=None):
-        self.connected = False
+        self.isConnected = False
         print('Connection closed')
 
     def connectionMade(self):
@@ -61,12 +63,12 @@ class GodswordServerProtocol(WebSocketServerProtocol):
 
     #Not used without player interaction
     def onMessage(self, packet, isBinary):
-        self.connected = True
         print("Server packet", packet)
         packet    = packet.decode()
         _, packet = packet.split(';') #Strip headeer
         r, c      = packet.split(' ') #Split camera coords
         self.pos  = [int(r), int(c)]
+        self.isConnected = True
 
     def onConnect(self, request):
         print("WebSocket connection request: {}".format(request))
@@ -89,13 +91,15 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.packet['ent'] = entities
 
         gameMap = environment.np()
-        if not self.connected:
+        print('Is Connected? : {}'.format(self.isConnected))
+        if self.isConnected:
             r, c    = self.pos
             W       = self.WINDOW
             gameMap = gameMap[r-W:r+W, c-W:c+W]
 
         gameMap = gameMap.tolist()
         #self.packet['overlay'] = {}
+        self.packet['pos']     = data['pos']
         self.packet['overlay'] = data['overlay']
         self.packet['map']     = gameMap
 
@@ -106,20 +110,22 @@ class WSServerFactory(WebSocketServerFactory):
     def __init__(self, ip, realm, step):
         super().__init__(ip)
         self.realm, self.step = realm, step
+        self.time = time.time()
         self.clients = []
 
-        self.pos = [256, 256]
+        self.pos = [512, 512]
         self.tickRate = 0.6
         self.tick = 0
 
         self.step(self.pos)
-        lc = LoopingCall(self.announce)
+        lc = LoopingCall(self.announce) #If this misses a tick, it waits for a whole cycle
         lc.start(self.tickRate)
 
     def announce(self):
         self.tick += 1
         uptime = np.round(self.tickRate*self.tick, 1)
-        print('Uptime: ', uptime, ', Tick: ', self.tick)
+        print('Wall Clock: ', time.time() - self.time, 'Uptime: ', uptime, ', Tick: ', self.tick)
+        self.time = time.time()
 
         for client in self.clients:
             client.sendUpdate()
@@ -141,7 +147,7 @@ class Application:
       log.startLogging(sys.stdout)
       port = 8080
 
-      factory = WSServerFactory(u'ws://localhost:' + str(port), realm, step)
+      factory          = WSServerFactory(u'ws://localhost:' + str(port), realm, step)
       factory.protocol = GodswordServerProtocol 
       resource         = WebSocketResource(factory)
 

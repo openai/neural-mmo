@@ -136,8 +136,8 @@ def fractal(terrain, path):
    frac = (256*terrain).astype(np.uint8)
    imsave(path, terrain)
 
-nMaps, sz = 256, 64 + 16
-#nMaps, sz = 1, 512 + 16
+nMaps, sz = 1, 1024
+#nMaps, sz = 1, 512
 seeds = np.linspace(0, 2**32, nMaps)
 scale = int(sz / 5)
 root = 'resource/maps/'

@@ -7,6 +7,8 @@ def camel(string):
 class Tile:
    SERIAL = 1
    def __init__(self, config, mat, r, c, nCounts, tex):
+      self.repr = None
+
       self.r, self.c = r, c
       self.rRel = self.cRel = None
       self.mat = mat()

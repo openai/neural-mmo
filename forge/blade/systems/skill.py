@@ -159,8 +159,8 @@ class Fishing(HarvestingSkill):
       self.exp = self.expCalc.expAtLevel(config.RESOURCE)
 
    def update(self, ent, world):
-      water      = ent.resources.water
-      water.val -= 1
+      water     = ent.resources.water
+      water.val = max(0, water.val-1)
 
       if Material.WATER.value not in ai.adjacentMats(world.env, ent.base.pos):
          return
@@ -178,8 +178,8 @@ class Hunting(HarvestingSkill):
       self.exp = self.expCalc.expAtLevel(config.RESOURCE)
 
    def update(self, ent, world):
-      food      = ent.resources.food
-      food.val -= 1
+      food     = ent.resources.food
+      food.val = max(0, food.val-1)
 
       r, c = ent.base.pos
       if (type(world.env.tiles[r, c].mat) not in [Material.FOREST.value] or 

@@ -112,7 +112,7 @@ class Stimulus(Config):
                #You set a low max here
                self.default = -1 
                self.min     = -1
-               self.max     = 10
+               self.max     = 99
 
    @bind(tile.Tile)
    class Tile(Config):

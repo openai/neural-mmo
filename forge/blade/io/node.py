@@ -3,9 +3,49 @@ import numpy as np
 import gym
 
 import inspect
+from enum import Enum, auto
 
-from forge.blade.lib.utils import classproperty
-from forge.blade.io.comparable import IterableTypeCompare
+from forge.blade.lib.utils import classproperty, staticproperty
+
+class IterableTypeCompare(type):
+   def __iter__(cls):
+      stack = list(cls.__dict__.items())
+      while len(stack) > 0:
+         name, attr = stack.pop()
+         if type(name) != tuple:
+            name = tuple([name])
+         if not inspect.isclass(attr):
+            continue
+         if issubclass(attr, Flat):
+            for n, a in attr.__dict__.items():
+               n = name + tuple([n])
+               stack.append((n, a))
+            continue
+         yield name, attr
+
+   def values(cls):
+      return [e[1] for e in cls]
+
+   def __hash__(self):
+      return hash(self.__name__)
+
+   def __eq__(self, other):
+      return self.__name__ == other.__name__
+
+   def __ne__(self, other):
+      return self.__name__ != other.__name__
+
+   def __lt__(self, other):
+      return self.__name__ < other.__name__
+
+   def __le__(self, other):
+      return self.__name__ <= other.__name__
+
+   def __gt__(self, other):
+      return self.__name__ > other.__name__
+
+   def __ge__(self, other):
+      return self.__name__ >= other.__name__
 
 class Flat:
    pass
@@ -42,14 +82,14 @@ class Stim(metaclass=IterableTypeCompare):
       if val is not None:
          assert val >= self.min and val <= self.max, str(self) + ': ' + str(val)
       return val
- 
+
    def update(self, val):
       self._val = val
       return self #for convenience
 
    def packet(self):
       return {
-            'val': self.val, 
+            'val': self.val,
             'max': self.max if self.max != float('inf') else None}
 
    def get(self, *args):
@@ -87,7 +127,7 @@ class Stim(metaclass=IterableTypeCompare):
 
 class Discrete(Stim):
    def __init__(self, config):
-      super().__init__(config)      
+      super().__init__(config)
       self.space = gym.spaces.Box(
             low=np.float32(0.0),
             high=np.float32(self.range),
@@ -119,7 +159,7 @@ class Discrete(Stim):
 
 class Continuous(Stim):
    def __init__(self, config):
-      super().__init__(config)      
+      super().__init__(config)
       self.space = gym.spaces.Box(
             low=np.float32(-1.0),
             high=np.float32(1.0),
@@ -147,3 +187,39 @@ class Continuous(Stim):
       val = self.norm()
       return np.array([val])
 
+class NodeType(Enum):
+   #Tree edges
+   STATIC = auto()    #Traverses all edges without decisions
+   SELECTION = auto() #Picks an edge to follow
+
+   #Executable actions
+   ACTION    = auto() #No arguments
+   CONSTANT  = auto() #Constant argument
+   VARIABLE  = auto() #Variable argument
+
+class Node(metaclass=IterableTypeCompare):
+   SERIAL = 2
+
+   @staticproperty
+   def edges():
+      return []
+
+   #Fill these in
+   @staticproperty
+   def priority():
+      return None
+
+   @staticproperty
+   def type():
+      return None
+
+   @staticproperty
+   def leaf():
+      return False
+
+   @classmethod
+   def N(cls, config):
+      return len(cls.edges)
+
+   def args(stim, entity, config):
+      return []

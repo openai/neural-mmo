@@ -11,7 +11,7 @@ from forge.ethyr.torch import io
 from forge.ethyr.torch import policy
 from forge.ethyr.torch.policy import baseline
 
-from projekt.realm import actionSpace
+from projekt.env import actionSpace
 
 class Policy(RecurrentNetwork, nn.Module):
    '''Wrapper class for using our baseline models with RLlib'''

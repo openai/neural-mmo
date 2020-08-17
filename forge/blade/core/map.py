@@ -36,6 +36,14 @@ class Map:
    def inds(self):
       return np.array([[j.state.index for j in i] for i in self.tiles])
 
+   def packet(self):
+       missingResources = []
+       for e in self.updateList:
+           pos = [e.r, e.c]
+           missingResources.append(pos)
+       return missingResources
+   
+
    def step(self):
       for e in self.updateList.copy():
          if e.static:

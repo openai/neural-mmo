@@ -5,6 +5,7 @@ import time
 from collections import defaultdict, deque
 
 from forge.blade.io.stimulus.static import Stimulus as Static
+from forge.blade.entity import Player
 
 def camel(string):
    '''Convert a string to camel case'''
@@ -84,6 +85,8 @@ class Stimulus:
       stim = deque()
       for tile in env.ravel():
          for e in tile.ents.values():
+            if type(e) != Player:
+               continue
             raw.append(e)
             args = [ent, e]
             s = Stimulus.add(static, e, config, args)

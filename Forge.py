@@ -11,6 +11,7 @@ from pdb import set_trace as T
 
 from fire import Fire
 import sys
+import time
 
 import numpy as np
 import torch
@@ -19,13 +20,14 @@ import ray
 from ray import rllib
 
 from forge.ethyr.torch import utils
+from forge.blade.systems import ai
 
 import projekt
-from projekt import realm, rlutils
+from projekt import env, rlutils
 
 #Instantiate a new environment
 def createEnv(config):
-   return projekt.Realm(config)
+   return projekt.RLLibEnv(config)
 
 #Map agentID to policyID -- requires config global
 def mapPolicy(agentID):
@@ -33,8 +35,8 @@ def mapPolicy(agentID):
 
 #Generate RLlib policies
 def createPolicies(config):
-   obs      = projekt.realm.observationSpace(config)
-   atns     = projekt.realm.actionSpace(config)
+   obs      = projekt.env.observationSpace(config)
+   atns     = projekt.env.actionSpace(config)
    policies = {}
 
    for i in range(config.NPOLICIES):
@@ -47,32 +49,22 @@ def createPolicies(config):
 
    return policies
 
-if __name__ == '__main__':
+def loadTrainer(config):
    #Setup ray
    torch.set_num_threads(1)
    ray.init()
-   
-   #Built config with CLI overrides
-   config = projekt.Config()
-   if len(sys.argv) > 1:
-      sys.argv.insert(1, 'override')
-      Fire(config)
 
-   #RLlib registry
+   #Instantiate monolithic RLlib Trainer object.
    rllib.models.ModelCatalog.register_custom_model(
          'test_model', projekt.Policy)
    ray.tune.registry.register_env("custom", createEnv)
-
-   #Create policies
    policies  = createPolicies(config)
-
-   #Instantiate monolithic RLlib Trainer object.
-   trainer = rlutils.SanePPOTrainer(
+   return rlutils.SanePPOTrainer(
          env="custom", path='experiment', config={
-      'num_workers': 4,
+      'num_workers': 2,
       'num_gpus': 1,
       'num_envs_per_worker': 1,
-      'train_batch_size': 4000,
+      'train_batch_size': 2000,
       'rollout_fragment_length': 100,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
@@ -93,12 +85,26 @@ if __name__ == '__main__':
       },
    })
 
-   #Print model size
-   utils.modelSize(trainer.defaultModel())
-   trainer.restore(config.MODEL)
+if __name__ == '__main__':
+  
+   #Built config with CLI overrides
+   config = projekt.Config()
+   if len(sys.argv) > 1:
+      sys.argv.insert(1, 'override')
+      Fire(config)
 
+   if config.SCRIPTED:
+      evaluator = projekt.Evaluator(config, trainer=None, policy=ai.policy.baseline)
+   else:
+      trainer   = loadTrainer(config)
+      evaluator = projekt.Evaluator(config, trainer=trainer, policy=None)
+      utils.modelSize(trainer.defaultModel())
+      trainer.restore(config.MODEL)
+
+   assert not config.RENDER or not config.EVALUATE, "Config EVALUATE and RENDER cannot both be True"
    if config.RENDER:
-      env = createEnv({'config': config})
-      projekt.Evaluator(trainer, env, config).run()
+      evaluator.render()
+   elif config.EVALUATE:
+      evaluator.test()
    else:
       trainer.train()

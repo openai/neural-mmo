@@ -1,10 +1,10 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.entity import Player
+#from forge.blade.entity import Player
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
-from forge.blade.io.action.node import Node, NodeType
+from forge.blade.io.node import Node, NodeType
 from forge.blade.systems import combat
 
 class Fixed:
@@ -25,6 +25,7 @@ class Action(Node):
 
    def args(stim, entity, config):
       return Static.edges 
+
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
    def hook():
@@ -42,16 +43,16 @@ class Action(Node):
       Action.arguments = arguments
 
 class Move(Node):
-   priority = 0
+   priority = 1
    nodeType = NodeType.SELECTION
-   def call(world, entity, direction):
+   def call(env, entity, direction):
       r, c = entity.base.pos
       entity.history.lastPos = (r, c)
       rDelta, cDelta = direction.delta
       rNew, cNew = r+rDelta, c+cDelta
-      if world.env.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
+      if env.map.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
          return
-      if not utils.inBounds(rNew, cNew, world.shape):
+      if not utils.inBounds(rNew, cNew, env.shape):
          return
       if entity.status.freeze > 0:
          return
@@ -61,10 +62,10 @@ class Move(Node):
       entID = entity.entID
       
       r, c = entity.history.lastPos
-      world.env.tiles[r, c].delEnt(entID)
+      env.map.tiles[r, c].delEnt(entID)
 
       r, c = entity.base.pos
-      world.env.tiles[r, c].addEnt(entID, entity)
+      env.map.tiles[r, c].addEnt(entID, entity)
 
    @staticproperty
    def edges():
@@ -98,6 +99,7 @@ class West(Node):
 
 
 class Attack(Node):
+   priority = 0
    nodeType = NodeType.SELECTION
    @staticproperty
    def n():
@@ -133,7 +135,7 @@ class Attack(Node):
       rCent, cCent = cent
       return abs(r - rCent) + abs(c - cCent)
 
-   def call(world, entity, style, targ):
+   def call(env, entity, style, targ):
       entity.history.attack = None
 
       #Check if self targeted
@@ -149,7 +151,7 @@ class Attack(Node):
          return
 
       #Check attack range
-      rng     = style.attackRange(world.config)
+      rng     = style.attackRange(env.config)
       start   = np.array(entity.base.pos)
       end     = np.array(targ.base.pos)
       dif     = np.abs(start - end)
@@ -161,10 +163,11 @@ class Attack(Node):
       entity.history.attack = {}
       entity.history.attack['target'] = targ.entID
       entity.history.attack['style'] = style.__name__
+      targ.attacker = entity
 
       dmg = combat.attack(entity, targ, style.skill(entity))
       if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze = world.config.FREEZE_TIME
+         targ.status.freeze = env.config.FREEZE_TIME
 
       return dmg
 
@@ -179,7 +182,8 @@ class Style(Node):
 
 
 class Target(Node):
-   argType = Player 
+   argType = None
+   #argType = Player 
 
    @classmethod
    def N(cls, config):
@@ -190,7 +194,6 @@ class Target(Node):
       return Attack.inRange(entity, stim, config, None)
 
 class Melee(Node):
-   priority = 1
    nodeType = NodeType.ACTION
    index = 0
    freeze=False
@@ -202,7 +205,6 @@ class Melee(Node):
       return entity.skills.melee
 
 class Range(Node):
-   priority = 1
    nodeType = NodeType.ACTION
    index = 1
    freeze=False
@@ -214,7 +216,6 @@ class Range(Node):
       return entity.skills.range
 
 class Mage(Node):
-   priority = 1
    nodeType = NodeType.ACTION
    index = 2
    freeze=True

@@ -35,7 +35,7 @@ def clip(ary):
         preprocessed[r, c] = val
    return preprocessed
 
-def twoTone(ary, nStd=2, preprocess='none', invert=False, periods=1):
+def twoTone(ary, nStd=2, preprocess='norm', invert=False, periods=1):
    assert preprocess in 'norm clip none'.split()
    if preprocess == 'norm':
        ary   = norm(ary, nStd)

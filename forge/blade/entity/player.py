@@ -1,131 +1,48 @@
 import numpy as np
 from pdb import set_trace as T
 
-from forge.blade.systems import ai
+from forge.blade.systems import ai, equipment
 from forge.blade.lib.enums import Material, Neon
 
 from forge.blade.systems.skill import Skills
 from forge.blade.systems.inventory import Inventory
+from forge.blade.entity import entity
 
-class Base:
-   def __init__(self, config, iden, pop, name, color):
-      self.name  = name + str(iden)
-      self.color = color
-      self.self  = True
- 
-      self.alive = True
-
-      self.r, self.c = config.SPAWN()
+class Base(entity.Base):
+   def __init__(self, config, pos, iden, pop, name, color):
+      super().__init__(config, pos, iden, name, color)
+      self.name = name + str(iden)
       self.population = pop
+      self.self       = True
 
-   def update(self, ent, world, actions):
-      if ent.resources.health.val <= 0:
-         self.alive = False
+   def update(self, realm, entity, actions):
+      super().update(realm, entity, actions)
+      if entity.resources.health <= 0:
+         self.killed = True
          return
-
-      r, c = self.pos
-      if type(world.env.tiles[r, c].mat) == Material.LAVA.value:
-         self.alive = False
-         return
-
-      #Update counts
-      r, c = self.pos
-      world.env.tiles[r, c].counts[self.population] += 1
 
    @property
    def pos(self):
       return self.r, self.c
 
    def packet(self):
-      #data = self.outputs(self.config)
+      data = super().packet()
 
-      data = {}
-      data['r']          = self.r
-      data['c']          = self.c
       data['population'] = self.population
       data['self']       = self.self
-      data['name']       = self.name
-      data['color']      = self.color.packet()
 
       return data
 
-class History:
-   def __init__(self, config):
-      self.timeAlive = 0
-      self.actions = None
-      self.attack  = None
-      self.damage = None
-
-      self.attackMap = np.zeros((7, 7, 3)).tolist()
-      self.lastPos = None
-
-   def update(self, ent, world, actions):
-      self.damage = None
-      self.actions = actions
-
-      #No way around this circular import I can see :/
-      from forge.blade.io.action import static as action
-      key = action.Attack
-
-      self.timeAlive += 1
-
-      if key in actions:
-         self.attack, self.targ = actions[key]
-         #self.mapAttack()
- 
-   def mapAttack(self):
-      if self.attack is not None:
-         attack = self.attack
-         targ = self.targ
-         name = attack.__name__
-         if name == 'Melee':
-            attackInd = 0
-         elif name == 'Range':
-            attackInd = 1
-         elif name == 'Mage':
-            attackInd = 2
-         rt, ct = targ.args.pos
-         rs, cs = self.pos
-         dr = rt - rs
-         dc = ct - cs
-         if abs(dr)<=3 and abs(dc)<=3:
-            self.attackMap[3+dr][3+dc][attackInd] += 1
-
-   def packet(self):
-      #data = self.outputs(self.config)
-      data = {}
-      data['damage']    = self.damage
-      data['timaAlive'] = self.timeAlive
-
-      if self.attack is not None:  
-         data['attack'] = self.attack
-         #   {
-         #      'style': self._attack.action.__name__,
-         #      'target': self._attack.args.name}
-
-      return data
-
-class Resource:
-    def __init__(self, val):
-        self.val = val
-        self.max = val
-
-    def packet(self):
-        return {
-                'val': self.val,
-                'max': self.max}
- 
-#Todo: fix negative rollover
 class Resources:
    def __init__(self, config):
-      self.health = Resource(config.HEALTH)
-      self.water  = Resource(config.RESOURCE)
-      self.food   = Resource(config.RESOURCE)
+      self.health = entity.Resource(config.HEALTH)
+      self.water  = entity.Resource(config.RESOURCE)
+      self.food   = entity.Resource(config.RESOURCE)
 
-   def update(self, ent, world, actions):
-      self.health.max = ent.skills.constitution.level
-      self.water.max  = ent.skills.fishing.level
-      self.food.max   = ent.skills.hunting.level
+   def update(self, realm, entity, actions):
+      self.health._max = entity.skills.constitution.level
+      self.water._max  = entity.skills.fishing.level
+      self.food._max   = entity.skills.hunting.level
 
    def packet(self):
       data = {}
@@ -134,91 +51,75 @@ class Resources:
       data['water']  = self.water.packet()
       return data
 
-def wilderness(config, pos):
-   rCent = config.R//2
-   cCent = config.C//2
-
-   R = abs(pos[0] - rCent)
-   C = abs(pos[1] - cCent)
-
-   #Circle crop with 0 starting at 10 squares from
-   #center and increasing one level every 5 tiles
-   wild = np.sqrt(R**2 + C**2)
-   wild = (wild - 10) // 5
-   wild = np.clip(wild, -1, 99)
-
-   return wild
-
-class Status:
-   def __init__(self, config):
-      self.config = config
-      self.wilderness = -1
-      self.immune = 0
-      self.freeze = 0
-
-   def update(self, ent, world, actions):
-      self.immune = max(0, self.immune-1)
-      self.freeze = max(0, self.freeze-1)
-   
-      self.wilderness = wilderness(self.config, ent.base.pos)
-
-   def packet(self):
-      data = {}
-      data['wilderness'] = self.wilderness
-      data['immune']     = self.immune
-      data['freeze']     = self.freeze
-      return data
-
-class Player():
+class Player(entity.Entity):
    SERIAL = 0
-   def __init__(self, config, iden, pop, name='', color=None):
-      self.config = config
-      self.repr   = None
+   def __init__(self, config, pos, iden, pop, name='', color=None):
+      super().__init__(config, iden)
+      self.annID  = pop
+      self.target = None
 
-      #Identifiers
-      self.entID = iden 
-      self.annID = pop
+      self.vision = 10
+      self.food   = None
+      self.water  = None
 
       #Submodules
-      self.base      = Base(config, iden, pop, name, color)
-      
+      self.base      = Base(config, pos, iden, pop, name, color)
+      self.status    = entity.Status(config)
+      self.history   = entity.History(config)
       self.resources = Resources(config)
-      self.status    = Status(config)
       self.skills    = Skills(config)
-      self.history   = History(config)
+      self.loadout   = equipment.Loadout()
       #self.inventory = Inventory(config)
       #self.chat      = Chat(config)
 
-   #Note: does not stack damage, but still applies to health
+   @property
+   def alive(self):
+      assert self.resources.health >= 0
+      if self.resources.health == 0:
+         return False
+      return super().alive
+
    def applyDamage(self, dmg, style):
-      self.resources.food.val  = max(0, self.resources.food.val + dmg)
-      self.resources.water.val = max(0, self.resources.water.val + dmg)
+      self.resources.food.increment(dmg)
+      self.resources.water.increment(dmg)
 
       self.skills.applyDamage(dmg, style)
       
-   def receiveDamage(self, dmg):
-      self.resources.health.val = max(0, self.resources.health.val - dmg)
-      self.resources.food.val   = max(0, self.resources.food.val - dmg)
-      self.resources.water.val  = max(0, self.resources.water.val - dmg)
-
+   #Note: does not stack damage, but still applies to health
+   def receiveDamage(self, source, dmg):
       self.history.damage = dmg
+
+      if not self.alive:
+         return 
+
+      self.resources.health.decrement(dmg)
+      self.resources.food.decrement(dmg)
+      self.resources.water.decrement(dmg)
+
       self.skills.receiveDamage(dmg)
+
+      if not self.alive and isinstance(source, Player):
+         source.receiveLoot(self.loadout)
+            
+   def receiveLoot(self, loadout):
+      if loadout.chestplate.level > self.loadout.chestplate.level:
+         self.loadout.chestplate = loadout.chestplate
+      if loadout.platelegs.level > self.loadout.platelegs.level:
+         self.loadout.platelegs = loadout.platelegs
 
    @property
    def serial(self):
       return self.annID, self.entID
  
    def packet(self):
-      data = {}
+      data = super().packet()
 
       data['entID']    = self.entID
       data['annID']    = self.annID
 
       data['base']     = self.base.packet()
       data['resource'] = self.resources.packet()
-      data['status']   = self.status.packet()
       data['skills']   = self.skills.packet()
-      data['history']  = self.history.packet()
 
       return data
   
@@ -228,15 +129,15 @@ class Player():
       action, args = self.cpu.decide(self, packets)
       return action, args
 
-   def step(self, world, actions):
-      self.base.update(self, world, actions)
-      if not self.base.alive:
+   def step(self, realm, actions):
+      self.base.update(realm, self, actions)
+      if not self.alive:
          return
 
-      self.resources.update(self, world, actions)
-      self.status.update(self, world, actions)
-      self.skills.update(self, world, actions)
-      self.history.update(self, world, actions)
+      self.resources.update(realm, self, actions)
+      self.status.update(realm, self, actions)
+      self.skills.update(realm, self, actions)
+      self.history.update(realm, self, actions)
       #self.inventory.update(world, actions)
       #self.update(world, actions)
 

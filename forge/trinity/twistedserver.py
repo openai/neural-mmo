@@ -39,11 +39,12 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         super().__init__()
         print("Created a server")
         self.frame  = 0
-        self.packet = {}
 
         #"connected" is already used by WSSP
         self.isConnected = False
         self.pos = [512, 512]
+        self.cmd = None
+
         self.WINDOW = 128
 
     def onOpen(self):
@@ -66,8 +67,13 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         print("Server packet", packet)
         packet    = packet.decode()
         _, packet = packet.split(';') #Strip headeer
-        r, c      = packet.split(' ') #Split camera coords
-        self.pos  = [int(r), int(c)]
+        r, c, cmd = packet.split(' ') #Split camera coords
+        if len(cmd) == 0:
+            cmd = None
+
+        self.pos = [int(r), int(c)]
+        self.cmd = cmd
+
         self.isConnected = True
 
     def onConnect(self, request):
@@ -84,26 +90,24 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         return data
 
     def sendUpdate(self):
-        ent = {}
         data = self.serverPacket()
-        entities = data['entities']
-        environment = data['environment']
-        self.packet['ent'] = entities
 
-        gameMap = environment.np()
+        packet               = {}
+        packet['resource']   = data['resource']
+        packet['player']     = data['player']
+        packet['npc']        = data['npc']
+        packet['pos']        = data['pos']
+        packet['wilderness'] = data['wilderness']
+
         print('Is Connected? : {}'.format(self.isConnected))
-        if self.isConnected:
-            r, c    = self.pos
-            W       = self.WINDOW
-            gameMap = gameMap[r-W:r+W, c-W:c+W]
+        if not self.isConnected:
+            packet['map'] = data['environment'].np().tolist()
 
-        gameMap = gameMap.tolist()
-        #self.packet['overlay'] = {}
-        self.packet['pos']     = data['pos']
-        self.packet['overlay'] = data['overlay']
-        self.packet['map']     = gameMap
+        if 'overlay' in data:
+           packet['overlay'] = data['overlay']
+           print('SENDING OVERLAY: ', len(packet['overlay']))
 
-        packet = json.dumps(self.packet).encode('utf8')
+        packet = json.dumps(packet).encode('utf8')
         self.sendMessage(packet, False)
 
 class WSServerFactory(WebSocketServerFactory):
@@ -114,10 +118,11 @@ class WSServerFactory(WebSocketServerFactory):
         self.clients = []
 
         self.pos = [512, 512]
+        self.cmd = None
         self.tickRate = 0.6
         self.tick = 0
 
-        self.step(self.pos)
+        self.step(self.pos, self.cmd)
         lc = LoopingCall(self.announce) #If this misses a tick, it waits for a whole cycle
         lc.start(self.tickRate)
 
@@ -131,8 +136,9 @@ class WSServerFactory(WebSocketServerFactory):
             client.sendUpdate()
             if client.pos is not None:
                 self.pos = client.pos
+                self.cmd = client.cmd
 
-        self.step(self.pos)
+        self.step(self.pos, self.cmd)
 
     def clientConnectionMade(self, client):
         self.clients.append(client)

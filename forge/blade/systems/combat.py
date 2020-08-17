@@ -10,93 +10,53 @@ def level(skills):
    defense = skills.defense.level
    melee = skills.melee.level
    ranged = skills.range.level
+   mage   = skills.mage.level
    
    base = 0.25*(defense + hp)
-   meleeAdjust = 0.65*melee
-   rangeAdjust = 0.325*(np.floor(ranged/2)+ranged)
-   final = np.floor(base + max(meleeAdjust, rangeAdjust))
+   final = np.floor(base + 0.5*max(melee, ranged, mage))
    return final
 
-'''
 def attack(entity, targ, skill):
    attackLevel  = skill.level
-   defenseLevel = targ.skills.defense.level
+   defenseLevel = targ.skills.defense.level + targ.loadout.defense
+   skill = skill.__class__.__name__
 
-   attackBonus, strengthBonus = 0, 0
-   if entity.isPC:
-      if skill.isMelee:
-         equip = entity.equipment.melee
-      elif skill.isRanged:
-         equip = entity.equipment.ranged
-         if equip.ammo is not None and equip.ammo <= 0:
-            return
-      attackBonus, strengthBonus  = equip.attack, equip.strength
-
-   defenseBonus = 0
-   if targ.isPC:
-      defenseBonus = targ.equipment.armor.defense
- 
-   dmg = 0
-   if isHit(attackLevel, attackBonus, defenseLevel, defenseBonus):
-      dmg = damage(attackLevel, strengthBonus)
-
-   if entity.isPC:
-      entity.skills.addCombatExp(skill, dmg)
-   if entity.isPC:
-      targ.skills.addCombatExp(targ.skills.defense, dmg)
-   targ.registerHit(entity, dmg)
-'''
-
-def attack(entity, targ, skill):
-   attackLevel  = skill.level
-   defenseLevel = targ.skills.defense.level
-
-   if targ.status.immune > 0:
-      return
-
-   dmg = 0
+   #1 dmg on a miss, max hit on success
+   dmg = 1
    if np.random.rand() < accuracy(attackLevel, defenseLevel):
-      #No roll now, just does the max hit
-      dmg = maxHit(skill, attackLevel)
+      dmg = damage(skill, attackLevel)
       
-   #targ.registerHit(entity, dmg)
-   entity.applyDamage(dmg, skill.__class__.__name__.lower())
-   targ.receiveDamage(dmg)
+   entity.applyDamage(dmg, skill.lower())
+   targ.receiveDamage(entity, dmg)
    return dmg
 
 #Compute maximum damage roll
-#def maxHit(effectiveLevel, equipmentBonus=220):
-#   return np.floor(0.5 + (8+effectiveLevel)*(equipmentBonus+64.0)/640.0)
-def maxHit(skill, level):
-   if isinstance(skill, Skill.Melee):
+def damage(skill, level):
+   if skill == 'Melee':
       return np.floor(5 + level * 45 / 99)
-   if isinstance(skill, Skill.Range):
+   if skill == 'Range':
       return np.floor(3 + level * 32 / 99)
-   if isinstance(skill, Skill.Mage):
+   if skill == 'Mage':
       return np.floor(1 + level * 24 / 99)
 
 #Compute maximum attack or defense roll (same formula)
-def maxAttackDefense(effectiveLevel, equipmentBonus):
-   return effectiveLevel*(equipmentBonus+64)
+#Max attack 198 - min def 1 = 197. Max 198 - max 198 = 0
+#REMOVE FACTOR OF 2 FROM ATTACK AFTER IMPLEMENTING WEAPONS
+def accuracy(attkLevel, defLevel):
+   return 0.5 + (2*attkLevel - defLevel) / 197
 
-def accuracy(defLevel, targDef):
-   return 0.5 + (defLevel - targDef) / 200
+def wilderness(config, pos):
+   rCent = config.R//2
+   cCent = config.C//2
 
-#Compute hit chance from max attack and defense
-'''
-def accuracy(atk, dfn):
-   if atk > dfn:
-      return 1 - (dfn+2) / (2*(atk+1))
-   return atk/(2*(dfn+1))
-'''
+   R = abs(pos[0] - rCent)
+   C = abs(pos[1] - cCent)
 
-def isHit(attackLevel, attackBonus, defenseLevel, defenseBonus):
-   maxAttack  = maxAttackDefense(attackLevel, attackBonus)
-   maxDefense = maxAttackDefense(defenseLevel, defenseBonus)
-   acc = accuracy(maxAttack, maxDefense)
-   return np.random.rand() < acc 
+   #Circle crop with 0 starting at 10 squares from
+   #center and increasing one level every 5 tiles
+   wild = config.R//2 - max(R, C)
+   wild = (wild - 17) // 5
 
-def damage(strengthLevel, strengthBonus):
-   mmax = maxHit(strengthLevel, strengthBonus)
-   return np.random.randint(1, 1 + mmax)
+   wild = int(np.clip(wild, -1, 99))
 
+   return wild

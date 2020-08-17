@@ -63,6 +63,7 @@ class Material(Enum):
    OREROCK  = Orerock
 
 IMPASSIBLE = (1, 5, 6)
+HABITABLE  = (2, 3, 4)
 
 class Defaults:
    BLACK    = (0, 0, 0)
@@ -110,6 +111,16 @@ class Color256:
       colors = [makeColor(idx, h=h, s=1, v=v) for idx, h, v in params]
       return colors
    colors = make256()
+
+class Tier:
+   BLACK    = Color('BLACK', '#000000')
+   WOOD     = Color('WOOD', '#784d1d')
+   BRONZE   = Color('BRONZE', '#db4508')
+   SILVER   = Color('SILVER', '#dedede')
+   GOLD     = Color('GOLD', '#ffae00')
+   PLATINUM = Color('PLATINUM', '#cd75ff')
+   DIAMOND  = Color('DIAMOND', '#00bbbb')
+   
 
 class Neon:
    RED      = Color('RED', '#ff0000')

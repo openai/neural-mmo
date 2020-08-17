@@ -110,7 +110,7 @@ def tile(val, offset):
    else:
       return 'stone'
 
-def material(terrain, tex, X, Y, border=9):
+def material(terrain, tex, X, Y, border=11):
    terrain = deepcopy(terrain).astype(object)
    for y in range(Y):
       for x in range(X):
@@ -122,6 +122,8 @@ def material(terrain, tex, X, Y, border=9):
 
          if not inBounds(y, x, (Y, X), border-1):
             mat = 'lava'
+         elif not inBounds(y, x, (Y, X), border):
+            mat = 'grass'
          elif np.sqrt(xRel**2 + yRel**2) < 2.5:
             mat = 'water'
          elif mag < 6:
@@ -168,8 +170,8 @@ for i, seed in enumerate(seeds):
       pass
    terrain = grid(sz, sz, scale=scale, seed=seed)
    tiles = material(terrain, tex, sz, sz)
-   fractal(terrain, path+'fractal.png')
-   render(tiles, path+'map.png')
+   #fractal(terrain, path+'fractal.png')
+   #render(tiles, path+'map.png')
    index(tiles, path)
 
 

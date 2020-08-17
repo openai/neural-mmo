@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
+import time
 from collections import defaultdict
 import gym
 
@@ -13,9 +14,10 @@ from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action.static import Action
 
-class Realm(core.Realm, rllib.MultiAgentEnv):
+class RLLibEnv(core.Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
+      #self.perfTick = 0
 
    def reset(self, idx=None):
       '''Enable us to reset the Neural MMO environment.
@@ -31,6 +33,8 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
 
    def step(self, decisions):
       '''Action postprocessing; small wrapper to fit RLlib'''
+      #start = time.time()
+
       actions = {}
       for entID in list(decisions.keys()):
          actions[entID] = defaultdict(dict)
@@ -54,11 +58,13 @@ class Realm(core.Realm, rllib.MultiAgentEnv):
       for ent in self.dead:
          lifetime = ent.history.timeAlive
          self.lifetimes.append(lifetime)
-         infos[ent.entID] = {'lifetime': lifetime}
          if not self.config.RENDER and len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             print('Lifetime: {}'.format(lifetime))
             dones['__all__'] = True
+
+      #self.perfTick += 1
+      #print('Perf tick', self.perfTick, ', Time: ', time.time() - start)
 
       return obs, rewards, dones, infos
 

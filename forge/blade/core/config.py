@@ -61,8 +61,8 @@ class Config(Template):
 
    NTILE  = 6 #Number of distinct tile types
    R = C  = 1024
-   BORDER = 8*2 
-   SZ     = R - BORDER
+   BORDER = 11
+   SZ     = R - 2*BORDER
 
    #Agent name
    NAME_PREFIX             = 'Neural_'
@@ -80,6 +80,9 @@ class Config(Template):
    # Population parameters
    NENT                    = 256
    '''Maximum number of agents spawnable in the environment'''
+
+   NMOB                    = 512
+   '''Maximum number of NPCs spawnable in the environment'''
 
    NPOP                    = 8
    '''Number of distinct populations spawnable in the environment'''
@@ -141,6 +144,17 @@ class Config(Template):
          position:
             The position (row, col) to spawn the given agent
       '''
+      R, C = Config.R, Config.C
+      mmax = Config.R - Config.BORDER - 1
+      mmin = Config.BORDER
+
+      var  = np.random.randint(mmin, mmax)
+      fixed = np.random.choice([mmin, mmax])
+      r, c = int(var), int(fixed)
+      if np.random.rand() > 0.5:
+          r, c = c, r 
+      return (r, c)
+
       W     = 2 #Offset
       R, C  = Config.R//2, Config.C//2
       spawn = [(R+W, C+W), (R-W, C-W), (R+W, C-W), (R-W, C+W)]

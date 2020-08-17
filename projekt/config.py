@@ -3,13 +3,15 @@ from forge.blade import core
 class Config(core.Config):
    #Computing the global value map takes ~20 seconds
    #Disabling this will speed up server start
-   COMPUTE_GLOBAL_VALUES = True
+   COMPUTE_GLOBAL_VALUES = False
 
    #Model to load. None will train from scratch
    #Baselines: recurrent, attentional, convolutional 
    #"current" will resume training custom models
-   MODEL   = 'recurrent'
-   RENDER  = True
+   MODEL    = 'current'
+   RENDER   = True 
+   EVALUATE = False
+   SCRIPTED = True
 
    NENT    = 256 #Maximum population size
    NPOP    = 1   #Number of populations

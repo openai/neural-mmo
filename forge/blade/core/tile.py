@@ -1,6 +1,8 @@
 from pdb import set_trace as T
 import numpy as np
 
+from forge.blade.lib import enums
+
 def camel(string):
    return string[0].lower() + string[1:]
 
@@ -27,6 +29,18 @@ class Tile:
    @property
    def serial(self):
       return self.r, self.c
+
+   @property
+   def pos(self):
+      return self.r, self.c
+
+   @property
+   def impassible(self):
+      return self.mat.index in enums.IMPASSIBLE
+
+   @property
+   def habitable(self):
+      return self.mat.index in enums.HABITABLE
 
    def addEnt(self, entID, ent):
       assert entID not in self.ents

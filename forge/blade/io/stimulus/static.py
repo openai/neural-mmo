@@ -1,9 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.io.stimulus import node
-from forge.blade.io.comparable import IterableTypeCompare
-
+from forge.blade.io import node
 from forge.blade import entity, core
 from forge.blade.core import tile
 
@@ -18,7 +16,7 @@ def bind(gameCls):
       return ioCls
    return to 
 
-class Config(metaclass=IterableTypeCompare):
+class Config(metaclass=node.IterableTypeCompare):
    pass
 
 class Stimulus(Config):

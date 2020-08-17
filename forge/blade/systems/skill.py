@@ -2,7 +2,7 @@ from pdb import set_trace as T
 import abc
 
 import numpy as np
-from forge.blade.systems import experience, ai, combat
+from forge.blade.systems import experience, combat, ai
 
 from forge.blade.lib.enums import Material
 
@@ -44,9 +44,9 @@ class Skills:
 
       return data
 
-   def update(self, ent, world, actions):
+   def update(self, realm, entity, actions):
       for skill in self.skills:
-         skill.update(ent, world)
+         skill.update(realm, entity)
 
    def applyDamage(self, dmg, style):
       config = self.config
@@ -78,7 +78,7 @@ class Skill:
 
       return data
 
-   def update(self, ent, world):
+   def update(self, realm, entity):
       pass
 
    @property
@@ -94,27 +94,26 @@ class Constitution(CombatSkill):
       super().__init__(skills, expCalc, config)
       self.exp = self.expCalc.expAtLevel(config.HEALTH)
 
-   def update(self, ent, world):
-      health = ent.resources.health
-      food   = ent.resources.food
-      water  = ent.resources.water
+   def update(self, realm, entity):
+      health = entity.resources.health
+      food   = entity.resources.food
+      water  = entity.resources.water
 
       config = self.config
 
       #Heal if above fractional resource threshold
-      foodThresh  = food.val  > config.HEALTH_REGEN_THRESHOLD * ent.skills.hunting.level
-      waterThresh = water.val > config.HEALTH_REGEN_THRESHOLD * ent.skills.fishing.level
+      foodThresh  = food  > config.HEALTH_REGEN_THRESHOLD * entity.skills.hunting.level
+      waterThresh = water > config.HEALTH_REGEN_THRESHOLD * entity.skills.fishing.level
 
       if foodThresh and waterThresh:
          restore = np.floor(self.level * self.config.HEALTH_RESTORE)
-         restore = min(self.level - health.val, restore)
-         health.val += restore
+         health.increment(restore)
 
-      if food.val <= 0:
-         health.val -= 1
+      if food.empty:
+         health.decrement(1)
 
-      if water.val <= 0:
-         health.val -= 1
+      if water.empty:
+         health.decrement(1)
 
 class Melee(CombatSkill): pass
 class Range(CombatSkill): pass
@@ -158,18 +157,17 @@ class Fishing(HarvestingSkill):
       super().__init__(skills, expCalc, config)
       self.exp = self.expCalc.expAtLevel(config.RESOURCE)
 
-   def update(self, ent, world):
-      water     = ent.resources.water
-      water.val = max(0, water.val-1)
+   def update(self, realm, entity):
+      water = entity.resources.water
+      water.decrement(1)
 
-      if Material.WATER.value not in ai.adjacentMats(world.env, ent.base.pos):
+      if Material.WATER.value not in ai.utils.adjacentMats(realm.map, entity.base.pos):
          return
 
-      restore    = np.floor(self.level * self.config.RESOURCE_RESTORE)
-      restore    = min(self.level - water.val, restore)
-      water.val += restore
+      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
+      water.increment(restore)
 
-      scale = self.config.XP_SCALE
+      scale     = self.config.XP_SCALE
       self.exp += scale * restore;
 
 class Hunting(HarvestingSkill):
@@ -177,20 +175,19 @@ class Hunting(HarvestingSkill):
       super().__init__(skills, expCalc, config)
       self.exp = self.expCalc.expAtLevel(config.RESOURCE)
 
-   def update(self, ent, world):
-      food     = ent.resources.food
-      food.val = max(0, food.val-1)
+   def update(self, realm, entity):
+      food = entity.resources.food
+      food.decrement(1)
 
-      r, c = ent.base.pos
-      if (type(world.env.tiles[r, c].mat) not in [Material.FOREST.value] or 
-            not world.env.harvest(r, c)):
+      r, c = entity.base.pos
+      if (type(realm.map.tiles[r, c].mat) not in [Material.FOREST.value] or 
+            not realm.map.harvest(r, c)):
          return
 
-      restore   = np.floor(self.level * self.config.RESOURCE_RESTORE)
-      restore   = min(self.level - food.val, restore)
-      food.val += restore
+      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
+      food.increment(restore)
 
-      scale = self.config.XP_SCALE
+      scale     = self.config.XP_SCALE
       self.exp += scale * restore;
 
 class Mining(HarvestingSkill): pass

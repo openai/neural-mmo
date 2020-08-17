@@ -5,6 +5,11 @@
 import numpy as np
 from queue import Queue
 from forge.blade.lib import enums, utils
+from forge.blade.io.action import static as Action
+
+# Flighty 
+# PassiveAggressive
+# Hostile 
 
 def turfSearchAndDestroy(world, entity, whitelist):
    for e in sortedByl1(world.env.ent, world.size, entity):
@@ -46,36 +51,6 @@ def whitelistByBlock(delMatPairs, whitelist):
          ret += [deli]
    return ret
 
-#Adjacency functions
-def adjacentDeltas():
-   return [(-1, 0), (1, 0), (0, 1), (0, -1)]
-
-def l1Deltas(s):
-   rets = []
-   for r in range(-s, s+1):
-      for c in range(-s, s+1):
-         rets.append((r, c))
-   return rets
-
-def adjacentPos(pos):
-   return [posSum(pos, delta) for delta in adjacentDeltas()]
-
-def adjacentEmptyPos(env, pos):
-   return [p for p in adjacentPos(pos) 
-         if utils.inBounds(*p, env.size)]
-
-def adjacentTiles(env, pos):
-   return [env.tiles[p] for p in adjacentPos(pos) 
-         if utils.inBounds(*p, env.size)]
-
-def adjacentMats(env, pos):
-   return [type(env.tiles[p].mat) for p in adjacentPos(pos) 
-         if utils.inBounds(*p, env.shape)]
-
-def adjacencyDelMatPairs(env, pos):
-   return zip(adjacentDeltas(), adjacentMats(env, pos))
-###End###
-
 def l1(pos1, pos2):
    r1, c1 = pos1
    r2, c2 = pos2
@@ -115,6 +90,7 @@ def routePath(start, end):
       return (0, np.sign(ec - sc))
    return (np.sign(er - sr), 0)
 
+ 
 def inRange(env, start, targ, rng):
    R, C = env.shape
    rs, cs = start

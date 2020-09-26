@@ -146,11 +146,14 @@ class Env(Timed):
 
       obs, rewards, dones = self.getStims(self.dead)
 
-      infos = log.Quill(self.worldIdx, self.tick)
-      for ent in self.dead:
-         self.log(infos, ent)
+      infos = {}
+      if self.config.RENDER:
+         infos = log.Quill(self.worldIdx, self.tick)
+         for ent in self.dead:
+            self.log(infos, ent)
+         infos = infos.packet
 
-      return obs, rewards, dones, infos.packet
+      return obs, rewards, dones, infos
 
    def log(self, blob, ent):
       pass

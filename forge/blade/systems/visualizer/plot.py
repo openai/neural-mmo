@@ -137,7 +137,7 @@ class Scatter(MarginPlot):
          name=key,
          x='x',
          y='y',
-         size=10,
+         size=6,
          color=color)
 
       return [circle]

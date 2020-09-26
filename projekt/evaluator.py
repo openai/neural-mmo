@@ -1,15 +1,27 @@
 from pdb import set_trace as T
 import numpy as np
+
 import time
+import os
 
 from collections import defaultdict
+from tqdm import tqdm
 
 import projekt
 from projekt.overlay import OverlayRegistry
 
 from forge.blade.systems import ai
-from forge.blade.core.env import Env
 from forge.blade.io.action import static as Action
+from forge.blade.lib.log import InkWell
+
+class Log:
+   def __init__(self):
+      self.data = []
+
+   def update(self, infos):
+      #Log performance
+      for entID, e in infos.items():
+         self.data.append(e)
 
 class Evaluator:
    '''Test-time evaluation with communication to
@@ -22,8 +34,7 @@ class Evaluator:
       self.done    = {}
       self.infos   = {}
 
-      #Logging
-      self.lifetimes = []
+      self.log = InkWell()
  
       if trainer:
          self.model    = self.trainer.get_policy('policy_0').model
@@ -33,7 +44,7 @@ class Evaluator:
          self.registry = OverlayRegistry(self.env, self.model, trainer, config)
          self.state    = {}
       else:
-         self.env      = Env(config)
+         self.env      = projekt.Env(config)
          self.obs      = self.env.reset()
          self.registry = OverlayRegistry(self.env, None, None, config)
 
@@ -45,16 +56,14 @@ class Evaluator:
       Application(self.env, self.tick)
 
    def test(self):
-      t = 0
-      while True:
+      for t in tqdm(range(self.config.EVALUATION_HORIZON)):
          self.tick(None, None)
-         print('Tick: ', t)
-         t += 1
-         if len(self.lifetimes) > 10:
-            break
 
-      perf = np.mean(self.lifetimes)
-      print('Performance: ', perf)
+      self.log.update([self.env.terminal()])
+      data = self.log.packet
+
+      fpath = os.path.join(self.config.LOG_DIR, self.config.LOG_FILE)
+      np.save(fpath, data)
 
    def tick(self, pos, cmd):
       '''Compute actions and overlays for a single timestep
@@ -85,7 +94,5 @@ class Evaluator:
 
       #Step the environment
       self.obs, rewards, self.done, self.infos = self.env.step(actions)
+      self.log.update([self.infos])
 
-      #Log performance
-      for entID, e in self.infos.items():
-         self.lifetimes.append(e)

@@ -24,6 +24,8 @@ from forge.blade.systems import ai
 
 import projekt
 from projekt import env, rlutils
+from projekt.visualize import visualize
+from forge.blade.core import terrain
 
 #Instantiate a new environment
 def createEnv(config):
@@ -85,26 +87,46 @@ def loadTrainer(config):
       },
    })
 
-if __name__ == '__main__':
-  
-   #Built config with CLI overrides
-   config = projekt.Config()
-   if len(sys.argv) > 1:
-      sys.argv.insert(1, 'override')
-      Fire(config)
-
+def init(config, **kwargs):
+   config.override(**kwargs)
+   trainer, policy = None, None
    if config.SCRIPTED:
-      evaluator = projekt.Evaluator(config, trainer=None, policy=ai.policy.baseline)
+      policy = ai.policy.hostile
    else:
-      trainer   = loadTrainer(config)
-      evaluator = projekt.Evaluator(config, trainer=trainer, policy=None)
+      trainer = loadTrainer(config)
       utils.modelSize(trainer.defaultModel())
       trainer.restore(config.MODEL)
 
-   assert not config.RENDER or not config.EVALUATE, "Config EVALUATE and RENDER cannot both be True"
-   if config.RENDER:
-      evaluator.render()
-   elif config.EVALUATE:
-      evaluator.test()
-   else:
+   return trainer, policy
+
+def evaluator(config, **kwargs):
+   trainer, policy = init(config, **kwargs)
+   return projekt.Evaluator(config,
+         trainer=trainer, policy=policy)
+
+class Config(projekt.Config):
+   '''Docstring'''
+   def train(self, **kwargs):
+      trainer, policy = init(self, **kwargs)
       trainer.train()
+
+   def evaluate(self, **kwargs):
+      self.RENDER = True
+      evaluator(self, **kwargs).test()
+
+   def render(self, **kwargs):
+      self.RENDER = True
+      evaluator(self, **kwargs).render()
+
+   def generate(self, **kwargs):
+      trainer, policy = init(self, **kwargs)
+      terrain.MapGenerator(config).generate()
+
+   def visualize(self, **kwargs):
+      self.override(**kwargs)
+      visualize(self)
+      
+if __name__ == '__main__':
+   #Built config with CLI overrides
+   config = Config()
+   Fire(config)

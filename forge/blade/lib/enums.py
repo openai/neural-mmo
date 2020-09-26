@@ -163,6 +163,29 @@ class Neon:
       randInd = np.random.randint(0, len(twelveColor))
       return twelveColor[randInd]
 
+class Solid:
+   BLUE       = Color('BLUE', '#1f77b4')
+   ORANGE     = Color('ORANGE', '#ff7f0e')
+   GREEN      = Color('GREEN', '#2ca02c')
+
+   RED        = Color('RED',  '#D62728')
+   PURPLE     = Color('PURPLE', '#9467bd')
+   BROWN      = Color('BROWN', '#8c564b')
+
+   PINK       = Color('PINK', '#e377c2')
+   GREY       = Color('GREY', '#7f7f7f')
+   CHARTREUSE = Color('CHARTREUSE', '#bcbd22')
+
+   SKY        = Color('SKY', '#17becf')
+
+   def color10():
+      return (
+              Solid.BLUE, Solid.ORANGE, Solid.GREEN,
+              Solid.RED, Solid.PURPLE, Solid.BROWN,
+              Solid.PINK, Solid.CHARTREUSE, Solid.SKY,
+              Solid.GREY)
+
+
 class Palette:
    def __init__(self, n):
       self.n = n

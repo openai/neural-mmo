@@ -13,8 +13,30 @@ from ray.rllib.utils.spaces.flexdict import FlexDict
 from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action.static import Action
+from forge.blade.systems import combat
 
-class RLLibEnv(core.Env, rllib.MultiAgentEnv):
+class Env(core.Env):
+   def log(self, quill, ent):
+      blob = quill.register('Lifetime', quill.LINE, quill.SCATTER, quill.HISTOGRAM, quill.GANTT)
+      blob.log(ent.history.timeAlive)
+
+      blob = quill.register('Skill Level', quill.STACKED_AREA, quill.SCATTER, quill.HISTOGRAM, quill.RADAR)
+      blob.log(ent.skills.range.level,        'Range')
+      blob.log(ent.skills.mage.level,         'Mage')
+      blob.log(ent.skills.melee.level,        'Melee')
+      blob.log(ent.skills.constitution.level, 'Constitution')
+      blob.log(ent.skills.defense.level,      'Defense')
+      blob.log(ent.skills.fishing.level,      'Fishing')
+      blob.log(ent.skills.hunting.level,      'Hunting')
+
+      blob = quill.register('Equipment', quill.STACKED_AREA, quill.HISTOGRAM)
+      blob.log(ent.loadout.chestplate.level, 'Chestplate')
+      blob.log(ent.loadout.platelegs.level,  'Platelegs')
+
+      blob = quill.register('Wilderness', quill.HISTOGRAM, quill.SCATTER)
+      blob.log(combat.wilderness(self.config, ent.pos))
+
+class RLLibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
       #self.perfTick = 0

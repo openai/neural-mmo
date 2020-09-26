@@ -56,13 +56,39 @@ class Config(Template):
       Config to add new static attributes -- CLI definitions will be
       generated automatically.
    '''
-   ROOT   = os.path.join(os.getcwd(), 'resource/maps/procedural/map')
-   SUFFIX = '/map.tmx'
 
-   NTILE  = 6 #Number of distinct tile types
-   R = C  = 1024
-   BORDER = 11
-   SZ     = R - 2*BORDER
+   #Terrain parameters
+   TERRAIN_DIR       = 'resource/maps/procedural/'
+   '''Directory in which generated maps are saved'''
+
+   TERRAIN_RENDER    = False
+   '''Whether map generation should also save .png previews (slow + large file size)'''
+
+   TERRAIN_SIZE      = 1024 
+   '''Size of each map (number of tiles along each side)'''
+
+   TERRAIN_BORDER    = 10
+   '''Number of lava border tiles surrounding each side of the map'''
+
+   TERRAIN_FREQUENCY = (-3, -6)
+   '''Simplex noise frequence range (log2 space)'''
+
+   TERRAIN_OCTAVES   = 8
+   '''Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range'''
+
+   TERRAIN_INVERT    = False
+   '''Specify normal generation (lower frequency at map center) or inverted generation (lower frequency at map edges). Only applied for TERRAIN_OCTAVES > 1'''
+
+
+   #Map load parameters
+   ROOT   = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
+   '''Terrain map load directory'''
+
+   SUFFIX = '/map.tmx'
+   '''Terrain map file suffix'''
+
+   NTILE  = 6
+   '''Number of distinct tile types'''
 
    #Agent name
    NAME_PREFIX             = 'Neural_'
@@ -73,15 +99,12 @@ class Config(Template):
    STIM                    = 7
    '''Number of tiles an agent can see in any direction'''
 
-   WINDOW                  = 2*STIM + 1
-   '''Size of the square tile crop visible to an agent'''
-
 
    # Population parameters
    NENT                    = 256
    '''Maximum number of agents spawnable in the environment'''
 
-   NMOB                    = 512
+   NMOB                    = 1024
    '''Maximum number of NPCs spawnable in the environment'''
 
    NPOP                    = 8
@@ -120,6 +143,12 @@ class Config(Template):
    IMMUNE                  = 10
    '''Number of ticks an agent cannot be damaged after spawning'''
 
+   WILDERNESS              = True
+   '''Whether to bracket combat into wilderness levels'''
+
+   INVERT_WILDERNESS       = False
+   '''Whether to reverse wilderness level generation'''
+
    MELEE_RANGE             = 1
    '''Range of attacks using the Melee skill'''
 
@@ -131,6 +160,11 @@ class Config(Template):
 
    FREEZE_TIME             = 3
    '''Number of ticks successful Mage attacks freeze a target'''
+
+   @property
+   def WINDOW(self):
+      '''Size of the square tile crop visible to an agent'''
+      return 2*self.STIM + 1
 
    def SPAWN(self):
       '''Generates spawn positions for new agents
@@ -144,9 +178,8 @@ class Config(Template):
          position:
             The position (row, col) to spawn the given agent
       '''
-      R, C = Config.R, Config.C
-      mmax = Config.R - Config.BORDER - 1
-      mmin = Config.BORDER
+      mmax = self.TERRAIN_SIZE - self.TERRAIN_BORDER - 1
+      mmin = self.TERRAIN_BORDER
 
       var  = np.random.randint(mmin, mmax)
       fixed = np.random.choice([mmin, mmax])

@@ -1,0 +1,28 @@
+{% extends base %}
+
+{% block title %}Neural MMO Analytics Dashboard{% endblock %}
+
+{% block preamble %}
+<style>
+  @import url(https://fonts.googleapis.com/css?family=Noto+Sans);
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #ff0000;
+    background: #000e0e;
+  }
+  .bk-root .bk-tooltip{
+      border: 1px solid #00bbbb;
+      background-color: black !important;
+      color: #00bbbb;
+      opacity: 0.95;
+      font-size: 16px;
+  }
+
+  .bk-root .bk-tooltip-row-label {
+    color: #005050;
+  }
+
+</style>
+{% endblock %}

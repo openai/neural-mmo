@@ -11,6 +11,7 @@ from forge.blade.io import stimulus
 from forge.blade.systems import combat
 
 from forge.blade.lib.enums import Palette
+from forge.blade.lib import log
 from forge.trinity.ascend import runtime, Timed
 
 def valToRGB(x):
@@ -145,11 +146,21 @@ class Env(Timed):
 
       obs, rewards, dones = self.getStims(self.dead)
 
-      infos = {}
+      infos = log.Quill(self.worldIdx, self.tick)
       for ent in self.dead:
-         infos[ent.entID] = ent.history.timeAlive
+         self.log(infos, ent)
 
-      return obs, rewards, dones, infos
+      return obs, rewards, dones, infos.packet
+
+   def log(self, blob, ent):
+      pass
+
+   def terminal(self):
+      infos = log.Quill(self.worldIdx, self.tick)
+      for entID, ent in self.realm.players.entities.items():
+         self.log(infos, ent)
+
+      return infos.packet
 
    def reset(self):
       '''Instantiates the environment and returns initial observations
@@ -226,6 +237,7 @@ class Env(Timed):
          packet: A packet of data for the client
       '''
       packet = {
+            'config': self.config,
             'environment': self.realm.map,
             'resource': self.realm.map.packet(),
             'player': dict((k, v.packet())

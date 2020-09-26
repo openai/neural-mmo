@@ -1,3 +1,5 @@
+from pdb import set_trace as T
+
 import inspect
 
 from forge.blade.io.stimulus import node
@@ -41,3 +43,14 @@ class IterableTypeCompare(type):
 
    def __ge__(self, other):
       return self.__name__ >= other.__name__
+
+class Iterable(type):
+   def __iter__(cls):
+      stack = list(cls.__dict__.items())
+      while len(stack) > 0:
+         name, attr = stack.pop()
+         if name.startswith('__'):
+            continue
+         yield name, attr
+
+

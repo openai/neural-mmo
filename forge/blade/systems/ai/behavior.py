@@ -43,9 +43,19 @@ def evade(realm, actions, entity):
    actions[Action.Move] = {Action.Direction: move.antipathfind(realm.map.tiles, entity, entity.attacker)}
 
 def hunt(realm, actions, entity):
-   actions[Action.Move]   = {Action.Direction: move.pathfind(realm.map.tiles, entity, entity.target)}
    actions[Action.Attack] = {Action.Style: entity.skills.style,
                              Action.Target: entity.target}
+
+   
+   distance = utils.distance(entity, entity.target)
+   if distance == 0:
+      direction = move.random()
+   elif distance == 1:
+      return
+   else:
+      direction = move.pathfind(realm.map.tiles, entity, entity.target)
+
+   actions[Action.Move]   = {Action.Direction: direction}
 
 def forage(realm, actions, entity):
    direction = utils.forage(realm.map.tiles, entity)

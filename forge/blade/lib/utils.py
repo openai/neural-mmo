@@ -2,6 +2,7 @@ import itertools
 import time
 
 import numpy as np
+from collections import defaultdict
 
 class staticproperty(property):
     def __get__(self, cls, owner):
@@ -12,6 +13,12 @@ class classproperty(object):
         self.f = f
     def __get__(self, obj, owner):
         return self.f(owner)
+
+#https://stackoverflow.com/questions/26496831/how-to-convert-defaultdict-of-defaultdicts-of-defaultdicts-to-dict-of-dicts-o
+def default_to_regular(d):
+    if isinstance(d, defaultdict):
+        d = {k: default_to_regular(v) for k, v in d.items()}
+    return d
 
 def cosSim(x):
    from sklearn.metrics.pairwise import euclidean_distances as pdist

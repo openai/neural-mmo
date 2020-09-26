@@ -121,12 +121,16 @@ class Attack(Node):
       for r in range(R-N, R+N+1):
          for c in range(C-N, C+N+1):
             for e in stim[r, c].ents.values():
-               minWilderness = min(entity.status.wilderness.val, e.status.wilderness.val)
+               if not config.WILDERNESS:
+                  rets.add(e)
+                  continue
 
-               selfLevel = combat.level(entity.skills)
-               targLevel = combat.level(e.skills)
+               minWilderness = min(entity.status.wilderness.val, e.status.wilderness.val)
+               selfLevel     = combat.level(entity.skills)
+               targLevel     = combat.level(e.skills)
                if abs(selfLevel - targLevel) <= minWilderness:
                   rets.add(e)
+
       rets = list(rets)
       return rets
 
@@ -147,16 +151,17 @@ class Attack(Node):
       selfLevel  = combat.level(entity.skills)
       targLevel  = combat.level(targ.skills)
 
-      if abs(selfLevel - targLevel) > wilderness:
+      if env.config.WILDERNESS and abs(selfLevel - targLevel) > wilderness:
          return
 
       #Check attack range
       rng     = style.attackRange(env.config)
       start   = np.array(entity.base.pos)
       end     = np.array(targ.base.pos)
-      dif     = np.abs(start - end)
+      dif     = np.max(np.abs(start - end))
 
-      if np.max(dif) > rng:
+      #Can't attack same cell or out of range
+      if dif == 0 or dif > rng:
          return 
       
       #Execute attack

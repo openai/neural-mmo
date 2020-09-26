@@ -46,17 +46,19 @@ def accuracy(attkLevel, defLevel):
    return 0.5 + (2*attkLevel - defLevel) / 197
 
 def wilderness(config, pos):
-   rCent = config.R//2
-   cCent = config.C//2
+   cent = config.TERRAIN_SIZE // 2
 
-   R = abs(pos[0] - rCent)
-   C = abs(pos[1] - cCent)
+   #Distance from border terrain to center
+   R = cent - abs(pos[0] - cent) - config.TERRAIN_BORDER
+   C = cent - abs(pos[1] - cent) - config.TERRAIN_BORDER
+  
+   #Normalize
+   dist = min(R, C) / (cent - config.TERRAIN_BORDER)
+   wild = int(100 * dist) - 1
 
-   #Circle crop with 0 starting at 10 squares from
-   #center and increasing one level every 5 tiles
-   wild = config.R//2 - max(R, C)
-   wild = (wild - 17) // 5
-
-   wild = int(np.clip(wild, -1, 99))
+   #Convert to distance from center?
+   if config.INVERT_WILDERNESS:
+      R = 1 - R
+      C = 1 - C
 
    return wild

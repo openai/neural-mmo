@@ -137,6 +137,8 @@ class Env(Timed):
       '''
       self.tick += 1
 
+      self.realm_step = time.time()
+
       #Spawn an ent
       iden, pop, name = self.spawn()
       assert iden is not None
@@ -144,7 +146,11 @@ class Env(Timed):
       self.realm.players.spawn(iden, pop, name)
       self.dead = self.realm.step(decisions)
 
+      self.realm_step = time.time() - self.realm_step
+      self.env_stim   = time.time()
+
       obs, rewards, dones = self.getStims(self.dead)
+      self.env_stim       = time.time() - self.env_stim
 
       infos = {}
       if self.config.RENDER:
@@ -267,6 +273,8 @@ class Env(Timed):
       Returns:
          The packet dictionary populated with agent data
       '''
+      self.stim_process = 0
+
       self.raw = {}
       obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.realm.players.items():
@@ -275,8 +283,11 @@ class Env(Timed):
          stim = self.realm.map.stim(
                 ent.base.pos, self.config.STIM)
 
+         start = time.time()
          obs[entID], self.raw[entID] = stimulus.Dynamic.process(
                self.config, stim, ent)
+
+         self.stim_process += time.time() - start
          ob = obs[entID]
 
          rewards[entID] = self.reward(entID)

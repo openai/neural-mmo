@@ -46,3 +46,16 @@ class BiasedInput(nn.Module):
 
    def forward(self, x):
       return self.embed(x) + self.bias.weight
+
+class MixedDTypeInput(nn.Module):
+   def __init__(self, discrete, config):
+      super().__init__()
+
+      self.continuous = torch.nn.Linear(1, config.EMBED)
+      self.discrete   = torch.nn.Embedding(discrete, config.EMBED)
+
+   def forward(self, x):
+      continuous = self.continuous(x['Continuous'].unsqueeze(-1))
+      discrete   = self.discrete(x['Discrete'].long())
+
+      return torch.cat((continuous, discrete), dim=-2)

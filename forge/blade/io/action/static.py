@@ -6,6 +6,7 @@ from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.node import Node, NodeType
 from forge.blade.systems import combat
+from forge.blade.io.stimulus import Static
 
 class Fixed:
    pass
@@ -46,7 +47,8 @@ class Move(Node):
    priority = 1
    nodeType = NodeType.SELECTION
    def call(env, entity, direction):
-      r, c = entity.base.pos
+      r, c  = entity.pos
+      entID = entity.entID
       entity.history.lastPos = (r, c)
       rDelta, cDelta = direction.delta
       rNew, cNew = r+rDelta, c+cDelta
@@ -57,14 +59,14 @@ class Move(Node):
       if entity.status.freeze > 0:
          return
 
-      entity.base.r = rNew
-      entity.base.c = cNew
-      entID = entity.entID
-      
+      env.dataframe.move(Static.Entity, entID, (r, c), (rNew, cNew))
+      entity.base.r.update(rNew)
+      entity.base.c.update(cNew)
+
       r, c = entity.history.lastPos
       env.map.tiles[r, c].delEnt(entID)
 
-      r, c = entity.base.pos
+      r, c = entity.pos
       env.map.tiles[r, c].addEnt(entID, entity)
 
    @staticproperty

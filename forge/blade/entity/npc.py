@@ -51,8 +51,8 @@ class Skills:
       return data
 
 class Base(entity.Base):
-   def __init__(self, config, pos, iden, name, color):
-      super().__init__(config, pos, iden, name, color)
+   def __init__(self, ent, pos, iden, name, color):
+      super().__init__(ent, pos, iden, name, color)
       self.name = name
 
    def update(self, realm, entity, actions):
@@ -73,10 +73,10 @@ class NPC(entity.Entity):
       self.skills  = skills
       self.loadout = loadout
 
-      self.status  = entity.Status(config)
-      self.history = entity.History(config)
+      self.status  = entity.Status(self)
+      self.history = entity.History(self)
 
-      self.health    = entity.Resource(self.skills.constitution.level)
+      self.health  = entity.Resource(self.skills.constitution.level)
 
    @property
    def alive(self):
@@ -112,19 +112,20 @@ class NPC(entity.Entity):
          source.receiveLoot(self.loadout)
 
    @staticmethod
-   def spawn(config, pos, iden):
-      wild = combat.wilderness(config, pos)
+   def spawn(realm, pos, iden):
+      config = realm.config
+      wild   = combat.wilderness(config, pos)
       skills = Skills(*(NPC.levels(wild)))
       loadout = equipment.Loadout(
             chest = NPC.gearLevel(skills.defense.level),
             legs  = NPC.gearLevel(skills.defense.level))
 
       if wild < 33:
-         return Passive(config, pos, iden, skills, loadout)
+         return Passive(realm, pos, iden, skills, loadout)
       elif wild < 66:
-         return PassiveAggressive(config, pos, iden, skills, loadout)
+         return PassiveAggressive(realm, pos, iden, skills, loadout)
       else:
-         return Aggressive(config, pos, iden, skills, loadout)
+         return Aggressive(realm, pos, iden, skills, loadout)
  
    def yieldDrops(self):
       self.lastAttacker.receiveDrops(self.drops.roll())
@@ -182,7 +183,7 @@ class NPC(entity.Entity):
 class Passive(NPC):
    def __init__(self, config, pos, iden, skills, loadout):
       super().__init__(config, iden, skills, loadout)
-      self.base = Base(config, pos, iden, "Passive", Neon.GREEN)
+      self.base = Base(self, pos, iden, "Passive", Neon.GREEN)
 
    #NPCs have direct access to the world
    def step(self, realm):
@@ -192,7 +193,7 @@ class Passive(NPC):
 class PassiveAggressive(NPC):
    def __init__(self, config, pos, iden, skills, loadout):
       super().__init__(config, iden, skills, loadout)
-      self.base   = Base(config, pos, iden, "Neutral", Neon.ORANGE)
+      self.base   = Base(self, pos, iden, "Neutral", Neon.ORANGE)
 
    def step(self, realm):
       actions = ai.policy.neutral(realm, self)
@@ -201,7 +202,7 @@ class PassiveAggressive(NPC):
 class Aggressive(NPC):
    def __init__(self, config, pos, iden, skills, loadout):
       super().__init__(config, iden, skills, loadout)
-      self.base   = Base(config, pos, iden, "Hostile", Neon.RED)
+      self.base   = Base(self, pos, iden, "Hostile", Neon.RED)
       self.vision = int(max(self.vision, 1 + combat.level(self.skills) // 10))
 
    def step(self, realm):

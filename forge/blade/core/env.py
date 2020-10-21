@@ -270,15 +270,8 @@ class Env(Timed):
       self.raw = {}
       obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.realm.players.items():
-         r, c = ent.base.pos
-         tile = self.realm.map.tiles[r, c].tex
-         stim = self.realm.map.stim(
-                ent.base.pos, self.config.STIM)
-
-         obs[entID], self.raw[entID] = stimulus.Dynamic.process(
-               self.config, stim, ent)
-         ob = obs[entID]
-
+         ob             = self.realm.dataframe.get(ent.pos)
+         obs[entID]     = ob
          rewards[entID] = self.reward(entID)
          dones[entID]   = False
 

@@ -2,33 +2,41 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge.blade.lib import enums
+from forge.blade.io.stimulus import Static
 
 def camel(string):
    return string[0].lower() + string[1:]
 
 class Tile:
    SERIAL = 1
-   def __init__(self, config, mat, r, c, nCounts, tex):
-      self.repr = None
+   def __init__(self, realm, config, mat, r, c, nCounts, tex):
+      self.realm = realm
+      self.mat   = mat()
+      self.ents  = {}
 
-      self.r, self.c = r, c
-      self.rRel = self.cRel = None
-      self.mat = mat()
-      self.ents = {}
-      self.state = mat()
+      self.state    = mat()
       self.capacity = self.mat.capacity
-      self.tex = tex
-      self.index = None
-      self.nEnts=None
+      self.tex      = tex
 
-      self.counts = config.NPOP * [0]
+      self.serialized = 'R' + str(r) + '-C' + str(c)
+
+      self.r     = Static.Tile.R(realm.dataframe, self.serial, r)
+      self.c     = Static.Tile.C(realm.dataframe, self.serial, c)
+      self.nEnts = Static.Tile.NEnts(realm.dataframe, self.serial)
+      self.index = Static.Tile.Index(realm.dataframe, self.serial, self.state.index)
+
+      realm.dataframe.init(Static.Tile, self.serial, (r, c))
+ 
+   @property
+   def repr(self):
+      return ((self.r, self.c))
 
    def packet(self):
       data = {}
 
    @property
    def serial(self):
-      return self.r, self.c
+      return self.serialized
 
    @property
    def pos(self):

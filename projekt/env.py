@@ -12,6 +12,7 @@ from ray.rllib.utils.spaces.flexdict import FlexDict
 
 from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.io.node import DataType
 from forge.blade.io.action.static import Action
 from forge.blade.systems import combat
 
@@ -63,7 +64,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
          if entID in self.dead:
             continue
 
-         ents = self.raw[entID][Stimulus.Entity]
+         ents = list(self.realm.players.entities.values())
          for atn, args in decisions[entID].items():
             for arg, val in args.items():
                val = int(val)
@@ -92,13 +93,27 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
 
 #Neural MMO observation space
 def observationSpace(config):
-   obs = FlexDict({})
+   obs = FlexDict(defaultdict(FlexDict))
    for entity in sorted(Stimulus.values()):
-      attrDict = FlexDict({})
-      for attr in sorted(entity.values()):
-         attrDict[attr] = attr(config).space
-      n           = entity.N(config)
-      obs[entity] = Repeated(attrDict, max_len=n)
+      #attrDict = FlexDict({})
+      #for attr in sorted(entity.values()):
+      #   attrDict[attr] = attr(config, None).space
+      nRows = entity.N(config)
+
+      nContinuous = 0
+      nDiscrete   = 0
+      for _, attr in entity:
+         if DataType.DISCRETE in attr.DATA_TYPES:
+            nDiscrete += 1
+         if DataType.CONTINUOUS in attr.DATA_TYPES:
+            nContinuous += 1
+
+      obs[entity.__name__]['Continuous'] = gym.spaces.Box(
+            low=-2**16, high=2**16, shape=(nRows, nContinuous), dtype=np.float32)
+
+      obs[entity.__name__]['Discrete']   = gym.spaces.Box(
+            low=0, high=4096, shape=(nRows, nDiscrete), dtype=np.int32)
+
    return obs
 
 #Neural MMO action space

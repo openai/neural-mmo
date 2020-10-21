@@ -30,7 +30,7 @@ def directionTowards(ent, targ):
    return direction
 
 def closestTarget(ent, tiles, rng=1):
-   sr, sc    = ent.base.pos
+   sr, sc = ent.base.pos
    for d in range(rng+1):
       for r in range(-d, d+1):
          for e in tiles[sr+r, sc-d].ents.values():

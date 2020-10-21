@@ -55,7 +55,7 @@ class Output(nn.Module):
                #Fixed arg
             else:
                #Temp hack, rename
-               cands = lookup[Stimulus.Entity]
+               cands = lookup['Entity']
 
             #lens = [cands.shape[1] for e in range(cands.shape[0])]
             lens  = None

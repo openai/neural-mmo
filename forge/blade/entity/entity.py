@@ -3,7 +3,9 @@ import numpy as np
 
 from forge.blade.systems import skill, droptable, combat
 from forge.blade.lib.enums import Material, Neon
+
 from forge.blade.io.action import static as Action
+from forge.blade.io.stimulus import Static
 
 class Resource:
    def __init__(self, val, mmax=None):
@@ -51,8 +53,8 @@ class Resource:
       return self._val <= val
 
 class Status:
-   def __init__(self, config):
-      self.config = config
+   def __init__(self, ent):
+      self.config = ent.config
       self.wilderness = -1
       self.immune = 0
       self.freeze = 0
@@ -71,7 +73,7 @@ class Status:
       return data
 
 class History:
-   def __init__(self, config):
+   def __init__(self, ent):
       self.timeAlive = 0
       self.actions = None
       self.attack  = None
@@ -106,9 +108,16 @@ class History:
       return data
 
 class Base:
-   def __init__(self, config, pos, iden, name, color):
-      self.color     = color
-      self.r, self.c = pos
+   def __init__(self, ent, pos, iden, name, color):
+      self.color = color
+      r, c       = pos
+
+      self.r          = Static.Entity.R(ent.dataframe, ent.entID, r)
+      self.c          = Static.Entity.C(ent.dataframe, ent.entID, c)
+
+      self.population = Static.Entity.Population(ent.dataframe, ent.entID, 0)
+      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, True)
+
 
    def update(self, realm, entity, actions):
       r, c = self.pos
@@ -118,7 +127,7 @@ class Base:
 
    @property
    def pos(self):
-      return self.r, self.c
+      return self.r.val, self.c.val
 
    def packet(self):
       data = {}
@@ -132,8 +141,9 @@ class Base:
 
 
 class Entity:
-   def __init__(self, config, iden):
-      self.config       = config
+   def __init__(self, realm, iden):
+      self.dataframe    = realm.dataframe
+      self.config       = realm.config
       self.entID        = iden
 
       self.repr         = None

@@ -23,7 +23,7 @@ class Base(nn.Module):
 
       self.output = io.Output(config)
       self.input  = io.Input(config,
-            embeddings=policy.BiasedInput,
+            embeddings=policy.MixedDTypeInput,
             attributes=policy.Attention)
 
       self.valueF = nn.Linear(config.HIDDEN, 1)
@@ -64,10 +64,10 @@ class Simple(Base):
 
    def hidden(self, obs, state=None, lens=None):
       #Attentional agent embedding
-      agents, _ = self.attend(obs[Stimulus.Entity])
+      agents, _ = self.attend(obs['Entity'])
 
       #Convolutional tile embedding
-      tiles     = obs[Stimulus.Tile]
+      tiles     = obs['Tile']
       self.attn = torch.norm(tiles, p=2, dim=-1)
 
       w      = self.config.WINDOW

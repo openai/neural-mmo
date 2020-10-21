@@ -7,11 +7,13 @@ from forge.blade.systems import experience, combat, ai
 from forge.blade.lib.enums import Material
 
 class Skills:
-   def __init__(self, config):
+   def __init__(self, dataframe):
+      config      = dataframe.config
+      self.config = config
+ 
       expCalc     = experience.ExperienceCalculator()
       self.skills = set()
-      self.config = config
-   
+  
       #Combat skills
       self.constitution = Constitution(self.skills, expCalc, config)
       self.melee        = Melee(self.skills, expCalc, config)

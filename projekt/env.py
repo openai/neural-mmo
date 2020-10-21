@@ -5,6 +5,8 @@ import time
 from collections import defaultdict
 import gym
 
+import time
+
 from ray import rllib
 
 from ray.rllib.utils.spaces.repeated import Repeated
@@ -46,17 +48,24 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
       '''Enable us to reset the Neural MMO environment.
       This is for training on limited-resource systems where
       simply using one env map per core is not feasible'''
+      self.env_reset = time.time()
+
       n   = self.config.NMAPS
       if idx is None:
          idx = np.random.randint(n)
 
       self.lifetimes = []
       super().__init__(self.config, idx)
-      return self.step({})[0]
+      ret = self.step({})[0]
+
+      self.env_reset = time.time() - self.env_reset
+      return ret
 
    def step(self, decisions):
       '''Action postprocessing; small wrapper to fit RLlib'''
       #start = time.time()
+
+      self.rllib_compat = time.time()
 
       actions = {}
       for entID in list(decisions.keys()):
@@ -75,7 +84,13 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
                else:
                   actions[entID][atn][arg] = ents[0]
 
+      self.rllib_compat = time.time() - self.rllib_compat
+      self.env_step     = time.time()
+
       obs, rewards, dones, infos = super().step(actions)
+
+      self.env_step     = time.time() - self.env_step
+      env_post          = time.time()
 
       #Cull dead agaents
       for ent in self.dead:
@@ -86,9 +101,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
             print('Lifetime: {}'.format(lifetime))
             dones['__all__'] = True
 
-      #self.perfTick += 1
-      #print('Perf tick', self.perfTick, ', Time: ', time.time() - start)
-
+      self.env_step += time.time() - env_post
       return obs, rewards, dones, infos
 
 #Neural MMO observation space

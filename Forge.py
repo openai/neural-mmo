@@ -17,7 +17,13 @@ import numpy as np
 import torch
 
 import ray
+from typing import Dict
 from ray import rllib
+from ray.rllib.env import BaseEnv
+from ray.rllib.policy import Policy
+from ray.rllib.policy.sample_batch import SampleBatch
+from ray.rllib.evaluation import MultiAgentEpisode, RolloutWorker
+from ray.rllib.agents.callbacks import DefaultCallbacks
 
 from forge.ethyr.torch import utils
 from forge.blade.systems import ai
@@ -51,6 +57,37 @@ def createPolicies(config):
 
    return policies
 
+class LogCallbacks(DefaultCallbacks):
+   STEP_KEYS    = 'rllib_compat env_step realm_step env_stim stim_process'.split()
+   EPISODE_KEYS = ['env_reset']
+   
+
+   def init(self, episode):
+      for key in LogCallbacks.STEP_KEYS + LogCallbacks.EPISODE_KEYS: 
+         episode.hist_data[key] = []
+
+   def on_episode_start(self, *, worker: RolloutWorker, base_env: BaseEnv,
+         policies: Dict[str, Policy],
+         episode: MultiAgentEpisode, **kwargs):
+      self.init(episode)
+
+   def on_episode_step(self, *, worker: RolloutWorker, base_env: BaseEnv,
+         episode: MultiAgentEpisode, **kwargs):
+
+      env = base_env.envs[0]
+      for key in LogCallbacks.STEP_KEYS:
+         if not hasattr(env, key):
+            continue
+         episode.hist_data[key].append(getattr(env, key))
+
+   def on_episode_end(self, *, worker: RolloutWorker, base_env: BaseEnv,
+         policies: Dict[str, Policy], episode: MultiAgentEpisode, **kwargs):
+      env = base_env.envs[0]
+      for key in LogCallbacks.EPISODE_KEYS:
+         if not hasattr(env, key):
+            continue
+         episode.hist_data[key].append(getattr(env, key))
+
 def loadTrainer(config):
    #Setup ray
    torch.set_num_threads(1)
@@ -74,6 +111,7 @@ def loadTrainer(config):
       'horizon': np.inf,
       'soft_horizon': False, 
       'no_done_at_end': False,
+      'callbacks': LogCallbacks,
       'env_config': {
          'config': config
       },

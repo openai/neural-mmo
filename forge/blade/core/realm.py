@@ -61,7 +61,7 @@ class NPCManager(EntityGroup):
    def spawn(self, nTries=25):
       R, C = self.realm.shape
       for i in range(nTries):
-         if len(self.entities) > self.config.NMOB:
+         if len(self.entities) >= self.config.NMOB:
             break
 
          r = np.random.randint(0, R)
@@ -139,13 +139,13 @@ class PlayerManager(EntityGroup):
       for entID in list(self.entities):
          player = self.entities[entID]
          if not player.alive:
-            r, c  = player.base.pos
+            r, c  = player.pos
             entID = player.entID
             dead.add(player)
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
-            self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
+            self.realm.dataframe.remove(Static.Entity, entID, player.pos)
 
       return dead
 

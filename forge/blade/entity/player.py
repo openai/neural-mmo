@@ -94,8 +94,9 @@ class Player(entity.Entity):
 
    @property
    def alive(self):
-      assert self.resources.health >= 0
-      if self.resources.health == 0:
+      #Have to change comparisons for these. Using str value in stim node.
+      assert self.resources.health.val >= 0
+      if self.resources.health.val == 0:
          return False
       return super().alive
 

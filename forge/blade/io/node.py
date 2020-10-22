@@ -97,15 +97,15 @@ class Stim(metaclass=IterableTypeCompare):
       return self.asserts(self.val)
 
    def update(self, val):
-      self._val = min(max(val, 0), self.max)
+      self.val = min(max(val, 0), self.max)
       return self
 
    def increment(self, val=1):
-      self._val = min(self._val + val, self.max)
+      self.val = min(self.val + val, self.max)
       return self
 
    def decrement(self, val=1):
-      self._val = max(self.val - val, 0)
+      self.val = max(self.val - val, 0)
       return self
 
    def __add__(self, other):

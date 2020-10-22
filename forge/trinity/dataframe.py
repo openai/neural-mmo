@@ -249,7 +249,7 @@ class Dataframe:
       self.data[node.obj].update(node, val)
 
    def remove(self, obj, key, pos):
-      self.data[obj.__name__].remove(key)
+      self.data[obj.__name__].remove(key, pos)
 
    def init(self, obj, key, pos):
       self.data[obj.__name__].init(key, pos)

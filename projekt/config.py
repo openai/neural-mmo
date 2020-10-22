@@ -15,7 +15,7 @@ class Config(core.Config):
    #Environment parameters
    NENT    = 256      #Maximum population size
    NPOP    = 1        #Number of populations
-   NMOB    = 128 #Number of NPCS
+   NMOB    = 0        #Number of NPCS
 
    TERRAIN_SIZE = 1024 #Side dimension of each map
    NMAPS        = 256 #Number maps to generate

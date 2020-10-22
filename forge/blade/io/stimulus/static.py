@@ -41,8 +41,10 @@ class Stimulus(Config):
 
       class R(node.Continuous):
          def init(self, config):
-            self.min = -config.STIM
-            self.max = config.STIM
+            #self.min = -config.STIM
+            #self.max = config.STIM
+            self.min = 0
+            self.max = config.TERRAIN_SIZE
 
          def get(self, ent, ref):
             self._val = ent.base.r - ref.base.r
@@ -51,8 +53,11 @@ class Stimulus(Config):
       #You made this continuous
       class C(node.Continuous):
          def init(self, config):
-            self.min = -config.STIM
-            self.max = config.STIM
+            #self.min = -config.STIM
+            #self.max = config.STIM
+            self.min = 0
+            self.max = config.TERRAIN_SIZE
+
 
          def get(self, ent, ref):
             self._val = ent.base.c - ref.base.c

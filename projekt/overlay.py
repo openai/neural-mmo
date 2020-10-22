@@ -46,8 +46,8 @@ class OverlayRegistry:
    def step(self, obs, pos, cmd, update=[]):
       '''Compute overlays and send to the environment'''
       #Per-tick updates
-      for overlay in update:
-          self.overlays[overlay].update(obs)
+      #for overlay in update:
+      #    self.overlays[overlay].update(obs)
 
       if cmd in self.overlays:
           self.overlays[cmd].register(obs)

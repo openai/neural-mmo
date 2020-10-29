@@ -17,7 +17,8 @@ class Config(core.Config):
    NPOP    = 1        #Number of populations
    NMOB    = 0        #Number of NPCS
 
-   TERRAIN_SIZE = 1024 #Side dimension of each map
+   TERRAIN_SIZE    = 80 #Side dimension of each map
+   TERRAIN_OCTAVES = 1  #Comment for fancy maps
    NMAPS        = 256 #Number maps to generate
 
    #Evaluation parameters

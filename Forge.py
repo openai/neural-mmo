@@ -61,7 +61,6 @@ class LogCallbacks(DefaultCallbacks):
    STEP_KEYS    = 'rllib_compat env_step realm_step env_stim stim_process'.split()
    EPISODE_KEYS = ['env_reset']
    
-
    def init(self, episode):
       for key in LogCallbacks.STEP_KEYS + LogCallbacks.EPISODE_KEYS: 
          episode.hist_data[key] = []

@@ -43,7 +43,6 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
       #self.perfTick = 0
-      self.lol = 0
 
    def reset(self, idx=None):
       '''Enable us to reset the Neural MMO environment.
@@ -65,9 +64,6 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
    def step(self, decisions):
       '''Action postprocessing; small wrapper to fit RLlib'''
       #start = time.time()
-      print('Step: {}'.format(self.lol))
-      self.lol += 1
-
       self.rllib_compat = time.time()
 
       actions = {}
@@ -99,7 +95,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
       for ent in self.dead:
          lifetime = ent.history.timeAlive.val
          self.lifetimes.append(lifetime)
-         if not self.config.RENDER and len(self.lifetimes) >= 50:
+         if not self.config.RENDER and len(self.lifetimes) >= 250:
             lifetime = np.mean(self.lifetimes)
             print('Lifetime: {}'.format(lifetime))
             dones['__all__'] = True

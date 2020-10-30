@@ -55,42 +55,45 @@ class Resource:
 class Status:
    def __init__(self, ent):
       self.config = ent.config
-      self.wilderness = -1
-      self.immune = 0
-      self.freeze = 0
+
+      self.wilderness = Static.Entity.Wilderness(ent.dataframe, ent.entID)
+      self.immune     = Static.Entity.Immune(    ent.dataframe, ent.entID)
+      self.freeze     = Static.Entity.Freeze(    ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
-      self.immune = max(0, self.immune-1)
-      self.freeze = max(0, self.freeze-1)
+      self.immune.decrement()
+      self.freeze.decrement()
 
-      self.wilderness = combat.wilderness(self.config, entity.base.pos)
+      wilderness = combat.wilderness(self.config, entity.base.pos)
+      self.wilderness.update(wilderness)
 
    def packet(self):
       data = {}
-      data['wilderness'] = self.wilderness
-      data['immune']     = self.immune
-      data['freeze']     = self.freeze
+      data['wilderness'] = self.wilderness.val
+      data['immune']     = self.immune.val
+      data['freeze']     = self.freeze.val
       return data
 
 class History:
    def __init__(self, ent):
-      self.timeAlive = 0
       self.actions = None
       self.attack  = None
-      self.damage = None
+
+      self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
+      self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
 
       self.attackMap = np.zeros((7, 7, 3)).tolist()
       self.lastPos = None
 
    def update(self, realm, entity, actions):
-      self.damage = None
+      self.damage.update(0)
       self.actions = actions
 
       #No way around this circular import I can see :/
       from forge.blade.io.action import static as action
       key = action.Attack
 
-      self.timeAlive += 1
+      self.timeAlive.increment()
 
       '''
       if key in actions:
@@ -99,8 +102,8 @@ class History:
 
    def packet(self):
       data = {}
-      data['damage']    = self.damage
-      data['timaAlive'] = self.timeAlive
+      data['damage']    = self.damage.val
+      data['timaAlive'] = self.timeAlive.val
 
       if self.attack is not None:
          data['attack'] = self.attack
@@ -132,8 +135,8 @@ class Base:
    def packet(self):
       data = {}
 
-      data['r']          = self.r
-      data['c']          = self.c
+      data['r']          = self.r.val
+      data['c']          = self.c.val
       data['name']       = self.name
       data['color']      = self.color.packet()
 

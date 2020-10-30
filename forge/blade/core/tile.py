@@ -40,7 +40,7 @@ class Tile:
 
    @property
    def pos(self):
-      return self.r, self.c
+      return self.r.val, self.c.val
 
    @property
    def impassible(self):

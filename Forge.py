@@ -106,7 +106,7 @@ def loadTrainer(config):
       'rollout_fragment_length': 100,
       'sgd_minibatch_size': 128,
       'num_sgd_iter': 1,
-      'use_pytorch': True,
+      'framework': 'torch',
       'horizon': np.inf,
       'soft_horizon': False, 
       'no_done_at_end': False,
@@ -120,7 +120,7 @@ def loadTrainer(config):
       },
       'model': {
          'custom_model': 'test_model',
-         'custom_options': {'config': config}
+         'custom_model_config': {'config': config}
       },
    })
 

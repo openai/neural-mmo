@@ -39,11 +39,9 @@ class Map:
    def packet(self):
        missingResources = []
        for e in self.updateList:
-           pos = [e.r, e.c]
-           missingResources.append(pos)
+           missingResources.append(e.pos)
        return missingResources
    
-
    def step(self):
       for e in self.updateList.copy():
          if e.static:

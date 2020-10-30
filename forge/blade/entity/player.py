@@ -26,8 +26,8 @@ class Base(entity.Base):
    def packet(self):
       data = super().packet()
 
-      data['population'] = self.population
-      data['self']       = self.self
+      data['population'] = self.population.val
+      data['self']       = self.self.val
 
       return data
 
@@ -49,27 +49,6 @@ class Resources:
       data['water']  = self.water.packet()
       return data
 
-class History(entity.History):
-   def __init__(self, ent):
-      super().__init__(ent.config)
-      self.health    = Static.Entity.Health(   ent.dataframe, ent.entID)
-      self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
-      self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
-
-class Status(entity.Status):
-   def __init__(self, ent):
-      super().__init__(ent)
-      self.wilderness = Static.Entity.Wilderness(ent.dataframe, ent.entID)
-      self.immune     = Static.Entity.Immune(    ent.dataframe, ent.entID)
-      self.freeze     = Static.Entity.Freeze(    ent.dataframe, ent.entID)
-
-   def packet(self):
-      data = {}
-      data['wilderness'] = self.wilderness.val
-      data['immune']     = self.immune.val
-      data['freeze']     = self.freeze.val
-      return data
-
 class Player(entity.Entity):
    SERIAL = 0
    def __init__(self, realm, pos, iden, pop, name='', color=None):
@@ -84,8 +63,8 @@ class Player(entity.Entity):
 
       #Submodules
       self.base      = Base(self, pos, iden, pop, name, color)
-      self.status    = Status(self)
-      self.history   = History(self)
+      self.status    = entity.Status(self)
+      self.history   = entity.History(self)
       self.resources = Resources(self)
       self.skills    = Skills(self)
       self.loadout   = equipment.Loadout()
@@ -108,7 +87,7 @@ class Player(entity.Entity):
       
    #Note: does not stack damage, but still applies to health
    def receiveDamage(self, source, dmg):
-      self.history.damage = dmg
+      self.history.damage.update(dmg)
 
       if not self.alive:
          return 

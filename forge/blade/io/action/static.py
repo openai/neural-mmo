@@ -177,8 +177,8 @@ class Attack(Node):
       targ.attacker = entity
 
       dmg = combat.attack(entity, targ, style.skill(entity))
-      if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze = env.config.FREEZE_TIME
+      if style.freeze and dmg > 0:
+         targ.status.freeze.update(env.config.FREEZE_TIME)
 
       return dmg
 

@@ -20,7 +20,7 @@ Notes:
 
 class Index:
    def __init__(self, prealloc):
-      self.free  = {idx for idx in range(prealloc)}
+      self.free  = {idx for idx in range(1, prealloc)}
       self.index = {}
 
    def full(self):
@@ -28,6 +28,8 @@ class Index:
 
    def remove(self, key):
       row = self.index[key]
+      del self.index[key]
+
       self.free.add(row)
       return row
 
@@ -174,6 +176,11 @@ class Dataframe:
       self.data[obj.__name__].init(key, pos)
 
    def move(self, obj, key, pos, nxt):
+      dat = self.data['Entity'].grid.data.ravel().tolist()
+      dat = [e for e in dat if e != 0]
+      if len(np.unique(dat)) != len(dat):
+         T()
+      
       self.data[obj.__name__].move(key, pos, nxt)
 
    def get(self, pos):

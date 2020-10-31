@@ -71,6 +71,8 @@ class Player(entity.Entity):
       #self.inventory = Inventory(dataframe)
       #self.chat      = Chat(dataframe)
 
+      self.dataframe.init(Static.Entity, self.entID, self.pos)
+
    @property
    def alive(self):
       #Have to change comparisons for these. Using str value in stim node.

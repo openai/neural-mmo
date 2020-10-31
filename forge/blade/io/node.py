@@ -101,11 +101,11 @@ class Stim(metaclass=IterableTypeCompare):
       return self
 
    def increment(self, val=1):
-      self.val = min(self.val + val, self.max)
+      self.update(self.val + val)
       return self
 
    def decrement(self, val=1):
-      self.val = max(self.val - val, 0)
+      self.update(self.val - val)
       return self
 
    def __add__(self, other):

@@ -14,9 +14,10 @@ from ray.rllib.utils.spaces.flexdict import FlexDict
 
 from forge.blade import core
 from forge.blade.io.stimulus.static import Stimulus
-from forge.blade.io.node import DataType
 from forge.blade.io.action.static import Action
 from forge.blade.systems import combat
+
+from forge.trinity.dataframe import DataType
 
 class Env(core.Env):
    def log(self, quill, ent):
@@ -115,16 +116,18 @@ def observationSpace(config):
       nContinuous = 0
       nDiscrete   = 0
       for _, attr in entity:
-         if DataType.DISCRETE in attr.DATA_TYPES:
+         if attr.DISCRETE:
             nDiscrete += 1
-         if DataType.CONTINUOUS in attr.DATA_TYPES:
+         if attr.CONTINUOUS:
             nContinuous += 1
 
       obs[entity.__name__]['Continuous'] = gym.spaces.Box(
-            low=-2**16, high=2**16, shape=(nRows, nContinuous), dtype=np.float32)
+            low=-2**16, high=2**16, shape=(nRows, nContinuous),
+            dtype=DataType.CONTINUOUS)
 
       obs[entity.__name__]['Discrete']   = gym.spaces.Box(
-            low=0, high=4096, shape=(nRows, nDiscrete), dtype=np.int32)
+            low=0, high=4096, shape=(nRows, nDiscrete),
+            dtype=DataType.DISCRETE)
 
    return obs
 

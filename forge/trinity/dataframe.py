@@ -4,7 +4,6 @@ import numpy as np
 from collections import defaultdict
 
 from forge.blade.io.stimulus import Static
-from forge.blade.io.node import DataType
 
 '''
 Notes:
@@ -17,6 +16,10 @@ Notes:
 6. You need to modify forge/ethyr/io to accept the new data forms
 7. You need to modify the game rules to ensure 1 agent max per tile
 '''
+
+class DataType:
+   CONTINUOUS = np.float32
+   DISCRETE   = np.int32
 
 class Index:
    def __init__(self, prealloc):
@@ -48,27 +51,24 @@ class Index:
    def expand(self, cur, nxt):
       self.free.update({idx for idx in range(cur, nxt)})
 
-class Table:
-   def __init__(self, config, obj, prealloc, dtype):
+class ContinuousTable:
+   def __init__(self, config, obj, prealloc, dtype=DataType.CONTINUOUS):
+      self.config = config
       self.dtype  = dtype
-      self.nCols  = 0
       self.cols   = {}
-      self.cumsum = 0
-      self.discrete = {}
-      for (attribute,), attr in obj:
-         if dtype not in attr.DATA_TYPES:
-            continue
+      self.nCols  = 0
 
-         self.cols[attribute]     = self.nCols
-         attr                     = attr(None, None, 0, config=config)
-         self.cumsum              += attr.max - attr.min + 1
-         self.discrete[attribute] = self.cumsum
+      for (attribute,), attr in obj:
+         self.initAttr(attribute, attr)
+
+      self.data = self.initData(prealloc, self.nCols)
+
+   def initAttr(self, key, attr):
+      if attr.CONTINUOUS:
+         self.cols[key] = self.nCols
          self.nCols += 1
 
-
-      self.data = self.init(prealloc, self.nCols)
-
-   def init(self, nRows, nCols):
+   def initData(self, nRows, nCols):
       return np.zeros((nRows, nCols), dtype=self.dtype)
 
    def update(self, row, attr, val):
@@ -76,12 +76,11 @@ class Table:
       self.data[row, col] = val
 
    def expand(self, cur, nxt):
-      data = self.init(nxt, self.nCols)
-
+      data       = self.initData(nxt, self.nCols)
       data[:cur] = self.data
 
-      self.nRows = nxt
       self.data  = data
+      self.nRows = nxt
 
    def get(self, rows, pad=None):
       data = self.data[rows]
@@ -91,12 +90,29 @@ class Table:
 
       return data
 
+class DiscreteTable(ContinuousTable):
+   def __init__(self, config, obj, prealloc, dtype=DataType.DISCRETE):
+      self.discrete, self.cumsum = {}, 0
+      super().__init__(config, obj, prealloc, dtype)
+
+   def initAttr(self, key, attr):
+      if not attr.DISCRETE:
+         return
+
+      self.cols[key]     =  self.nCols
+      #You're not actually using any of this
+      #Enable -min in node and then activate this in dataframe
+      #attr               =  attr(None, None, 0, config=self.config)
+      #self.cumsum        += attr.max - attr.min + 1
+      #self.discrete[key] =  self.cumsum
+      self.nCols         += 1
+
 class Grid:
    def __init__(self, R, C):
       self.data = np.zeros((R, C), dtype=np.int)
 
    def zero(self, pos):
-      r, c           = pos
+      r, c            = pos
       self.data[r, c] = 0
     
    def set(self, pos, val):
@@ -114,8 +130,8 @@ class Grid:
 class GridTables:
    def __init__(self, config, obj, pad, prealloc=1000, expansion=2):
       self.grid       = Grid(config.TERRAIN_SIZE, config.TERRAIN_SIZE)
-      self.continuous = Table(config, obj, prealloc, np.float32)
-      self.discrete   = Table(config, obj, prealloc, np.int32)
+      self.continuous = ContinuousTable(config, obj, prealloc)
+      self.discrete   = DiscreteTable(config, obj, prealloc)
       self.index      = Index(prealloc)
 
       self.nRows      = prealloc
@@ -123,11 +139,19 @@ class GridTables:
       self.radius     = config.STIM
       self.pad        = pad
 
-   def get(self, pos):
+   def get(self, pos, radius=None):
+      if radius is None:
+         radius = self.radius
+
       r, c = pos
+      cent = self.grid.data[r, c]
       rows = self.grid.window(
-            r-self.radius, r+self.radius+1,
-            c-self.radius, c+self.radius+1)
+            r-radius, r+radius+1,
+            c-radius, c+radius+1)
+
+      #Center element first
+      rows.remove(cent)
+      rows.insert(0, cent)
 
       return {'Continuous': self.continuous.get(rows, self.pad),
               'Discrete':   self.discrete.get(rows, self.pad)}
@@ -143,9 +167,9 @@ class GridTables:
          self.discrete.expand(cur, self.nRows)
 
       row = self.index.update(key)
-      if DataType.DISCRETE in obj.DATA_TYPES:
+      if obj.DISCRETE:
          self.discrete.update(row, attr, val)
-      if DataType.CONTINUOUS in obj.DATA_TYPES:
+      if obj.CONTINUOUS:
          self.continuous.update(row, attr, val)
 
    def move(self, key, pos, nxt):
@@ -179,8 +203,7 @@ class Dataframe:
       dat = self.data['Entity'].grid.data.ravel().tolist()
       dat = [e for e in dat if e != 0]
       if len(np.unique(dat)) != len(dat):
-         T()
-      
+         T() 
       self.data[obj.__name__].move(key, pos, nxt)
 
    def get(self, pos):

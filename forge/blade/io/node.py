@@ -4,18 +4,15 @@ import gym
 
 import inspect
 from enum import Enum, auto
+from collections import deque
 
 from forge.blade.lib.utils import classproperty, staticproperty
 
-class DataType:
-   CONTINUOUS = np.float32
-   DISCRETE   = np.int32
-
 class IterableTypeCompare(type):
    def __iter__(cls):
-      stack = list(cls.__dict__.items())
-      while len(stack) > 0:
-         name, attr = stack.pop()
+      queue = deque(cls.__dict__.items())
+      while len(queue) > 0:
+         name, attr = queue.popleft()
          if type(name) != tuple:
             name = tuple([name])
          if not inspect.isclass(attr):
@@ -23,7 +20,7 @@ class IterableTypeCompare(type):
          if issubclass(attr, Flat):
             for n, a in attr.__dict__.items():
                n = name + tuple([n])
-               stack.append((n, a))
+               queue.append((n, a))
             continue
          yield name, attr
 
@@ -55,6 +52,8 @@ class Flat:
    pass
 
 class Stim(metaclass=IterableTypeCompare):
+   CONTINUOUS = False
+   DISCRETE   = False
    def __init__(self, dataframe, key, val=None, config=None):
       if config is None:
          config    = dataframe.config
@@ -129,16 +128,16 @@ class Stim(metaclass=IterableTypeCompare):
       return self.val >= other
 
 class Continuous(Stim):
-   DATA_TYPES = {DataType.CONTINUOUS}
+   CONTINUOUS = True
    def update(self, val):
-      val = super().update(val).val
+      val = Stim.update(self, val).val
       self.dataframe.update(self, val)
       return val
 
 class Discrete(Continuous):
-   DATA_TYPES = {DataType.DISCRETE, DataType.CONTINUOUS}
+   DISCRETE = True
    def update(self, val):
-      val = super().update(val) - self.min
+      val = Stim.update(self, val).val# - self.min
       self.dataframe.update(self, val)
       return val
 

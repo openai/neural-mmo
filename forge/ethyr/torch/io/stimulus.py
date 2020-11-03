@@ -42,6 +42,25 @@ class Input(nn.Module):
       ''' 
       #Pack entities of each attribute set
       entityLookup = {}
+
+      egocentric = {
+         'Tile': {
+            'Continuous': (2, 3),
+            #'Discrete':   (1, 2)
+         },
+         'Entity': {
+            'Continuous': (2, 3),
+            #'Discrete':   (2, 3)
+         },
+      }
+
+      for entity, dtypes in egocentric.items():
+         entities = inp[entity]
+         for dtype, idxs in dtypes.items():
+            typed             = entities[dtype]
+            cent              = typed[:, :1, idxs]
+            typed[:, :, idxs] = cent - typed[:, :, idxs]
+
       for name, entities in inp.items():
          #Construct: Batch, ents, nattrs, hidden
          embeddings = self.embeddings[name](entities)

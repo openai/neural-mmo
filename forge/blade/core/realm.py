@@ -112,8 +112,10 @@ class PlayerManager(EntityGroup):
       if len(self.entities) == self.config.NENT:
          return
 
-
       r, c   = self.config.SPAWN()
+      while len(self.realm.map.tiles[r, c].ents) != 0:
+         r, c   = self.config.SPAWN()
+
       color  = self.palette.colors[pop]
       player = Player(self.realm, (r, c), iden, pop, name, color)
 

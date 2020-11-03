@@ -12,6 +12,8 @@ class Config(core.Config):
    EMBED   = 64
    HIDDEN  = 64
 
+   #TODO: Spawning retry logic in Player/NPC for overlapping spawns
+
    #Environment parameters
    NENT    = 256      #Maximum population size
    NPOP    = 1        #Number of populations

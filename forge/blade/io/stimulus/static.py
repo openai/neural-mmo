@@ -39,7 +39,7 @@ class Stimulus(Config):
          def init(self, config):
             self.max = config.NPOP
 
-      class R(node.Continuous):
+      class R(node.Discrete):
          def init(self, config):
             #self.min = -config.STIM
             #self.max = config.STIM
@@ -51,7 +51,7 @@ class Stimulus(Config):
             return np.array([self.norm()])
    
       #You made this continuous
-      class C(node.Continuous):
+      class C(node.Discrete):
          def init(self, config):
             #self.min = -config.STIM
             #self.max = config.STIM
@@ -75,23 +75,23 @@ class Stimulus(Config):
             self.val = 0
 
       #Resources
-      class Food(node.Continuous):
+      class Food(node.Discrete):
          def init(self, config):
             self.val = config.RESOURCE
             self.max = config.RESOURCE
 
-      class Water(node.Continuous):
+      class Water(node.Discrete):
          def init(self, config):
             self.val = config.RESOURCE
             self.max = config.RESOURCE
 
-      class Health(node.Continuous):
+      class Health(node.Discrete):
          def init(self, config):
             self.val = config.HEALTH 
             self.max = config.HEALTH
 
       #Status effects
-      class Freeze(node.Continuous):
+      class Freeze(node.Discrete):
          def init(self, config):
             self.val = 0
             self.max = 3

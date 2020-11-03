@@ -67,11 +67,8 @@ class Move(Node):
       entity.base.r.update(rNew)
       entity.base.c.update(cNew)
 
-      r, c = entity.history.lastPos
       env.map.tiles[r, c].delEnt(entID)
-
-      r, c = entity.pos
-      env.map.tiles[r, c].addEnt(entID, entity)
+      env.map.tiles[rNew, cNew].addEnt(entID, entity)
 
    @staticproperty
    def edges():

@@ -22,7 +22,7 @@ from forge.trinity.dataframe import DataType
 class Env(core.Env):
    def log(self, quill, ent):
       blob = quill.register('Lifetime', quill.LINE, quill.SCATTER, quill.HISTOGRAM, quill.GANTT)
-      blob.log(ent.history.timeAlive)
+      blob.log(ent.history.timeAlive.val)
 
       blob = quill.register('Skill Level', quill.STACKED_AREA, quill.SCATTER, quill.HISTOGRAM, quill.RADAR)
       blob.log(ent.skills.range.level,        'Range')
@@ -96,7 +96,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
       for ent in self.dead:
          lifetime = ent.history.timeAlive.val
          self.lifetimes.append(lifetime)
-         if not self.config.RENDER and len(self.lifetimes) >= 250:
+         if not self.config.RENDER and len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             print('Lifetime: {}'.format(lifetime))
             dones['__all__'] = True

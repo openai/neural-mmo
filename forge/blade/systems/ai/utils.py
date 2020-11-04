@@ -86,14 +86,14 @@ def adjacentPos(pos):
    r, c = pos
    return [(r-1, c), (r, c-1), (r+1, c), (r, c+1)]
 
-def forage(tiles, entity, cutoff=100):
+def forage(tiles, entity, cutoff=10):
    start = entity.pos
 
    queue = Queue()
    queue.put(start)
 
    backtrace = {start: None}
-   reward    = {start: (entity.resources.food._val, entity.resources.water._val)}
+   reward    = {start: (entity.resources.food.val, entity.resources.water.val)}
    best      = -1000 
    goal      = start
 
@@ -125,10 +125,10 @@ def forage(tiles, entity, cutoff=100):
          water = max(0, water-1)
 
          if tiles[nxt].state.tex == 'forest':
-            food = min(food + entity.resources.food._max//2, entity.resources.food._max) 
+            food = min(food + entity.resources.food.max//2, entity.resources.food.max) 
          for pos in adjacentPos(nxt):
             if tiles[pos].state.tex == 'water':
-               water = min(water + entity.resources.water._max//2, entity.resources.water._max) 
+               water = min(water + entity.resources.water.max//2, entity.resources.water.max) 
                break
 
          reward[nxt] = (food, water)

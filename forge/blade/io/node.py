@@ -137,7 +137,7 @@ class Continuous(Stim):
 class Discrete(Continuous):
    DISCRETE = True
    def update(self, val):
-      val = Stim.update(self, val).val# - self.min
+      val = Stim.update(self, val).val - self.min
       self.dataframe.update(self, val)
       return val
 

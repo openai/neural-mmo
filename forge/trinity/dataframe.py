@@ -102,10 +102,14 @@ class DiscreteTable(ContinuousTable):
       self.cols[key]     =  self.nCols
       #You're not actually using any of this
       #Enable -min in node and then activate this in dataframe
-      #attr               =  attr(None, None, 0, config=self.config)
-      #self.cumsum        += attr.max - attr.min + 1
-      #self.discrete[key] =  self.cumsum
+      attr               =  attr(None, None, 0, config=self.config)
+      self.cumsum        += attr.max - attr.min + 1
+      self.discrete[key] =  self.cumsum
       self.nCols         += 1
+
+   def update(self, row, attr, val):
+      col = self.cols[attr] 
+      self.data[row, col] = val + self.discrete[attr]
 
 class Grid:
    def __init__(self, R, C):

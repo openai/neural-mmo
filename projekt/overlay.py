@@ -63,7 +63,7 @@ class Counts(Overlay):
       '''Computes a count-based exploration map by painting
       tiles as agents walk over them'''
       for entID, agent in self.realm.realm.players.items():
-         pop  = agent.base.population
+         pop  = agent.base.population.val
          r, c = agent.base.pos
          self.values[r, c][pop] += 1
 

@@ -39,15 +39,15 @@ class OverlayRegistry:
               'wilderness':     Wilderness}
 
       for cmd, overlay in self.overlays.items():
-          self.overlays[cmd] = overlay(realm, model, trainer, config)
+         self.overlays[cmd] = overlay(realm, model, trainer, config)
 
       self.overlays['wilderness'].init()
 
    def step(self, obs, pos, cmd, update=[]):
       '''Compute overlays and send to the environment'''
       #Per-tick updates
-      #for overlay in update:
-      #    self.overlays[overlay].update(obs)
+      for overlay in update:
+          self.overlays[overlay].update(obs)
 
       if cmd in self.overlays:
           self.overlays[cmd].register(obs)
@@ -124,11 +124,13 @@ class Attention(Overlay):
       '''Computes local attentional maps with respect to each agent'''
       attentions = defaultdict(list)
       for idx, agentID in enumerate(obs):
-         tiles = self.realm.raw[agentID][Stimulus.Tile]
          ent   = self.realm.realm.players[agentID]
+         rad   = self.config.STIM
+         r, c  = ent.pos
+
+         tiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
          for tile, a in zip(tiles, self.model.attention()[idx]):
             attentions[tile].append(float(a))
-
 
       data = np.zeros((self.R, self.C))
       tiles = self.realm.realm.map.tiles

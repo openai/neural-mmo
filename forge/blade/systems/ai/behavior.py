@@ -58,5 +58,5 @@ def hunt(realm, actions, entity):
    actions[Action.Move]   = {Action.Direction: direction}
 
 def forage(realm, actions, entity):
-   direction = utils.forage(realm.map.tiles, entity)
+   direction = utils.forageDP(realm.map.tiles, entity)
    actions[Action.Move]   = {Action.Direction: move.towards(direction)}

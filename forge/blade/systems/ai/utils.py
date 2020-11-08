@@ -120,7 +120,7 @@ def forageDP(tiles, entity):
    return max_value_line, max_value_column
 
 
-def forage(tiles, entity, cutoff=100):
+def forageBFS(tiles, entity, cutoff=100):
    start = entity.pos
 
    queue = Queue()

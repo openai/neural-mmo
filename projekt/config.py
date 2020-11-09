@@ -17,7 +17,7 @@ class Config(core.Config):
    # Environment parameters
    NENT = 256  # Maximum population size
    NPOP = 1  # Number of populations
-   NMOB = 10  # Number of NPCS
+   NMOB = 0  # Number of NPCS
    # NMOB    = 1024     #Number of NPCS
 
    TERRAIN_SIZE = 80  # Side dimension of each map
@@ -26,10 +26,10 @@ class Config(core.Config):
    # Evaluation parameters
    EVALUATION_HORIZON = 2048
 
-   # Agent vision range
-   STIM = 4
+   #Agent vision range
+   STIM    = 7
 
-   # Maximum number of observed agents
+   #Maximum number of observed agents
    N_AGENT_OBS = 100
 
    # Whether to share weights across policies

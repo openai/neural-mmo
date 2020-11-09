@@ -9,7 +9,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from pytmx import TiledMap
 import time
 
-def loadTiled(config, fPath, tiles, nCounts):
+def loadTiled(realm, config, fPath, tiles, nCounts):
     tm = TiledMap(fPath)
     assert len(tm.layers) == 1
     layer = tm.layers[0]
@@ -19,15 +19,15 @@ def loadTiled(config, fPath, tiles, nCounts):
        f = dat[0]
        tex = f.split('/')[-1].split('.')[0]
        t  = time.time()
-       tilemap[h, w] = core.Tile(config, tiles[tex], h, w, nCounts, tex)
+       tilemap[h, w] = core.Tile(realm, config, tiles[tex], h, w, nCounts, tex)
     return tilemap
 
 class Map:
-   def __init__(self, config, idx):
+   def __init__(self, realm, config, idx):
       self.updateList = set()
       self.config = config
       self.nCounts = config.NPOP
-      self.genEnv(config.ROOT + str(idx) + config.SUFFIX)
+      self.genEnv(realm, config.ROOT + str(idx) + config.SUFFIX)
 
    def harvest(self, r, c):
       self.updateList.add(self.tiles[r, c])
@@ -39,11 +39,9 @@ class Map:
    def packet(self):
        missingResources = []
        for e in self.updateList:
-           pos = [e.r, e.c]
-           missingResources.append(pos)
+           missingResources.append(e.pos)
        return missingResources
    
-
    def step(self):
       for e in self.updateList.copy():
          if e.static:
@@ -77,8 +75,8 @@ class Map:
             self.tiles.ravel()]).reshape(*self.shape)
       return env
 
-   def genEnv(self, fName):
+   def genEnv(self, realm, fName):
       tiles = dict((mat.value.tex, mat.value) for mat in enums.Material)
-      self.tiles = loadTiled(self.config, fName, tiles, self.nCounts)
+      self.tiles = loadTiled(realm, self.config, fName, tiles, self.nCounts)
       self.shape = self.tiles.shape
        

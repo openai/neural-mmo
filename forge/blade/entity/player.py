@@ -7,13 +7,15 @@ from forge.blade.lib.enums import Material, Neon
 from forge.blade.systems.skill import Skills
 from forge.blade.systems.inventory import Inventory
 from forge.blade.entity import entity
+from forge.blade.io.stimulus import Static
 
 class Base(entity.Base):
-   def __init__(self, config, pos, iden, pop, name, color):
-      super().__init__(config, pos, iden, name, color)
+   def __init__(self, ent, pos, iden, pop, name, color):
+      super().__init__(ent, pos, iden, name, color)
       self.name = name + str(iden)
-      self.population = pop
-      self.self       = True
+
+      self.population = Static.Entity.Population(ent.dataframe, ent.entID, pop)
+      ent.dataframe.init(Static.Entity, ent.entID, (self.r.val, self.c.val))
 
    def update(self, realm, entity, actions):
       super().update(realm, entity, actions)
@@ -21,23 +23,19 @@ class Base(entity.Base):
          self.killed = True
          return
 
-   @property
-   def pos(self):
-      return self.r, self.c
-
    def packet(self):
       data = super().packet()
 
-      data['population'] = self.population
-      data['self']       = self.self
+      data['population'] = self.population.val
+      data['self']       = self.self.val
 
       return data
 
 class Resources:
-   def __init__(self, config):
-      self.health = entity.Resource(config.HEALTH)
-      self.water  = entity.Resource(config.RESOURCE)
-      self.food   = entity.Resource(config.RESOURCE)
+   def __init__(self, ent):
+      self.health = Static.Entity.Health(ent.dataframe, ent.entID)
+      self.water  = Static.Entity.Water( ent.dataframe, ent.entID)
+      self.food   = Static.Entity.Food(  ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
       self.health._max = entity.skills.constitution.level
@@ -53,29 +51,33 @@ class Resources:
 
 class Player(entity.Entity):
    SERIAL = 0
-   def __init__(self, config, pos, iden, pop, name='', color=None):
-      super().__init__(config, iden)
+   def __init__(self, realm, pos, iden, pop, name='', color=None):
+      super().__init__(realm, iden)
+
       self.annID  = pop
       self.target = None
 
-      self.vision = 10
+      self.vision = 7
       self.food   = None
       self.water  = None
 
       #Submodules
-      self.base      = Base(config, pos, iden, pop, name, color)
-      self.status    = entity.Status(config)
-      self.history   = entity.History(config)
-      self.resources = Resources(config)
-      self.skills    = Skills(config)
+      self.base      = Base(self, pos, iden, pop, name, color)
+      self.status    = entity.Status(self)
+      self.history   = entity.History(self)
+      self.resources = Resources(self)
+      self.skills    = Skills(self)
       self.loadout   = equipment.Loadout()
-      #self.inventory = Inventory(config)
-      #self.chat      = Chat(config)
+      #self.inventory = Inventory(dataframe)
+      #self.chat      = Chat(dataframe)
+
+      self.dataframe.init(Static.Entity, self.entID, self.pos)
 
    @property
    def alive(self):
-      assert self.resources.health >= 0
-      if self.resources.health == 0:
+      #Have to change comparisons for these. Using str value in stim node.
+      assert self.resources.health.val >= 0
+      if self.resources.health.val == 0:
          return False
       return super().alive
 
@@ -87,7 +89,7 @@ class Player(entity.Entity):
       
    #Note: does not stack damage, but still applies to health
    def receiveDamage(self, source, dmg):
-      self.history.damage = dmg
+      self.history.damage.update(dmg)
 
       if not self.alive:
          return 

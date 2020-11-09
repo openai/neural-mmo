@@ -16,6 +16,9 @@ from forge.blade.lib.enums import Palette
 from forge.blade.entity import npc
 from pdb import set_trace as T
 from forge.blade.entity import Player
+from forge import trinity
+
+from forge.blade.io.stimulus import Static
 
 #actions[atn.priority][entID] = [atn, args]
 def prioritized(entities, merged):
@@ -58,7 +61,7 @@ class NPCManager(EntityGroup):
    def spawn(self, nTries=25):
       R, C = self.realm.shape
       for i in range(nTries):
-         if len(self.entities) > self.config.NMOB:
+         if len(self.entities) >= self.config.NMOB:
             break
 
          r = np.random.randint(0, R)
@@ -68,7 +71,7 @@ class NPCManager(EntityGroup):
          if tile.mat.tex != 'grass':
             continue
 
-         entity = npc.NPC.spawn(self.config, (r, c), self.idx)
+         entity = npc.NPC.spawn(self.realm, (r, c), self.idx)
          self.entities[self.idx] = entity
          self.realm.map.tiles[r, c].addEnt(self.idx, entity)
          self.idx -= 1
@@ -109,10 +112,12 @@ class PlayerManager(EntityGroup):
       if len(self.entities) == self.config.NENT:
          return
 
-
       r, c   = self.config.SPAWN()
+      while len(self.realm.map.tiles[r, c].ents) != 0:
+         r, c   = self.config.SPAWN()
+
       color  = self.palette.colors[pop]
-      player = Player(self.config, (r, c), iden, pop, name, color)
+      player = Player(self.realm, (r, c), iden, pop, name, color)
 
       self.realm.map.tiles[r, c].addEnt(iden, player)
       self.entities[player.entID] = player
@@ -136,28 +141,30 @@ class PlayerManager(EntityGroup):
       for entID in list(self.entities):
          player = self.entities[entID]
          if not player.alive:
-            r, c  = player.base.pos
+            r, c  = player.pos
             entID = player.entID
             dead.add(player)
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
+            self.realm.dataframe.remove(Static.Entity, entID, player.pos)
 
       return dead
 
 class Realm:
    def __init__(self, config, idx):
       #Load the world file
-      self.map    = core.Map(config, idx)
-      self.shape  = self.map.shape
-      self.spawn  = config.SPAWN
-      self.config = config
+      self.dataframe = trinity.Dataframe(config)
+      self.map       = core.Map(self, config, idx)
+      self.shape     = self.map.shape
+      self.spawn     = config.SPAWN
+      self.config    = config
 
       #Entity handlers
       self.stimSize = 3
       self.worldDim = 2*self.stimSize+1
-      self.players = PlayerManager(self, config)
-      self.npcs    = NPCManager(self, config)
+      self.players  = PlayerManager(self, config)
+      self.npcs     = NPCManager(self, config)
 
       #Exchange - For future updates
       self.market = systems.Exchange()
@@ -181,9 +188,9 @@ class Realm:
       self.mobIdx = 0
       self.mobs = {}
 
-   def stim(self, pos):
-      return self.env.getPadded(self.env.tiles, pos, 
-            self.stimSize, key=lambda e:e.index).astype(np.int8)
+   @property
+   def nEntities(self):
+      return len(self.players.entities)
 
    #Hook for render
    def graphicsData(self):

@@ -64,7 +64,7 @@ class Config(Template):
    TERRAIN_RENDER    = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 
-   TERRAIN_SIZE      = 1024 
+   TERRAIN_SIZE      = 1024
    '''Size of each map (number of tiles along each side)'''
 
    TERRAIN_BORDER    = 10

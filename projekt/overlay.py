@@ -39,7 +39,7 @@ class OverlayRegistry:
               'wilderness':     Wilderness}
 
       for cmd, overlay in self.overlays.items():
-          self.overlays[cmd] = overlay(realm, model, trainer, config)
+         self.overlays[cmd] = overlay(realm, model, trainer, config)
 
       self.overlays['wilderness'].init()
 
@@ -63,7 +63,7 @@ class Counts(Overlay):
       '''Computes a count-based exploration map by painting
       tiles as agents walk over them'''
       for entID, agent in self.realm.realm.players.items():
-         pop  = agent.base.population
+         pop  = agent.base.population.val
          r, c = agent.base.pos
          self.values[r, c][pop] += 1
 
@@ -124,11 +124,13 @@ class Attention(Overlay):
       '''Computes local attentional maps with respect to each agent'''
       attentions = defaultdict(list)
       for idx, agentID in enumerate(obs):
-         tiles = self.realm.raw[agentID][Stimulus.Tile]
          ent   = self.realm.realm.players[agentID]
+         rad   = self.config.STIM
+         r, c  = ent.pos
+
+         tiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
          for tile, a in zip(tiles, self.model.attention()[idx]):
             attentions[tile].append(float(a))
-
 
       data = np.zeros((self.R, self.C))
       tiles = self.realm.realm.map.tiles

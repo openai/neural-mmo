@@ -6,6 +6,7 @@ from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.node import Node, NodeType
 from forge.blade.systems import combat
+from forge.blade.io.stimulus import Static
 
 class Fixed:
    pass
@@ -46,10 +47,15 @@ class Move(Node):
    priority = 1
    nodeType = NodeType.SELECTION
    def call(env, entity, direction):
-      r, c = entity.base.pos
+      r, c  = entity.pos
+      entID = entity.entID
       entity.history.lastPos = (r, c)
       rDelta, cDelta = direction.delta
       rNew, cNew = r+rDelta, c+cDelta
+
+      #One agent per cell
+      if len(env.map.tiles[rNew, cNew].ents) != 0:
+         return
       if env.map.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
          return
       if not utils.inBounds(rNew, cNew, env.shape):
@@ -57,15 +63,12 @@ class Move(Node):
       if entity.status.freeze > 0:
          return
 
-      entity.base.r = rNew
-      entity.base.c = cNew
-      entID = entity.entID
-      
-      r, c = entity.history.lastPos
-      env.map.tiles[r, c].delEnt(entID)
+      env.dataframe.move(Static.Entity, entID, (r, c), (rNew, cNew))
+      entity.base.r.update(rNew)
+      entity.base.c.update(cNew)
 
-      r, c = entity.base.pos
-      env.map.tiles[r, c].addEnt(entID, entity)
+      env.map.tiles[r, c].delEnt(entID)
+      env.map.tiles[rNew, cNew].addEnt(entID, entity)
 
    @staticproperty
    def edges():
@@ -171,8 +174,8 @@ class Attack(Node):
       targ.attacker = entity
 
       dmg = combat.attack(entity, targ, style.skill(entity))
-      if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze = env.config.FREEZE_TIME
+      if style.freeze and dmg > 0:
+         targ.status.freeze.update(env.config.FREEZE_TIME)
 
       return dmg
 
@@ -192,7 +195,8 @@ class Target(Node):
 
    @classmethod
    def N(cls, config):
-      return config.N_AGENT_OBS
+      return config.WINDOW ** 2
+      #return config.N_AGENT_OBS
 
    def args(stim, entity, config):
       #Should pass max range?

@@ -8,12 +8,14 @@ from forge.blade.lib.enums import Material
 
 
 class Skills:
-   def __init__(self, config):
-      expCalc = experience.ExperienceCalculator()
-      self.skills = set()
+   def __init__(self, dataframe):
+      config      = dataframe.config
       self.config = config
-
-      # Combat skills
+ 
+      expCalc     = experience.ExperienceCalculator()
+      self.skills = set()
+  
+      #Combat skills
       self.constitution = Constitution(self.skills, expCalc, config)
       self.melee = Melee(self.skills, expCalc, config)
       self.range = Range(self.skills, expCalc, config)

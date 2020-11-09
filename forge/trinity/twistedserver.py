@@ -121,7 +121,7 @@ class WSServerFactory(WebSocketServerFactory):
         self.time = time.time()
         self.clients = []
 
-        self.pos = [512, 512]
+        self.pos = [40, 40]
         self.cmd = None
         self.tickRate = 0.6
         self.tick = 0

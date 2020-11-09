@@ -67,7 +67,7 @@ class MapGenerator:
          return Terrain.LAVA
       if val < 0.25:
          return Terrain.WATER
-      if val < 0.25+beta:
+      if val < 0.30+beta: #This was changed from .25 for better small maps :/
          return Terrain.FOREST
       if val < 0.715+alpha:
          return Terrain.GRASS

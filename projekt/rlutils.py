@@ -50,4 +50,13 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
           nSteps = stats['info']['num_steps_trained']
           print('Epoch: {}, Samples: {}'.format(epoch, nSteps))
+          hist = stats['hist_stats']
+          for key, stat in hist.items():
+             if len(stat) == 0:
+                continue
+
+             print('{}:: Total: {:.4f}, N: {:.4f}, Mean: {:.4f}, Std: {:.4f}, Min: {:.4f}, Max: {:.4f}'.format(
+                   key, np.sum(stat), len(stat), np.mean(stat), np.std(stat), np.min(stat), np.max(stat)))
+             hist[key] = []
+       
           epoch += 1

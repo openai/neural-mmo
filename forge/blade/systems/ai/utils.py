@@ -39,9 +39,9 @@ def directionTowards(ent, targ):
 
 def closestTarget(ent, tiles, rng=1):
    sr, sc = ent.base.pos
-   for d in range(rng + 1):
-      for r in range(-d, d + 1):
-         for e in tiles[sr + r, sc - d].ents.values():
+   for d in range(rng+1):
+      for r in range(-d, d+1):
+         for e in tiles[sr+r, sc-d].ents.values():
             if e is not ent and validTarget(ent, e, rng): return e
 
          for e in tiles[sr + r, sc + d].ents.values():
@@ -127,9 +127,10 @@ def forageBFS(tiles, entity, cutoff=100):
    queue.put(start)
 
    backtrace = {start: None}
-   reward = {start: (entity.resources.food._val, entity.resources.water._val)}
-   best = -1000
-   goal = start
+
+   reward    = {start: (entity.resources.food.val, entity.resources.water.val)}
+   best      = -1000 
+   goal      = start
 
    while not queue.empty():
       cutoff -= 1
@@ -159,12 +160,10 @@ def forageBFS(tiles, entity, cutoff=100):
          water = max(0, water - 1)
 
          if tiles[nxt].state.tex == 'forest':
-            food = min(food + entity.resources.food._max // 2,
-                       entity.resources.food._max)
+            food = min(food + entity.resources.food.max//2, entity.resources.food.max) 
          for pos in adjacentPos(nxt):
             if tiles[pos].state.tex == 'water':
-               water = min(water + entity.resources.water._max // 2,
-                           entity.resources.water._max)
+               water = min(water + entity.resources.water.max//2, entity.resources.water.max) 
                break
 
          reward[nxt] = (food, water)

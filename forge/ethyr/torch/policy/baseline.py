@@ -23,8 +23,8 @@ class Base(nn.Module):
 
       self.output = io.Output(config)
       self.input  = io.Input(config,
-            embeddings=policy.BiasedInput,
-            attributes=policy.Attention)
+            embeddings=policy.MixedDTypeInput,
+            attributes=policy.SelfAttention)
 
       self.valueF = nn.Linear(config.HIDDEN, 1)
 
@@ -55,19 +55,23 @@ class Simple(Base):
       super().__init__(config)
       h = config.HIDDEN
 
+      self.ent    = nn.Linear(h, h)
       self.conv   = nn.Conv2d(h, h, 3)
       self.pool   = nn.MaxPool2d(2)
-      self.fc     = nn.Linear(h*3*3, h)
+      self.fc     = nn.Linear(h*6*6, h)
 
       self.proj   = nn.Linear(2*h, h)
-      self.attend = policy.Attention(self.embed, h)
+      #self.attend = policy.SelfAttention(self.embed, h)
 
    def hidden(self, obs, state=None, lens=None):
       #Attentional agent embedding
-      agents, _ = self.attend(obs[Stimulus.Entity])
+      selfEmb  = obs['Entity'][:, 112, :]
+      #agentEmb = obs['Entity']
+      #agents, _ = self.attend(selfEmb, agentEmb)
+      agents = self.ent(selfEmb)
 
       #Convolutional tile embedding
-      tiles     = obs[Stimulus.Tile]
+      tiles     = obs['Tile']
       self.attn = torch.norm(tiles, p=2, dim=-1)
 
       w      = self.config.WINDOW

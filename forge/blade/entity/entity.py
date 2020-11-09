@@ -3,7 +3,9 @@ import numpy as np
 
 from forge.blade.systems import skill, droptable, combat
 from forge.blade.lib.enums import Material, Neon
+
 from forge.blade.io.action import static as Action
+from forge.blade.io.stimulus import Static
 
 class Resource:
    def __init__(self, val, mmax=None):
@@ -51,44 +53,47 @@ class Resource:
       return self._val <= val
 
 class Status:
-   def __init__(self, config):
-      self.config = config
-      self.wilderness = -1
-      self.immune = 0
-      self.freeze = 0
+   def __init__(self, ent):
+      self.config = ent.config
+
+      self.wilderness = Static.Entity.Wilderness(ent.dataframe, ent.entID)
+      self.immune     = Static.Entity.Immune(    ent.dataframe, ent.entID)
+      self.freeze     = Static.Entity.Freeze(    ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
-      self.immune = max(0, self.immune-1)
-      self.freeze = max(0, self.freeze-1)
+      self.immune.decrement()
+      self.freeze.decrement()
 
-      self.wilderness = combat.wilderness(self.config, entity.base.pos)
+      wilderness = combat.wilderness(self.config, entity.base.pos)
+      self.wilderness.update(wilderness)
 
    def packet(self):
       data = {}
-      data['wilderness'] = self.wilderness
-      data['immune']     = self.immune
-      data['freeze']     = self.freeze
+      data['wilderness'] = self.wilderness.val
+      data['immune']     = self.immune.val
+      data['freeze']     = self.freeze.val
       return data
 
 class History:
-   def __init__(self, config):
-      self.timeAlive = 0
+   def __init__(self, ent):
       self.actions = None
       self.attack  = None
-      self.damage = None
+
+      self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
+      self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
 
       self.attackMap = np.zeros((7, 7, 3)).tolist()
       self.lastPos = None
 
    def update(self, realm, entity, actions):
-      self.damage = None
+      self.damage.update(0)
       self.actions = actions
 
       #No way around this circular import I can see :/
       from forge.blade.io.action import static as action
       key = action.Attack
 
-      self.timeAlive += 1
+      self.timeAlive.increment()
 
       '''
       if key in actions:
@@ -97,8 +102,8 @@ class History:
 
    def packet(self):
       data = {}
-      data['damage']    = self.damage
-      data['timaAlive'] = self.timeAlive
+      data['damage']    = self.damage.val
+      data['timaAlive'] = self.timeAlive.val
 
       if self.attack is not None:
          data['attack'] = self.attack
@@ -106,9 +111,16 @@ class History:
       return data
 
 class Base:
-   def __init__(self, config, pos, iden, name, color):
-      self.color     = color
-      self.r, self.c = pos
+   def __init__(self, ent, pos, iden, name, color):
+      self.color = color
+      r, c       = pos
+
+      self.r          = Static.Entity.R(ent.dataframe, ent.entID, r)
+      self.c          = Static.Entity.C(ent.dataframe, ent.entID, c)
+
+      self.population = Static.Entity.Population(ent.dataframe, ent.entID, 0)
+      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, True)
+
 
    def update(self, realm, entity, actions):
       r, c = self.pos
@@ -118,13 +130,13 @@ class Base:
 
    @property
    def pos(self):
-      return self.r, self.c
+      return self.r.val, self.c.val
 
    def packet(self):
       data = {}
 
-      data['r']          = self.r
-      data['c']          = self.c
+      data['r']          = self.r.val
+      data['c']          = self.c.val
       data['name']       = self.name
       data['color']      = self.color.packet()
 
@@ -132,8 +144,9 @@ class Base:
 
 
 class Entity:
-   def __init__(self, config, iden):
-      self.config       = config
+   def __init__(self, realm, iden):
+      self.dataframe    = realm.dataframe
+      self.config       = realm.config
       self.entID        = iden
 
       self.repr         = None

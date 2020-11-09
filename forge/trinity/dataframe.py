@@ -84,9 +84,10 @@ class ContinuousTable:
 
    def get(self, rows, pad=None):
       data = self.data[rows]
+      data[rows==0] = 0
 
-      if pad is not None:
-         data = np.pad(data, ((0, pad-len(data)), (0, 0)))
+      #if pad is not None:
+      #   data = np.pad(data, ((0, pad-len(data)), (0, 0)))
 
       return data
 
@@ -100,11 +101,12 @@ class DiscreteTable(ContinuousTable):
          return
 
       self.cols[key]     =  self.nCols
-      #You're not actually using any of this
-      #Enable -min in node and then activate this in dataframe
+
+      #Flat index
       attr               =  attr(None, None, 0, config=self.config)
-      self.cumsum        += attr.max - attr.min + 1
       self.discrete[key] =  self.cumsum
+
+      self.cumsum        += attr.max - attr.min + 1
       self.nCols         += 1
 
    def update(self, row, attr, val):
@@ -129,6 +131,7 @@ class Grid:
 
    def window(self, rStart, rEnd, cStart, cEnd):
       crop = self.data[rStart:rEnd, cStart:cEnd].ravel()
+      return crop
       return list(filter(lambda x: x != 0, crop))
       
 class GridTables:
@@ -149,13 +152,15 @@ class GridTables:
 
       r, c = pos
       cent = self.grid.data[r, c]
+      assert cent != 0
       rows = self.grid.window(
             r-radius, r+radius+1,
             c-radius, c+radius+1)
 
       #Center element first
-      rows.remove(cent)
-      rows.insert(0, cent)
+      #rows.remove(cent)
+      #rows.insert(0, cent)
+      #This will screw up conv models
 
       return {'Continuous': self.continuous.get(rows, self.pad),
               'Discrete':   self.discrete.get(rows, self.pad)}

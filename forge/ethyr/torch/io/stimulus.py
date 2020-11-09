@@ -46,7 +46,7 @@ class Input(nn.Module):
       egocentric = {
          'Tile': {
             'Continuous': (2, 3),
-            #'Discrete':   (1, 2)
+            'Discrete':   (1, 2)
          },
          'Entity': {
             'Continuous': (2, 3),
@@ -58,8 +58,16 @@ class Input(nn.Module):
          entities = inp[entity]
          for dtype, idxs in dtypes.items():
             typed             = entities[dtype]
-            cent              = typed[:, :1, idxs]
+            cent              = typed[:, 112:113, idxs]
             typed[:, :, idxs] = cent - typed[:, :, idxs]
+
+      #Changes this run: Hacked discrete egocentric,
+      #Removed reordering of center obs (self) to first
+      #Added 112 manual indexing in baseline
+      inp['Tile']['Discrete'][:, :, 1] += 7 + 7
+      inp['Tile']['Discrete'][:, :, 2] += 7 + 7 + 8 + 7
+ 
+      #Next run: try rescaling continuous vals
 
       for name, entities in inp.items():
          #Construct: Batch, ents, nattrs, hidden

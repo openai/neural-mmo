@@ -21,6 +21,7 @@ class Config(core.Config):
 
    TERRAIN_SIZE    = 80 #Side dimension of each map
    TERRAIN_OCTAVES = 1  #Comment for fancy maps
+   TERRAIN_RENDER  = False
    NMAPS        = 256 #Number maps to generate
 
    #Evaluation parameters
@@ -28,7 +29,7 @@ class Config(core.Config):
 
 
    #Agent vision range
-   STIM    = 4
+   STIM    = 7
 
    #Maximum number of observed agents
    N_AGENT_OBS = 100

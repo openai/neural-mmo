@@ -90,6 +90,7 @@ class LogCallbacks(DefaultCallbacks):
 def loadTrainer(config):
    #Setup ray
    torch.set_num_threads(1)
+   #ray.init(local_mode=True)
    ray.init()
 
    #Instantiate monolithic RLlib Trainer object.

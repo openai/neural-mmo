@@ -38,7 +38,7 @@ class ScaledDotProductAttention(nn.Module):
       QKV = torch.matmul(QK, V)
       return QKV, score
 
-class Attention(nn.Module):
+class SelfAttention(nn.Module):
    def __init__(self, xDim, yDim, flat=True):
       super().__init__()
 
@@ -54,6 +54,30 @@ class Attention(nn.Module):
       K = self.K(q)
       V = self.V(q)
 
+      attn, scores = self.attention(Q, K, V)
+
+      if self.flat:
+         attn, _ = torch.max(attn, dim=-2)
+
+      return attn, scores
+
+class Attention(nn.Module):
+   def __init__(self, xDim, yDim, flat=True):
+      super().__init__()
+
+      self.Q = torch.nn.Linear(xDim, yDim)
+      self.K = torch.nn.Linear(xDim, yDim)
+      self.V = torch.nn.Linear(xDim, yDim)
+
+      self.attention = ScaledDotProductAttention(yDim)
+      self.flat = flat
+
+   def forward(self, q, v):
+      Q = self.Q(q)
+      K = self.K(v)
+      V = self.V(v)
+
+      #??? Doing 100x100 mat here, not good
       attn, scores = self.attention(Q, K, V)
 
       if self.flat:

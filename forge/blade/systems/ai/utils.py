@@ -86,7 +86,7 @@ def adjacentPos(pos):
    r, c = pos
    return [(r-1, c), (r, c-1), (r+1, c), (r, c+1)]
 
-def forage(tiles, entity, cutoff=10):
+def forage(tiles, entity, cutoff=100):
    start = entity.pos
 
    queue = Queue()

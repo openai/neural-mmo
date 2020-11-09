@@ -57,7 +57,7 @@ class Player(entity.Entity):
       self.annID  = pop
       self.target = None
 
-      self.vision = 4
+      self.vision = 7
       self.food   = None
       self.water  = None
 

@@ -5,40 +5,42 @@ from forge.blade.systems import ai
 
 import math
 
+import numpy as np
+
 
 def map_to_rewards(tiles, entity) -> List[List[float]]:
-   default_reward = -1.0  # grass & co
-   lava_reward = float('-inf')
-   stone_reward = float('-inf')
-   forest_reward = math.pow(
-      (1 - entity.resources.food._val / entity.resources.food._max) * 15,
+   lava_reward = stone_reward = water_reward = float('-inf')
+   forest_reward = 1.0 + math.pow(
+      (1 - entity.resources.food._val / entity.resources.food._max) * 15.0,
       1.25)
-   scrub_reward = 0.0
-   water_reward = float('-inf')
-   around_water_reward = math.pow(
-      (1 - entity.resources.water._val / entity.resources.water._max) * 15,
+   scrub_reward = 1.0
+   around_water_reward = 1.0 + math.pow(
+      (1 - entity.resources.water._val / entity.resources.water._max) * 15.0,
       1.25)
 
-   reward_matrix = [[default_reward for x in range(len(tiles[0]))] for y in
-                    range(len(tiles))]
+   reward_matrix = np.full((len(tiles), len(tiles[0])), 0.0)
 
    for line in range(len(tiles)):
       tile_line = tiles[line]
       for column in range(len(tile_line)):
          tile_val = tile_line[column].state.tex
          if tile_val == 'lava':
-            reward_matrix[line][column] = lava_reward
-         elif tile_val == 'stone':
-            reward_matrix[line][column] = stone_reward
-         elif tile_val == 'forest':
-            reward_matrix[line][column] = forest_reward
-         elif tile_val == 'water':
-            reward_matrix[line][column] = water_reward
-         elif Material.WATER.value in ai.utils.adjacentMats(tiles,
-                                                            (line, column)):
-            reward_matrix[line][column] = around_water_reward
-         elif tile_val == 'scrub':
-            reward_matrix[line][column] = scrub_reward
+            reward_matrix[line][column] += lava_reward
+
+         if tile_val == 'stone':
+            reward_matrix[line][column] += stone_reward
+
+         if tile_val == 'forest':
+            reward_matrix[line][column] += forest_reward
+
+         if tile_val == 'water':
+            reward_matrix[line][column] += water_reward
+
+         if 'water' in ai.utils.adjacentMats(tiles, (line, column)):
+            reward_matrix[line][column] += around_water_reward
+
+         if tile_val == 'scrub':
+            reward_matrix[line][column] += scrub_reward
 
    return reward_matrix
 
@@ -46,25 +48,21 @@ def map_to_rewards(tiles, entity) -> List[List[float]]:
 def compute_values(reward_matrix: List[List[float]]) -> List[List[float]]:
    gamma_factor = 0.8  # look ahead ∈ [0, 1]
    max_delta = 0.01  # maximum allowed approximation
-   default_reward = -1.0  # grass & co
 
-   value_matrix = [[default_reward for x in range(len(reward_matrix[0]))] for
-                   y in range(len(reward_matrix))]
+   value_matrix = np.full((len(reward_matrix), len(reward_matrix[0])), 0.0)
 
    delta = float('inf')
    while delta > max_delta:
-      delta = float('-inf')
+      old_value_matrix = np.copy(value_matrix)
       for line in range(len(reward_matrix)):
          for column in range(len(reward_matrix[0])):
             reward = reward_matrix[line][column]
-            old_value = value_matrix[line][column]
-
             value_matrix[line][
                column] = reward + gamma_factor * max_value_around(
                (line, column), value_matrix)
 
-            delta = max(delta, abs(old_value - value_matrix[line][column]))
-
+      delta = np.amax(
+         np.abs(np.subtract(old_value_matrix, value_matrix)))
    return value_matrix
 
 

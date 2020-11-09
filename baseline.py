@@ -42,7 +42,7 @@ class Baseline:
          # agent.resources.food.increment(10)
          # agent.resources.water.increment(10)
 
-         actions[agentID] = ai.policy.baseline(realm, agent)
+         actions[agentID] = ai.policy.baselineBFS(realm, agent)
 
       self.obs, _, self.dones, self.infos = self.env.step(actions)
       self.env.overlayPos = pos

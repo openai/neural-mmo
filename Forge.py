@@ -128,8 +128,10 @@ def loadTrainer(config):
 def init(config, **kwargs):
    config.override(**kwargs)
    trainer, policy = None, None
-   if config.SCRIPTED:
-      policy = ai.policy.hostile
+   if config.SCRIPTED_DP:
+      policy = ai.policy.baselineDP
+   elif config.SCRIPTED_BFS:
+      policy = ai.policy.baselineBFS
    else:
       trainer = loadTrainer(config)
       utils.modelSize(trainer.defaultModel())

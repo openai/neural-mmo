@@ -6,6 +6,7 @@ from forge.blade.systems import experience, combat, ai
 
 from forge.blade.lib.enums import Material
 
+
 class Skills:
    def __init__(self, dataframe):
       config      = dataframe.config
@@ -16,33 +17,33 @@ class Skills:
   
       #Combat skills
       self.constitution = Constitution(self.skills, expCalc, config)
-      self.melee        = Melee(self.skills, expCalc, config)
-      self.range        = Range(self.skills, expCalc, config)
-      self.mage         = Mage(self.skills, expCalc, config)
-      self.defense      = Defense(self.skills, expCalc, config)
+      self.melee = Melee(self.skills, expCalc, config)
+      self.range = Range(self.skills, expCalc, config)
+      self.mage = Mage(self.skills, expCalc, config)
+      self.defense = Defense(self.skills, expCalc, config)
 
-      #Harvesting Skills
-      self.fishing      = Fishing(self.skills, expCalc, config)
-      self.hunting      = Hunting(self.skills, expCalc, config)
-      self.mining       = Mining(self.skills, expCalc, config)
+      # Harvesting Skills
+      self.fishing = Fishing(self.skills, expCalc, config)
+      self.hunting = Hunting(self.skills, expCalc, config)
+      self.mining = Mining(self.skills, expCalc, config)
 
-      #Processing Skills
-      self.cooking      = Cooking(self.skills, expCalc, config)
-      self.smithing     = Smithing(self.skills, expCalc, config)
+      # Processing Skills
+      self.cooking = Cooking(self.skills, expCalc, config)
+      self.smithing = Smithing(self.skills, expCalc, config)
 
    def packet(self):
       data = {}
-      
+
       data['constitution'] = self.constitution.packet()
-      data['melee']        = self.melee.packet()
-      data['range']        = self.range.packet()
-      data['mage']         = self.mage.packet()
-      data['defense']      = self.defense.packet()
-      data['fishing']      = self.fishing.packet()
-      data['hunting']      = self.hunting.packet()
-      data['cooking']      = self.cooking.packet()
-      data['smithing']     = self.smithing.packet()
-      data['level']        = combat.level(self)
+      data['melee'] = self.melee.packet()
+      data['range'] = self.range.packet()
+      data['mage'] = self.mage.packet()
+      data['defense'] = self.defense.packet()
+      data['fishing'] = self.fishing.packet()
+      data['hunting'] = self.hunting.packet()
+      data['cooking'] = self.cooking.packet()
+      data['smithing'] = self.smithing.packet()
+      data['level'] = combat.level(self)
 
       return data
 
@@ -52,7 +53,7 @@ class Skills:
 
    def applyDamage(self, dmg, style):
       config = self.config
-      scale  = config.XP_SCALE
+      scale = config.XP_SCALE
       self.constitution.exp += scale * dmg * config.CONSTITUTION_XP_SCALE
 
       skill = self.__dict__[style]
@@ -61,21 +62,23 @@ class Skills:
    def receiveDamage(self, dmg):
       scale = self.config.XP_SCALE
       self.constitution.exp += scale * dmg * 2
-      self.defense.exp      += scale * dmg * 4
+      self.defense.exp += scale * dmg * 4
+
 
 class Skill:
    skillItems = abc.ABCMeta
+
    def __init__(self, skills, expCalc, config):
       self.expCalc = expCalc
-      self.exp     = 0
+      self.exp = 0
 
-      self.config  = config
+      self.config = config
       skills.add(self)
 
    def packet(self):
       data = {}
-      
-      data['exp']   = self.exp
+
+      data['exp'] = self.exp
       data['level'] = self.level
 
       return data
@@ -89,7 +92,9 @@ class Skill:
       assert lvl == int(lvl)
       return int(lvl)
 
+
 class CombatSkill(Skill): pass
+
 
 class Constitution(CombatSkill):
    def __init__(self, skills, expCalc, config):
@@ -98,13 +103,13 @@ class Constitution(CombatSkill):
 
    def update(self, realm, entity):
       health = entity.resources.health
-      food   = entity.resources.food
-      water  = entity.resources.water
+      food = entity.resources.food
+      water = entity.resources.water
 
       config = self.config
 
-      #Heal if above fractional resource threshold
-      foodThresh  = food  > config.HEALTH_REGEN_THRESHOLD * entity.skills.hunting.level
+      # Heal if above fractional resource threshold
+      foodThresh = food > config.HEALTH_REGEN_THRESHOLD * entity.skills.hunting.level
       waterThresh = water > config.HEALTH_REGEN_THRESHOLD * entity.skills.fishing.level
 
       if foodThresh and waterThresh:
@@ -117,28 +122,36 @@ class Constitution(CombatSkill):
       if water.empty:
          health.decrement(1)
 
+
 class Melee(CombatSkill): pass
+
+
 class Range(CombatSkill): pass
+
+
 class Mage(CombatSkill): pass
+
+
 class Defense(CombatSkill): pass
+
 
 class NonCombatSkill(Skill):
    def success(self, levelReq):
       level = self.level
       if level < levelReq:
          return False
-      chance = 0.5 + 0.05*(level - levelReq)
+      chance = 0.5 + 0.05 * (level - levelReq)
       if chance >= 1.0:
          return True
       return np.random.rand() < chance
 
    def attempt(self, inv, item):
       if (item.createSkill != self.__class__ or
-            self.level < item.createLevel):
-         return      
+              self.level < item.createLevel):
+         return
 
       if item.recipe is not None:
-         #Check that everything is available
+         # Check that everything is available
          if not inv.satisfies(item.recipe): return
          inv.removeRecipe(item.recipe)
 
@@ -147,12 +160,14 @@ class NonCombatSkill(Skill):
          self.exp += item.exp
          return True
 
+
 class HarvestingSkill(NonCombatSkill):
-   #Attempt each item from highest to lowest tier until success
+   # Attempt each item from highest to lowest tier until success
    def harvest(self, inv):
       for e in self.skillItems:
          if self.attempt(inv, e):
             return
+
 
 class Fishing(HarvestingSkill):
    def __init__(self, skills, expCalc, config):
@@ -163,14 +178,16 @@ class Fishing(HarvestingSkill):
       water = entity.resources.water
       water.decrement(1)
 
-      if Material.WATER.value not in ai.utils.adjacentMats(realm.map, entity.base.pos):
+      if Material.WATER.value not in ai.utils.adjacentMats(realm.map.tiles,
+                                                           entity.base.pos):
          return
 
       restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
       water.increment(restore)
 
-      scale     = self.config.XP_SCALE
-      self.exp += scale * restore;
+      scale = self.config.XP_SCALE
+      self.exp += scale * restore
+
 
 class Hunting(HarvestingSkill):
    def __init__(self, skills, expCalc, config):
@@ -182,23 +199,26 @@ class Hunting(HarvestingSkill):
       food.decrement(1)
 
       r, c = entity.base.pos
-      if (type(realm.map.tiles[r, c].mat) not in [Material.FOREST.value] or 
-            not realm.map.harvest(r, c)):
+      if (type(realm.map.tiles[r, c].mat) not in [Material.FOREST.value] or
+              not realm.map.harvest(r, c)):
          return
 
       restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
       food.increment(restore)
 
-      scale     = self.config.XP_SCALE
-      self.exp += scale * restore;
+      scale = self.config.XP_SCALE
+      self.exp += scale * restore
+
 
 class Mining(HarvestingSkill): pass
+
 
 class ProcessingSkill(NonCombatSkill):
    def process(self, inv, item):
       self.attempt(inv, item)
-     
+
+
 class Cooking(ProcessingSkill): pass
-class Smithing(ProcessingSkill): pass        
 
 
+class Smithing(ProcessingSkill): pass

@@ -31,6 +31,7 @@ class Stimulus(Config):
          def init(self, config):
             self.val = 0
             self.max = 1
+            self.scale = 1.0
 
          def get(self, ent, ref):
             val = int(ent is ref)
@@ -39,6 +40,7 @@ class Stimulus(Config):
       class Population(node.Discrete):
          def init(self, config):
             self.max = config.NPOP
+            self.scale = 1.0
 
       class R(node.Discrete):
          def init(self, config):
@@ -46,6 +48,7 @@ class Stimulus(Config):
             #self.max = config.STIM
             self.min = 0
             self.max = config.TERRAIN_SIZE
+            self.scale = 0.15
 
          def get(self, ent, ref):
             self._val = ent.base.r - ref.base.r
@@ -58,6 +61,7 @@ class Stimulus(Config):
             #self.max = config.STIM
             self.min = 0
             self.max = config.TERRAIN_SIZE
+            self.scale = 0.15
 
 
          def get(self, ent, ref):
@@ -69,38 +73,44 @@ class Stimulus(Config):
          def init(self, config):
             #This scale may eventually be too high
             self.val   = 0
-            self.scale = 0.01
+            self.scale = 0.1
 
       class TimeAlive(node.Continuous):
          def init(self, config):
             self.val = 0
+            self.scale = 0.01
 
       #Resources
       class Food(node.Discrete):
          def init(self, config):
             self.val = config.RESOURCE
             self.max = config.RESOURCE
+            self.scale = 0.1
 
       class Water(node.Discrete):
          def init(self, config):
             self.val = config.RESOURCE
             self.max = config.RESOURCE
+            self.scale = 0.1
 
       class Health(node.Discrete):
          def init(self, config):
             self.val = config.HEALTH 
             self.max = config.HEALTH
+            self.scale = 0.1
 
       #Status effects
       class Freeze(node.Discrete):
          def init(self, config):
             self.val = 0
             self.max = 3
+            self.scale = 0.3
 
       class Immune(node.Continuous):
          def init(self, config):
             self.val = config.IMMUNE
             self.max = config.IMMUNE
+            self.scale = 0.1
 
       class Wilderness(node.Continuous):
          def init(self, config):
@@ -108,6 +118,7 @@ class Stimulus(Config):
             self.val = -1 
             self.min = -1
             self.max = 99
+            self.scale = 0.01
 
    class Tile(Config):
       @staticmethod
@@ -118,15 +129,19 @@ class Stimulus(Config):
          def init(self, config):
             self.max = config.NENT
             self.val = 0
+            self.scale = 1.0
 
       class Index(node.Discrete):
          def init(self, config):
             self.max = config.NTILE
+            self.scale = 0.15
 
       class R(node.Discrete):
          def init(self, config):
             self.max = config.TERRAIN_SIZE
+            self.scale = 0.15
  
       class C(node.Discrete):
          def init(self, config):
             self.max = config.TERRAIN_SIZE
+            self.scale = 0.15

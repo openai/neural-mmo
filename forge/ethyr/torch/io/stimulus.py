@@ -66,6 +66,15 @@ class Input(nn.Module):
       #Added 112 manual indexing in baseline
       inp['Tile']['Discrete'][:, :, 1] += 7 + 7
       inp['Tile']['Discrete'][:, :, 2] += 7 + 7 + 8 + 7
+      tileWeight = torch.Tensor([1.0, 0.15, 0.15, 0.15])
+      entWeight  = torch.Tensor([1.0, 1.0, 0.15, 0.15, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3, 0.1, 0.01])
+
+      try:
+         inp['Tile']['Continuous']   *= tileWeight
+         inp['Entity']['Continuous'] *= entWeight
+      except:
+         inp['Tile']['Continuous']   *= tileWeight.cuda()
+         inp['Entity']['Continuous'] *= entWeight.cuda()
  
       #Next run: try rescaling continuous vals
 

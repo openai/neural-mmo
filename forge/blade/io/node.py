@@ -97,6 +97,7 @@ class Stim(metaclass=IterableTypeCompare):
 
    def update(self, val):
       self.val = min(max(val, 0), self.max)
+      self.dataframe.update(self, self.val)
       return self
 
    def increment(self, val=1):
@@ -129,17 +130,9 @@ class Stim(metaclass=IterableTypeCompare):
 
 class Continuous(Stim):
    CONTINUOUS = True
-   def update(self, val):
-      val = Stim.update(self, val).val
-      self.dataframe.update(self, val)
-      return val
 
 class Discrete(Continuous):
    DISCRETE = True
-   def update(self, val):
-      val = Stim.update(self, val).val - self.min
-      self.dataframe.update(self, val)
-      return val
 
 class NodeType(Enum):
    #Tree edges

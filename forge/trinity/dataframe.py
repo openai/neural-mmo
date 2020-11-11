@@ -177,7 +177,7 @@ class GridTables:
 
       row = self.index.update(key)
       if obj.DISCRETE:
-         self.discrete.update(row, attr, val)
+         self.discrete.update(row, attr, val - obj.min)
       if obj.CONTINUOUS:
          self.continuous.update(row, attr, val)
 

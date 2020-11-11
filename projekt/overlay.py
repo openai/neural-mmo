@@ -42,6 +42,7 @@ class OverlayRegistry:
          self.overlays[cmd] = overlay(realm, model, trainer, config)
 
       self.overlays['wilderness'].init()
+      self.overlays['globalValues'].init()
 
    def step(self, obs, pos, cmd, update=[]):
       '''Compute overlays and send to the environment'''
@@ -96,28 +97,36 @@ class Values(Overlay):
       self.realm.registerOverlay(colorized)
 
 class GlobalValues(Overlay):
-   def register(self, obs):
+   def init(self):
       '''Compute a global value function map. This requires ~6400 forward
       passes and may take up to a minute. You can disable this computation
       in the config file'''
+      if self.trainer is None:
+         return
+
       print('Computing value map...')
-      values     = np.zeros(self.realm.size)
-      model      = self.trainer.get_policy('policy_0').model
-      obs, stims = self.realm.getValStim()
+      values    = np.zeros(self.realm.size)
+      model     = self.trainer.get_policy('policy_0').model
+      obs, ents = self.realm.getValStim()
 
       #Compute actions to populate model value function
-      self.trainer.compute_actions(obs, state={}, policy_id='policy_0')
-
-      for agentID in obs.keys():
-         env, ent = stims[agentID]
-         atn      = obs[agentID]
-         r, c     = ent.base.pos
-
-         values[r, c] = float(self.model.value_function()[agentID])
+      BATCH_SIZE = 128
+      batch = {}
+      final = list(obs.keys())[-1]
+      for agentID in obs:
+         batch[agentID] = obs[agentID]
+         if len(batch) == BATCH_SIZE or agentID == final:
+            self.trainer.compute_actions(batch, state={}, policy_id='policy_0')
+            for idx, agentID in enumerate(batch):
+               r, c = ents[agentID].base.pos
+               values[r, c] = float(self.model.value_function()[idx])
+            batch = {}
 
       print('Value map computed')
-      colorized = overlay.twoTone(values)
-      self.realm.registerOverlay(colorized)
+      self.colorized = overlay.twoTone(values)
+
+   def register(self, obs):
+      self.realm.registerOverlay(self.colorized)
 
 class Attention(Overlay):
    def register(self, obs):

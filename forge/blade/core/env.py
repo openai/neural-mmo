@@ -8,6 +8,7 @@ from copy import deepcopy
 
 from forge.blade import entity, core
 from forge.blade.io import stimulus
+from forge.blade.io.stimulus import Static
 from forge.blade.systems import combat
 
 from forge.blade.lib.enums import Palette
@@ -363,29 +364,26 @@ class Env(Timed):
       '''
       config  = self.config
       R, C    = self.realm.map.tiles.shape
-      B       = config.BORDER
+      B       = config.TERRAIN_BORDER
 
       entID   = 0
       pop     = 0
       name    = "Value"
       color   = (255, 255, 255)
 
-      observations, stims = {}, {}
+      observations, ents = {}, {}
       for r in range(B-1, R-B):
          for c in range(B-1, C-B):
-            pos   = tuple([r, c])
-            ent   = entity.Player(config, entID, pop, name, color)
-
-            ent.base.r = r
-            ent.base.c = c
+            ent = entity.Player(self.realm, (r, c), entID, pop, name, color)
 
             self.realm.map.tiles[r, c].addEnt(entID, ent)
-            stim   = self.realm.map.stim(pos, self.config.STIM)
-            obs, _ = stimulus.Dynamic.process(self.config, stim, ent)
+            obs = self.realm.dataframe.get(ent.pos)
+
             self.realm.map.tiles[r, c].delEnt(entID)
+            self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
 
             observations[entID] = obs
-            stims[entID] = (stim, ent)
+            ents[entID] = ent
             entID += 1
 
-      return observations, stims
+      return observations, ents

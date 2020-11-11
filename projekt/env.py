@@ -45,7 +45,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
       self.config = config['config']
       #self.perfTick = 0
 
-   def reset(self, idx=None):
+   def reset(self, idx=None, dry=False):
       '''Enable us to reset the Neural MMO environment.
       This is for training on limited-resource systems where
       simply using one env map per core is not feasible'''
@@ -57,7 +57,10 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
 
       self.lifetimes = []
       super().__init__(self.config, idx)
-      ret = self.step({})[0]
+
+      ret = None
+      if not dry:
+         ret = self.step({})[0]
 
       self.env_reset = time.time() - self.env_reset
       return ret

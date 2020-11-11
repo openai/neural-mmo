@@ -88,7 +88,7 @@ class Evaluator:
          for agentID in self.obs:
             agent              = realm.players[agentID]
             agent.skills.style = Action.Range
-            actions[agentID]   = ai.policy.baseline(realm, agent)
+            actions[agentID]   = self.policy(realm, agent)
 
          self.registry.step(self.obs, pos, cmd, update=
                'counts wilderness'.split())

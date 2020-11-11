@@ -277,7 +277,7 @@ def adjacentTiles(env, pos):
 
 
 def adjacentMats(tiles, pos):
-   return [tiles[p].state.tex for p in adjacentPos(pos)
+   return [type(tiles[p].state) for p in adjacentPos(pos)
            if inBounds(*p, tiles.shape)]
 
 

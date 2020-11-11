@@ -11,11 +11,11 @@ import numpy as np
 def map_to_rewards(tiles, entity) -> List[List[float]]:
    lava_reward = stone_reward = water_reward = float('-inf')
    forest_reward = 1.0 + math.pow(
-      (1 - entity.resources.food._val / entity.resources.food._max) * 15.0,
+      (1 - entity.resources.food.val / entity.resources.food._max) * 15.0,
       1.25)
    scrub_reward = 1.0
    around_water_reward = 1.0 + math.pow(
-      (1 - entity.resources.water._val / entity.resources.water._max) * 15.0,
+      (1 - entity.resources.water.val / entity.resources.water._max) * 15.0,
       1.25)
 
    reward_matrix = np.full((len(tiles), len(tiles[0])), 0.0)
@@ -36,6 +36,8 @@ def map_to_rewards(tiles, entity) -> List[List[float]]:
          if tile_val == 'water':
             reward_matrix[line][column] += water_reward
 
+         #TODO: Make these comparisons work off of the water Enum type
+         #instead of string compare
          if 'water' in ai.utils.adjacentMats(tiles, (line, column)):
             reward_matrix[line][column] += around_water_reward
 

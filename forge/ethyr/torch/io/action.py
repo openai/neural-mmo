@@ -56,6 +56,7 @@ class Output(nn.Module):
             else:
                #Temp hack, rename
                cands = lookup['Entity']
+               continue #Fix attacks here and masking? below
 
             #lens = [cands.shape[1] for e in range(cands.shape[0])]
             lens  = None

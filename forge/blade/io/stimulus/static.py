@@ -24,7 +24,7 @@ class Stimulus(Config):
    class Entity(Config):
       @staticmethod
       def N(config):
-         return config.WINDOW ** 2
+         #return config.WINDOW ** 2
          return config.N_AGENT_OBS
 
       class Self(node.Discrete):
@@ -80,27 +80,28 @@ class Stimulus(Config):
             self.val = 0
             self.scale = 0.01
 
-      #Resources
-      class Food(node.Discrete):
+      #Resources -- Redo the max/min scaling. You can't change these
+      #after init without messing up the embeddings
+      class Food(node.Continuous):
          def init(self, config):
             self.val = config.RESOURCE
             self.max = config.RESOURCE
             self.scale = 0.1
 
-      class Water(node.Discrete):
+      class Water(node.Continuous):
          def init(self, config):
             self.val = config.RESOURCE
             self.max = config.RESOURCE
             self.scale = 0.1
 
-      class Health(node.Discrete):
+      class Health(node.Continuous):
          def init(self, config):
             self.val = config.HEALTH 
             self.max = config.HEALTH
             self.scale = 0.1
 
       #Status effects
-      class Freeze(node.Discrete):
+      class Freeze(node.Continuous):
          def init(self, config):
             self.val = 0
             self.max = 3

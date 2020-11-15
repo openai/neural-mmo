@@ -280,7 +280,7 @@ class Env(Timed):
       obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.realm.players.items():
          start = time.time()
-         ob             = self.realm.dataframe.get(ent.pos)
+         ob             = self.realm.dataframe.get(ent)
          obs[entID]     = ob
          self.stim_process += time.time() - start
 
@@ -377,7 +377,7 @@ class Env(Timed):
             ent = entity.Player(self.realm, (r, c), entID, pop, name, color)
 
             self.realm.map.tiles[r, c].addEnt(entID, ent)
-            obs = self.realm.dataframe.get(ent.pos)
+            obs = self.realm.dataframe.get(ent)
 
             self.realm.map.tiles[r, c].delEnt(entID)
             self.realm.dataframe.remove(Static.Entity, entID, ent.pos)

@@ -78,6 +78,12 @@ class BokehServer:
       #Draw Plots
       bokeh.plotting.output_file(fPath)
       quill, layout = self.data[0], []
+
+      import itertools
+      lifetimes = list(itertools.chain(*quill[('Lifetime', (0,1,2,3))][None].values()))
+      mean, std = np.mean(lifetimes), np.std(lifetimes)
+      print("Lifetime:: Mean: {}, Std: {}".format(mean, std))
+
       for (key, plots), blob in quill.items():
          row, n = [], len(plots)
          for idx, plot in enumerate(plots):

@@ -38,9 +38,9 @@ class Resources:
       self.food   = Static.Entity.Food(  ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
-      self.health._max = entity.skills.constitution.level
-      self.water._max  = entity.skills.fishing.level
-      self.food._max   = entity.skills.hunting.level
+      self.health.max = entity.skills.constitution.level
+      self.water.max  = entity.skills.fishing.level
+      self.food.max   = entity.skills.hunting.level
 
    def packet(self):
       data = {}

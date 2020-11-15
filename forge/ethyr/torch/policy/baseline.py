@@ -58,14 +58,14 @@ class Simple(Base):
       self.ent    = nn.Linear(h, h)
       self.conv   = nn.Conv2d(h, h, 3)
       self.pool   = nn.MaxPool2d(2)
-      self.fc     = nn.Linear(h*6*6, h)
+      self.fc     = nn.Linear(h*3*3, h)
 
       self.proj   = nn.Linear(2*h, h)
       #self.attend = policy.SelfAttention(self.embed, h)
 
    def hidden(self, obs, state=None, lens=None):
       #Attentional agent embedding
-      selfEmb  = obs['Entity'][:, 112, :]
+      selfEmb  = obs['Entity'][:, 0, :]
       #agentEmb = obs['Entity']
       #agents, _ = self.attend(selfEmb, agentEmb)
       agents = self.ent(selfEmb)

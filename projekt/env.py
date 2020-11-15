@@ -125,7 +125,7 @@ def observationSpace(config):
             nContinuous += 1
 
       obs[entity.__name__]['Continuous'] = gym.spaces.Box(
-            low=-2**16, high=2**16, shape=(nRows, nContinuous),
+            low=0, high=2500, shape=(nRows, nContinuous),
             dtype=DataType.CONTINUOUS)
 
       obs[entity.__name__]['Discrete']   = gym.spaces.Box(

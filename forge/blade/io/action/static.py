@@ -18,7 +18,8 @@ class Action(Node):
    @staticproperty
    def edges():
       #return [Move, Attack, Exchange, Skill]
-      return [Move, Attack]
+      #return [Move, Attack]
+      return [Move]
 
    @staticproperty
    def n():

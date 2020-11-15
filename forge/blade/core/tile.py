@@ -66,6 +66,7 @@ class Tile:
       #Try inserting a pass
       if self.static:
          self.state = self.mat
+         self.index.update(self.state.index)
 
    @property
    def static(self):
@@ -77,6 +78,7 @@ class Tile:
          return False
       elif self.capacity <= 1:
          self.state = self.mat.degen()
+         self.index.update(self.state.index)
       self.capacity -= 1
       return True
       return self.mat.dropTable.roll()

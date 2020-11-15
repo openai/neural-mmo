@@ -146,13 +146,14 @@ class GridTables:
       self.radius     = config.STIM
       self.pad        = pad
 
-   def get(self, pos, radius=None):
+   def get(self, ent, radius=None):
       if radius is None:
          radius = self.radius
 
-      r, c = pos
+      r, c = ent.pos
       cent = self.grid.data[r, c]
       assert cent != 0
+
       rows = self.grid.window(
             r-radius, r+radius+1,
             c-radius, c+radius+1)
@@ -215,11 +216,35 @@ class Dataframe:
          T() 
       self.data[obj.__name__].move(key, pos, nxt)
 
-   def get(self, pos):
+   def get(self, ent):
       stim = {}
-      for key, grid2Table in self.data.items():
-         stim[key] = grid2Table.get(pos)
+     
+      #r, c = ent.pos
+      #dat  = self.data['Entity'].index.get(ent.entID)
+      #cent = self.data['Entity'].grid.data[r, c]
+      #assert dat == cent
+      #entDat = self.data['Entity']
+      #continuous = entDat.continuous.get(cent)
+      #discrete   = entDat.discrete.get(cent)
 
+      stim['Entity'] = self.data['Entity'].get(ent, radius=0)
+      stim['Tile']   = self.data['Tile'].get(ent)
+      #for key, grid2Table in self.data.items():
+      #   stim[key] = grid2Table.get(ent)
+      continuous = stim['Entity']['Continuous'][0]
+      assert ent.base.self.val         == continuous[0]
+      assert ent.base.population.val   == continuous[1]
+      assert ent.base.r.val            == continuous[2]
+      assert ent.base.c.val            == continuous[3]
+      assert ent.history.damage.val    == continuous[4]
+      assert ent.history.timeAlive.val == continuous[5]
+      assert ent.resources.food.val    == continuous[6]
+      assert ent.resources.water.val   == continuous[7]
+      assert ent.resources.health.val  == continuous[8]
+      assert ent.status.freeze.val     == continuous[9]
+      assert ent.status.immune.val     == continuous[10]
+      assert ent.status.wilderness.val == continuous[11]
+ 
       return stim
 
 

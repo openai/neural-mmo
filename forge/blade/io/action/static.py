@@ -18,8 +18,8 @@ class Action(Node):
    @staticproperty
    def edges():
       #return [Move, Attack, Exchange, Skill]
-      #return [Move, Attack]
-      return [Move]
+      return [Move, Attack]
+      #return [Move]
 
    @staticproperty
    def n():
@@ -196,8 +196,8 @@ class Target(Node):
 
    @classmethod
    def N(cls, config):
-      return config.WINDOW ** 2
-      #return config.N_AGENT_OBS
+      #return config.WINDOW ** 2
+      return config.N_AGENT_OBS
 
    def args(stim, entity, config):
       #Should pass max range?

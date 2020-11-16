@@ -24,7 +24,6 @@ class Stimulus(Config):
    class Entity(Config):
       @staticmethod
       def N(config):
-         #return config.WINDOW ** 2
          return config.N_AGENT_OBS
 
       class Self(node.Discrete):

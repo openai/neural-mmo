@@ -46,6 +46,7 @@ class Output(nn.Module):
       rets = defaultdict(dict)
       for atn in static.Action.edges:
          for arg in atn.edges:
+            lens  = None
             if arg.argType == static.Fixed:
                batch = obs.shape[0]
                idxs  = [e.idx for e in arg.edges]
@@ -56,11 +57,13 @@ class Output(nn.Module):
             else:
                #Temp hack, rename
                cands = lookup['Entity']
-               continue #Fix attacks here and masking? below
+               lens  = lookup['N']
 
             #lens = [cands.shape[1] for e in range(cands.shape[0])]
-            lens  = None
             logits = self.net(obs, cands, lens)
+            #if logits.shape[1] > 5 and logits[0][1] != logits[0][2]:
+            #   T()
+
             #String names for RLlib for now
             #rets[atn.__name__][arg.__name__] = logits
             rets[atn][arg] = logits
@@ -91,6 +94,11 @@ class DiscreteAction(Action):
 
    def forward(self, stim, args, lens):
       x = self.net(stim, args)
+
+      if lens is not None:
+         mask = torch.arange(x.shape[-1]).to(x.device).expand_as(x)
+         x[mask >= lens] = -float('inf')
+
       return x
 
       '''

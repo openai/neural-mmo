@@ -91,6 +91,7 @@ class Input(nn.Module):
          inp['Tile']['Continuous']   *= tileWeight.cuda()
          inp['Entity']['Continuous'] *= entWeight.cuda()
  
+      entityLookup['N'] = inp['Entity'].pop('N')
       for name, entities in inp.items():
          #Construct: Batch, ents, nattrs, hidden
          embeddings = self.embeddings[name](entities)

@@ -72,20 +72,38 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
 
       actions = {}
       for entID in list(decisions.keys()):
+         ent = self.realm.players[entID]
+         r, c = ent.pos
+         radius = self.config.STIM
+         grid  = self.realm.dataframe.data['Entity'].grid
+         index = self.realm.dataframe.data['Entity'].index
+         cent = grid.data[r, c]
+         rows = grid.window(
+            r-radius, r+radius+1,
+            c-radius, c+radius+1)
+         rows.remove(cent)
+         rows.insert(0, cent)
+         rows = [index.teg(e) for e in rows]
+         assert rows[0] == ent.entID
+
          actions[entID] = defaultdict(dict)
          if entID in self.dead:
             continue
 
-         ents = list(self.realm.players.entities.values())
+         ents = self.realm.players.entities
+         #ents = list(self.realm.players.entities.values())
          for atn, args in decisions[entID].items():
             for arg, val in args.items():
                val = int(val)
                if len(arg.edges) > 0:
                   actions[entID][atn][arg] = arg.edges[val]
-               elif val < len(ents):
-                  actions[entID][atn][arg] = ents[val]
+               #elif val < len(ents):
+               elif val < len(rows):
+                  actions[entID][atn][arg] = ents[rows[val]]
+                  #actions[entID][atn][arg] = ents[val]
                else:
-                  actions[entID][atn][arg] = ents[0]
+                  #actions[entID][atn][arg] = ents[0]
+                  actions[entID][atn][arg] = ent
 
       self.rllib_compat = time.time() - self.rllib_compat
       self.env_step     = time.time()
@@ -95,7 +113,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
       self.env_step     = time.time() - self.env_step
       env_post          = time.time()
 
-      #Cull dead agaents
+      #Cull dead agents
       for ent in self.dead:
          lifetime = ent.history.timeAlive.val
          self.lifetimes.append(lifetime)
@@ -131,6 +149,10 @@ def observationSpace(config):
       obs[entity.__name__]['Discrete']   = gym.spaces.Box(
             low=0, high=4096, shape=(nRows, nDiscrete),
             dtype=DataType.DISCRETE)
+
+   obs['Entity']['N']   = gym.spaces.Box(
+         low=0, high=config.N_AGENT_OBS, shape=(1,),
+         dtype=DataType.DISCRETE)
 
    return obs
 

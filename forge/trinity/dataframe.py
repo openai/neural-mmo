@@ -25,6 +25,7 @@ class Index:
    def __init__(self, prealloc):
       self.free  = {idx for idx in range(1, prealloc)}
       self.index = {}
+      self.back  = {}
 
    def full(self):
       return len(self.free) == 0
@@ -32,6 +33,7 @@ class Index:
    def remove(self, key):
       row = self.index[key]
       del self.index[key]
+      del self.back[row]
 
       self.free.add(row)
       return row
@@ -42,11 +44,15 @@ class Index:
       else:
          row = self.free.pop()
          self.index[key] = row
+         self.back[row]  = key
 
       return row
 
    def get(self, key):
       return self.index[key]
+
+   def teg(self, row):
+      return self.back[row]
 
    def expand(self, cur, nxt):
       self.free.update({idx for idx in range(cur, nxt)})
@@ -86,8 +92,8 @@ class ContinuousTable:
       data = self.data[rows]
       data[rows==0] = 0
 
-      #if pad is not None:
-      #   data = np.pad(data, ((0, pad-len(data)), (0, 0)))
+      if pad is not None:
+         data = np.pad(data, ((0, pad-len(data)), (0, 0)))
 
       return data
 
@@ -131,7 +137,6 @@ class Grid:
 
    def window(self, rStart, rEnd, cStart, cEnd):
       crop = self.data[rStart:rEnd, cStart:cEnd].ravel()
-      return crop
       return list(filter(lambda x: x != 0, crop))
       
 class GridTables:
@@ -146,7 +151,7 @@ class GridTables:
       self.radius     = config.STIM
       self.pad        = pad
 
-   def get(self, ent, radius=None):
+   def get(self, ent, radius=None, entity=False):
       if radius is None:
          radius = self.radius
 
@@ -158,13 +163,13 @@ class GridTables:
             r-radius, r+radius+1,
             c-radius, c+radius+1)
 
-      #Center element first
-      #rows.remove(cent)
-      #rows.insert(0, cent)
-      #This will screw up conv models
+      #Self entity first
+      if entity:
+         rows.remove(cent)
+         rows.insert(0, cent)
 
       return {'Continuous': self.continuous.get(rows, self.pad),
-              'Discrete':   self.discrete.get(rows, self.pad)}
+              'Discrete':   self.discrete.get(rows, self.pad)}, rows
 
    def update(self, obj, val):
       key, attr = obj.key, obj.attr
@@ -227,10 +232,13 @@ class Dataframe:
       #continuous = entDat.continuous.get(cent)
       #discrete   = entDat.discrete.get(cent)
 
-      stim['Entity'] = self.data['Entity'].get(ent, radius=0)
-      stim['Tile']   = self.data['Tile'].get(ent)
+      stim['Entity'], ents = self.data['Entity'].get(ent, entity=True)
+      stim['Entity']['N']  = np.array([len(ents)], dtype=np.int32)
+
+      stim['Tile'], _      = self.data['Tile'].get(ent)
       #for key, grid2Table in self.data.items():
       #   stim[key] = grid2Table.get(ent)
+      '''
       continuous = stim['Entity']['Continuous'][0]
       assert ent.base.self.val         == continuous[0]
       assert ent.base.population.val   == continuous[1]
@@ -244,6 +252,7 @@ class Dataframe:
       assert ent.status.freeze.val     == continuous[9]
       assert ent.status.immune.val     == continuous[10]
       assert ent.status.wilderness.val == continuous[11]
+      '''
  
       return stim
 

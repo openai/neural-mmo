@@ -100,7 +100,7 @@ def loadTrainer(config):
    policies  = createPolicies(config)
    return rlutils.SanePPOTrainer(
          env="custom", path='experiment', config={
-      'num_workers': 1,
+      'num_workers': 4,
       'num_gpus': 1,
       'num_envs_per_worker': 1,
       'train_batch_size': 4000,

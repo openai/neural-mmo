@@ -30,7 +30,7 @@ class Config(core.Config):
    STIM    = 4
 
    #Maximum number of observed agents
-   N_AGENT_OBS = 1
+   N_AGENT_OBS = 100
 
    # Whether to share weights across policies
    # The 1.4 baselines use one policy

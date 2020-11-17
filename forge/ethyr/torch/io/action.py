@@ -97,7 +97,7 @@ class DiscreteAction(Action):
 
       if lens is not None:
          mask = torch.arange(x.shape[-1]).to(x.device).expand_as(x)
-         x[mask >= lens] = -float('inf')
+         x[mask >= lens] = 0#-float('inf')
 
       return x
 

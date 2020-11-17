@@ -21,10 +21,10 @@ from forge.trinity.dataframe import DataType
 
 class Env(core.Env):
    def log(self, quill, ent):
-      blob = quill.register('Lifetime', quill.LINE, quill.SCATTER, quill.HISTOGRAM, quill.GANTT)
+      blob = quill.register('Lifetime', quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
       blob.log(ent.history.timeAlive.val)
 
-      blob = quill.register('Skill Level', quill.STACKED_AREA, quill.SCATTER, quill.HISTOGRAM, quill.RADAR)
+      blob = quill.register('Skill Level', quill.HISTOGRAM, quill.STACKED_AREA, quill.STATS, quill.RADAR)
       blob.log(ent.skills.range.level,        'Range')
       blob.log(ent.skills.mage.level,         'Mage')
       blob.log(ent.skills.melee.level,        'Melee')
@@ -33,12 +33,18 @@ class Env(core.Env):
       blob.log(ent.skills.fishing.level,      'Fishing')
       blob.log(ent.skills.hunting.level,      'Hunting')
 
-      blob = quill.register('Equipment', quill.STACKED_AREA, quill.HISTOGRAM)
+      #TODO: swap these entries when equipment is reenabled
+      blob = quill.register('Wilderness', quill.HISTOGRAM, quill.SCATTER)
+      blob.log(combat.wilderness(self.config, ent.pos))
+
+      blob = quill.register('Equipment', quill.HISTOGRAM, quill.STACKED_AREA)
       blob.log(ent.loadout.chestplate.level, 'Chestplate')
       blob.log(ent.loadout.platelegs.level,  'Platelegs')
 
-      blob = quill.register('Wilderness', quill.HISTOGRAM, quill.SCATTER)
-      blob.log(combat.wilderness(self.config, ent.pos))
+      quill.stat('Lifetime',  ent.history.timeAlive.val)
+      quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
+      quill.stat('Combat',    combat.level(ent.skills))
+      quill.stat('Equipment', ent.loadout.defense)
 
 class RLLibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
@@ -143,7 +149,7 @@ def observationSpace(config):
             nContinuous += 1
 
       obs[entity.__name__]['Continuous'] = gym.spaces.Box(
-            low=0, high=2500, shape=(nRows, nContinuous),
+            low=0, high=2**16, shape=(nRows, nContinuous),
             dtype=DataType.CONTINUOUS)
 
       obs[entity.__name__]['Discrete']   = gym.spaces.Box(

@@ -38,8 +38,12 @@ class Quill:
 
    def __init__(self, realm, tick):
       self.blobs = defaultdict(Blob)
+      self.stats = defaultdict(list)
       self.realm = realm #Game map index
       self.tick  = tick  #Current game tick
+
+   def stat(self, key, val):
+      self.stats[key].append(val)
 
    def register(self, key, *plots):
       if key in self.blobs:
@@ -53,7 +57,8 @@ class Quill:
 
    @property
    def packet(self):
-      return {key: blob.packet for key, blob in self.blobs.items()}
+      logs = {key: blob.packet for key, blob in self.blobs.items()}
+      return {'Log': logs, 'Stats': self.stats}
 
 class Blob:
    def __init__(self, *args):
@@ -82,33 +87,25 @@ class Track:
    def packet(self):
       return self.data
 
-'''
-flat = []
-for key, val in sorted(self.data.items()):
-   flat += val
-
-if Quill.LINE in plots:
-   data['line']      = flat
-if Quill.SCATTER in plots:
-   data['scatter']   = self.data
-if Quill.HISTOGRAM in plots:
-   data['histogram'] = flat
-'''
-
 class InkWell:
    def __init__(self):
-      self.data = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(list))))
+      self.log   = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(list))))
+      self.stats = defaultdict(list)
 
    def update(self, packets):
       for realm, quill in enumerate(packets):
-         for key, blob in quill.items():
+         log, stats = quill['Log'], quill['Stats']
+         for key, blob in log.items():
             for subkey, (plots, track) in blob.items():
                for time, vals in track.items():
-                  self.data[realm][key, tuple(plots)][subkey][time] += vals
+                  self.log[realm][key, tuple(plots)][subkey][time] += vals
+         for key, stat in stats.items():
+            self.stats[key] += stat
 
    @property
    def packet(self):
-      return utils.default_to_regular(self.data)
+      return {'Log': utils.default_to_regular(self.log),
+              'Stats': utils.default_to_regular(self.stats)}
  
 #Log wrapper and benchmarker
 class Benchmarker:

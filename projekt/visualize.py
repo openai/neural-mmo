@@ -77,18 +77,20 @@ class BokehServer:
 
       #Draw Plots
       bokeh.plotting.output_file(fPath)
-      quill, layout = self.data[0], []
+      layout = []
 
-      import itertools
-      lifetimes = list(itertools.chain(*quill[('Lifetime', (0,1,2,3))][None].values()))
-      mmin, mmax, mean, std = np.min(lifetimes), np.max(lifetimes), np.mean(lifetimes), np.std(lifetimes)
-      print("Lifetime:: Min: {}, Max: {}, Mean: {}, Std: {}".format(mmin, mmax, mean, std))
-      for key, vals in quill[('Skill Level', (6,1,2,5))].items():
-         vals = list(itertools.chain(*vals.values()))
-         mmin, mmax, mean, std = np.min(vals), np.max(vals), np.mean(vals), np.std(vals)
-         print("{}:: Min: {}, Max: {}, Mean: {}, Std: {}".format(key, mmin, mmax, mean, std))
+      data   = self.data
+      logs   = data['Log'][0]
+      stats  = data['Stats']
+      
+      for key, vals in stats.items():
+         mmin, mmax = np.min(vals), np.max(vals)
+         mean, std  = np.mean(vals), np.std(vals)
 
-      for (key, plots), blob in quill.items():
+         print("{}:: Min: {}, Max: {}, Mean: {}, Std: {}".format(
+               key, mmin, mmax, mean, std))
+
+      for (key, plots), blob in logs.items():
          row, n = [], len(plots)
          for idx, plot in enumerate(plots):
             fig, legend = self.plot(key, blob, plot, idx, n)

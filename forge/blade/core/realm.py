@@ -31,6 +31,12 @@ class EntityGroup:
    def __init__(self, config):
       self.config   = config
       self.entities = {}
+      self.dead     = {}
+
+   def packet(self):
+      alive = dict((k, v.packet()) for k, v in self.entities.items())
+      dead  = dict((k, v.packet()) for k, v in self.dead.items())
+      return {**alive, **dead}
 
    def items(self):
       return self.entities.items()
@@ -84,17 +90,18 @@ class NPCManager(EntityGroup):
        
    def cull(self):
       #Cull dead players
-      dead = set()
+      dead = {}
       for entID in list(self.entities):
          player = self.entities[entID]
          if not player.alive:
             r, c  = player.base.pos
             entID = player.entID
-            dead.add(player)
+            dead[entID] = player
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
 
+      self.dead = dead
       return dead
 
 
@@ -137,18 +144,19 @@ class PlayerManager(EntityGroup):
 
    def cull(self):
       #Cull dead players
-      dead = set()
+      dead = {}
       for entID in list(self.entities):
          player = self.entities[entID]
          if not player.alive:
             r, c  = player.pos
             entID = player.entID
-            dead.add(player)
+            dead[entID] = player
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
             self.realm.dataframe.remove(Static.Entity, entID, player.pos)
 
+      self.dead = dead
       return dead
 
 class Realm:
@@ -187,6 +195,12 @@ class Realm:
 
       self.mobIdx = 0
       self.mobs = {}
+
+   def packet(self):
+      return {'environment': self.map,
+              'resource': self.map.packet(),
+              'player': self.players.packet(),
+              'npc': self.npcs.packet()}
 
    @property
    def nEntities(self):
@@ -229,4 +243,5 @@ class Realm:
       #self.stats.update(self.players, self.npcs, self.market)
       self.tick += 1
       return dead
+
 

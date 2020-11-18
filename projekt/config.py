@@ -24,7 +24,7 @@ class Config(core.Config):
    NMAPS = 256  # Number maps to generate
 
    # Evaluation parameters
-   EVALUATION_HORIZON = 10000
+   EVALUATION_HORIZON = 2048
 
    #Agent vision range
    STIM    = 4

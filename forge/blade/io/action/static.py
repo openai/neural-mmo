@@ -48,6 +48,9 @@ class Move(Node):
    priority = 1
    nodeType = NodeType.SELECTION
    def call(env, entity, direction):
+      if not entity.alive:
+         return
+
       r, c  = entity.pos
       entID = entity.entID
       entity.history.lastPos = (r, c)

@@ -24,9 +24,7 @@ class Resource:
       return self._val == 0
 
    def packet(self):
-      return {
-              'val': self._val,
-              'max': self._max}
+      return { 'val': self._val, 'max': self._max}
 
    def increment(self, val):
       self._val = min(self._val + val, self._max)
@@ -163,6 +161,7 @@ class Entity:
       data['status']  = self.status.packet()
       data['history'] = self.history.packet()
       data['loadout'] = self.loadout.packet()
+      data['alive']   = self.alive
 
       return data
 

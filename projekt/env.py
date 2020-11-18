@@ -120,7 +120,7 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
       env_post          = time.time()
 
       #Cull dead agents
-      for ent in self.dead:
+      for entID, ent in self.dead.items():
          lifetime = ent.history.timeAlive.val
          self.lifetimes.append(lifetime)
          if not self.config.RENDER and len(self.lifetimes) >= 1000:

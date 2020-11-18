@@ -156,7 +156,7 @@ class Env(Timed):
       infos = {}
       if self.config.RENDER:
          infos = log.Quill(self.worldIdx, self.tick)
-         for ent in self.dead:
+         for entID, ent in self.dead.items():
             self.log(infos, ent)
          infos = infos.packet
 
@@ -248,15 +248,11 @@ class Env(Timed):
       '''
       packet = {
             'config': self.config,
-            'environment': self.realm.map,
-            'resource': self.realm.map.packet(),
-            'player': dict((k, v.packet())
-               for k, v in self.realm.players.items()),
-            'npc': dict((k, v.packet())
-               for k, v in self.realm.npcs.items()),
             'pos': self.overlayPos,
             'wilderness': combat.wilderness(self.config, self.overlayPos)
             }
+
+      packet = {**self.realm.packet(), **packet}
 
       if self.overlay is not None:
          print('Overlay data: ', len(self.overlay))
@@ -287,7 +283,7 @@ class Env(Timed):
          rewards[entID] = self.reward(entID)
          dones[entID]   = False
 
-      for ent in dead:
+      for entID, ent in dead.items():
          #Why do we have to provide an ob for the last timestep?
          #Currently just copying one over
          rewards[ent.entID] = self.reward(ent)

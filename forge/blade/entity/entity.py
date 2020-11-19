@@ -1,54 +1,29 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.systems import skill, droptable, combat
+from forge.blade.systems import skill, droptable, combat, equipment
 from forge.blade.lib.enums import Material, Neon
 
 from forge.blade.io.action import static as Action
 from forge.blade.io.stimulus import Static
 
-class Resource:
-   def __init__(self, val, mmax=None):
-      self._val = val
-      if mmax is None:
-         self._max = val
-      else:
-         self._max = mmax
+class Resources:
+   def __init__(self, ent):
+      self.health = Static.Entity.Health(ent.dataframe, ent.entID)
+      self.water  = Static.Entity.Water( ent.dataframe, ent.entID)
+      self.food   = Static.Entity.Food(  ent.dataframe, ent.entID)
 
-   @property
-   def max(self):
-      return self._max
-
-   @property
-   def empty(self):
-      return self._val == 0
+   def update(self, realm, entity, actions):
+      self.health.max = entity.skills.constitution.level
+      self.water.max  = entity.skills.fishing.level
+      self.food.max   = entity.skills.hunting.level
 
    def packet(self):
-      return { 'val': self._val, 'max': self._max}
-
-   def increment(self, val):
-      self._val = min(self._val + val, self._max)
-
-   def decrement(self, val):
-      self._val = max(self._val - val, 0)
-
-   def __eq__(self, val):
-      return self._val == val
-
-   def __ne__(self, val):
-      return self._val != val
-
-   def __gt__(self, val):
-      return self._val > val
-
-   def __ge__(self, val):
-      return self._val >= val
-
-   def __lt__(self, val):
-      return self._val < val
-
-   def __le__(self, val):
-      return self._val <= val
+      data = {}
+      data['health'] = self.health.packet()
+      data['food']   = self.food.packet()
+      data['water']  = self.water.packet()
+      return data
 
 class Status:
    def __init__(self, ent):
@@ -101,7 +76,7 @@ class History:
    def packet(self):
       data = {}
       data['damage']    = self.damage.val
-      data['timaAlive'] = self.timeAlive.val
+      data['timeAlive'] = self.timeAlive.val
 
       if self.attack is not None:
          data['attack'] = self.attack
@@ -109,21 +84,28 @@ class History:
       return data
 
 class Base:
-   def __init__(self, ent, pos, iden, name, color):
+   def __init__(self, ent, pos, iden, name, color, pop=0):
+      self.name  = name + str(iden)
       self.color = color
       r, c       = pos
 
       self.r          = Static.Entity.R(ent.dataframe, ent.entID, r)
       self.c          = Static.Entity.C(ent.dataframe, ent.entID, c)
 
-      self.population = Static.Entity.Population(ent.dataframe, ent.entID, 0)
+      self.population = Static.Entity.Population(ent.dataframe, ent.entID, pop)
       self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, True)
+
+      ent.dataframe.init(Static.Entity, ent.entID, (r, c))
 
 
    def update(self, realm, entity, actions):
       r, c = self.pos
       if type(realm.map.tiles[r, c].mat) == Material.LAVA.value:
          entity.killed = True
+         return
+
+      if entity.resources.health.empty:
+         self.killed = True
          return
 
    @property
@@ -137,12 +119,13 @@ class Base:
       data['c']          = self.c.val
       data['name']       = self.name
       data['color']      = self.color.packet()
+      data['population'] = self.population.val
+      data['self']       = self.self.val
 
       return data
 
-
 class Entity:
-   def __init__(self, realm, iden):
+   def __init__(self, realm, pos, iden, name, color):
       self.dataframe    = realm.dataframe
       self.config       = realm.config
       self.entID        = iden
@@ -155,6 +138,13 @@ class Entity:
       self.target       = None
       self.closest      = None
 
+      #Submodules
+      self.base      = Base(self, pos, iden, name, color, pop=-1)
+      self.status    = Status(self)
+      self.history   = History(self)
+      self.resources = Resources(self)
+      self.loadout   = equipment.Loadout()
+
    def packet(self):
       data = {}
 
@@ -165,12 +155,25 @@ class Entity:
 
       return data
 
-   def step(self, realm, actions):
+   def update(self, realm, actions):
+      '''Update occurs after actions, e.g. does not include history'''
       self.base.update(realm, self, actions)
+
+      if not self.alive:
+         return False
+
       self.status.update(realm, self, actions)
-      self.history.update(realm, self, actions)
+
+      return True
 
    def receiveDamage(self, source, dmg):
+      self.history.damage.update(dmg)
+      self.resources.health.decrement(dmg)
+
+      if not self.alive:
+         source.receiveLoot(self.loadout)
+
+   def receiveLoot(self, loadout):
       pass
 
    def applyDamage(self, dmg, style):
@@ -184,4 +187,8 @@ class Entity:
    def alive(self):
       if self.killed:
          return False
+
+      if self.resources.health.empty:
+         return False
+
       return True

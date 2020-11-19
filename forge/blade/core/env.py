@@ -276,7 +276,10 @@ class Env(Timed):
       obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.realm.players.items():
          start = time.time()
-         ob             = self.realm.dataframe.get(ent)
+         try:
+            ob             = self.realm.dataframe.get(ent)
+         except:
+            T()
          obs[entID]     = ob
          self.stim_process += time.time() - start
 

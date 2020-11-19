@@ -58,6 +58,39 @@ class EntityGroup:
    def __len__(self):
       return len(self.entities)
 
+   def cull(self):
+      #Cull dead players
+      dead = {}
+      for entID in list(self.entities):
+         player = self.entities[entID]
+         if not player.alive:
+            r, c  = player.base.pos
+            entID = player.entID
+            dead[entID] = player
+
+            self.realm.map.tiles[r, c].delEnt(entID)
+            del self.entities[entID]
+            self.realm.dataframe.remove(Static.Entity, entID, player.pos)
+
+      self.dead = dead
+      return dead
+
+   def preActions(self, decisions):
+      '''Update agent history before performing actions
+      Args:
+         decisions: A dictionary of agent actions
+      '''
+      for entID, entity in self.entities.items():
+         entity.history.update(self.realm, entity, decisions)
+
+   def postActions(self, decisions):
+      '''Update agent data after performing actions
+      Args:
+         decisions: A dictionary of agent actions
+      '''
+      for entID, entity in self.entities.items():
+         entity.update(self.realm, decisions)
+
 class NPCManager(EntityGroup):
    def __init__(self, realm, config):
       super().__init__(config)
@@ -72,8 +105,11 @@ class NPCManager(EntityGroup):
 
          r = np.random.randint(0, R)
          c = np.random.randint(0, C)
-         tile = self.realm.map.tiles[r, c]
 
+         if len(self.realm.map.tiles[r, c].ents) != 0:
+            continue
+
+         tile = self.realm.map.tiles[r, c]
          if tile.mat.tex != 'grass':
             continue
 
@@ -85,26 +121,9 @@ class NPCManager(EntityGroup):
    def actions(self, realm):
       actions = {}
       for idx, entity in self.entities.items():
-         actions[idx] = entity.step(realm)
+         actions[idx] = entity.decide(realm)
       return actions
        
-   def cull(self):
-      #Cull dead players
-      dead = {}
-      for entID in list(self.entities):
-         player = self.entities[entID]
-         if not player.alive:
-            r, c  = player.base.pos
-            entID = player.entID
-            dead[entID] = player
-
-            self.realm.map.tiles[r, c].delEnt(entID)
-            del self.entities[entID]
-
-      self.dead = dead
-      return dead
-
-
 class PlayerManager(EntityGroup):
    def __init__(self, realm, config):
       super().__init__(config)
@@ -128,36 +147,6 @@ class PlayerManager(EntityGroup):
 
       self.realm.map.tiles[r, c].addEnt(iden, player)
       self.entities[player.entID] = player
-
-   def step(self, decisions):
-      '''Perform agent actions
-      Args:
-         decisions: A dictionary of agent actions
-
-      Returns:
-         dead: A list of dead agents
-      '''
-      #Update players before performing actions
-      for entID, actions in decisions.items():
-         ent = self.entities[entID]
-         ent.step(self.realm, actions)   
-
-   def cull(self):
-      #Cull dead players
-      dead = {}
-      for entID in list(self.entities):
-         player = self.entities[entID]
-         if not player.alive:
-            r, c  = player.pos
-            entID = player.entID
-            dead[entID] = player
-
-            self.realm.map.tiles[r, c].delEnt(entID)
-            del self.entities[entID]
-            self.realm.dataframe.remove(Static.Entity, entID, player.pos)
-
-      self.dead = dead
-      return dead
 
 class Realm:
    def __init__(self, config, idx):
@@ -193,9 +182,6 @@ class Realm:
       self.handlerTimer = utils.BenchmarkTimer()
       self.statTimer  = utils.BenchmarkTimer()
 
-      self.mobIdx = 0
-      self.mobs = {}
-
    def packet(self):
       return {'environment': self.map,
               'resource': self.map.packet(),
@@ -206,41 +192,44 @@ class Realm:
    def nEntities(self):
       return len(self.players.entities)
 
+   def entity(self, entID):
+      if entID < 0:
+         return self.npcs[entID]
+      else:
+         return self.players[entID]
+
    #Hook for render
    def graphicsData(self):
       return self.env, self.stats
 
    def step(self, decisions):
+      #NPC Spawning and decisions
       self.npcs.spawn()
+      npcDecisions = self.npcs.actions(self)
 
       #Prioritize actions
-      merged = defaultdict(list)
-      prioritized(self.npcs.actions(self), merged)
+      merged       = defaultdict(list)
       prioritized(decisions, merged)
+      prioritized(npcDecisions, merged)
 
-      #Perform actions
-      keys = sorted(merged)
-      for priority in keys:
-         actions = merged[priority] 
-         for tup in actions:
-            entID, atnArgs = tup
-            atn, args      = atnArgs
-            if entID < 0:
-               entity = self.npcs[entID]
-            else:
-               entity = self.players[entID]
+      #Update entities and perform actions
+      self.players.preActions(decisions)
+      self.npcs.preActions(npcDecisions)
 
-            atn.call(self, entity, *args)
+      for priority in sorted(merged):
+         for entID, (atn, args) in merged[priority]:
+            atn.call(self, self.entity(entID), *args)
 
-      self.players.step(decisions)
+      self.players.postActions(decisions)
+      self.npcs.postActions(npcDecisions)
 
       #Cull dead
       dead = self.players.cull()
       self.npcs.cull()
 
+      #Update map
       self.map.step()
 
-      #self.stats.update(self.players, self.npcs, self.market)
       self.tick += 1
       return dead
 

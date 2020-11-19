@@ -8,7 +8,7 @@ from collections import deque
 
 from forge.blade.lib.utils import classproperty, staticproperty
 
-class IterableTypeCompare(type):
+class Iterable(type):
    def __iter__(cls):
       queue = deque(cls.__dict__.items())
       while len(queue) > 0:
@@ -27,6 +27,7 @@ class IterableTypeCompare(type):
    def values(cls):
       return [e[1] for e in cls]
 
+class NameComparable(type):
    def __hash__(self):
       return hash(self.__name__)
 
@@ -48,10 +49,13 @@ class IterableTypeCompare(type):
    def __ge__(self, other):
       return self.__name__ >= other.__name__
 
+class IterableNameComparable(Iterable, NameComparable):
+   pass
+
 class Flat:
    pass
 
-class Stim(metaclass=IterableTypeCompare):
+class Stim:
    CONTINUOUS = False
    DISCRETE   = False
    def __init__(self, dataframe, key, val=None, config=None):
@@ -84,17 +88,6 @@ class Stim(metaclass=IterableTypeCompare):
             'val': self.val,
             'max': self.max}
 
-   def asserts(self):
-      assert self.val >= self.min, self.name + ' = ' + self.val + '; min = ' + self.min
-      assert self.val <= self.max, self.name + ' = ' + self.val + '; max = ' + self.max
-
-   @property
-   def empty(self):
-      return self.val == 0
-
-   def get(self, *args):
-      return self.asserts(self.val)
-
    def update(self, val):
       self.val = min(max(val, 0), self.max)
       self.dataframe.update(self, self.val)
@@ -108,6 +101,10 @@ class Stim(metaclass=IterableTypeCompare):
       self.update(self.val - val)
       return self
 
+   @property
+   def empty(self):
+      return self.val == 0
+
    def __add__(self, other):
       self.increment(other)
       return self
@@ -115,6 +112,12 @@ class Stim(metaclass=IterableTypeCompare):
    def __sub__(self, other):
       self.decrement(other)
       return self
+
+   def __eq__(self, other):
+      return self.val == other
+
+   def __ne__(self, other):
+      return self.val != other
 
    def __lt__(self, other):
       return self.val < other
@@ -144,7 +147,7 @@ class NodeType(Enum):
    CONSTANT  = auto() #Constant argument
    VARIABLE  = auto() #Variable argument
 
-class Node(metaclass=IterableTypeCompare):
+class Node(metaclass=IterableNameComparable):
    SERIAL = 2
 
    @staticproperty

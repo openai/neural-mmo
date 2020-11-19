@@ -96,19 +96,16 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
          if entID in self.dead:
             continue
 
-         ents = self.realm.players.entities
-         #ents = list(self.realm.players.entities.values())
+         #TODO: Cleaner get function without merge every tick
+         ents = {**self.realm.players.entities, **self.realm.npcs.entities}
          for atn, args in decisions[entID].items():
             for arg, val in args.items():
                val = int(val)
                if len(arg.edges) > 0:
                   actions[entID][atn][arg] = arg.edges[val]
-               #elif val < len(ents):
                elif val < len(rows):
                   actions[entID][atn][arg] = ents[rows[val]]
-                  #actions[entID][atn][arg] = ents[val]
                else:
-                  #actions[entID][atn][arg] = ents[0]
                   actions[entID][atn][arg] = ent
 
       self.rllib_compat = time.time() - self.rllib_compat

@@ -14,7 +14,7 @@ def bind(gameCls):
       return ioCls
    return to 
 
-class Config(metaclass=node.IterableTypeCompare):
+class Config(metaclass=node.IterableNameComparable):
    pass
 
 class Stimulus(Config):
@@ -32,10 +32,6 @@ class Stimulus(Config):
             self.max = 1
             self.scale = 1.0
 
-         def get(self, ent, ref):
-            val = int(ent is ref)
-            return np.array([self.asserts(val)])
-
       class Population(node.Discrete):
          def init(self, config):
             self.max = config.NPOP
@@ -49,10 +45,6 @@ class Stimulus(Config):
             self.max = config.TERRAIN_SIZE
             self.scale = 0.15
 
-         def get(self, ent, ref):
-            self._val = ent.base.r - ref.base.r
-            return np.array([self.norm()])
-   
       #You made this continuous
       class C(node.Discrete):
          def init(self, config):
@@ -61,11 +53,6 @@ class Stimulus(Config):
             self.min = 0
             self.max = config.TERRAIN_SIZE
             self.scale = 0.15
-
-
-         def get(self, ent, ref):
-            self._val = ent.base.c - ref.base.c
-            return np.array([self.norm()])
 
       #Historical stats
       class Damage(node.Continuous):

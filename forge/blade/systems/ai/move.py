@@ -34,6 +34,9 @@ def habitable(tiles, ent):
    if tiles[r, c+1].habitable:
       cands.append(Action.East)
    
+   if len(cands) == 0:
+      return Action.North
+
    return rand.choice(cands)
 
 def towards(direction):

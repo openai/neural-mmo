@@ -84,7 +84,7 @@ class History:
       return data
 
 class Base:
-   def __init__(self, ent, pos, iden, name, color, pop=0):
+   def __init__(self, ent, pos, iden, name, color, pop):
       self.name  = name + str(iden)
       self.color = color
       r, c       = pos
@@ -125,7 +125,7 @@ class Base:
       return data
 
 class Entity:
-   def __init__(self, realm, pos, iden, name, color):
+   def __init__(self, realm, pos, iden, name, color, pop):
       self.dataframe    = realm.dataframe
       self.config       = realm.config
       self.entID        = iden
@@ -139,7 +139,7 @@ class Entity:
       self.closest      = None
 
       #Submodules
-      self.base      = Base(self, pos, iden, name, color, pop=-1)
+      self.base      = Base(self, pos, iden, name, color, pop)
       self.status    = Status(self)
       self.history   = History(self)
       self.resources = Resources(self)
@@ -172,6 +172,9 @@ class Entity:
 
       if not self.alive:
          source.receiveLoot(self.loadout)
+         return False
+
+      return True
 
    def receiveLoot(self, loadout):
       pass

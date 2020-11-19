@@ -9,8 +9,8 @@ from forge.blade.io.action import static as Action
 from forge.blade.io.stimulus import Static
 
 class NPC(entity.Entity):
-   def __init__(self, realm, pos, iden, name, color):
-      super().__init__(realm, pos, iden, name, color)
+   def __init__(self, realm, pos, iden, name, color, pop):
+      super().__init__(realm, pos, iden, name, color, pop)
       self.skills = skill.Combat(self)
 
    def update(self, realm, actions):
@@ -88,7 +88,7 @@ class NPC(entity.Entity):
 
 class Passive(NPC):
    def __init__(self, realm, pos, iden):
-      super().__init__(realm, pos, iden, 'Passive', Neon.GREEN)
+      super().__init__(realm, pos, iden, 'Passive', Neon.GREEN, -1)
       self.dataframe.init(Static.Entity, iden, pos)
 
    #NPCs have direct access to the world
@@ -97,7 +97,7 @@ class Passive(NPC):
 
 class PassiveAggressive(NPC):
    def __init__(self, realm, pos, iden):
-      super().__init__(realm, pos, iden, 'Neutral', Neon.ORANGE)
+      super().__init__(realm, pos, iden, 'Neutral', Neon.ORANGE, -2)
       self.dataframe.init(Static.Entity, iden, pos)
 
    def decide(self, realm):
@@ -105,7 +105,7 @@ class PassiveAggressive(NPC):
 
 class Aggressive(NPC):
    def __init__(self, realm, pos, iden):
-      super().__init__(realm, pos, iden, 'Hostile', Neon.RED)
+      super().__init__(realm, pos, iden, 'Hostile', Neon.RED, -3)
       self.dataframe.init(Static.Entity, iden, pos)
       self.vision = int(max(self.vision, 1 + combat.level(self.skills) // 10))
       self.dataframe.init(Static.Entity, self.entID, self.pos)

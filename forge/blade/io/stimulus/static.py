@@ -34,7 +34,8 @@ class Stimulus(Config):
 
       class Population(node.Discrete):
          def init(self, config):
-            self.max = config.NPOP
+            self.min = -3 #NPC index
+            self.max = config.NPOP - 1
             self.scale = 1.0
 
       class R(node.Discrete):

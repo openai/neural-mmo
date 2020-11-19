@@ -11,7 +11,7 @@ from forge.blade.io.stimulus import Static
 
 class Player(entity.Entity):
    def __init__(self, realm, pos, iden, pop, name='', color=None):
-      super().__init__(realm, pos, iden, name, color)
+      super().__init__(realm, pos, iden, name, color, pop)
 
       self.annID  = pop
       self.target = None
@@ -28,15 +28,16 @@ class Player(entity.Entity):
    def applyDamage(self, dmg, style):
       self.resources.food.increment(dmg)
       self.resources.water.increment(dmg)
-
       self.skills.applyDamage(dmg, style)
       
    #Note: does not stack damage, but still applies to health
    def receiveDamage(self, source, dmg):
-      super().receiveDamage(source, dmg)
+      if not super().receiveDamage(source, dmg):
+         return 
 
       self.resources.food.decrement(dmg)
       self.resources.water.decrement(dmg)
+      self.skills.receiveDamage(dmg)
 
    def receiveLoot(self, loadout):
       if loadout.chestplate.level > self.loadout.chestplate.level:

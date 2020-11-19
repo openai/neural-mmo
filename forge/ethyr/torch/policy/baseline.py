@@ -55,20 +55,22 @@ class Simple(Base):
       super().__init__(config)
       h = config.HIDDEN
 
-      self.ent    = nn.Linear(h, h)
+      self.ent    = nn.Linear(2*h, h)
       self.conv   = nn.Conv2d(h, h, 3)
       self.pool   = nn.MaxPool2d(2)
       self.fc     = nn.Linear(h*3*3, h)
 
       self.proj   = nn.Linear(2*h, h)
-      #self.attend = policy.SelfAttention(self.embed, h)
+      self.attend = policy.SelfAttention(self.embed, h)
 
    def hidden(self, obs, state=None, lens=None):
       #Attentional agent embedding
-      selfEmb  = obs['Entity'][:, 0, :]
-      #agentEmb = obs['Entity']
-      #agents, _ = self.attend(selfEmb, agentEmb)
-      agents = self.ent(selfEmb)
+      agentEmb  = obs['Entity']
+      selfEmb   = agentEmb[:, 0:1].expand_as(agentEmb)
+      agents    = torch.cat((selfEmb, agentEmb), dim=-1)
+      agents    = self.ent(agents)
+      agents, _ = self.attend(agents)
+      #agents = self.ent(selfEmb)
 
       #Convolutional tile embedding
       tiles     = obs['Tile']

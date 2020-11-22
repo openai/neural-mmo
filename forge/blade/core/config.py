@@ -79,12 +79,20 @@ class Config(Template):
    TERRAIN_INVERT    = False
    '''Specify normal generation (lower frequency at map center) or inverted generation (lower frequency at map edges). Only applied for TERRAIN_OCTAVES > 1'''
 
+   TERRAIN_ALPHA        = 0.035
+   TERRAIN_BETA         = 0.05
+   TERRAIN_LAVA         = 0.0
+   TERRAIN_WATER        = 0.25
+   TERRAIN_FOREST_LOW   = 0.25
+   TERRAIN_GRASS        = 0.715
+   TERRAIN_FOREST_HIGH  = 0.75
+
 
    #Map load parameters
    ROOT   = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
    '''Terrain map load directory'''
 
-   SUFFIX = '/map.tmx'
+   SUFFIX = '/map.npy'
    '''Terrain map file suffix'''
 
    NTILE  = 6

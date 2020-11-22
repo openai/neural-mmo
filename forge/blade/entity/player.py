@@ -17,6 +17,8 @@ class Player(entity.Entity):
       self.target = None
 
       self.vision = 7
+      self.food  = 0
+      self.water = 0
 
       #Submodules
       self.skills     = Skills(self)

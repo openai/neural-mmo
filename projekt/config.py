@@ -1,6 +1,5 @@
 from forge.blade import core
 
-
 class Config(core.Config):
    # Model to load. None will train from scratch
    # Baselines: recurrent, attentional, convolutional
@@ -16,12 +15,10 @@ class Config(core.Config):
 
    # Environment parameters
    NENT = 256  # Maximum population size
-   NPOP = 1  # Number of populations
-   NMOB = 32  # Number of NPCS
-   # NMOB    = 1024     #Number of NPCS
+   NPOP = 1    # Number of populations
+   NMOB = 32   # Number of NPCS
 
-   TERRAIN_SIZE = 80  # Side dimension of each map
-   NMAPS = 256  # Number maps to generate
+   NMAPS = 256 # Number maps to generate
 
    # Evaluation parameters
    EVALUATION_HORIZON = 2048
@@ -54,3 +51,34 @@ class Config(core.Config):
    PLOT_COLUMNS = 4
    PLOT_TOOLS = False
    PLOT_INTERACTIVE = False
+
+#Map Size Presets
+class SmallMap(Config):
+   TERRAIN_SIZE      = 80 
+   TERRAIN_OCTAVES   = 1
+   TERRAIN_FOREST    = 0.30
+
+class LargeMap(Config):
+   pass
+
+#Battle Royale Presets
+class BattleRoyale(Config):
+   pass
+
+class SmallBR(SmallMap, BattleRoyale):
+   pass
+
+class LargeBR(LargeMap, BattleRoyale):
+   pass
+
+#MMO Presets
+class MMO(Config):
+   TERRAIN_INVERT    = True
+
+class SmallMMO(SmallMap, MMO):
+   pass
+
+class LargeMMO(LargeMap, MMO):
+   pass
+
+

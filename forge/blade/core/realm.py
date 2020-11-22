@@ -149,10 +149,10 @@ class PlayerManager(EntityGroup):
       self.entities[player.entID] = player
 
 class Realm:
-   def __init__(self, config, idx):
+   def __init__(self, config):
       #Load the world file
       self.dataframe = trinity.Dataframe(config)
-      self.map       = core.Map(self, config, idx)
+      self.map       = core.Map(self, config)
       self.shape     = self.map.shape
       self.spawn     = config.SPAWN
       self.config    = config
@@ -183,7 +183,7 @@ class Realm:
       self.statTimer  = utils.BenchmarkTimer()
 
    def packet(self):
-      return {'environment': self.map,
+      return {'environment': self.map.np().tolist(),
               'resource': self.map.packet(),
               'player': self.players.packet(),
               'npc': self.npcs.packet()}
@@ -202,6 +202,21 @@ class Realm:
    def graphicsData(self):
       return self.env, self.stats
 
+   def reset(self, idx):
+      self.map.reset(self, idx)
+
+      entities = {**self.players.entities, **self.npcs.entities}
+      for entID, ent in entities.items():
+         self.dataframe.remove(Static.Entity, entID, ent.pos)
+
+      self.players  = PlayerManager(self, self.config)
+      self.npcs     = NPCManager(self, self.config)
+      self.tick     = 0
+  
+      dataframe = self.dataframe.data[Static.Entity.__name__]
+      #assert len(dataframe.index.index) == 0
+      #assert np.sum(dataframe.grid.data) == 0
+
    def step(self, decisions):
       #NPC Spawning and decisions
       self.npcs.spawn()
@@ -218,7 +233,8 @@ class Realm:
 
       for priority in sorted(merged):
          for entID, (atn, args) in merged[priority]:
-            atn.call(self, self.entity(entID), *args)
+            ent = self.entity(entID)
+            atn.call(self, ent, *args)
 
       self.players.postActions(decisions)
       self.npcs.postActions(npcDecisions)

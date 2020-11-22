@@ -5,30 +5,42 @@ from forge.blade import core
 from forge.blade.lib import enums, utils
 
 import os
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-from pytmx import TiledMap
 import time
 
-def loadTiled(realm, config, fPath, tiles, nCounts):
-    tm = TiledMap(fPath)
-    assert len(tm.layers) == 1
-    layer = tm.layers[0]
-    W, H = layer.width, layer.height
-    tilemap = np.zeros((H, W), dtype=object)
-    for w, h, dat in layer.tiles():
-       f = dat[0]
-       tex = f.split('/')[-1].split('.')[0]
-       t  = time.time()
-       tilemap[h, w] = core.Tile(realm, config, tiles[tex], h, w, nCounts, tex)
-    return tilemap
+def loadTiled(tiles, fPath, materials):
+    idxMap = np.load(fPath)
+    for r, row in enumerate(idxMap):
+       for c, idx in enumerate(row):
+          mat  = materials[idx]
+          tile = tiles[r, c]
+
+          tile.ents     = {}
+          tile.mat      = mat()
+          tile.state    = mat()
+          tile.capacity = tile.state.capacity
+          tile.tex      = mat.tex
+
+          tile.nEnts.update(0)
+          tile.index.update(tile.state.index)
 
 class Map:
-   def __init__(self, realm, config, idx):
-      self.updateList = set()
-      self.config = config
-      self.nCounts = config.NPOP
-      self.genEnv(realm, config.ROOT + str(idx) + config.SUFFIX)
+   def __init__(self, realm, config):
+      sz              = config.TERRAIN_SIZE
+      self.shape      = (sz, sz)
+      self.config     = config
 
+      self.tiles = np.zeros(self.shape, dtype=object)
+      for r in range(sz):
+         for c in range(sz):
+            self.tiles[r, c] = core.Tile(realm, config, enums.Grass, r, c, 'grass')
+
+   def reset(self, realm, idx):
+      materials = dict((mat.value.index, mat.value) for mat in enums.Material)
+      fName     = self.config.ROOT + str(idx) + self.config.SUFFIX
+
+      loadTiled(self.tiles, fName, materials)
+      self.updateList = set()
+ 
    def harvest(self, r, c):
       self.updateList.add(self.tiles[r, c])
       return self.tiles[r, c].harvest()
@@ -74,9 +86,3 @@ class Map:
       env = np.array([e.state.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)
       return env
-
-   def genEnv(self, realm, fName):
-      tiles = dict((mat.value.tex, mat.value) for mat in enums.Material)
-      self.tiles = loadTiled(realm, self.config, fName, tiles, self.nCounts)
-      self.shape = self.tiles.shape
-       

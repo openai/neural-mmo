@@ -11,15 +11,6 @@ def sharp(self, noise):
    return 2 * (0.5 - abs(0.5 - noise));
 
 class Save:
-   template_tiled = """<?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="{0}" height="{1}" tilewidth="128" tileheight="128" infinite="0" nextobjectid="1">
- <tileset firstgid="0" source="../../tiles.tsx"/>
- <layer name="Tile Layer 1" width="{0}" height="{1}">
-  <data encoding="csv">
-  {2}
-</data>
- </layer>
-</map>"""
    def render(mats, lookup, path):
       images = [[lookup[e] for e in l] for l in mats]
       image = np.vstack([np.hstack(e) for e in images])
@@ -29,15 +20,10 @@ class Save:
       frac = (256*terrain).astype(np.uint8)
       imsave(path, frac)
 
-   def tiled(mats, path):
+   def np(mats, path):
       """"Saved a map into into a tiled compatiable file given a save_path, width
        and height of the map, and 2D numpy array specifiying enums for the array"""
-      dat = np.array([[e+1 for e in l] for l in mats])
-      height, width = dat.shape 
-      dat = str(dat.ravel().tolist())
-      dat = dat.strip('[').strip(']')
-      with open(path + 'map.tmx', "w") as f:
-         f.write(Save.template_tiled.format(width, height, dat))
+      np.save(path + 'map.npy', mats.astype(np.int))
 
 class Terrain:
    pass
@@ -59,19 +45,20 @@ class MapGenerator:
          setattr(Terrain, key.upper(), mat.index)
       self.textures = lookup
 
-   def material(self, val, gamma=0):
-      assert gamma >= 0 and gamma <= 1
-      alpha = 0.035 * gamma
-      beta  = 0.05 * gamma
-      if val == 0:
+   def material(self, config, val, gamma=0):
+      assert 0 <= gamma <= 1
+      alpha = config.TERRAIN_ALPHA * gamma
+      beta  = config.TERRAIN_ALPHA * gamma
+
+      if val == config.TERRAIN_LAVA:
          return Terrain.LAVA
-      if val < 0.25:
+      if val <= config.TERRAIN_WATER:
          return Terrain.WATER
-      if val < 0.30+beta: #This was changed from .25 for better small maps :/
+      if val <= config.TERRAIN_FOREST_LOW + beta:
          return Terrain.FOREST
-      if val < 0.715+alpha:
+      if val <= config.TERRAIN_GRASS + alpha:
          return Terrain.GRASS
-      if val < 0.75:
+      if val <= config.TERRAIN_FOREST_HIGH:
          return Terrain.FOREST
       return Terrain.STONE
 
@@ -85,20 +72,20 @@ class MapGenerator:
          except:
             pass
 
-         terrain, tiles = self.grid(
-               sz        = self.config.TERRAIN_SIZE,
-               frequency = self.config.TERRAIN_FREQUENCY,
-               octaves   = self.config.TERRAIN_OCTAVES,
-               border    = self.config.TERRAIN_BORDER,
-               invert    = self.config.TERRAIN_INVERT,
-               seed      = seed)
+         terrain, tiles = self.grid(self.config, seed)
 
-         Save.tiled(tiles, path)
+         Save.np(tiles, path)
          if self.config.TERRAIN_RENDER:
             Save.fractal(terrain, path+'fractal.png')
             Save.render(tiles, self.textures, path+'map.png')
 
-   def grid(self, sz, frequency, octaves, border, invert, seed):
+   def grid(self, config, seed):
+      sz          = config.TERRAIN_SIZE
+      frequency   = config.TERRAIN_FREQUENCY
+      octaves     = config.TERRAIN_OCTAVES
+      border      = config.TERRAIN_BORDER
+      invert      = config.TERRAIN_INVERT
+      
       val   = np.zeros((sz, sz, octaves))
       s     = np.arange(sz)
       X, Y  = np.meshgrid(s, s)
@@ -131,16 +118,16 @@ class MapGenerator:
          val = np.sum(v*val, -1)
 
       #Paint borders and center
-      val[l1 > sz//2 - border]  = 0
-      val[l1 == sz//2 - border] = 0.5
-      val[l2 < 6]               = 0.5
-      val[l2 < 3.5]             = 0.1
+      val[l1 > sz//2 - border]  = config.TERRAIN_LAVA 
+      val[l1 == sz//2 - border] = config.TERRAIN_GRASS
+      val[l2 < 6]               = config.TERRAIN_GRASS
+      val[l2 < 3.5]             = config.TERRAIN_WATER
 
       #Clip l1
       if octaves > 1:
          l1 = 2 * l1 / sz
-         l1[l1 <= 0.25] = 0
-         l1[l1 >= 0.75] = 1
+         l1[l1 <= 0.25] = 0 #Only spawn food near water at edges
+         l1[l1 >= 0.75] = 1 #Only spawn food near rocks at middle
       else:
          l1 = 0.5 + l1*0
 
@@ -148,6 +135,6 @@ class MapGenerator:
       matl = np.zeros((sz, sz), dtype=object)
       for y in range(sz):
          for x in range(sz):
-            matl[y, x] = self.material(val[y, x], l1[y, x])
+            matl[y, x] = self.material(config, val[y, x], l1[y, x])
  
       return val, matl

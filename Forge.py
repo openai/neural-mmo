@@ -144,29 +144,30 @@ def evaluator(config, **kwargs):
    return projekt.Evaluator(config,
          trainer=trainer, policy=policy)
 
-class Config(projekt.Config):
+ExpConfig = projekt.config.LargeMap
+class Config(ExpConfig):
    '''Docstring'''
    def train(self, **kwargs):
-      trainer, policy = init(self, **kwargs)
+      trainer, policy = init(config, **kwargs)
       trainer.train()
 
    def evaluate(self, **kwargs):
-      self.RENDER = True
-      evaluator(self, **kwargs).test()
+      config.RENDER = True
+      evaluator(config, **kwargs).test()
 
    def render(self, **kwargs):
-      self.RENDER = True
-      evaluator(self, **kwargs).render()
+      config.RENDER = True
+      evaluator(config, **kwargs).render()
 
    def generate(self, **kwargs):
-      trainer, policy = init(self, **kwargs)
+      trainer, policy = init(config, **kwargs)
       terrain.MapGenerator(config).generate()
 
    def visualize(self, **kwargs):
-      self.override(**kwargs)
-      visualize(self)
+      config.override(**kwargs)
+      visualize(config)
       
 if __name__ == '__main__':
    #Built config with CLI overrides
-   config = Config()
-   Fire(config)
+   config = ExpConfig()
+   Fire(Config)

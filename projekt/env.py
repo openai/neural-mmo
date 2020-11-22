@@ -49,24 +49,16 @@ class Env(core.Env):
 class RLLibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
-      #self.perfTick = 0
+      super().__init__(self.config)
 
-   def reset(self, idx=None, dry=False):
+   def reset(self, idx=None, step=True):
       '''Enable us to reset the Neural MMO environment.
       This is for training on limited-resource systems where
       simply using one env map per core is not feasible'''
       self.env_reset = time.time()
-
-      n   = self.config.NMAPS
-      if idx is None:
-         idx = np.random.randint(n)
-
       self.lifetimes = []
-      super().__init__(self.config, idx)
 
-      ret = None
-      if not dry:
-         ret = self.step({})[0]
+      ret = super().reset(idx=idx, step=step)
 
       self.env_reset = time.time() - self.env_reset
       return ret
@@ -96,15 +88,13 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
          if entID in self.dead:
             continue
 
-         #TODO: Cleaner get function without merge every tick
-         ents = {**self.realm.players.entities, **self.realm.npcs.entities}
          for atn, args in decisions[entID].items():
             for arg, val in args.items():
                val = int(val)
                if len(arg.edges) > 0:
                   actions[entID][atn][arg] = arg.edges[val]
                elif val < len(rows):
-                  actions[entID][atn][arg] = ents[rows[val]]
+                  actions[entID][atn][arg] = self.realm.entity(rows[val])
                else:
                   actions[entID][atn][arg] = ent
 

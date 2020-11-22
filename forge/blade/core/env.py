@@ -29,17 +29,16 @@ class Env(Timed):
    PyTorch+RLlib to take advantage of our prebuilt baseline implementations,
    but any framework that supports RLlib's fairly popular environment API and
    extended OpenAI gym.spaces observation/action definitions works as well.'''
-   def __init__(self, config, idx=0):
+   def __init__(self, config):
       '''
       Args:
          config : A forge.blade.core.Config (or subclass) specification object
          idx    : Index of the map file to load (0 to number of maps)
       '''
       super().__init__()
-      self.realm     = core.Realm(config, idx)
+      self.realm     = core.Realm(config)
 
       self.config    = config
-      self.worldIdx  = idx
       self.overlay   = None
 
       self.entID     = 1
@@ -172,7 +171,7 @@ class Env(Timed):
 
       return infos.packet
 
-   def reset(self):
+   def reset(self, idx=None, step=True):
       '''Instantiates the environment and returns initial observations
 
       Neural MMO simulates a persistent world. It is best-practice to call
@@ -190,8 +189,16 @@ class Env(Timed):
          observations, as documented by step()
       '''
       err = 'Neural MMO is persistent and may only be reset once upon initialization'
-      assert self.tick == 0, err
-      return self.step({})[0]
+      if idx is None:
+         idx = np.random.randint(self.config.NMAPS)
+
+      self.worldIdx = idx
+      self.dead     = {}
+      self.tick     = 0
+
+      self.realm.reset(idx)
+      if step:
+         return self.step({})[0]
 
    def reward(self, entID):
       '''Computes the reward for the specified agent
@@ -277,10 +284,10 @@ class Env(Timed):
       for entID, ent in self.realm.players.items():
          start = time.time()
          try:
-            ob             = self.realm.dataframe.get(ent)
+            ob                 = self.realm.dataframe.get(ent)
          except:
             T()
-         obs[entID]     = ob
+         obs[entID]         = ob
          self.stim_process += time.time() - start
 
          rewards[entID] = self.reward(entID)
@@ -365,7 +372,7 @@ class Env(Timed):
       R, C    = self.realm.map.tiles.shape
       B       = config.TERRAIN_BORDER
 
-      entID   = 0
+      entID   = 100000
       pop     = 0
       name    = "Value"
       color   = (255, 255, 255)
@@ -375,10 +382,7 @@ class Env(Timed):
          for c in range(B-1, C-B):
             ent = entity.Player(self.realm, (r, c), entID, pop, name, color)
 
-            self.realm.map.tiles[r, c].addEnt(entID, ent)
             obs = self.realm.dataframe.get(ent)
-
-            self.realm.map.tiles[r, c].delEnt(entID)
             self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
 
             observations[entID] = obs

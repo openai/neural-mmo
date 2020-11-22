@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from collections import defaultdict
+from tqdm import tqdm
 
 from forge.blade.lib import overlay
 from forge.blade.systems import combat
@@ -41,8 +42,8 @@ class OverlayRegistry:
       for cmd, overlay in self.overlays.items():
          self.overlays[cmd] = overlay(realm, model, trainer, config)
 
-      self.overlays['wilderness'].init()
-      self.overlays['globalValues'].init()
+      #self.overlays['wilderness'].init()
+      #self.overlays['globalValues'].init()
 
    def step(self, obs, pos, cmd, update=[]):
       '''Compute overlays and send to the environment'''
@@ -113,7 +114,7 @@ class GlobalValues(Overlay):
       BATCH_SIZE = 128
       batch = {}
       final = list(obs.keys())[-1]
-      for agentID in obs:
+      for agentID in tqdm(obs):
          batch[agentID] = obs[agentID]
          if len(batch) == BATCH_SIZE or agentID == final:
             self.trainer.compute_actions(batch, state={}, policy_id='policy_0')

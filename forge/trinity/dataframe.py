@@ -157,6 +157,8 @@ class GridTables:
 
       r, c = ent.pos
       cent = self.grid.data[r, c]
+      if cent == 0:
+         foo
       assert cent != 0
 
       rows = self.grid.window(
@@ -215,10 +217,10 @@ class Dataframe:
       self.data[obj.__name__].init(key, pos)
 
    def move(self, obj, key, pos, nxt):
-      dat = self.data['Entity'].grid.data.ravel().tolist()
-      dat = [e for e in dat if e != 0]
-      if len(np.unique(dat)) != len(dat):
-         T() 
+      #dat = self.data['Entity'].grid.data.ravel().tolist()
+      #dat = [e for e in dat if e != 0]
+      #if len(np.unique(dat)) != len(dat):
+      #   T() 
       self.data[obj.__name__].move(key, pos, nxt)
 
    def get(self, ent):

@@ -103,7 +103,7 @@ class GodswordServerProtocol(WebSocketServerProtocol):
 
         print('Is Connected? : {}'.format(self.isConnected))
         if not self.isConnected:
-            packet['map']    = data['environment'].np().tolist()
+            packet['map']    = data['environment']
             packet['border'] = config.TERRAIN_BORDER
             packet['size']   = config.TERRAIN_SIZE
 

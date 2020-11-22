@@ -9,7 +9,7 @@ def camel(string):
 
 class Tile:
    SERIAL = 1
-   def __init__(self, realm, config, mat, r, c, nCounts, tex):
+   def __init__(self, realm, config, mat, r, c, tex):
       self.realm = realm
       self.mat   = mat()
       self.ents  = {}

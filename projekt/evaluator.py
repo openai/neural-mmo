@@ -39,9 +39,10 @@ class Evaluator:
       if trainer:
          self.model    = self.trainer.get_policy('policy_0').model
          self.env      = projekt.RLLibEnv({'config': config})
-         self.obs      = self.env.reset(idx=0, dry=True)
+
+         self.env.reset(idx=0, step=False)
          self.registry = OverlayRegistry(self.env, self.model, trainer, config)
-         self.obs      = self.env.reset(idx=0)
+         self.obs      = self.env.step({})[0]
 
          self.state    = {}
       else:

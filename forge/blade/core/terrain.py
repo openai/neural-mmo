@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
+import os
 
 import vec_noise
 from imageio import imread, imsave
@@ -23,7 +24,12 @@ class Save:
    def np(mats, path):
       """"Saved a map into into a tiled compatiable file given a save_path, width
        and height of the map, and 2D numpy array specifiying enums for the array"""
-      np.save(path + 'map.npy', mats.astype(np.int))
+      try:
+         os.mkdir(path)
+      except:
+         pass
+
+      np.save(path + '/map.npy', mats.astype(np.int))
 
 class Terrain:
    pass
@@ -65,7 +71,14 @@ class MapGenerator:
    def generate(self):
       print('Generating {} game maps. This may take a moment'.format(self.config.NMAPS))
       for seed in tqdm(range(self.config.NMAPS)):
-         path = self.config.TERRAIN_DIR + 'map' + str(seed) + '/'
+         if self.config.__class__.__name__ == 'SmallMap':
+            prefix = self.config.TERRAIN_DIR_SMALL
+         elif self.config.__class__.__name__ == 'LargeMap':
+            prefix = self.config.TERRAIN_DIR_LARGE
+         else:
+            prefix = self.config.TERRAIN_DIR
+
+         path = prefix + 'map' + str(seed)
 
          try:
             os.mkdir(path)

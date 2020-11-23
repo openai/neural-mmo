@@ -61,6 +61,9 @@ class Config(Template):
    TERRAIN_DIR       = 'resource/maps/procedural/'
    '''Directory in which generated maps are saved'''
 
+   TERRAIN_DIR_SMALL = 'resource/maps/procedural-small/'
+   TERRAIN_DIR_LARGE = 'resource/maps/procedural-large/'
+
    TERRAIN_RENDER    = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 

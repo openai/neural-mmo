@@ -1,16 +1,18 @@
+from pdb import set_trace as T
 from forge.blade import core
+import os
 
 class Config(core.Config):
    # Model to load. None will train from scratch
    # Baselines: recurrent, attentional, convolutional
    # "current" will resume training custom models
-   MODEL = 'current'
+   MODEL        = 'current'
    SCRIPTED_BFS = False
    SCRIPTED_DP  = False
-   RENDER = False  # Don't edit this manually; TODO: remove it
+   RENDER       = False  # Don't edit this manually; TODO: remove it
 
    # Model dimensions
-   EMBED = 64
+   EMBED  = 64
    HIDDEN = 64
 
    # Environment parameters
@@ -58,8 +60,14 @@ class SmallMap(Config):
    TERRAIN_OCTAVES    = 1
    TERRAIN_FOREST_LOW = 0.30
 
+   MODEL              = 'small-map'
+   TERRAIN_DIR        = Config.TERRAIN_DIR_SMALL
+   ROOT               = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
+
 class LargeMap(Config):
-   pass
+   MODEL              = 'large-map'
+   TERRAIN_DIR        = Config.TERRAIN_DIR_LARGE
+   ROOT               = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
 
 #Battle Royale Presets
 class BattleRoyale(Config):

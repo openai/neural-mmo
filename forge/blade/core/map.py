@@ -14,10 +14,11 @@ def loadTiled(tiles, fPath, materials):
           mat  = materials[idx]
           tile = tiles[r, c]
 
-          tile.ents     = {}
           tile.mat      = mat()
+          tile.ents     = {}
+
           tile.state    = mat()
-          tile.capacity = tile.state.capacity
+          tile.capacity = tile.mat.capacity
           tile.tex      = mat.tex
 
           tile.nEnts.update(0)

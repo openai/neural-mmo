@@ -43,7 +43,7 @@ class OverlayRegistry:
          self.overlays[cmd] = overlay(realm, model, trainer, config)
 
       #self.overlays['wilderness'].init()
-      #self.overlays['globalValues'].init()
+      self.overlays['globalValues'].init()
 
    def step(self, obs, pos, cmd, update=[]):
       '''Compute overlays and send to the environment'''

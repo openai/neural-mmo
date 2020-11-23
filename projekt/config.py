@@ -54,9 +54,9 @@ class Config(core.Config):
 
 #Map Size Presets
 class SmallMap(Config):
-   TERRAIN_SIZE      = 80 
-   TERRAIN_OCTAVES   = 1
-   TERRAIN_FOREST    = 0.30
+   TERRAIN_SIZE       = 80 
+   TERRAIN_OCTAVES    = 1
+   TERRAIN_FOREST_LOW = 0.30
 
 class LargeMap(Config):
    pass

@@ -157,8 +157,6 @@ class GridTables:
 
       r, c = ent.pos
       cent = self.grid.data[r, c]
-      if cent == 0:
-         foo
       assert cent != 0
 
       rows = self.grid.window(

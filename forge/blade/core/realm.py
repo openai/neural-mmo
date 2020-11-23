@@ -204,6 +204,7 @@ class Realm:
 
    def reset(self, idx):
       self.map.reset(self, idx)
+      self.tick = 0
 
       entities = {**self.players.entities, **self.npcs.entities}
       for entID, ent in entities.items():
@@ -211,12 +212,7 @@ class Realm:
 
       self.players  = PlayerManager(self, self.config)
       self.npcs     = NPCManager(self, self.config)
-      self.tick     = 0
   
-      dataframe = self.dataframe.data[Static.Entity.__name__]
-      #assert len(dataframe.index.index) == 0
-      #assert np.sum(dataframe.grid.data) == 0
-
    def step(self, decisions):
       #NPC Spawning and decisions
       self.npcs.spawn()

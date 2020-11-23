@@ -41,9 +41,6 @@ class Env(Timed):
       self.config    = config
       self.overlay   = None
 
-      self.entID     = 1
-      self.tick      = 0
-
    @runtime
    def step(self, decisions):
       '''OpenAI Gym API step function simulating one game tick or timestep
@@ -195,6 +192,7 @@ class Env(Timed):
       self.worldIdx = idx
       self.dead     = {}
       self.tick     = 0
+      self.entID    = 1
 
       self.realm.reset(idx)
       if step:
@@ -283,10 +281,7 @@ class Env(Timed):
       obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.realm.players.items():
          start = time.time()
-         try:
-            ob                 = self.realm.dataframe.get(ent)
-         except:
-            T()
+         ob                 = self.realm.dataframe.get(ent)
          obs[entID]         = ob
          self.stim_process += time.time() - start
 

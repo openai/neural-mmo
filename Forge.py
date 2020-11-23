@@ -144,7 +144,7 @@ def evaluator(config, **kwargs):
    return projekt.Evaluator(config,
          trainer=trainer, policy=policy)
 
-ExpConfig = projekt.config.LargeMap
+ExpConfig = projekt.config.SmallMap
 class Config(ExpConfig):
    '''Docstring'''
    def train(self, **kwargs):

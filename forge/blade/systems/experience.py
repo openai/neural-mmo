@@ -17,5 +17,6 @@ class ExperienceCalculator:
       return self.exp[level - 1]
 
    def levelAtExp(self, exp):
+      if exp >= self.exp[-1]:
+         return len(self.exp)
       return np.argmin(exp >= self.exp)
-      return np.searchsorted(self.exp, exp) + 1

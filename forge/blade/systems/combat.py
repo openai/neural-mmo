@@ -45,7 +45,7 @@ def damage(skill, level):
 def accuracy(attkLevel, defLevel):
    return 0.5 + (2*attkLevel - defLevel) / 197
 
-def wilderness(config, pos):
+def danger(config, pos):
    cent = config.TERRAIN_SIZE // 2
 
    #Distance from border terrain to center
@@ -53,7 +53,10 @@ def wilderness(config, pos):
    C = cent - abs(pos[1] - cent) - config.TERRAIN_BORDER
   
    #Normalize
-   dist = min(R, C) / (cent - config.TERRAIN_BORDER)
+   return min(R, C) / (cent - config.TERRAIN_BORDER)
+ 
+def wilderness(config, pos):
+   dist = danger(config, pos)
    wild = int(100 * dist) - 1
 
    #Convert to distance from center?

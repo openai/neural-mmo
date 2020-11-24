@@ -114,6 +114,9 @@ class NPCManager(EntityGroup):
             continue
 
          entity = npc.NPC.spawn(self.realm, (r, c), self.idx)
+         if entity is None:
+            continue
+
          self.entities[self.idx] = entity
          self.realm.map.tiles[r, c].addEnt(self.idx, entity)
          self.idx -= 1

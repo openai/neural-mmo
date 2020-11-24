@@ -104,8 +104,8 @@ class Stimulus(Config):
          def init(self, config):
             #You set a low max here
             self.val = -1 
-            self.min = -1
-            self.max = 99
+            self.min = config.WILDERNESS_MIN
+            self.max = config.WILDERNESS_MAX
             self.scale = 0.01
 
    class Tile(Config):

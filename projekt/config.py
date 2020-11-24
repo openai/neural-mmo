@@ -64,6 +64,9 @@ class SmallMap(Config):
    TERRAIN_DIR        = Config.TERRAIN_DIR_SMALL
    ROOT               = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
 
+   NPC_LEVEL_MAX      = 40
+   NPC_LEVEL_SPREAD   = 10
+
 class LargeMap(Config):
    MODEL              = 'large-map'
    TERRAIN_DIR        = Config.TERRAIN_DIR_LARGE

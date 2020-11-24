@@ -21,40 +21,36 @@ class NPC(entity.Entity):
       self.lastAction = actions
 
    @staticmethod
-   def spawn(realm, pos, iden, alpha=0.8):
+   def spawn(realm, pos, iden):
       config = realm.config
-      wild   = combat.wilderness(config, pos) + 1
 
       #Select AI Policy
-      if wild < 33:
-         ent = Passive(realm, pos, iden)
-      elif wild < 66:
-         ent = PassiveAggressive(realm, pos, iden)
-      else:
+      danger = combat.danger(config, pos)
+      if danger >= config.NPC_SPAWN_AGGRESSIVE:
          ent = Aggressive(realm, pos, iden)
-
-      #Generates combat levels based on wilderness depth and clips within [1, 99]
-      mmin = int(alpha * wild)
-      mmax = int((1+alpha) * wild)
-        
-      ent.skills.constitution.setExpByLevel(NPC.clippedLevel(mmin, mmax))
-      ent.skills.defense.setExpByLevel(NPC.clippedLevel(mmin, mmax))
-
-      attack = NPC.clippedLevel(mmin, mmax)
-      idx    = random.randint(0, 4)
-
-      if idx <=2:
-         ent.skills.melee.setExpByLevel(attack)
-         ent.skills.style = Action.Melee
-      elif idx == 3:
-         ent.skills.range.setExpByLevel(attack)
-         ent.skills.style = Action.Range
+      elif danger >= config.NPC_SPAWN_NEUTRAL:
+         ent = PassiveAggressive(realm, pos, iden)
+      elif danger >= config.NPC_SPAWN_PASSIVE:
+         ent = Passive(realm, pos, iden)
       else:
-         ent.skills.mage.setExpByLevel(attack)
-         ent.skills.style = Action.Mage
+         return
+
+      #Set levels
+      levels = NPC.clippedLevels(config, danger, n=5)
+      constitution, defense, melee, ranged, mage = levels
+
+      ent.resources.health.max = constitution
+      ent.resources.health.update(constitution)
+
+      ent.skills.constitution.setExpByLevel(constitution)
+      ent.skills.defense.setExpByLevel(defense)
+      ent.skills.melee.setExpByLevel(melee)
+      ent.skills.range.setExpByLevel(ranged)
+      ent.skills.mage.setExpByLevel(mage)
+
+      ent.skills.style = random.choice((Action.Melee, Action.Range, Action.Mage))
 
       #Set equipment levels
-      defense = ent.skills.defense.level
       ent.loadout.chestplate.level = NPC.gearLevel(defense)
       ent.loadout.platelegs.level  = NPC.gearLevel(defense)
 
@@ -66,17 +62,27 @@ class NPC(entity.Entity):
    @staticmethod
    def gearLevel(lvl, offset=10):
       proposed = random.gauss(lvl-offset, offset)
-      lvl      = min(proposed, lvl)
-      lvl      = max(0, lvl)
+      lvl      = np.clip(proposed, 0, lvl)
       return int(lvl)
 
    @staticmethod
-   def clippedLevel(mmin, mmax):
-      lvl = random.randint(mmin, mmax)
-      lvl = min(99, lvl)
-      lvl = max(1, lvl)
-      return lvl
+   def clippedLevels(config, danger, n=1):
+      lmin    = config.NPC_LEVEL_MIN
+      lmax    = config.NPC_LEVEL_MAX
 
+      lbase   = danger*(lmax-lmin) + lmin
+      lspread = config.NPC_LEVEL_SPREAD
+
+      lvlMin  = int(max(lmin, lbase - lspread))
+      lvlMax  = int(min(lmax, lbase + lspread))
+
+      lvls = [random.randint(lvlMin, lvlMax) for _ in range(n)]
+
+      if n == 1:
+         return lvls[0]
+
+      return lvls
+ 
    def packet(self):
       data = super().packet()
 

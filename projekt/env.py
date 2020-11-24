@@ -19,34 +19,8 @@ from forge.blade.systems import combat
 
 from forge.trinity.dataframe import DataType
 
-class Env(core.Env):
-   def log(self, quill, ent):
-      blob = quill.register('Lifetime', quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
-      blob.log(ent.history.timeAlive.val)
-
-      blob = quill.register('Skill Level', quill.HISTOGRAM, quill.STACKED_AREA, quill.STATS, quill.RADAR)
-      blob.log(ent.skills.range.level,        'Range')
-      blob.log(ent.skills.mage.level,         'Mage')
-      blob.log(ent.skills.melee.level,        'Melee')
-      blob.log(ent.skills.constitution.level, 'Constitution')
-      blob.log(ent.skills.defense.level,      'Defense')
-      blob.log(ent.skills.fishing.level,      'Fishing')
-      blob.log(ent.skills.hunting.level,      'Hunting')
-
-      #TODO: swap these entries when equipment is reenabled
-      blob = quill.register('Wilderness', quill.HISTOGRAM, quill.SCATTER)
-      blob.log(combat.wilderness(self.config, ent.pos))
-
-      blob = quill.register('Equipment', quill.HISTOGRAM, quill.STACKED_AREA)
-      blob.log(ent.loadout.chestplate.level, 'Chestplate')
-      blob.log(ent.loadout.platelegs.level,  'Platelegs')
-
-      quill.stat('Lifetime',  ent.history.timeAlive.val)
-      quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
-      quill.stat('Combat',    combat.level(ent.skills))
-      quill.stat('Equipment', ent.loadout.defense)
-
-class RLLibEnv(Env, rllib.MultiAgentEnv):
+#Moved log to forge/blade/core/env
+class RLLibEnv(core.Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
       super().__init__(self.config)

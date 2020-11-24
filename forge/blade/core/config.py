@@ -160,6 +160,17 @@ class Config(Template):
    INVERT_WILDERNESS       = False
    '''Whether to reverse wilderness level generation'''
 
+   WILDERNESS_MIN          = -1
+   WILDERNESS_MAX          = 99
+
+   NPC_SPAWN_AGGRESSIVE    = 0.70
+   NPC_SPAWN_NEUTRAL       = 0.45
+   NPC_SPAWN_PASSIVE       = 0.20
+   
+   NPC_LEVEL_MIN           = 1
+   NPC_LEVEL_MAX           = 99
+   NPC_LEVEL_SPREAD        = 10 
+
    MELEE_RANGE             = 1
    '''Range of attacks using the Melee skill'''
 

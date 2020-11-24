@@ -59,6 +59,7 @@ class History:
       self.lastPos = None
 
    def update(self, realm, entity, actions):
+      self.attack = None
       self.damage.update(0)
       self.actions = actions
 

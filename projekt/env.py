@@ -84,7 +84,7 @@ class RLLibEnv(core.Env, rllib.MultiAgentEnv):
       for entID, ent in self.dead.items():
          lifetime = ent.history.timeAlive.val
          self.lifetimes.append(lifetime)
-         if not self.config.RENDER and len(self.lifetimes) >= 1000:
+         if not self.config.EVALUATE and len(self.lifetimes) >= 1000:
             lifetime = np.mean(self.lifetimes)
             print('Lifetime: {}'.format(lifetime))
             dones['__all__'] = True

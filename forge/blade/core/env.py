@@ -150,7 +150,7 @@ class Env(Timed):
       self.env_stim       = time.time() - self.env_stim
 
       infos = {}
-      if self.config.RENDER:
+      if self.config.EVALUATE:
          infos = log.Quill(self.worldIdx, self.tick)
          for entID, ent in self.dead.items():
             self.log(infos, ent)

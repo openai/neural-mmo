@@ -9,7 +9,7 @@ class Config(core.Config):
    MODEL        = 'current'
    SCRIPTED_BFS = False
    SCRIPTED_DP  = False
-   RENDER       = False  # Don't edit this manually; TODO: remove it
+   EVALUATE     = False
 
    # Model dimensions
    EMBED  = 64

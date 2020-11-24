@@ -33,30 +33,6 @@ from projekt import env, rlutils
 from projekt.visualize import visualize
 from forge.blade.core import terrain
 
-#Instantiate a new environment
-def createEnv(config):
-   return projekt.RLLibEnv(config)
-
-#Map agentID to policyID -- requires config global
-def mapPolicy(agentID):
-   return 'policy_{}'.format(agentID % config.NPOLICIES)
-
-#Generate RLlib policies
-def createPolicies(config):
-   obs      = projekt.env.observationSpace(config)
-   atns     = projekt.env.actionSpace(config)
-   policies = {}
-
-   for i in range(config.NPOLICIES):
-      params = {
-            "agent_id": i,
-            "obs_space_dict": obs,
-            "act_space_dict": atns}
-      key           = mapPolicy(i)
-      policies[key] = (None, obs, atns, params)
-
-   return policies
-
 class LogCallbacks(DefaultCallbacks):
    STEP_KEYS    = 'rllib_compat env_step realm_step env_stim stim_process'.split()
    EPISODE_KEYS = ['env_reset']
@@ -87,6 +63,26 @@ class LogCallbacks(DefaultCallbacks):
             continue
          episode.hist_data[key].append(getattr(env, key))
 
+#Map agentID to policyID -- requires config global
+def mapPolicy(agentID):
+   return 'policy_{}'.format(agentID % config.NPOLICIES)
+
+#Generate RLlib policies
+def createPolicies(config):
+   obs      = projekt.env.observationSpace(config)
+   atns     = projekt.env.actionSpace(config)
+   policies = {}
+
+   for i in range(config.NPOLICIES):
+      params = {
+            "agent_id": i,
+            "obs_space_dict": obs,
+            "act_space_dict": atns}
+      key           = mapPolicy(i)
+      policies[key] = (None, obs, atns, params)
+
+   return policies
+
 def loadTrainer(config):
    #Setup ray
    torch.set_num_threads(1)
@@ -96,8 +92,11 @@ def loadTrainer(config):
    #Instantiate monolithic RLlib Trainer object.
    rllib.models.ModelCatalog.register_custom_model(
          'test_model', projekt.Policy)
-   ray.tune.registry.register_env("custom", createEnv)
+
    policies  = createPolicies(config)
+   ray.tune.registry.register_env("custom",
+         lambda config: projekt.RLLibEnv(config))
+
    return rlutils.SanePPOTrainer(
          env="custom", path='experiment', config={
       'num_workers': 4,
@@ -125,49 +124,59 @@ def loadTrainer(config):
       },
    })
 
-def init(config, **kwargs):
-   config.override(**kwargs)
-   trainer, policy = None, None
+def loadModel(config):
+   trainer = None
+   policy  = None
+
    if config.SCRIPTED_DP:
       policy = ai.policy.baselineDP
    elif config.SCRIPTED_BFS:
       policy = ai.policy.baselineBFS
    else:
       trainer = loadTrainer(config)
-      utils.modelSize(trainer.defaultModel())
-      trainer.restore(config.MODEL)
 
-   return trainer, policy
+   utils.modelSize(trainer.defaultModel())
+   trainer.restore(config.MODEL)
 
-def evaluator(config, **kwargs):
-   trainer, policy = init(config, **kwargs)
-   return projekt.Evaluator(config,
-         trainer=trainer, policy=policy)
+   evaluator = projekt.Evaluator(config,
+      trainer=trainer, policy=policy)
 
-ExpConfig = projekt.config.SmallMap
-class Config(ExpConfig):
+   return trainer, policy, evaluator
+
+class Anvil():
    '''Docstring'''
+   def __init__(self, **kwargs):
+      #TODO: obliterate this
+      global config
+
+      if 'config' in kwargs:
+         config = kwargs.pop('config')
+         config = getattr(projekt.config, config)()
+      else:
+         config = projekt.config.SmallMap()
+      config.override(**kwargs)
+      self.config = config
+
    def train(self, **kwargs):
-      trainer, policy = init(config, **kwargs)
+      trainer, _, _ = loadModel(self.config)
       trainer.train()
 
    def evaluate(self, **kwargs):
-      config.RENDER = True
-      evaluator(config, **kwargs).test()
+      self.config.EVALUATE = True
+      _, _, evaluator      = loadModel(self.config)
+      evaluator.test()
 
    def render(self, **kwargs):
-      config.RENDER = True
-      evaluator(config, **kwargs).render()
+      self.config.EVALUATE = True
+      _, _, evaluator      = loadModel(self.config)
+      evaluator.render()
 
    def generate(self, **kwargs):
-      trainer, policy = init(config, **kwargs)
-      terrain.MapGenerator(config).generate()
+      terrain.MapGenerator(self.config).generate()
 
    def visualize(self, **kwargs):
-      config.override(**kwargs)
-      visualize(config)
+      visualize(self.config)
       
 if __name__ == '__main__':
-   #Built config with CLI overrides
-   config = ExpConfig()
-   Fire(Config)
+   #Build config with CLI overrides
+   Fire(Anvil)

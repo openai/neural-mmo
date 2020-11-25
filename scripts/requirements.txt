@@ -3,7 +3,7 @@ setproctitle==1.1.10
 service_identity==18.1.0
 redis==3.4.0
 opensimplex==0.2
-ray==1.0.0
+ray==1.0.1
 PyTMX==3.21.7
 autobahn==19.3.3
 Twisted==19.2.0

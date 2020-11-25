@@ -100,6 +100,7 @@ def loadTrainer(config):
    return rlutils.SanePPOTrainer(
          env="custom", path='experiment', config={
       'num_workers': 4,
+      'num_gpus_per_worker': 0,
       'num_gpus': 1,
       'num_envs_per_worker': 1,
       'train_batch_size': 4000,
@@ -109,6 +110,7 @@ def loadTrainer(config):
       'framework': 'torch',
       'horizon': np.inf,
       'soft_horizon': False, 
+      '_use_trajectory_view_api': False,
       'no_done_at_end': False,
       'callbacks': LogCallbacks,
       'env_config': {

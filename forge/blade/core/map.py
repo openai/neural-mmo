@@ -84,6 +84,6 @@ class Map:
 
    #This constant re-encode is slow
    def np(self):
-      env = np.array([e.state.index for e in 
+      env = np.array([e.mat.index for e in 
             self.tiles.ravel()]).reshape(*self.shape)
       return env

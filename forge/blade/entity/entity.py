@@ -102,8 +102,7 @@ class Base:
    def update(self, realm, entity, actions):
       r, c = self.pos
       if type(realm.map.tiles[r, c].mat) == Material.LAVA.value:
-         entity.killed = True
-         return
+         entity.receiveDamage(None, entity.resources.health.val)
 
       if entity.resources.health.empty:
          self.killed = True
@@ -171,7 +170,7 @@ class Entity:
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
 
-      if not self.alive:
+      if not self.alive and source is not None:
          source.receiveLoot(self.loadout)
          return False
 

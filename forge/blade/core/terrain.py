@@ -8,6 +8,12 @@ from tqdm import tqdm
 
 from forge.blade.lib import enums
 
+def mkdir(path):
+   try:
+      os.mkdir(path)
+   except:
+      pass
+
 def sharp(self, noise):
    return 2 * (0.5 - abs(0.5 - noise));
 
@@ -24,11 +30,7 @@ class Save:
    def np(mats, path):
       """"Saved a map into into a tiled compatiable file given a save_path, width
        and height of the map, and 2D numpy array specifiying enums for the array"""
-      try:
-         os.mkdir(path)
-      except:
-         pass
-
+      mkdir(path)
       np.save(path + '/map.npy', mats.astype(np.int))
 
 class Terrain:
@@ -78,12 +80,10 @@ class MapGenerator:
          else:
             prefix = self.config.TERRAIN_DIR
 
-         path = prefix + 'map' + str(seed)
 
-         try:
-            os.mkdir(path)
-         except:
-            pass
+         path = prefix + '/map' + str(seed)
+         mkdir(prefix)
+         mkdir(path)
 
          terrain, tiles = self.grid(self.config, seed)
 

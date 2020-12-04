@@ -6,6 +6,8 @@
 import numpy as np
 from collections import defaultdict
 
+from typing import Dict
+
 from forge.blade import systems
 from forge.blade.lib import utils
 from forge.blade import lib
@@ -13,7 +15,7 @@ from forge.blade import lib
 from forge.blade import core
 from forge.blade.item import rawfish, knife, armor
 from forge.blade.lib.enums import Palette
-from forge.blade.entity import npc
+from forge.blade.entity.npc import NPC
 from pdb import set_trace as T
 from forge.blade.entity import Player
 from forge import trinity
@@ -58,24 +60,26 @@ class EntityGroup:
    def __len__(self):
       return len(self.entities)
 
-   def cull(self):
-      #Cull dead players
-      dead = {}
+   def spawn(self, entity) -> None:
+      pos, entID = entity.pos, entity.entID
+      self.realm.map.tiles[pos].addEnt(entity)
+      self.entities[entID] = entity
+ 
+   def cull(self) -> Dict[int, Player]:
+      self.dead = {}
       for entID in list(self.entities):
-         player = self.entities[entID]
-         if not player.alive:
+         if not (player := self.entities[entID]).alive:
             r, c  = player.base.pos
             entID = player.entID
-            dead[entID] = player
+            self.dead[entID] = player
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
             self.realm.dataframe.remove(Static.Entity, entID, player.pos)
 
-      self.dead = dead
-      return dead
+      return self.dead
 
-   def preActions(self, decisions):
+   def preActions(self, decisions) -> None:
       '''Update agent history before performing actions
       Args:
          decisions: A dictionary of agent actions
@@ -83,7 +87,7 @@ class EntityGroup:
       for entID, entity in self.entities.items():
          entity.history.update(self.realm, entity, decisions)
 
-   def postActions(self, decisions):
+   def postActions(self, decisions) -> None:
       '''Update agent data after performing actions
       Args:
          decisions: A dictionary of agent actions
@@ -97,29 +101,18 @@ class NPCManager(EntityGroup):
       self.realm = realm
       self.idx   = -1
  
-   def spawn(self, nTries=25):
-      R, C = self.realm.shape
-      for i in range(nTries):
+   def spawn(self):
+      for _ in range(self.config.NPC_SPAWN_ATTEMPTS):
          if len(self.entities) >= self.config.NMOB:
             break
 
-         r = np.random.randint(0, R)
-         c = np.random.randint(0, C)
-
-         if len(self.realm.map.tiles[r, c].ents) != 0:
+         r, c = np.random.randint(0, self.config.TERRAIN_SIZE, 2).tolist()
+         if not self.realm.map.tiles[r, c].habitable:
             continue
 
-         tile = self.realm.map.tiles[r, c]
-         if tile.mat.tex != 'grass':
-            continue
-
-         entity = npc.NPC.spawn(self.realm, (r, c), self.idx)
-         if entity is None:
-            continue
-
-         self.entities[self.idx] = entity
-         self.realm.map.tiles[r, c].addEnt(self.idx, entity)
-         self.idx -= 1
+         if npc := NPC.spawn(self.realm, (r, c), self.idx):
+            super().spawn(npc)
+            self.idx -= 1
 
    def actions(self, realm):
       actions = {}
@@ -128,42 +121,46 @@ class NPCManager(EntityGroup):
       return actions
        
 class PlayerManager(EntityGroup):
-   def __init__(self, realm, config):
+   def __init__(self, realm, config, iden):
       super().__init__(config)
-      self.realm = realm
-
       self.palette = Palette(config.NPOP)
+      self.iden    = iden
 
-   def spawn(self, iden, pop, name):
-      assert len(self.entities) <= self.config.NENT
-      assert iden is not None
- 
-      if len(self.entities) == self.config.NENT:
-         return
+      self.realm   = realm
+      self.idx     = 1
 
-      r, c   = self.config.SPAWN()
-      while len(self.realm.map.tiles[r, c].ents) != 0:
+   def spawn(self):
+      for _ in range(self.config.PLAYER_SPAWN_ATTEMPTS):
+         if len(self.entities) >= self.config.NENT:
+            break
+
          r, c   = self.config.SPAWN()
+         if not self.realm.map.tiles[r, c].habitable:
+            continue
 
-      color  = self.palette.colors[pop]
-      player = Player(self.realm, (r, c), iden, pop, name, color)
+         pop, name = self.iden()
+         color     = self.palette.colors[pop]
+         player    = Player(self.realm, (r, c), self.idx, pop, name, color)
 
-      self.realm.map.tiles[r, c].addEnt(iden, player)
-      self.entities[player.entID] = player
+         super().spawn(player)
+         self.idx += 1
 
 class Realm:
-   def __init__(self, config):
+   def __init__(self, config, iden):
       #Load the world file
       self.dataframe = trinity.Dataframe(config)
       self.map       = core.Map(self, config)
       self.shape     = self.map.shape
       self.spawn     = config.SPAWN
       self.config    = config
+      self.tick      = 0
 
       #Entity handlers
       self.stimSize = 3
       self.worldDim = 2*self.stimSize+1
-      self.players  = PlayerManager(self, config)
+
+      self.iden     = iden
+      self.players  = PlayerManager(self, config, iden)
       self.npcs     = NPCManager(self, config)
 
       #Exchange - For future updates
@@ -178,7 +175,6 @@ class Realm:
 
       self.stats = lib.StatTraker()
 
-      self.tick = 0
       self.envTimer  = utils.BenchmarkTimer()
       self.entTimer  = utils.BenchmarkTimer()
       self.cpuTimer  = utils.BenchmarkTimer()
@@ -213,10 +209,14 @@ class Realm:
       for entID, ent in entities.items():
          self.dataframe.remove(Static.Entity, entID, ent.pos)
 
-      self.players  = PlayerManager(self, self.config)
+      self.players  = PlayerManager(self, self.config, self.iden)
       self.npcs     = NPCManager(self, self.config)
   
    def step(self, decisions):
+      self.players.spawn()
+      while len(self.players.entities) == 0:
+         self.players.spawn()
+
       #NPC Spawning and decisions
       self.npcs.spawn()
       npcDecisions = self.npcs.actions(self)

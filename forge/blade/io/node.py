@@ -89,7 +89,7 @@ class Stim:
             'max': self.max}
 
    def update(self, val):
-      self.val = min(max(val, 0), self.max)
+      self.val = min(max(val, self.min), self.max)
       self.dataframe.update(self, self.val)
       return self
 

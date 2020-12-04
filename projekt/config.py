@@ -6,10 +6,12 @@ class Config(core.Config):
    # Model to load. None will train from scratch
    # Baselines: recurrent, attentional, convolutional
    # "current" will resume training custom models
+
    MODEL        = 'current'
    SCRIPTED_BFS = False
    SCRIPTED_DP  = False
    EVALUATE     = False
+   LOCAL_MODE   = False
 
    # Model dimensions
    EMBED  = 64
@@ -54,42 +56,22 @@ class Config(core.Config):
    PLOT_TOOLS = False
    PLOT_INTERACTIVE = False
 
-#Map Size Presets
+#Small map preset
 class SmallMap(Config):
-   TERRAIN_SIZE       = 80 
-   TERRAIN_OCTAVES    = 1
-   TERRAIN_FOREST_LOW = 0.30
+   MODEL                   = 'small-map'
 
-   MODEL              = 'small-map'
-   TERRAIN_DIR        = Config.TERRAIN_DIR_SMALL
-   ROOT               = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
+   TERRAIN_SIZE            = 80 
+   TERRAIN_OCTAVES         = 1
+   TERRAIN_FOREST_LOW      = 0.30
+   TERRAIN_BETA            = 0.035
+   TERRAIN_WATER           = 0.25
 
-   NPC_LEVEL_MAX      = 40
-   NPC_LEVEL_SPREAD   = 10
+   TERRAIN_INVERT          = True
+   TERRAIN_WATER_RADIUS    = 3.5
+   TERRAIN_NO_STONE_RADIUS = 3.5
 
-class LargeMap(Config):
-   MODEL              = 'large-map'
-   TERRAIN_DIR        = Config.TERRAIN_DIR_LARGE
-   ROOT               = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
+   TERRAIN_DIR             = Config.TERRAIN_DIR_SMALL
+   ROOT                    = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
 
-#Battle Royale Presets
-class BattleRoyale(Config):
-   pass
-
-class SmallBR(SmallMap, BattleRoyale):
-   pass
-
-class LargeBR(LargeMap, BattleRoyale):
-   pass
-
-#MMO Presets
-class MMO(Config):
-   TERRAIN_INVERT    = True
-
-class SmallMMO(SmallMap, MMO):
-   pass
-
-class LargeMMO(LargeMap, MMO):
-   pass
-
-
+   NPC_LEVEL_MAX           = 40
+   NPC_LEVEL_SPREAD        = 10

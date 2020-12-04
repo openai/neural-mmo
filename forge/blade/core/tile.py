@@ -48,11 +48,15 @@ class Tile:
 
    @property
    def habitable(self):
-      return self.mat.index in enums.HABITABLE
+      return self.mat.index in enums.HABITABLE and len(self.ents) == 0
 
-   def addEnt(self, entID, ent):
-      assert entID not in self.ents
-      self.ents[entID] = ent
+   @property
+   def lava(self):
+      return self.mat.index == enums.Lava.index
+
+   def addEnt(self, ent):
+      assert ent.entID not in self.ents
+      self.ents[ent.entID] = ent
 
    def delEnt(self, entID):
       assert entID in self.ents

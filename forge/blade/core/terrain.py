@@ -56,13 +56,13 @@ class MapGenerator:
    def material(self, config, val, gamma=0):
       assert 0 <= gamma <= 1
       alpha = config.TERRAIN_ALPHA * gamma
-      beta  = config.TERRAIN_ALPHA * gamma
+      beta  = (1 - gamma) * config.TERRAIN_BETA
 
       if val == config.TERRAIN_LAVA:
          return Terrain.LAVA
       if val <= config.TERRAIN_WATER:
          return Terrain.WATER
-      if val <= config.TERRAIN_FOREST_LOW + beta:
+      if val <= config.TERRAIN_FOREST_LOW - beta:
          return Terrain.FOREST
       if val <= config.TERRAIN_GRASS + alpha:
          return Terrain.GRASS
@@ -89,14 +89,13 @@ class MapGenerator:
 
          Save.np(tiles, path)
          if self.config.TERRAIN_RENDER:
-            Save.fractal(terrain, path+'fractal.png')
-            Save.render(tiles, self.textures, path+'map.png')
+            Save.fractal(terrain, path+'/fractal.png')
+            Save.render(tiles, self.textures, path+'/map.png')
 
    def grid(self, config, seed):
       sz          = config.TERRAIN_SIZE
       frequency   = config.TERRAIN_FREQUENCY
       octaves     = config.TERRAIN_OCTAVES
-      border      = config.TERRAIN_BORDER
       invert      = config.TERRAIN_INVERT
       
       val   = np.zeros((sz, sz, octaves))
@@ -120,9 +119,9 @@ class MapGenerator:
          dist  = np.linspace(0.5/octaves, 1-0.5/octaves, octaves)[None, None, :]
          norm  = 2 * l1[:, :, None] / sz 
          if invert:
-            v = 1 - abs(norm - dist)
-         else:
             v = 1 - abs(1 - norm - dist)
+         else:
+            v = 1 - abs(norm - dist)
 
          v   = (2*octaves-1) * (v - 1) + 1
          v   = np.clip(v, 0, 1)
@@ -131,16 +130,19 @@ class MapGenerator:
          val = np.sum(v*val, -1)
 
       #Paint borders and center
-      val[l1 > sz//2 - border]  = config.TERRAIN_LAVA 
-      val[l1 == sz//2 - border] = config.TERRAIN_GRASS
-      val[l2 < 6]               = config.TERRAIN_GRASS
-      val[l2 < 3.5]             = config.TERRAIN_WATER
+      border      = config.TERRAIN_BORDER
+      waterRadius = config.TERRAIN_WATER_RADIUS
+      spawnRegion = config.TERRAIN_CENTER_REGION
+      spawnWidth  = config.TERRAIN_CENTER_WIDTH
 
       #Clip l1
       if octaves > 1:
-         l1 = 2 * l1 / sz
+         thresh = l1
+         l1     = 2 * l1 / sz
          l1[l1 <= 0.25] = 0 #Only spawn food near water at edges
          l1[l1 >= 0.75] = 1 #Only spawn food near rocks at middle
+         if not invert:
+            l1     = 1 - l1
       else:
          l1 = 0.5 + l1*0
 
@@ -149,5 +151,24 @@ class MapGenerator:
       for y in range(sz):
          for x in range(sz):
             matl[y, x] = self.material(config, val[y, x], l1[y, x])
+
+      #Lava border
+      matl[thresh > sz//2 - border]     = Terrain.LAVA
+
+      #Center GodSword
+      matl[l2 < waterRadius+1]      = Terrain.FOREST
+      matl[l2 < waterRadius]        = Terrain.WATER
+
+      #Grass border or center spawn region
+      if invert:
+         matl[l1 == sz//2 - border] = Terrain.GRASS
+      else:
+         matl[thresh <= spawnRegion]              = Terrain.GRASS
+         matl[thresh <= spawnRegion-spawnWidth]   = Terrain.STONE
+         matl[thresh <= spawnRegion-spawnWidth-1] = Terrain.WATER
  
+         #matl[np.logical_or(matl == Terrain.GRASS, matl == Terrain.FOREST) *
+         #     np.logical_and(X % 2 == 0, Y % 2 == 0) *
+         #     (thresh == spawnRegion+1)] = Terrain.STONE
+
       return val, matl

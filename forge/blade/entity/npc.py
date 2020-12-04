@@ -92,6 +92,10 @@ class NPC(entity.Entity):
 
       return data
 
+   @property
+   def isNPC(self) -> bool:
+      return True
+
 class Passive(NPC):
    def __init__(self, realm, pos, iden):
       super().__init__(realm, pos, iden, 'Passive', Neon.GREEN, -1)

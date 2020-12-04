@@ -1,7 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
 
-#from forge.blade.entity import Player
 from forge.blade.lib import utils, enums
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.node import Node, NodeType
@@ -58,12 +57,10 @@ class Move(Node):
       rNew, cNew = r+rDelta, c+cDelta
 
       #One agent per cell
-      if len(env.map.tiles[rNew, cNew].ents) != 0:
+      tile = env.map.tiles[rNew, cNew] 
+      if not tile.habitable and not tile.lava:
          return
-      if env.map.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
-         return
-      if not utils.inBounds(rNew, cNew, env.shape):
-         return
+
       if entity.status.freeze > 0:
          return
 
@@ -72,7 +69,7 @@ class Move(Node):
       entity.base.c.update(cNew)
 
       env.map.tiles[r, c].delEnt(entID)
-      env.map.tiles[rNew, cNew].addEnt(entID, entity)
+      env.map.tiles[rNew, cNew].addEnt(entity)
 
    @staticproperty
    def edges():
@@ -158,7 +155,8 @@ class Attack(Node):
       selfLevel  = combat.level(entity.skills)
       targLevel  = combat.level(targ.skills)
 
-      if env.config.WILDERNESS and abs(selfLevel - targLevel) > wilderness:
+      if (env.config.WILDERNESS and abs(selfLevel - targLevel) > wilderness
+            and entity.isPlayer and targ.isPlayer):
          return
 
       #Check attack range

@@ -1,10 +1,10 @@
 '''Main file for the neural-mmo/projekt demo
 
-/projeckt will give you a basic sense of the training
-loop, infrastructure, and IO modules for handling input 
-and output spaces. From there, you can either use the 
-prebuilt IO networks in PyTorch to start training your 
-own models immediately or hack on the environment'''
+/projeckt contains all necessary code to train and
+evaluate capable policies on Neural MMO using RLlib,
+as well as rendering, logging, and visualization tools.
+
+Associated docs and tutorials are hosted on jsuarez5341.github.io.'''
 
 #My favorite debugging macro
 from pdb import set_trace as T
@@ -84,10 +84,8 @@ def createPolicies(config):
    return policies
 
 def loadTrainer(config):
-   #Setup ray
    torch.set_num_threads(1)
-   #ray.init(local_mode=True)
-   ray.init()
+   ray.init(local_mode=config.LOCAL_MODE)
 
    #Instantiate monolithic RLlib Trainer object.
    rllib.models.ModelCatalog.register_custom_model(
@@ -155,7 +153,7 @@ class Anvil():
          config = kwargs.pop('config')
          config = getattr(projekt.config, config)()
       else:
-         config = projekt.config.SmallMap()
+         config = projekt.config.Config()
       config.override(**kwargs)
       self.config = config
 

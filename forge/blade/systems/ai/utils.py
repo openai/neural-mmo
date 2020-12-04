@@ -53,7 +53,6 @@ def closestTarget(ent, tiles, rng=1):
          for e in tiles[sr + d, sc + r].ents.values():
             if e is not ent and validTarget(ent, e, rng): return e
 
-
 def closestResources(ent, tiles, rng=1):
    sr, sc = ent.pos
    food, water = None, None

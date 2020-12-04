@@ -36,7 +36,7 @@ class Env(Timed):
          idx    : Index of the map file to load (0 to number of maps)
       '''
       super().__init__()
-      self.realm     = core.Realm(config)
+      self.realm     = core.Realm(config, self.spawn)
 
       self.config    = config
       self.overlay   = None
@@ -132,15 +132,9 @@ class Env(Timed):
          infos:
             An empty dictionary provided only for conformity with OpenAI Gym.
       '''
-      self.tick += 1
-
       self.realm_step = time.time()
 
       #Spawn an ent
-      iden, pop, name = self.spawn()
-      assert iden is not None
-
-      self.realm.players.spawn(iden, pop, name)
       self.dead = self.realm.step(decisions)
 
       self.realm_step = time.time() - self.realm_step
@@ -151,7 +145,7 @@ class Env(Timed):
 
       infos = {}
       if self.config.EVALUATE:
-         infos = log.Quill(self.worldIdx, self.tick)
+         infos = log.Quill(self.worldIdx, self.realm.tick)
          for entID, ent in self.dead.items():
             self.log(infos, ent)
          infos = infos.packet
@@ -185,7 +179,7 @@ class Env(Timed):
       quill.stat('Equipment', ent.loadout.defense)
 
    def terminal(self):
-      infos = log.Quill(self.worldIdx, self.tick)
+      infos = log.Quill(self.worldIdx, self.realm.tick)
       for entID, ent in self.realm.players.entities.items():
          self.log(infos, ent)
 
@@ -214,8 +208,6 @@ class Env(Timed):
 
       self.worldIdx = idx
       self.dead     = {}
-      self.tick     = 0
-      self.entID    = 1
 
       self.realm.reset(idx)
       if step:
@@ -263,10 +255,8 @@ class Env(Timed):
          particular, it allows you to define behavior that selectively
          spawns agents into particular populations based on the current game
          state -- for example, current population sizes or performance.'''
-      pop        =  hash(str(self.entID)) % self.config.NPOP
-      self.entID += 1
-
-      return self.entID, pop, 'Neural_'
+      pop = np.random.randint(self.config.NPOP)
+      return pop, 'Neural_'
 
    def clientData(self):
       '''Data packet used by the renderer
@@ -361,7 +351,7 @@ class Env(Timed):
       an observation where it is the only agent alive. This allows us to
       isolate potential influences from observations of nearby agents
 
-      This function is slow, and anything you do with it is porbably slower.
+      This function is slow, and anything you do with it is probably slower.
       As a concrete example, consider that we would like to visualize a
       learned agent value function for the entire map. This would require
       computing a forward pass for one agent per tile. To cut down on

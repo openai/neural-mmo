@@ -84,4 +84,6 @@ class Player(entity.Entity):
       args = args.values()
       atn.call(world, self, *args)
 
-
+   @property
+   def isPlayer(self) -> bool:
+      return True

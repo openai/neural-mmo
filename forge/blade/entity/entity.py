@@ -37,7 +37,7 @@ class Status:
       self.immune.decrement()
       self.freeze.decrement()
 
-      wilderness = combat.wilderness(self.config, entity.base.pos)
+      wilderness = combat.wilderness(self.config, entity.pos)
       self.wilderness.update(wilderness)
 
    def packet(self):
@@ -101,12 +101,14 @@ class Base:
 
    def update(self, realm, entity, actions):
       r, c = self.pos
-      if type(realm.map.tiles[r, c].mat) == Material.LAVA.value:
+      if realm.map.tiles[r, c].lava:
          entity.receiveDamage(None, entity.resources.health.val)
 
       if entity.resources.health.empty:
          self.killed = True
-         return
+         return None
+
+      return True
 
    @property
    def pos(self):
@@ -158,11 +160,10 @@ class Entity:
    def update(self, realm, actions):
       '''Update occurs after actions, e.g. does not include history'''
       self.base.update(realm, self, actions)
+      self.status.update(realm, self, actions)
 
       if not self.alive:
          return False
-
-      self.status.update(realm, self, actions)
 
       return True
 
@@ -195,3 +196,11 @@ class Entity:
          return False
 
       return True
+
+   @property
+   def isPlayer(self) -> bool:
+      return False
+
+   @property
+   def isNPC(self) -> bool:
+      return False

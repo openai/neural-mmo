@@ -49,29 +49,29 @@ def danger(config, pos, full=False):
    cent = config.TERRAIN_SIZE // 2
 
    #Distance from center
-   R = int(abs(pos[0] - cent + 0.5))
-   C = int(abs(pos[1] - cent + 0.5))
+   R   = int(abs(pos[0] - cent + 0.5))
+   C   = int(abs(pos[1] - cent + 0.5))
+   mag = max(R, C)
 
    #Distance from border terrain to center
    if config.INVERT_WILDERNESS:
-      R = cent - R - config.TERRAIN_BORDER
-      C = cent - C - config.TERRAIN_BORDER
+      R   = cent - R - config.TERRAIN_BORDER
+      C   = cent - C - config.TERRAIN_BORDER
+      mag = min(R, C)
 
    #Normalize
-   mmax = max(R, C)
-   norm = mmax / (cent - config.TERRAIN_BORDER)
+   norm = mag / (cent - config.TERRAIN_BORDER)
 
    if full:
-      return norm, mmax
+      return norm, mag
    return norm
       
 def wilderness(config, pos):
    norm, raw = danger(config, pos, full=True)
    wild      = int(100 * norm) - 1
 
-   #if not config.INVERT_WILDERNESS and raw < config.TERRAIN_CENTER_REGION:
-   #   return -1
-
+   if not config.WILDERNESS:
+      return 99
    if wild < config.WILDERNESS_MIN:
       return -1
    if wild > config.WILDERNESS_MAX:

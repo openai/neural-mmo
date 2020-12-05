@@ -79,14 +79,16 @@ class Config(Template):
    TERRAIN_OCTAVES   = 8
    '''Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range'''
 
-   TERRAIN_INVERT    = False 
-   '''Specify normal generation (lower frequency at map center) or inverted generation (lower frequency at map edges). Only applied for TERRAIN_OCTAVES > 1'''
+   TERRAIN_MODE      = 'expand'
+   '''expand or contract. Specify normal generation (lower frequency at map center) or inverted generation (lower frequency at map edges)'''
 
-   TERRAIN_ALPHA        = 0.025
-   TERRAIN_BETA         = 0.075
+   TERRAIN_LERP      = True 
+
+   TERRAIN_ALPHA        = 0.15
+   TERRAIN_BETA         = 0.025
    TERRAIN_LAVA         = 0.0
    TERRAIN_WATER        = 0.25
-   TERRAIN_FOREST_LOW   = 0.325
+   TERRAIN_FOREST_LOW   = 0.35
    TERRAIN_GRASS        = 0.75
    TERRAIN_FOREST_HIGH  = 0.775
 
@@ -210,7 +212,7 @@ class Config(Template):
             The position (row, col) to spawn the given agent
       '''
       #Spawn at edges
-      if self.TERRAIN_INVERT:
+      if self.TERRAIN_MODE == 'contract':
          mmax = self.TERRAIN_SIZE - self.TERRAIN_BORDER - 1
          mmin = self.TERRAIN_BORDER
 

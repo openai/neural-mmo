@@ -18,8 +18,8 @@ class Config(core.Config):
    HIDDEN = 64
 
    # Environment parameters
-   NENT = 256  # Maximum population size
    NPOP = 1    # Number of populations
+   NENT = 256  # Maximum population size
    NMOB = 32   # Number of NPCS
 
    NMAPS = 256 # Number maps to generate
@@ -60,18 +60,22 @@ class Config(core.Config):
 class SmallMap(Config):
    MODEL                   = 'small-map'
 
+   NENT                    = 128
+   NMOB                    = 32
+
+   TERRAIN_MODE            = 'contract'
+   TERRAIN_LERP            = False
+
    TERRAIN_SIZE            = 80 
    TERRAIN_OCTAVES         = 1
-   TERRAIN_FOREST_LOW      = 0.30
-   TERRAIN_BETA            = 0.035
-   TERRAIN_WATER           = 0.25
-
-   TERRAIN_INVERT          = True
-   TERRAIN_WATER_RADIUS    = 3.5
-   TERRAIN_NO_STONE_RADIUS = 3.5
+   TERRAIN_FOREST_LOW      = 0.375
+   TERRAIN_GRASS           = 0.7
 
    TERRAIN_DIR             = Config.TERRAIN_DIR_SMALL
    ROOT                    = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
 
-   NPC_LEVEL_MAX           = 40
-   NPC_LEVEL_SPREAD        = 10
+   INVERT_WILDERNESS       = True
+   WILDERNESS              = False
+
+   NPC_LEVEL_MAX           = 30
+   NPC_LEVEL_SPREAD        = 5

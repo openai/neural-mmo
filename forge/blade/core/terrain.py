@@ -143,7 +143,7 @@ class MapGenerator:
          l1 = 1 - l1
 
       if not lerp:
-         l1 = 0.35 + 0*l1
+         l1 = 0.5 + 0*l1
 
       #Threshold to materials
       matl = np.zeros((sz, sz), dtype=object)

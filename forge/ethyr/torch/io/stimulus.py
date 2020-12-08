@@ -66,7 +66,7 @@ class Input(nn.Module):
          entities = inp[entity]
          for dtype, idxs in dtypes.items():
             typed             = entities[dtype]
-            cent              = typed[:, 40:41, idxs]
+            cent              = typed[:, 112:113, idxs]
             typed[:, :, idxs] = cent - typed[:, :, idxs]
 
       #Changes prevrun: Hacked discrete egocentric,
@@ -77,8 +77,9 @@ class Input(nn.Module):
       #Zero out continuous tile embeddings (was 0.15)
       #Zero out continuous index embedding
       #Set stim=4, 4000 batch
-      inp['Tile']['Discrete'][:, :, 1] += 7 + 7
-      inp['Tile']['Discrete'][:, :, 2] += 7 + 7 + 8 + 7
+      inp['Tile']['Discrete'][:, :, 1] += 7 + 15
+      inp['Tile']['Discrete'][:, :, 2] += 7 + 15 + 15
+      x = inp['Tile']['Discrete'][0]
 
       inp['Entity']['Discrete'] *= 0
       tileWeight = torch.Tensor([0.0, 0.0, 1.00, 1.00])

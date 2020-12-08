@@ -28,7 +28,7 @@ class Config(core.Config):
    EVALUATION_HORIZON = 2048
 
    #Agent vision range
-   STIM    = 4
+   STIM    = 7
 
    #Maximum number of observed agents
    N_AGENT_OBS = 100

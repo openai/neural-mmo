@@ -50,9 +50,9 @@ class Input(nn.Module):
 
       egocentric = {
          'Tile': {
-            'Continuous': (2, 3),
             'Discrete':   (1, 2)
          },
+         #   'Continuous': (2, 3),
          #'Entity': {
          #'Continuous': (2, 3),
          #'Discrete':   (2, 3)
@@ -82,7 +82,8 @@ class Input(nn.Module):
       x = inp['Tile']['Discrete'][0]
 
       inp['Entity']['Discrete'] *= 0
-      tileWeight = torch.Tensor([0.0, 0.0, 1.00, 1.00])
+      tileWeight = torch.Tensor([0.0, 0.0, 0.02, 0.02])
+      #tileWeight = torch.Tensor([0.0, 0.0, 1.00, 1.00])
       entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.0, 0.0, 0.00])
 
       try:

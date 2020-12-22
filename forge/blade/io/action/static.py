@@ -175,7 +175,7 @@ class Attack(Node):
       entity.history.attack['style'] = style.__name__
       targ.attacker = entity
 
-      dmg = combat.attack(entity, targ, style.skill(entity))
+      dmg = combat.attack(entity, targ, style.skill)
       if style.freeze and dmg > 0:
          targ.status.freeze.update(env.config.FREEZE_TIME)
 

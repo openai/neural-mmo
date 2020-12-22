@@ -19,8 +19,8 @@ class Config(core.Config):
 
    # Environment parameters
    NPOP = 1    # Number of populations
-   NENT = 256  # Maximum population size
-   NMOB = 32   # Number of NPCS
+   NENT = 1024 # Maximum population size
+   NMOB = 1024 # Number of NPCS
 
    NMAPS = 256 # Number maps to generate
 

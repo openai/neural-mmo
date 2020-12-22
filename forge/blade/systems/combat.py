@@ -16,34 +16,45 @@ def level(skills):
    final = np.floor(base + 0.5*max(melee, ranged, mage))
    return final
 
-def attack(entity, targ, skill):
-   attackLevel  = skill.level
-   defenseLevel = targ.skills.defense.level + targ.loadout.defense
-   skill = skill.__class__.__name__
+def attack(entity, targ, skillFn):
+   config      = entity.config
+   entitySkill = skillFn(entity)
+   targetSkill = skillFn(targ)
 
-   #1 dmg on a miss, max hit on success
-   dmg = 1
-   if np.random.rand() < accuracy(attackLevel, defenseLevel):
-      dmg = damage(skill, attackLevel)
+   targetDefense = targ.skills.defense.level + targ.loadout.defense
+
+   roll = np.random.randint(1, config.DICE_SIDES+1)
+   dc   = accuracy(config, entitySkill.level, targetSkill.level, targetDefense)
+   crit = roll == config.DICE_SIDES
+
+   dmg = 1 #Chip dmg on a miss
+   if roll >= dc or crit:
+      dmg = damage(entitySkill.__class__, entitySkill.level)
       
-   entity.applyDamage(dmg, skill.lower())
+   entity.applyDamage(dmg, entitySkill.__class__.__name__.lower())
    targ.receiveDamage(entity, dmg)
    return dmg
 
 #Compute maximum damage roll
 def damage(skill, level):
-   if skill == 'Melee':
+   if skill == Skill.Melee:
       return np.floor(5 + level * 45 / 99)
-   if skill == 'Range':
+   if skill == Skill.Range:
       return np.floor(3 + level * 32 / 99)
-   if skill == 'Mage':
+   if skill == Skill.Mage:
       return np.floor(1 + level * 24 / 99)
 
 #Compute maximum attack or defense roll (same formula)
 #Max attack 198 - min def 1 = 197. Max 198 - max 198 = 0
 #REMOVE FACTOR OF 2 FROM ATTACK AFTER IMPLEMENTING WEAPONS
-def accuracy(attkLevel, defLevel):
-   return 0.5 + (2*attkLevel - defLevel) / 197
+def accuracy(config, entAtk, targAtk, targDef):
+   alpha   = config.DEFENSE_WEIGHT
+
+   attack  = entAtk
+   defense = alpha*targDef + (1-alpha)*targAtk
+   dc      = defense - attack + config.DICE_SIDES//2
+
+   return dc
 
 def danger(config, pos, full=False):
    cent = config.TERRAIN_SIZE // 2

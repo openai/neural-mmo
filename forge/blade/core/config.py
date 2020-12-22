@@ -182,6 +182,13 @@ class Config(Template):
    NPC_LEVEL_MAX           = 99
    NPC_LEVEL_SPREAD        = 10 
 
+
+   DEFENSE_WEIGHT          = 0.3 
+   '''Fraction of defense that comes from the Defense skill'''   
+
+   DICE_SIDES              = 20
+   '''Number of sides for combat dice -- higher means weaker attacks can hit stronger opponents'''
+
    MELEE_RANGE             = 1
    '''Range of attacks using the Melee skill'''
 

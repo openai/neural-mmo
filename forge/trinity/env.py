@@ -13,13 +13,12 @@ from forge.blade.systems import combat
 
 from forge.blade.lib.enums import Palette
 from forge.blade.lib import log
-from forge.trinity.ascend import runtime, Timed
 
 def valToRGB(x):
     '''x in range [0, 1]'''
     return np.array([1-x, x, 0])
 
-class Env(Timed):
+class Env:
    '''Neural MMO environment class implementing the OpenAI Gym API function
    signatures. The actual (ob, reward, done, info) data contents returned by
    the canonical reset() and step(action) methods conform to RLlib's Gym
@@ -41,8 +40,7 @@ class Env(Timed):
       self.config    = config
       self.overlay   = None
 
-   @runtime
-   def step(self, decisions):
+   def step(self, decisions, omitDead=False, preprocessActions=True):
       '''OpenAI Gym API step function simulating one game tick or timestep
 
       Args:
@@ -132,31 +130,40 @@ class Env(Timed):
          infos:
             An empty dictionary provided only for conformity with OpenAI Gym.
       '''
-      self.realm_step = time.time()
+      self.env_step = time.time()
 
-      #Spawn an ent
-      self.dead = self.realm.step(decisions)
+      ###Preprocess actions
+      self.preprocess_actions = time.time()
+      if preprocessActions:
+         actions = self.preprocessActions(decisions)
+      else:
+         actions = decisions 
+      self.preprocess_actions = time.time() - self.preprocess_actions
 
-      self.realm_step = time.time() - self.realm_step
-      self.env_stim   = time.time()
+      #Step Realm
+      self.realm_step     = time.time()
+      self.dead           = self.realm.step(actions)
+      self.realm_step     = time.time() - self.realm_step
 
-      obs, rewards, dones = self.getStims(self.dead)
+      #Compute observations
+      self.env_stim       = time.time()
+      obs, rewards, dones = self.getStims(self.dead, omitDead)
       self.env_stim       = time.time() - self.env_stim
 
-      infos = {}
-      if self.config.EVALUATE:
-         infos = log.Quill(self.worldIdx, self.realm.tick)
-         for entID, ent in self.dead.items():
-            self.log(infos, ent)
-         infos = infos.packet
+      #Logging
+      for entID, ent in self.dead.items():
+         self.log(ent)
 
-      return obs, rewards, dones, infos
+      self.env_step = time.time() - self.env_step
+      return obs, rewards, dones, {}
 
-   def log(self, quill, ent):
-      blob = quill.register('Lifetime', quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
+   def log(self, ent):
+      quill = self.quill
+
+      blob = quill.register('Lifetime', self.realm.tick, quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
       blob.log(ent.history.timeAlive.val)
 
-      blob = quill.register('Skill Level', quill.HISTOGRAM, quill.STACKED_AREA, quill.STATS, quill.RADAR)
+      blob = quill.register('Skill Level', self.realm.tick, quill.HISTOGRAM, quill.STACKED_AREA, quill.STATS, quill.RADAR)
       blob.log(ent.skills.range.level,        'Range')
       blob.log(ent.skills.mage.level,         'Mage')
       blob.log(ent.skills.melee.level,        'Melee')
@@ -166,24 +173,24 @@ class Env(Timed):
       blob.log(ent.skills.hunting.level,      'Hunting')
 
       #TODO: swap these entries when equipment is reenabled
-      blob = quill.register('Wilderness', quill.HISTOGRAM, quill.SCATTER)
+      blob = quill.register('Wilderness', self.realm.tick, quill.HISTOGRAM, quill.SCATTER)
       blob.log(combat.wilderness(self.config, ent.pos))
 
-      blob = quill.register('Equipment', quill.HISTOGRAM, quill.STACKED_AREA)
+      blob = quill.register('Equipment', self.realm.tick, quill.HISTOGRAM, quill.SCATTER)
       blob.log(ent.loadout.chestplate.level, 'Chestplate')
       blob.log(ent.loadout.platelegs.level,  'Platelegs')
 
+      quill.stat('Population', len(self.realm.players.entities))
       quill.stat('Lifetime',  ent.history.timeAlive.val)
       quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
       quill.stat('Combat',    combat.level(ent.skills))
       quill.stat('Equipment', ent.loadout.defense)
 
    def terminal(self):
-      infos = log.Quill(self.worldIdx, self.realm.tick)
       for entID, ent in self.realm.players.entities.items():
-         self.log(infos, ent)
+         self.log(ent)
 
-      return infos.packet
+      return self.quill.packet
 
    def reset(self, idx=None, step=True):
       '''Instantiates the environment and returns initial observations
@@ -202,7 +209,11 @@ class Env(Timed):
       Returns:
          observations, as documented by step()
       '''
-      err = 'Neural MMO is persistent and may only be reset once upon initialization'
+      self.quill     = log.Quill(self.realm.iden)
+      self.lifetimes = []
+
+      self.env_reset = time.time()
+      
       if idx is None:
          idx = np.random.randint(self.config.NMAPS)
 
@@ -210,8 +221,14 @@ class Env(Timed):
       self.dead     = {}
 
       self.realm.reset(idx)
+
+      obs = None
       if step:
-         return self.step({})[0]
+         obs, _, _, _ = self.step({})
+
+      self.env_reset = time.time() - self.env_reset
+
+      return obs
 
    def reward(self, entID):
       '''Computes the reward for the specified agent
@@ -279,7 +296,29 @@ class Env(Timed):
 
       return packet
 
-   def getStims(self, dead):
+   def preprocessActions(self, decisions):
+      actions = {}
+      for entID in list(decisions.keys()):
+         ent            = self.realm.players[entID]
+         actions[entID] = defaultdict(dict)
+
+         if entID in self.dead:
+            continue
+
+         for atn, args in decisions[entID].items():
+            for arg, val in args.items():
+               val = int(val)
+               if len(arg.edges) > 0:
+                  actions[entID][atn][arg] = arg.edges[val]
+               elif val < len(ent.targets):
+                  targ                     = ent.targets[val]
+                  actions[entID][atn][arg] = self.realm.entity(targ)
+               else: #Need to fix -inf in classifier before removing this
+                  actions[entID][atn][arg] = ent
+
+      return actions
+ 
+   def getStims(self, dead, omitDead):
       '''Gets agent stimuli from the environment
 
       Args:
@@ -288,25 +327,28 @@ class Env(Timed):
       Returns:
          The packet dictionary populated with agent data
       '''
-      self.stim_process = 0
-
       self.raw = {}
       obs, rewards, dones = {}, {}, {'__all__': False}
       for entID, ent in self.realm.players.items():
          start = time.time()
-         ob                 = self.realm.dataframe.get(ent)
-         obs[entID]         = ob
-         self.stim_process += time.time() - start
+         ob             = self.realm.dataframe.get(ent)
+         obs[entID]     = ob
 
          rewards[entID] = self.reward(entID)
          dones[entID]   = False
 
+      if omitDead:
+         return obs, rewards, dones
+
+      #RLlib quirk: requires obs for dead agents
       for entID, ent in dead.items():
-         #Why do we have to provide an ob for the last timestep?
          #Currently just copying one over
          rewards[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = ob
+
+         lifetime = ent.history.timeAlive.val
+         self.lifetimes.append(lifetime)
 
       return obs, rewards, dones
 

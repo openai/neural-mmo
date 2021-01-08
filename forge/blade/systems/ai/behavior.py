@@ -16,9 +16,9 @@ def update(entity):
    if entity.__class__.__name__ != 'Player':
       return
 
-   if (not utils.validResource(entity, entity.food, entity.vision) or
-         not utils.validResource(entity, entity.water, entity.vision)):
-      entity.food  = None
+   if not utils.validResource(entity, entity.food, entity.vision):
+      entity.food = None
+   if not utils.validResource(entity, entity.water, entity.vision):
       entity.water = None
       
 def pathfind(realm, actions, entity, target):

@@ -60,6 +60,11 @@ class Config(Template):
    TERRAIN_DIR_SMALL = 'resource/maps/procedural-small'
    TERRAIN_DIR_LARGE = 'resource/maps/procedural-large'
 
+   ASSETS_DIR        = 'resource/assets'
+
+   LOGO_FILE         = 'fonts/ascii.txt'
+   LOGO_DIR          =  os.path.join(ASSETS_DIR, LOGO_FILE)
+
    #Terrain parameters
    TERRAIN_DIR       = TERRAIN_DIR_LARGE
    '''Directory in which generated maps are saved'''
@@ -171,7 +176,7 @@ class Config(Template):
    #Fix this to be for small maps in systems skill
    RESOURCE_GRACE_PERIOD   = -1 
 
-   PLAYER_SPAWN_ATTEMPTS   = 1
+   PLAYER_SPAWN_ATTEMPTS   = 5
    NPC_SPAWN_ATTEMPTS      = 25
 
    NPC_SPAWN_AGGRESSIVE    = 0.75

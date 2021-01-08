@@ -36,23 +36,22 @@ class Quill:
    def plot(idx):
       return Quill.PLOTS[idx] 
 
-   def __init__(self, realm, tick):
+   def __init__(self, realm):
       self.blobs = defaultdict(Blob)
       self.stats = defaultdict(list)
       self.realm = realm #Game map index
-      self.tick  = tick  #Current game tick
 
    def stat(self, key, val):
       self.stats[key].append(val)
 
-   def register(self, key, *plots):
+   def register(self, key, tick, *plots):
       if key in self.blobs:
          blob = self.blobs[key]
       else:
          blob = Blob(*plots)
          self.blobs[key] = blob
 
-      blob.tick = self.tick
+      blob.tick = tick
       return blob
 
    @property
@@ -92,15 +91,14 @@ class InkWell:
       self.log   = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(list))))
       self.stats = defaultdict(list)
 
-   def update(self, packets):
-      for realm, quill in enumerate(packets):
-         log, stats = quill['Log'], quill['Stats']
-         for key, blob in log.items():
-            for subkey, (plots, track) in blob.items():
-               for time, vals in track.items():
-                  self.log[realm][key, tuple(plots)][subkey][time] += vals
-         for key, stat in stats.items():
-            self.stats[key] += stat
+   def update(self, quill, realm=0):
+      log, stats = quill['Log'], quill['Stats']
+      for key, blob in log.items():
+         for subkey, (plots, track) in blob.items():
+            for time, vals in track.items():
+               self.log[realm][key, tuple(plots)][subkey][time] += vals
+      for key, stat in stats.items():
+         self.stats[key] += stat
 
    @property
    def packet(self):

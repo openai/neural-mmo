@@ -168,8 +168,15 @@ class GridTables:
          rows.remove(cent)
          rows.insert(0, cent)
 
-      return {'Continuous': self.continuous.get(rows, self.pad),
-              'Discrete':   self.discrete.get(rows, self.pad)}, rows
+      values = {'Continuous': self.continuous.get(rows, self.pad),
+                'Discrete':   self.discrete.get(rows, self.pad)}
+
+      if entity:
+         ents = [self.index.teg(e) for e in rows]
+         assert ents[0] == ent.entID
+         return values, ents
+
+      return values
 
    def update(self, obj, val):
       key, attr = obj.key, obj.attr
@@ -234,8 +241,9 @@ class Dataframe:
 
       stim['Entity'], ents = self.data['Entity'].get(ent, entity=True)
       stim['Entity']['N']  = np.array([len(ents)], dtype=np.int32)
+      ent.targets          = ents
 
-      stim['Tile'], _      = self.data['Tile'].get(ent)
+      stim['Tile']         = self.data['Tile'].get(ent)
       #for key, grid2Table in self.data.items():
       #   stim[key] = grid2Table.get(ent)
       '''

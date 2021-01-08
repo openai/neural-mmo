@@ -1,22 +1,32 @@
 from pdb import set_trace as T
 
+import inspect
 from collections import defaultdict
 
-from forge.blade.io.comparable import IterableTypeCompare, Iterable
-
+class Iterable(type):
+   def __iter__(cls):
+      stack = list(cls.__dict__.items())
+      while len(stack) > 0:
+         name, attr = stack.pop()
+         if name.startswith('__'):
+            continue
+         if not inspect.isclass(attr) and type(attr) == classmethod:
+            continue
+         yield name, attr
+  
 class I(metaclass=Iterable):
    pass
 
-class Theme(metaclass=IterableTypeCompare):
+class Theme(metaclass=Iterable):
    @classmethod
    def dict(cls):
      data = defaultdict(dict)
 
-     for (group,), c in Theme:
+     for group, c in Theme:
         for attr, val in c:
            data[group][attr] = val
 
-     for (group,), c in cls:
+     for group, c in cls:
         for attr, val in c:
            data[group][attr] = val
 

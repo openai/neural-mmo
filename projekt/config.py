@@ -7,6 +7,19 @@ class Config(core.Config):
    # Baselines: recurrent, attentional, convolutional
    # "current" will resume training custom models
 
+   v                       = False
+
+   ENV_NAME                = 'Neural_MMO'
+   ENV_VERSION             = '1.5'
+   NUM_WORKERS             = 4
+   NUM_GPUS_PER_WORKER     = 0
+   NUM_GPUS                = 1
+   TRAIN_BATCH_SIZE        = 4000
+   #TRAIN_BATCH_SIZE        = 400
+   ROLLOUT_FRAGMENT_LENGTH = 100
+   SGD_MINIBATCH_SIZE      = 128
+   NUM_SGD_ITER            = 1
+
    MODEL        = 'current'
    SCRIPTED_BFS = False
    SCRIPTED_DP  = False
@@ -18,14 +31,16 @@ class Config(core.Config):
    HIDDEN = 64
 
    # Environment parameters
-   NPOP = 1    # Number of populations
+   NPOP = 1    # Number of populations #SET SHARE POLICY TRUE
    NENT = 1024 # Maximum population size
    NMOB = 1024 # Number of NPCS
 
    NMAPS = 256 # Number maps to generate
 
-   # Evaluation parameters
-   EVALUATION_HORIZON = 2048
+   #Horizons for training and evaluation
+   #TRAIN_HORIZON      = 500 #This in in agent trajs
+   TRAIN_HORIZON      = 1000 #This in in agent trajs
+   EVALUATION_HORIZON = 2048 #This is in timesteps
 
    #Agent vision range
    STIM    = 7
@@ -35,15 +50,18 @@ class Config(core.Config):
 
    # Whether to share weights across policies
    # The 1.4 baselines use one policy
-   POPULATIONS_SHARE_POLICIES = True
+   POPULATIONS_SHARE_POLICIES = False
    NPOLICIES = 1 if POPULATIONS_SHARE_POLICIES else NPOP
 
-   # Evaluation
+   #Overlays
+   OVERLAY_GLOBALS = False
+
+   #Evaluation
    LOG_DIR = 'experiment/'
    LOG_FILE = 'evaluation.npy'
    LOG_FIGURE = 'evaluation.html'
 
-   # Visualization
+   #Visualization
    THEME_DIR = 'forge/blade/systems/visualizer/'
    THEME_NAME = 'web'  # publication or web
    THEME_FILE = 'theme_temp.json'

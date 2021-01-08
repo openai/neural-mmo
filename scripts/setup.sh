@@ -14,7 +14,7 @@ fi
 
 #Install python packages
 pip install -r scripts/requirements.txt
+conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
 
-python Forge.py generate --sz=1044 --nMaps=256
-#python scripts/terrain_api.py generate --sz=1044 --nMaps=256 --invert=True
-#python scripts/terrain_api.py generate --sz=84 --nMaps=256 --octaves=1
+python Forge.py generate --config=SmallMap
+python Forge.py generate --config=LargeMap

@@ -12,7 +12,6 @@ from forge.blade.io.stimulus import Static
 class Player(entity.Entity):
    def __init__(self, realm, pos, iden, pop, name='', color=None):
       super().__init__(realm, pos, iden, name, color, pop)
-
       self.annID  = pop
       self.target = None
 
@@ -24,6 +23,13 @@ class Player(entity.Entity):
       self.skills     = Skills(self)
       #self.inventory = Inventory(dataframe)
       #self.chat      = Chat(dataframe)
+
+      #Update immune
+      mmul = realm.config.IMMUNE_MUL
+      madd = realm.config.IMMUNE_ADD
+      mmax = realm.config.IMMUNE_MAX
+      immune = min(mmul*len(realm.players) + madd, mmax)
+      self.status.immune.update(immune)
 
       self.dataframe.init(Static.Entity, self.entID, self.pos)
 

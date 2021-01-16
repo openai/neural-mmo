@@ -3,87 +3,88 @@ from forge.blade import core
 import os
 
 class Config(core.Config):
-   # Model to load. None will train from scratch
-   # Baselines: recurrent, attentional, convolutional
-   # "current" will resume training custom models
+   '''Base config for RLlib Models
 
-   v                       = False
-
-   ENV_NAME                = 'Neural_MMO'
-   ENV_VERSION             = '1.5'
+   Extends core Config, which contains environment, evaluation,
+   and non-RLlib-specific learning parameters'''
+   
+   #Hardware Scale
    NUM_WORKERS             = 4
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
-   TRAIN_BATCH_SIZE        = 4000
-   #TRAIN_BATCH_SIZE        = 400
+   LOCAL_MODE              = False
+
+   #Memory/Batch Scale
+   TRAIN_BATCH_SIZE        = 400000
    ROLLOUT_FRAGMENT_LENGTH = 100
+
+   #Optimization Scale
    SGD_MINIBATCH_SIZE      = 128
    NUM_SGD_ITER            = 1
 
-   MODEL        = 'current'
-   SCRIPTED_BFS = False
-   SCRIPTED_DP  = False
-   EVALUATE     = False
-   LOCAL_MODE   = False
+   #Model Parameters 
+   N_AGENT_OBS             = 100
+   NPOLICIES               = 1
+   HIDDEN                  = 64
+   EMBED                   = 64
 
-   # Model dimensions
-   EMBED  = 64
-   HIDDEN = 64
+   #Alternative model selection
+   #Scripted baselines: SCRIPTED_BFS, SCRIPTED_DP
+   #None=train from scratch
+   #current=resume checkpoint
+   MODEL                   = 'current'
+   SCRIPTED_BFS            = False
+   SCRIPTED_DP             = False
 
-   # Environment parameters
-   NPOP = 1    # Number of populations #SET SHARE POLICY TRUE
-   NENT = 1024 # Maximum population size
-   NMOB = 1024 # Number of NPCS
 
-   NMAPS = 256 # Number maps to generate
+class LargeMaps(Config):
+   '''Large scale Neural MMO training setting
 
-   #Horizons for training and evaluation
-   #TRAIN_HORIZON      = 500 #This in in agent trajs
-   TRAIN_HORIZON      = 1000 #This in in agent trajs
-   EVALUATION_HORIZON = 2048 #This is in timesteps
+   Features up to 1000 concurrent agents and 1000 concurrent NPCs,
+   1km x 1km maps, and 10k timestep train/eval horizons
 
-   #Agent vision range
-   STIM    = 7
+   This is the default setting as of v1.5 and allows for large
+   scale multiagent research even on relatively modest hardware'''
 
-   #Maximum number of observed agents
-   N_AGENT_OBS = 100
+   MODEL                   = 'large-map'
 
-   # Whether to share weights across policies
-   # The 1.4 baselines use one policy
-   POPULATIONS_SHARE_POLICIES = False
-   NPOLICIES = 1 if POPULATIONS_SHARE_POLICIES else NPOP
+   TRAIN_HORIZON           = 5000
+   EVALUATION_HORIZON      = 10000
 
-   #Overlays
-   OVERLAY_GLOBALS = False
+   NENT                    = 1024
+   NMOB                    = 1024
 
-   #Evaluation
-   LOG_DIR = 'experiment/'
-   LOG_FILE = 'evaluation.npy'
-   LOG_FIGURE = 'evaluation.html'
 
-   #Visualization
-   THEME_DIR = 'forge/blade/systems/visualizer/'
-   THEME_NAME = 'web'  # publication or web
-   THEME_FILE = 'theme_temp.json'
-   THEME_WEB_INDEX = 'index_web.html'
-   THEME_PUBLICATION_INDEX = 'index_publication.html'
-   PORT = 5006
-   PLOT_WIDTH = 1920
-   PLOT_HEIGHT = 270
-   PLOT_COLUMNS = 4
-   PLOT_TOOLS = False
-   PLOT_INTERACTIVE = False
+class SmallMaps(Config):
+   '''Small scale Neural MMO training setting
 
-#Small map preset
-class SmallMap(Config):
+   Features up to 128 concurrent agents and 32 concurrent NPCs,
+   60x60 maps (excluding the border), and 1000 timestep train/eval horizons.
+   
+   This setting is modeled off of v1.1-v1.4 It is appropriate as a quick train
+   task for new ideas, a transfer target for agents trained on large maps,
+   or as a primary research target for PCG methods.'''
+
    MODEL                   = 'small-map'
+
+   TRAIN_HORIZON           = 1000
+   EVALUATION_HORIZON      = 1000
 
    NENT                    = 128
    NMOB                    = 32
 
+   #Path settings
+   PATH_MAPS               = core.Config.PATH_MAPS_SMALL
+   PATH_ROOT               = os.path.join(os.getcwd(), PATH_MAPS, 'map')
+
+   #Outside-in map design
+   SPAWN_CENTER            = False
+   INVERT_WILDERNESS       = True
+   WILDERNESS              = False
+
+   #Terrain generation parameters
    TERRAIN_MODE            = 'contract'
    TERRAIN_LERP            = False
-
    TERRAIN_SIZE            = 80 
    TERRAIN_OCTAVES         = 1
    TERRAIN_FOREST_LOW      = 0.30
@@ -92,15 +93,21 @@ class SmallMap(Config):
    TERRAIN_ALPHA           = -0.025
    TERRAIN_BETA            = 0.035
 
-   TERRAIN_DIR             = Config.TERRAIN_DIR_SMALL
-   ROOT                    = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
-
-   INVERT_WILDERNESS       = True
-   WILDERNESS              = False
-
+   #Entity spawning parameters
+   PLAYER_SPAWN_ATTEMPTS   = 1
    NPC_LEVEL_MAX           = 35
    NPC_LEVEL_SPREAD        = 5
-
    NPC_SPAWN_PASSIVE       = 0.00
    NPC_SPAWN_NEUTRAL       = 0.60
    NPC_SPAWN_AGGRESSIVE    = 0.80
+
+
+class Debug(SmallMaps):
+   '''Debug Neural MMO training setting
+
+   A version of the SmallMap setting with greatly reduced batch parameters.
+   Only intended as a tool for identifying bugs in the model or environment'''
+
+   TRAIN_BATCH_SIZE        = 400
+   TRAIN_HORIZON           = 100
+   EVALUATION_HORIZON      = 500

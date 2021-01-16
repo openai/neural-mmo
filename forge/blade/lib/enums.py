@@ -10,46 +10,53 @@ from enum import Enum
 from forge.blade import systems
 
 class Tile:
-   capacity = 3
-   respawnProb = 0.1
-   def __init__(self):
-      self.harvestable = False
+   harvestable = False
+   capacity    = 1
+   def __init__(self, config):
+      pass
 
 class Lava(Tile):
+   tex   = 'lava'
    index = 0
-   tex = 'lava'
+
 class Water(Tile):
+   tex   = 'water'
    index = 1
-   tex = 'water'
+
 class Grass(Tile):
+   tex   = 'grass'
    index = 2
-   tex = 'grass'
+
 class Scrub(Tile):
-   index = 3
    tex = 'scrub'
+   index = 3
+
 class Forest(Tile):
+   tex   = 'forest'
    index = 4
-   degen = Scrub
-   tex = 'forest'
-   #capacity = 3
-   capacity = 1
-   respawnProb = 0.025
-   def __init__(self):
-      super().__init__()
-      self.harvestable = True
+
+   harvestable = True
+   degen       = Scrub
+
+   def __init__(self, config):
+      self.capacity = config.FOREST_CAPACITY
+      self.respawn  = config.FOREST_RESPAWN
       #self.dropTable = DropTable.DropTable()
+
 class Stone(Tile):
+   tex   = 'stone'
    index = 5
-   tex = 'stone'
+
 class Orerock(Tile):
+   tex   = 'iron_ore'
    index = 6
-   degenIndex = Stone.index
-   tex = 'iron_ore'
-   capacity = 1
-   respawnprob = 0.05
-   def __init__(self):
-      super().__init__()
-      self.harvestable = True
+
+   harvestable = True
+   degen       = Stone
+
+   def __init__(self, config):
+      self.capacity = config.OREROCK_CAPACITY
+      self.respawn  = config.OREROCK_RESPAWN
       #self.dropTable = systems.DropTable()
       #self.dropTable.add(ore.Copper, 1)
 

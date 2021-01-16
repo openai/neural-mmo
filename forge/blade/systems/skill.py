@@ -178,7 +178,7 @@ class Fishing(HarvestingSkill):
 
    def update(self, realm, entity):
       water = entity.resources.water
-      if entity.history.timeAlive > self.config.RESOURCE_GRACE_PERIOD:
+      if entity.status.immune <= 0:
          water.decrement(1)
 
       if Material.WATER.value not in ai.utils.adjacentMats(
@@ -199,7 +199,7 @@ class Hunting(HarvestingSkill):
 
    def update(self, realm, entity):
       food = entity.resources.food
-      if entity.history.timeAlive > self.config.RESOURCE_GRACE_PERIOD:
+      if entity.status.immune <= 0:
          food.decrement(1)
 
       r, c = entity.pos

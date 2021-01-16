@@ -24,17 +24,23 @@ def update(entity):
 def pathfind(realm, actions, entity, target):
    actions[Action.Move]   = {Action.Direction: move.pathfind(realm.map.tiles, entity, target)}
 
-def inward(realm, actions, entity):
+def explore(realm, actions, entity):
    R, C = realm.shape
    r, c = entity.pos
-   
-   #Direction 
-   rr   = int(r + np.clip(R//2-r, -entity.vision, entity.vision))
-   cc   = int(c + np.clip(C//2-c, -entity.vision, entity.vision))
+
+   spawnR, spawnC = entity.spawnPos
+   centR, centC   = R//2, C//2
+
+   vR, vC = spawnR-centR, spawnC-centC
+   if not realm.config.SPAWN_CENTER:
+      vR, vC = -vR, -vC
+
+   mmag = max(abs(vR), abs(vC))
+   rr   = r + int(np.round(entity.vision*vR/mmag))
+   cc   = c + int(np.round(entity.vision*vC/mmag))
 
    tile = realm.map.tiles[rr, cc]
    pathfind(realm, actions, entity, tile)
-    
 
 def meander(realm, actions, entity):
    actions[Action.Move] = {Action.Direction: move.habitable(realm.map.tiles, entity)}
@@ -55,11 +61,15 @@ def hunt(realm, actions, entity):
    if direction is not None:
       actions[Action.Move] = {Action.Direction: direction}
 
-   #Attack args
-   if distance <= entity.skills.style.attackRange(realm.config):
-      actions[Action.Attack] = {Action.Style: entity.skills.style,
-            Action.Target: entity.target}
+   attack(realm, actions, entity)
 
+def attack(realm, actions, entity):
+   distance = utils.distance(entity, entity.target)
+   if distance > entity.skills.style.attackRange(realm.config):
+      return
+
+   actions[Action.Attack] = {Action.Style: entity.skills.style,
+         Action.Target: entity.target}
 
 def forageDP(realm, actions, entity):
    direction = utils.forageDP(realm.map.tiles, entity)

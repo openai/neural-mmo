@@ -102,6 +102,7 @@ class Recurrent(Simple):
    #Pytorch (seq_len, batch, hidden) <-> RLlib (batch, seq_len, hidden)
    def hidden(self, obs, state, lens):
       #Attentional input preprocessor and batching
+      lens = lens.cpu() if type(lens) == torch.Tensor else lens
       hidden, _ = super().hidden(obs)
       config    = self.config
       h, c      = state

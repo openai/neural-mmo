@@ -146,6 +146,10 @@ class Attack(Node):
    def call(env, entity, style, targ):
       entity.history.attack = None
 
+      #Can't attack if either party is immune
+      if entity.status.immune > 0 or targ.status.immune > 0:
+         return
+
       #Check if self targeted
       if entity.entID == targ.entID:
          return

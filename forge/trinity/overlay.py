@@ -5,6 +5,7 @@ from collections import defaultdict
 from tqdm import tqdm
 
 from forge.blade.lib import overlay
+from forge.blade.lib.enums import Neon
 from forge.blade.systems import combat
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.entity import entity, player
@@ -34,6 +35,7 @@ class OverlayRegistry:
 
       self.overlays = {
               'counts':         Counts,
+              'skills':         Skills,
               'values':         Values,
               'globalValues':   GlobalValues,
               'attention':      Attention,
@@ -41,10 +43,6 @@ class OverlayRegistry:
 
       for cmd, overlay in self.overlays.items():
          self.overlays[cmd] = overlay(realm, model, trainer, config)
-
-      if config.OVERLAY_GLOBALS:
-         self.overlays['wilderness'].init()
-         self.overlays['globalValues'].init()
 
    def step(self, obs, pos, cmd, update=[]):
       '''Compute overlays and send to the environment'''
@@ -56,6 +54,51 @@ class OverlayRegistry:
           self.overlays[cmd].register(obs)
 
       self.realm.overlayPos = pos
+
+class Skills(Overlay):
+   def __init__(self, realm, model, trainer, config):
+      super().__init__(realm, model, trainer, config)
+      self.nSkills = 2
+
+      self.values  = np.zeros((self.R, self.C, self.nSkills))
+
+   def update(self, obs):
+      '''Computes a count-based exploration map by painting
+      tiles as agents walk over them'''
+      for entID, agent in self.realm.realm.players.items():
+         r, c = agent.base.pos
+
+         skillLvl  = (agent.skills.fishing.level + agent.skills.hunting.level)/2.0
+         combatLvl = combat.level(agent.skills)
+
+         if skillLvl == 10 and combatLvl == 3:
+            continue
+
+         self.values[r, c, 0] = skillLvl
+         self.values[r, c, 1] = combatLvl
+
+   def register(self, obs):
+      values = np.zeros((self.R, self.C, self.nSkills))
+      for idx in range(self.nSkills):
+         ary  = self.values[:, :, idx]
+         vals = ary[ary != 0]
+         mean = np.mean(vals)
+         std  = np.std(vals)
+         if std == 0:
+            std = 1
+
+         values[:, :, idx] = (ary - mean) / std
+         values[ary == 0] = 0
+
+      colors    = np.array([Neon.BLUE.rgb, Neon.BLOOD.rgb])
+      colorized = np.zeros((self.R, self.C, 3))
+      amax      = np.argmax(values, -1)
+
+      for idx in range(self.nSkills):
+         colorized[amax == idx] = colors[idx] / 255
+         colorized[values[:, :, idx] == 0] = 0
+
+      self.realm.registerOverlay(colorized)
 
 class Counts(Overlay):
    def __init__(self, realm, model, trainer, config):
@@ -128,6 +171,10 @@ class GlobalValues(Overlay):
       self.colorized = overlay.twoTone(values)
 
    def register(self, obs):
+      if not hasattr(self, 'colorized'):
+         print('Initializing Global Values. This requires one NN pass per tile')
+         self.init()
+
       self.realm.registerOverlay(self.colorized)
 
 class Attention(Overlay):
@@ -167,5 +214,9 @@ class Wilderness(Overlay):
       self.wildy = colorized
 
    def register(self, obs):
+      if not hasattr(self, 'wildy'):
+         print('Initializing Wilderness')
+         self.init()
+
       self.realm.registerOverlay(self.wildy)
 

@@ -56,100 +56,203 @@ class Config(Template):
       Config to add new static attributes -- CLI definitions will be
       generated automatically.
    '''
+   ############################################################################
+   ### Meta-Parameters
+   ENV_NAME             = 'Neural_MMO'
+   '''Environment Name'''
 
-   TERRAIN_DIR_SMALL = 'resource/maps/procedural-small'
-   TERRAIN_DIR_LARGE = 'resource/maps/procedural-large'
+   ENV_VERSION          = '1.5'
+   '''Environment version'''
 
-   ASSETS_DIR        = 'resource/assets'
+   EVALUATE             = False
+   '''Run in evaluation mode (test/render)'''
 
-   LOGO_FILE         = 'fonts/ascii.txt'
-   LOGO_DIR          =  os.path.join(ASSETS_DIR, LOGO_FILE)
+   v                    = False
+   '''Verbose mode'''
 
-   #Terrain parameters
-   TERRAIN_DIR       = TERRAIN_DIR_LARGE
-   '''Directory in which generated maps are saved'''
 
-   TERRAIN_RENDER    = False
+   ############################################################################
+   ### Path Parameters
+   PATH_ROOT            = os.getcwd()
+   '''Global repository directory'''
+
+   PATH_RESOURCE        = os.path.join(PATH_ROOT, 'resource')
+   '''Resource directory'''
+
+
+   #Maps
+   PATH_MAPS            = os.path.join(PATH_RESOURCE, 'maps')
+   '''Generated map directory'''
+
+   PATH_MAP_SUFFIX      = 'map.npy'
+   '''Map file name'''
+
+   PATH_MAPS_SMALL      = os.path.join(PATH_MAPS, 'procedural-small')
+   '''Generated map directory for SmallMap config'''
+
+   PATH_MAPS_LARGE      = os.path.join(PATH_MAPS, 'procedural-large')
+   '''Generated map directory for LargeMap config'''
+
+
+   #Assets
+   PATH_ASSETS          = os.path.join(PATH_RESOURCE, 'assets')
+   '''Asset directory'''
+
+   PATH_FONTS           = os.path.join(PATH_ASSETS, 'fonts')
+   '''Font directory'''
+
+   PATH_LOGO            = os.path.join(PATH_FONTS, 'ascii.txt')
+   '''Logo file (Ascii art)'''
+
+
+   #Logs
+   PATH_LOGS            = 'experiment'
+   '''Training and evaluation log directory'''
+
+   PATH_EVAL_DATA       = os.path.join(PATH_LOGS, 'evaluation.npy')
+   '''Evaluation data file'''
+
+   PATH_EVAL_FIGURE     = os.path.join(PATH_LOGS, 'evaluation.html')
+   '''Evaluation figure file'''
+
+   #Themes
+   PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 
+   '''Theme directory'''
+
+   PATH_THEME_JSON      = os.path.join(PATH_THEMES,  'theme_temp.json')
+   '''Theme JSON file'''
+
+   PATH_THEME_WEB       = os.path.join(PATH_THEMES, 'index_web.html')
+   '''Web theme file'''
+
+   PATH_THEME_PUB       = os.path.join(PATH_THEMES, 'index_publication.html')
+   '''Publication theme file'''
+
+
+   ############################################################################
+   ### Visualization Parameters
+   VIS_THEME            = 'web'
+   '''Visualizer theme: web or publication'''
+
+   VIS_WIDTH            = 1920
+   '''Visualizer figure width (pixels)'''
+
+   VIS_HEIGHT           = 270
+   '''Visualizer per-plot height (pixels)'''
+
+   VIS_COLUMNS          = 4
+   '''Visualizer plot columns'''
+
+   VIS_PORT             = 5006
+   '''Visualizer local Bokeh server port'''
+
+   VIS_TOOLS            = False
+   '''Visualizer display plot tools'''
+
+   VIS_INTERACTIVE      = False
+   '''Visualizer enable interactive mode'''
+
+
+   ############################################################################
+   ### Terrain Generation Parameters
+   TERRAIN_RENDER       = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 
-   TERRAIN_SIZE      = 1024
+   TERRAIN_SIZE         = 1024
    '''Size of each map (number of tiles along each side)'''
 
-   TERRAIN_BORDER    = 10
+   TERRAIN_BORDER       = 10
    '''Number of lava border tiles surrounding each side of the map'''
 
-   TERRAIN_FREQUENCY = (-3, -6)
+   TERRAIN_FREQUENCY    = (-3, -6)
    '''Simplex noise frequence range (log2 space)'''
 
-   TERRAIN_OCTAVES   = 8
+   TERRAIN_OCTAVES      = 8
    '''Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range'''
 
-   TERRAIN_MODE      = 'expand'
-   '''expand or contract. Specify normal generation (lower frequency at map center) or inverted generation (lower frequency at map edges)'''
+   TERRAIN_MODE         = 'expand'
+   '''expand or contract.
 
-   TERRAIN_LERP      = True 
+   Specify normal generation (lower frequency at map center) or
+   inverted generation (lower frequency at map edges)'''
+
+   TERRAIN_LERP         = True 
+   '''Whether to apply a linear blend between terrain octaves'''
 
    TERRAIN_ALPHA        = 0.15
+   '''Blend factor for FOREST_LOW (water adjacent)'''
+
    TERRAIN_BETA         = 0.025
+   '''Blend factor for FOREST_HIGH (stone adjacent)'''
+
    TERRAIN_LAVA         = 0.0
+   '''Noise threshold for lava generation'''
+
    TERRAIN_WATER        = 0.25
+   '''Noise threshold for water generation'''
+
    TERRAIN_FOREST_LOW   = 0.35
+   '''Noise threshold for forest (water adjacent)'''
+
    TERRAIN_GRASS        = 0.75
+   '''Noise threshold for grass'''
+
    TERRAIN_FOREST_HIGH  = 0.775
+   '''Noise threshold for forest (stone adjacent)'''
 
    TERRAIN_WATER_RADIUS  = 3.5
+   '''Central water radius'''
+
    TERRAIN_CENTER_REGION = 19 #Keep this number odd for large maps
+   '''Central water square cutout'''
+
    TERRAIN_CENTER_WIDTH  = 3
+   '''Central square grass border'''
 
-   #Map load parameters
-   ROOT   = os.path.join(os.getcwd(), TERRAIN_DIR, 'map')
-   '''Terrain map load directory'''
 
-   SUFFIX = '/map.npy'
-   '''Terrain map file suffix'''
+   ############################################################################
+   ### Tile Parameters
+   FOREST_CAPACITY      = 1
+   '''Maximum number of harvests before a forest tile decays'''
 
+   FOREST_RESPAWN       = 0.025
+   '''Probability that a harvested forest tile will regenerate each tick'''
+
+   OREROCK_CAPACITY     = 1
+   '''Maximum number of harvests before an orerock tile decays'''
+
+   OREROCK_RESPAWN      = 0.05
+   '''Probability that a harvested orerock tile will regenerate each tick'''
+ 
    NTILE  = 6
-   '''Number of distinct tile types'''
-
-   #Agent name
-   NAME_PREFIX             = 'Neural_'
-   '''Prefix used in agent names displayed by the client'''
+   '''Number of distinct terrain tile types'''
 
 
-   # Observation tile crop size
-   STIM                    = 7
-   '''Number of tiles an agent can see in any direction'''
-
-
-   # Population parameters
+   ############################################################################
+   ### Population Parameters                                                   
    NENT                    = 256
    '''Maximum number of agents spawnable in the environment'''
 
    NMOB                    = 1024
    '''Maximum number of NPCs spawnable in the environment'''
 
-   NPOP                    = 8
+   NPOP                    = 1
    '''Number of distinct populations spawnable in the environment'''
 
-
-   # Skill parameters
-   RESOURCE                = 10
-   '''Initial level and capacity for Hunting + Fishing resource skills'''
-
-   HEALTH                  = 10
-   '''Initial Constitution level and agent health'''
-
-   HEALTH_REGEN_THRESHOLD  = 0.5
-   '''Fraction of maximum resource capacity required to regen health'''
-
-   RESOURCE_RESTORE        = 0.5
-   '''Fraction of maximum capacity restored upon collecting a resource'''
-
-   HEALTH_RESTORE          = 0.1
-   '''Fraction of health restored per tick when above half food+water'''
+   NMAPS                   = 256 #Number of maps to generate
 
 
-   # Experience parameters
+   ############################################################################
+   ### Agent Parameters
+   NAME_PREFIX             = 'Neural_'
+   '''Prefix used in agent names displayed by the client'''
+
+   STIM                    = 7
+   '''Number of tiles an agent can see in any direction'''
+
+
+   ############################################################################
+   ### Experience Parameters                                                   
    XP_SCALE                = 10
    '''Skill level progression speed as a multiplier of typical MMOs'''
 
@@ -160,39 +263,32 @@ class Config(Template):
    '''Multiplier on top of XP_SCALE for Combat skills'''
 
 
-   # Combat parameters
-   IMMUNE                  = 0
-   '''Number of ticks an agent cannot be damaged after spawning'''
+   ############################################################################
+   ### Skill Parameters                                                   
+   RESOURCE                = 10
+   '''Initial level and capacity for Hunting + Fishing resource skills'''
 
-   WILDERNESS              = True
-   '''Whether to bracket combat into wilderness levels'''
+   HEALTH                  = 10
+   '''Initial Constitution level and agent health'''
 
-   INVERT_WILDERNESS       = False
-   '''Whether to reverse wilderness level generation'''
+   HEALTH_REGEN_THRESHOLD  = 0.5
+   '''Fraction of maximum resource capacity required to regen health'''
 
-   WILDERNESS_MIN          = -1
-   WILDERNESS_MAX          = 99
+   RESOURCE_RESTORE        = 1.0 #Modified from .5... Small maps?
+   '''Fraction of maximum capacity restored upon collecting a resource'''
 
-   #Fix this to be for small maps in systems skill
-   RESOURCE_GRACE_PERIOD   = -1 
-
-   PLAYER_SPAWN_ATTEMPTS   = 5
-   NPC_SPAWN_ATTEMPTS      = 25
-
-   NPC_SPAWN_AGGRESSIVE    = 0.75
-   NPC_SPAWN_NEUTRAL       = 0.40
-   NPC_SPAWN_PASSIVE       = 0.02
-   
-   NPC_LEVEL_MIN           = 1
-   NPC_LEVEL_MAX           = 99
-   NPC_LEVEL_SPREAD        = 10 
-
+   HEALTH_RESTORE          = 0.1
+   '''Fraction of health restored per tick when above half food+water'''
 
    DEFENSE_WEIGHT          = 0.3 
    '''Fraction of defense that comes from the Defense skill'''   
 
    DICE_SIDES              = 20
-   '''Number of sides for combat dice -- higher means weaker attacks can hit stronger opponents'''
+   '''Number of sides for combat dice
+
+   Attacks can only hit opponents up to the attacker's level plus
+   DICE_SIDES/2. Increasing this value makes attacks more accurate
+   and allows lower level attackers to hit stronger opponents'''
 
    MELEE_RANGE             = 1
    '''Range of attacks using the Melee skill'''
@@ -205,6 +301,63 @@ class Config(Template):
 
    FREEZE_TIME             = 3
    '''Number of ticks successful Mage attacks freeze a target'''
+
+
+   ############################################################################
+   ### Spawn Protection Parameters                                             
+   IMMUNE_ADD              = 10
+   '''Minimum number of ticks an agent cannot be damaged after spawning'''
+
+   IMMUNE_MUL              = 0.05
+   '''Additional number of immunity ticks per population size'''
+
+   IMMUNE_MAX              = 50
+   '''Maximum number of immunity ticks'''
+
+   WILDERNESS              = True
+   '''Whether to bracket terrain into combat level ranges'''
+
+   INVERT_WILDERNESS       = False
+   '''Whether to invert wilderness level generation'''
+
+   WILDERNESS_MIN          = -1
+   '''Minimum wilderness level. -1 corresponds to a safe zone'''
+
+   WILDERNESS_MAX          = 99
+   '''Maximum wilderness level. 99 corresponds to unrestricted combat'''
+
+
+   ############################################################################
+   ### Spawn Parameters                                                   
+   PLAYER_SPAWN_ATTEMPTS   = 3
+   '''Number of player spawn attempts per tick
+
+   Note that the env will attempt to spawn agents until success
+   if the current population size is zero.'''
+
+   NPC_SPAWN_ATTEMPTS      = 25
+   '''Number of NPC spawn attempts per tick'''
+
+   SPAWN_CENTER            = True
+   '''Whether to spawn agents from the map center or edges'''
+
+   NPC_SPAWN_AGGRESSIVE    = 0.75
+   '''Percentage distance threshold from spawn for aggressive NPCs'''
+
+   NPC_SPAWN_NEUTRAL       = 0.40
+   '''Percentage distance threshold from spawn for neutral NPCs'''
+
+   NPC_SPAWN_PASSIVE       = 0.02
+   '''Percentage distance threshold from spawn for passive NPCs'''
+   
+   NPC_LEVEL_MIN           = 1
+   '''Minimum NPC level'''
+
+   NPC_LEVEL_MAX           = 99
+   '''Maximum NPC level'''
+
+   NPC_LEVEL_SPREAD        = 10 
+   '''Level range for NPC spawns'''
 
    @property
    def WINDOW(self):

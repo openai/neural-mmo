@@ -9,23 +9,29 @@ def camel(string):
 
 class Tile:
    SERIAL = 1
-   def __init__(self, realm, config, mat, r, c, tex):
-      self.realm = realm
-      self.mat   = mat()
-      self.ents  = {}
-
-      self.state    = mat()
-      self.capacity = self.mat.capacity
-      self.tex      = tex
+   def __init__(self, realm, config, r, c):
+      self.config = config
+      self.realm  = realm
 
       self.serialized = 'R' + str(r) + '-C' + str(c)
 
       self.r     = Static.Tile.R(realm.dataframe, self.serial, r)
       self.c     = Static.Tile.C(realm.dataframe, self.serial, c)
       self.nEnts = Static.Tile.NEnts(realm.dataframe, self.serial)
-      self.index = Static.Tile.Index(realm.dataframe, self.serial, self.state.index)
+      self.index = Static.Tile.Index(realm.dataframe, self.serial, 0)
 
       realm.dataframe.init(Static.Tile, self.serial, (r, c))
+
+   def reset(self, mat, config):
+      self.state  = mat(config)
+      self.mat    = mat(config)
+
+      self.capacity = self.mat.capacity
+      self.tex      = mat.tex
+      self.ents     = {}
+
+      self.nEnts.update(0)
+      self.index.update(self.state.index)
  
    @property
    def repr(self):
@@ -64,7 +70,7 @@ class Tile:
 
    def step(self):
       if (not self.static and 
-            np.random.rand() < self.mat.respawnProb):
+            np.random.rand() < self.mat.respawn):
          self.capacity += 1
 
       #Try inserting a pass
@@ -81,7 +87,7 @@ class Tile:
       if self.capacity == 0:
          return False
       elif self.capacity <= 1:
-         self.state = self.mat.degen()
+         self.state = self.mat.degen(self.config)
          self.index.update(self.state.index)
       self.capacity -= 1
       return True

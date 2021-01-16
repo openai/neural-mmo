@@ -35,8 +35,7 @@ class Base:
       log = InkWell()
       log.update(self.env.terminal())
 
-      fpath = os.path.join(self.config.LOG_DIR, self.config.LOG_FILE)
-      np.save(fpath, log.packet)
+      np.save(config.PATH_EVAL_DATA, log.packet)
 
    def tick(self, actions, preprocessActions=True):
       '''Compute actions and overlays for a single timestep
@@ -64,8 +63,8 @@ class Evaluator(Base):
          agent.skills.style = Action.Range
          actions[agentID]   = self.policy(realm, agent)
 
-         self.registry.step(self.obs, pos, cmd, update=
-               'counts wilderness'.split())
+      self.registry.step(self.obs, pos, cmd,
+            update='counts wilderness skills'.split())
 
       super().tick(actions, preprocessActions=False)
  

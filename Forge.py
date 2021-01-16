@@ -79,8 +79,9 @@ def loadTrainer(config):
          'config': config
       },
       'multiagent': {
-         "policies": policies,
-         "policy_mapping_fn": mapPolicy
+         'policies': policies,
+         'policy_mapping_fn': mapPolicy,
+         'count_steps_by': 'agent_steps'
       },
       'model': {
          'custom_model': 'godsword',
@@ -113,7 +114,7 @@ class Anvil():
          config = kwargs.pop('config')
          config = getattr(projekt.config, config)()
       else:
-         config = projekt.config.Config()
+         config = projekt.config.LargeMaps()
       config.override(**kwargs)
       self.config = config
 

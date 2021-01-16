@@ -139,6 +139,7 @@ class Entity:
       self.attacker     = None
       self.target       = None
       self.closest      = None
+      self.spawnPos     = pos
 
       #Submodules
       self.base      = Base(self, pos, iden, name, color, pop)
@@ -161,6 +162,7 @@ class Entity:
       '''Update occurs after actions, e.g. does not include history'''
       self.base.update(realm, self, actions)
       self.status.update(realm, self, actions)
+      self.attacker = None #This requires sequential decisions
 
       if not self.alive:
          return False

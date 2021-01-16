@@ -34,6 +34,7 @@ from forge.ethyr.torch.policy import baseline
 
 from forge.trinity import Env
 from forge.trinity import evaluator 
+from forge.trinity import visualize
 from forge.trinity.dataframe import DataType
 from forge.trinity.overlay import OverlayRegistry
 
@@ -70,7 +71,7 @@ def observationSpace(config):
             nContinuous += 1
 
       obs[entity.__name__]['Continuous'] = gym.spaces.Box(
-            low=-2**16, high=2**16, shape=(nRows, nContinuous),
+            low=-2**20, high=2**20, shape=(nRows, nContinuous),
             dtype=DataType.CONTINUOUS)
 
       obs[entity.__name__]['Discrete']   = gym.spaces.Box(
@@ -118,7 +119,7 @@ class RLLibEvaluator(evaluator.Base):
       actions, self.state, _ = self.trainer.compute_actions(
             self.obs, state=self.state, policy_id='policy_0')
       self.registry.step(self.obs, pos, cmd,
-            update='counts values attention wilderness'.split())
+            update='counts skills values attention wilderness'.split())
 
       #Step environment
       super().tick(actions)
@@ -235,28 +236,20 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
    def train(self):
       '''Train forever, printing per epoch'''
-      logo   = open(self.envConfig.LOGO_DIR).read().splitlines()
-      epoch  = 0
+      logo   = open(self.envConfig.PATH_LOGO).read().splitlines()
+      epoch  = -1
 
       total_sample_time = 0
       total_learn_time = 0
 
-      sep     = u'\u2595\u258f'
-      block   = u'\u2591'
-      top     = u'\u2581'
-      bot     = u'\u2594'
-      left    = u'\u258f'
-      right   = u'\u2595'
-
-      summary = left + 'Neural MMO v1.5{}Epochs: {}{}Samples: {}{}Sample Time: {:.1f}s{}Learn Time: {:.1f}s' + right
+      summary = 'Neural MMO v1.5{}Epochs: {}{}Samples: {}{}Sample Time: {:.1f}s{}Learn Time: {:.1f}s'
       blocks  = []
 
       while True:
           stats = super().train()
           self.save()
 
-          lines = logo.copy()
-
+          lines  = logo.copy()
           nSteps = stats['info']['num_steps_trained']
 
           timers             = stats['timers']
@@ -268,50 +261,32 @@ class SanePPOTrainer(ppo.PPOTrainer):
           total_sample_time += sample_time
           total_learn_time  += learn_time
 
-          line = (left + 'Epoch: {}{}Sample: {:.1f}/s ({:.1f}s){}Train: {:.1f}/s ({:.1f}s)' + right).format(
-               epoch, sep, sample_throughput, sample_time, sep, learn_throughput, learn_time)
+          sample_stat = '{:.1f}/s ({:.1f}s)'.format(sample_throughput, sample_time)
+          learn_stat  = '{:.1f}/s ({:.1f}s)'.format(learn_throughput, learn_time)
 
           epoch += 1
-            
-          block = []
-          for key, stat in stats['hist_stats'].items():
-             if key.startswith('_') and len(stat) > 0:
-                stat       = stat[-self.envConfig.TRAIN_BATCH_SIZE:]
-                mmin, mmax = np.min(stat),  np.max(stat)
-                mean, std  = np.mean(stat), np.std(stat)
+          header = visualize.box([visualize.formatLine(
+                keys   = 'Epoch Sample Train'.split(),
+                vals   = [epoch, sample_stat, learn_stat],
+                valFmt = '{}')])
 
-                block.append(('   ' + left + '{:<12}{}Min: {:8.1f}{}Max: {:8.1f}{}Mean: {:8.1f}{}Std: {:8.1f}').format(
-                      key.lstrip('_'), sep, mmin, sep, mmax, sep, mean, sep, std))
-
-             if not self.envConfig.v: 
-                continue
-
-             if len(stat) == 0:
-                continue
-
-             lines.append('{}:: Total: {:.4f}, N: {:.4f}, Mean: {:.4f}, Std: {:.4f}'.format(
-                   key, np.sum(stat), len(stat), np.mean(stat), np.std(stat)))
+          block = visualize.formatBlock(stats['hist_stats'], self.envConfig)
 
           if len(block) > 0:
-             mmax = max(len(l) for l in block) + 1
-             for idx, l in enumerate(block):
-                block[idx] = ('{:<'+str(mmax)+'}').format(l + right)
-
-             blocks.append([top*len(line), line, bot*len(line), '   ' +
-                   top*(mmax-3)] + block + ['   ' + bot*(mmax-3)])
- 
-         
+             blocks.append(header + block)
+             
           if len(blocks) > 3:
              blocks = blocks[1:]
           
           for block in blocks:
              for line in block:
-                lines.append(' ' + line)
+                lines.append(line)
 
-          line = summary.format(sep, epoch, sep, nSteps, sep, total_sample_time, sep, total_learn_time)
-          lines.append(' ' + top*len(line))
-          lines.append(' ' + line)
-          lines.append(' ' + bot*len(line))
+          lines += visualize.box([visualize.formatLine(
+                title  = 'Neural MMO v1.5',
+                keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
+                vals   = [epoch, nSteps/1000, total_sample_time, total_learn_time],
+                valFmt = '{:.1f}')])
 
           #Cross-platform clear screen
           os.system('cls' if os.name == 'nt' else 'clear')

@@ -31,7 +31,8 @@ class Save:
       """"Saved a map into into a tiled compatiable file given a save_path, width
        and height of the map, and 2D numpy array specifiying enums for the array"""
       mkdir(path)
-      np.save(path + '/map.npy', mats.astype(np.int))
+      path = os.path.join(path, 'map.npy')
+      np.save(path, mats.astype(np.int))
 
 class Terrain:
    pass
@@ -74,11 +75,11 @@ class MapGenerator:
       print('Generating {} game maps. This may take a moment'.format(self.config.NMAPS))
       for seed in tqdm(range(self.config.NMAPS)):
          if self.config.__class__.__name__ == 'SmallMap':
-            prefix = self.config.TERRAIN_DIR_SMALL
+            prefix = self.config.PATH_TERRAIN_SMALL
          elif self.config.__class__.__name__ == 'LargeMap':
-            prefix = self.config.TERRAIN_DIR_LARGE
+            prefix = self.config.PATH_TERRAIN_LARGE
          else:
-            prefix = self.config.TERRAIN_DIR
+            prefix = self.config.PATH_TERRAIN
 
 
          path = prefix + '/map' + str(seed)

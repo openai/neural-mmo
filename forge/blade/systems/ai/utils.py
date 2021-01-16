@@ -155,7 +155,7 @@ def forageBFS(tiles, entity, cutoff=100):
             continue
 
          food, water = reward[cur]
-         food = max(0, food - 1)
+         food  = max(0, food - 1)
          water = max(0, water - 1)
 
          if tiles[nxt].state.tex == 'forest':
@@ -183,6 +183,16 @@ def l1(start, goal):
    gr, gc = goal
    return abs(gr - sr) + abs(gc - sc)
 
+def l2(start, goal):
+   sr, sc = start
+   gr, gc = goal
+   return 0.5*((gr - sr)**2 + (gc - sc)**2)**0.5
+
+#TODO: unify lInfty and lInf
+def lInfty(start, goal):
+   sr, sc = start
+   gr, gc = goal
+   return max(abs(gr - sr), abs(gc - sc))
 
 def aStar(tiles, start, goal, cutoff=100):
    if start == goal:
@@ -220,7 +230,7 @@ def aStar(tiles, start, goal, cutoff=100):
          newCost = cost[cur] + 1
          if nxt not in cost or newCost < cost[nxt]:
             cost[nxt] = newCost
-            heuristic = l1(goal, nxt)
+            heuristic = lInfty(goal, nxt)
             priority = newCost + heuristic
 
             # Compute approximate solution

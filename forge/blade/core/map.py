@@ -7,22 +7,13 @@ from forge.blade.lib import enums, utils
 import os
 import time
 
-def loadTiled(tiles, fPath, materials):
+def loadTiled(tiles, fPath, materials, config):
     idxMap = np.load(fPath)
     for r, row in enumerate(idxMap):
        for c, idx in enumerate(row):
           mat  = materials[idx]
           tile = tiles[r, c]
-
-          tile.mat      = mat()
-          tile.ents     = {}
-
-          tile.state    = mat()
-          tile.capacity = tile.mat.capacity
-          tile.tex      = mat.tex
-
-          tile.nEnts.update(0)
-          tile.index.update(tile.state.index)
+          tile.reset(mat, config)
 
 class Map:
    def __init__(self, realm, config):
@@ -33,13 +24,14 @@ class Map:
       self.tiles = np.zeros(self.shape, dtype=object)
       for r in range(sz):
          for c in range(sz):
-            self.tiles[r, c] = core.Tile(realm, config, enums.Grass, r, c, 'grass')
+            self.tiles[r, c] = core.Tile(realm, config, r, c)
 
    def reset(self, realm, idx):
       materials = dict((mat.value.index, mat.value) for mat in enums.Material)
-      fName     = self.config.ROOT + str(idx) + self.config.SUFFIX
+      fName     = os.path.join(self.config.PATH_ROOT+str(idx),
+            self.config.PATH_MAP_SUFFIX)
 
-      loadTiled(self.tiles, fName, materials)
+      loadTiled(self.tiles, fName, materials, self.config)
       self.updateList = set()
  
    def harvest(self, r, c):

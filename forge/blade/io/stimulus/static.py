@@ -96,8 +96,8 @@ class Stimulus(Config):
 
       class Immune(node.Continuous):
          def init(self, config):
-            self.val = config.IMMUNE
-            self.max = config.IMMUNE
+            self.val = 0
+            self.max = config.IMMUNE_MAX
             self.scale = 0.1
 
       class Wilderness(node.Continuous):

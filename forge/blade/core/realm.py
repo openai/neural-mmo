@@ -188,7 +188,7 @@ class Realm:
               'npc': self.npcs.packet()}
 
    @property
-   def nEntities(self):
+   def population(self):
       return len(self.players.entities)
 
    def entity(self, entID):

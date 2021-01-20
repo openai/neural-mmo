@@ -84,7 +84,7 @@ class Config(Template):
    PATH_MAPS            = os.path.join(PATH_RESOURCE, 'maps')
    '''Generated map directory'''
 
-   PATH_MAP_SUFFIX      = 'map.npy'
+   PATH_MAP_SUFFIX      = 'map{}/map.npy'
    '''Map file name'''
 
    PATH_MAPS_SMALL      = os.path.join(PATH_MAPS, 'procedural-small')
@@ -134,13 +134,19 @@ class Config(Template):
    VIS_WIDTH            = 1920
    '''Visualizer figure width (pixels)'''
 
-   VIS_HEIGHT           = 270
+   VIS_HEIGHT           = 314
    '''Visualizer per-plot height (pixels)'''
 
-   VIS_LEGEND_WIDTH      = 109
+   VIS_BORDER_WIDTH     = 20
+   '''Horizontal padding per figure side (pixels)'''
+
+   VIS_BORDER_HEIGHT    = 60
+   '''Vertical padding per figure side (pixels)'''
+
+   VIS_LEGEND_WIDTH     = 109
    '''Width of legend label before offset'''
    
-   VIS_LEGEND_OFFSET     = 71 
+   VIS_LEGEND_OFFSET    = 71 
    '''Width of legend label offset'''
 
    VIS_TITLE_OFFSET     = 60

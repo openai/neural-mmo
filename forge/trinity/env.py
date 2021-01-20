@@ -160,6 +160,9 @@ class Env:
    def log(self, ent):
       quill = self.quill
 
+      blob = quill.register('Population', self.realm.tick, quill.HISTOGRAM, quill.LINE, quill.SCATTER)
+      blob.log(self.realm.population)
+
       blob = quill.register('Lifetime', self.realm.tick, quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
       blob.log(ent.history.timeAlive.val)
 
@@ -180,7 +183,7 @@ class Env:
       blob.log(ent.loadout.chestplate.level, 'Chestplate')
       blob.log(ent.loadout.platelegs.level,  'Platelegs')
 
-      quill.stat('Population', len(self.realm.players.entities))
+      quill.stat('Population', self.realm.population)
       quill.stat('Lifetime',  ent.history.timeAlive.val)
       quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
       quill.stat('Combat',    combat.level(ent.skills))

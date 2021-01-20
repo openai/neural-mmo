@@ -35,7 +35,6 @@ from forge.ethyr.torch.policy import baseline
 
 from forge.trinity import Env
 from forge.trinity import evaluator 
-from forge.trinity import visualize
 from forge.trinity import formatting
 from forge.trinity.dataframe import DataType
 from forge.trinity.overlay import OverlayRegistry
@@ -268,7 +267,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
           nSteps             = stats['info']['num_steps_trained']
           total_sample_time += sample_time
           total_learn_time  += learn_time
-          summary = visualize.box([visualize.formatLine(
+          summary = formatting.box([formatting.line(
                 title  = 'Neural MMO v1.5',
                 keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
                 vals   = [epoch, nSteps/1000, total_sample_time, total_learn_time],
@@ -277,7 +276,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
           #Block Title
           sample_stat = '{:.1f}/s ({:.1f}s)'.format(sample_throughput, sample_time)
           learn_stat  = '{:.1f}/s ({:.1f}s)'.format(learn_throughput, learn_time)
-          header = visualize.box([visualize.formatLine(
+          header = formatting.box([formatting.line(
                 keys   = 'Epoch Sample Train'.split(),
                 vals   = [epoch, sample_stat, learn_stat],
                 valFmt = '{}')])

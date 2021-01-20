@@ -74,12 +74,12 @@ class MapGenerator:
    def generate(self):
       print('Generating {} game maps. This may take a moment'.format(self.config.NMAPS))
       for seed in tqdm(range(self.config.NMAPS)):
-         if self.config.__class__.__name__ == 'SmallMap':
-            prefix = self.config.PATH_TERRAIN_SMALL
-         elif self.config.__class__.__name__ == 'LargeMap':
-            prefix = self.config.PATH_TERRAIN_LARGE
+         if self.config.__class__.__name__ == 'SmallMaps':
+            prefix = self.config.PATH_MAPS_SMALL
+         elif self.config.__class__.__name__ == 'LargeMaps':
+            prefix = self.config.PATH_MAPS_LARGE
          else:
-            prefix = self.config.PATH_TERRAIN
+            prefix = self.config.PATH_MAPS
 
 
          path = prefix + '/map' + str(seed)

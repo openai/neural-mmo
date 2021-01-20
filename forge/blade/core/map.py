@@ -28,8 +28,8 @@ class Map:
 
    def reset(self, realm, idx):
       materials = dict((mat.value.index, mat.value) for mat in enums.Material)
-      fName     = os.path.join(self.config.PATH_ROOT+str(idx),
-            self.config.PATH_MAP_SUFFIX)
+      fName     = os.path.join(self.config.PATH_MAPS,
+            self.config.PATH_MAP_SUFFIX.format(idx))
 
       loadTiled(self.tiles, fName, materials, self.config)
       self.updateList = set()

@@ -48,6 +48,8 @@ class LargeMaps(Base):
 
    MODEL                   = 'large-map'
 
+   PATH_MAPS               = core.Config.PATH_MAPS_LARGE
+
    TRAIN_HORIZON           = 5000
    EVALUATION_HORIZON      = 10000
 

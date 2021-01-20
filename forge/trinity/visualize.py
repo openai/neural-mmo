@@ -79,13 +79,17 @@ class BokehServer:
          fig.add_layout(titleObj, 'left')
          row.append(fig)
 
+         colors = self.colors
+         if config.VIS_THEME == 'publication' and len(blob)==1:
+            colors = [bokeh.colors.RGB(0, 0, 0)]
+ 
          for idx, p in enumerate(plots):
-            fig, legend = self.plot(key, blob, p, idx, n)
+            fig, legend = self.plot(key, blob, p, colors, idx, n)
             row.append(fig)
          
          fig, legend = plot.blank(
                config.VIS_LEGEND_WIDTH + config.VIS_LEGEND_OFFSET,
-               config.VIS_HEIGHT, blob, key, self.colors)
+               config.VIS_HEIGHT, blob, key, colors)
          
          fig.outline_line_width = 0
          items  = list(legend.items())
@@ -96,9 +100,10 @@ class BokehServer:
          row.append(fig)
 
          layout.append(row)
+
       doc.add_root(bokeh.layouts.layout(layout))
 
-   def plot(self, ylabel, blob, plot, idx, n):
+   def plot(self, ylabel, blob, plot, colors, idx, n):
       config = self.config
       Plot   = Quill.plot(plot)
       title  = Plot.__name__
@@ -108,8 +113,8 @@ class BokehServer:
          ("(x,y)", "($x, $y)"),
       ]
 
-      width  = (config.VIS_WIDTH - config.VIS_LEGEND_WIDTH
-            - config.VIS_LEGEND_OFFSET - config.VIS_TITLE_OFFSET)  // n
+      width  = ((config.VIS_WIDTH - config.VIS_LEGEND_WIDTH
+            - config.VIS_LEGEND_OFFSET - config.VIS_TITLE_OFFSET)  // n)
       height = config.VIS_HEIGHT
 
       #Draw figure
@@ -129,19 +134,18 @@ class BokehServer:
          title_location='above',
          y_axis_label=ylabel,
          x_axis_location='below',
-         min_border_right=50,
-         min_border_left=50,
-         min_border_top=50,
-         min_border_bottom=50,
+         min_border_right=config.VIS_BORDER_WIDTH,
+         min_border_left=config.VIS_BORDER_WIDTH,
+         min_border_top=config.VIS_BORDER_HEIGHT,
+         min_border_bottom=config.VIS_BORDER_HEIGHT,
          )
 
       fig.axis.axis_label_text_font_style = 'bold'
       fig.toolbar.logo                    = None
       if not config.VIS_TOOLS:
          fig.toolbar_location = None
-
-      #Add glyphs
-      legend  = Plot(config, fig, ylabel, len(blob)).render(blob, self.colors)
+        
+      legend  = Plot(config, fig, ylabel, len(blob)).render(blob, colors)
 
       if config.VIS_THEME == 'web':
          fig.title.text = '{} vs. {}'.format(

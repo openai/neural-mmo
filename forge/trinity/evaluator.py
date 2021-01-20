@@ -35,7 +35,7 @@ class Base:
       log = InkWell()
       log.update(self.env.terminal())
 
-      np.save(config.PATH_EVAL_DATA, log.packet)
+      np.save(self.config.PATH_EVAL_DATA, log.packet)
 
    def tick(self, actions, preprocessActions=True):
       '''Compute actions and overlays for a single timestep

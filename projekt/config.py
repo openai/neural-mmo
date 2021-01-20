@@ -2,7 +2,7 @@ from pdb import set_trace as T
 from forge.blade import core
 import os
 
-class Config(core.Config):
+class Base(core.Config):
    '''Base config for RLlib Models
 
    Extends core Config, which contains environment, evaluation,
@@ -37,7 +37,7 @@ class Config(core.Config):
    SCRIPTED_DP             = False
 
 
-class LargeMaps(Config):
+class LargeMaps(Base):
    '''Large scale Neural MMO training setting
 
    Features up to 1000 concurrent agents and 1000 concurrent NPCs,
@@ -55,7 +55,7 @@ class LargeMaps(Config):
    NMOB                    = 1024
 
 
-class SmallMaps(Config):
+class SmallMaps(Base):
    '''Small scale Neural MMO training setting
 
    Features up to 128 concurrent agents and 32 concurrent NPCs,
@@ -107,7 +107,13 @@ class Debug(SmallMaps):
 
    A version of the SmallMap setting with greatly reduced batch parameters.
    Only intended as a tool for identifying bugs in the model or environment'''
+   MODEL                   = None
 
-   TRAIN_BATCH_SIZE        = 400
-   TRAIN_HORIZON           = 100
-   EVALUATION_HORIZON      = 500
+   TRAIN_BATCH_SIZE        = 128
+   TRAIN_HORIZON           = 20
+   EVALUATION_HORIZON      = 50
+
+   HIDDEN                  = 8
+   EMBED                   = 8
+
+

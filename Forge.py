@@ -1,20 +1,16 @@
 '''Main file for the neural-mmo/projekt demo
 
-/projeckt contains all necessary code to train and
-evaluate capable policies on Neural MMO using RLlib,
-as well as rendering, logging, and visualization tools.
+/projeckt contains all necessary RLlib wrappers to train and
+evaluate capable policies on Neural MMO as well as rendering,
+logging, and visualization tools.
 
 Associated docs and tutorials are hosted on jsuarez5341.github.io.'''
-
-#My favorite debugging macro
 from pdb import set_trace as T
 
 import numpy as np
 import torch
 
 from fire import Fire
-import sys
-import time
 
 import ray
 from ray import rllib

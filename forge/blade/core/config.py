@@ -119,9 +119,6 @@ class Config(Template):
    PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 
    '''Theme directory'''
 
-   PATH_THEME_JSON      = os.path.join(PATH_THEMES,  'theme_temp.json')
-   '''Theme JSON file'''
-
    PATH_THEME_WEB       = os.path.join(PATH_THEMES, 'index_web.html')
    '''Web theme file'''
 
@@ -140,6 +137,15 @@ class Config(Template):
    VIS_HEIGHT           = 270
    '''Visualizer per-plot height (pixels)'''
 
+   VIS_LEGEND_WIDTH      = 109
+   '''Width of legend label before offset'''
+   
+   VIS_LEGEND_OFFSET     = 71 
+   '''Width of legend label offset'''
+
+   VIS_TITLE_OFFSET     = 60
+   '''Width of left title offset'''
+
    VIS_COLUMNS          = 4
    '''Visualizer plot columns'''
 
@@ -148,10 +154,6 @@ class Config(Template):
 
    VIS_TOOLS            = False
    '''Visualizer display plot tools'''
-
-   VIS_INTERACTIVE      = False
-   '''Visualizer enable interactive mode'''
-
 
    ############################################################################
    ### Terrain Generation Parameters

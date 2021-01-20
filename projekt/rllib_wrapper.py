@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 
 from collections import defaultdict
+from itertools import chain
 import os
 
 from tqdm import tqdm
@@ -35,6 +36,7 @@ from forge.ethyr.torch.policy import baseline
 from forge.trinity import Env
 from forge.trinity import evaluator 
 from forge.trinity import visualize
+from forge.trinity import formatting
 from forge.trinity.dataframe import DataType
 from forge.trinity.overlay import OverlayRegistry
 
@@ -236,57 +238,69 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
    def train(self):
       '''Train forever, printing per epoch'''
-      logo   = open(self.envConfig.PATH_LOGO).read().splitlines()
-      epoch  = -1
+      config = self.envConfig
+
+      logo   = open(config.PATH_LOGO).read().splitlines()
 
       total_sample_time = 0
       total_learn_time = 0
 
-      summary = 'Neural MMO v1.5{}Epochs: {}{}Samples: {}{}Sample Time: {:.1f}s{}Learn Time: {:.1f}s'
+      epoch   = 0
       blocks  = []
 
       while True:
+          #Train model
           stats = super().train()
           self.save()
+          epoch += 1
 
-          lines  = logo.copy()
-          nSteps = stats['info']['num_steps_trained']
+          if epoch == 1:
+            continue
 
+          #Time Stats
           timers             = stats['timers']
           sample_time        = timers['sample_time_ms'] / 1000
           learn_time         = timers['learn_time_ms'] / 1000
           sample_throughput  = timers['sample_throughput']
           learn_throughput   = timers['learn_throughput']
 
+          #Summary
+          nSteps             = stats['info']['num_steps_trained']
           total_sample_time += sample_time
           total_learn_time  += learn_time
+          summary = visualize.box([visualize.formatLine(
+                title  = 'Neural MMO v1.5',
+                keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
+                vals   = [epoch, nSteps/1000, total_sample_time, total_learn_time],
+                valFmt = '{:.1f}')])
 
+          #Block Title
           sample_stat = '{:.1f}/s ({:.1f}s)'.format(sample_throughput, sample_time)
           learn_stat  = '{:.1f}/s ({:.1f}s)'.format(learn_throughput, learn_time)
-
-          epoch += 1
           header = visualize.box([visualize.formatLine(
                 keys   = 'Epoch Sample Train'.split(),
                 vals   = [epoch, sample_stat, learn_stat],
                 valFmt = '{}')])
 
-          block = visualize.formatBlock(stats['hist_stats'], self.envConfig)
+          #Format stats
+          hist    = stats['hist_stats']
+          timings = {k: v for k, v in hist.items() if not k.startswith('_')}
+          stats   = {k.lstrip('_'): v[-config.TRAIN_BATCH_SIZE:] for k, v in 
+               stats['hist_stats'].items() if k.startswith('_')}
 
-          if len(block) > 0:
-             blocks.append(header + block)
+          lines = formatting.stats(stats)
+          if config.v:
+             lines += formatting.timings(timings)
+
+          #Extend blocks
+          if len(lines) > 0:
+             blocks.append(header + formatting.box(lines, indent=4))
              
           if len(blocks) > 3:
              blocks = blocks[1:]
           
-          for block in blocks:
-             for line in block:
-                lines.append(line)
-
-          lines += visualize.box([visualize.formatLine(
-                title  = 'Neural MMO v1.5',
-                keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
-                vals   = [epoch, nSteps/1000, total_sample_time, total_learn_time],
-                valFmt = '{:.1f}')])
+          #Assemble Summary Bar Title
+          lines = logo.copy() + list(chain.from_iterable(blocks)) + summary
 
           #Cross-platform clear screen
           os.system('cls' if os.name == 'nt' else 'clear')

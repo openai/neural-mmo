@@ -43,7 +43,6 @@ class Base:
           pos: Camera position (r, c) from the server)
           cmd: Console command from the server
       '''
-      #Step the environment
       self.obs, rewards, self.done, _ = self.env.step(
             actions, omitDead=True, preprocessActions=preprocessActions)
 
@@ -54,7 +53,7 @@ class Evaluator(Base):
 
       self.env      = Env(config)
       self.obs      = self.env.reset()
-      self.registry = OverlayRegistry(self.env, None, None, config)
+      self.registry = OverlayRegistry(config, self.env).init()
 
    def tick(self, pos, cmd):
       realm, actions    = self.env.realm, {}
@@ -63,9 +62,5 @@ class Evaluator(Base):
          agent.skills.style = Action.Range
          actions[agentID]   = self.policy(realm, agent)
 
-      self.registry.step(self.obs, pos, cmd,
-            update='counts wilderness skills'.split())
-
+      self.registry.step(self.obs, pos, cmd)
       super().tick(actions, preprocessActions=False)
- 
-

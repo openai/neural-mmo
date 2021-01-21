@@ -213,15 +213,8 @@ class Realm:
       self.npcs     = NPCManager(self, self.config)
   
    def step(self, decisions):
-      self.players.spawn()
-      while len(self.players.entities) == 0:
-         self.players.spawn()
-
-      #NPC Spawning and decisions
-      self.npcs.spawn()
-      npcDecisions = self.npcs.actions(self)
-
       #Prioritize actions
+      npcDecisions = self.npcs.actions(self)
       merged       = defaultdict(list)
       prioritized(decisions, merged)
       prioritized(npcDecisions, merged)
@@ -241,6 +234,12 @@ class Realm:
       #Cull dead
       dead = self.players.cull()
       self.npcs.cull()
+
+      #Spawn Players and NPCs
+      self.npcs.spawn()
+      self.players.spawn()
+      while len(self.players.entities) == 0:
+         self.players.spawn()
 
       #Update map
       self.map.step()

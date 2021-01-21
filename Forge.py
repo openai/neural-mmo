@@ -18,17 +18,17 @@ from ray import rllib
 from forge.ethyr.torch import utils
 from forge.blade.systems import ai
 
-from forge.trinity.visualize import visualize
+from forge.trinity.visualize import BokehServer
 from forge.trinity.evaluator import Evaluator
 
 import projekt
-from projekt import rllib_wrapper
+from projekt import rllib_wrapper as wrapper
 from forge.blade.core import terrain
 
 #Generate RLlib policies
 def createPolicies(config, mapPolicy):
-   obs      = rllib_wrapper.observationSpace(config)
-   atns     = rllib_wrapper.actionSpace(config)
+   obs      = wrapper.observationSpace(config)
+   atns     = wrapper.actionSpace(config)
    policies = {}
 
    for i in range(config.NPOLICIES):
@@ -47,15 +47,15 @@ def loadTrainer(config):
 
    #Register custom env
    ray.tune.registry.register_env("Neural_MMO",
-         lambda config: rllib_wrapper.RLLibEnv(config))
+         lambda config: wrapper.RLlibEnv(config))
 
    #Create policies
-   rllib.models.ModelCatalog.register_custom_model('godsword', rllib_wrapper.Policy)
+   rllib.models.ModelCatalog.register_custom_model('godsword', wrapper.RLlibPolicy)
    mapPolicy = lambda agentID: 'policy_{}'.format(agentID % config.NPOLICIES)
    policies  = createPolicies(config, mapPolicy)
 
    #Instantiate monolithic RLlib Trainer object.
-   return rllib_wrapper.SanePPOTrainer(
+   return wrapper.SanePPOTrainer(
       env=config.ENV_NAME, path='experiment', config={
       'num_workers': config.NUM_WORKERS,
       'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
@@ -70,7 +70,7 @@ def loadTrainer(config):
       'soft_horizon': False, 
       '_use_trajectory_view_api': False,
       'no_done_at_end': False,
-      'callbacks': rllib_wrapper.LogCallbacks,
+      'callbacks': wrapper.RLlibLogCallbacks,
       'env_config': {
          'config': config
       },
@@ -99,7 +99,7 @@ def loadEvaluator(config):
       evaluator = Evaluator(config, ai.policy.baselineBFS)
    else:
       trainer   = loadModel(config)
-      evaluator = rllib_wrapper.RLLibEvaluator(config, trainer)
+      evaluator = wrapper.RLlibEvaluator(config, trainer)
 
    return evaluator
 
@@ -127,7 +127,7 @@ class Anvil():
       terrain.MapGenerator(self.config).generate()
 
    def visualize(self, **kwargs):
-      visualize(self.config)
+      BokehServer(self.config)
       
 if __name__ == '__main__':
    #Build config with CLI overrides

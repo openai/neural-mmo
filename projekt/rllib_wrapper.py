@@ -12,37 +12,25 @@ import gym
 import torch
 from torch import nn
 
-from typing import Dict
 from ray import rllib
 import ray.rllib.agents.ppo.ppo as ppo
-from ray.rllib.env import BaseEnv
-from ray.rllib.policy import Policy
-from ray.rllib.policy.sample_batch import SampleBatch
-from ray.rllib.evaluation import MultiAgentEpisode, RolloutWorker
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from ray.rllib.utils.spaces.flexdict import FlexDict
 from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
-from ray.rllib.policy.sample_batch import DEFAULT_POLICY_ID
-from ray.rllib.policy.rnn_sequencing import add_time_dimension
 
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action.static import Action
-from forge.blade.lib.log import InkWell
+from forge.blade.lib import overlay
 
-from forge.ethyr.torch import io
-from forge.ethyr.torch import policy
 from forge.ethyr.torch.policy import baseline
 
-from forge.trinity import Env
-from forge.trinity import evaluator 
-from forge.trinity import formatting
+from forge.trinity import Env, evaluator, formatting
 from forge.trinity.dataframe import DataType
-from forge.trinity.overlay import OverlayRegistry
+from forge.trinity.overlay import Overlay, OverlayRegistry
 
-import projekt
-
-#Moved log to forge/trinity/env
-class RLLibEnv(Env, rllib.MultiAgentEnv):
+###############################################################################
+### RLlib Env Wrapper
+class RLlibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
       super().__init__(self.config)
@@ -57,7 +45,6 @@ class RLLibEnv(Env, rllib.MultiAgentEnv):
 
       return obs, rewards, dones, infos
 
-#Neural MMO observation space
 def observationSpace(config):
    obs = FlexDict(defaultdict(FlexDict))
    for entity in sorted(Stimulus.values()):
@@ -85,7 +72,6 @@ def observationSpace(config):
 
    return obs
 
-#Neural MMO action space
 def actionSpace(config):
    atns = FlexDict(defaultdict(FlexDict))
    for atn in sorted(Action.edges):
@@ -94,38 +80,9 @@ def actionSpace(config):
          atns[atn][arg] = gym.spaces.Discrete(n)
    return atns
 
-class RLLibEvaluator(evaluator.Base):
-   '''Test-time evaluation with communication to
-   the Unity3D client. Makes use of batched GPU inference'''
-   def __init__(self, config, trainer):
-      super().__init__(config)
-      self.trainer  = trainer
-
-      self.model    = self.trainer.get_policy('policy_0').model
-      self.env      = projekt.rllib_wrapper.RLLibEnv({'config': config})
-
-      self.env.reset(idx=0, step=False)
-      self.registry = OverlayRegistry(self.env, self.model, trainer, config)
-      self.obs      = self.env.step({})[0]
-
-      self.state    = {} 
-
-   def tick(self, pos, cmd):
-      '''Compute actions and overlays for a single timestep
-      Args:
-          pos: Camera position (r, c) from the server)
-          cmd: Console command from the server
-      '''
-      #Compute batch of actions
-      actions, self.state, _ = self.trainer.compute_actions(
-            self.obs, state=self.state, policy_id='policy_0')
-      self.registry.step(self.obs, pos, cmd,
-            update='counts skills values attention wilderness'.split())
-
-      #Step environment
-      super().tick(actions)
-
-class Policy(RecurrentNetwork, nn.Module):
+################################################################################
+### RLlib Policy, Evaluator, and Trainer wrappers
+class RLlibPolicy(RecurrentNetwork, nn.Module):
    '''Wrapper class for using our baseline models with RLlib'''
    def __init__(self, *args, **kwargs):
       self.config = kwargs.pop('config')
@@ -164,38 +121,35 @@ class Policy(RecurrentNetwork, nn.Module):
    def attention(self):
       return self.model.attn
 
-class LogCallbacks(DefaultCallbacks):
-   STEP_KEYS    = 'env_step preprocess_actions realm_step env_stim'.split()
-   EPISODE_KEYS = ['env_reset']
+class RLlibEvaluator(evaluator.Base):
+   '''Test-time evaluation with communication to
+   the Unity3D client. Makes use of batched GPU inference'''
+   def __init__(self, config, trainer):
+      super().__init__(config)
+      self.trainer  = trainer
 
-   def init(self, episode):
-      for key in LogCallbacks.STEP_KEYS + LogCallbacks.EPISODE_KEYS:
-         episode.hist_data[key] = []
+      self.model    = self.trainer.get_policy('policy_0').model
+      self.env      = RLlibEnv({'config': config})
 
-   def on_episode_start(self, *, worker: RolloutWorker, base_env: BaseEnv,
-         policies: Dict[str, Policy],
-         episode: MultiAgentEpisode, **kwargs):
-      self.init(episode)
+      self.env.reset(idx=0, step=False)
+      self.registry = RLlibOverlayRegistry(
+            config, self.env).init(trainer, self.model)
+      self.obs      = self.env.step({})[0]
+      self.state    = {} 
 
-   def on_episode_step(self, *, worker: RolloutWorker, base_env: BaseEnv,
-         episode: MultiAgentEpisode, **kwargs):
+   def tick(self, pos, cmd):
+      '''Compute actions and overlays for a single timestep
+      Args:
+          pos: Camera position (r, c) from the server)
+          cmd: Console command from the server
+      '''
+      #Compute batch of actions
+      actions, self.state, _ = self.trainer.compute_actions(
+            self.obs, state=self.state, policy_id='policy_0')
+      self.registry.step(self.obs, pos, cmd)
 
-      env = base_env.envs[0]
-      for key in LogCallbacks.STEP_KEYS:
-         if not hasattr(env, key):
-            continue
-         episode.hist_data[key].append(getattr(env, key))
-
-   def on_episode_end(self, *, worker: RolloutWorker, base_env: BaseEnv,
-         policies: Dict[str, Policy], episode: MultiAgentEpisode, **kwargs):
-      env = base_env.envs[0]
-      for key in LogCallbacks.EPISODE_KEYS:
-         if not hasattr(env, key):
-            continue
-         episode.hist_data[key].append(getattr(env, key))
-
-      for key, val in env.terminal()['Stats'].items():
-         episode.hist_data['_'+key] = val
+      #Step environment
+      super().tick(actions)
 
 class SanePPOTrainer(ppo.PPOTrainer):
    '''Small utility class on top of RLlib's base trainer'''
@@ -305,3 +259,122 @@ class SanePPOTrainer(ppo.PPOTrainer):
           os.system('cls' if os.name == 'nt' else 'clear')
           for idx, line in enumerate(lines):
              print(line)
+
+################################################################################
+### RLlib Overlays
+class RLlibOverlay(Overlay):
+   def __init__(self, config, realm, trainer, model):
+      super().__init__(config, realm)
+      self.trainer = trainer
+      self.model   = model
+
+class RLlibOverlayRegistry(OverlayRegistry):
+   def __init__(self, config, realm):
+      super().__init__(config, realm)
+
+      self.overlays['values']       = Values
+      self.overlays['globalValues'] = GlobalValues
+      self.overlays['attention']    = Attention
+
+class Attention(RLlibOverlay):
+   def register(self, obs):
+      '''Computes local attentional maps with respect to each agent'''
+      attentions = defaultdict(list)
+      for idx, agentID in enumerate(obs):
+         ent   = self.realm.realm.players[agentID]
+         rad   = self.config.STIM
+         r, c  = ent.pos
+
+         tiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
+         for tile, a in zip(tiles, self.model.attention()[idx]):
+            attentions[tile].append(float(a))
+
+      data = np.zeros((self.R, self.C))
+      tiles = self.realm.realm.map.tiles
+      for r, tList in enumerate(tiles):
+         for c, tile in enumerate(tList):
+            if tile not in attentions:
+               continue
+            data[r, c] = np.mean(attentions[tile])
+
+      colorized = overlay.twoTone(data)
+      self.realm.registerOverlay(colorized)
+
+class Values(RLlibOverlay):
+   def update(self, obs):
+      '''Computes a local value function by painting tiles as agents
+      walk over them. This is fast and does not require additional
+      network forward passes'''
+      for idx, agentID in enumerate(obs):
+         r, c = self.realm.realm.players[agentID].base.pos
+         self.values[r, c] = float(self.model.value_function()[idx])
+
+   def register(self, obs):
+      colorized = overlay.twoTone(self.values[:, :])
+      self.realm.registerOverlay(colorized)
+
+class GlobalValues(RLlibOverlay):
+   def init(self):
+      '''Compute a global value function map. This requires ~6400 forward
+      passes and may take up to a minute. You can disable this computation
+      in the config file'''
+      if self.trainer is None:
+         return
+
+      print('Computing value map...')
+      values    = np.zeros(self.realm.size)
+      model     = self.trainer.get_policy('policy_0').model
+      obs, ents = self.realm.getValStim()
+
+      #Compute actions to populate model value function
+      BATCH_SIZE = 128
+      batch = {}
+      final = list(obs.keys())[-1]
+      for agentID in tqdm(obs):
+         batch[agentID] = obs[agentID]
+         if len(batch) == BATCH_SIZE or agentID == final:
+            self.trainer.compute_actions(batch, state={}, policy_id='policy_0')
+            for idx, agentID in enumerate(batch):
+               r, c = ents[agentID].base.pos
+               values[r, c] = float(self.model.value_function()[idx])
+            batch = {}
+
+      print('Value map computed')
+      self.colorized = overlay.twoTone(values)
+
+   def register(self, obs):
+      if not hasattr(self, 'colorized'):
+         print('Initializing Global Values. This requires one NN pass per tile')
+         self.init()
+
+      self.realm.registerOverlay(self.colorized)
+
+################################################################################
+### Performance and Debug Logging
+class RLlibLogCallbacks(DefaultCallbacks):
+   STEP_KEYS    = 'env_step preprocess_actions realm_step env_stim'.split()
+   EPISODE_KEYS = ['env_reset']
+
+   def init(self, episode):
+      for key in RLlibLogCallbacks.STEP_KEYS + RLlibLogCallbacks.EPISODE_KEYS:
+         episode.hist_data[key] = []
+
+   def on_episode_start(self, *, worker, base_env, policies, episode, **kwargs):
+      self.init(episode)
+
+   def on_episode_step(self, *, worker, base_env, episode, **kwargs):
+      env = base_env.envs[0]
+      for key in RLlibLogCallbacks.STEP_KEYS:
+         if not hasattr(env, key):
+            continue
+         episode.hist_data[key].append(getattr(env, key))
+
+   def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
+      env = base_env.envs[0]
+      for key in RLlibLogCallbacks.EPISODE_KEYS:
+         if not hasattr(env, key):
+            continue
+         episode.hist_data[key].append(getattr(env, key))
+
+      for key, val in env.terminal()['Stats'].items():
+         episode.hist_data['_'+key] = val

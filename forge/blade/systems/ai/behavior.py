@@ -72,10 +72,10 @@ def attack(realm, actions, entity):
          Action.Target: entity.target}
 
 def forageDP(realm, actions, entity):
-   direction = utils.forageDP(realm.map.tiles, entity)
-   actions[Action.Move]   = {Action.Direction: move.towards(direction)}
+   direction            = utils.forageDP(realm.map.tiles, entity)
+   actions[Action.Move] = {Action.Direction: move.towards(direction)}
 
-def forageBFS(realm, actions, entity):
-   direction = utils.forageBFS(realm.map.tiles, entity)
-   actions[Action.Move]   = {Action.Direction: move.towards(direction)}
+def forageDijkstra(realm, actions, entity):
+   direction            = utils.forageDijkstra(realm.map.tiles, entity)
+   actions[Action.Move] = {Action.Direction: move.towards(direction)}
 

@@ -2,7 +2,7 @@ import numpy as np
 from pdb import set_trace as T
 
 from forge.blade.systems import ai, equipment
-from forge.blade.lib.enums import Material, Neon
+from forge.blade.lib import material
 
 from forge.blade.systems.skill import Skills
 from forge.blade.systems.inventory import Inventory
@@ -12,12 +12,13 @@ from forge.blade.io.stimulus import Static
 class Player(entity.Entity):
    def __init__(self, realm, pos, iden, pop, name='', color=None):
       super().__init__(realm, pos, iden, name, color, pop)
-      self.annID  = pop
-      self.target = None
+      self.pop    = pop
 
-      self.vision = 7
+      #Scripted hooks
+      self.target = None
       self.food   = None
       self.water  = None
+      self.vision = 7
 
       #Submodules
       self.skills     = Skills(self)
@@ -33,12 +34,23 @@ class Player(entity.Entity):
 
       self.dataframe.init(Static.Entity, self.entID, self.pos)
 
+   @property
+   def serial(self):
+      return self.annID, self.entID
+
+   @property
+   def isPlayer(self) -> bool:
+      return True
+
+   @property
+   def population(self):
+      return self.pop
+
    def applyDamage(self, dmg, style):
       self.resources.food.increment(dmg)
       self.resources.water.increment(dmg)
       self.skills.applyDamage(dmg, style)
       
-   #Note: does not stack damage, but still applies to health
    def receiveDamage(self, source, dmg):
       if not super().receiveDamage(source, dmg):
          return 
@@ -53,10 +65,6 @@ class Player(entity.Entity):
       if loadout.platelegs.level > self.loadout.platelegs.level:
          self.loadout.platelegs = loadout.platelegs
 
-   @property
-   def serial(self):
-      return self.annID, self.entID
- 
    def packet(self):
       data = super().packet()
 
@@ -69,12 +77,6 @@ class Player(entity.Entity):
 
       return data
   
-   #PCs interact with the world only through stimuli
-   #to prevent cheating 
-   def decide(self, packets):
-      action, args = self.cpu.decide(self, packets)
-      return action, args
-
    def update(self, realm, actions):
       '''Post-action update. Do not include history'''
       if not super().update(realm, actions):
@@ -83,13 +85,3 @@ class Player(entity.Entity):
       self.resources.update(realm, self, actions)
       self.skills.update(realm, self, actions)
       #self.inventory.update(world, actions)
-
-   def act(self, world, atnArgs):
-      #Right now we only support one arg. So *args for future update
-      atn, args = atnArgs
-      args = args.values()
-      atn.call(world, self, *args)
-
-   @property
-   def isPlayer(self) -> bool:
-      return True

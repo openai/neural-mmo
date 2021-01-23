@@ -31,6 +31,7 @@ def attack(entity, targ, skillFn):
    if roll >= dc or crit:
       dmg = damage(entitySkill.__class__, entitySkill.level)
       
+   dmg = min(dmg, entity.resources.health.val)
    entity.applyDamage(dmg, entitySkill.__class__.__name__.lower())
    targ.receiveDamage(entity, dmg)
    return dmg

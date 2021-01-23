@@ -11,13 +11,13 @@ def random():
 def randomSafe(tiles, ent):
    r, c  = ent.base.pos
    cands = []
-   if tiles[r-1, c].mat.tex != 'lava':
+   if not tiles[r-1, c].lava:
       cands.append(Action.North)
-   if tiles[r+1, c].mat.tex != 'lava':
+   if not tiles[r+1, c].lava:
       cands.append(Action.South)
-   if tiles[r, c-1].mat.tex != 'lava':
+   if not tiles[r, c-1].lava:
       cands.append(Action.West)
-   if tiles[r, c+1].mat.tex != 'lava':
+   if not tiles[r, c+1].lava:
       cands.append(Action.East)
    
    return rand.choice(cands)
@@ -25,13 +25,13 @@ def randomSafe(tiles, ent):
 def habitable(tiles, ent):
    r, c  = ent.base.pos
    cands = []
-   if tiles[r-1, c].habitable:
+   if tiles[r-1, c].vacant:
       cands.append(Action.North)
-   if tiles[r+1, c].habitable:
+   if tiles[r+1, c].vacant:
       cands.append(Action.South)
-   if tiles[r, c-1].habitable:
+   if tiles[r, c-1].vacant:
       cands.append(Action.West)
-   if tiles[r, c+1].habitable:
+   if tiles[r, c+1].vacant:
       cands.append(Action.East)
    
    if len(cands) == 0:

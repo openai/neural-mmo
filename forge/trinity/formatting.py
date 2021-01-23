@@ -67,5 +67,6 @@ def box(block, indent=1):
    return block
 
 def box_stats(vals, indent=1):
+   '''Format stats and then draw a box around them'''
    return box(stats(vals))
    

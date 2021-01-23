@@ -10,25 +10,9 @@ from forge.blade.systems import combat
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.entity import entity, player
 
-class Overlay:
-   def __init__(self, config, realm, *args):
-      self.config    = config
-      self.realm     = realm
-
-      self.R, self.C = realm.size
-      self.values    = np.zeros((self.R, self.C))
-
-   def update(self, obs):
-       '''Compute per-tick updates to this overlay'''
-       pass
-
-   def register(self):
-       '''Compute the overlay and register it within realm'''
-       pass
-
 class OverlayRegistry:
    def __init__(self, config, realm):
-      '''Manager class for custom overlays'''
+      '''Manager class for overlays'''
       self.config = config
       self.realm  = realm
 
@@ -51,12 +35,34 @@ class OverlayRegistry:
       if cmd in self.overlays:
           self.overlays[cmd].register(obs)
 
+class Overlay:
+   '''Define a overlay for visualization in the client
+
+   Overlays are color images of the same size as the game map.
+   They are rendered over the environment with transparency and
+   can be used to gain insight about agent behaviors.'''
+   def __init__(self, config, realm, *args):
+      self.config     = config
+      self.realm      = realm
+
+      self.size       = config.TERRAIN_SIZE
+      self.values     = np.zeros((self.size, self.size))
+
+   def update(self, obs):
+       '''Compute per-tick updates to this overlay'''
+       pass
+
+   def register(self):
+       '''Compute the overlay and register it within realm'''
+       pass
+
 class Skills(Overlay):
    def __init__(self, config, realm, *args):
+      '''Indicates whether agents specialize in foraging or combat'''
       super().__init__(config, realm)
       self.nSkills = 2
 
-      self.values  = np.zeros((self.R, self.C, self.nSkills))
+      self.values  = np.zeros((self.size, self.size, self.nSkills))
 
    def update(self, obs):
       '''Computes a count-based exploration map by painting
@@ -74,7 +80,7 @@ class Skills(Overlay):
          self.values[r, c, 1] = combatLvl
 
    def register(self, obs):
-      values = np.zeros((self.R, self.C, self.nSkills))
+      values = np.zeros((self.size, self.size, self.nSkills))
       for idx in range(self.nSkills):
          ary  = self.values[:, :, idx]
          vals = ary[ary != 0]
@@ -87,19 +93,19 @@ class Skills(Overlay):
          values[ary == 0] = 0
 
       colors    = np.array([Neon.BLUE.rgb, Neon.BLOOD.rgb])
-      colorized = np.zeros((self.R, self.C, 3))
+      colorized = np.zeros((self.size, self.size, 3))
       amax      = np.argmax(values, -1)
 
       for idx in range(self.nSkills):
          colorized[amax == idx] = colors[idx] / 255
          colorized[values[:, :, idx] == 0] = 0
 
-      self.realm.registerOverlay(colorized)
+      self.realm.register(colorized)
 
 class Counts(Overlay):
    def __init__(self, config, realm, *args):
       super().__init__(config, realm)
-      self.values = np.zeros((self.R, self.C, config.NPOP))
+      self.values = np.zeros((self.size, self.size, config.NPOP))
 
    def update(self, obs):
       '''Computes a count-based exploration map by painting
@@ -122,18 +128,18 @@ class Counts(Overlay):
       countSum[countSum==0] = 1
       colorized = colorized * data / countSum[..., None]
 
-      self.realm.registerOverlay(colorized)
+      self.realm.register(colorized)
 
 class Wilderness(Overlay):
    def init(self):
       '''Computes the local wilderness level'''
-      data = np.zeros((self.R, self.C))
-      for r in range(self.R):
-         for c in range(self.C):
+      data = np.zeros((self.size, self.size))
+      for r in range(self.size):
+         for c in range(self.size):
             data[r, c] = combat.wilderness(self.config, (r, c))
 
       colorized = overlay.twoTone(data, preprocess='clip', invert=True, periods=5)
-      self.realm.registerOverlay(colorized)
+      self.realm.register(colorized)
       self.wildy = colorized
 
    def register(self, obs):
@@ -141,5 +147,4 @@ class Wilderness(Overlay):
          print('Initializing Wilderness')
          self.init()
 
-      self.realm.registerOverlay(self.wildy)
-
+      self.realm.register(self.wildy)

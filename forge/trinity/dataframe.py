@@ -1,3 +1,13 @@
+'''Infrastructure layer for representing agent observations
+
+Maintains a synchronized + serialized representation of agent observations in
+flat tensors. This allows for fast observation processing as a set of tensor
+slices instead of a lengthy traversal over hundreds of game properties.
+
+Synchronization bugs are notoriously difficult to track down: make sure
+to follow the correct instantiation protocol, e.g. as used for defining
+agent/tile observations, when adding new types observations to the code'''
+
 from pdb import set_trace as T
 import numpy as np
 
@@ -5,23 +15,12 @@ from collections import defaultdict
 
 from forge.blade.io.stimulus import Static
 
-'''
-Notes:
-1. You need 3d tables for fast row/col range indexing
-2. You need a matrix + 2d table representation for entities
-3. You need to modify the update() functions to compute absolute
-   offsets for discrete variables
-4. You need to modify env.getStims and stimulus.Dynamic to accept the new data forms
-5. You need to modify RLlib to accept the new data forms
-6. You need to modify forge/ethyr/io to accept the new data forms
-7. You need to modify the game rules to ensure 1 agent max per tile
-'''
-
 class DataType:
    CONTINUOUS = np.float32
    DISCRETE   = np.int32
 
 class Index:
+   '''Lookup index of attribute names'''
    def __init__(self, prealloc):
       self.free  = {idx for idx in range(1, prealloc)}
       self.index = {}
@@ -58,6 +57,7 @@ class Index:
       self.free.update({idx for idx in range(cur, nxt)})
 
 class ContinuousTable:
+   '''Flat tensor representation for a set of continuous attributes'''
    def __init__(self, config, obj, prealloc, dtype=DataType.CONTINUOUS):
       self.config = config
       self.dtype  = dtype
@@ -98,6 +98,7 @@ class ContinuousTable:
       return data
 
 class DiscreteTable(ContinuousTable):
+   '''Flat tensor representation for a set of discrete attributes'''
    def __init__(self, config, obj, prealloc, dtype=DataType.DISCRETE):
       self.discrete, self.cumsum = {}, 0
       super().__init__(config, obj, prealloc, dtype)
@@ -120,6 +121,7 @@ class DiscreteTable(ContinuousTable):
       self.data[row, col] = val + self.discrete[attr]
 
 class Grid:
+   '''Flat representation of tile/agent positions'''
    def __init__(self, R, C):
       self.data = np.zeros((R, C), dtype=np.int)
 
@@ -140,6 +142,11 @@ class Grid:
       return list(filter(lambda x: x != 0, crop))
       
 class GridTables:
+   '''Combines a Grid + Index + Continuous and Discrete tables
+
+   Together, these data structures provide a robust and efficient
+   flat tensor representation of an entire class of observations,
+   such as agents or tiles'''
    def __init__(self, config, obj, pad, prealloc=1000, expansion=2):
       self.grid       = Grid(config.TERRAIN_SIZE, config.TERRAIN_SIZE)
       self.continuous = ContinuousTable(config, obj, prealloc)
@@ -207,6 +214,7 @@ class GridTables:
       self.grid.zero(pos)
 
 class Dataframe:
+   '''Infrastructure wrapper class'''
    def __init__(self, config):
       self.config, self.data = config, defaultdict(dict)
       for (objKey,), obj in Static:
@@ -222,47 +230,15 @@ class Dataframe:
       self.data[obj.__name__].init(key, pos)
 
    def move(self, obj, key, pos, nxt):
-      #dat = self.data['Entity'].grid.data.ravel().tolist()
-      #dat = [e for e in dat if e != 0]
-      #if len(np.unique(dat)) != len(dat):
-      #   T() 
       self.data[obj.__name__].move(key, pos, nxt)
 
    def get(self, ent):
       stim = {}
      
-      #r, c = ent.pos
-      #dat  = self.data['Entity'].index.get(ent.entID)
-      #cent = self.data['Entity'].grid.data[r, c]
-      #assert dat == cent
-      #entDat = self.data['Entity']
-      #continuous = entDat.continuous.get(cent)
-      #discrete   = entDat.discrete.get(cent)
-
       stim['Entity'], ents = self.data['Entity'].get(ent, entity=True)
       stim['Entity']['N']  = np.array([len(ents)], dtype=np.int32)
+
       ent.targets          = ents
-
       stim['Tile']         = self.data['Tile'].get(ent)
-      #for key, grid2Table in self.data.items():
-      #   stim[key] = grid2Table.get(ent)
-      '''
-      continuous = stim['Entity']['Continuous'][0]
-      assert ent.base.self.val         == continuous[0]
-      assert ent.base.population.val   == continuous[1]
-      assert ent.base.r.val            == continuous[2]
-      assert ent.base.c.val            == continuous[3]
-      assert ent.history.damage.val    == continuous[4]
-      assert ent.history.timeAlive.val == continuous[5]
-      assert ent.resources.food.val    == continuous[6]
-      assert ent.resources.water.val   == continuous[7]
-      assert ent.resources.health.val  == continuous[8]
-      assert ent.status.freeze.val     == continuous[9]
-      assert ent.status.immune.val     == continuous[10]
-      assert ent.status.wilderness.val == continuous[11]
-      '''
- 
+
       return stim
-
-
-

@@ -25,8 +25,8 @@ import projekt
 from projekt import rllib_wrapper as wrapper
 from forge.blade.core import terrain
 
-#Generate RLlib policies
 def createPolicies(config, mapPolicy):
+   '''Generate RLlib policies'''
    obs      = wrapper.observationSpace(config)
    atns     = wrapper.actionSpace(config)
    policies = {}
@@ -42,6 +42,7 @@ def createPolicies(config, mapPolicy):
    return policies
 
 def loadTrainer(config):
+   '''Create monolithic RLlib trainer object'''
    torch.set_num_threads(1)
    ray.init(local_mode=config.LOCAL_MODE)
 
@@ -85,26 +86,31 @@ def loadTrainer(config):
       },
    })
 
+def loadEvaluator(config):
+   '''Create test/render evaluator'''
+   config.EVALUATE = True
+   if config.MODEL != 'scripted':
+      return wrapper.RLlibEvaluator(config, loadModel(config))
+
+   err = 'SCRIPTED_BACKEND may be either dijkstra or dynamic_programming'
+   assert config.SCRIPTED_BACKEND in ('dijkstra', 'dynamic_programming'), err
+   if config.SCRIPTED_BACKEND == 'dijkstra':
+      backend = ai.behavior.forageDijkstra
+   elif config.SCRIPTED_BACKEND == 'dynamic_programming':
+      backend = ai.behavior.forageDP
+
+   return Evaluator(config, ai.policy.baseline,
+         config.SCRIPTED_EXPLORE, backend)
+
 def loadModel(config):
+   '''Load NN weights and optimizer state'''
    trainer = loadTrainer(config)
    utils.modelSize(trainer.defaultModel())
    trainer.restore(config.MODEL)
    return trainer
 
-def loadEvaluator(config):
-   config.EVALUATE = True
-   if config.SCRIPTED_DP:
-      evaluator = Evaluator(config, ai.policy.baselineDP)
-   elif config.SCRIPTED_BFS:
-      evaluator = Evaluator(config, ai.policy.baselineBFS)
-   else:
-      trainer   = loadModel(config)
-      evaluator = wrapper.RLlibEvaluator(config, trainer)
-
-   return evaluator
-
 class Anvil():
-   '''Docstring'''
+   '''Google Fire command parser for Neural MMO'''
    def __init__(self, **kwargs):
       if 'config' in kwargs:
          config = kwargs.pop('config')
@@ -130,5 +136,4 @@ class Anvil():
       BokehServer(self.config)
       
 if __name__ == '__main__':
-   #Build config with CLI overrides
    Fire(Anvil)

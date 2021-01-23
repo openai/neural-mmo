@@ -10,8 +10,11 @@ from forge.trinity import formatting
 import bokeh, jinja2
 
 class BokehServer:
+   '''Interactive dashboard for visualizing evaluation logs
+
+   This dashboard is created automatically from the data and plot types
+   collected in Env.log. It supports both web and publication themes.'''
    def __init__(self, config):
-      '''Create Bokeh dashboard'''
       self.data   = np.load(config.PATH_EVAL_DATA, allow_pickle=True).tolist()
       self.config = config
       self.start()
@@ -41,7 +44,7 @@ class BokehServer:
       return preset
  
    def visualize(self, doc):
-      '''Load dashboard theme'''
+      '''Build dashboard'''
       config = self.config
 
       #Load Theme and Index

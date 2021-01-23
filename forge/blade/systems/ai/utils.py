@@ -119,7 +119,7 @@ def forageDP(tiles, entity):
    return max_value_line, max_value_column
 
 
-def forageBFS(tiles, entity, cutoff=100):
+def forageDijkstra(tiles, entity, cutoff=100):
    start = entity.pos
 
    queue = Queue()
@@ -148,7 +148,7 @@ def forageBFS(tiles, entity, cutoff=100):
          if nxt in backtrace:
             continue
 
-         if not tiles[nxt].habitable:
+         if tiles[nxt].occupied:
             continue
 
          if not inBounds(*nxt, tiles.shape):
@@ -175,7 +175,6 @@ def forageBFS(tiles, entity, cutoff=100):
 
          queue.put(nxt)
          backtrace[nxt] = cur
-
 
 # A* Search
 def l1(start, goal):

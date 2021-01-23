@@ -1,6 +1,5 @@
 from pdb import set_trace as T
 import numpy as np
-import time
 
 from collections import defaultdict
 from itertools import chain
@@ -14,25 +13,21 @@ from forge.blade.systems import combat
 from forge.blade.lib.enums import Palette
 from forge.blade.lib import log
 
-def valToRGB(x):
-    '''x in range [0, 1]'''
-    return np.array([1-x, x, 0])
-
 class Env:
-   '''Neural MMO environment class implementing the OpenAI Gym API function
-   signatures. The actual (ob, reward, done, info) data contents returned by
-   the canonical reset() and step(action) methods conform to RLlib's Gym
-   extensions in order to support multiple and variably sized agent
-   populations. This means you cannot use preexisting optimizer
-   implementations that expect the OpenAI Gym API. We recommend
-   PyTorch+RLlib to take advantage of our prebuilt baseline implementations,
-   but any framework that supports RLlib's fairly popular environment API and
-   extended OpenAI gym.spaces observation/action definitions works as well.'''
+   '''Environment wrapper for Neural MMO
+
+   Note that the contents of (ob, reward, done, info) returned by the standard
+   OpenAI Gym API reset() and step(actions) methods have been generalized to
+   support variable agent populations and more expressive observation/action
+   spaces. This means you cannot use preexisting optimizer implementations that
+   strictly expect the OpenAI Gym API. We recommend PyTorch+RLlib to take
+   advantage of our prebuilt baseline implementations, but any framework that
+   supports RLlib's fairly popular environment API and extended OpenAI
+   gym.spaces observation/action definitions should work as well.'''
    def __init__(self, config):
       '''
       Args:
-         config : A forge.blade.core.Config (or subclass) specification object
-         idx    : Index of the map file to load (0 to number of maps)
+         config : A forge.blade.core.Config object or subclass object
       '''
       super().__init__()
       self.realm     = core.Realm(config, self.spawn)
@@ -40,11 +35,52 @@ class Env:
       self.config    = config
       self.overlay   = None
 
-   def step(self, decisions, omitDead=False, preprocessActions=True):
+   ############################################################################
+   ### Core API
+   def reset(self, idx=None, step=True):
+      '''OpenAI Gym API reset function
+
+      Loads a new game map and returns initial observations
+
+      Args:
+         idx: Map index to load. Selects a random map by default
+
+         step: Whether to step the environment and return initial obs
+
+      Returns:
+         obs: Initial obs if step=True, None otherwise 
+
+      Notes:
+         Neural MMO simulates a persistent world. Ideally, you should reset
+         the environment only once, upon creation. In practice, this approach
+         limits the number of parallel environment simulations to the number
+         of CPU cores available. At small and medium hardware scale, we
+         therefore recommend the standard approach of resetting after a long
+         but finite horizon: ~1000 timesteps for small maps and
+         5000+ timesteps for large maps
+
+      Returns:
+         observations, as documented by step()
+      '''
+      self.quill = log.Quill(self.realm.identify)
+      
+      if idx is None:
+         idx = np.random.randint(self.config.NMAPS)
+
+      self.worldIdx = idx
+      self.realm.reset(idx)
+
+      obs = None
+      if step:
+         obs, _, _, _ = self.step({})
+
+      return obs
+
+   def step(self, actions, omitDead=False, preprocessActions=True):
       '''OpenAI Gym API step function simulating one game tick or timestep
 
       Args:
-         decisions: A dictionary of agent action choices of format::
+         actions: A dictionary of agent decisions of format::
 
                {
                   agent_1: {
@@ -60,11 +96,9 @@ class Env:
 
             Where agent_i is the integer index of the i\'th agent 
 
-            You do not need to provide actions for each agent
-            You do not need to provide an action of each type for each agent
-            Only provided actions for provided agents will be evaluated
-            Unprovided action types are interpreted as no-ops
-            Invalid actions are ignored
+            The environment only evaluates provided actions for provided
+            agents. Unprovided action types are interpreted as no-ops and
+            illegal actions are ignored
 
             It is also possible to specify invalid combinations of valid
             actions, such as two movements or two attacks. In this case,
@@ -73,6 +107,13 @@ class Env:
             A well-formed algorithm should do none of the above. We only
             Perform this conditional processing to make batched action
             computation easier.
+
+         omitDead: Whether to omit dead agents observations from the returned
+            obs. Provided for conformity with some optimizer APIs
+
+         preprocessActions: Whether to treat actions as raw indices or
+            as game objects. Typically, this value should be True for
+            neural models and false for scripted baselines.
 
       Returns:
          (dict, dict, dict, None):
@@ -106,8 +147,8 @@ class Env:
             reward_i is the reward of the i\'th' agent.
 
             By default, agents receive -1 reward for dying and 0 reward for
-            all other circumstances. Realm.hook provides an interface for
-            creating custom reward functions using full game state.
+            all other circumstances. Override Env.reward to specify
+            custom reward functions
  
          dones:
             A dictionary of agent done booleans of format::
@@ -121,52 +162,80 @@ class Env:
             Where agent_i is the integer index of the i\'th agent and
             done_i is a boolean denoting whether the i\'th agent has died.
 
-            
             Note that obs_i will be a garbage placeholder if done_i is true.
             This is provided only for conformity with OpenAI Gym. Your
             algorithm should not attempt to leverage observations outside of
-            trajectory bounds.
+            trajectory bounds. You can omit garbage obs_i values by setting
+            omitDead=True.
 
          infos:
             An empty dictionary provided only for conformity with OpenAI Gym.
       '''
-      self.env_step = time.time()
-
-      ###Preprocess actions
-      self.preprocess_actions = time.time()
+      #Preprocess actions
       if preprocessActions:
-         actions = self.preprocessActions(decisions)
-      else:
-         actions = decisions 
-      self.preprocess_actions = time.time() - self.preprocess_actions
+         for entID in list(actions.keys()):
+            ent = self.realm.players[entID]
+            if not ent.alive:
+               continue
 
-      #Step Realm
-      self.realm_step     = time.time()
-      self.dead           = self.realm.step(actions)
-      self.realm_step     = time.time() - self.realm_step
+            for atn, args in actions[entID].items():
+               for arg, val in args.items():
+                  if len(arg.edges) > 0:
+                     actions[entID][atn][arg] = arg.edges[val]
+                  elif val < len(ent.targets):
+                     targ                     = ent.targets[val]
+                     actions[entID][atn][arg] = self.realm.entity(targ)
+                  else: #Need to fix -inf in classifier before removing this
+                     actions[entID][atn][arg] = ent
 
-      #Compute observations
-      self.env_stim       = time.time()
-      obs, rewards, dones = self.getStims(self.dead, omitDead)
-      self.env_stim       = time.time() - self.env_stim
+      #Step: Realm, Observations, Logs
+      dead = self.realm.step(actions)
+      obs, rewards, dones, self.raw = {}, {}, {}, {}
+      for entID, ent in self.realm.players.items():
+         ob             = self.realm.dataframe.get(ent)
+         obs[entID]     = ob
 
-      #Logging
-      for entID, ent in self.dead.items():
+         rewards[entID] = self.reward(entID)
+         dones[entID]   = False
+
+      for entID, ent in dead.items():
          self.log(ent)
 
-      self.env_step = time.time() - self.env_step
+      #Postprocess dead agents
+      if omitDead:
+         return obs, rewards, dones, {}
+
+      for entID, ent in dead.items():
+         rewards[ent.entID] = self.reward(ent)
+         dones[ent.entID]   = True
+         obs[ent.entID]     = ob
+
       return obs, rewards, dones, {}
 
-   def log(self, ent):
+   ############################################################################
+   ### Logging
+   def log(self, ent) -> None:
+      '''Logs agent data upon death
+
+      This function is called automatically when an agent dies. You should not
+      call it manually. Instead, override this method to customize logging.
+
+      Args:
+         ent: An agent
+      '''
+
       quill = self.quill
 
-      blob = quill.register('Population', self.realm.tick, quill.HISTOGRAM, quill.LINE, quill.SCATTER)
+      blob = quill.register('Population', self.realm.tick,
+            quill.HISTOGRAM, quill.LINE, quill.SCATTER)
       blob.log(self.realm.population)
 
-      blob = quill.register('Lifetime', self.realm.tick, quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
+      blob = quill.register('Lifetime', self.realm.tick,
+            quill.HISTOGRAM, quill.LINE, quill.SCATTER, quill.GANTT)
       blob.log(ent.history.timeAlive.val)
 
-      blob = quill.register('Skill Level', self.realm.tick, quill.HISTOGRAM, quill.STACKED_AREA, quill.STATS, quill.RADAR)
+      blob = quill.register('Skill Level', self.realm.tick,
+            quill.HISTOGRAM, quill.STACKED_AREA, quill.STATS, quill.RADAR)
       blob.log(ent.skills.range.level,        'Range')
       blob.log(ent.skills.mage.level,         'Mage')
       blob.log(ent.skills.melee.level,        'Melee')
@@ -175,13 +244,14 @@ class Env:
       blob.log(ent.skills.fishing.level,      'Fishing')
       blob.log(ent.skills.hunting.level,      'Hunting')
 
-      #TODO: swap these entries when equipment is reenabled
-      blob = quill.register('Wilderness', self.realm.tick, quill.HISTOGRAM, quill.SCATTER)
-      blob.log(combat.wilderness(self.config, ent.pos))
-
-      blob = quill.register('Equipment', self.realm.tick, quill.HISTOGRAM, quill.SCATTER)
+      blob = quill.register('Equipment', self.realm.tick,
+            quill.HISTOGRAM, quill.SCATTER)
       blob.log(ent.loadout.chestplate.level, 'Chestplate')
       blob.log(ent.loadout.platelegs.level,  'Platelegs')
+
+      blob = quill.register('Wilderness', self.realm.tick,
+            quill.HISTOGRAM, quill.SCATTER)
+      blob.log(combat.wilderness(self.config, ent.pos))
 
       quill.stat('Population', self.realm.population)
       quill.stat('Lifetime',  ent.history.timeAlive.val)
@@ -190,56 +260,34 @@ class Env:
       quill.stat('Equipment', ent.loadout.defense)
 
    def terminal(self):
+      '''Logs currently alive agents and returns all collected logs
+
+      Automatic log calls occur only when agents die. To evaluate agent
+      performance over a fixed horizon, you will need to include logs for
+      agents that are still alive at the end of that horizon. This function
+      performs that logging and returns the associated a data structure
+      containing logs for the entire evaluation
+
+      Returns:
+         Log datastructure. Use them to update an InkWell logger.
+         
+      Args:
+         ent: An agent
+      '''
+
       for entID, ent in self.realm.players.entities.items():
          self.log(ent)
 
       return self.quill.packet
 
-   def reset(self, idx=None, step=True):
-      '''Instantiates the environment and returns initial observations
-
-      Neural MMO simulates a persistent world. It is best-practice to call
-      reset() once per environment upon initialization and never again.
-      Treating agent lifetimes as episodes enables training with all on-policy
-      and off-policy reinforcement learning algorithms.
-
-      We provide this function for conformity with OpenAI Gym and
-      compatibility with various existing off-the-shelf reinforcement
-      learning algorithms that expect a hard environment reset. If you
-      absolutely must call this method after the first initialization,
-      we suggest using very long (1000+) timestep environment simulations.
-
-      Returns:
-         observations, as documented by step()
-      '''
-      self.quill     = log.Quill(self.realm.iden)
-      self.lifetimes = []
-
-      self.env_reset = time.time()
-      
-      if idx is None:
-         idx = np.random.randint(self.config.NMAPS)
-
-      self.worldIdx = idx
-      self.dead     = {}
-
-      self.realm.reset(idx)
-
-      obs = None
-      if step:
-         obs, _, _, _ = self.step({})
-
-      self.env_reset = time.time() - self.env_reset
-
-      return obs
-
+   ############################################################################
+   ### Override hooks
    def reward(self, entID):
       '''Computes the reward for the specified agent
 
-      You can override this method to create custom reward functions.
-      This method has access to the full environment state via self.
-      The baselines do not modify this method. You should specify any
-      changes you may have made to this method when comparing to the baselines
+      Override this method to create custom reward functions. You have full
+      access to the environment state via self.realm. Our baselines do not
+      modify this method; specify any changes when comparing to baselines
 
       Returns:
          float:
@@ -255,14 +303,10 @@ class Env:
    def spawn(self):
       '''Called when an agent is added to the environment
 
-      You can override this method to specify custom spawning behavior
-      with full access to the environment state via self.
+      Override this method to specify name/population upon spawning.
 
       Returns:
-         (int, int, str):
-
-         entID:
-            An integer used to uniquely identify the entity
+         (int, str):
 
          popID:
             An integer used to identity membership within a population
@@ -271,14 +315,18 @@ class Env:
             The agent will be named prefix + entID
 
       Notes:
-         This API hook is mainly intended for population-based research. In
-         particular, it allows you to define behavior that selectively
-         spawns agents into particular populations based on the current game
-         state -- for example, current population sizes or performance.'''
+         Mainly intended for population-based research. In particular, it
+         allows you to define behavior that selectively spawns agents into
+         particular populations based on the current game state -- for example,
+         current population sizes or performance.'''
+
       pop = np.random.randint(self.config.NPOP)
       return pop, 'Neural_'
 
-   def clientData(self):
+   ############################################################################
+   ### Client data
+   @property
+   def packet(self):
       '''Data packet used by the renderer
 
       Returns:
@@ -299,85 +347,12 @@ class Env:
 
       return packet
 
-   def preprocessActions(self, decisions):
-      actions = {}
-      for entID in list(decisions.keys()):
-         ent            = self.realm.players[entID]
-         actions[entID] = defaultdict(dict)
+   def register(self, overlay):
+      '''Register an overlay to be sent to the client
 
-         if entID in self.dead:
-            continue
-
-         for atn, args in decisions[entID].items():
-            for arg, val in args.items():
-               val = int(val)
-               if len(arg.edges) > 0:
-                  actions[entID][atn][arg] = arg.edges[val]
-               elif val < len(ent.targets):
-                  targ                     = ent.targets[val]
-                  actions[entID][atn][arg] = self.realm.entity(targ)
-               else: #Need to fix -inf in classifier before removing this
-                  actions[entID][atn][arg] = ent
-
-      return actions
- 
-   def getStims(self, dead, omitDead):
-      '''Gets agent stimuli from the environment
-
-      Args:
-         packets: A dictionary of Packet objects
-
-      Returns:
-         The packet dictionary populated with agent data
-      '''
-      self.raw = {}
-      obs, rewards, dones = {}, {}, {'__all__': False}
-      for entID, ent in self.realm.players.items():
-         start = time.time()
-         ob             = self.realm.dataframe.get(ent)
-         obs[entID]     = ob
-
-         rewards[entID] = self.reward(entID)
-         dones[entID]   = False
-
-      if omitDead:
-         return obs, rewards, dones
-
-      #RLlib quirk: requires obs for dead agents
-      for entID, ent in dead.items():
-         #Currently just copying one over
-         rewards[ent.entID] = self.reward(ent)
-         dones[ent.entID]   = True
-         obs[ent.entID]     = ob
-
-         lifetime = ent.history.timeAlive.val
-         self.lifetimes.append(lifetime)
-
-      return obs, rewards, dones
-
-   @property
-   def size(self):
-      '''Returns the size of the game map
-
-      You can override this method to create custom reward functions.
-      This method has access to the full environment state via self.
-      The baselines do not modify this method. You should specify any
-      changes you may have made to this method when comparing to the baselines
-
-      Returns:
-         tuple(int, int):
-
-         size:
-            The size of the map as (rows, columns)
-      '''
-      return self.realm.map.tiles.shape
-
-   def registerOverlay(self, overlay):
-      '''Registers an overlay to be sent to the client
-
-      This variable is included in client data passed to the renderer and is
-      typically used to send value maps computed using getValStim to the
-      client in order to render as an overlay.
+      The intended use of this function is: User types overlay ->
+      client sends cmd to server -> server computes overlay update -> 
+      register(overlay) -> overlay is sent to client -> overlay rendered
 
       Args:
          values: A map-sized (self.size) array of floating point values
@@ -386,7 +361,7 @@ class Env:
       assert type(overlay) == np.ndarray, err
       self.overlay = overlay.tolist()
 
-   def getValStim(self):
+   def dense(self):
       '''Simulates an agent on every tile and returns observations
 
       This method is used to compute per-tile visualizations across the
@@ -408,18 +383,8 @@ class Env:
          observations:
             A dictionary of agent observations as specified by step()
 
-         stimuli:
-            A dictionary of raw game object observations as follows::
-
-               {
-                  agent_1: (tiles, agent),
-                  agent_2: (tiles, agent),
-                  ...
-               ]
-
-            Where agent_i is the integer index of the i\'th agent,
-            tiles is an array of observed game tiles, and agent is the
-            game object corresponding to agent_i
+         ents:
+            A corresponding dictionary of agents keyed by their entID
       '''
       config  = self.config
       R, C    = self.realm.map.tiles.shape

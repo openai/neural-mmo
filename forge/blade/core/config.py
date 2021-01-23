@@ -152,9 +152,6 @@ class Config(Template):
    VIS_TITLE_OFFSET     = 60
    '''Width of left title offset'''
 
-   VIS_COLUMNS          = 4
-   '''Visualizer plot columns'''
-
    VIS_PORT             = 5006
    '''Visualizer local Bokeh server port'''
 

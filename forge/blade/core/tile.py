@@ -1,19 +1,15 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.lib import enums
+from forge.blade.lib import material
 from forge.blade.io.stimulus import Static
 
-def camel(string):
-   return string[0].lower() + string[1:]
-
 class Tile:
-   SERIAL = 1
-   def __init__(self, realm, config, r, c):
+   def __init__(self, config, realm, r, c):
       self.config = config
       self.realm  = realm
 
-      self.serialized = 'R' + str(r) + '-C' + str(c)
+      self.serialized = 'R{}-C{}'.format(r, c)
 
       self.r     = Static.Tile.R(realm.dataframe, self.serial, r)
       self.c     = Static.Tile.C(realm.dataframe, self.serial, c)
@@ -21,6 +17,40 @@ class Tile:
       self.index = Static.Tile.Index(realm.dataframe, self.serial, 0)
 
       realm.dataframe.init(Static.Tile, self.serial, (r, c))
+
+   @property
+   def serial(self):
+      return self.serialized
+
+   @property
+   def repr(self):
+      return ((self.r, self.c))
+
+   @property
+   def pos(self):
+      return self.r.val, self.c.val
+
+   @property
+   def vacant(self):
+      return len(self.ents) == 0 and self.mat in material.Habitable
+
+   @property
+   def occupied(self):
+      return not self.vacant
+
+   @property
+   def impassible(self):
+      return self.mat in material.Impassible
+
+   @property
+   def lava(self):
+      return self.mat == material.Lava
+
+   @property
+   def static(self):
+      '''No updates needed'''
+      assert self.capacity <= self.mat.capacity
+      return self.capacity == self.mat.capacity
 
    def reset(self, mat, config):
       self.state  = mat(config)
@@ -33,33 +63,6 @@ class Tile:
       self.nEnts.update(0)
       self.index.update(self.state.index)
  
-   @property
-   def repr(self):
-      return ((self.r, self.c))
-
-   def packet(self):
-      data = {}
-
-   @property
-   def serial(self):
-      return self.serialized
-
-   @property
-   def pos(self):
-      return self.r.val, self.c.val
-
-   @property
-   def impassible(self):
-      return self.mat.index in enums.IMPASSIBLE
-
-   @property
-   def habitable(self):
-      return self.mat.index in enums.HABITABLE and len(self.ents) == 0
-
-   @property
-   def lava(self):
-      return self.mat.index == enums.Lava.index
-
    def addEnt(self, ent):
       assert ent.entID not in self.ents
       self.ents[ent.entID] = ent
@@ -73,15 +76,9 @@ class Tile:
             np.random.rand() < self.mat.respawn):
          self.capacity += 1
 
-      #Try inserting a pass
       if self.static:
          self.state = self.mat
          self.index.update(self.state.index)
-
-   @property
-   def static(self):
-      assert self.capacity <= self.mat.capacity
-      return self.capacity == self.mat.capacity
 
    def harvest(self):
       if self.capacity == 0:

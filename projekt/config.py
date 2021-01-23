@@ -2,6 +2,8 @@ from pdb import set_trace as T
 from forge.blade import core
 import os
 
+from forge.blade.systems.ai import behavior
+
 class Base(core.Config):
    '''Base config for RLlib Models
 
@@ -23,18 +25,20 @@ class Base(core.Config):
    NUM_SGD_ITER            = 1
 
    #Model Parameters 
+   #large-map: Large maps baseline
+   #small-map: Small maps baseline
+   #scripted:  Scripted baseline
+   #current:   Resume latest checkpoint
+   #None:      Train from scratch
+   MODEL                   = 'current'
    N_AGENT_OBS             = 100
    NPOLICIES               = 1
    HIDDEN                  = 64
    EMBED                   = 64
 
-   #Alternative model selection
-   #Scripted baselines: SCRIPTED_BFS, SCRIPTED_DP
-   #None=train from scratch
-   #current=resume checkpoint
-   MODEL                   = 'current'
-   SCRIPTED_BFS            = False
-   SCRIPTED_DP             = False
+   #Scripted model parameters
+   SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
+   SCRIPTED_EXPLORE        = True       #Intentional exploration
 
 
 class LargeMaps(Base):
@@ -68,6 +72,7 @@ class SmallMaps(Base):
    or as a primary research target for PCG methods.'''
 
    MODEL                   = 'small-map'
+   SCRIPTED_EXPLORE        = False
 
    TRAIN_HORIZON           = 1000
    EVALUATION_HORIZON      = 1000

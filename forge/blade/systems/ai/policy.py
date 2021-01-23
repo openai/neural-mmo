@@ -41,57 +41,36 @@ def hostile(realm, entity):
 
    return actions
 
-def baselineDP(realm, entity):
+def baseline(realm, entity, explore=True, forage=behavior.forageDijkstra):
    behavior.update(entity)
    actions = {}
 
-   if not entity.attacker:
-      min_level = min(combat.level(entity.skills) * 0.5 + 7, 15)
-      # level 3 fighter need 9 food, 9 water, 9 health to fight
-      if entity.resources.food <= min_level or entity.resources.water <= min_level or entity.resources.health <= min_level:
-         behavior.forageDP(realm, actions, entity)
-      else:
-         if not entity.target:
-            entity.target = utils.closestTarget(entity, realm.map.tiles,
-                                                rng=entity.vision)
-
-         if entity.target \
-                 and ((combat.level(entity.target.skills) <= combat.level(
-            entity.skills) <= 5)
-                      or (combat.level(entity.skills) >= combat.level(
-                    entity.target.skills) + 3)):
-            behavior.hunt(realm, actions, entity)
-         else:
-            behavior.forageDP(realm, actions, entity)
-   else:
-      entity.target = entity.attacker
-      behavior.hunt(realm, actions, entity)
-
-   return actions
-
-def baselineBFS(realm, entity):
-   behavior.update(entity)
-   actions = {}
-
+   #Baseline only considers nearest entity
    entity.target = utils.closestTarget(entity,
          realm.map.tiles, rng=entity.vision)
+
+   #Define agent behavior during downtime
+   if explore:
+      downtime = behavior.explore
+   else:
+      downtime = forage
 
    #Forage if low on resources
    min_level = 7
    if (entity.resources.food <= min_level
          or entity.resources.water <= min_level):
-      behavior.forageBFS(realm, actions, entity)
+      forage(realm, actions, entity)
    elif entity.attacker:
       entity.target = entity.attacker
       behavior.evade(realm, actions, entity)
       behavior.attack(realm, actions, entity)
    elif entity.target:
-      behavior.explore(realm, actions, entity)
+      downtime(realm, actions, entity)
       entLvl  = combat.level(entity.skills)
       targLvl = combat.level(entity.target.skills)
       if targLvl <=  entLvl <= 5 or entLvl >= targLvl+3:
          behavior.attack(realm, actions, entity)
    else:
-      behavior.explore(realm, actions, entity)
+      downtime(realm, actions, entity)
 
    return actions

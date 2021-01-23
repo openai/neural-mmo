@@ -1,7 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.lib import utils, enums
+from forge.blade.lib import utils, material
 from forge.blade.lib.utils import staticproperty
 from forge.blade.io.node import Node, NodeType
 from forge.blade.systems import combat
@@ -58,7 +58,7 @@ class Move(Node):
 
       #One agent per cell
       tile = env.map.tiles[rNew, cNew] 
-      if not tile.habitable and not tile.lava:
+      if tile.occupied and not tile.lava:
          return
 
       if entity.status.freeze > 0:

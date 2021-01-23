@@ -9,69 +9,6 @@ from enum import Enum
 #from forge.blade.item import ore
 from forge.blade import systems
 
-class Tile:
-   harvestable = False
-   capacity    = 1
-   def __init__(self, config):
-      pass
-
-class Lava(Tile):
-   tex   = 'lava'
-   index = 0
-
-class Water(Tile):
-   tex   = 'water'
-   index = 1
-
-class Grass(Tile):
-   tex   = 'grass'
-   index = 2
-
-class Scrub(Tile):
-   tex = 'scrub'
-   index = 3
-
-class Forest(Tile):
-   tex   = 'forest'
-   index = 4
-
-   harvestable = True
-   degen       = Scrub
-
-   def __init__(self, config):
-      self.capacity = config.FOREST_CAPACITY
-      self.respawn  = config.FOREST_RESPAWN
-      #self.dropTable = DropTable.DropTable()
-
-class Stone(Tile):
-   tex   = 'stone'
-   index = 5
-
-class Orerock(Tile):
-   tex   = 'iron_ore'
-   index = 6
-
-   harvestable = True
-   degen       = Stone
-
-   def __init__(self, config):
-      self.capacity = config.OREROCK_CAPACITY
-      self.respawn  = config.OREROCK_RESPAWN
-      #self.dropTable = systems.DropTable()
-      #self.dropTable.add(ore.Copper, 1)
-
-class Material(Enum):
-   LAVA     = Lava
-   WATER    = Water
-   GRASS    = Grass
-   SCRUB    = Scrub
-   FOREST   = Forest
-   STONE    = Stone
-   OREROCK  = Orerock
-
-IMPASSIBLE = (1, 5, 6)
-HABITABLE  = (2, 3, 4)
-
 class Defaults:
    BLACK    = (0, 0, 0)
    GRAY3    = (20, 20, 20)

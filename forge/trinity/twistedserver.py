@@ -86,7 +86,7 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.sendUpdate()
 
     def serverPacket(self):
-        data = self.realm.clientData()
+        data = self.realm.packet
         return data
 
     def sendUpdate(self):

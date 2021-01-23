@@ -2,7 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge.blade.systems import skill, droptable, combat, equipment
-from forge.blade.lib.enums import Material, Neon
+from forge.blade.lib import material
 
 from forge.blade.io.action import static as Action
 from forge.blade.io.stimulus import Static
@@ -55,24 +55,13 @@ class History:
       self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
       self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
 
-      self.attackMap = np.zeros((7, 7, 3)).tolist()
       self.lastPos = None
 
    def update(self, realm, entity, actions):
-      self.attack = None
-      self.damage.update(0)
+      self.attack  = None
       self.actions = actions
-
-      #No way around this circular import I can see :/
-      from forge.blade.io.action import static as action
-      key = action.Attack
-
+      self.damage.update(0)
       self.timeAlive.increment()
-
-      '''
-      if key in actions:
-         action = actions[key]
-      '''
 
    def packet(self):
       data = {}
@@ -97,7 +86,6 @@ class Base:
       self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, True)
 
       ent.dataframe.init(Static.Entity, ent.entID, (r, c))
-
 
    def update(self, realm, entity, actions):
       r, c = self.pos
@@ -160,9 +148,12 @@ class Entity:
 
    def update(self, realm, actions):
       '''Update occurs after actions, e.g. does not include history'''
+      if self.history.damage == 0:
+         self.attacker = None
+
       self.base.update(realm, self, actions)
       self.status.update(realm, self, actions)
-      self.attacker = None #This requires sequential decisions
+      self.history.update(realm, self, actions)
 
       if not self.alive:
          return False

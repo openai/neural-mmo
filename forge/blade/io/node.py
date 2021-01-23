@@ -148,8 +148,6 @@ class NodeType(Enum):
    VARIABLE  = auto() #Variable argument
 
 class Node(metaclass=IterableNameComparable):
-   SERIAL = 2
-
    @staticproperty
    def edges():
       return []

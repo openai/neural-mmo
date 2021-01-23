@@ -15,8 +15,7 @@ from forge.blade.io.action import static as Action
 from forge.blade.lib.log import InkWell
 
 class Base:
-   '''Test-time evaluation with communication to
-   the Unity3D client. Makes use of batched GPU inference'''
+   '''Base class for test-time evaluators'''
    def __init__(self, config):
       self.config  = config
       self.done    = {}
@@ -37,30 +36,42 @@ class Base:
 
       np.save(self.config.PATH_EVAL_DATA, log.packet)
 
-   def tick(self, actions, preprocessActions=True):
-      '''Compute actions and overlays for a single timestep
+   def tick(self, obs, actions, pos, cmd, preprocessActions=True):
+      '''Simulate a single timestep
+
       Args:
-          pos: Camera position (r, c) from the server)
+          obs: dict of agent observations
+          actions: dict of policy actions
+          pos: Camera position (r, c) from the server
           cmd: Console command from the server
+          preprocessActions: Required for actions provided as indices
       '''
+      self.registry.step(obs, pos, cmd)
       self.obs, rewards, self.done, _ = self.env.step(
             actions, omitDead=True, preprocessActions=preprocessActions)
 
 class Evaluator(Base):
-   def __init__(self, config, policy):
+   '''Evaluator for scripted models'''
+   def __init__(self, config, policy, *args):
       super().__init__(config)
       self.policy   = policy
+      self.args     = args
 
       self.env      = Env(config)
       self.obs      = self.env.reset()
       self.registry = OverlayRegistry(config, self.env).init()
 
    def tick(self, pos, cmd):
+      '''Simulate a single timestep
+
+      Args:
+          pos: Camera position (r, c) from the server)
+          cmd: Console command from the server
+      '''
       realm, actions    = self.env.realm, {}
       for agentID in self.obs:
          agent              = realm.players[agentID]
          agent.skills.style = Action.Range
-         actions[agentID]   = self.policy(realm, agent)
+         actions[agentID]   = self.policy(realm, agent, *self.args)
 
-      self.registry.step(self.obs, pos, cmd)
-      super().tick(actions, preprocessActions=False)
+      super().tick(self.obs, actions, pos, cmd, preprocessActions=False)

@@ -36,11 +36,12 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       super().__init__(self.config)
 
    def step(self, decisions, omitDead=False, preprocessActions=True):
-      obs, rewards, dones, infos = super().step(decisions,
-            omitDead=omitDead, preprocessActions=preprocessActions)
+      obs, rewards, dones, infos = super().step(
+            decisions, omitDead, preprocessActions)
 
-      t, mmean = len(self.lifetimes), np.mean(self.lifetimes)
-      if not self.config.EVALUATE and t >= self.config.TRAIN_HORIZON:
+      config = self.config
+      dones['__all__'] = False
+      if not config.EVALUATE and self.realm.tick  >= config.TRAIN_HORIZON:
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
@@ -80,7 +81,7 @@ def actionSpace(config):
          atns[atn][arg] = gym.spaces.Discrete(n)
    return atns
 
-################################################################################
+###############################################################################
 ### RLlib Policy, Evaluator, and Trainer wrappers
 class RLlibPolicy(RecurrentNetwork, nn.Module):
    '''Wrapper class for using our baseline models with RLlib'''
@@ -138,18 +139,15 @@ class RLlibEvaluator(evaluator.Base):
       self.state    = {} 
 
    def tick(self, pos, cmd):
-      '''Compute actions and overlays for a single timestep
+      '''Simulate a single timestep
+
       Args:
           pos: Camera position (r, c) from the server)
           cmd: Console command from the server
       '''
-      #Compute batch of actions
       actions, self.state, _ = self.trainer.compute_actions(
             self.obs, state=self.state, policy_id='policy_0')
-      self.registry.step(self.obs, pos, cmd)
-
-      #Step environment
-      super().tick(actions)
+      super().tick(self.obs, actions, pos, cmd)
 
 class SanePPOTrainer(ppo.PPOTrainer):
    '''Small utility class on top of RLlib's base trainer'''
@@ -260,21 +258,23 @@ class SanePPOTrainer(ppo.PPOTrainer):
           for idx, line in enumerate(lines):
              print(line)
 
-################################################################################
+###############################################################################
 ### RLlib Overlays
-class RLlibOverlay(Overlay):
-   def __init__(self, config, realm, trainer, model):
-      super().__init__(config, realm)
-      self.trainer = trainer
-      self.model   = model
-
 class RLlibOverlayRegistry(OverlayRegistry):
+   '''Host class for RLlib Map overlays'''
    def __init__(self, config, realm):
       super().__init__(config, realm)
 
       self.overlays['values']       = Values
       self.overlays['globalValues'] = GlobalValues
       self.overlays['attention']    = Attention
+
+class RLlibOverlay(Overlay):
+   '''RLlib Map overlay wrapper'''
+   def __init__(self, config, realm, trainer, model):
+      super().__init__(config, realm)
+      self.trainer = trainer
+      self.model   = model
 
 class Attention(RLlibOverlay):
    def register(self, obs):
@@ -298,7 +298,7 @@ class Attention(RLlibOverlay):
             data[r, c] = np.mean(attentions[tile])
 
       colorized = overlay.twoTone(data)
-      self.realm.registerOverlay(colorized)
+      self.realm.register(colorized)
 
 class Values(RLlibOverlay):
    def update(self, obs):
@@ -311,7 +311,7 @@ class Values(RLlibOverlay):
 
    def register(self, obs):
       colorized = overlay.twoTone(self.values[:, :])
-      self.realm.registerOverlay(colorized)
+      self.realm.register(colorized)
 
 class GlobalValues(RLlibOverlay):
    def init(self):
@@ -322,9 +322,9 @@ class GlobalValues(RLlibOverlay):
          return
 
       print('Computing value map...')
-      values    = np.zeros(self.realm.size)
       model     = self.trainer.get_policy('policy_0').model
       obs, ents = self.realm.getValStim()
+      values    = 0 * self.values
 
       #Compute actions to populate model value function
       BATCH_SIZE = 128
@@ -347,34 +347,12 @@ class GlobalValues(RLlibOverlay):
          print('Initializing Global Values. This requires one NN pass per tile')
          self.init()
 
-      self.realm.registerOverlay(self.colorized)
+      self.realm.register(self.colorized)
 
-################################################################################
-### Performance and Debug Logging
+###############################################################################
+### Logging
 class RLlibLogCallbacks(DefaultCallbacks):
-   STEP_KEYS    = 'env_step preprocess_actions realm_step env_stim'.split()
-   EPISODE_KEYS = ['env_reset']
-
-   def init(self, episode):
-      for key in RLlibLogCallbacks.STEP_KEYS + RLlibLogCallbacks.EPISODE_KEYS:
-         episode.hist_data[key] = []
-
-   def on_episode_start(self, *, worker, base_env, policies, episode, **kwargs):
-      self.init(episode)
-
-   def on_episode_step(self, *, worker, base_env, episode, **kwargs):
-      env = base_env.envs[0]
-      for key in RLlibLogCallbacks.STEP_KEYS:
-         if not hasattr(env, key):
-            continue
-         episode.hist_data[key].append(getattr(env, key))
-
    def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
       env = base_env.envs[0]
-      for key in RLlibLogCallbacks.EPISODE_KEYS:
-         if not hasattr(env, key):
-            continue
-         episode.hist_data[key].append(getattr(env, key))
-
       for key, val in env.terminal()['Stats'].items():
          episode.hist_data['_'+key] = val

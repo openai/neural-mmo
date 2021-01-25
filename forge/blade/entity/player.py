@@ -36,7 +36,7 @@ class Player(entity.Entity):
 
    @property
    def serial(self):
-      return self.annID, self.entID
+      return self.population, self.entID
 
    @property
    def isPlayer(self) -> bool:
@@ -69,7 +69,7 @@ class Player(entity.Entity):
       data = super().packet()
 
       data['entID']    = self.entID
-      data['annID']    = self.annID
+      data['annID']    = self.population
 
       data['base']     = self.base.packet()
       data['resource'] = self.resources.packet()

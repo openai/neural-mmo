@@ -65,7 +65,7 @@ class Env:
       self.quill = log.Quill(self.realm.identify)
       
       if idx is None:
-         idx = np.random.randint(self.config.NMAPS)
+         idx = np.random.randint(self.config.N_TRAIN_MAPS)
 
       self.worldIdx = idx
       self.realm.reset(idx)

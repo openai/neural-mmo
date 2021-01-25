@@ -41,7 +41,8 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
 
       config = self.config
       dones['__all__'] = False
-      if not config.EVALUATE and self.realm.tick  >= config.TRAIN_HORIZON:
+      test = config.EVALUATE or config.RENDER
+      if not test and self.realm.tick  >= config.TRAIN_HORIZON:
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
@@ -131,12 +132,13 @@ class RLlibEvaluator(evaluator.Base):
 
       self.model    = self.trainer.get_policy('policy_0').model
       self.env      = RLlibEnv({'config': config})
-
-      self.env.reset(idx=0, step=False)
-      self.registry = RLlibOverlayRegistry(
-            config, self.env).init(trainer, self.model)
-      self.obs      = self.env.step({})[0]
       self.state    = {} 
+
+   def render(self):
+      self.obs = self.env.reset(idx=0)
+      self.registry = RLlibOverlayRegistry(
+            self.config, self.env).init(self.trainer, self.model)
+      super().render()
 
    def tick(self, pos, cmd):
       '''Simulate a single timestep

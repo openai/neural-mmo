@@ -91,6 +91,7 @@ class InkWell:
       self.stats = defaultdict(list)
 
    def update(self, quill, realm=0):
+      '''Realm param unused -- for future interactive expansions'''
       log, stats = quill['Log'], quill['Stats']
       for key, blob in log.items():
          for subkey, (plots, track) in blob.items():

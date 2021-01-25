@@ -88,7 +88,6 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   config.EVALUATE = True
    if config.MODEL != 'scripted':
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
@@ -124,9 +123,15 @@ class Anvil():
       loadModel(self.config).train()
 
    def evaluate(self, **kwargs):
-      loadEvaluator(self.config).test()
+      self.config.EVALUATE = True
+      loadEvaluator(self.config).evaluate()
+
+   def generalize(self, **kwargs):
+      self.config.EVALUATE = True
+      loadEvaluator(self.config).evaluate(generalize=True)
 
    def render(self, **kwargs):
+      self.config.RENDER = True
       loadEvaluator(self.config).render()
 
    def generate(self, **kwargs):

@@ -231,7 +231,7 @@ class Gantt(Plot):
          left='left',
          right='right',
          fill_color=color,
-         line_color=color,
+         line_color=None,
          )
 
       return [quad]

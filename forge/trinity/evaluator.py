@@ -27,12 +27,21 @@ class Base:
       from forge.trinity.twistedserver import Application
       Application(self.env, self.tick)
 
-   def test(self):
-      for t in tqdm(range(self.config.EVALUATION_HORIZON)):
-         self.tick(None, None)
+   def evaluate(self, generalize=False):
+      config = self.config
+      log    = InkWell()
 
-      log = InkWell()
-      log.update(self.env.terminal())
+      if generalize:
+         maps = range(-1, -self.config.EVAL_MAPS-1, -1)
+      else:
+         maps = range(1, config.N_MAPS+1)
+
+      for idx in maps:
+         self.obs = self.env.reset(idx)
+         for t in tqdm(range(self.config.EVALUATION_HORIZON)):
+            self.tick(None, None)
+
+         log.update(self.env.terminal())
 
       np.save(self.config.PATH_EVAL_DATA, log.packet)
 
@@ -46,7 +55,8 @@ class Base:
           cmd: Console command from the server
           preprocessActions: Required for actions provided as indices
       '''
-      self.registry.step(obs, pos, cmd)
+      if self.config.RENDER:
+         self.registry.step(obs, pos, cmd)
       self.obs, rewards, self.done, _ = self.env.step(
             actions, omitDead=True, preprocessActions=preprocessActions)
 
@@ -58,8 +68,11 @@ class Evaluator(Base):
       self.args     = args
 
       self.env      = Env(config)
+
+   def render(self):
       self.obs      = self.env.reset()
       self.registry = OverlayRegistry(config, self.env).init()
+      super().render()
 
    def tick(self, pos, cmd):
       '''Simulate a single timestep

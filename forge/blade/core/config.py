@@ -64,9 +64,6 @@ class Config(Template):
    ENV_VERSION          = '1.5'
    '''Environment version'''
 
-   EVALUATE             = False
-   '''Run in evaluation mode (test/render)'''
-
    v                    = False
    '''Verbose mode'''
 
@@ -124,6 +121,17 @@ class Config(Template):
 
    PATH_THEME_PUB       = os.path.join(PATH_THEMES, 'index_publication.html')
    '''Publication theme file'''
+
+   ############################################################################
+   ### Evaluation Parameters
+   EVALUATE             = False
+   '''Flag used by evaluation mode'''
+
+   RENDER               = False
+   '''Flag used by rener mode'''
+
+   EVAL_MAPS            = 5
+   '''Number of evaluation maps'''
 
 
    ############################################################################
@@ -244,8 +252,11 @@ class Config(Template):
    NPOP                    = 1
    '''Number of distinct populations spawnable in the environment'''
 
-   NMAPS                   = 256 #Number of maps to generate
+   N_TRAIN_MAPS            = 256
+   '''Number of training maps to generate'''
 
+   N_EVAL_MAPS             = 64
+   '''Number of evaluation maps to generate'''
 
    ############################################################################
    ### Agent Parameters

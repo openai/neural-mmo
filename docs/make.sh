@@ -5,8 +5,8 @@ make clean
 #  undoc-members (pollutes with garbage internals)
 #  imported-members (pollutes with inhereted garbage)
 
-SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../forge/ -fMe --implicit-namespaces -o source/autodoc/
-SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc ../projekt/ -fMe --implicit-namespaces -o source/autodoc/
+SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc -o source/autodoc/ -fMe --implicit-namespaces ../forge/ ../forge/embyr/
+SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance sphinx-apidoc -o source/autodoc -fMe --implicit-namespaces ../projekt/
 
 #Strip bad headers
 for f in source/autodoc/*.rst; do\

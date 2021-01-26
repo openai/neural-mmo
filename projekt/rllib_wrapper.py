@@ -135,7 +135,7 @@ class RLlibEvaluator(evaluator.Base):
       self.state    = {} 
 
    def render(self):
-      self.obs = self.env.reset(idx=0)
+      self.obs = self.env.reset(idx=1)
       self.registry = RLlibOverlayRegistry(
             self.config, self.env).init(self.trainer, self.model)
       super().render()

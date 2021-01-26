@@ -94,7 +94,7 @@ class Base:
 
       if entity.resources.health.empty:
          self.killed = True
-         return None
+         return False
 
       return True
 

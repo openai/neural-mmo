@@ -34,7 +34,7 @@ class Base:
       if generalize:
          maps = range(-1, -self.config.EVAL_MAPS-1, -1)
       else:
-         maps = range(1, config.N_MAPS+1)
+         maps = range(1, config.EVAL_MAPS+1)
 
       for idx in maps:
          self.obs = self.env.reset(idx)

@@ -12,17 +12,19 @@
 
 |env|
 
-|icon| Abstract
-###############
+|icon| Welcome to Neural MMO
+############################
 
 `[Demo Video] <https://youtu.be/y_f77u9vlLQ>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
+**Abstract:** Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
+
+Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
 |icon| Installation
 ###################
 
-**Dependencies:** Anaconda Python 3.7.x and gcc. Tested for Ubuntu 16.04/18.04/20.04, macOS Catalina (10.15), and Windows 10.
+**Dependencies:** Anaconda Python 3.7.x and gcc. Tested for Ubuntu 16.04/18.04/20.04, macOS Catalina (10.15), and Windows 10 via WSL.
 
 Ubuntu and macOS:
 
@@ -31,7 +33,7 @@ Ubuntu and macOS:
    #Download Neural MMO and run the pretrained demo model
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
    bash scripts/setup.sh
-   python Forge.py
+   python Forge.py render
 
    #Open the client in a separate terminal
    ./client.sh
@@ -43,14 +45,13 @@ Windows + WSL:
    #Execute on WSL Ubuntu (dependencies required)
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
    bash scripts/setup.sh --SERVER_ONLY
-   python Forge.py
+   python Forge.py render
 
    #Execute on Windows (dependencies not required)
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo-client
    neural-mmo-client/UnityClient/neural-mmo.exe
 
 **Troubleshooting:**
-  - Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with ``--COMPUTE_GLOBAL_VALUES=False``. This will also fix most out-of-memory errors.
   - If PyTorch is not recognizing your GPU, you can run CPU only using ``CUDA_VISIBLE_DEVICES="" python Forge.py``, but expect low FPS.
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.
   - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time.
@@ -58,48 +59,55 @@ Windows + WSL:
 
 **Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
 
-|icon| Overview
-###############
 
-Agents in Neural MMO progress persistent skills while exploring procedurally generated terrain and engaging in strategic combat over thousands of timesteps. Our platform is both an environment and a set of tools for visualizing and comparing emergent policies of intelligent agents.
+|icon| The Basics
+#################
 
-.. image:: /resource/figure/web/overview.svg
+Forge.py is the main file for the included starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. For example:
 
-The long-term goal of Neural MMO is to train artificial general intelligence in simulation -- that is, **agents that scale to the complexity of the real world**. The project is divided into research and engineering modules that cleanly segment this objective into concrete and approachable research and engineering tasks:
+.. code-block:: python
 
-Research
---------
+  python Forge.py generate                         #Generate maps
+  python Forge.py train --MODEL=None --NUM_GPUS=2  #Train w/ 2 GPUs
+  python Forge.py evaluate --MODEL=current         #Evaluate latest checkpoint
+  python Forge.py visualize                        #Visualize the results
+  python Forge.py render --MODEL=current           #Start the game server
+  ./client.sh                                      #Open the 3D client
 
-**Agents that scale to the complexity of their environment**
+To select a configuration file, use the *--config* option, which defaults to *LargeMaps*. We provide *SmallMaps* for smaller scale work and *Debug* for diagnosing bugs and crashes. You may also write your own config classes directly within projekt/config.py -- they will be made available as command line flags automatically.
 
-|water| Trinity: Distributed computation framework based on Ray+RLlib
+|icon| Evaluation
+#################
 
-|air| Ethyr: Baseline models and research utility contrib -- submit PRs with your own tools!
+As a quick exercise, run 
 
-Engineering
------------
+We provide two configurations, SmallMaps and LargeMaps
+You may also write your own You may also set individual config flags directly within projekt/config.py.
 
-**Environments that scale to the complexity of the real world**
+Neural MMO support deep customization: a full list of environment configuration properties is available in
 
-|earth| Blade: Core game environment and extended OpenAI Gym external API
+Basic The most common config options  The  Note that --config defaults to LargeMaps with the associated pretrained baseline.
 
-|fire| Embyr: 3D Unity game client for test-time visualization
+`[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_
 
-|icon| Getting Started
-######################
+  The Forge.py main file The main file is Forge.py.
 
-Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
+Neural MMO is structured as follows:
 
-**1:** Work through the tutorials below and familiarize yourself with the `[Realm API] <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.realm.html>`_
+|air| forge/ethyr: Deep learning models and tools
 
-**2:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion. **This is the best way to contact me**
+|water| forge/trinity: Infrastructure and environment tools
 
-**3:** Develop your own fork and contribute your features to the platform.
+|earth| forge/blade: Core game
 
-Neural MMO is fully open-source -- to succeed long-term, we will need the help of talented researchers, software engineers, game designers, and technical artists. I actively review issues and pull requests.
+|fire| forge/embyr: 3D Unity client
 
-|icon| Training from scratch
-############################
+
+Forge.py is the main file. It We also provide an RLlib wrapper and associated configuration file in /projekt.
+
+
+**Contact:**  and familiarize yourself with the `[Realm API] <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.realm.html>`_
+
 
 Next, we will get familiar with the baseline parameters and train a model from scratch. Open up projekt/config.py, which contains all of the training configuration options. You can either edit defaults here or override individual parameters using command line arguments. To train a baseline, simply run:
 

@@ -20,7 +20,7 @@ API Reference:
 .. toctree::
    :maxdepth: 4
 
-   forge.blade.core.realm
+   forge.trinity.env
    forge.blade.core.config
 
 |icon| Developer API

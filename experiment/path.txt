@@ -1,1 +1,1 @@
-experiment/checkpoint_108/checkpoint-108
+experiment/checkpoint_96/checkpoint-96

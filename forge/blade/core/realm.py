@@ -192,14 +192,15 @@ class Realm:
       prioritized(actions, merged)
       prioritized(npcActions, merged)
 
-      #Update entities and perform actions
-      self.players.update(actions)
-      self.npcs.update(npcActions)
-
+      #Execute actions
       for priority in sorted(merged):
          for entID, (atn, args) in merged[priority]:
             ent = self.entity(entID)
             atn.call(self, ent, *args)
+
+      #Update entities and perform actions
+      self.players.update(actions)
+      self.npcs.update(npcActions)
 
       #Cull dead agents and spawn new ones
       dead = self.players.cull()

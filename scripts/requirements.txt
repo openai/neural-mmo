@@ -21,3 +21,5 @@ lz4==3.1.0
 vec_noise==1.1.4
 sphinx_rtd_theme==0.5.1
 selenium==3.141.0
+ray==1.2.0.dev0
+fire=0.4.0

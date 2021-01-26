@@ -3,6 +3,11 @@
 
 |env|
 
+**3:** Develop your own fork and contribute your features to the platform.
+
+Neural MMO is fully open-source -- to succeed long-term, we will need the help of talented researchers, software engineers, game designers, and technical artists. I actively review issues and pull requests.
+
+
 |icon| Foreword
 ###############
 

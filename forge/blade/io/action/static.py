@@ -47,9 +47,6 @@ class Move(Node):
    priority = 1
    nodeType = NodeType.SELECTION
    def call(env, entity, direction):
-      if not entity.alive:
-         return
-
       r, c  = entity.pos
       entID = entity.entID
       entity.history.lastPos = (r, c)
@@ -70,6 +67,9 @@ class Move(Node):
 
       env.map.tiles[r, c].delEnt(entID)
       env.map.tiles[rNew, cNew].addEnt(entity)
+
+      if env.map.tiles[rNew, cNew].lava:
+         entity.receiveDamage(None, entity.resources.health.val)
 
    @staticproperty
    def edges():
@@ -144,8 +144,6 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(env, entity, style, targ):
-      entity.history.attack = None
-
       #Can't attack if either party is immune
       if entity.status.immune > 0 or targ.status.immune > 0:
          return

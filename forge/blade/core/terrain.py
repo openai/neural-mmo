@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
+
 import os
 
 import vec_noise
@@ -78,13 +79,13 @@ class MapGenerator:
       else:
          prefix = config.PATH_MAPS
 
+      #Train and eval map indices
       msg    = 'Generating {} training and {} evaluation maps:'
-      maps   = range(-config.N_EVAL_MAPS, config.N_TRAIN_MAPS+1)
+      evalMaps  = range(-config.N_EVAL_MAPS, 0)
+      trainMaps = range(1, config.N_TRAIN_MAPS+1)
       print(msg.format(config.N_TRAIN_MAPS, config.N_EVAL_MAPS))
-      for seed in tqdm(maps):
-         if seed == 0:
-            continue
 
+      for seed in tqdm([*evalMaps, *trainMaps]):
          path = prefix + '/map' + str(seed)
          mkdir(prefix)
          mkdir(path)

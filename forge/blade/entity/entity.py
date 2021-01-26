@@ -88,15 +88,7 @@ class Base:
       ent.dataframe.init(Static.Entity, ent.entID, (r, c))
 
    def update(self, realm, entity, actions):
-      r, c = self.pos
-      if realm.map.tiles[r, c].lava:
-         entity.receiveDamage(None, entity.resources.health.val)
-
-      if entity.resources.health.empty:
-         self.killed = True
-         return False
-
-      return True
+      pass
 
    @property
    def pos(self):
@@ -121,7 +113,6 @@ class Entity:
       self.entID        = iden
 
       self.repr         = None
-      self.killed       = False
       self.vision       = 5
 
       self.attacker     = None
@@ -155,11 +146,6 @@ class Entity:
       self.status.update(realm, self, actions)
       self.history.update(realm, self, actions)
 
-      if not self.alive:
-         return False
-
-      return True
-
    def receiveDamage(self, source, dmg):
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
@@ -182,9 +168,6 @@ class Entity:
 
    @property
    def alive(self):
-      if self.killed:
-         return False
-
       if self.resources.health.empty:
          return False
 

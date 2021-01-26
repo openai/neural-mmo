@@ -109,8 +109,23 @@ def loadModel(config):
    return trainer
 
 class Anvil():
-   '''Google Fire command parser for Neural MMO'''
+   '''Neural MMO CLI powered by Google Fire
+
+   Main file for the RLlib demo included with Neural MMO.
+
+   Usage:
+      python Forge.py <COMMAND> --config=<CONFIG> --ARG1=<ARG1> ...
+
+   The User API documents core env flags. Additional config options specific
+   to this demo are available in projekt/config.py. 
+
+   The --config flag may be used to load an entire group of options at once.
+   The Debug, SmallMaps, and LargeMaps options are included in this demo with
+   the latter being the default -- or write your own in projekt/config.py
+   '''
    def __init__(self, **kwargs):
+      if 'help' in kwargs:
+         kwargs.pop('help')
       if 'config' in kwargs:
          config = kwargs.pop('config')
          config = getattr(projekt.config, config)()
@@ -120,25 +135,37 @@ class Anvil():
       self.config = config
 
    def train(self, **kwargs):
+      '''Train a model starting with the current value of --MODEL'''
       loadModel(self.config).train()
 
    def evaluate(self, **kwargs):
+      '''Evaluate a model on --EVAL_MAPS maps from the training set'''
       self.config.EVALUATE = True
       loadEvaluator(self.config).evaluate()
 
    def generalize(self, **kwargs):
+      '''Evaluate a model on --EVAL_MAPS maps not seen during training'''
       self.config.EVALUATE = True
       loadEvaluator(self.config).evaluate(generalize=True)
 
    def render(self, **kwargs):
+      '''Start a WebSocket server that autoconnects to the 3D Unity client'''
       self.config.RENDER = True
       loadEvaluator(self.config).render()
 
    def generate(self, **kwargs):
+      '''Generate game maps for the current --config setting'''
       terrain.MapGenerator(self.config).generate()
 
    def visualize(self, **kwargs):
+      '''Web dashboard for the latest evaluation/generalization results'''
       BokehServer(self.config)
       
 if __name__ == '__main__':
+   def Display(lines, out):
+        text = "\n".join(lines) + "\n"
+        out.write(text)
+
+   from fire import core
+   core.Display = Display
    Fire(Anvil)

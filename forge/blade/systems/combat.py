@@ -39,7 +39,7 @@ def attack(entity, targ, skillFn):
 #Compute maximum damage roll
 def damage(skill, level):
    if skill == Skill.Melee:
-      return np.floor(5 + level * 45 / 99)
+      return np.floor(7 + level * 63 / 99)
    if skill == Skill.Range:
       return np.floor(3 + level * 32 / 99)
    if skill == Skill.Mage:

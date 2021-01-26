@@ -79,7 +79,9 @@ class Player(entity.Entity):
   
    def update(self, realm, actions):
       '''Post-action update. Do not include history'''
-      if not super().update(realm, actions):
+      super().update(realm, actions)
+
+      if not self.alive:
          return
 
       self.resources.update(realm, self, actions)

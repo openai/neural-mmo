@@ -36,6 +36,7 @@ class Base:
       else:
          maps = range(1, config.EVAL_MAPS+1)
 
+      print('Number of evaluation maps: {}'.format(len(maps)))
       for idx in maps:
          self.obs = self.env.reset(idx)
          for t in tqdm(range(self.config.EVALUATION_HORIZON)):

@@ -14,7 +14,9 @@ class NPC(entity.Entity):
       self.skills = skill.Combat(self)
 
    def update(self, realm, actions):
-      if not super().update(realm, actions):
+      super().update(realm, actions)
+
+      if not self.alive:
          return
 
       self.resources.health.increment(1)

@@ -27,7 +27,10 @@
 
 I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
+2021 (winter): v1.5 release
+
 2020 (spring): v1.3 and v1.4 releases
+   - Neural MMO v1.4 presented at the ICML 2020 Learning in Artificial Open Worlds workshop
    - Neural MMO v1.3 presented as an Extended Abstract at AAMAS 2020
    - Neural MMO v1.3-prerelease presented at a casual seminar in NeosVR
 
@@ -51,6 +54,7 @@ I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of
    - I (**Joseph Suarez**) retain ownership of this smaller original code base and game kernel, along with associated ideas. I created these before my affiliations with OpenAI and MIT
 
 Open source contributors, listed by time since latest contribution. Discord handle have been used for individuals who have not granted explicit permission to display their real names:
+   - **Thomas Cloarec:** Developed the dynamic programming backend for scripted baseline agents
    - **Jack Garbus:** Major contributions to the logging framework, feedback on the documentation and tutorials
    - **@tdimeola:** Feedback on the documentation and tutorials
    - **@cehinson:** Mac build of the Unity3D client
@@ -69,4 +73,4 @@ We currently use them for flavor as an homage to the game that inspired the proj
 |ags| Namesake
 ##############
 
-In formal publications, we refer to our project simply as a (the first) "Neural MMO." Internally and informally, we call it "Projekt: Godsword" (God-Sword). The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called godswords. The latter is a particularly good model for AI environments; the former is more of a soft flavor inspiration.
+Neural MMO was originally named "Projekt: Godsword" (God-Sword). The name comes from two sources: CD Projekt Red, my personal favorite game dev studio, and OldSchool Runescape, which contains an iconic set of weapons called godswords. The latter is a particularly good model for AI environments; the former is more of a soft inspiration. While we now refer to the project simply as (the first) Neural MMO, the source files and API retain several of the original naming conventions for flavor.

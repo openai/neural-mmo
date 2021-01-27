@@ -9,9 +9,9 @@ Index
 
 .. toctree::
    :maxdepth: 8
-   :caption: Update Materials
+   :caption: Developer Guide
 
-   rst/updates
+   rst/devguide
 
 .. toctree::
    :maxdepth: 8
@@ -21,9 +21,9 @@ Index
 
 .. toctree::
    :maxdepth: 8
-   :caption: Developer Guide
+   :caption: Updates
 
-   rst/devguide
+   rst/updates
 
 .. toctree::
    :maxdepth: 8

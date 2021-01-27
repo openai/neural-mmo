@@ -12,24 +12,6 @@ Agents in Neural MMO progress persistent skills while exploring procedurally gen
 
 The long-term goal of Neural MMO is to train artificial general intelligence in simulation -- that is, **agents that scale to the complexity of the real world**. The project is divided into research and engineering modules that cleanly segment this objective into concrete and approachable research and engineering tasks: *agents that scale to the complexity of their environment* and *environments that scale to the complexity of the real world*.
 
-Research
---------
-
-**Agents that scale to the complexity of their environment**
-
-|water| Trinity: Distributed computation framework based on Ray+RLlib
-
-|air| Ethyr: Baseline models and research utility contrib -- submit PRs with your own tools!
-
-Engineering
------------
-
-**Environments that scale to the complexity of the real world**
-
-|earth| Blade: Core game environment and extended OpenAI Gym external API
-
-|fire| Embyr: 3D Unity game client for test-time visualization
-
 This dual problem formulation is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this `[Two Pager] <https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing>`_ for a more thorough overview of the project approach and objective.
 
 The discussion of failure modes below is mostly intended to dissuade skepticism, which thus far I've found correlates perfectly with lack of familiarity with MMOs. If you are very familiar with MMOs + current AI research and are still skeptical, please contact me on the Discord -- I'd love to hear your views.

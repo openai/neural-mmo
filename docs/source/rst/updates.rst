@@ -17,13 +17,15 @@
 |icon| Publications
 ###################
 
+:download:`[Poster] </resource/update/NMMO_ICML2020_Poster.pdf>` :download:`Neural MMO: Ingredients for Massively Multiagent Artificial Intelligence Research  </resource/update/nmmo_icml2020.pdf>` (ICML 2020 LAOW Workshop) (v1.4)
+
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS, 2020)
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://arxiv.org/abs/2001.12004>`_ (arXiv, 2020)
 
-`Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents <https://arxiv.org/abs/1903.00784>`_ (arXiv, 2019)
+`Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents <https://arxiv.org/abs/1903.00784>`_ (arXiv, 2019) (v1.0)
 
-`Neural MMO: A Massively Multiagent Game Environment <https://github.com/jsuarez5341/neural-mmo>`_ (OpenAI Blog, 2019)
+`Neural MMO: A Massively Multiagent Game Environment <https://github.com/jsuarez5341/neural-mmo>`_ (OpenAI Blog, 2019) (v1.0)
 
 |icon| Presentations
 ####################

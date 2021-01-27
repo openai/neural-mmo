@@ -217,7 +217,8 @@ class Env:
    def log(self, ent) -> None:
       '''Logs agent data upon death
 
-      This function is called automatically when an agent dies. You should not
+      This function is called automatically when an agent dies. Logs are used
+      to compute summary stats and populate the dashboard. You should not
       call it manually. Instead, override this method to customize logging.
 
       Args:

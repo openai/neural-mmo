@@ -1,38 +1,33 @@
 .. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
+.. |ags| image:: /resource/icon/rs/ags.png
+.. |air| image:: /resource/icon/rs/air.png
+.. |earth| image:: /resource/icon/rs/earth.png
+.. |fire| image:: /resource/icon/rs/fire.png
+.. |water| image:: /resource/icon/rs/water.png
+
 |env|
-
-**3:** Develop your own fork and contribute your features to the platform.
-
-Neural MMO is fully open-source -- to succeed long-term, we will need the help of talented researchers, software engineers, game designers, and technical artists. I actively review issues and pull requests.
-
 
 |icon| Foreword
 ###############
 
-The formal User API is new as of v1.4. This means we've just gotten public functionality to the point where it's relatively stable and wont change too much from update to update. The internals are still moving fast and subject to constant refactoring and reworking. This up-front engineering cost is essential to the long-term success of the project and more or less makes it impossible to have a stable developer API for the time being.
+We're actively looking for academic collaborators and open source contributors for all aspects of the project, including those that do not involve any AI or ML. Message me on Discord if you are interested in getting involved. This guide serves as a brief organizational overview of Neural MMO for new contributors and links to a scrum board. It also contains information on some of the more important technical decisions in this project, some of which may be important to you depending on which portion of the project you are interested in.
 
-That said, we are working on stabilizing and exposing small sections of the API and do expect to have a reasonable developer guide at some point. Neural MMO is fully open source and in no way limited to experienced reinforcement learning researchers. We also need full-stack software engineers and game designers/programmers/technical artists, among others. The purpose of this section in its current form is to provide a starting point for those interested in contributing to the platform. If you think something is missing, let me know on Discord.
+|icon| Code Structure
+#####################
 
-|icon| Before You Start
-#######################
+Neural MMO is broken into four major modules
 
-Neural MMO is open source by traditional measures -- good PRs get merged. In practice, more is required. Neural MMO is neither a pure research nor software engineering endeavor; long-term success requires people from a variety of skill backgrounds to contribute. Here's how you can help:
+|air| forge/ethyr: Neural networks. This module contains all code with PyTorch dependencies and associated tools.
 
-**Research Science:** We need better baseline models and algorithms. The largest likely improvement will come from rewriting the baseline model to be fully attentional. It should be possible to express the input, hidden, and output networks as Transformer modules. I've done some preliminary work and have a decent Attentional baseline, but it needs some tuning and also doesn't incorporate attention at every layer. Note that the above is intended for contributors who want to improve the base platform. We also support collaborations with researchers who want to use Neural MMO as a platform for more creative explorations into multiagent communication, population-based algorithms, emergent communication, etc. Come chat on Discord.
+|water| forge/trinity: Infrastructure. This module contains everything positions between the environment code and the model code, including the core API, evaluation and visualization tools, and serialized observation representations.
 
-**Research Engineering:** The single hardest engineering challenge in Neural MMO lies between the model and the environment. Our IO processing allows us to modify the environment observation and action spaces without having to manually rewrite networks. Currently, we only support discrete and continuous observations and discrete fixed and variable length actions. We would like to expand support to include vector-values observations and actions, as well as continous values actions. We also need peripheral research utilities -- better model versioning, versioning, and troubleshooting tools.
+|earth| forge/blade: Core game. This module contains the environment code with minimal dependencies on non-game elements.
 
-**Software Engineering:** The Neural MMO core is nothing more than a traditional game with a few extra design decisions to support efficiency and simplicity as a research environment. Research on Neural MMO is fundamentally limited by the simplicity of the environment -- more complex game mechanics give agents more systems to learn and interact with. We need more content: item and inventory systems, player communication, trade, PvE, interesting terrain generation, etc.
+|fire| forge/embyr: 3D Unity client. This module contains the C# Unity project and associated executables.
 
-**Game Development:** The server-side code can be handled more or less by traditional software engineering. Game designers and programmers would be helpful there, but experienced Unity developers would probably be more helpful on the client side. The Neural MMO client is currently limited to relatively small maps that are assembled from 3D tiles in what is probably the stupidest way possible. We need scalable systems for handling large maps and large numbers of agents. As the game and rendering logic are separated, we also need to keep up with features being added to the server.
-
-**Technical Artwork:** The models, animations, UIs, and other assets used in the client are good by research environment standard but amateur otherwise. We need help improving all aspects of the client visuals
-
-**Technical Writing:** The website docs could use improvement -- assistance in editing is greatly appreciated.
-
-**Other:** If you have other relevent skills and can improve a portion of this project, we welcome your help. Come chat on Discord about how you can get involved if you don't fit into one of the buckets above or come from a multidisciplinary background.
+Forge.py is the main file and the RLlib demo is implemented in /projekt
 
 |icon| Tech Stack
 #################
@@ -41,30 +36,46 @@ Neural MMO is open source by traditional measures -- good PRs get merged. In pra
 
 **Server:** Broken into four modules as described in the User Guide. The biggest chunk of code is responsible for the environment game logic, as well as general purpose observation and action processing required for the OpenAI Gym derivative User API. The baselines are PyTorch models and our demo training code uses RLlib. The environment itself does not depend on PyTorch or RLlib (and shouldn't), but they are more or less mandatory if you want an out-of-the-box experience. There isn't a way around this with current frameworks. No frameworks currently support automatic input/output network definitions from complex Gym spaces. The best we could do is to replicate the current design in other frameworks (e.g. TensorFlow). That is too much work for me to do as an individual for too little benefit, but if you want to implement a TensorFlow port, go ahead and I'll merge to forge/ethyr/tensorflow.
 
-As of v1.4, we use a slightly customized GoogleFire wrapper for environment and experiment configuration files (pure python with nice CLI support) and a pip requirements.txt for dependency management and installation
+We use a slightly customized GoogleFire wrapper for environment and experiment configuration files (pure python with nice CLI support) and a pip requirements.txt for dependency management and installation
 
-**Client:** The v1.0 client was written in THREE.js. Since then, we have migrated to Unity3D with a C# code base. The terrain is made of a large number of snappable 3D tiles modeled in Blender. The only significant library we use outside of base Unity is websocket-sharp for communicating with the server.
+**Client:** Embyr is the Neural MMO renderer. The v1.0 client was written in THREE.js. Since then, we have migrated to Unity3D with a C# code base. The renderer functions much like an MMO game client: rather than directly simulating game logic, it renders the current game state from packets communicated by the Neural MMO server over a Twisted WebSocket. This design cuts out the overhead of running a bulky game engine during training and also enables us to keep the environment in pure Python for faster development. Embyr is maintained in a separate repository for historical reasons as well as because it is large and not required on remote servers during distributed training. The terrain is made of a large number of snappable 3D tiles modeled in Blender. The only significant library we use outside of base Unity is websocket-sharp for communicating with the server.
+
+**Dashboard:** The interactive Dashboard is implemented as a Bokeh server and renders in-browser.
 
 **Documentation:** We use Sphinx to autogenerate documentation. The User API is created manually in docs/source/public. The Developer API is a dump of all doctrings using Sphinx Autodoc. The website template is defined in source/_templates and is a reskinned readthedocs.io theme.
-
-|icon| Versioning
-#################
-
-We assume Python 3.7+ with the packages listed in the requirements.txt, minus Pytorch/RLlib which are only required for the baseline models. Note that this means:
-
-1. Dicts are assumed sorted by insertion order
-
-2. No walrus := operator
 
 |icon| Style
 ############
 
-Deviations from PEP:
-
-1. 3 space indents
-
-2. Lines cut at 78 characters
-
-Unit tests at the User API level and a basic linter will be required as the project scales. We currently have neither of these. For the time being, verify that your commits do not break the demo policy + renderer. Larger patches should run the training code overnight to ensure agents still learn similar behaviors.
+We mostly follow PEP8. The only notable exceptions are three-space indents and camel case names -- you don't need to follow these in new modules, but avoid mixing styles or autoformatting large swaths of old code.
 
 The Neural MMO: `[Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>`_ provides canonical color schemes for the website, figures, and presentations. It is not designed for traditional light-on-dark publications -- arXiv and conference papers should significantly downplay fonts/colors to avoid overly high-contrast figures.
+
+|icon| Scrum Board
+##################
+
+We manage major improvements and expansions through Github Projects as of v1.5. This is a non-exhaustive list. Feel free to propose new efforts. In general, we're always looking for:
+  - New game content in the style of traditional MMOs
+  - Methods for hooking up a wider variety of game content to our IO code
+  - Better evaluation and visualization tools
+  - Better baseline models and more efficient trainers
+  - Expansions that support new research directions
+  - Client performance improvements
+  - Client UI and asset improvements
+  - New types of in-client visualizations
+  - Improvements to our documentation
+
+|icon| Client Map Representation
+################################
+
+When the client first connects to the server, it receives a packet containing the material types of all tiles. In order to build the map, the client selects the correct snappable 3D asset for each tile depending on its material and surrounding tiles. This loading process occurs in chunks of configurable size, and each chunk is welded together into a single object after being loaded. Maps in v1.5+ can have over a million tiles -- performance is crucial. We leverage Unity's DOTS/ECS (Data Oriented Tech Stac/Entity Component System), which allows us to represent tiles/chunks with structs instead of heavier GameObjects. However, this system is not perfect. We cannot change tile types without reloading an entire chunk. As such, the food resource (forest tile) is represented using a separate 3d model. These are also represented using ECS, but it still places a significant load on the client. Large maps can also contain up to 2048 entities (players and NPCs). This has started to become a performance bottleneck as well, and we have not yet integrated ECS into the player logic. ECS is great for performance, but it makes development significantly more complicated, as we essentially lose the conveniences of OOP.
+
+|icon| Observation Representation
+#################################
+
+Agent observations are represented by a set of sets: they observe a set of nearby objects (agents and tiles) each parameterized by on the order of a dozen attributes (continuous and discrete values). This quickly becomes a lot of data: for an agent with a vision range of 7, they observe 15x15=256 tiles and up to 256 agents for a total of 512 entities. Multiply this value by up to a thousand agents per environment and we have a lot of data. More importantly, we have a lot of nested object traversals in order to extract the data for each observation from the environment. This is ridiculously slow -- before the following optimizations, observation processing consumed 98+ percent of environment computation time. The solution was to keep a serialized flat-tensor representation of the environment synchronized with the actual environment. Every time the environment updates one of the properties that is observable by agents, the change is reflected in an underlying tensor representation. This allows us to extract agent observations as flat tensor slices. This logic is in forge/trinity/dataframe.py. Be warned: it is essential to follow the patterns used by the Tile and Entity classes to avoid desync. The worst training bugs in Neural MMO invariably come from a mismatch between the game object state and the serialized state.
+
+|icon| Model IO
+###############
+
+Each agent observes discrete and continuous tensors for each objects type (currently Tiles and Entities). Discrete values have been flat-indexed to fit a single embedding layer. This enables us to compute discrete/continuous embedding vectors using a single lookup/weight multiply per entity type. The embeddings are then passed to an attentional preprocessor which squashes the variable-length set of objects to a fixed-size representation. It may then be passed to a standard model, currently an LSTM, before being fed to the action model. In order to support variable-length actions such as targeting nearby agents, we use a hard-attentional mechanism. That is, the model hidden state is keyed (dot producted) with action argument embeddings. This allows us to keep the entire model end-to-end differentiable.

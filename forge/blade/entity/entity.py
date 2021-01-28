@@ -2,7 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge.blade.systems import skill, droptable, combat, equipment
-from forge.blade.lib import material
+from forge.blade.lib import material, utils
 
 from forge.blade.io.action import static as Action
 from forge.blade.io.stimulus import Static
@@ -51,6 +51,9 @@ class History:
    def __init__(self, ent):
       self.actions = None
       self.attack  = None
+  
+      self.origPos     = ent.pos
+      self.exploration = 0
 
       self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
       self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
@@ -61,6 +64,10 @@ class History:
       self.attack  = None
       self.actions = actions
       self.damage.update(0)
+
+      exploration      = utils.l1(entity.pos, self.origPos)
+      self.exploration = max(exploration, self.exploration)
+
       self.timeAlive.increment()
 
    def packet(self):

@@ -2,7 +2,10 @@ from pdb import set_trace as T
 
 from collections import defaultdict
 from itertools import chain
+import shutil
+import contextlib
 import os
+import re
 
 from tqdm import tqdm
 import numpy as np
@@ -153,31 +156,42 @@ class RLlibEvaluator(evaluator.Base):
 
 class SanePPOTrainer(ppo.PPOTrainer):
    '''Small utility class on top of RLlib's base trainer'''
-   def __init__(self, env, path, config):
-      super().__init__(env=env, config=config)
+   def __init__(self, config):
       self.envConfig = config['env_config']['config']
-      self.saveDir   = path
+      super().__init__(env=self.envConfig.ENV_NAME, config=config)
 
    def save(self):
       '''Save model to file. Note: RLlib does not let us chose save paths'''
-      savedir = super().save(self.saveDir)
-      with open('experiment/path.txt', 'w') as f:
-         f.write(savedir)
-      print('Saved to: {}'.format(savedir))
-      return savedir
+      config   = self.envConfig
+      saveFile = super().save(config.PATH_CHECKPOINTS)
+      saveDir  = os.path.dirname(saveFile)
+      
+      #Clear current save dir
+      shutil.rmtree(config.PATH_CURRENT, ignore_errors=True)
+      os.mkdir(config.PATH_CURRENT)
+
+      #Copy checkpoints
+      for f in os.listdir(saveDir):
+         stripped = re.sub('-\d+', '', f)
+         src      = os.path.join(saveDir, f)
+         dst      = os.path.join(config.PATH_CURRENT, stripped) 
+         shutil.copy(src, dst)
+
+      print('Saved to: {}'.format(saveDir))
 
    def restore(self, model):
       '''Restore model from path'''
+      config    = self.envConfig
+
       if model is None:
          print('Training from scratch...')
+         trainPath = config.PATH_TRAINING_DATA.format('current')
+         np.save(trainPath, {})
          return
-      if model == 'current':
-         with open('experiment/path.txt') as f:
-            path = f.read().splitlines()[0]
-      else:
-         path = 'experiment/{}/checkpoint'.format(model)
 
-      print('Loading from: {}'.format(path))
+      modelPath = config.PATH_MODEL.format(config.MODEL)
+      print('Loading from: {}'.format(modelPath))
+      path     = os.path.join(modelPath, 'checkpoint')
       super().restore(path)
 
    def policyID(self, idx):
@@ -194,6 +208,10 @@ class SanePPOTrainer(ppo.PPOTrainer):
       config = self.envConfig
 
       logo   = open(config.PATH_LOGO).read().splitlines()
+
+      model         = config.MODEL if config.MODEL is not None else 'current'
+      trainPath     = config.PATH_TRAINING_DATA.format(model)
+      training_logs = np.load(trainPath, allow_pickle=True).item()
 
       total_sample_time = 0
       total_learn_time = 0
@@ -235,13 +253,26 @@ class SanePPOTrainer(ppo.PPOTrainer):
                 vals   = [epoch, sample_stat, learn_stat],
                 valFmt = '{}')])
 
-          #Format stats
-          hist    = stats['hist_stats']
-          timings = {k: v for k, v in hist.items() if not k.startswith('_')}
-          stats   = {k.lstrip('_'): v[-config.TRAIN_BATCH_SIZE:] for k, v in 
-               stats['hist_stats'].items() if k.startswith('_')}
+          #Format stats (RLlib callback format limitation)
+          data = defaultdict(dict)
+          for k, vals in stats['hist_stats'].items():
+             if not k.startswith('_'):
+                continue
+             k                 = k.lstrip('_')
+             track, stat       = re.split('_', k)
+             data[track][stat] = vals
 
-          lines = formatting.stats(stats)
+          np.save(trainPath, data)
+
+          #Representation for CLI
+          cli = {}
+          for track, stats in data.items():
+             cli[track] = {}
+             for stat, vals in stats.items():
+                mmean = np.mean(vals[-config.TRAIN_SUMMARY_ENVS:])
+                cli[track][stat] = mmean
+
+          lines = formatting.precomputed_stats(cli)
           if config.v:
              lines += formatting.timings(timings)
 
@@ -355,6 +386,15 @@ class GlobalValues(RLlibOverlay):
 ### Logging
 class RLlibLogCallbacks(DefaultCallbacks):
    def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
-      env = base_env.envs[0]
-      for key, val in env.terminal()['Stats'].items():
-         episode.hist_data['_'+key] = val
+      assert len(base_env.envs) == 1, 'One env per worker'
+      env    = base_env.envs[0]
+      config = env.config
+
+      for key, vals in env.terminal()['Stats'].items():
+         logs = episode.hist_data
+         key  = '_' + key
+
+         logs[key + '_Min']  = [np.min(vals)]
+         logs[key + '_Max']  = [np.max(vals)]
+         logs[key + '_Mean'] = [np.mean(vals)]
+         logs[key + '_Std']  = [np.std(vals)]

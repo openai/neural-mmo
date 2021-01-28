@@ -25,11 +25,12 @@ class Base(core.Config):
    NUM_SGD_ITER            = 1
 
    #Model Parameters 
-   #large-map: Large maps baseline
-   #small-map: Small maps baseline
-   #scripted:  Scripted baseline
-   #current:   Resume latest checkpoint
-   #None:      Train from scratch
+   #large-map:        Large maps baseline
+   #small-map:        Small maps baseline
+   #scripted_combat:  Scripted with combat
+   #scripted_forage:  Scripted without combat
+   #current:          Resume latest checkpoint
+   #None:             Train from scratch
    MODEL                   = 'current'
    N_AGENT_OBS             = 100
    NPOLICIES               = 1

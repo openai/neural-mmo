@@ -10,6 +10,16 @@ BOT     = u'\u2594'
 LEFT    = u'\u258f'
 RIGHT   = u'\u2595'
 
+def precomputed_stats(stats):
+   '''Format a dict of precomputed stats'''
+   lines = []
+   for key, stat in stats.items():
+      keys  = 'Min Max Mean Std'.split()
+      vals  = [stat[k] for k in keys]
+      lines.append(line(title=key, keys=keys, vals=vals))
+   
+   return lines
+
 def stats(stats):
    '''Format a dict of stats'''
    lines = []

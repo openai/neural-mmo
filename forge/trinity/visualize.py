@@ -14,15 +14,29 @@ class BokehServer:
 
    This dashboard is created automatically from the data and plot types
    collected in Env.log. It supports both web and publication themes.'''
-   def __init__(self, config):
-      self.data   = np.load(config.PATH_EVAL_DATA, allow_pickle=True).tolist()
+   def __init__(self, config, data):
+      assert data in ('training', 'evaluation')
       self.config = config
-      self.start()
 
-   def start(self):
+      if data == 'training':
+         path = config.PATH_TRAINING_DATA.format(config.MODEL)
+         func = self.visualize_training
+      if data == 'evaluation':
+         path = config.PATH_EVALUATION_DATA.format(config.MODEL)
+         func = self.visualize_evaluation
+
+      try: 
+         self.data = np.load(path, allow_pickle=True).tolist()
+      except FileNotFoundError:
+         print('Run evaluation first -- no data for specified config')
+         exit(0)
+
+      self.start(func)
+
+   def start(self, func):
       '''Start Bokeh server'''
       server = bokeh.server.server.Server(
-         {'/': self.visualize},
+         {'/': func},
          port=self.config.VIS_PORT,
          num_procs=1)
 
@@ -42,7 +56,7 @@ class BokehServer:
 
       self.colors = [bokeh.colors.RGB(*(c.rgb)) for c in preset.colors]
       return preset
- 
+
    def visualize(self, doc):
       '''Build dashboard'''
       config = self.config
@@ -52,6 +66,30 @@ class BokehServer:
       doc.theme = bokeh.themes.Theme(json={'attrs': preset.dict()})
       with open(preset.index) as f:
          doc.template = jinja2.environment.Template(f.read())
+
+      return doc
+
+   def visualize_training(self, doc):
+      doc    = self.visualize(doc)
+      config = self.config
+
+      trainPath     = config.PATH_TRAINING_DATA.format(config.MODEL)
+      training_logs = np.load(trainPath, allow_pickle=True).item()
+
+      fig, legend = self.plot('Title', training_logs, -1, self.colors, 0, 1)
+      fig.legend.location  = 'top_left'
+      fig.title.text       = 'Training Progress'
+      fig.xaxis.axis_label = 'Environments'
+      fig.yaxis.axis_label = 'Value'
+      fig.plot_width       = 1920
+      fig.plot_height      = 1080
+
+      layout = [fig]
+      doc.add_root(bokeh.layouts.layout(layout))
+ 
+   def visualize_evaluation(self, doc):
+      doc    = self.visualize(doc)
+      config = self.config
 
       #Draw Plots
       data   = self.data
@@ -153,3 +191,4 @@ class BokehServer:
          fig.xaxis.axis_label = None
 
       return fig, legend
+

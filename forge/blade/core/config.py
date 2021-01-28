@@ -102,15 +102,28 @@ class Config(Template):
    '''Logo file (Ascii art)'''
 
 
-   #Logs
-   PATH_LOGS            = 'experiment'
-   '''Training and evaluation log directory'''
+   #Baselines and Checkpoints
+   PATH_CHECKPOINTS          = 'checkpoints'
+   '''Checkpoints path'''
 
-   PATH_EVAL_DATA       = os.path.join(PATH_LOGS, 'evaluation.npy')
-   '''Evaluation data file'''
+   PATH_BASELINES            = 'baselines'
+   '''Model and evaluation directory'''
 
-   PATH_EVAL_FIGURE     = os.path.join(PATH_LOGS, 'evaluation.html')
-   '''Evaluation figure file'''
+   PATH_CURRENT              = os.path.join(PATH_BASELINES, 'current')
+   '''Current experiment path'''
+
+   PATH_MODEL                = os.path.join(PATH_BASELINES, '{}')
+   '''Model path -- format me with the model name'''
+
+   PATH_TRAINING_DATA        = os.path.join(PATH_MODEL, 'training.npy')
+   '''Model training data -- format me with the model name'''
+
+   PATH_EVALUATION_DATA      = os.path.join(PATH_MODEL, 'evaluation.npy')
+   '''Model evaluation data -- format me with the model name'''
+
+   PATH_FIGURE               = os.path.join(PATH_MODEL, 'evaluation.html')
+   '''Dashboard figure -- format me with the model name'''
+
 
    #Themes
    PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 
@@ -132,6 +145,9 @@ class Config(Template):
 
    EVAL_MAPS            = 5
    '''Number of evaluation maps'''
+
+   TRAIN_SUMMARY_ENVS   = 10
+   '''Most recent envs to use for training summaries'''
 
 
    ############################################################################

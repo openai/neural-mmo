@@ -14,6 +14,7 @@ from forge.blade.systems import visualizer
 from forge.blade.systems.visualizer import plot
 
 class Quill:
+   TRAINING     = -1
    LINE         = 0
    SCATTER      = 1
    HISTOGRAM    = 2
@@ -23,6 +24,7 @@ class Quill:
    STACKED_AREA = 6
 
    PLOTS = {
+      TRAINING:     plot.Training,
       LINE:         plot.Line,
       SCATTER:      plot.Scatter,
       HISTOGRAM:    plot.Histogram,

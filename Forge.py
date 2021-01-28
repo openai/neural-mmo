@@ -56,8 +56,7 @@ def loadTrainer(config):
    policies  = createPolicies(config, mapPolicy)
 
    #Instantiate monolithic RLlib Trainer object.
-   return wrapper.SanePPOTrainer(
-      env=config.ENV_NAME, path='experiment', config={
+   return wrapper.SanePPOTrainer(config={
       'num_workers': config.NUM_WORKERS,
       'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
       'num_gpus': config.NUM_GPUS,
@@ -88,9 +87,16 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   if config.MODEL != 'scripted':
+   if config.MODEL not in ('scripted_forage', 'scripted_combat'):
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
+   #Scripted policy backend
+   if config.MODEL == 'scripted_forage':
+      policy = ai.policy.forage 
+   else:
+      policy = ai.policy.combat
+
+   #Search backend
    err = 'SCRIPTED_BACKEND may be either dijkstra or dynamic_programming'
    assert config.SCRIPTED_BACKEND in ('dijkstra', 'dynamic_programming'), err
    if config.SCRIPTED_BACKEND == 'dijkstra':
@@ -98,8 +104,7 @@ def loadEvaluator(config):
    elif config.SCRIPTED_BACKEND == 'dynamic_programming':
       backend = ai.behavior.forageDP
 
-   return Evaluator(config, ai.policy.baseline,
-         config.SCRIPTED_EXPLORE, backend)
+   return Evaluator(config, policy, config.SCRIPTED_EXPLORE, backend)
 
 def loadModel(config):
    '''Load NN weights and optimizer state'''
@@ -157,9 +162,13 @@ class Anvil():
       '''Generate game maps for the current --config setting'''
       terrain.MapGenerator(self.config).generate()
 
-   def visualize(self, **kwargs):
-      '''Web dashboard for the latest evaluation/generalization results'''
-      BokehServer(self.config)
+   def visualize_training(self, **kwargs):
+      '''Evaluation/Generalization results Web dashboard'''
+      BokehServer(self.config, 'training')
+
+   def visualize_evaluation(self, **kwargs):
+      '''Training results Web dashboard'''
+      BokehServer(self.config, 'evaluation')
       
 if __name__ == '__main__':
    def Display(lines, out):

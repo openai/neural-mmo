@@ -15,6 +15,3 @@ fi
 #Install python packages
 pip install -r scripts/requirements.txt
 conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
-
-python Forge.py generate --config=SmallMaps
-python Forge.py generate --config=LargeMaps

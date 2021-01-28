@@ -250,15 +250,16 @@ class Env:
       blob.log(ent.loadout.chestplate.level, 'Chestplate')
       blob.log(ent.loadout.platelegs.level,  'Platelegs')
 
-      blob = quill.register('Wilderness', self.realm.tick,
+      blob = quill.register('Exploration', self.realm.tick,
             quill.HISTOGRAM, quill.SCATTER)
-      blob.log(combat.wilderness(self.config, ent.pos))
+      blob.log(ent.history.exploration)
 
       quill.stat('Population', self.realm.population)
       quill.stat('Lifetime',  ent.history.timeAlive.val)
       quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
       quill.stat('Combat',    combat.level(ent.skills))
       quill.stat('Equipment', ent.loadout.defense)
+      quill.stat('Exploration', ent.history.exploration)
 
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs

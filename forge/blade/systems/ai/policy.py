@@ -41,7 +41,13 @@ def hostile(realm, entity):
 
    return actions
 
-def baseline(realm, entity, explore=True, forage=behavior.forageDijkstra):
+def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
+   return baseline(realm, entity, explore, forage, combat=False)
+
+def combat(realm, entity, explore=True, forage=behavior.forageDijkstra):
+   return baseline(realm, entity, explore, forage, combat=True)
+
+def baseline(realm, entity, explore, forage, combat):
    behavior.update(entity)
    actions = {}
 
@@ -60,11 +66,11 @@ def baseline(realm, entity, explore=True, forage=behavior.forageDijkstra):
    if (entity.resources.food <= min_level
          or entity.resources.water <= min_level):
       forage(realm, actions, entity)
-   elif entity.attacker:
+   elif entity.attacker and combat:
       entity.target = entity.attacker
       behavior.evade(realm, actions, entity)
       behavior.attack(realm, actions, entity)
-   elif entity.target:
+   elif entity.target and combat:
       downtime(realm, actions, entity)
       entLvl  = combat.level(entity.skills)
       targLvl = combat.level(entity.target.skills)

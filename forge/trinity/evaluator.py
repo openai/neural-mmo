@@ -28,23 +28,31 @@ class Base:
       Application(self.env, self.tick)
 
    def evaluate(self, generalize=False):
+      '''Evaluate the model on maps according to config params'''
+
       config = self.config
       log    = InkWell()
 
       if generalize:
-         maps = range(-1, -self.config.EVAL_MAPS-1, -1)
+         maps = range(-1, -config.EVAL_MAPS-1, -1)
       else:
          maps = range(1, config.EVAL_MAPS+1)
 
       print('Number of evaluation maps: {}'.format(len(maps)))
       for idx in maps:
          self.obs = self.env.reset(idx)
-         for t in tqdm(range(self.config.EVALUATION_HORIZON)):
+         for t in tqdm(range(config.EVALUATION_HORIZON)):
             self.tick(None, None)
 
          log.update(self.env.terminal())
 
-      np.save(self.config.PATH_EVAL_DATA, log.packet)
+      #Save data
+      path = config.PATH_MODEL.format(config.MODEL)
+      if not os.path.exists(path):
+         os.makedirs(path)
+
+      path = config.PATH_EVALUATION_DATA.format(config.MODEL)
+      np.save(path, log.packet)
 
    def tick(self, obs, actions, pos, cmd, preprocessActions=True):
       '''Simulate a single timestep
@@ -71,6 +79,7 @@ class Evaluator(Base):
       self.env      = Env(config)
 
    def render(self):
+      '''Render override for scripted models'''
       self.obs      = self.env.reset()
       self.registry = OverlayRegistry(config, self.env).init()
       super().render()

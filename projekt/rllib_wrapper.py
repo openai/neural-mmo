@@ -254,19 +254,25 @@ class SanePPOTrainer(ppo.PPOTrainer):
                 valFmt = '{}')])
 
           #Format stats (RLlib callback format limitation)
-          data = defaultdict(dict)
           for k, vals in stats['hist_stats'].items():
              if not k.startswith('_'):
                 continue
              k                 = k.lstrip('_')
              track, stat       = re.split('_', k)
-             data[track][stat] = vals
 
-          np.save(trainPath, data)
+             if track not in training_logs:
+                training_logs[track] = {}
+
+             if stat not in training_logs[track]:
+                training_logs[track][stat] = []
+
+             training_logs[track][stat] += vals
+
+          np.save(trainPath, training_logs)
 
           #Representation for CLI
           cli = {}
-          for track, stats in data.items():
+          for track, stats in training_logs.items():
              cli[track] = {}
              for stat, vals in stats.items():
                 mmean = np.mean(vals[-config.TRAIN_SUMMARY_ENVS:])

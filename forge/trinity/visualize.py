@@ -2,6 +2,7 @@ from pdb import set_trace as T
 
 import numpy as np
 import sys
+import os
  
 from forge.blade.systems.visualizer import plot, theme
 from forge.blade.lib.log import Quill
@@ -14,29 +15,11 @@ class BokehServer:
 
    This dashboard is created automatically from the data and plot types
    collected in Env.log. It supports both web and publication themes.'''
-   def __init__(self, config, data):
-      assert data in ('training', 'evaluation')
+   def __init__(self, config):
       self.config = config
 
-      if data == 'training':
-         path = config.PATH_TRAINING_DATA.format(config.MODEL)
-         func = self.visualize_training
-      if data == 'evaluation':
-         path = config.PATH_EVALUATION_DATA.format(config.MODEL)
-         func = self.visualize_evaluation
-
-      try: 
-         self.data = np.load(path, allow_pickle=True).tolist()
-      except FileNotFoundError:
-         print('Run evaluation first -- no data for specified config')
-         exit(0)
-
-      self.start(func)
-
-   def start(self, func):
-      '''Start Bokeh server'''
       server = bokeh.server.server.Server(
-         {'/': func},
+         {'/': self.visualize},
          port=self.config.VIS_PORT,
          num_procs=1)
 
@@ -44,7 +27,7 @@ class BokehServer:
       server.io_loop.add_callback(server.show, '/')
       server.io_loop.start()
 
-   def load(self):
+   def load_theme(self, doc):
       '''Load dashboard theme'''
       config = self.config
       if config.VIS_THEME == 'web':
@@ -55,53 +38,68 @@ class BokehServer:
          sys.exit('THEME_NAME invalid: web or publication')
 
       self.colors = [bokeh.colors.RGB(*(c.rgb)) for c in preset.colors]
-      return preset
 
-   def visualize(self, doc):
-      '''Build dashboard'''
-      config = self.config
-
-      #Load Theme and Index
-      preset    = self.load()
       doc.theme = bokeh.themes.Theme(json={'attrs': preset.dict()})
       with open(preset.index) as f:
          doc.template = jinja2.environment.Template(f.read())
 
-      return doc
-
-   def visualize_training(self, doc):
-      doc    = self.visualize(doc)
+   def load_data(self):
+      train_data, eval_data = {}, {}
       config = self.config
 
-      trainPath     = config.PATH_TRAINING_DATA.format(config.MODEL)
-      training_logs = np.load(trainPath, allow_pickle=True).item()
+      train_path = config.PATH_TRAINING_DATA.format(config.MODEL)
+      if os.path.exists(train_path):
+         train_data = np.load(train_path, allow_pickle=True).tolist()
+      else:
+         print('VISUALIZE: No training logs for specified config')
 
-      fig, legend = self.plot('Title', training_logs, -1, self.colors, 0, 1)
-      fig.legend.location  = 'top_left'
-      fig.title.text       = 'Training Progress'
-      fig.xaxis.axis_label = 'Environments'
-      fig.yaxis.axis_label = 'Value'
-      fig.plot_width       = 1920
-      fig.plot_height      = 1080
+      eval_path = config.PATH_EVALUATION.format(config.NAME, config.MODEL)
+      if os.path.exists(eval_path):
+         eval_data = np.load(eval_path, allow_pickle=True).tolist()
+      else:
+         print('VISUALIZE: No evaluation logs for specified config')
 
-      layout = [fig]
-      doc.add_root(bokeh.layouts.layout(layout))
+      return train_data, eval_data
+
+   def resample(self, data, n):
+      config  = self.config
+      n      -= 1
+
+      for track, stats in data.items():
+         for key, vals in stats.items():
+            llen   = len(vals) - 1
+            window =  llen // n - 1
+            sz     = window * n
+            ary    = np.array(vals[1:sz+1]).reshape(n, -1)
+
+            first = vals[0]
+            mid   = ary[:-1].mean(1).tolist()
+            last  = np.mean(ary[-1].tolist() + vals[sz+1:])
+         
+            ary        = np.array([first] + mid + [last])
+            mmin, mmax = np.min(ary), np.max(ary)
+            ary        = (ary - mmin) / (mmax - mmin)
+
+            data[track][key] = ary.tolist()
+         data[track]['x'] = [1] + (1 + window*np.arange(1, n)).tolist() + [len(vals)]
  
-   def visualize_evaluation(self, doc):
-      doc    = self.visualize(doc)
+   def visualize(self, doc):
+      '''Build dashboard'''
       config = self.config
+      self.load_theme(doc)
 
-      #Draw Plots
-      data   = self.data
-      logs   = data['Log'][0]
-      stats  = data['Stats']
-      
-      #Print stats
-      for line in formatting.box_stats(stats):
-         print(line)
+      #Load data
+      train_data, eval_data = self.load_data()
+      if len(train_data) > 0:
+         self.resample(train_data, config.TRAIN_DATA_RESAMPLE)
+         train_data = {('Training', (-1,)): train_data}
+      if len(eval_data) > 0:
+         for line in formatting.table_stats(eval_data['Stats']):
+            print(line)
+         eval_data  = eval_data['Log'][0]
 
       layout = []
-      for (key, plots), blob in logs.items():
+      for (key, plots), blob in {**train_data, **eval_data}.items():
          row, n = [], len(plots)
 
          #Left title
@@ -134,7 +132,10 @@ class BokehServer:
 
          layout.append(row)
 
+      
       doc.add_root(bokeh.layouts.layout(layout))
+      return doc
+
 
    def plot(self, ylabel, blob, plot, colors, idx, n):
       config = self.config

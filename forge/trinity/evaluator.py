@@ -27,7 +27,7 @@ class Base:
       from forge.trinity.twistedserver import Application
       Application(self.env, self.tick)
 
-   def evaluate(self, generalize=False):
+   def evaluate(self, generalize=True):
       '''Evaluate the model on maps according to config params'''
 
       config = self.config
@@ -47,11 +47,7 @@ class Base:
          log.update(self.env.terminal())
 
       #Save data
-      path = config.PATH_MODEL.format(config.MODEL)
-      if not os.path.exists(path):
-         os.makedirs(path)
-
-      path = config.PATH_EVALUATION_DATA.format(config.MODEL)
+      path = config.PATH_EVALUATION.format(config.NAME, config.MODEL)
       np.save(path, log.packet)
 
    def tick(self, obs, actions, pos, cmd, preprocessActions=True):
@@ -64,10 +60,10 @@ class Base:
           cmd: Console command from the server
           preprocessActions: Required for actions provided as indices
       '''
-      if self.config.RENDER:
-         self.registry.step(obs, pos, cmd)
       self.obs, rewards, self.done, _ = self.env.step(
             actions, omitDead=True, preprocessActions=preprocessActions)
+      if self.config.RENDER:
+         self.registry.step(obs, pos, cmd)
 
 class Evaluator(Base):
    '''Evaluator for scripted models'''
@@ -81,7 +77,7 @@ class Evaluator(Base):
    def render(self):
       '''Render override for scripted models'''
       self.obs      = self.env.reset()
-      self.registry = OverlayRegistry(config, self.env).init()
+      self.registry = OverlayRegistry(self.config, self.env).init()
       super().render()
 
    def tick(self, pos, cmd):

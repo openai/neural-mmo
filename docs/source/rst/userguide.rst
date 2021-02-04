@@ -1,20 +1,9 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
-
-.. |map1| image:: /resource/image/map.png
-.. |pretrained| image:: /resource/image/userguide_pretrained.png
-.. |scripted| image:: /resource/image/userguide_scripted.png
-.. |scripted_publication| image:: /resource/image/userguide_scripted_publication.png
-.. |client| image:: /resource/image/v1-4_env.png
-.. |counts| image:: /resource/image/v1-4_counts.png
-.. |values| image:: /resource/image/v1-4_values.png
-.. |globalValues| image:: /resource/image/v1-4_globalValues.png
-.. |attention| image:: /resource/image/v1-4_attention.png
 
 .. role:: python(code)
     :language: python
 
-|env|
+.. image:: /resource/image/v1-4_splash.png
 
 |icon| Introduction
 ###################
@@ -140,7 +129,7 @@ We're going to need some maps to play with in the tutorials below. If you're fol
 
 Generating small maps without rendering takes 5-10 seconds on a modern CPU. Example image from resource/maps/procedural-small/map1/map.png:
 
-|map1|
+.. image:: /resource/image/map.png
 
 Terrain generation is controlled by a number of parameters prefixed with TERRAIN_. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in forge/blade/core/terrain.py.
 
@@ -155,25 +144,13 @@ Rendering the environment requires launching both a server and a client. To laun
 
 Launch client.sh in a separate shell or click the associated executable. The server will take a few seconds to a minute to load the pretrained policy and connect to the client. You should see the map load, as below:
 
-|client|
+.. image:: /resource/image/v1-4_ui.png
 
-The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. These are rendered as heatmaps over the environment. For example you can view exploration counts:
+The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. These are rendered as heatmaps over the environment.
 
-|counts|
+.. image:: /resource/image/v1-5_overlays.png
 
-For non-scripted models, you can view the learned value function:
-
-|values|
-
-And even an indicator of the agent's current attention:
-
-|attention|
-
-The counts overlay above is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the globalValues overlay simulates an agent on every tile and computes the value function as if that agent were the only one in the environment:
-
-|globalValues|
-
-Note that this requires a forward pass for every tile -- not too bad on small maps, up to an hour on large maps.
+The counts (exploration) overlay is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.
 
 Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in forge/trinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py.
 
@@ -304,10 +281,13 @@ The "evaluate" command stores data from the most recent run in experiment/evalua
 From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights -- both to aid in future development and for the paper. The "visualize" command also loads a browser-based interactive dashboard:
 
 Pretrained baseline
-|pretrained|
+
+.. image:: /resource/image/baselines/SmallMaps/neural_small_maps.png
+
 
 Scripted baseline
-|scripted|
+
+.. image:: /resource/image/baselines/SmallMaps/scripted_combat.png
 
 Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating -- notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably slightly stronger overall, but apparently Range and Mage are fairly balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent -- perhaps I should consider changing the movement system in a future update.
 
@@ -316,4 +296,5 @@ So, why do we need 15 plots when only one turned out to be important? First of a
 And before you ask, yes: there's a boring publication theme: specify --VIS_THEME=publication. In fact, you can create custom logging with a highly configurable dashboard to go with it in only a few lines of code -- just override the log method of forge/trinity/env.py to specify your own data tracks and plot styles.
 
 Scripted baseline, publication theme
-|scripted_publication|
+
+.. image:: /resource/image/publication_theme.png

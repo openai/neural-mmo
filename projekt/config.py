@@ -46,11 +46,12 @@ class LargeMaps(Base):
    '''Large scale Neural MMO training setting
 
    Features up to 1000 concurrent agents and 1000 concurrent NPCs,
-   1km x 1km maps, and 10k timestep train/eval horizons
+   1km x 1km maps, and 5/10k timestep train/eval horizons
 
    This is the default setting as of v1.5 and allows for large
    scale multiagent research even on relatively modest hardware'''
 
+   NAME                    = __qualname__
    MODEL                   = 'large-map'
 
    PATH_MAPS               = core.Config.PATH_MAPS_LARGE
@@ -72,6 +73,7 @@ class SmallMaps(Base):
    task for new ideas, a transfer target for agents trained on large maps,
    or as a primary research target for PCG methods.'''
 
+   NAME                    = __qualname__
    MODEL                   = 'small-map'
    SCRIPTED_EXPLORE        = False
 
@@ -117,11 +119,11 @@ class Debug(SmallMaps):
    Only intended as a tool for identifying bugs in the model or environment'''
    MODEL                   = None
 
-   TRAIN_BATCH_SIZE        = 128
-   TRAIN_HORIZON           = 20
+   TRAIN_BATCH_SIZE        = 800
+   TRAIN_HORIZON           = 200
    EVALUATION_HORIZON      = 50
 
-   HIDDEN                  = 8
-   EMBED                   = 8
+   HIDDEN                  = 2
+   EMBED                   = 2
 
 

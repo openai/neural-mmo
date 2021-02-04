@@ -95,10 +95,9 @@ class Training(Plot):
    def preprocess(self, data, key, color, idx, w=20):
       mean                   = np.array(data['Mean'])
       std                    = np.array(data['Std'])
-      n                      = len(mean)
 
       preprocessed           = {}
-      preprocessed['x']      = np.arange(n)
+      preprocessed['x']      = data['x']
       preprocessed['smooth'] = mean
       preprocessed['lower']  = mean - std
       preprocessed['upper']  = mean + std
@@ -106,46 +105,17 @@ class Training(Plot):
       return preprocessed
 
    def plot(self, source, key, color, idx):
-      self.fig.xaxis.axis_label = 'Index in Logs'
-      self.fig.yaxis.axis_label = 'Value'
-
-      band = self.fig.varea(
-         source=source,
-         name=key,
-         x='x',
-         y1='lower',
-         y2='upper',
-         fill_color=color)
-
-      lower = self.fig.line(
-         source=source,
-         name=key,
-         x='x',
-         y='lower',
-         line_color=color,
-         line_width=0.5,
-         line_alpha=0.7,
-         color=color)
-
-      upper = self.fig.line(
-         source=source,
-         name=key,
-         x='x',
-         y='upper',
-         line_color=color,
-         line_width=0.5,
-         line_alpha=0.7,
-         color=color)
+      self.fig.xaxis.axis_label = 'Environment Episodes'
+      self.fig.yaxis.axis_label = 'Normalized Value'
 
       line = self.fig.line(
          source=source,
          name=key,
-         legend_label=key,
          x='x',
          y='smooth',
          color=color)
 
-      return [band, lower, upper, line]
+      return [line]
 
 
 class Line(Plot):

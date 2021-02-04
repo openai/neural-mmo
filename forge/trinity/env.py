@@ -390,20 +390,30 @@ class Env:
       '''
       config  = self.config
       R, C    = self.realm.map.tiles.shape
-      B       = config.TERRAIN_BORDER
 
       entID   = 100000
       pop     = 0
       name    = "Value"
       color   = (255, 255, 255)
 
+
       observations, ents = {}, {}
-      for r in range(B-1, R-B):
-         for c in range(B-1, C-B):
-            ent = entity.Player(self.realm, (r, c), entID, pop, name, color)
+      for r in range(R):
+         for c in range(C):
+            tile    = self.realm.map.tiles[r, c]
+            if not tile.habitable:
+               continue
+
+            current = tile.ents
+            n       = len(current)
+            if n == 0:
+               ent = entity.Player(self.realm, (r, c), entID, pop, name, color)
+            else:
+               ent = list(current.values())[0]
 
             obs = self.realm.dataframe.get(ent)
-            self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
+            if n == 0:
+               self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
 
             observations[entID] = obs
             ents[entID] = ent

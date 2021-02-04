@@ -184,7 +184,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
       config    = self.envConfig
 
       if model is None:
-         print('Training from scratch...')
+         print('Initializing new model...')
          trainPath = config.PATH_TRAINING_DATA.format('current')
          np.save(trainPath, {})
          return
@@ -305,8 +305,9 @@ class RLlibOverlayRegistry(OverlayRegistry):
       super().__init__(config, realm)
 
       self.overlays['values']       = Values
-      self.overlays['globalValues'] = GlobalValues
       self.overlays['attention']    = Attention
+      self.overlays['tileValues']   = TileValues
+      self.overlays['entityValues'] = EntityValues
 
 class RLlibOverlay(Overlay):
    '''RLlib Map overlay wrapper'''
@@ -318,18 +319,24 @@ class RLlibOverlay(Overlay):
 class Attention(RLlibOverlay):
    def register(self, obs):
       '''Computes local attentional maps with respect to each agent'''
-      attentions = defaultdict(list)
-      for idx, agentID in enumerate(obs):
-         ent   = self.realm.realm.players[agentID]
-         rad   = self.config.STIM
-         r, c  = ent.pos
+      tiles      = self.realm.realm.map.tiles
+      players    = self.realm.realm.players
 
-         tiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
-         for tile, a in zip(tiles, self.model.attention()[idx]):
+      attentions = defaultdict(list)
+      for idx, playerID in enumerate(obs):
+         if playerID not in players:
+            continue
+         player = players[playerID]
+         r, c   = player.pos
+
+         rad     = self.config.STIM
+         obTiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
+
+         for tile, a in zip(obTiles, self.model.attention()[idx]):
             attentions[tile].append(float(a))
 
-      data = np.zeros((self.R, self.C))
-      tiles = self.realm.realm.map.tiles
+      sz    = self.config.TERRAIN_SIZE
+      data  = np.zeros((sz, sz))
       for r, tList in enumerate(tiles):
          for c, tile in enumerate(tList):
             if tile not in attentions:
@@ -344,25 +351,30 @@ class Values(RLlibOverlay):
       '''Computes a local value function by painting tiles as agents
       walk over them. This is fast and does not require additional
       network forward passes'''
-      for idx, agentID in enumerate(obs):
-         r, c = self.realm.realm.players[agentID].base.pos
+      players = self.realm.realm.players
+      for idx, playerID in enumerate(obs):
+         if playerID not in players:
+            continue
+         r, c = players[playerID].base.pos
          self.values[r, c] = float(self.model.value_function()[idx])
 
    def register(self, obs):
       colorized = overlay.twoTone(self.values[:, :])
       self.realm.register(colorized)
 
+def zeroOb(ob, key):
+   for k in ob[key]:
+      ob[key][k] *= 0
+
 class GlobalValues(RLlibOverlay):
-   def init(self):
-      '''Compute a global value function map. This requires ~6400 forward
-      passes and may take up to a minute. You can disable this computation
-      in the config file'''
+   '''Abstract base for global value functions'''
+   def init(self, zeroKey):
       if self.trainer is None:
          return
 
       print('Computing value map...')
       model     = self.trainer.get_policy('policy_0').model
-      obs, ents = self.realm.getValStim()
+      obs, ents = self.realm.dense()
       values    = 0 * self.values
 
       #Compute actions to populate model value function
@@ -370,11 +382,13 @@ class GlobalValues(RLlibOverlay):
       batch = {}
       final = list(obs.keys())[-1]
       for agentID in tqdm(obs):
-         batch[agentID] = obs[agentID]
+         ob             = obs[agentID]
+         batch[agentID] = ob
+         zeroOb(ob, zeroKey)
          if len(batch) == BATCH_SIZE or agentID == final:
             self.trainer.compute_actions(batch, state={}, policy_id='policy_0')
             for idx, agentID in enumerate(batch):
-               r, c = ents[agentID].base.pos
+               r, c         = ents[agentID].base.pos
                values[r, c] = float(self.model.value_function()[idx])
             batch = {}
 
@@ -382,11 +396,23 @@ class GlobalValues(RLlibOverlay):
       self.colorized = overlay.twoTone(values)
 
    def register(self, obs):
-      if not hasattr(self, 'colorized'):
-         print('Initializing Global Values. This requires one NN pass per tile')
-         self.init()
+      print('Computing Global Values. This requires one NN pass per tile')
+      self.init()
 
       self.realm.register(self.colorized)
+
+class TileValues(GlobalValues):
+   def init(self, zeroKey='Entity'):
+      '''Compute a global value function map excluding other agents. This
+      requires a forward pass for every tile and will be slow on large maps'''
+      super().init(zeroKey)
+
+class EntityValues(GlobalValues):
+   def init(self, zeroKey='Tile'):
+      '''Compute a global value function map excluding tiles. This
+      requires a forward pass for every tile and will be slow on large maps'''
+      super().init(zeroKey)
+
 
 ###############################################################################
 ### Logging

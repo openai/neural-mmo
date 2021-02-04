@@ -21,6 +21,12 @@ Index
 
 .. toctree::
    :maxdepth: 8
+   :caption: Baselines
+
+   rst/baselines
+
+.. toctree::
+   :maxdepth: 8
    :caption: Updates
 
    rst/updates

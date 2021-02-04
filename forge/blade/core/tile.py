@@ -31,8 +31,12 @@ class Tile:
       return self.r.val, self.c.val
 
    @property
+   def habitable(self):
+      return self.mat in material.Habitable
+
+   @property
    def vacant(self):
-      return len(self.ents) == 0 and self.mat in material.Habitable
+      return len(self.ents) == 0 and self.habitable
 
    @property
    def occupied(self):

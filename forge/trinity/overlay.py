@@ -138,9 +138,7 @@ class Wilderness(Overlay):
          for c in range(self.size):
             data[r, c] = combat.wilderness(self.config, (r, c))
 
-      colorized = overlay.twoTone(data, preprocess='clip', invert=True, periods=5)
-      self.realm.register(colorized)
-      self.wildy = colorized
+      self.wildy = overlay.twoTone(data, preprocess='clip', invert=True, periods=5)
 
    def register(self, obs):
       if not hasattr(self, 'wildy'):

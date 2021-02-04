@@ -2,8 +2,7 @@ from pdb import set_trace as T
 
 from forge.blade.systems.ai import behavior, move, attack, utils
 from forge.blade.io.action import static as Action
-from forge.blade.systems import combat
-
+from forge.blade import systems
 
 def passive(realm, entity):
    behavior.update(entity)
@@ -72,8 +71,8 @@ def baseline(realm, entity, explore, forage, combat):
       behavior.attack(realm, actions, entity)
    elif entity.target and combat:
       downtime(realm, actions, entity)
-      entLvl  = combat.level(entity.skills)
-      targLvl = combat.level(entity.target.skills)
+      entLvl  = systems.combat.level(entity.skills)
+      targLvl = systems.combat.level(entity.target.skills)
       if targLvl <=  entLvl <= 5 or entLvl >= targLvl+3:
          behavior.attack(realm, actions, entity)
    else:

@@ -10,6 +10,30 @@ BOT     = u'\u2594'
 LEFT    = u'\u258f'
 RIGHT   = u'\u2595'
 
+def table_stats(stats, titleLen=12, entryLen=12):
+   titleFmt = '{:<' + str(titleLen) + '}'
+   valFmt   = '{:' + str(entryLen) + '.1f}'
+   keyFmt   = '{:<' + str(entryLen) + '}'
+
+   keys  = [keyFmt.format(k) for k in 'Min Max Mean Std'.split()]
+   title = titleFmt.format('Metric')
+   lines = [[title] + keys]
+
+   for key, stat in stats.items():
+      l = [titleFmt.format(key)]
+      for func in (np.min, np.max, np.mean, np.std):
+         val = valFmt.format(func(stat))
+         l.append(val)
+      lines.append(l)
+      
+   llens = [titleLen] + 4*[entryLen]
+   seps  = ['='*l for l in llens]
+   lines = [seps, lines[0], seps, *(lines[1:]), seps]
+   lines = [' '.join(e) for e in lines]
+ 
+   return lines
+
+
 def precomputed_stats(stats):
    '''Format a dict of precomputed stats'''
    lines = []

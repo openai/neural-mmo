@@ -108,21 +108,24 @@ class Config(Template):
 
    PATH_BASELINES            = 'baselines'
    '''Model and evaluation directory'''
+  
+   PATH_ALL_MODELS           = os.path.join(PATH_BASELINES, 'models')
+   '''All models directory'''
 
-   PATH_CURRENT              = os.path.join(PATH_BASELINES, 'current')
-   '''Current experiment path'''
+   PATH_CURRENT              = os.path.join(PATH_ALL_MODELS, 'current')
+   '''Current experiment model path'''
 
-   PATH_MODEL                = os.path.join(PATH_BASELINES, '{}')
+   PATH_MODEL                = os.path.join(PATH_ALL_MODELS, '{}')
    '''Model path -- format me with the model name'''
 
    PATH_TRAINING_DATA        = os.path.join(PATH_MODEL, 'training.npy')
    '''Model training data -- format me with the model name'''
 
-   PATH_EVALUATION_DATA      = os.path.join(PATH_MODEL, 'evaluation.npy')
-   '''Model evaluation data -- format me with the model name'''
+   PATH_ALL_EVALUATIONS      = os.path.join(PATH_BASELINES, 'evaluations')
+   '''All evaluations directory'''
 
-   PATH_FIGURE               = os.path.join(PATH_MODEL, 'evaluation.html')
-   '''Dashboard figure -- format me with the model name'''
+   PATH_EVALUATION           = os.path.join(PATH_ALL_EVALUATIONS, '{}', '{}.npy')
+   '''Evaluation path -- format me with the (config, model) names'''
 
 
    #Themes
@@ -146,8 +149,14 @@ class Config(Template):
    EVAL_MAPS            = 5
    '''Number of evaluation maps'''
 
+   GENERALIZE           = True
+   '''Evaluate on maps not seen during training'''
+
    TRAIN_SUMMARY_ENVS   = 10
    '''Most recent envs to use for training summaries'''
+
+   TRAIN_DATA_RESAMPLE  = 200
+   '''Number of points to resample training data'''
 
 
    ############################################################################

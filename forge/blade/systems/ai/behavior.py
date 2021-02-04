@@ -25,11 +25,11 @@ def pathfind(realm, actions, entity, target):
    actions[Action.Move]   = {Action.Direction: move.pathfind(realm.map.tiles, entity, target)}
 
 def explore(realm, actions, entity):
-   R, C = realm.shape
+   sz   = realm.config.TERRAIN_SIZE
    r, c = entity.pos
 
    spawnR, spawnC = entity.spawnPos
-   centR, centC   = R//2, C//2
+   centR, centC   = sz//2, sz//2
 
    vR, vC = spawnR-centR, spawnC-centC
    if not realm.config.SPAWN_CENTER:

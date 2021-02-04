@@ -144,14 +144,9 @@ class Anvil():
       loadModel(self.config).train()
 
    def evaluate(self, **kwargs):
-      '''Evaluate a model on --EVAL_MAPS maps from the training set'''
+      '''Evaluate a model on --EVAL_MAPS maps'''
       self.config.EVALUATE = True
-      loadEvaluator(self.config).evaluate()
-
-   def generalize(self, **kwargs):
-      '''Evaluate a model on --EVAL_MAPS maps not seen during training'''
-      self.config.EVALUATE = True
-      loadEvaluator(self.config).evaluate(generalize=True)
+      loadEvaluator(self.config).evaluate(self.config.GENERALIZE)
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''
@@ -162,13 +157,9 @@ class Anvil():
       '''Generate game maps for the current --config setting'''
       terrain.MapGenerator(self.config).generate()
 
-   def visualize_training(self, **kwargs):
-      '''Evaluation/Generalization results Web dashboard'''
-      BokehServer(self.config, 'training')
-
-   def visualize_evaluation(self, **kwargs):
-      '''Training results Web dashboard'''
-      BokehServer(self.config, 'evaluation')
+   def visualize(self, **kwargs):
+      '''Training/Evaluation results Web dashboard'''
+      BokehServer(self.config)
       
 if __name__ == '__main__':
    def Display(lines, out):

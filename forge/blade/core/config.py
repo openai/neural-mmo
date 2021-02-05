@@ -95,10 +95,13 @@ class Config(Template):
    PATH_ASSETS          = os.path.join(PATH_RESOURCE, 'assets')
    '''Asset directory'''
 
-   PATH_FONTS           = os.path.join(PATH_ASSETS, 'fonts')
-   '''Font directory'''
+   PATH_TILE            = os.path.join(PATH_ASSETS, 'tiles/{}.png')
+   '''Tile path -- format me with tile name'''
 
-   PATH_LOGO            = os.path.join(PATH_FONTS, 'ascii.txt')
+   PATH_TEXT            = os.path.join(PATH_ASSETS, 'text')
+   '''Text directory'''
+
+   PATH_LOGO            = os.path.join(PATH_TEXT, 'ascii.txt')
    '''Logo file (Ascii art)'''
 
 

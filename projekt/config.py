@@ -118,8 +118,10 @@ class Debug(SmallMaps):
    A version of the SmallMap setting with greatly reduced batch parameters.
    Only intended as a tool for identifying bugs in the model or environment'''
    MODEL                   = None
+   LOCAL_MODE              = True
+   NUM_WORKERS             = 1
 
-   TRAIN_BATCH_SIZE        = 800
+   TRAIN_BATCH_SIZE        = 400
    TRAIN_HORIZON           = 200
    EVALUATION_HORIZON      = 50
 

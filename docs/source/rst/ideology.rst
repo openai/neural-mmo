@@ -1,7 +1,6 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
-|env|
+.. figure:: /resource/image/splash.png
 
 |icon| Abstract
 ###############
@@ -35,24 +34,25 @@ The second problem is probably most familiar to researchers as exploration. Give
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 
-.. image:: /resource/image/rs/quests.png
-  :alt: Quest Map
-`[Source] <https://www.reddit.com/user/Gamez_X>`_
+.. figure:: /resource/image/rs/quests.png
+   :alt: Quest Map
+   
+   `[Source] <https://www.reddit.com/user/Gamez_X>`_
 
 Actually, it's a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:
 
 .. image:: /resource/image/rs/skills.png
-  :alt: Skills
+   :alt: Skills
 
 .. image:: /resource/image/rs/equipment.png
-  :alt: Equipment
-`[Source] <https://www.jagex.com/en-GB/>`_
+   :alt: Equipment
 
 In a massive open world:
 
-.. image:: /resource/image/rs/map.png
-  :alt: GameMap
-`[Source] <https://www.jagex.com/en-GB/>`_
+.. figure:: /resource/image/rs/map.png
+   :alt: GameMap
+
+`[Images Source] <https://www.jagex.com/en-GB/>`_
 
 The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy--especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.
 

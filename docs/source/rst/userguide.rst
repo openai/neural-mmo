@@ -3,7 +3,7 @@
 .. role:: python(code)
     :language: python
 
-.. image:: /resource/image/v1-4_splash.png
+.. figure:: /resource/image/splash.png
 
 |icon| Introduction
 ###################
@@ -12,16 +12,17 @@
 
 Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
 
+.. figure:: /resource/image/environment.png
+
 Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
 |icon| Installation
 ###################
 
-**Dependencies:** Anaconda Python 3.8.x. Tested for Ubuntu 18.04/20.04 and Windows 10 via WSL.
-
-Ubuntu:
+**Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
 
 .. code-block:: python
+   :caption: Ubuntu 20.04/18.04 + Anaconda Python 3.8.x
 
    #Download Neural MMO and run the pretrained demo model
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
@@ -31,9 +32,8 @@ Ubuntu:
    #Open the client in a separate terminal
    ./client.sh
 
-Windows + WSL:
-
 .. code-block:: python
+   :caption: Windows 10 with WSl Ubuntu 20.04/18.04 + Anaconda Python 3.8.x
 
    #Execute on WSL Ubuntu + Anaconda
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
@@ -45,12 +45,9 @@ Windows + WSL:
    neural-mmo-client/UnityClient/neural-mmo.exe
 
 **Troubleshooting:**
-  - Performance issues? Ensure PyTorch is using your GPU
+  - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
   - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
-  - If none of the above work, post in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
-
-**Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
 
 CLI
 ###
@@ -127,9 +124,11 @@ We're going to need some maps to play with in the tutorials below. If you're fol
   Generating 256 training and 64 evaluation maps:
   100%|████████████████████████████████████████████████| 320/320 [09:53<00:00,  1.85s/it]
 
-Generating small maps without rendering takes 5-10 seconds on a modern CPU. Example image from resource/maps/procedural-small/map1/map.png:
+Generating small maps without rendering takes 5-10 seconds on a modern CPU.
 
-.. image:: /resource/image/map.png
+.. figure:: /resource/image/map.png
+
+   Example map from resource/maps/procedural-small/map1/map.png
 
 Terrain generation is controlled by a number of parameters prefixed with TERRAIN_. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in forge/blade/core/terrain.py.
 
@@ -142,13 +141,15 @@ Rendering the environment requires launching both a server and a client. To laun
 
   python Forge.py render --config=SmallMaps
 
-Launch client.sh in a separate shell or click the associated executable. The server will take a few seconds to a minute to load the pretrained policy and connect to the client. You should see the map load, as below:
+Launch client.sh in a separate shell or click the associated executable. The server will take a few seconds to a minute to load the pretrained policy and connect to the client.
 
-.. image:: /resource/image/v1-4_ui.png
+.. figure:: /resource/image/ui.png
 
-The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. These are rendered as heatmaps over the environment.
+   You should see this view once the map loads
 
-.. image:: /resource/image/v1-5_overlays.png
+The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays.
+
+.. image:: /resource/image/overlays.png
 
 The counts (exploration) overlay is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.
 
@@ -280,14 +281,13 @@ The "evaluate" command stores data from the most recent run in experiment/evalua
 
 From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights -- both to aid in future development and for the paper. The "visualize" command also loads a browser-based interactive dashboard:
 
-Pretrained baseline
+.. figure:: /resource/image/baselines/SmallMaps/neural_small_maps.png
 
-.. image:: /resource/image/baselines/SmallMaps/neural_small_maps.png
+   Pretrained neural baseline
 
+.. figure:: /resource/image/baselines/SmallMaps/scripted_combat.png
 
-Scripted baseline
-
-.. image:: /resource/image/baselines/SmallMaps/scripted_combat.png
+   Scripted baseline
 
 Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating -- notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably slightly stronger overall, but apparently Range and Mage are fairly balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent -- perhaps I should consider changing the movement system in a future update.
 
@@ -295,6 +295,6 @@ So, why do we need 15 plots when only one turned out to be important? First of a
 
 And before you ask, yes: there's a boring publication theme: specify --VIS_THEME=publication. In fact, you can create custom logging with a highly configurable dashboard to go with it in only a few lines of code -- just override the log method of forge/trinity/env.py to specify your own data tracks and plot styles.
 
-Scripted baseline, publication theme
+.. figure:: /resource/image/publication_theme.png
 
-.. image:: /resource/image/publication_theme.png
+   Publication theme

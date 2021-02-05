@@ -45,9 +45,10 @@ class MapGenerator:
 
    def loadTextures(self):
       lookup = {}
+      path = self.config.PATH_TILE
       for mat in material.All:
-         tex = imread('resource/assets/tiles/' + mat.tex + '.png')
          key = mat.tex
+         tex = imread(path.format(key))
          mat.tex = tex[:, :, :3][::4, ::4]
          lookup[mat.index] = mat.tex
          setattr(Terrain, key.upper(), mat.index)

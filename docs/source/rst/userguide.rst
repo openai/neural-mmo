@@ -19,10 +19,8 @@ Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a
 |icon| Installation
 ###################
 
-**Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
-
 .. code-block:: python
-   :caption: Ubuntu 20.04/18.04 + Anaconda Python 3.8.x
+   :caption: Ubuntu 20.04/18.04 (requires Anaconda Python 3.8.x + gcc)
 
    #Download Neural MMO and run the pretrained demo model
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
@@ -33,7 +31,7 @@ Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a
    ./client.sh
 
 .. code-block:: python
-   :caption: Windows 10 with WSl Ubuntu 20.04/18.04 + Anaconda Python 3.8.x
+   :caption: WSl Ubuntu 20.04/18.04 (requires Anaconda Python 3.8.x + gcc) + Windows 10
 
    #Execute on WSL Ubuntu + Anaconda
    git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
@@ -48,6 +46,7 @@ Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a
   - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
   - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
+  - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
 
 CLI
 ###
@@ -113,6 +112,7 @@ Terrain Generation
 We're going to need some maps to play with in the tutorials below. If you're following along interactively and want to keep things quick, we suggest only generating the small maps. Generating image previews of each map can be useful in certain circumstances. The files for large maps are huge, so we'll only generate PNGs for small maps.
 
 .. code-block:: python
+  :caption: Generate small and large game maps
 
   python Forge.py generate --config=SmallMaps --TERRAIN_RENDER
   python Forge.py generate --config=LargeMaps
@@ -141,19 +141,19 @@ Rendering the environment requires launching both a server and a client. To laun
 
   python Forge.py render --config=SmallMaps
 
-Launch client.sh in a separate shell or click the associated executable. The server will take a few seconds to a minute to load the pretrained policy and connect to the client.
+Launch *client.sh* in a separate shell or click the associated executable. The server will take a few seconds to load the pretrained policy and connect to the client.
 
 .. figure:: /resource/image/ui.png
 
    You should see this view once the map loads
 
-The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays.
+The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. Note that the LargeMaps config requires a good workstation to render and you should avoid zooming all the way out.
 
 .. image:: /resource/image/overlays.png
 
 The counts (exploration) overlay is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.
 
-Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in forge/trinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py.
+Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in forge/trinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.
 
 Training
 ########
@@ -161,6 +161,7 @@ Training
 Evaluating on small/large maps will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:
 
 .. code-block:: python
+  :caption: Train on small and large game maps
 
   python Forge.py train --config=SmallMaps --MODEL=None
   python Forge.py train --config=LargeMaps --MODEL=None
@@ -216,21 +217,19 @@ Evaluating on small/large maps will load the associated pretrained baseline by d
 The training monitor above summarizes wall-clock time spent on sampling vs training and displays performance for the last three epochs. You can train reasonably good small-map models in a few hours and decent large-map models overnight on a single desktop with one GPU. See Baselines for exact training times and performances of our models. Specify the --MODEL=current flag throughout the remainder of these tutorials to load the model you just trained.
 
 Note:
-  - Any subsequent training commands will overwrite your checkpoint files. We suggest copying them to somewhere safe. Their default location is written in experiment/path.txt.
-  - You can modify this path file to point the current model to other checkpoints.
+  - Any subsequent training commands will overwrite your checkpoint files. We suggest copying your latest model (baselines/models/current/) to another directory in baselines/models. You can then load that model by specifying the directory name.
   - The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.
 
 Evaluation
 ##########
 
-Evaluation in open-ended massively multiagent settings is akin to that in the real world. There isn't an obvious single real-number metric. It's like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO's suite of evaluation and visualization tools.
-
-To evaluate a pretrained model and a scripted baseline:
+Evaluation in open-ended massively multiagent settings is akin to that in the real world. There is not an obvious single real-number metric. It's like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO's suite of evaluation and visualization tools.
 
 .. code-block:: python
+   :caption: Evaluate the pretrained SmallMaps model and a scripted baseline
 
-  python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1
-  python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1 --MODEL=scripted
+   python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1
+   python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1 --MODEL=scripted-combat
 
 .. code-block:: text
 
@@ -246,40 +245,46 @@ Advanced
 
 Neural MMO provides three sets of evaluation settings:
 
-**Training Maps:** Evaluate on the same maps used for training. This is standard practice in reinforcement learning. *Enable by setting the EVAL_GENERALIZE flag to false*
+**Training Maps:** Evaluate on the same maps used for training. This is standard practice in reinforcement learning. *Enable by setting the GENERALIZE flag to False*
 
 **Evaluation Maps:** Evaluate on a set of held-out maps drawn from the training map *distribution* generated using different random seeds. *This is the default setting*
 
-**Generalization Maps:** Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). *Enable by setting the appropriate --config*
+**Transfer Maps:** Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). *Enable by setting the appropriate --config*
 
 Dashboard and Statistics
 ########################
 
-The "evaluate" command stores data from the most recent run in experiment/evaluation.npy. To view a summary:
+The "visualize" command creates summary tables and figures using the results of training and evaluation
 
 .. code-block:: python
+   :caption: Visualize evaluation results for pretrained and scripted baselines
 
-  python Forge.py visualize #After evaluating pretrained baseline
-  python Forge.py visualize #After evaluating scripted baseline
+   python Forge.py visualize --config=SmallMaps --MODEL=small-maps
+   python Forge.py visualize --config=SmallMaps --MODEL=scripted-combat
 
-.. code-block:: text
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          18.00        57.00        45.95         4.09
+Lifetime             0.00      1000.00        46.49       110.78
+Skilling            10.00        50.50        14.06         5.92
+Combat               3.00        28.00         4.64         3.06
+Equipment            0.00        18.00         0.22         1.36
+Exploration          0.00        73.00         8.23         6.34
+============ ============ ============ ============ ============
 
-  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  ▏Population  ▕▏Min:     24.0▕▏Max:     63.0▕▏Mean:     52.6▕▏Std:      4.9▕
-  ▏Lifetime    ▕▏Min:      0.0▕▏Max:    981.0▕▏Mean:     52.5▕▏Std:    100.8▕
-  ▏Skilling    ▕▏Min:     10.0▕▏Max:     48.0▕▏Mean:     14.9▕▏Std:      5.8▕
-  ▏Combat      ▕▏Min:      3.0▕▏Max:     24.0▕▏Mean:      4.6▕▏Std:      2.4▕
-  ▏Equipment   ▕▏Min:      0.0▕▏Max:     12.0▕▏Mean:      0.1▕▏Std:      0.9▕
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-  ▏Population  ▕▏Min:     25.0▕▏Max:     61.0▕▏Mean:     50.4▕▏Std:      4.1▕
-  ▏Lifetime    ▕▏Min:      0.0▕▏Max:    933.0▕▏Mean:     51.8▕▏Std:     67.4▕
-  ▏Skilling    ▕▏Min:     10.0▕▏Max:     49.5▕▏Mean:     14.9▕▏Std:      5.5▕
-  ▏Combat      ▕▏Min:      3.0▕▏Max:     30.0▕▏Mean:      4.3▕▏Std:      2.7▕
-  ▏Equipment   ▕▏Min:      0.0▕▏Max:     18.0▕▏Mean:      0.1▕▏Std:      0.9▕
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          27.00        62.00        49.50         4.43
+Lifetime             0.00       994.00        50.92        74.27
+Skilling            10.00        53.00        15.04         5.54
+Combat               3.00        33.00         4.35         2.77
+Equipment            0.00        26.00         0.10         1.04
+Exploration          0.00       101.00        14.94        10.80
+============ ============ ============ ============ ============
 
-From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights -- both to aid in future development and for the paper. The "visualize" command also loads a browser-based interactive dashboard:
+Your results may vary slightly from ours, which were obtained using a slightly larger evaluation for stability. From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights -- both to aid in future development and for the paper. The "visualize" command also loads a browser-based interactive dashboard:
 
 .. figure:: /resource/image/baselines/SmallMaps/neural_small_maps.png
 
@@ -289,7 +294,7 @@ From the summary stats, the models look pretty comparable. Since the scripted ba
 
    Scripted baseline
 
-Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating -- notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably slightly stronger overall, but apparently Range and Mage are fairly balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent -- perhaps I should consider changing the movement system in a future update.
+Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating -- notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably stronger overall, but apparently Range and Mage are somewhat balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent -- perhaps I should consider changing the movement system in a future update.
 
 So, why do we need 15 plots when only one turned out to be important? First of all, we didn't know which plot would highlight an interesting difference ahead of time. Second, there are some smaller observations we can make, such as the pretrained model obtaining significantly more equipment pickups while the scripted model obtained fewer and better pickups (Equipment scatter plots). Or that the pretrained model has a slightly heavier Lifetime right tail, as seen in the Lifetime Gantt plot. Many of our most experiments (and worst bug fixes) were motivated by an unusual disparity in the dashboard.
 

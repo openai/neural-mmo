@@ -87,11 +87,11 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   if config.MODEL not in ('scripted_forage', 'scripted_combat'):
+   if config.MODEL not in ('scripted-forage', 'scripted-combat'):
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
    #Scripted policy backend
-   if config.MODEL == 'scripted_forage':
+   if config.MODEL == 'scripted-forage':
       policy = ai.policy.forage 
    else:
       policy = ai.policy.combat

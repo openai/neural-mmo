@@ -14,7 +14,7 @@ To reproduce the tables and figures below, run the associated command. Run *trai
 |icon| Small Maps
 #################
 
-This setting includes 256 80x80 maps (60x60 excluding lava) and supports up to 128 agents/32 NPCs. It is intended for training and evaluation horizons of 1000 timesteps, or 10 minutes in real time. Reasonable policies are trainable with as low as 4 CPU cores and a single modern GPU in a few hours. Evaluation takes only a few minutes.
+This setting includes 256 80x80 maps (60x60 excluding lava) and supports up to 128 agents/32 NPCs. It is intended for training and evaluation horizons of 1000 timesteps, or 10 minutes in real time. Evaluation takes only a few minutes. Reasonable policies are trainable with as low as 4 CPU cores and a single modern GPU in a few hours. Our baseline is trained using an RTX 3080 + 64 cores for ~4 days. Training for an additional 2 days did not result in any substantial improvments.
 
 .. image:: /resource/image/small_isometric.png
 
@@ -39,6 +39,25 @@ Exploration          0.00        73.00         8.23         6.34
 .. figure:: /resource/image/baselines/SmallMaps/neural_long_train.png
 
    New skills emerge up to 100k training environments, but performance dynamics appear mostly stable thereafter
+
+Untrained
+*********
+
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population           1.00        17.00         8.29         2.37
+Lifetime             0.00       480.00         8.86        14.85
+Skilling            10.00        36.50        10.41         1.19
+Combat               3.00         5.00         3.87         0.34
+Equipment            0.00         4.00         0.00         0.07
+Exploration          0.00        26.00         2.22         2.72
+============ ============ ============ ============ ============
+
+.. figure:: /resource/image/baselines/SmallMaps/neural_untrained.png
+
+   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=None
+
 
 Zero-Shot Transfer (LargeMaps Model)
 ************************************
@@ -97,7 +116,7 @@ Exploration          0.00       101.00        14.94        10.80
 |icon| Large Maps
 #################
 
-This setting includes 256 1024x1024 maps (1004x1004 excluding lava) and supports up to 1024 agents/1024 NPCs. It is intended for training and evaluation horizons of 6000-12000+ timesteps, or 1-2 hours in real time. Reasonable policies are trainable with 64 CPU cores and a single GPU in a few days. Evaluation takes several hours. The bounds of scaling with additional compute are unknown.
+This setting includes 256 1024x1024 maps (1004x1004 excluding lava) and supports up to 1024 agents/1024 NPCs. It is intended for training and evaluation horizons of 6000-12000+ timesteps, or 1-2 hours in real time. Evaluation takes several hours. Reasonable policies are trainable with 4 CPU cores and a single GPU in a few days. Our baseline is trained using an RTX 3080 + 16 cores for ~5 days. The bounds of scaling with additional compute are unknown -- note that this setting is typically RAM bound.
 
 .. image:: /resource/image/large_isometric.png
 

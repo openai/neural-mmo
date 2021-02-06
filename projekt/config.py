@@ -27,8 +27,8 @@ class Base(core.Config):
    #Model Parameters 
    #large-map:        Large maps baseline
    #small-map:        Small maps baseline
-   #scripted_combat:  Scripted with combat
-   #scripted_forage:  Scripted without combat
+   #scripted-combat:  Scripted with combat
+   #scripted-forage:  Scripted without combat
    #current:          Resume latest checkpoint
    #None:             Train from scratch
    MODEL                   = 'current'

@@ -1,4 +1,3 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
 .. |ags| image:: /resource/icon/rs/ags.png
@@ -7,7 +6,7 @@
 .. |fire| image:: /resource/icon/rs/fire.png
 .. |water| image:: /resource/icon/rs/water.png
 
-|env|
+.. figure:: /resource/image/splash.png
 
 |icon| Foreword
 ###############

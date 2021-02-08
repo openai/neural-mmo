@@ -12,7 +12,7 @@ RIGHT   = u'\u2595'
 
 def table_stats(stats, titleLen=12, entryLen=12):
    titleFmt = '{:<' + str(titleLen) + '}'
-   valFmt   = '{:' + str(entryLen) + '.1f}'
+   valFmt   = '{:' + str(entryLen) + '.2f}'
    keyFmt   = '{:<' + str(entryLen) + '}'
 
    keys  = [keyFmt.format(k) for k in 'Min Max Mean Std'.split()]

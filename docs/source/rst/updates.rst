@@ -1,7 +1,6 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
-|env|
+.. figure:: /resource/image/splash.png
 
 |icon| Video Demos
 ##################
@@ -29,6 +28,8 @@
 
 |icon| Presentations
 ####################
+
+`[Slides] <https://docs.google.com/presentation/d/1HYdoe3btw1USWaufBO1yuqFIOg-XW8E2wX0vZal0LtY/edit?usp=sharing>`_ `Neural MMO: A Saga in Deep Reinforcement Learning <https://www.twitch.tv/videos/900545247?t=03h03m06s>`_ (English Week 2021, IUT Vannes)
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://underline.io/lecture/167-neural-mmo-v1.3-a-massively-multiagent-game-environment-for-training-and-evaluating-neural-networks>`_ (AAMAS 2020)
 

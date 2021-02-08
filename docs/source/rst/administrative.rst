@@ -1,4 +1,3 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
 .. |ags| image:: /resource/icon/rs/ags.png
@@ -20,7 +19,7 @@
 .. |magenta| image:: /resource/icon/agent/magenta.png
 .. |sky| image:: /resource/icon/agent/sky.png
 
-|env|
+.. figure:: /resource/image/splash.png
 
 |icon| Authorship, License, Disclaimer
 ######################################
@@ -28,6 +27,7 @@
 I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
 2021 (winter): v1.5 release
+   - Neural MMO v1.5 presented at English Week 2021, IUT Vannes
 
 2020 (spring): v1.3 and v1.4 releases
    - Neural MMO v1.4 presented at the ICML 2020 Learning in Artificial Open Worlds workshop

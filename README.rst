@@ -13,6 +13,8 @@ Neural MMO is a massively multiagent AI research environment inspired by Massive
 Beta Tester Information
 ***********************
 
-Build the v1.5 docs locally to view installation instructions and tutorials:
+Build the v1.5 docs locally:
 
-```cd docs && bash make.sh && bash view.sh```
+```cd docs && bash make.sh```
+
+If you have Firefox, bash view.sh. Otherwise, open docs/build/html/index.html. Installation instructions and tutorials are contained in the User Guide accessible from the left sidebar menu.

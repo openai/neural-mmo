@@ -1,7 +1,7 @@
 
 .. |icon| image:: docs/source/resource/icon/icon_pixel.png
 
-.. figure:: /resource/image/splash.png
+.. figure:: docs/source/resource/image/splash.png
 
 |icon| Welcome to the Platform!
 ###############################
@@ -21,16 +21,13 @@ Beta Tester Instructions
 
 *bash view.sh*
 
-This build docs and open a local view in a browser. The installation instructions given assume that you want to use the master branch, which will not be the case until v1.5 goes live officially. Use the modified instructions below to install the v1.5 prerelease/dev branches. You will need Anaconda python 3.8 + gcc before starting.
-
-If you are on WSL, run the client setup from Windows and the main repo setup from Ubuntu. If you are on a Mac, follow the Ubuntu instructions and let me know if they work. If you do not have CUDA, use --MODEL=scripted-combat in the tutorials.
+This build docs and open a local view in a browser. The installation instructions given assume that you want to use the master branch, which will not be the case until v1.5 goes live officially. Use the modified instructions below to install the v1.5 prerelease/dev branches. You will need Anaconda python 3.8 + gcc before starting. If you are on WSL, run the client setup from Windows and the main repo setup from Ubuntu. If you are on a Mac, follow the Ubuntu instructions and let me know if they work. If you do not have CUDA, use --MODEL=scripted-combat in the tutorials.
 
 **Server -- if you can't run python Forge.py --help after install, rerun pip install ray[rllib]**
 
 *git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo*
 
 *git checkout --track origin/v1.5-prerelease*
-
 *bash scripts/setup.sh --SERVER_ONLY*
 
 

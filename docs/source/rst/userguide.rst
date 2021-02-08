@@ -16,40 +16,25 @@ Progress in multiagent intelligence research is fundamentally limited by the com
 
 Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
-|icon| Installation
-###################
+|icon| Beta Installation
+########################
+
+If you are on Ubuntu 18.04/20.04, run both the server and client installation. If you are on MacOS, do the same but note that this is untested. If you are on WSL + Ubuntu, run the client setup on Windows 10 and the server setup on Ubuntu.
 
 .. code-block:: python
-   :caption: Ubuntu 20.04/18.04 (requires Anaconda Python 3.8.x + gcc)
+   :caption: Server installation assumes Anaconda Python 3.8.x + gcc
 
-   #Download Neural MMO and run the pretrained demo model
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
-   bash scripts/setup.sh
-   python Forge.py render
-
-   #Open the client in a separate terminal
-   ./client.sh
-
-.. code-block:: python
-   :caption: WSl Ubuntu 20.04/18.04 (requires Anaconda Python 3.8.x + gcc) + Windows 10
-
-   #Execute on WSL Ubuntu + Anaconda
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
+   #Server -- if you can't run python Forge.py --help after install, rerun pip install ray[rllib]
+   git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
+   git checkout --track origin/v1.5-prerelease
    bash scripts/setup.sh --SERVER_ONLY
-   python Forge.py render
 
-   #Execute on Windows
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo-client
-   neural-mmo-client/UnityClient/neural-mmo.exe
+   #Client
+   git clone https://github.com/jsuarez5341/neural-mmo-client && mv neural-mmo-client forge/embyr && cd forge/embyr
+   git checkout --track origin/v1.5-cowboy-dev && cd ../..
 
-**Troubleshooting:**
-  - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
-  - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
-  - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
-  - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
-
-CLI
-###
+|icon| CLI
+##########
 
 Forge.py is the main file for the included demo and starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. To view documentation:
 
@@ -106,8 +91,8 @@ Forge.py is the main file for the included demo and starter project (/projekt). 
          Web dashboard for the latest evaluation/generalization results
 
 
-Terrain Generation
-##################
+|icon| Terrain Generation
+#########################
 
 We're going to need some maps to play with in the tutorials below. If you're following along interactively and want to keep things quick, we suggest only generating the small maps. Generating image previews of each map can be useful in certain circumstances. The files for large maps are huge, so we'll only generate PNGs for small maps.
 
@@ -132,8 +117,8 @@ Generating small maps without rendering takes 5-10 seconds on a modern CPU.
 
 Terrain generation is controlled by a number of parameters prefixed with TERRAIN_. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in forge/blade/core/terrain.py.
 
-Rendering and Overlays
-######################
+|icon| Rendering and Overlays
+#############################
 
 Rendering the environment requires launching both a server and a client. To launch the server:
 
@@ -155,8 +140,8 @@ The counts (exploration) overlay is computed by splatting the agent's current po
 
 Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in forge/trinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.
 
-Training
-########
+|icon| Training
+###############
 
 Evaluating on small/large maps will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:
 
@@ -220,8 +205,8 @@ Note:
   - Any subsequent training commands will overwrite your checkpoint files. We suggest copying your latest model (baselines/models/current/) to another directory in baselines/models. You can then load that model by specifying the directory name.
   - The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.
 
-Evaluation
-##########
+|icon| Evaluation
+#################
 
 Evaluation in open-ended massively multiagent settings is akin to that in the real world. There is not an obvious single real-number metric. It's like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO's suite of evaluation and visualization tools.
 
@@ -251,8 +236,8 @@ Neural MMO provides three sets of evaluation settings:
 
 **Transfer Maps:** Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). *Enable by setting the appropriate --config*
 
-Dashboard and Statistics
-########################
+|icon| Dashboard and Statistics
+###############################
 
 The "visualize" command creates summary tables and figures using the results of training and evaluation
 

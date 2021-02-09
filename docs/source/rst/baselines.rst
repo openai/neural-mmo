@@ -14,12 +14,13 @@ To reproduce the tables and figures below, run the associated command. Run *trai
 |icon| Small Maps
 #################
 
-This setting includes 256 80x80 maps (60x60 excluding lava) and supports up to 128 agents/32 NPCs. It is intended for training and evaluation horizons of 1000 timesteps, or 10 minutes in real time. Evaluation takes only a few minutes. Reasonable policies are trainable with as low as 4 CPU cores and a single modern GPU in a few hours. Our baseline is trained using an RTX 3080 + 64 cores for ~4 days. Training for an additional 2 days did not result in any substantial improvments.
-
+This setting includes 256 80x80 maps (60x60 excluding lava) and supports up to 128 agents/32 NPCs. It is intended for training and evaluation horizons of 1000 timesteps, or 10 minutes in real time. Evaluation takes only a few minutes.
 .. image:: /resource/image/small_isometric.png
 
 Neural Baseline
 ***************
+
+Our baseline is trained using an RTX 3080 + 64 cores for ~(100k maps/1000 epochs/4 days). The first skills to emerge are survival/foraging/exploration, followed by combat, followed much later by attacking NPCs for equipment. Training for an extra ~500 epochs did not result in any substantial improvements.
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
@@ -35,10 +36,6 @@ Exploration          0.00        73.00         8.23         6.34
 .. figure:: /resource/image/baselines/SmallMaps/neural_small_maps.png
 
    **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=small-baseline
-
-.. figure:: /resource/image/baselines/SmallMaps/neural_long_train.png
-
-   New skills emerge up to 100k training environments, but performance dynamics appear mostly stable thereafter
 
 Untrained
 *********
@@ -122,6 +119,8 @@ This setting includes 256 1024x1024 maps (1004x1004 excluding lava) and supports
 
 Neural Baseline
 ***************
+
+Our baseline is trained using an RTX 3080 + 16 cores for ~(20k maps/250 epochs/4 days).  The first skill to emerge is capable foraging and exploration, followed by combat and some equipment farming. Training for an extra ~230 epochs results in improved combat and equipment farming but greatly decreased lifetime/foraging/exploration.
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std

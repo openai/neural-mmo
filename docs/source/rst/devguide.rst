@@ -11,7 +11,12 @@
 |icon| Foreword
 ###############
 
-We're actively looking for academic collaborators and open source contributors for all aspects of the project, including those that do not involve any AI or ML. Message me on Discord if you are interested in getting involved. This guide serves as a brief organizational overview of Neural MMO for new contributors and links to a scrum board. It also contains information on some of the more important technical decisions in this project, some of which may be important to you depending on which portion of the project you are interested in.
+We're actively looking for academic collaborators and open source contributors for all aspects of the project, including those that do not involve any AI or ML. This guide serves as a brief organizational overview of Neural MMO for new contributors and links to the scrum board. It also contains information on some of the more important technical decisions in this project, some of which may be important to you depending on which portion of the project you are interested in.
+
+|icon| Contributing
+###################
+
+We manage major improvements and expansions through a Github Projects `[Scrum Board] <https://github.com/jsuarez5341/neural-mmo/projects>`_ as of v1.5. This is a non-exhaustive list. Feel free to propose new efforts. Also, come introduce yourself on Discord!
 
 |icon| Code Structure
 #####################
@@ -28,6 +33,13 @@ Neural MMO is broken into four major modules
 
 Forge.py is the main file and the RLlib demo is implemented in /projekt
 
+|icon| Style
+############
+
+We mostly follow PEP8. The only notable exceptions are three-space indents and camel case names -- you don't need to follow these in new modules, but avoid mixing styles or autoformatting large swaths of old code.
+
+The Neural MMO: `[Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>`_ provides canonical color schemes for the website, figures, and presentations. It is not designed for traditional light-on-dark publications -- arXiv and conference papers should significantly downplay fonts/colors to avoid overly high-contrast figures.
+
 |icon| Tech Stack
 #################
 
@@ -42,27 +54,6 @@ We use a slightly customized GoogleFire wrapper for environment and experiment c
 **Dashboard:** The interactive Dashboard is implemented as a Bokeh server and renders in-browser.
 
 **Documentation:** We use Sphinx to autogenerate documentation. The User API is created manually in docs/source/public. The Developer API is a dump of all doctrings using Sphinx Autodoc. The website template is defined in source/_templates and is a reskinned readthedocs.io theme.
-
-|icon| Style
-############
-
-We mostly follow PEP8. The only notable exceptions are three-space indents and camel case names -- you don't need to follow these in new modules, but avoid mixing styles or autoformatting large swaths of old code.
-
-The Neural MMO: `[Style Guide] <https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing>`_ provides canonical color schemes for the website, figures, and presentations. It is not designed for traditional light-on-dark publications -- arXiv and conference papers should significantly downplay fonts/colors to avoid overly high-contrast figures.
-
-|icon| Scrum Board
-##################
-
-We manage major improvements and expansions through Github Projects as of v1.5. This is a non-exhaustive list. Feel free to propose new efforts. In general, we're always looking for:
-  - New game content in the style of traditional MMOs
-  - Methods for hooking up a wider variety of game content to our IO code
-  - Better evaluation and visualization tools
-  - Better baseline models and more efficient trainers
-  - Expansions that support new research directions
-  - Client performance improvements
-  - Client UI and asset improvements
-  - New types of in-client visualizations
-  - Improvements to our documentation
 
 |icon| Client Map Representation
 ################################

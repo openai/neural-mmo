@@ -25,13 +25,11 @@ If you are on Ubuntu 18.04/20.04, run both the server and client installation. I
    :caption: Server installation assumes Anaconda Python 3.8.x + gcc
 
    #Server -- if you can't run python Forge.py --help after install, rerun pip install ray[rllib]
-   git clone https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
-   git checkout --track origin/v1.5-prerelease
-   bash scripts/setup.sh --SERVER_ONLY
+   git clone --single-branch --depth=1 --branch v1.5-prerelease https://github.com/jsuarez5341/neural-mmo
+   cd neural-mmo && bash scripts/setup.sh --SERVER_ONLY
 
    #Client
-   git clone https://github.com/jsuarez5341/neural-mmo-client && mv neural-mmo-client forge/embyr && cd forge/embyr
-   git checkout --track origin/v1.5-cowboy-dev && cd ../..
+   git clone --single-branch --depth=1 --branch v1.5-cowboy-dev https://github.com/jsuarez5341/neural-mmo-client forge/embyr
 
 |icon| CLI
 ##########

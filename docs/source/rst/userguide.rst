@@ -29,7 +29,7 @@ If you are on Ubuntu 18.04/20.04, run both the server and client installation. I
    cd neural-mmo && bash scripts/setup.sh --SERVER_ONLY
 
    #Client
-   git clone --single-branch --depth=1 --branch v1.5-cowboy-dev https://github.com/jsuarez5341/neural-mmo-client forge/embyr
+   git clone --single-branch --depth=1 --branch v1.5-prerelease https://github.com/jsuarez5341/neural-mmo-client forge/embyr
 
 |icon| CLI
 ##########

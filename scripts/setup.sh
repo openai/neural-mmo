@@ -17,3 +17,5 @@ conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
 ray install-nightly
 pip install ray[rllib]
 echo "Errors upon pip install ray[rllib] are normal. If the environment runs, setup is correct"
+
+#Make cmake zlib1g-dev

@@ -33,9 +33,9 @@ Equipment            0.00        18.00         0.22         1.36
 Exploration          0.00        73.00         8.23         6.34
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/SmallMaps/neural_small_maps.png
+.. figure:: /resource/image/baselines/SmallMaps/small-map.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=small-baseline
+   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=small-map
 
 Untrained
 *********
@@ -51,7 +51,7 @@ Equipment            0.00         4.00         0.00         0.07
 Exploration          0.00        26.00         2.22         2.72
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/SmallMaps/neural_untrained.png
+.. figure:: /resource/image/baselines/SmallMaps/None.png
 
    **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=None
 
@@ -70,9 +70,9 @@ Equipment            0.00        10.00         0.01         0.26
 Exploration          0.00        91.00        13.20        10.90
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/SmallMaps/neural_large_maps.png
+.. figure:: /resource/image/baselines/SmallMaps/large-maps.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=large-baseline
+   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=large-map
 
 Scripted Foraging
 *****************
@@ -88,9 +88,9 @@ Equipment            0.00         0.00         0.00         0.00
 Exploration          0.00       111.00        17.50        13.12
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/SmallMaps/scripted_forage.png
+.. figure:: /resource/image/baselines/SmallMaps/scripted-forage.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=scripted_forage
+   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=scripted-forage
 
 Scripted Foraging + Combat
 **************************
@@ -106,9 +106,9 @@ Equipment            0.00        26.00         0.10         1.04
 Exploration          0.00       101.00        14.94        10.80
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/SmallMaps/scripted_combat.png
+.. figure:: /resource/image/baselines/SmallMaps/scripted-combat.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=scripted_combat
+   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=scripted-combat
 
 |icon| Large Maps
 #################
@@ -120,37 +120,37 @@ This setting includes 256 1024x1024 maps (1004x1004 excluding lava) and supports
 Neural Baseline
 ***************
 
-Our baseline is trained using an RTX 3080 + 16 cores for ~(20k maps/250 epochs/4 days).  The first skill to emerge is capable foraging and exploration, followed by combat and some equipment farming. Training for an extra ~230 epochs results in improved combat and equipment farming but greatly decreased lifetime/foraging/exploration.
+Our baseline is trained using an RTX 3080 + 16 cores for ~(7.5k maps/100 epochs/1 day).  The first skill to emerge is capable foraging and exploration, followed by combat and some equipment farming. Training for an extra ~740 epochs results in improved combat and equipment farming but greatly decreased lifetime/foraging/exploration.
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
 ============ ============ ============ ============ ============
-Population           73.0        932.0        748.3        184.6
-Lifetime              0.0      10000.0        251.4        893.2
-Skilling             10.0         79.0         19.7         10.6
-Combat                3.0         30.0          4.4          2.6
-Equipment             0.0         15.0          0.0          0.2
-Exploration           0.0        556.0         34.7         47.9
+Population          56.00       904.00       680.67       170.47
+Lifetime             0.00     10000.00       232.52       833.39
+Skilling            10.00        78.50        19.51        10.30
+Combat               3.00        27.00         4.28         2.29
+Equipment            0.00        15.00         0.00         0.13
+Exploration          0.00       580.00        30.50        44.57
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/LargeMaps/neural.png
+.. figure:: /resource/image/baselines/LargeMaps/large-map.png
 
-   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=large-baseline
+   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=large-map
 
 Scripted Combat
 *****************
 
-   ============ ============ ============ ============ ============
-   Metric       Min          Max          Mean         Std
-   ============ ============ ============ ============ ============
-   Population          55.00       648.00       548.28        58.87
-   Lifetime             0.00      9996.00       194.07       587.94
-   Skilling            10.00        76.00        20.46        10.07
-   Combat               3.00        36.00         5.02         2.94
-   Equipment            0.00        29.00         0.01         0.40
-   Exploration          0.00       532.00        49.50        61.95
-   ============ ============ ============ ============ ============
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          55.00       648.00       548.28        58.87
+Lifetime             0.00      9996.00       194.07       587.94
+Skilling            10.00        76.00        20.46        10.07
+Combat               3.00        36.00         5.02         2.94
+Equipment            0.00        29.00         0.01         0.40
+Exploration          0.00       532.00        49.50        61.95
+============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/LargeMaps/scripted_combat.png
+.. figure:: /resource/image/baselines/LargeMaps/scripted-combat.png
 
-   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=scripted_combat
+   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=scripted-combat

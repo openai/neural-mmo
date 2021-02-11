@@ -15,6 +15,7 @@ To reproduce the tables and figures below, run the associated command. Run *trai
 #################
 
 This setting includes 256 80x80 maps (60x60 excluding lava) and supports up to 128 agents/32 NPCs. It is intended for training and evaluation horizons of 1000 timesteps, or 10 minutes in real time. Evaluation takes only a few minutes.
+
 .. image:: /resource/image/small_isometric.png
 
 Neural Baseline
@@ -56,21 +57,21 @@ Exploration          0.00        26.00         2.22         2.72
    **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=None
 
 
-Zero-Shot Transfer (LargeMaps Model)
+Zero-Shot Transfer (large-map model)
 ************************************
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
 ============ ============ ============ ============ ============
-Population          15.00        79.00        62.63         7.00
-Lifetime             0.00       997.00        62.39        96.93
-Skilling            10.00        49.50        15.17         6.27
-Combat               3.00        17.00         3.82         1.25
-Equipment            0.00        10.00         0.01         0.26
-Exploration          0.00        91.00        13.20        10.90
+Population           4.00        69.00        50.60         5.90
+Lifetime             0.00       999.00        50.90        85.25
+Skilling            10.00        48.50        14.43         6.24
+Combat               3.00        12.00         3.93         0.99
+Equipment            0.00         6.00         0.02         0.24
+Exploration          0.00       102.00        11.59        13.54
 ============ ============ ============ ============ ============
 
-.. figure:: /resource/image/baselines/SmallMaps/large-maps.png
+.. figure:: /resource/image/baselines/SmallMaps/large-map.png
 
    **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=large-map
 
@@ -136,6 +137,42 @@ Exploration          0.00       580.00        30.50        44.57
 .. figure:: /resource/image/baselines/LargeMaps/large-map.png
 
    **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=large-map
+
+Untrained
+*********
+
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          60.00       103.00        84.49         4.44
+Lifetime             0.00       441.00        32.74        11.11
+Skilling            10.00        37.00        10.90         1.58
+Combat               3.00         7.00         3.02         0.16
+Equipment            0.00         5.00         0.00         0.02
+Exploration          0.00        42.00         6.25         2.80
+============ ============ ============ ============ ============
+
+.. figure:: /resource/image/baselines/LargeMaps/None.png
+
+   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=None
+
+Zero-Shot Transfer (small-map model)
+************************************
+
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          41.00       260.00       197.00        33.20
+Lifetime             0.00     10000.00        75.53       412.76
+Skilling            10.00        80.00        13.57         6.37
+Combat               3.00        20.00         4.81         1.90
+Equipment            0.00        22.00         0.01         0.33
+Exploration          0.00       431.00         8.98        10.13
+============ ============ ============ ============ ============
+
+.. figure:: /resource/image/baselines/LargeMaps/small-map.png
+
+   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=small-map
 
 Scripted Combat
 *****************

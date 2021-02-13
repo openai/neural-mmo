@@ -1,0 +1,740 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>User API &mdash; Neural MMO v1.5 1.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Environment" href="forge.trinity.env.html" />
+    <link rel="prev" title="Foreword" href="devguide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html"> Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-installation"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-cli"> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-terrain-generation"> Terrain Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-training"> Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-evaluation"> Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-dashboard-and-statistics"> Dashboard and Statistics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-contributing"> Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-code-structure"> Code Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-style"> Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-client-map-representation"> Client Map Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-observation-representation"> Observation Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-model-io"> Model IO</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> User API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.env.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.blade.core.config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.evaluator.html">Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.overlay.html">Overlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.formatting.html">Formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-developer-api"> Developer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/projekt.html">projekt package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/forge.html">forge package</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Baselines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="baselines.html"> Evaluation Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="baselines.html#icon-small-maps"> Small Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="baselines.html#icon-large-maps"> Large Maps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Updates</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="updates.html"> Video Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-presentations"> Presentations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-update-slides"> Update Slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-additional-links"> Additional Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ideology</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html#icon-failure-modes"> Failure Modes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Administrative</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html#icon-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html#ags-namesake"> Namesake</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO v1.5</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li> User API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/rst/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="figure align-default">
+<img alt="../_images/splash.png" src="../_images/splash.png" />
+</div>
+<div class="section" id="icon-user-api">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> User API<a class="headerlink" href="#icon-user-api" title="Permalink to this headline">¶</a></h1>
+<p>Neural MMO’s core Env API is a simple multiagent analog to the standard OpenAI Gym API. It also includes a configuration file for customizing everything from terrain generation to spawning behavior to game mechanics</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.env.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forge.blade.core.config.html">Config</a></li>
+</ul>
+</div>
+<p>This is all that most environments provide. However, Neural MMO is not a single-task environment: it is a platform built to support a wide diversity of research. The current release includes a full evaluation and visualization suite for creating custom dashboards and in-game overlays. If you wish to make use of these custom features, familiarize yourself with the /projekt demo code and refer to these additional docs:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.evaluator.html">Evaluator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.overlay.html">Overlay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.formatting.html">Formatting</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="icon-developer-api">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Developer API<a class="headerlink" href="#icon-developer-api" title="Permalink to this headline">¶</a></h1>
+<p>The doctree below contains automatically generated documentation for the entire project. This is not intended for typical users but is a useful reference for Neural MMO developers and contributors.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc/projekt.html">projekt package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/projekt.config.html">projekt.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/projekt.rllib_wrapper.html">projekt.rllib_wrapper module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc/forge.html">forge package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/forge.blade.html">forge.blade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.core.html">forge.blade.core package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.core.market.html">forge.blade.core.market namespace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.core.config.html">forge.blade.core.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.core.map.html">forge.blade.core.map module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.core.realm.html">forge.blade.core.realm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.core.terrain.html">forge.blade.core.terrain module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.core.tile.html">forge.blade.core.tile module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.entity.html">forge.blade.entity package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.entity.entity.html">forge.blade.entity.entity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.entity.npc.html">forge.blade.entity.npc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.entity.player.html">forge.blade.entity.player module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.hook.html">forge.blade.hook package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.hook.item.html">forge.blade.hook.item module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.hook.modules.html">forge.blade.hook.modules module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.io.html">forge.blade.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.io.action.html">forge.blade.io.action package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.io.stimulus.html">forge.blade.io.stimulus package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.io.comparable.html">forge.blade.io.comparable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.io.node.html">forge.blade.io.node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.io.utils.html">forge.blade.io.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.item.html">forge.blade.item package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.armor.html">forge.blade.item.armor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.food.html">forge.blade.item.food module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.item.html">forge.blade.item.item module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.knife.html">forge.blade.item.knife module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.ore.html">forge.blade.item.ore module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.rawfish.html">forge.blade.item.rawfish module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.rawmeat.html">forge.blade.item.rawmeat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.sword.html">forge.blade.item.sword module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.tool.html">forge.blade.item.tool module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.lib.html">forge.blade.lib package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.comms.html">forge.blade.lib.comms module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.enums.html">forge.blade.lib.enums module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.log.html">forge.blade.lib.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.material.html">forge.blade.lib.material module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.multiset.html">forge.blade.lib.multiset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.overlay.html">forge.blade.lib.overlay module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.priorityqueue.html">forge.blade.lib.priorityqueue module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.ray.html">forge.blade.lib.ray module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.stattrak.html">forge.blade.lib.stattrak module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.utils.html">forge.blade.lib.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.systems.html">forge.blade.systems package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.ai.html">forge.blade.systems.ai package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.visualizer.html">forge.blade.systems.visualizer namespace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.combat.html">forge.blade.systems.combat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.droptable.html">forge.blade.systems.droptable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.equipment.html">forge.blade.systems.equipment module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.exchange.html">forge.blade.systems.exchange module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.experience.html">forge.blade.systems.experience module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.inventory.html">forge.blade.systems.inventory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.oldEquipment.html">forge.blade.systems.oldEquipment module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.recipe.html">forge.blade.systems.recipe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.skill.html">forge.blade.systems.skill module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/forge.ethyr.html">forge.ethyr package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.ethyr.torch.html">forge.ethyr.torch package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.io.html">forge.ethyr.torch.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.policy.html">forge.ethyr.torch.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.loss.html">forge.ethyr.torch.loss module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.model.html">forge.ethyr.torch.model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.optim.html">forge.ethyr.torch.optim module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.param.html">forge.ethyr.torch.param module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.save.html">forge.ethyr.torch.save module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.ethyr.torch.utils.html">forge.ethyr.torch.utils module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../autodoc/forge.trinity.html">forge.trinity package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.dataframe.html">forge.trinity.dataframe module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.env.html">forge.trinity.env module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.evaluator.html">forge.trinity.evaluator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.formatting.html">forge.trinity.formatting module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.overlay.html">forge.trinity.overlay module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.twistedserver.html">forge.trinity.twistedserver module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.visualize.html">forge.trinity.visualize module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="forge.trinity.env.html" class="btn btn-neutral float-right" title="Environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="devguide.html" class="btn btn-neutral float-left" title="Foreword" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Joseph Suarez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+      --link:       #ffffff;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    html.writer-html5 .rst-content table.docutils th {
+      border: 1px solid var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--text);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--text);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+      font-size: 150%
+    }
+
+    h2 {
+      color: var(--accent);
+      font-size: 125%
+    }
+
+    h3 {
+      color: var(--accent);
+    }
+
+    h4 {
+      color: var(--accent);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: var(--title); /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--link);
+    }
+
+    a:visited {
+      color: var(--link);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

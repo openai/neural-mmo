@@ -1,0 +1,7 @@
+forge.trinity.formatting module
+===============================
+
+.. automodule:: forge.trinity.formatting
+   :members:
+   :inherited-members:
+   :show-inheritance:

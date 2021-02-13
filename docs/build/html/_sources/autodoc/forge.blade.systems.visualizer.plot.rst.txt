@@ -1,0 +1,7 @@
+forge.blade.systems.visualizer.plot module
+==========================================
+
+.. automodule:: forge.blade.systems.visualizer.plot
+   :members:
+   :inherited-members:
+   :show-inheritance:

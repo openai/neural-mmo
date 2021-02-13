@@ -1,0 +1,28 @@
+forge.blade.systems package
+===========================
+
+.. automodule:: forge.blade.systems
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   forge.blade.systems.ai
+   forge.blade.systems.visualizer
+
+
+.. toctree::
+   :maxdepth: 4
+
+   forge.blade.systems.combat
+   forge.blade.systems.droptable
+   forge.blade.systems.equipment
+   forge.blade.systems.exchange
+   forge.blade.systems.experience
+   forge.blade.systems.inventory
+   forge.blade.systems.oldEquipment
+   forge.blade.systems.recipe
+   forge.blade.systems.skill

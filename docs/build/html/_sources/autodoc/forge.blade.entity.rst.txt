@@ -1,0 +1,15 @@
+forge.blade.entity package
+==========================
+
+.. automodule:: forge.blade.entity
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   forge.blade.entity.entity
+   forge.blade.entity.npc
+   forge.blade.entity.player

@@ -1,0 +1,19 @@
+forge.trinity package
+=====================
+
+.. automodule:: forge.trinity
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   forge.trinity.dataframe
+   forge.trinity.env
+   forge.trinity.evaluator
+   forge.trinity.formatting
+   forge.trinity.overlay
+   forge.trinity.twistedserver
+   forge.trinity.visualize

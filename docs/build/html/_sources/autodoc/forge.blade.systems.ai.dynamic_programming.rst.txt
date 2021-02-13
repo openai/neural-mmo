@@ -1,0 +1,7 @@
+forge.blade.systems.ai.dynamic\_programming module
+==================================================
+
+.. automodule:: forge.blade.systems.ai.dynamic_programming
+   :members:
+   :inherited-members:
+   :show-inheritance:

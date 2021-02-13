@@ -1,0 +1,7 @@
+forge.blade.systems.ai.move module
+==================================
+
+.. automodule:: forge.blade.systems.ai.move
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,971 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Introduction &mdash; Neural MMO v1.5 1.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Foreword" href="devguide.html" />
+    <link rel="prev" title="Index" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-installation"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-cli"> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-terrain-generation"> Terrain Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-training"> Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-evaluation"> Evaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#advanced">Advanced</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-dashboard-and-statistics"> Dashboard and Statistics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-contributing"> Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-code-structure"> Code Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-style"> Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-client-map-representation"> Client Map Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-observation-representation"> Observation Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devguide.html#icon-model-io"> Model IO</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html"> User API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#icon-developer-api"> Developer API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Baselines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="baselines.html"> Evaluation Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="baselines.html#icon-small-maps"> Small Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="baselines.html#icon-large-maps"> Large Maps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Updates</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="updates.html"> Video Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-presentations"> Presentations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-update-slides"> Update Slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-additional-links"> Additional Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ideology</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ideology.html#icon-failure-modes"> Failure Modes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Administrative</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html#icon-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administrative.html#ags-namesake"> Namesake</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO v1.5</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li> Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/rst/userguide.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="figure align-default">
+<img alt="../_images/splash.png" src="../_images/splash.png" />
+</div>
+<div class="section" id="icon-introduction">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Introduction<a class="headerlink" href="#icon-introduction" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://youtu.be/y_f77u9vlLQ">[Demo Video]</a> | <a class="reference external" href="https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html">[User API]</a> | <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">[Github]</a> | <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a> | <a class="reference external" href="https://twitter.com/jsuarez5341">[Twitter]</a></p>
+<p>Neural MMO is a platform for agent-based intelligence research featuring hundreds of concurrent agents, multi-thousand-step time horizons, and procedurally-generated, million-tile maps. This release ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a> for support, discussion, and dev updates. This is the best place to contact me.</p>
+<div class="figure align-default">
+<img alt="../_images/large_isometric_zoom.png" src="../_images/large_isometric_zoom.png" />
+</div>
+<p><strong>Abstract:</strong> Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games – self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.</p>
+</div>
+<div class="section" id="icon-installation">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Installation<a class="headerlink" href="#icon-installation" title="Permalink to this headline">¶</a></h1>
+<p><strong>Dependencies:</strong></p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Ubuntu 20.04/18.04</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">single</span><span class="o">-</span><span class="n">branch</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">branch</span> <span class="n">v1</span><span class="o">.</span><span class="mi">5</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">single</span><span class="o">-</span><span class="n">branch</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">branch</span> <span class="n">v1</span><span class="o">.</span><span class="mi">5</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">/</span><span class="n">forge</span><span class="o">/</span><span class="n">embyr</span>
+
+<span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Windows 10 + WSL Ubuntu 20.04/18.04</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Execute in WSL Ubuntu</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">single</span><span class="o">-</span><span class="n">branch</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">branch</span> <span class="n">v1</span><span class="o">.</span><span class="mi">5</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span>
+<span class="n">cd</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span> <span class="o">&amp;&amp;</span> <span class="n">bash</span> <span class="n">scripts</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+
+<span class="c1">#Execute in Windows 10</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">single</span><span class="o">-</span><span class="n">branch</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">branch</span> <span class="n">v1</span><span class="o">.</span><span class="mi">5</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
+</pre></div>
+</div>
+</div>
+<dl class="simple">
+<dt><strong>Troubleshooting:</strong></dt><dd><ul class="simple">
+<li><p>Post installation errors in #support on the <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a></p></li>
+<li><p>Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor</p></li>
+<li><p>If you want full commit history, clone without <code class="docutils literal notranslate"><span class="pre">--depth=1</span></code> (including in scripts/setup.sh for the client). This flag is only included to cut down on download time</p></li>
+<li><p>The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="icon-cli">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> CLI<a class="headerlink" href="#icon-cli" title="Permalink to this headline">¶</a></h1>
+<p>Forge.py is the main file for the included demo and starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. To view documentation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>NAME
+    Forge.py --help - Neural MMO CLI powered by Google Fire
+
+SYNOPSIS
+    Forge.py --help - GROUP | COMMAND
+
+DESCRIPTION
+    Main file for the RLlib demo included with Neural MMO.
+
+    Usage:
+       python Forge.py &lt;COMMAND&gt; --config=&lt;CONFIG&gt; --ARG1=&lt;ARG1&gt; ...
+
+    The User API documents core env flags. Additional config options specific
+    to this demo are available in projekt/config.py.
+
+    The --config flag may be used to load an entire group of options at once.
+    The Debug, SmallMaps, and LargeMaps options are included in this demo with
+    the latter being the default -- or write your own in projekt/config.py
+
+GROUPS
+    GROUP is one of the following:
+
+     config
+       Large scale Neural MMO training setting
+
+COMMANDS
+    COMMAND is one of the following:
+
+     evaluate
+       Evaluate a model on --EVAL_MAPS maps from the training set
+
+     generalize
+       Evaluate a model on --EVAL_MAPS maps not seen during training
+
+     generate
+       Generate game maps for the current --config setting
+
+     render
+       Start a WebSocket server that autoconnects to the 3D Unity client
+
+     train
+       Train a model starting with the current value of --MODEL
+
+     visualize
+       Web dashboard for the latest evaluation/generalization results
+</pre></div>
+</div>
+</div>
+<div class="section" id="icon-terrain-generation">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Terrain Generation<a class="headerlink" href="#icon-terrain-generation" title="Permalink to this headline">¶</a></h1>
+<p>We’re going to need some maps to play with in the tutorials below. If you’re following along interactively and want to keep things quick, we suggest only generating the small maps. Generating image previews of each map can be useful in certain circumstances. The files for large maps are huge, so we’ll only generate PNGs for small maps.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Generate small and large game maps</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">generate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span> <span class="o">--</span><span class="n">TERRAIN_RENDER</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">generate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">LargeMaps</span>
+</pre></div>
+</div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Generating 256 training and 64 evaluation maps:
+100%|████████████████████████████████████████████████| 320/320 [01:35&lt;00:00,  3.34it/s]
+Generating 256 training and 64 evaluation maps:
+100%|████████████████████████████████████████████████| 320/320 [09:53&lt;00:00,  1.85s/it]
+</pre></div>
+</div>
+<p>Generating small maps without rendering takes 5-10 seconds on a modern CPU.</p>
+<div class="figure align-default" id="id6">
+<img alt="../_images/map1.png" src="../_images/map1.png" />
+<p class="caption"><span class="caption-text">Example map from resource/maps/procedural-small/map1/map.png</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>Terrain generation is controlled by a number of parameters prefixed with <a href="#id14"><span class="problematic" id="id15">TERRAIN_</span></a>. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in forge/blade/core/terrain.py.</p>
+</div>
+<div class="section" id="icon-rendering-and-overlays">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Rendering and Overlays<a class="headerlink" href="#icon-rendering-and-overlays" title="Permalink to this headline">¶</a></h1>
+<p>Rendering the environment requires launching both a server and a client. To launch the server:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">render</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Linux:</strong> Launch <em>client.sh</em> in a separate shell or click the associated executable</div>
+<div class="line"><strong>Windows:</strong> Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10</div>
+</div>
+<p>The server will take a few seconds to load the pretrained policy and connect to the client.</p>
+<div class="figure align-default" id="id7">
+<img alt="../_images/ui.png" src="../_images/ui.png" />
+<p class="caption"><span class="caption-text">You should see this view once the map loads</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<p>The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. Note that the LargeMaps config requires a good workstation to render and you should avoid zooming all the way out.</p>
+<img alt="../_images/overlays.png" src="../_images/overlays.png" />
+<p>The counts (exploration) overlay is computed by splatting the agent’s current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.</p>
+<p>Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in forge/trinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.</p>
+</div>
+<div class="section" id="icon-training">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Training<a class="headerlink" href="#icon-training" title="Permalink to this headline">¶</a></h1>
+<p>Evaluating on small/large maps will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Train on small and large game maps</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">train</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span> <span class="o">--</span><span class="n">MODEL</span><span class="o">=</span><span class="kc">None</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">train</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">LargeMaps</span> <span class="o">--</span><span class="n">MODEL</span><span class="o">=</span><span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>     ___           ___           ___           ___
+    /__/\         /__/\         /__/\         /  /\
+    \  \:\       |  |::\       |  |::\       /  /::\     An open source
+     \  \:\      |  |:|:\      |  |:|:\     /  /:/\:\    project originally
+ _____\__\:\   __|__|:|\:\   __|__|:|\:\   /  /:/  \:\   founded by Joseph Suarez
+/__/::::::::\ /__/::::| \:\ /__/::::| \:\ /__/:/ \__\:\  and formalized at OpenAI
+\  \:\~~\~~\/ \  \:\~~\__\/ \  \:\~~\__\/ \  \:\ /  /:/
+ \  \:\  ~~~   \  \:\        \  \:\        \  \:\  /:/   Now developed and
+  \  \:\        \  \:\        \  \:\        \  \:\/:/    maintained at MIT in
+   \  \:\        \  \:\        \  \:\        \  \::/     Phillip Isola&#39;s lab
+    \__\/         \__\/         \__\/         \__\/
+
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▏Epoch: 16▕▏Sample: 8923.8/s (64.0s)▕▏Train: 35.4/s (235.2s)▕
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
+   ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
+   ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
+   ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
+   ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▏Epoch: 17▕▏Sample: 8910.2/s (62.2s)▕▏Train: 33.7/s (227.8s)▕
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
+   ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
+   ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
+   ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
+   ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▏Epoch: 18▕▏Sample: 8885.9/s (59.5s)▕▏Train: 32.4/s (217.2s)▕
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
+   ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
+   ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
+   ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
+   ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▏Neural MMO v1.5▕▏Epochs: 18.0▕▏kSamples: 236.8▕▏Sample Time: 1022.2▕▏Learn Time: 3797.6▕
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+</pre></div>
+</div>
+<p>The training monitor above summarizes wall-clock time spent on sampling vs training and displays performance for the last three epochs. You can train reasonably good small-map models in a few hours and decent large-map models overnight on a single desktop with one GPU. See Baselines for exact training times and performances of our models. Specify the –MODEL=current flag throughout the remainder of these tutorials to load the model you just trained.</p>
+<dl class="simple">
+<dt>Note:</dt><dd><ul class="simple">
+<li><p>Any subsequent training commands will overwrite your checkpoint files. We suggest copying your latest model (baselines/models/current/) to another directory in baselines/models. You can then load that model by specifying the directory name.</p></li>
+<li><p>The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="icon-evaluation">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Evaluation<a class="headerlink" href="#icon-evaluation" title="Permalink to this headline">¶</a></h1>
+<p>Evaluation in open-ended massively multiagent settings is akin to that in the real world. There is not an obvious single real-number metric. It’s like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO’s suite of evaluation and visualization tools.</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">Evaluate the pretrained SmallMaps model and a scripted baseline</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">evaluate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span> <span class="o">--</span><span class="n">EVAL_MAPS</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">evaluate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span> <span class="o">--</span><span class="n">EVAL_MAPS</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">MODEL</span><span class="o">=</span><span class="n">scripted</span><span class="o">-</span><span class="n">combat</span>
+</pre></div>
+</div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Number of evaluation maps: 1
+100%|██████████████████████████████████████████████| 1000/1000 [00:32&lt;00:00, 31.10it/s]
+Number of evaluation maps: 1
+100%|██████████████████████████████████████████████| 1000/1000 [01:01&lt;00:00, 16.17it/s]
+</pre></div>
+</div>
+<p>Note that we have used a single evaluation map here to keep runtime short – our baselines average over several maps, and you should follow the protocol detailed in Baselines in formal comparisons.</p>
+<div class="section" id="advanced">
+<h2>Advanced<a class="headerlink" href="#advanced" title="Permalink to this headline">¶</a></h2>
+<p>Neural MMO provides three sets of evaluation settings:</p>
+<p><strong>Training Maps:</strong> Evaluate on the same maps used for training. This is standard practice in reinforcement learning. <em>Enable by setting the GENERALIZE flag to False</em></p>
+<p><strong>Evaluation Maps:</strong> Evaluate on a set of held-out maps drawn from the training map <em>distribution</em> generated using different random seeds. <em>This is the default setting</em></p>
+<p><strong>Transfer Maps:</strong> Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). <em>Enable by setting the appropriate –config</em></p>
+</div>
+</div>
+<div class="section" id="icon-dashboard-and-statistics">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Dashboard and Statistics<a class="headerlink" href="#icon-dashboard-and-statistics" title="Permalink to this headline">¶</a></h1>
+<p>The “visualize” command creates summary tables and figures using the results of training and evaluation</p>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">Visualize evaluation results for pretrained and scripted baselines</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">visualize</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span> <span class="o">--</span><span class="n">MODEL</span><span class="o">=</span><span class="n">small</span><span class="o">-</span><span class="n">maps</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">visualize</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMaps</span> <span class="o">--</span><span class="n">MODEL</span><span class="o">=</span><span class="n">scripted</span><span class="o">-</span><span class="n">combat</span>
+</pre></div>
+</div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Min</p></th>
+<th class="head"><p>Max</p></th>
+<th class="head"><p>Mean</p></th>
+<th class="head"><p>Std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Population</p></td>
+<td><p>18.00</p></td>
+<td><p>57.00</p></td>
+<td><p>45.95</p></td>
+<td><p>4.09</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lifetime</p></td>
+<td><p>0.00</p></td>
+<td><p>1000.00</p></td>
+<td><p>46.49</p></td>
+<td><p>110.78</p></td>
+</tr>
+<tr class="row-even"><td><p>Skilling</p></td>
+<td><p>10.00</p></td>
+<td><p>50.50</p></td>
+<td><p>14.06</p></td>
+<td><p>5.92</p></td>
+</tr>
+<tr class="row-odd"><td><p>Combat</p></td>
+<td><p>3.00</p></td>
+<td><p>28.00</p></td>
+<td><p>4.64</p></td>
+<td><p>3.06</p></td>
+</tr>
+<tr class="row-even"><td><p>Equipment</p></td>
+<td><p>0.00</p></td>
+<td><p>18.00</p></td>
+<td><p>0.22</p></td>
+<td><p>1.36</p></td>
+</tr>
+<tr class="row-odd"><td><p>Exploration</p></td>
+<td><p>0.00</p></td>
+<td><p>73.00</p></td>
+<td><p>8.23</p></td>
+<td><p>6.34</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Min</p></th>
+<th class="head"><p>Max</p></th>
+<th class="head"><p>Mean</p></th>
+<th class="head"><p>Std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Population</p></td>
+<td><p>27.00</p></td>
+<td><p>62.00</p></td>
+<td><p>49.50</p></td>
+<td><p>4.43</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lifetime</p></td>
+<td><p>0.00</p></td>
+<td><p>994.00</p></td>
+<td><p>50.92</p></td>
+<td><p>74.27</p></td>
+</tr>
+<tr class="row-even"><td><p>Skilling</p></td>
+<td><p>10.00</p></td>
+<td><p>53.00</p></td>
+<td><p>15.04</p></td>
+<td><p>5.54</p></td>
+</tr>
+<tr class="row-odd"><td><p>Combat</p></td>
+<td><p>3.00</p></td>
+<td><p>33.00</p></td>
+<td><p>4.35</p></td>
+<td><p>2.77</p></td>
+</tr>
+<tr class="row-even"><td><p>Equipment</p></td>
+<td><p>0.00</p></td>
+<td><p>26.00</p></td>
+<td><p>0.10</p></td>
+<td><p>1.04</p></td>
+</tr>
+<tr class="row-odd"><td><p>Exploration</p></td>
+<td><p>0.00</p></td>
+<td><p>101.00</p></td>
+<td><p>14.94</p></td>
+<td><p>10.80</p></td>
+</tr>
+</tbody>
+</table>
+<p>Your results may vary slightly from ours, which were obtained using a slightly larger evaluation for stability. From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights – both to aid in future development and for the paper. The “visualize” command also loads a browser-based interactive dashboard:</p>
+<div class="figure align-default" id="id11">
+<img alt="../_images/small-map.png" src="../_images/small-map.png" />
+<p class="caption"><span class="caption-text">Pretrained neural baseline</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id12">
+<img alt="../_images/scripted-combat.png" src="../_images/scripted-combat.png" />
+<p class="caption"><span class="caption-text">Scripted baseline</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+<p>Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating – notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably stronger overall, but apparently Range and Mage are somewhat balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent – perhaps I should consider changing the movement system in a future update.</p>
+<p>So, why do we need 15 plots when only one turned out to be important? First of all, we didn’t know which plot would highlight an interesting difference ahead of time. Second, there are some smaller observations we can make, such as the pretrained model obtaining significantly more equipment pickups while the scripted model obtained fewer and better pickups (Equipment scatter plots). Or that the pretrained model has a slightly heavier Lifetime right tail, as seen in the Lifetime Gantt plot. Many of our most experiments (and worst bug fixes) were motivated by an unusual disparity in the dashboard.</p>
+<p>And before you ask, yes: there’s a boring publication theme: specify –VIS_THEME=publication. In fact, you can create custom logging with a highly configurable dashboard to go with it in only a few lines of code – just override the log method of forge/trinity/env.py to specify your own data tracks and plot styles.</p>
+<div class="figure align-default" id="id13">
+<img alt="../_images/publication_theme.png" src="../_images/publication_theme.png" />
+<p class="caption"><span class="caption-text">Publication theme</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="devguide.html" class="btn btn-neutral float-right" title="Foreword" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Joseph Suarez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+      --link:       #ffffff;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    html.writer-html5 .rst-content table.docutils th {
+      border: 1px solid var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--text);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--text);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+      font-size: 150%
+    }
+
+    h2 {
+      color: var(--accent);
+      font-size: 125%
+    }
+
+    h3 {
+      color: var(--accent);
+    }
+
+    h4 {
+      color: var(--accent);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: var(--title); /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--link);
+    }
+
+    a:visited {
+      color: var(--link);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

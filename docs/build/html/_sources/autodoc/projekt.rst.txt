@@ -1,0 +1,14 @@
+projekt package
+===============
+
+.. automodule:: projekt
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   projekt.config
+   projekt.rllib_wrapper

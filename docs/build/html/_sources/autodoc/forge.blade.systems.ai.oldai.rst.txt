@@ -1,0 +1,7 @@
+forge.blade.systems.ai.oldai module
+===================================
+
+.. automodule:: forge.blade.systems.ai.oldai
+   :members:
+   :inherited-members:
+   :show-inheritance:

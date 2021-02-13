@@ -48,42 +48,9 @@ class Input(nn.Module):
       #Pack entities of each attribute set
       entityLookup = {}
 
-      egocentric = {
-         ###'Tile': {
-         ###   'Discrete':   (1, 2)
-         ###},
-         #   'Continuous': (2, 3),
-         #'Entity': {
-         #'Continuous': (2, 3),
-         #'Discrete':   (2, 3)
-         #},
-      }
-
-      if False in (inp['Entity']['Discrete'].sum(1) >= 0):
-         T()
-
-      for entity, dtypes in egocentric.items():
-         entities = inp[entity]
-         for dtype, idxs in dtypes.items():
-            typed             = entities[dtype]
-            cent              = typed[:, 112:113, idxs]
-            typed[:, :, idxs] = cent - typed[:, :, idxs]
-
-      #Changes prevrun: Hacked discrete egocentric,
-      #Removed reordering of center obs (self) to first
-      #Added 112 manual indexing in baseline
-
-      #Changed this run: make food/health/water continuous
-      #Zero out continuous tile embeddings (was 0.15)
-      #Zero out continuous index embedding
-      #Set stim=4, 4000 batch
-      ###inp['Tile']['Discrete'][:, :, 1] += 7 + 15
-      ###inp['Tile']['Discrete'][:, :, 2] += 7 + 15 + 15
-      ###x = inp['Tile']['Discrete'][0]
-
+      #TODO: implement obs scaling in a less hackey place
       inp['Entity']['Discrete'] *= 0
       tileWeight = torch.Tensor([0.0, 0.0, 0.02, 0.02])
-      #tileWeight = torch.Tensor([0.0, 0.0, 1.00, 1.00])
       entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.0, 0.0, 0.00])
 
       try:
@@ -101,7 +68,6 @@ class Input(nn.Module):
          embeddings = embeddings.view(B, N, -1)
 
          #Construct: Batch, ents, hidden
-         #entityLookup[name], scores = self.attributes[name](embeddings)
          entityLookup[name] = self.attributes[name](embeddings)
 
       return entityLookup

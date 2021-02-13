@@ -1,11 +1,13 @@
 .. |icon| image:: /resource/icon/icon_pixel.png
 
-.. figure:: /resource/image/splash.png
+.. figure:: /resource/image/environment.png
+
+   Neural MMO provides two standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.
 
 |icon| Evaluation Protocol
 ##########################
 
-Neural MMO provides two standard training and evaluation settings along with pretrained and scripted baselines. Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.
+Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.
 
 Publications including new models should clearly indicate training scale, domain knowledge assumptions, and any other significant changes to the default configuration. Ideally, they should also include a discussion of agent behavior and supporting training/evaluation plots, overlay figures, and/or other evidence specific to the associated work.
 
@@ -41,6 +43,8 @@ Exploration          0.00        73.00         8.23         6.34
 Untrained
 *********
 
+A randomly initialized copy of the trained model architecture
+
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
 ============ ============ ============ ============ ============
@@ -57,8 +61,10 @@ Exploration          0.00        26.00         2.22         2.72
    **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=None
 
 
-Zero-Shot Transfer (large-map model)
-************************************
+Zero-Shot Transfer
+******************
+
+Evaluation of the large-map model on the SmallMaps domain
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
@@ -78,6 +84,8 @@ Exploration          0.00       102.00        11.59        13.54
 Scripted Foraging
 *****************
 
+A scripted model that forages for food and only fights back when attacked by NPCs.
+
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
 ============ ============ ============ ============ ============
@@ -95,6 +103,8 @@ Exploration          0.00       111.00        17.50        13.12
 
 Scripted Foraging + Combat
 **************************
+
+A scripted model that forages for food and actively fights other scripted agents and NPCs
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
@@ -141,6 +151,8 @@ Exploration          0.00       580.00        30.50        44.57
 Untrained
 *********
 
+A randomly initialized copy of the trained model architecture
+
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
 ============ ============ ============ ============ ============
@@ -156,8 +168,10 @@ Exploration          0.00        42.00         6.25         2.80
 
    **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=None
 
-Zero-Shot Transfer (small-map model)
-************************************
+Zero-Shot Transfer
+******************
+
+Evaluation of the small-map model on the LargeMaps domain
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std
@@ -174,8 +188,29 @@ Exploration          0.00       431.00         8.98        10.13
 
    **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=small-map
 
-Scripted Combat
+Scripted Foraging
 *****************
+
+A scripted model that forages for food and only fights back when attacked by NPCs.
+
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          95.00      1024.00       989.19       128.00
+Lifetime             0.00      9995.00       995.88       994.33
+Skilling            10.00        76.00        39.84        14.51
+Combat               3.00         3.00         3.00         0.00
+Equipment            0.00         0.00         0.00         0.00
+Exploration          0.00       570.00       222.63       144.32
+============ ============ ============ ============ ============
+
+.. figure:: /resource/image/baselines/LargeMaps/scripted-forage.png
+
+    **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=scripted-forage
+
+
+Scripted Combat
+***************
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std

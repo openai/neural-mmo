@@ -1,21 +1,18 @@
-echo "Neural MMO setup; assumes Anaconda Python 3.7 and gcc"
-
-if [[ $1 == "--SERVER_ONLY" ]]; then 
-   echo "You have chosen not to install the graphical rendering client"
-elif [[ $1 == "" ]]; then
-   echo "Installing Neural MMO Client (Unity3D)..."
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo-client
-   mv neural-mmo-client forge/embyr
-else
-   echo "Specify either --SERVER_ONLY or no argument"
-   exit 1
+read -p "DEPENDENCIES: this script requires Anaconda Python 3.8, gcc, make, cmake, and zlib1g-dev. Installation will fail otherwise. Proceed [y/n]?" -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+   [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
 #Install python packages
+echo "Installing conda pip packages"
 pip install -r scripts/requirements.txt
+
+echo "Installing cuda torch"
 conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
+
+echo "Installing ray/rllib"
 ray install-nightly
 pip install ray[rllib]
-echo "Errors upon pip install ray[rllib] are normal. If the environment runs, setup is correct"
-
-#Make cmake zlib1g-dev
+echo "Done. Errors? Check that dependencies have been met"

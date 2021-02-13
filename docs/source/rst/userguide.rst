@@ -10,26 +10,41 @@
 
 `[Demo Video] <https://youtu.be/y_f77u9vlLQ>`_ | `[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
+Neural MMO is a platform for agent-based intelligence research featuring hundreds of concurrent agents, multi-thousand-step time horizons, and procedurally-generated, million-tile maps. This release ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
-.. figure:: /resource/image/environment.png
+.. figure:: /resource/image/large_isometric_zoom.png
 
-Neural MMO ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+**Abstract:** Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
 
-|icon| Beta Installation
-########################
+|icon| Installation
+###################
 
-If you are on Ubuntu 18.04/20.04, run both the server and client installation. If you are on MacOS, do the same but note that this is untested. If you are on WSL + Ubuntu, run the client setup on Windows 10 and the server setup on Ubuntu.
+**Dependencies:**
 
 .. code-block:: python
-   :caption: Server installation assumes Anaconda Python 3.8.x + gcc
+   :caption: Ubuntu 20.04/18.04
 
-   #Server -- if you can't run python Forge.py --help after install, rerun pip install ray[rllib]
-   git clone --single-branch --depth=1 --branch v1.5-prerelease https://github.com/jsuarez5341/neural-mmo
-   cd neural-mmo && bash scripts/setup.sh --SERVER_ONLY
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client neural-mmo/forge/embyr
 
-   #Client
-   git clone --single-branch --depth=1 --branch v1.5-prerelease https://github.com/jsuarez5341/neural-mmo-client forge/embyr
+   cd neural-mmo && bash scripts/setup.sh
+
+.. code-block:: python
+   :caption: Windows 10 + WSL Ubuntu 20.04/18.04
+
+   #Execute in WSL Ubuntu
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
+   cd neural-mmo && bash scripts/setup.sh
+
+   #Execute in Windows 10
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client
+
+**Troubleshooting:**
+  - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
+  - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
+  - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
+  - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
+
 
 |icon| CLI
 ##########
@@ -124,7 +139,10 @@ Rendering the environment requires launching both a server and a client. To laun
 
   python Forge.py render --config=SmallMaps
 
-Launch *client.sh* in a separate shell or click the associated executable. The server will take a few seconds to load the pretrained policy and connect to the client.
+| **Linux:** Launch *client.sh* in a separate shell or click the associated executable
+| **Windows:** Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10
+
+The server will take a few seconds to load the pretrained policy and connect to the client.
 
 .. figure:: /resource/image/ui.png
 
@@ -269,11 +287,11 @@ Exploration          0.00       101.00        14.94        10.80
 
 Your results may vary slightly from ours, which were obtained using a slightly larger evaluation for stability. From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights -- both to aid in future development and for the paper. The "visualize" command also loads a browser-based interactive dashboard:
 
-.. figure:: /resource/image/baselines/SmallMaps/neural_small_maps.png
+.. figure:: /resource/image/baselines/SmallMaps/small-map.png
 
    Pretrained neural baseline
 
-.. figure:: /resource/image/baselines/SmallMaps/scripted_combat.png
+.. figure:: /resource/image/baselines/SmallMaps/scripted-combat.png
 
    Scripted baseline
 

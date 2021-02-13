@@ -1,32 +1,131 @@
+from pdb import set_trace as T
 from forge.blade import core
+import os
 
-class Config(core.Config):
-   #Computing the global value map takes ~20 seconds
-   #Disabling this will speed up server start
-   COMPUTE_GLOBAL_VALUES = True
+from forge.blade.systems.ai import behavior
 
-   #Model to load. None will train from scratch
-   #Baselines: recurrent, attentional, convolutional 
-   #"current" will resume training custom models
-   MODEL   = 'recurrent'
-   RENDER  = True
+class Base(core.Config):
+   '''Base config for RLlib Models
 
-   NENT    = 256 #Maximum population size
-   NPOP    = 1   #Number of populations
-   NMAPS   = 256 #Number of game maps
+   Extends core Config, which contains environment, evaluation,
+   and non-RLlib-specific learning parameters'''
+   
+   #Hardware Scale
+   NUM_WORKERS             = 4
+   NUM_GPUS_PER_WORKER     = 0
+   NUM_GPUS                = 1
+   LOCAL_MODE              = False
 
-   #Model dimensions
-   EMBED   = 64
-   HIDDEN  = 64
+   #Memory/Batch Scale
+   TRAIN_BATCH_SIZE        = 400000
+   ROLLOUT_FRAGMENT_LENGTH = 100
 
-   #Agent vision range
-   STIM    = 4
-   WINDOW  = 9  #Reduced from 15
+   #Optimization Scale
+   SGD_MINIBATCH_SIZE      = 128
+   NUM_SGD_ITER            = 1
 
-   #Maximum number of observed agents
-   N_AGENT_OBS = 15
+   #Model Parameters 
+   #large-map:        Large maps baseline
+   #small-map:        Small maps baseline
+   #scripted-combat:  Scripted with combat
+   #scripted-forage:  Scripted without combat
+   #current:          Resume latest checkpoint
+   #None:             Train from scratch
+   MODEL                   = 'current'
+   N_AGENT_OBS             = 100
+   NPOLICIES               = 1
+   HIDDEN                  = 64
+   EMBED                   = 64
 
-   #Whether to share weights across policies
-   #The 1.4 baselines use one policy
-   POPULATIONS_SHARE_POLICIES = True
-   NPOLICIES = 1 if POPULATIONS_SHARE_POLICIES else NPOP
+   #Scripted model parameters
+   SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
+   SCRIPTED_EXPLORE        = True       #Intentional exploration
+
+
+class LargeMaps(Base):
+   '''Large scale Neural MMO training setting
+
+   Features up to 1000 concurrent agents and 1000 concurrent NPCs,
+   1km x 1km maps, and 5/10k timestep train/eval horizons
+
+   This is the default setting as of v1.5 and allows for large
+   scale multiagent research even on relatively modest hardware'''
+
+   NAME                    = __qualname__
+   MODEL                   = 'large-map'
+
+   PATH_MAPS               = core.Config.PATH_MAPS_LARGE
+
+   TRAIN_HORIZON           = 5000
+   EVALUATION_HORIZON      = 10000
+
+   NENT                    = 1024
+   NMOB                    = 1024
+
+
+class SmallMaps(Base):
+   '''Small scale Neural MMO training setting
+
+   Features up to 128 concurrent agents and 32 concurrent NPCs,
+   60x60 maps (excluding the border), and 1000 timestep train/eval horizons.
+   
+   This setting is modeled off of v1.1-v1.4 It is appropriate as a quick train
+   task for new ideas, a transfer target for agents trained on large maps,
+   or as a primary research target for PCG methods.'''
+
+   NAME                    = __qualname__
+   MODEL                   = 'small-map'
+   SCRIPTED_EXPLORE        = False
+
+   TRAIN_HORIZON           = 1000
+   EVALUATION_HORIZON      = 1000
+
+   NENT                    = 128
+   NMOB                    = 32
+
+   #Path settings
+   PATH_MAPS               = core.Config.PATH_MAPS_SMALL
+   PATH_ROOT               = os.path.join(os.getcwd(), PATH_MAPS, 'map')
+
+   #Outside-in map design
+   SPAWN_CENTER            = False
+   INVERT_WILDERNESS       = True
+   WILDERNESS              = False
+
+   #Terrain generation parameters
+   TERRAIN_MODE            = 'contract'
+   TERRAIN_LERP            = False
+   TERRAIN_SIZE            = 80 
+   TERRAIN_OCTAVES         = 1
+   TERRAIN_FOREST_LOW      = 0.30
+   TERRAIN_FOREST_HIGH     = 0.75
+   TERRAIN_GRASS           = 0.715
+   TERRAIN_ALPHA           = -0.025
+   TERRAIN_BETA            = 0.035
+
+   #Entity spawning parameters
+   PLAYER_SPAWN_ATTEMPTS   = 1
+   NPC_LEVEL_MAX           = 35
+   NPC_LEVEL_SPREAD        = 5
+   NPC_SPAWN_PASSIVE       = 0.00
+   NPC_SPAWN_NEUTRAL       = 0.60
+   NPC_SPAWN_AGGRESSIVE    = 0.80
+
+
+class Debug(SmallMaps):
+   '''Debug Neural MMO training setting
+
+   A version of the SmallMap setting with greatly reduced batch parameters.
+   Only intended as a tool for identifying bugs in the model or environment'''
+   MODEL                   = None
+   LOCAL_MODE              = True
+   NUM_WORKERS             = 1
+
+   TRAIN_BATCH_SIZE        = 400
+   TRAIN_HORIZON           = 200
+   EVALUATION_HORIZON      = 50
+
+   HIDDEN                  = 2
+   EMBED                   = 2
+
+

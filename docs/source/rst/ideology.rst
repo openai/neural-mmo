@@ -1,12 +1,17 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
-|env|
+.. figure:: /resource/image/splash.png
 
 |icon| Abstract
 ###############
 
-The dual problem formulation mentioned in the User Guide is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this `[Two Pager] <https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing>`_ for a more thorough overview of the project approach and objective.
+Agents in Neural MMO progress persistent skills while exploring procedurally generated terrain and engaging in strategic combat over thousands of timesteps. Our platform is both an environment and a set of tools for visualizing and comparing emergent policies of intelligent agents.
+
+.. image:: /resource/figure/web/overview.svg
+
+The long-term goal of Neural MMO is to train artificial general intelligence in simulation -- that is, **agents that scale to the complexity of the real world**. The project is divided into research and engineering modules that cleanly segment this objective into concrete and approachable research and engineering tasks: *agents that scale to the complexity of their environment* and *environments that scale to the complexity of the real world*.
+
+This dual problem formulation is core to the guiding ideology of the project. Depending on your own personal conception of where the field is as the moment, this may seem like a practical philosophy, AGI cultism, or anything in between. Regardless, see this `[Two Pager] <https://docs.google.com/document/d/1_76rYTPtPysSh2_cFFz3Mfso-9VL3_tF5ziaIZ8qmS8/edit?usp=sharing>`_ for a more thorough overview of the project approach and objective.
 
 The discussion of failure modes below is mostly intended to dissuade skepticism, which thus far I've found correlates perfectly with lack of familiarity with MMOs. If you are very familiar with MMOs + current AI research and are still skeptical, please contact me on the Discord -- I'd love to hear your views.
 
@@ -29,24 +34,25 @@ The second problem is probably most familiar to researchers as exploration. Give
 
 The third problem probably appears most likely to many researchers, but least likely to anyone who has spent a significant amount of time in MMOs. Here is a map of the NYC subway:
 
-.. image:: /resource/image/rs/quests.png
-  :alt: Quest Map
-`[Source] <https://www.reddit.com/user/Gamez_X>`_
+.. figure:: /resource/image/rs/quests.png
+   :alt: Quest Map
+   
+   `[Source] <https://www.reddit.com/user/Gamez_X>`_
 
 Actually, it's a quest map of Runescape, a particular MMO that our environment is loosely based upon. Each quest is a puzzle in itself, takes anywhere from several minutes to several hours to complete, is part of an interconnected web of prerequisites of other quests, and provides different incentives for completion ranging from equipment to unlockable content to experience in a tightly connected set of skills:
 
 .. image:: /resource/image/rs/skills.png
-  :alt: Skills
+   :alt: Skills
 
 .. image:: /resource/image/rs/equipment.png
-  :alt: Equipment
-`[Source] <https://www.jagex.com/en-GB/>`_
+   :alt: Equipment
 
 In a massive open world:
 
-.. image:: /resource/image/rs/map.png
-  :alt: GameMap
-`[Source] <https://www.jagex.com/en-GB/>`_
+.. figure:: /resource/image/rs/map.png
+   :alt: GameMap
+
+`[Images Source] <https://www.jagex.com/en-GB/>`_
 
 The most complex class of games considered to date is MOBAs (Massive Online Battle Arenas, e.g. Dota, Quake CTF), which are round based, take on order of an hour, and are mechanically intensive. Achieving 99 in all skills and acquiring the best gear in Runescape takes, at minimum, several thousand hours. In a tournament setting where attacking other players is allowed everywhere, moment-to-moment gameplay is less important than balancing the risks and rewards of any potential strategy--especially in the presence of hundreds of other players attempting to do the same. There is almost certainly still a complexity gap from MMOs to the real world, but we believe it is much smaller than that in environments currently available.
 

@@ -2,55 +2,93 @@ from pdb import set_trace as T
 import abc
 
 import numpy as np
-from forge.blade.systems import experience, ai, combat
+from forge.blade.systems import experience, combat, ai
 
-from forge.blade.lib.enums import Material
+from forge.blade.lib import material
 
-class Skills:
-   def __init__(self, config):
-      expCalc     = experience.ExperienceCalculator()
-      self.skills = set()
-      self.config = config
-   
-      #Combat skills
-      self.constitution = Constitution(self.skills, expCalc, config)
-      self.melee        = Melee(self.skills, expCalc, config)
-      self.range        = Range(self.skills, expCalc, config)
-      self.mage         = Mage(self.skills, expCalc, config)
-      self.defense      = Defense(self.skills, expCalc, config)
+### Infrastructure ###
+class SkillGroup:
+   def __init__(self, realm):
+      self.expCalc = experience.ExperienceCalculator()
+      self.config  = realm.dataframe.config
+      self.skills  = set()
 
-      #Harvesting Skills
-      self.fishing      = Fishing(self.skills, expCalc, config)
-      self.hunting      = Hunting(self.skills, expCalc, config)
-      self.mining       = Mining(self.skills, expCalc, config)
-
-      #Processing Skills
-      self.cooking      = Cooking(self.skills, expCalc, config)
-      self.smithing     = Smithing(self.skills, expCalc, config)
+   def update(self, realm, entity, actions):
+      for skill in self.skills:
+         skill.update(realm, entity)
 
    def packet(self):
       data = {}
-      
-      data['constitution'] = self.constitution.packet()
-      data['melee']        = self.melee.packet()
-      data['range']        = self.range.packet()
-      data['mage']         = self.mage.packet()
-      data['defense']      = self.defense.packet()
-      data['fishing']      = self.fishing.packet()
-      data['hunting']      = self.hunting.packet()
-      data['cooking']      = self.cooking.packet()
-      data['smithing']     = self.smithing.packet()
-      data['level']        = combat.level(self)
+      for skill in self.skills:
+         data[skill.__class__.__name__.lower()] = skill.packet()
 
       return data
 
-   def update(self, ent, world, actions):
-      for skill in self.skills:
-         skill.update(ent, world)
+class Skill:
+   skillItems = abc.ABCMeta
+
+   def __init__(self, skillGroup):
+      self.config  = skillGroup.config
+      self.expCalc = skillGroup.expCalc
+      self.exp     = 0
+
+      skillGroup.skills.add(self)
+
+   def packet(self):
+      data = {}
+
+      data['exp']   = self.exp
+      data['level'] = self.level
+
+      return data
+
+   def update(self, realm, entity):
+      pass
+
+   def setExpByLevel(self, level):
+      self.exp = self.expCalc.expAtLevel(level)
+
+   @property
+   def level(self):
+      lvl = self.expCalc.levelAtExp(self.exp)
+      assert lvl == int(lvl)
+      return int(lvl)
+
+### Skill Subsets ###
+class Gathering(SkillGroup):
+   def __init__(self, realm):
+      super().__init__(realm)
+
+      self.fishing      = Fishing(self)
+      self.hunting      = Hunting(self)
+      self.mining       = Mining(self)
+
+class Processing(SkillGroup):
+   def __init__(self, realm):
+      super().__init__(realm)
+
+      self.cooking      = Cooking(self)
+      self.smithing     = Smithing(self)
+
+class Combat(SkillGroup):
+   def __init__(self, realm):
+      super().__init__(realm)
+
+      self.constitution = Constitution(self)
+      self.defense      = Defense(self)
+      self.melee        = Melee(self)
+      self.range        = Range(self)
+      self.mage         = Mage(self)
+
+   def packet(self):
+      data          = super().packet() 
+      data['level'] = combat.level(self)
+
+      return data
 
    def applyDamage(self, dmg, style):
       config = self.config
-      scale  = config.XP_SCALE
+      scale = config.XP_SCALE
       self.constitution.exp += scale * dmg * config.CONSTITUTION_XP_SCALE
 
       skill = self.__dict__[style]
@@ -61,61 +99,38 @@ class Skills:
       self.constitution.exp += scale * dmg * 2
       self.defense.exp      += scale * dmg * 4
 
-class Skill:
-   skillItems = abc.ABCMeta
-   def __init__(self, skills, expCalc, config):
-      self.expCalc = expCalc
-      self.exp     = 0
 
-      self.config  = config
-      skills.add(self)
+class Skills(Gathering, Processing, Combat):
+   pass
 
-   def packet(self):
-      data = {}
-      
-      data['exp']   = self.exp
-      data['level'] = self.level
-
-      return data
-
-   def update(self, ent, world):
-      pass
-
-   @property
-   def level(self):
-      lvl = self.expCalc.levelAtExp(self.exp)
-      assert lvl == int(lvl)
-      return int(lvl)
-
+### Individual Skills ###
 class CombatSkill(Skill): pass
 
 class Constitution(CombatSkill):
-   def __init__(self, skills, expCalc, config):
-      super().__init__(skills, expCalc, config)
-      self.exp = self.expCalc.expAtLevel(config.HEALTH)
+   def __init__(self, skillGroup):
+      super().__init__(skillGroup)
+      self.setExpByLevel(self.config.HEALTH)
 
-   def update(self, ent, world):
-      health = ent.resources.health
-      food   = ent.resources.food
-      water  = ent.resources.water
+   def update(self, realm, entity):
+      health = entity.resources.health
+      food   = entity.resources.food
+      water  = entity.resources.water
 
-      health.max = self.level
-      config     = self.config
+      config = self.config
 
-      #Heal if above fractional resource threshold
-      foodThresh  = food.val  > config.HEALTH_REGEN_THRESHOLD * food.max
-      waterThresh = water.val > config.HEALTH_REGEN_THRESHOLD * water.max
+      # Heal if above fractional resource threshold
+      foodThresh  = food > config.HEALTH_REGEN_THRESHOLD * entity.skills.hunting.level
+      waterThresh = water > config.HEALTH_REGEN_THRESHOLD * entity.skills.fishing.level
 
       if foodThresh and waterThresh:
          restore = np.floor(self.level * self.config.HEALTH_RESTORE)
-         restore = min(health.missing, restore)
          health.increment(restore)
 
-      if food.val <= 0:
-         health.decrement()
+      if food.empty:
+         health.decrement(1)
 
-      if water.val <= 0:
-         health.decrement()
+      if water.empty:
+         health.decrement(1)
 
 class Melee(CombatSkill): pass
 class Range(CombatSkill): pass
@@ -127,7 +142,7 @@ class NonCombatSkill(Skill):
       level = self.level
       if level < levelReq:
          return False
-      chance = 0.5 + 0.05*(level - levelReq)
+      chance = 0.5 + 0.05*(level-levelReq)
       if chance >= 1.0:
          return True
       return np.random.rand() < chance
@@ -135,7 +150,7 @@ class NonCombatSkill(Skill):
    def attempt(self, inv, item):
       if (item.createSkill != self.__class__ or
             self.level < item.createLevel):
-         return      
+         return
 
       if item.recipe is not None:
          #Check that everything is available
@@ -147,6 +162,7 @@ class NonCombatSkill(Skill):
          self.exp += item.exp
          return True
 
+
 class HarvestingSkill(NonCombatSkill):
    #Attempt each item from highest to lowest tier until success
    def harvest(self, inv):
@@ -154,55 +170,55 @@ class HarvestingSkill(NonCombatSkill):
          if self.attempt(inv, e):
             return
 
+
 class Fishing(HarvestingSkill):
-   def __init__(self, skills, expCalc, config):
-      super().__init__(skills, expCalc, config)
-      self.exp = self.expCalc.expAtLevel(config.RESOURCE)
+   def __init__(self, skillGroup):
+      super().__init__(skillGroup)
+      self.setExpByLevel(self.config.RESOURCE)
 
-   def update(self, ent, world):
-      water     = ent.resources.water
-      water.max = self.level
-      water.decrement()
+   def update(self, realm, entity):
+      water = entity.resources.water
+      if entity.status.immune <= 0:
+         water.decrement(1)
 
-      if Material.WATER.value not in ai.adjacentMats(world.env, ent.base.pos):
+      if material.Water not in ai.utils.adjacentMats(
+            realm.map.tiles, entity.pos):
          return
 
       restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
-      restore = min(water.missing, restore)
       water.increment(restore)
 
-      scale = self.config.XP_SCALE
-      self.exp += scale * restore;
+      scale     = self.config.XP_SCALE
+      self.exp += scale * restore
+
 
 class Hunting(HarvestingSkill):
-   def __init__(self, skills, expCalc, config):
-      super().__init__(skills, expCalc, config)
-      self.exp = self.expCalc.expAtLevel(config.RESOURCE)
+   def __init__(self, skillGroup):
+      super().__init__(skillGroup)
+      self.setExpByLevel(self.config.RESOURCE)
 
-   def update(self, ent, world):
-      food     = ent.resources.food
-      food.max = self.level
-      food.decrement()
+   def update(self, realm, entity):
+      food = entity.resources.food
+      if entity.status.immune <= 0:
+         food.decrement(1)
 
-      r, c = ent.base.pos
-      if (type(world.env.tiles[r, c].mat) not in [Material.FOREST.value] or 
-            not world.env.harvest(r, c)):
+      r, c = entity.pos
+      if (type(realm.map.tiles[r, c].mat) not in [material.Forest] or
+            not realm.map.harvest(r, c)):
          return
 
       restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
-      restore = min(food.missing, restore)
       food.increment(restore)
 
-      scale = self.config.XP_SCALE
-      self.exp += scale * restore;
+      scale     = self.config.XP_SCALE
+      self.exp += scale * restore
+
 
 class Mining(HarvestingSkill): pass
 
 class ProcessingSkill(NonCombatSkill):
    def process(self, inv, item):
       self.attempt(inv, item)
-     
+
 class Cooking(ProcessingSkill): pass
-class Smithing(ProcessingSkill): pass        
-
-
+class Smithing(ProcessingSkill): pass

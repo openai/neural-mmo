@@ -1,11 +1,11 @@
 from pdb import set_trace as T
 import numpy as np
 
-from forge.blade.entity import Player
-from forge.blade.lib import utils, enums
+from forge.blade.lib import utils, material
 from forge.blade.lib.utils import staticproperty
-from forge.blade.io.action.node import Node, NodeType
+from forge.blade.io.node import Node, NodeType
 from forge.blade.systems import combat
+from forge.blade.io.stimulus import Static
 
 class Fixed:
    pass
@@ -18,6 +18,7 @@ class Action(Node):
    def edges():
       #return [Move, Attack, Exchange, Skill]
       return [Move, Attack]
+      #return [Move]
 
    @staticproperty
    def n():
@@ -25,6 +26,7 @@ class Action(Node):
 
    def args(stim, entity, config):
       return Static.edges 
+
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
    def hook():
@@ -42,29 +44,32 @@ class Action(Node):
       Action.arguments = arguments
 
 class Move(Node):
-   priority = 0
+   priority = 1
    nodeType = NodeType.SELECTION
-   def call(world, entity, direction):
-      r, c = entity.base.pos
+   def call(env, entity, direction):
+      r, c  = entity.pos
+      entID = entity.entID
       entity.history.lastPos = (r, c)
       rDelta, cDelta = direction.delta
       rNew, cNew = r+rDelta, c+cDelta
-      if world.env.tiles[rNew, cNew].state.index in enums.IMPASSIBLE:
+
+      #One agent per cell
+      tile = env.map.tiles[rNew, cNew] 
+      if tile.occupied and not tile.lava:
          return
-      if not utils.inBounds(rNew, cNew, world.shape):
-         return
+
       if entity.status.freeze > 0:
          return
 
+      env.dataframe.move(Static.Entity, entID, (r, c), (rNew, cNew))
       entity.base.r.update(rNew)
       entity.base.c.update(cNew)
-      entID = entity.entID
-      
-      r, c = entity.history.lastPos
-      world.env.tiles[r, c].delEnt(entID)
 
-      r, c = entity.base.pos
-      world.env.tiles[r, c].addEnt(entID, entity)
+      env.map.tiles[r, c].delEnt(entID)
+      env.map.tiles[rNew, cNew].addEnt(entity)
+
+      if env.map.tiles[rNew, cNew].lava:
+         entity.receiveDamage(None, entity.resources.health.val)
 
    @staticproperty
    def edges():
@@ -98,6 +103,7 @@ class West(Node):
 
 
 class Attack(Node):
+   priority = 0
    nodeType = NodeType.SELECTION
    @staticproperty
    def n():
@@ -119,12 +125,16 @@ class Attack(Node):
       for r in range(R-N, R+N+1):
          for c in range(C-N, C+N+1):
             for e in stim[r, c].ents.values():
-               minWilderness = min(entity.status.wilderness.val, e.status.wilderness.val)
+               if not config.WILDERNESS:
+                  rets.add(e)
+                  continue
 
-               selfLevel = combat.level(entity.skills)
-               targLevel = combat.level(e.skills)
-               #if abs(selfLevel - targLevel) <= minWilderness:
-               rets.add(e)
+               minWilderness = min(entity.status.wilderness.val, e.status.wilderness.val)
+               selfLevel     = combat.level(entity.skills)
+               targLevel     = combat.level(e.skills)
+               if abs(selfLevel - targLevel) <= minWilderness:
+                  rets.add(e)
+
       rets = list(rets)
       return rets
 
@@ -133,26 +143,43 @@ class Attack(Node):
       rCent, cCent = cent
       return abs(r - rCent) + abs(c - cCent)
 
-   def call(world, entity, style, targ):
+   def call(env, entity, style, targ):
+      #Can't attack if either party is immune
+      if entity.status.immune > 0 or targ.status.immune > 0:
+         return
+
+      #Check if self targeted
+      if entity.entID == targ.entID:
+         return
+
+      #Check wilderness level
+      wilderness = min(entity.status.wilderness, targ.status.wilderness)
+      selfLevel  = combat.level(entity.skills)
+      targLevel  = combat.level(targ.skills)
+
+      if (env.config.WILDERNESS and abs(selfLevel - targLevel) > wilderness
+            and entity.isPlayer and targ.isPlayer):
+         return
+
+      #Check attack range
+      rng     = style.attackRange(env.config)
+      start   = np.array(entity.base.pos)
+      end     = np.array(targ.base.pos)
+      dif     = np.max(np.abs(start - end))
+
+      #Can't attack same cell or out of range
+      if dif == 0 or dif > rng:
+         return 
+      
+      #Execute attack
       entity.history.attack = {}
       entity.history.attack['target'] = targ.entID
       entity.history.attack['style'] = style.__name__
-      if entity.entID == targ.entID:
-         entity.history.attack = None
-         return
+      targ.attacker = entity
 
-      rng     = style.attackRange(world.config)
-      start   = np.array(entity.base.pos)
-      end     = np.array(targ.base.pos)
-      dif     = np.abs(start - end)
-
-      if np.max(dif) > rng:
-         entity.history.attack = None
-         return 
-
-      dmg = combat.attack(entity, targ, style.skill(entity))
-      if style.freeze and dmg is not None and dmg > 0:
-         targ.status.freeze.update(world.config.FREEZE_TIME)
+      dmg = combat.attack(entity, targ, style.skill)
+      if style.freeze and dmg > 0:
+         targ.status.freeze.update(env.config.FREEZE_TIME)
 
       return dmg
 
@@ -167,10 +194,12 @@ class Style(Node):
 
 
 class Target(Node):
-   argType = Player 
+   argType = None
+   #argType = Player 
 
    @classmethod
    def N(cls, config):
+      #return config.WINDOW ** 2
       return config.N_AGENT_OBS
 
    def args(stim, entity, config):
@@ -178,7 +207,6 @@ class Target(Node):
       return Attack.inRange(entity, stim, config, None)
 
 class Melee(Node):
-   priority = 1
    nodeType = NodeType.ACTION
    index = 0
    freeze=False
@@ -190,7 +218,6 @@ class Melee(Node):
       return entity.skills.melee
 
 class Range(Node):
-   priority = 1
    nodeType = NodeType.ACTION
    index = 1
    freeze=False
@@ -202,7 +229,6 @@ class Range(Node):
       return entity.skills.range
 
 class Mage(Node):
-   priority = 1
    nodeType = NodeType.ACTION
    index = 2
    freeze=True

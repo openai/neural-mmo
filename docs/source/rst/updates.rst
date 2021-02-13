@@ -1,7 +1,6 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
 
-|env|
+.. figure:: /resource/image/splash.png
 
 |icon| Video Demos
 ##################
@@ -17,16 +16,20 @@
 |icon| Publications
 ###################
 
-`Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS, 2020)
+:download:`[Poster] </resource/update/NMMO_ICML2020_Poster.pdf>` :download:`Neural MMO: Ingredients for Massively Multiagent Artificial Intelligence Research  </resource/update/nmmo_icml2020.pdf>` (ICML 2020 LAOW Workshop) (v1.4)
+
+`Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS Extended Abstract, 2020)
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://arxiv.org/abs/2001.12004>`_ (arXiv, 2020)
 
-`Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents <https://arxiv.org/abs/1903.00784>`_ (arXiv, 2019)
+`Neural MMO: A Massively Multiagent Game Environment for Training and Evaluating Intelligent Agents <https://arxiv.org/abs/1903.00784>`_ (arXiv, 2019) (v1.0)
 
-`Neural MMO: A Massively Multiagent Game Environment <https://github.com/jsuarez5341/neural-mmo>`_ (OpenAI Blog, 2019)
+`Neural MMO: A Massively Multiagent Game Environment <https://github.com/jsuarez5341/neural-mmo>`_ (OpenAI Blog, 2019) (v1.0)
 
 |icon| Presentations
 ####################
+
+`[Slides] <https://docs.google.com/presentation/d/1HYdoe3btw1USWaufBO1yuqFIOg-XW8E2wX0vZal0LtY/edit?usp=sharing>`_ `Neural MMO: A Saga in Deep Reinforcement Learning <https://www.twitch.tv/videos/900545247?t=03h03m06s>`_ (English Week 2021, IUT Vannes) (v1.5)
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://underline.io/lecture/167-neural-mmo-v1.3-a-massively-multiagent-game-environment-for-training-and-evaluating-neural-networks>`_ (AAMAS 2020)
 
@@ -54,6 +57,70 @@ Discontinued in v1.4+ -- better demos and patch notes have made these obsolete.
 ####################################
 
 The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.0. My personal `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ hosts the latest version in *master* and all previous versions as separate branches. This documentation page is generated from the latest environment release. Feel free to drop in the Discord #support channel if you are having trouble. You can expect fast fixes to Github issues and even faster replies to Discord PMs.
+
+.. figure:: /resource/legacy/v1-5_env.png
+
+**v1.5:** Large maps, Dashboard, Scripted Baselines
+   - Blade: Full rework to support large environments and scripted players/NPCs
+      - Map representation
+         - Terrain generation for large maps
+         - Environment caching to enable fast resets
+         - Tiles are now limited to one occupying agent
+         - Reworked tile material enum and properties
+      - NPCs
+         - Passive: Meanders around the map
+         - Neutral: Meanders around the map until attacked, then fights back
+         - Hostile: Actively hunts and attacks players and other NPCs
+         - Level ranges and spawning locations are configurable for all NPC types
+         - Navigation based on A* search
+      - Scripted Baselines
+         - Extension of the NPC AI module to support scripted player policies
+         - Fixed-horizon food/water min-max search with Dijkstra's algorithm and dynamic programming backends
+         - Intentional exploration capabilities enable broad coverage of large and small maps
+      - Equipment
+         - NPCs spawn with chestplates/platelegs of a level appropriate for their skills
+         - Players/NPCs wearing equipment drop it upon death
+         - Players automatically equip any items better than their current items
+         - Equipment provides a large bonus to defense
+         - Reworked combat formulas to account for this new system
+   - Trinity: New home for non-neural-specific infrastructure and tools
+      - Serialized observations
+         - Maintains a flat tensor representation of the environment state
+         - This representation is kept synchronous with the game state representation
+         - Each entity (Player/Tile) is represented as discrete and continuous vectors
+         - Observations are computed by slicing from tensor representations without traversing game objects
+         - Discrete values are flat-indexed for ease of use in embedding layers
+      - Evaluation
+         - Runs the given model on multiple maps and aggregates data for the dashboard
+         - Outputs a tabular summary of the results for baselines and publications
+         - Usable on training maps, held-out evaluation maps (default), and transfer maps
+      - Dashboard
+         - Environment log function records customizable data for customizable plot types whenever an agent dies
+         - Data is aggregated during training and at the end of evaluation
+         - Bokeh dashboard is built using the aggregated data for the specified plot types
+         - Dashboard is rendered in an interactive browser session
+   - Ethyr: Simplified attribute processing
+      - The Trinity additions flatten the bottom layer of the observation hierarchy
+      - This removes a slow loop and significant complexity from IO embedding/unembed modules
+      - We have standardized on the Recurrent baseline architecture for this release
+   - Embyr: Full rework to support large environments and scripted players/NPCs
+      - Map representation
+         - All terrain representation code has been rewritten using the performant Unity Entity Component System
+         - Tiles are loaded into and welded together in chunks
+         - Lava/water assets have been replaced with more performant variants
+      - Visuals
+         - Tile textures are now configurable with the hifi (default)/medfi/lofi command
+         - Attack animations have been replaced with more distinctive and aesthetic assets
+         - A graphical bug causing sharp normals in some tile models has been fixed
+         - UI and console retouched to match the new website theme
+   - /projekt: Demo code for evaluation, overlays and logging
+      - Unified command-line utility for map generation, training, evaluation, visualization, and rendering
+      - Experiment config for canonical large/small baseline tasks
+      - Single-file ~400 line RLlib wrapper/demo
+      - Non-RLlib specific code has been moved to Trinity
+      - Improved overall code cohesion and quality
+
+.. figure:: /resource/legacy/v1-4_env.png
 
 **v1.4:** RLlib Support and Overlays
    - Blade: Minor API changes have been made for compatibility with Gym and RLlib
@@ -100,6 +167,8 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
    - New tutorials covering distributed computation and the IO API
    - The Discord has grown to 80+! Join for active development updates, the quickest support, and community discussions.
 
+.. figure:: /resource/legacy/v1-2_env.png
+
 **v1.2:** Unity Client and Skilling
    - Blade: Skilling/professions. This persistent progression system comprises Hunting, Fishing (gathering skills) and Constitution, Melee, Range, Mage (combat skills). Skills are improved through usage: agents that spend a lot of time gathering resources will become able to gather and store more resources at a time. Agents that spend a lot of time fighting will be able to inflict and take more damage. Additional bug fixes and enhancements.
    - Trinity: Major new infrastructure API: Ascend -- a generalization of Trinity. Whereas v1.1 Trinity implemented cluster, server, and node layer APIs with persistence, synchronous/asynchronous, etc... Ascend implements a single infrastructure "layer" object with all the same features and more. Trinity is still around and functions identically -- it has just been reimplemented in ~10 lines of Ascend. Additional bug fixes and features; notable: moved environment out of Trinity.
@@ -117,6 +186,9 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
    - Official Discord
    - End to end training source. There is also a pretrained model, but it's just a weak single population foraging baseline around 2.5x of random reward. I'm currently between cluster access -- once I get my hands on some better hardware, I'll retune hyperparameters for the new demo model.
 
+
+.. figure:: /resource/legacy/v1-0_env.png
+
 **v1.0:** Initial OpenAI environment release
    - Blade: Base environment with foraging and combat
    - Embyr: THREE.js web client
@@ -125,5 +197,9 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
    - Basic project-level documentation
    - End to end training source and a pretrained model
 
+.. figure:: /resource/legacy/v0-2_env.png
+
 **v0.x:** Private development
    - Personal-scale side project and early prototyping
+
+.. figure:: /resource/legacy/v0-1_env.jpg

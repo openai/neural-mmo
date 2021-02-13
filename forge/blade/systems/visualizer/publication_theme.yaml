@@ -1,0 +1,43 @@
+attrs:
+   Figure:
+      background_fill_color: "#ffffff"
+      border_fill_color: "#ffffff"
+      outline_line_color: "#ffffff"
+   Grid:
+      grid_line_color: "#505050"
+      grid_line_dash: [6, 4]
+      grid_line_alpha: 1.0
+      grid_line_width: 1.1
+   Title:
+      text_color: "#000000"
+      text_font_size: "16pt"
+      align: "center"
+   Axis:
+      axis_line_color: "#000000"
+      axis_label_text_color: "#000000"
+      axis_label_text_font_size: "20pt"
+      major_label_text_font_size: "16pt"
+      major_label_text_color: "#000000"
+      major_tick_line_color: "#000000"
+      minor_tick_line_color: "#000000"
+   Legend:
+      background_fill_color: "#bbbbbb"
+      background_fill_alpha: 0.75
+      inactive_fill_color: "#bbbbbb"
+      border_line_color: "#000000"
+      border_line_width: 1
+      border_line_alpha: 1.0
+      label_text_color: "#000000"
+      label_text_font_size: "10pt"
+      click_policy: "hide"
+      location: "bottom_right"
+   Line:
+      line_width: 2.5
+   Circle:
+      fill_alpha: 0.3
+      line_width: 1.0
+   Quad:
+      fill_alpha: 0.5
+   VArea:
+      fill_alpha: 0.3
+

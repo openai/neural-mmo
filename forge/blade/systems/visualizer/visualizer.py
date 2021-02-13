@@ -93,49 +93,13 @@ class Analytics:
 
         self.data        = defaultdict(list)
         self.dataSource  = {}
-        self.keys        = 'Convolutional Recurrent Attentional'.split()
+        self.keys        = 'lifetime'.split()
         for key in self.keys:
            self.dataSource[key] = [1, 2]
            self.dataSource[key+'_x'] = [1, 2]
            self.dataSource[key+'_lower'] = [1, 2]
            self.dataSource[key+'_upper'] = [1, 2]
            self.dataSource[key+'_smooth'] = [1, 2]
-
-        if config.LOAD_EXP:
-            # TODO write loading from pickle here
-            file = open(self.filename, 'rb')
-            self.scales = pickle.load(file)
-            self.x      = pickle.load(file)
-            parse = {}
-            for scale in self.scales:
-               parse[scale] = {}
-            
-            # combine data from all packets into relevant spots for scales
-            while True:
-               try: 
-                  packet = pickle.load(file)
-                  # add to each relevant scale
-                  for scale in self.scales:
-                      # skip over irrelevant scales
-                      if packet[self.x][0] % int(scale) != 0:
-                          continue
-                      for key in packet: 
-                          if key not in parse[scale]:
-                              parse[scale][key] = [0] * (packet[self.x][0] // int(scale))
-                          parse[scale][key].append(packet[key][0])
-               except EOFError as e:                                    
-                  break 
-
-            self.data = parse.copy()
-            self.keys = list(self.data[self.scales[0]].keys())
-            self.keys.remove(self.x)
-            self.keys = [k for k in self.keys if k[-5:] != 'upper' and k[-5:] != 'lower']
-
-            data = np.load('lifetime.npy', allow_pickle=True).tolist()
-            self.keys = list(data.keys())
-            self.keys.remove(self.x)
-            self.keys = [k for k in self.keys if k[-5:] != 'upper' and k[-5:] != 'lower']
-            self.data = data
 
     def init(self, doc):
         # Source must only be modified through a stream
@@ -353,30 +317,31 @@ class Middleman:
     def getShutdown(self):
         return self.shutdown
 
-class Market:
-    def __init__(self, items, middleman):
-        '''Dummy market emulator
-        Args: 
-           items     : List of item keys
-           middleman : A Middleman object'''
-        self.middleman = middleman
-        self.items     = items
+#class Market:
+#    def __init__(self, items, middleman):
+#        '''Dummy market emulator
+#        Args: 
+#           items     : List of item keys
+#           middleman : A Middleman object'''
+#        self.middleman = middleman
+#        self.items     = items
+#
+#        self.keys = items
+#        # Data contains market history for lowest values
+#        self.data = {}
+#
+#        for i, key in enumerate(self.keys):
+#            self.data[key] = 0
+#
+#    def update(self):
+#        '''Updates market data and propagates to Bokeh server
+#        # update data and send to middle man
+#        Note: best to update all at once. Current version may cause bugs'''
+#        for key, val in self.data.items():
+#           self.data[key] = val + 0.2*(random() - 0.5)
+#
+#
+#        # update if not shutting down visualizer
+#        if not ray.get(middleman.getShutdown.remote()):
+#            self.middleman.setData.remote(self.data)
 
-        self.keys = items
-        # Data contains market history for lowest values
-        self.data = {}
-
-        for i, key in enumerate(self.keys):
-            self.data[key] = 0
-
-    def update(self):
-        '''Updates market data and propagates to Bokeh server
-        # update data and send to middle man
-        Note: best to update all at once. Current version may cause bugs'''
-        for key, val in self.data.items():
-           self.data[key] = val + 0.2*(random() - 0.5)
-
-
-        # update if not shutting down visualizer
-        if not ray.get(middleman.getShutdown.remote()):
-            self.middleman.setData.remote(self.data)

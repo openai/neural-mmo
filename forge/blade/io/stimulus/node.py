@@ -2,6 +2,8 @@ from pdb import set_trace as T
 import numpy as np
 import gym
 
+import inspect
+
 from forge.blade.lib.utils import classproperty
 from forge.blade.io.comparable import IterableTypeCompare
 

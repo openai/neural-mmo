@@ -1,40 +1,34 @@
 '''Main file for the neural-mmo/projekt demo
 
-/projeckt will give you a basic sense of the training
-loop, infrastructure, and IO modules for handling input 
-and output spaces. From there, you can either use the 
-prebuilt IO networks in PyTorch to start training your 
-own models immediately or hack on the environment'''
+/projeckt contains all necessary RLlib wrappers to train and
+evaluate capable policies on Neural MMO as well as rendering,
+logging, and visualization tools.
 
-#My favorite debugging macro
+Associated docs and tutorials are hosted on jsuarez5341.github.io.'''
 from pdb import set_trace as T
-
-from fire import Fire
-import sys
 
 import numpy as np
 import torch
+
+from fire import Fire
 
 import ray
 from ray import rllib
 
 from forge.ethyr.torch import utils
+from forge.blade.systems import ai
+
+from forge.trinity.visualize import BokehServer
+from forge.trinity.evaluator import Evaluator
 
 import projekt
-from projekt import realm, rlutils
+from projekt import rllib_wrapper as wrapper
+from forge.blade.core import terrain
 
-#Instantiate a new environment
-def createEnv(config):
-   return projekt.Realm(config)
-
-#Map agentID to policyID -- requires config global
-def mapPolicy(agentID):
-   return 'policy_{}'.format(agentID % config.NPOLICIES)
-
-#Generate RLlib policies
-def createPolicies(config):
-   obs      = projekt.realm.observationSpace(config)
-   atns     = projekt.realm.actionSpace(config)
+def createPolicies(config, mapPolicy):
+   '''Generate RLlib policies'''
+   obs      = wrapper.observationSpace(config)
+   atns     = wrapper.actionSpace(config)
    policies = {}
 
    for i in range(config.NPOLICIES):
@@ -47,58 +41,131 @@ def createPolicies(config):
 
    return policies
 
-if __name__ == '__main__':
-   #Setup ray
+def loadTrainer(config):
+   '''Create monolithic RLlib trainer object'''
    torch.set_num_threads(1)
-   ray.init()
-   
-   #Built config with CLI overrides
-   config = projekt.Config()
-   if len(sys.argv) > 1:
-      sys.argv.insert(1, 'override')
-      Fire(config)
+   ray.init(local_mode=config.LOCAL_MODE)
 
-   #RLlib registry
-   rllib.models.ModelCatalog.register_custom_model(
-         'test_model', projekt.Policy)
-   ray.tune.registry.register_env("custom", createEnv)
+   #Register custom env
+   ray.tune.registry.register_env("Neural_MMO",
+         lambda config: wrapper.RLlibEnv(config))
 
    #Create policies
-   policies  = createPolicies(config)
+   rllib.models.ModelCatalog.register_custom_model('godsword', wrapper.RLlibPolicy)
+   mapPolicy = lambda agentID: 'policy_{}'.format(agentID % config.NPOLICIES)
+   policies  = createPolicies(config, mapPolicy)
 
    #Instantiate monolithic RLlib Trainer object.
-   trainer = rlutils.SanePPOTrainer(
-         env="custom", path='experiment', config={
-      'num_workers': 4,
-      'num_gpus': 1,
+   return wrapper.SanePPOTrainer(config={
+      'num_workers': config.NUM_WORKERS,
+      'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
+      'num_gpus': config.NUM_GPUS,
       'num_envs_per_worker': 1,
-      'train_batch_size': 4000,
-      'rollout_fragment_length': 100,
-      'sgd_minibatch_size': 128,
-      'num_sgd_iter': 1,
-      'use_pytorch': True,
+      'train_batch_size': config.TRAIN_BATCH_SIZE,
+      'rollout_fragment_length': config.ROLLOUT_FRAGMENT_LENGTH,
+      'sgd_minibatch_size': config.SGD_MINIBATCH_SIZE,
+      'num_sgd_iter': config.NUM_SGD_ITER,
+      'framework': 'torch',
       'horizon': np.inf,
       'soft_horizon': False, 
+      '_use_trajectory_view_api': False,
       'no_done_at_end': False,
+      'callbacks': wrapper.RLlibLogCallbacks,
       'env_config': {
          'config': config
       },
       'multiagent': {
-         "policies": policies,
-         "policy_mapping_fn": mapPolicy
+         'policies': policies,
+         'policy_mapping_fn': mapPolicy,
+         'count_steps_by': 'agent_steps'
       },
       'model': {
-         'custom_model': 'test_model',
-         'custom_options': {'config': config}
+         'custom_model': 'godsword',
+         'custom_model_config': {'config': config}
       },
    })
 
-   #Print model size
+def loadEvaluator(config):
+   '''Create test/render evaluator'''
+   if config.MODEL not in ('scripted-forage', 'scripted-combat'):
+      return wrapper.RLlibEvaluator(config, loadModel(config))
+
+   #Scripted policy backend
+   if config.MODEL == 'scripted-forage':
+      policy = ai.policy.forage 
+   else:
+      policy = ai.policy.combat
+
+   #Search backend
+   err = 'SCRIPTED_BACKEND may be either dijkstra or dynamic_programming'
+   assert config.SCRIPTED_BACKEND in ('dijkstra', 'dynamic_programming'), err
+   if config.SCRIPTED_BACKEND == 'dijkstra':
+      backend = ai.behavior.forageDijkstra
+   elif config.SCRIPTED_BACKEND == 'dynamic_programming':
+      backend = ai.behavior.forageDP
+
+   return Evaluator(config, policy, config.SCRIPTED_EXPLORE, backend)
+
+def loadModel(config):
+   '''Load NN weights and optimizer state'''
+   trainer = loadTrainer(config)
    utils.modelSize(trainer.defaultModel())
    trainer.restore(config.MODEL)
+   return trainer
 
-   if config.RENDER:
-      env = createEnv({'config': config})
-      projekt.Evaluator(trainer, env, config).run()
-   else:
-      trainer.train()
+class Anvil():
+   '''Neural MMO CLI powered by Google Fire
+
+   Main file for the RLlib demo included with Neural MMO.
+
+   Usage:
+      python Forge.py <COMMAND> --config=<CONFIG> --ARG1=<ARG1> ...
+
+   The User API documents core env flags. Additional config options specific
+   to this demo are available in projekt/config.py. 
+
+   The --config flag may be used to load an entire group of options at once.
+   The Debug, SmallMaps, and LargeMaps options are included in this demo with
+   the latter being the default -- or write your own in projekt/config.py
+   '''
+   def __init__(self, **kwargs):
+      if 'help' in kwargs:
+         kwargs.pop('help')
+      if 'config' in kwargs:
+         config = kwargs.pop('config')
+         config = getattr(projekt.config, config)()
+      else:
+         config = projekt.config.LargeMaps()
+      config.override(**kwargs)
+      self.config = config
+
+   def train(self, **kwargs):
+      '''Train a model starting with the current value of --MODEL'''
+      loadModel(self.config).train()
+
+   def evaluate(self, **kwargs):
+      '''Evaluate a model on --EVAL_MAPS maps'''
+      self.config.EVALUATE = True
+      loadEvaluator(self.config).evaluate(self.config.GENERALIZE)
+
+   def render(self, **kwargs):
+      '''Start a WebSocket server that autoconnects to the 3D Unity client'''
+      self.config.RENDER = True
+      loadEvaluator(self.config).render()
+
+   def generate(self, **kwargs):
+      '''Generate game maps for the current --config setting'''
+      terrain.MapGenerator(self.config).generate()
+
+   def visualize(self, **kwargs):
+      '''Training/Evaluation results Web dashboard'''
+      BokehServer(self.config)
+      
+if __name__ == '__main__':
+   def Display(lines, out):
+        text = "\n".join(lines) + "\n"
+        out.write(text)
+
+   from fire import core
+   core.Display = Display
+   Fire(Anvil)

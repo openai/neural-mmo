@@ -46,6 +46,7 @@ class Output(nn.Module):
       rets = defaultdict(dict)
       for atn in static.Action.edges:
          for arg in atn.edges:
+            lens  = None
             if arg.argType == static.Fixed:
                batch = obs.shape[0]
                idxs  = [e.idx for e in arg.edges]
@@ -55,31 +56,20 @@ class Output(nn.Module):
                #Fixed arg
             else:
                #Temp hack, rename
-               cands = lookup[Stimulus.Entity]
+               cands = lookup['Entity']
+               lens  = lookup['N']
 
-            #lens = [cands.shape[1] for e in range(cands.shape[0])]
-            lens  = None
             logits = self.net(obs, cands, lens)
+
             #String names for RLlib for now
             #rets[atn.__name__][arg.__name__] = logits
             rets[atn][arg] = logits
 
       return rets
       
+#Root action class
 class Action(nn.Module):
-   '''Head for selecting an action'''
-   def forward(self, x, mask=None):
-      xIdx = functional.classify(x, mask)
-      return x, xIdx
-
-class FlatAction(Action):
-   def __init__(self, config, xdim, h):
-      super().__init__()
-      self.net = nn.Linear(xdim, 4)
-
-   def forward(self, stim, args, lens):
-      x = self.net(stim).squeeze(1)
-      return super().forward(x)
+   pass
 
 class DiscreteAction(Action):
    '''Head for making a discrete selection from
@@ -90,18 +80,9 @@ class DiscreteAction(Action):
 
    def forward(self, stim, args, lens):
       x = self.net(stim, args)
+
+      if lens is not None:
+         mask = torch.arange(x.shape[-1]).to(x.device).expand_as(x)
+         x[mask >= lens] = 0
+
       return x
-
-      '''
-      lens      = torch.LongTensor(lens).unsqueeze(-1)
-      n, maxLen = x.shape[0], x.shape[-1]
-
-      inds = torch.arange(maxLen).expand_as(x)
-      mask = inds < lens 
-      '''
-      #Un-None and fix this mask. Need to fix dims
-      x, xIdx = super().forward(x, mask=None)
-
-      #x = [e[:l] for e, l in zip(x, lens)]
-      return x, xIdx
-

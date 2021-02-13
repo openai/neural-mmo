@@ -1,7 +1,6 @@
 from pdb import set_trace as T
 from collections import defaultdict
-from forge.blade.lib.enums import Material
-from forge.blade.lib import enums
+from forge.blade.lib import material 
 from copy import deepcopy
 import os
 
@@ -10,180 +9,104 @@ import json, pickle
 import time
 import ray
 
+from forge.blade.lib import utils
 from forge.blade.systems import visualizer
-
-class Logger:                                                                 
-   def __init__(self, middleman):                                             
-      self.items     = 'reward lifetime value'.split()                              
-      self.middleman = middleman                                              
-      self.tick      = 0                                                      
-                                                                              
-   def update(self, lifetime_mean, reward_mean, value_mean,
-              lifetime_std, reward_std, value_std):
-      data = {}                                                               
-      data['lifetime'] = lifetime_mean
-      data['reward']   = reward_mean
-      data['value']    = value_mean
-      data['lifetime_std']  = lifetime_std
-      data['reward_std']    = reward_std
-      data['value_std']     = value_std
-      data['tick']     = self.tick                                            
-                                                                              
-      self.tick += 1                                                          
-      self.middleman.setData.remote(data)
-
-#Static blob analytics
-class InkWell:
-   def unique(blobs):
-      tiles = defaultdict(list)
-      for blob in blobs:
-          for t, v in blob.unique.items():
-             tiles['unique_'+t.tex].append(v)
-      return tiles
-
-   def counts(blobs):
-      tiles = defaultdict(list)
-      for blob in blobs:
-          for t, v in blob.counts.items():
-             tiles['counts_'+t.tex].append(v)
-      return tiles
-
-   def explore(blobs):
-      tiles = defaultdict(list)
-      for blob in blobs:
-          for t in blob.counts.keys():
-             counts = blob.counts[t]
-             unique = blob.unique[t]
-             if counts != 0:
-                tiles['explore_'+t.tex].append(unique / counts)
-      return tiles
-
-   def lifetime(blobs):
-      return {'lifetime':[blob.lifetime for blob in blobs]}
- 
-   def reward(blobs):
-      return {'reward':[blob.reward for blob in blobs]}
-  
-   def value(blobs):
-      return {'value': [blob.value for blob in blobs]}
-
-class BlobSummary:
-   def __init__(self):
-      self.nRollouts = 0
-      self.nUpdates  = 0
-
-      self.lifetime = []
-      self.reward   = [] 
-      self.value    = []
-
-   def add(self, blobs):
-      for blob in blobs:
-         self.nRollouts += blob.nRollouts
-         self.nUpdates  += blob.nUpdates
-
-         self.lifetime += blob.lifetime
-         self.reward   += blob.reward
-         self.value    += blob.value
-
-      return self
-
-#Agent logger
-class Blob:
-   def __init__(self, entID, annID): 
-      self.lifetime = 0
-      self.reward   = [] 
-      self.value    = []
-
-      self.entID = entID 
-      self.annID = annID
-
-   def inputs(self, reward):
-      if reward is not None:
-         self.reward.append(reward)
-
-   def outputs(self, value):
-      self.value.append(value)
-      self.lifetime += 1
-
-   def finish(self):
-      self.reward   = [np.mean(self.reward)]
-      self.value    = [np.mean(self.value)]
-      self.lifetime = [self.lifetime]
-
-      self.nUpdates  = self.lifetime[0]
-      self.nRollouts = 1
+from forge.blade.systems.visualizer import plot
 
 class Quill:
-   def __init__(self, config):
-      self.config = config
-      modeldir = config.MODELDIR
+   TRAINING     = -1
+   LINE         = 0
+   SCATTER      = 1
+   HISTOGRAM    = 2
+   GANTT        = 3
+   STATS        = 4
+   RADAR        = 5
+   STACKED_AREA = 6
 
-      self.time = time.time()
-      self.dir = modeldir
+   PLOTS = {
+      TRAINING:     plot.Training,
+      LINE:         plot.Line,
+      SCATTER:      plot.Scatter,
+      HISTOGRAM:    plot.Histogram,
+      GANTT:        plot.Gantt,
+      STATS:        plot.Stats,
+      RADAR:        plot.Radar,
+      STACKED_AREA: plot.StackedArea,
+   }
 
-      self.curUpdates  = 0
-      self.curRollouts = 0
-      self.nUpdates    = 0
-      self.nRollouts   = 0
+   def plot(idx):
+      return Quill.PLOTS[idx] 
 
-      try:
-         os.remove(modeldir + 'logs.p')
-      except:
-         pass
+   def __init__(self, realm):
+      self.blobs = defaultdict(Blob)
+      self.stats = defaultdict(list)
+      self.realm = realm #Game map index
 
-      if config.LOG:
-         middleman   = visualizer.Middleman.remote()
-         self.logger = Logger(middleman)
-         vis         = visualizer.BokehServer.remote(middleman, self.config)
+   def stat(self, key, val):
+      self.stats[key].append(val)
+
+   def register(self, key, tick, *plots):
+      if key in self.blobs:
+         blob = self.blobs[key]
+      else:
+         blob = Blob(*plots)
+         self.blobs[key] = blob
+
+      blob.tick = tick
+      return blob
+
+   @property
+   def packet(self):
+      logs = {key: blob.packet for key, blob in self.blobs.items()}
+      return {'Log': logs, 'Stats': self.stats}
+
+class Blob:
+   def __init__(self, *args):
+      self.tracks = defaultdict(Track)
+      self.plots  = args
  
-   def timestamp(self):
-      cur = time.time()
-      ret = cur - self.time
-      self.time = cur
-      return str(ret)
+   def log(self, value, key=None):
+      self.tracks[key].update(self.tick, value)
 
-   def stats(self):
-      updates  = 'Updates:  (Total) ' + str(self.nUpdates)
-      rollouts = 'Rollouts: (Total) ' + str(self.nRollouts)
+   @property
+   def packet(self):
+      return {key: (self.plots, track.packet) for key, track in self.tracks.items()}
 
-      padlen   = len(updates)
-      updates  = updates.ljust(padlen)  
-      rollouts = rollouts.ljust(padlen) 
+#Static blob analytics
+class Track:
+   def __init__(self):
+      self.data = defaultdict(list)
 
-      updates  += '  |  (Epoch) ' + str(self.curUpdates)
-      rollouts += '  |  (Epoch) ' + str(self.curRollouts)
+   def update(self, tick, value):
+      if type(value) != list:
+         value = [value]
 
-      return updates + '\n' + rollouts
+      self.data[tick] += value
 
-   def scrawl(self, logs):
-      #Collect experience information
-      self.nUpdates      += logs.nUpdates
-      self.nRollouts     += logs.nRollouts
-      self.curUpdates    =  logs.nUpdates
-      self.curRollouts   =  logs.nRollouts
+   @property
+   def packet(self):
+      return self.data
 
-      self.value_mean    = np.mean(logs.value)
-      self.reward_mean   = np.mean(logs.reward)
-      self.lifetime_mean = np.mean(logs.lifetime)
+class InkWell:
+   def __init__(self):
+      self.log   = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(list))))
+      self.stats = defaultdict(list)
 
-      self.value_std     = np.std(logs.value)
-      self.reward_std    = np.std(logs.reward)
-      self.lifetime_std  = np.std(logs.lifetime)
+   def update(self, quill, realm=0):
+      '''Realm param unused -- for future interactive expansions'''
+      log, stats = quill['Log'], quill['Stats']
+      for key, blob in log.items():
+         for subkey, (plots, track) in blob.items():
+            for time, vals in track.items():
+               self.log[realm][key, tuple(plots)][subkey][time] += vals
+      for key, stat in stats.items():
+         self.stats[key] += stat
 
-      print('Value Function: ', self.value_mean)
-
-      return self.stats(), self.lifetime_mean
-
-   def latest(self):
-      return self.lifetime_mean, self.reward_mean
-
-   def save(self, blobs):
-      with open(self.dir + 'logs.p', 'ab') as f:
-         pickle.dump(blobs, f)
-
-   def scratch(self):
-      pass
-
+   @property
+   def packet(self):
+      return {'Log': utils.default_to_regular(self.log),
+              'Stats': utils.default_to_regular(self.stats)}
+ 
 #Log wrapper and benchmarker
 class Benchmarker:
    def __init__(self, logdir):

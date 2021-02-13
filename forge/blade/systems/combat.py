@@ -10,93 +10,83 @@ def level(skills):
    defense = skills.defense.level
    melee = skills.melee.level
    ranged = skills.range.level
+   mage   = skills.mage.level
    
    base = 0.25*(defense + hp)
-   meleeAdjust = 0.65*melee
-   rangeAdjust = 0.325*(np.floor(ranged/2)+ranged)
-   final = np.floor(base + max(meleeAdjust, rangeAdjust))
+   final = np.floor(base + 0.5*max(melee, ranged, mage))
    return final
 
-'''
-def attack(entity, targ, skill):
-   attackLevel  = skill.level
-   defenseLevel = targ.skills.defense.level
+def attack(entity, targ, skillFn):
+   config      = entity.config
+   entitySkill = skillFn(entity)
+   targetSkill = skillFn(targ)
 
-   attackBonus, strengthBonus = 0, 0
-   if entity.isPC:
-      if skill.isMelee:
-         equip = entity.equipment.melee
-      elif skill.isRanged:
-         equip = entity.equipment.ranged
-         if equip.ammo is not None and equip.ammo <= 0:
-            return
-      attackBonus, strengthBonus  = equip.attack, equip.strength
+   targetDefense = targ.skills.defense.level + targ.loadout.defense
 
-   defenseBonus = 0
-   if targ.isPC:
-      defenseBonus = targ.equipment.armor.defense
- 
-   dmg = 0
-   if isHit(attackLevel, attackBonus, defenseLevel, defenseBonus):
-      dmg = damage(attackLevel, strengthBonus)
+   roll = np.random.randint(1, config.DICE_SIDES+1)
+   dc   = accuracy(config, entitySkill.level, targetSkill.level, targetDefense)
+   crit = roll == config.DICE_SIDES
 
-   if entity.isPC:
-      entity.skills.addCombatExp(skill, dmg)
-   if entity.isPC:
-      targ.skills.addCombatExp(targ.skills.defense, dmg)
-   targ.registerHit(entity, dmg)
-'''
-
-def attack(entity, targ, skill):
-   attackLevel  = skill.level
-   defenseLevel = targ.skills.defense.level
-
-   if targ.status.immune.val > 0:
-      return
-
-   dmg = 0
-   if np.random.rand() < accuracy(attackLevel, defenseLevel):
-      #No roll now, just does the max hit
-      dmg = maxHit(skill, attackLevel)
+   dmg = 1 #Chip dmg on a miss
+   if roll >= dc or crit:
+      dmg = damage(entitySkill.__class__, entitySkill.level)
       
-   #targ.registerHit(entity, dmg)
-   entity.applyDamage(dmg, skill.__class__.__name__.lower())
-   targ.receiveDamage(dmg)
+   dmg = min(dmg, entity.resources.health.val)
+   entity.applyDamage(dmg, entitySkill.__class__.__name__.lower())
+   targ.receiveDamage(entity, dmg)
    return dmg
 
 #Compute maximum damage roll
-#def maxHit(effectiveLevel, equipmentBonus=220):
-#   return np.floor(0.5 + (8+effectiveLevel)*(equipmentBonus+64.0)/640.0)
-def maxHit(skill, level):
-   if isinstance(skill, Skill.Melee):
-      return np.floor(5 + level * 45 / 99)
-   if isinstance(skill, Skill.Range):
+def damage(skill, level):
+   if skill == Skill.Melee:
+      return np.floor(7 + level * 63 / 99)
+   if skill == Skill.Range:
       return np.floor(3 + level * 32 / 99)
-   if isinstance(skill, Skill.Mage):
+   if skill == Skill.Mage:
       return np.floor(1 + level * 24 / 99)
 
 #Compute maximum attack or defense roll (same formula)
-def maxAttackDefense(effectiveLevel, equipmentBonus):
-   return effectiveLevel*(equipmentBonus+64)
+#Max attack 198 - min def 1 = 197. Max 198 - max 198 = 0
+#REMOVE FACTOR OF 2 FROM ATTACK AFTER IMPLEMENTING WEAPONS
+def accuracy(config, entAtk, targAtk, targDef):
+   alpha   = config.DEFENSE_WEIGHT
 
-def accuracy(defLevel, targDef):
-   return 0.5 + (defLevel - targDef) / 200
+   attack  = entAtk
+   defense = alpha*targDef + (1-alpha)*targAtk
+   dc      = defense - attack + config.DICE_SIDES//2
 
-#Compute hit chance from max attack and defense
-'''
-def accuracy(atk, dfn):
-   if atk > dfn:
-      return 1 - (dfn+2) / (2*(atk+1))
-   return atk/(2*(dfn+1))
-'''
+   return dc
 
-def isHit(attackLevel, attackBonus, defenseLevel, defenseBonus):
-   maxAttack  = maxAttackDefense(attackLevel, attackBonus)
-   maxDefense = maxAttackDefense(defenseLevel, defenseBonus)
-   acc = accuracy(maxAttack, maxDefense)
-   return np.random.rand() < acc 
+def danger(config, pos, full=False):
+   cent = config.TERRAIN_SIZE // 2
 
-def damage(strengthLevel, strengthBonus):
-   mmax = maxHit(strengthLevel, strengthBonus)
-   return np.random.randint(1, 1 + mmax)
+   #Distance from center
+   R   = int(abs(pos[0] - cent + 0.5))
+   C   = int(abs(pos[1] - cent + 0.5))
+   mag = max(R, C)
 
+   #Distance from border terrain to center
+   if config.INVERT_WILDERNESS:
+      R   = cent - R - config.TERRAIN_BORDER
+      C   = cent - C - config.TERRAIN_BORDER
+      mag = min(R, C)
+
+   #Normalize
+   norm = mag / (cent - config.TERRAIN_BORDER)
+
+   if full:
+      return norm, mag
+   return norm
+      
+def wilderness(config, pos):
+   norm, raw = danger(config, pos, full=True)
+   wild      = int(100 * norm) - 1
+
+   if not config.WILDERNESS:
+      return 99
+   if wild < config.WILDERNESS_MIN:
+      return -1
+   if wild > config.WILDERNESS_MAX:
+      return config.WILDERNESS_MAX
+
+   return wild

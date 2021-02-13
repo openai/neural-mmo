@@ -1,245 +1,306 @@
-.. |env| image:: /resource/image/v1-4_splash.png
 .. |icon| image:: /resource/icon/icon_pixel.png
-
-.. |ags| image:: /resource/icon/rs/ags.png
-.. |air| image:: /resource/icon/rs/air.png
-.. |earth| image:: /resource/icon/rs/earth.png
-.. |fire| image:: /resource/icon/rs/fire.png
-.. |water| image:: /resource/icon/rs/water.png
 
 .. role:: python(code)
     :language: python
 
-|env|
+.. figure:: /resource/image/splash.png
 
-|icon| Abstract
-###############
+|icon| Introduction
+###################
 
-`[Demo Video] <https://youtu.be/y_f77u9vlLQ>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
+`[Demo Video] <https://youtu.be/y_f77u9vlLQ>`_ | `[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
+Neural MMO is a platform for agent-based intelligence research featuring hundreds of concurrent agents, multi-thousand-step time horizons, and procedurally-generated, million-tile maps. This release ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+
+.. figure:: /resource/image/large_isometric_zoom.png
+
+**Abstract:** Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
 
 |icon| Installation
 ###################
 
-**Dependencies:** Anaconda Python 3.7.x and gcc. Tested for Ubuntu 16.04/18.04/20.04, macOS Catalina (10.15), and Windows 10.
-
-Ubuntu and macOS:
+**Dependencies:**
 
 .. code-block:: python
+   :caption: Ubuntu 20.04/18.04
 
-   #Download Neural MMO and run the pretrained demo model
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
-   bash scripts/setup.sh
-   python Forge.py
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client neural-mmo/forge/embyr
 
-   #Open the client in a separate terminal
-   ./client.sh
-
-Windows + WSL:
+   cd neural-mmo && bash scripts/setup.sh
 
 .. code-block:: python
+   :caption: Windows 10 + WSL Ubuntu 20.04/18.04
 
-   #Execute on WSL Ubuntu (dependencies required)
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo && cd neural-mmo
-   bash scripts/setup.sh --SERVER_ONLY
-   python Forge.py
+   #Execute in WSL Ubuntu
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
+   cd neural-mmo && bash scripts/setup.sh
 
-   #Execute on Windows (dependencies not required)
-   git clone --depth=1 https://github.com/jsuarez5341/neural-mmo-client
-   neural-mmo-client/UnityClient/neural-mmo.exe
+   #Execute in Windows 10
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client
 
 **Troubleshooting:**
-  - Forge.py takes ~30 seconds to launch the server. This is due to overlay precomputation; you can speed it up by running with ``--COMPUTE_GLOBAL_VALUES=False``. This will also fix most out-of-memory errors.
-  - If PyTorch is not recognizing your GPU, you can run CPU only using ``CUDA_VISIBLE_DEVICES="" python Forge.py``, but expect low FPS.
-  - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor.
-  - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time.
-  - If none of the above work, post in #support on Discord
+  - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
+  - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
+  - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
+  - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
 
-**Versioning:** The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Other branches are for contributors and developers only: they are not bleeding edge builds and may be flammable.
 
-|icon| Overview
-###############
+|icon| CLI
+##########
 
-Agents in Neural MMO progress persistent skills while exploring procedurally generated terrain and engaging in strategic combat over thousands of timesteps. Our platform is both an environment and a set of tools for visualizing and comparing emergent policies of intelligent agents.
-
-.. image:: /resource/figure/web/overview.svg
-
-The long-term goal of Neural MMO is to train artificial general intelligence in simulation -- that is, **agents that scale to the complexity of the real world**. The project is divided into research and engineering modules that cleanly segment this objective into concrete and approachable research and engineering tasks:
-
-Research
---------
-
-**Agents that scale to the complexity of their environment**
-
-|water| Trinity: Distributed computation framework based on Ray+RLlib
-
-|air| Ethyr: Baseline models and research utility contrib -- submit PRs with your own tools!
-
-Engineering
------------
-
-**Environments that scale to the complexity of the real world**
-
-|earth| Blade: Core game environment and extended OpenAI Gym external API
-
-|fire| Embyr: 3D Unity game client for test-time visualization
-
-|icon| Getting Started
-######################
-
-Neural MMO extends the OpenAI Gym API to support additional environment complexity: persistence, large/variable agent populations, and hierarchical observation/action spaces. The quickest way to dive in is:
-
-**1:** Work through the tutorials below and familiarize yourself with the `[Realm API] <https://jsuarez5341.github.io/neural-mmo/build/html/autodoc/forge.blade.core.realm.html>`_
-
-**2:** Join our `[Discord] <https://discord.gg/BkMmFUC>`_ community for help and discussion. **This is the best way to contact me**
-
-**3:** Develop your own fork and contribute your features to the platform.
-
-Neural MMO is fully open-source -- to succeed long-term, we will need the help of talented researchers, software engineers, game designers, and technical artists. I actively review issues and pull requests.
-
-|icon| Training from scratch
-############################
-
-Next, we will get familiar with the baseline parameters and train a model from scratch. Open up projekt/config.py, which contains all of the training configuration options. You can either edit defaults here or override individual parameters using command line arguments. To train a baseline, simply run:
+Forge.py is the main file for the included demo and starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. To view documentation:
 
 .. code-block:: python
 
-  python Forge.py --RENDER=False --MODEL=None
+  python Forge.py --help
 
-You can reduce batch size if you are running out of memory or disable CUDA if you don't have a GPU on hand, but performance may suffer. All baseline models train overnight with four i7-9700K CPU cores @3.6 GHz + one GTX 1080Ti at very low utilization and 32 GB of RAM:
+.. code-block:: text
 
-.. image:: /resource/figure/web/train.png
+  NAME
+      Forge.py --help - Neural MMO CLI powered by Google Fire
 
-As a sanity check, your agents should have learned not to run into lava after several epochs, around 20 average lifetime. The trained baseline models range within 30-40 average lifetime fully trained. However, individual agents may live much longer -- we have seen >10,000 ticks (~100 minutes real-time). Additionally, higher average lifetime is not always strictly better -- the performance of each agent is loosely coupled to the performance of all other agents. Rendering and overlays help resolve discrepancies.
+  SYNOPSIS
+      Forge.py --help - GROUP | COMMAND
+
+  DESCRIPTION
+      Main file for the RLlib demo included with Neural MMO.
+
+      Usage:
+         python Forge.py <COMMAND> --config=<CONFIG> --ARG1=<ARG1> ...
+
+      The User API documents core env flags. Additional config options specific
+      to this demo are available in projekt/config.py.
+
+      The --config flag may be used to load an entire group of options at once.
+      The Debug, SmallMaps, and LargeMaps options are included in this demo with
+      the latter being the default -- or write your own in projekt/config.py
+
+  GROUPS
+      GROUP is one of the following:
+
+       config
+         Large scale Neural MMO training setting
+
+  COMMANDS
+      COMMAND is one of the following:
+
+       evaluate
+         Evaluate a model on --EVAL_MAPS maps from the training set
+
+       generalize
+         Evaluate a model on --EVAL_MAPS maps not seen during training
+
+       generate
+         Generate game maps for the current --config setting
+
+       render
+         Start a WebSocket server that autoconnects to the 3D Unity client
+
+       train
+         Train a model starting with the current value of --MODEL
+
+       visualize
+         Web dashboard for the latest evaluation/generalization results
+
+
+|icon| Terrain Generation
+#########################
+
+We're going to need some maps to play with in the tutorials below. If you're following along interactively and want to keep things quick, we suggest only generating the small maps. Generating image previews of each map can be useful in certain circumstances. The files for large maps are huge, so we'll only generate PNGs for small maps.
+
+.. code-block:: python
+  :caption: Generate small and large game maps
+
+  python Forge.py generate --config=SmallMaps --TERRAIN_RENDER
+  python Forge.py generate --config=LargeMaps
+
+.. code-block:: text
+
+  Generating 256 training and 64 evaluation maps:
+  100%|████████████████████████████████████████████████| 320/320 [01:35<00:00,  3.34it/s]
+  Generating 256 training and 64 evaluation maps:
+  100%|████████████████████████████████████████████████| 320/320 [09:53<00:00,  1.85s/it]
+
+Generating small maps without rendering takes 5-10 seconds on a modern CPU.
+
+.. figure:: /resource/image/map.png
+
+   Example map from resource/maps/procedural-small/map1/map.png
+
+Terrain generation is controlled by a number of parameters prefixed with TERRAIN_. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in forge/blade/core/terrain.py.
 
 |icon| Rendering and Overlays
 #############################
 
-Embyr is the Neural MMO renderer. It is written in C# using Unity3D and functions much like an MMO game client: rather than directly simulating game logic, it renders the current game state from packets communicated by the Neural MMO server over a Twisted WebSocket. This design cuts out the overhead of running a bulky game engine during training and also enables us to keep the environment in pure Python for faster development. Embyr is maintained in a separate repository for historical reasons as well as because it is large and not required on remote servers during distributed training. Agents advance various foraging and combat skills by collecting food and water and engaging in fights with other agents:
-
-.. image:: /resource/image/v1-4_combat.png
-
-To view an agent's skill levels or follow it with the camera, simply click on it:
-
-.. image:: /resource/image/v1-4_ui.png
-
-The client ships with an in-game console (press tilde ~ to toggle) stocked with prebuilt overlays for visualizing various aspects of the learned policy.
-
-.. image:: /resource/figure/web/overlays.svg
-
-
-The counts overlay renders a heatmap of agent exploration in real time:
-
-.. image:: /resource/image/v1-4_counts.png
-
-The attention overlay renders egocentric heatmaps of each agent's attention weightings in real time:
-
-.. image:: /resource/image/v1-4_attention.png
-
-The values overlay renders a heatmap of the agent's learned value function in real time:
-
-.. image:: /resource/image/v1-4_values.png
-
-The globalValues overlay hallucinates an agent on each cell and computes the value function for that agent with no other agents on the map and all resources present. This requires a forward pass for each of the ~3600 tiles in the environment. The overlay is precomputed once during server initialization (~30 seconds) and may be disabled in projekt/config.py for faster startup:
-
-.. image:: /resource/image/v1-4_globalValues.png
-
-You can also write your own overlays using Realm.registerOverlay(). For example, the value function overlay in `[/projekt/overlay.py] <https://github.com/jsuarez5341/neural-mmo/blob/master/projekt/overlay.py>`_  is implemented as:
+Rendering the environment requires launching both a server and a client. To launch the server:
 
 .. code-block:: python
 
-   def values(self, obs):
-      '''Computes a local value function by painting tiles as agents
-      walk over them. This is fast and does not require additional
-      network forward passes'''
-      for idx, agentID in enumerate(obs):
-         r, c = self.realm.desciples[agentID].base.pos
-         self.valueMap[r, c] = float(self.model.value_function()[idx])
+  python Forge.py render --config=SmallMaps
 
-      colorized = overlay.twoTone(self.valueMap)
-      self.realm.registerOverlay(colorized, 'values')
+| **Linux:** Launch *client.sh* in a separate shell or click the associated executable
+| **Windows:** Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10
 
-Custom overlays can make full use of the current environment state, but note that this is not part of the official API. See /projekt/overlays.py for full implementations of the baseline overlays.
+The server will take a few seconds to load the pretrained policy and connect to the client.
 
-|icon| The IO API
+.. figure:: /resource/image/ui.png
+
+   You should see this view once the map loads
+
+The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. Note that the LargeMaps config requires a good workstation to render and you should avoid zooming all the way out.
+
+.. image:: /resource/image/overlays.png
+
+The counts (exploration) overlay is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.
+
+Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in forge/trinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.
+
+|icon| Training
+###############
+
+Evaluating on small/large maps will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:
+
+.. code-block:: python
+  :caption: Train on small and large game maps
+
+  python Forge.py train --config=SmallMaps --MODEL=None
+  python Forge.py train --config=LargeMaps --MODEL=None
+
+.. code-block:: text
+
+        ___           ___           ___           ___
+       /__/\         /__/\         /__/\         /  /\
+       \  \:\       |  |::\       |  |::\       /  /::\     An open source
+        \  \:\      |  |:|:\      |  |:|:\     /  /:/\:\    project originally
+    _____\__\:\   __|__|:|\:\   __|__|:|\:\   /  /:/  \:\   founded by Joseph Suarez
+   /__/::::::::\ /__/::::| \:\ /__/::::| \:\ /__/:/ \__\:\  and formalized at OpenAI
+   \  \:\~~\~~\/ \  \:\~~\__\/ \  \:\~~\__\/ \  \:\ /  /:/
+    \  \:\  ~~~   \  \:\        \  \:\        \  \:\  /:/   Now developed and
+     \  \:\        \  \:\        \  \:\        \  \:\/:/    maintained at MIT in
+      \  \:\        \  \:\        \  \:\        \  \::/     Phillip Isola's lab
+       \__\/         \__\/         \__\/         \__\/
+
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Epoch: 16▕▏Sample: 8923.8/s (64.0s)▕▏Train: 35.4/s (235.2s)▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+      ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+      ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
+      ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
+      ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
+      ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
+      ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
+      ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Epoch: 17▕▏Sample: 8910.2/s (62.2s)▕▏Train: 33.7/s (227.8s)▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+      ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+      ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
+      ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
+      ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
+      ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
+      ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
+      ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Epoch: 18▕▏Sample: 8885.9/s (59.5s)▕▏Train: 32.4/s (217.2s)▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+      ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+      ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
+      ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
+      ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
+      ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
+      ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
+      ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+   ▏Neural MMO v1.5▕▏Epochs: 18.0▕▏kSamples: 236.8▕▏Sample Time: 1022.2▕▏Learn Time: 3797.6▕
+   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+
+The training monitor above summarizes wall-clock time spent on sampling vs training and displays performance for the last three epochs. You can train reasonably good small-map models in a few hours and decent large-map models overnight on a single desktop with one GPU. See Baselines for exact training times and performances of our models. Specify the --MODEL=current flag throughout the remainder of these tutorials to load the model you just trained.
+
+Note:
+  - Any subsequent training commands will overwrite your checkpoint files. We suggest copying your latest model (baselines/models/current/) to another directory in baselines/models. You can then load that model by specifying the directory name.
+  - The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.
+
+|icon| Evaluation
 #################
 
-OpenAI Gym supports standard definitions for structured, mixed discrete/continuous observation and action (input/output or IO) spaces. However, there are a few issues:
-
-1. OpenAI Gym has a couple of blind spots surrounding dictionary and repeated set observations
-
-2. The existence of structured IO spaces does not imply a corresponding neural architecture for processing them
-
-Neural MMO resolves both of these problems out of the box. We have worked with the RLlib developers to augment OpenAI Gym's *spaces* API with two new structure objects, *Repeated* and *FlexDict*.
-
-Additionally, we have implemented substantially general procedural generation code that automatically fits attentional PyTorch architectures to the given IO spaces. These will be subject to minor tweaks from update to update but should remain structurally stable from update to update. The high-level concept is to model observations of sets of entities, each of which is a set of attributes:
-
-.. image:: /resource/figure/web/header.svg
-
-Entity embeddings are created by attending over attributes, and the observation is flattened to a fixed-length embedding by attenting over entity embeddings. Actions are similarly defined by targeting entity embeddings with attention. The diagram below summarizes this process -- see the `[Neural MMO v1.3 white paper] <https://arxiv.org/abs/2001.12004>`_ for details
-
-.. image:: /resource/figure/web/io.svg
-
-Our Baseline models include an abstract `[Base] <https://github.com/jsuarez5341/neural-mmo/blob/master/forge/ethyr/torch/policy/baseline.py>`_ model that instantiates our IO modules but defers the hidden network to subclasses:
+Evaluation in open-ended massively multiagent settings is akin to that in the real world. There is not an obvious single real-number metric. It's like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO's suite of evaluation and visualization tools.
 
 .. code-block:: python
+   :caption: Evaluate the pretrained SmallMaps model and a scripted baseline
 
-   class Base(nn.Module):
-      def __init__(self, config):
-         ...
-         self.output = io.Output(config)
-         self.input  = io.Input(config,
-               embeddings=policy.BiasedInput,
-               attributes=policy.Attention)
-         self.valueF = nn.Linear(config.HIDDEN, 1)
+   python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1
+   python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1 --MODEL=scripted-combat
 
-      def hidden(self, obs, state=None, lens=None):
-         raise NotImplementedError('Implement this method in a subclass')
+.. code-block:: text
 
-      def forward(self, obs, state=None, lens=None):
-         entityLookup  = self.input(obs)
-         hidden, state = self.hidden(entityLookup, state, lens)
-         self.value    = self.valueF(hidden).squeeze(1)
-         actions       = self.output(hidden, entityLookup)
-         return actions, state
+  Number of evaluation maps: 1
+  100%|██████████████████████████████████████████████| 1000/1000 [00:32<00:00, 31.10it/s]
+  Number of evaluation maps: 1
+  100%|██████████████████████████████████████████████| 1000/1000 [01:01<00:00, 16.17it/s]
 
-Custom models work by defining new subnetworks and overriding the *hidden* method. For example:
+Note that we have used a single evaluation map here to keep runtime short -- our baselines average over several maps, and you should follow the protocol detailed in Baselines in formal comparisons.
+
+Advanced
+********
+
+Neural MMO provides three sets of evaluation settings:
+
+**Training Maps:** Evaluate on the same maps used for training. This is standard practice in reinforcement learning. *Enable by setting the GENERALIZE flag to False*
+
+**Evaluation Maps:** Evaluate on a set of held-out maps drawn from the training map *distribution* generated using different random seeds. *This is the default setting*
+
+**Transfer Maps:** Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). *Enable by setting the appropriate --config*
+
+|icon| Dashboard and Statistics
+###############################
+
+The "visualize" command creates summary tables and figures using the results of training and evaluation
 
 .. code-block:: python
+   :caption: Visualize evaluation results for pretrained and scripted baselines
 
-   class Simple(Base):
-      def __init__(self, config):
-         '''Simple baseline model with flat subnetworks'''
-         super().__init__(config)
-         h = config.HIDDEN
+   python Forge.py visualize --config=SmallMaps --MODEL=small-maps
+   python Forge.py visualize --config=SmallMaps --MODEL=scripted-combat
 
-         self.conv   = nn.Conv2d(h, h, 3)
-         self.pool   = nn.MaxPool2d(2)
-         self.fc     = nn.Linear(h*3*3, h)
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          18.00        57.00        45.95         4.09
+Lifetime             0.00      1000.00        46.49       110.78
+Skilling            10.00        50.50        14.06         5.92
+Combat               3.00        28.00         4.64         3.06
+Equipment            0.00        18.00         0.22         1.36
+Exploration          0.00        73.00         8.23         6.34
+============ ============ ============ ============ ============
 
-         self.proj   = nn.Linear(2*h, h)
-         self.attend = policy.Attention(self.embed, h)
+============ ============ ============ ============ ============
+Metric       Min          Max          Mean         Std
+============ ============ ============ ============ ============
+Population          27.00        62.00        49.50         4.43
+Lifetime             0.00       994.00        50.92        74.27
+Skilling            10.00        53.00        15.04         5.54
+Combat               3.00        33.00         4.35         2.77
+Equipment            0.00        26.00         0.10         1.04
+Exploration          0.00       101.00        14.94        10.80
+============ ============ ============ ============ ============
 
-      def hidden(self, obs, state=None, lens=None):
-         #Attentional agent embedding
-         agents, _ = self.attend(obs[Stimulus.Entity])
+Your results may vary slightly from ours, which were obtained using a slightly larger evaluation for stability. From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights -- both to aid in future development and for the paper. The "visualize" command also loads a browser-based interactive dashboard:
 
-         #Convolutional tile embedding
-         tiles     = obs[Stimulus.Tile]
-         self.attn = torch.norm(tiles, p=2, dim=-1)
+.. figure:: /resource/image/baselines/SmallMaps/small-map.png
 
-         w      = self.config.WINDOW
-         batch  = tiles.size(0)
-         hidden = tiles.size(2)
-         tiles  = tiles.reshape(batch, w, w, hidden).permute(0, 3, 1, 2)
-         tiles  = self.conv(tiles)
-         tiles  = self.pool(tiles)
-         tiles  = tiles.reshape(batch, -1)
-         tiles  = self.fc(tiles)
+   Pretrained neural baseline
 
-         hidden = torch.cat((agents, tiles), dim=-1)
-         hidden = self.proj(hidden)
-         return hidden, state
+.. figure:: /resource/image/baselines/SmallMaps/scripted-combat.png
 
-You can write your own PyTorch models using the same template. Or, if you prefer, you can use our IO subnetworks directly, as is done in our *Base* class. Neural MMO's IO spaces themselves are framework agnostic, but if you want to train in e.g. TensorFlow, you will have to write analogous IO networks.
+   Scripted baseline
+
+Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating -- notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably stronger overall, but apparently Range and Mage are somewhat balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent -- perhaps I should consider changing the movement system in a future update.
+
+So, why do we need 15 plots when only one turned out to be important? First of all, we didn't know which plot would highlight an interesting difference ahead of time. Second, there are some smaller observations we can make, such as the pretrained model obtaining significantly more equipment pickups while the scripted model obtained fewer and better pickups (Equipment scatter plots). Or that the pretrained model has a slightly heavier Lifetime right tail, as seen in the Lifetime Gantt plot. Many of our most experiments (and worst bug fixes) were motivated by an unusual disparity in the dashboard.
+
+And before you ask, yes: there's a boring publication theme: specify --VIS_THEME=publication. In fact, you can create custom logging with a highly configurable dashboard to go with it in only a few lines of code -- just override the log method of forge/trinity/env.py to specify your own data tracks and plot styles.
+
+.. figure:: /resource/image/publication_theme.png
+
+   Publication theme

@@ -6,8 +6,6 @@ import time
 from collections import defaultdict
 from torch.nn.parameter import Parameter
 
-from forge.blade.lib.log import Quill
-
 from forge.ethyr.torch import save
 from forge.ethyr.torch.optim import ManualAdam
 from forge.ethyr.torch.param import setParameters, getParameters

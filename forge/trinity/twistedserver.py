@@ -38,13 +38,20 @@ class GodswordServerProtocol(WebSocketServerProtocol):
     def __init__(self):
         super().__init__()
         print("Created a server")
-        self.frame = 0
-        self.packet = {}
+        self.frame  = 0
+
+        #"connected" is already used by WSSP
+        self.isConnected = False
+        self.pos = [512, 512]
+        self.cmd = None
+
+        self.WINDOW = 128
 
     def onOpen(self):
         print("Opened connection to server")
 
     def onClose(self, wasClean, code=None, reason=None):
+        self.isConnected = False
         print('Connection closed')
 
     def connectionMade(self):
@@ -57,7 +64,17 @@ class GodswordServerProtocol(WebSocketServerProtocol):
 
     #Not used without player interaction
     def onMessage(self, packet, isBinary):
-        print("Message", packet)
+        print("Server packet", packet)
+        packet    = packet.decode()
+        _, packet = packet.split(';') #Strip headeer
+        r, c, cmd = packet.split(' ') #Split camera coords
+        if len(cmd) == 0:
+            cmd = None
+
+        self.pos = [int(r), int(c)]
+        self.cmd = cmd
+
+        self.isConnected = True
 
     def onConnect(self, request):
         print("WebSocket connection request: {}".format(request))
@@ -69,45 +86,63 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.sendUpdate()
 
     def serverPacket(self):
-        data = self.realm.clientData()
+        data = self.realm.packet
         return data
 
     def sendUpdate(self):
-        ent = {}
         data = self.serverPacket()
-        entities = data['entities']
-        environment = data['environment']
-        self.packet['ent'] = entities
 
-        gameMap = environment.np().tolist()
-        self.packet['overlay'] = data['overlay']
-        self.packet['map']     = gameMap
+        packet               = {}
+        packet['resource']   = data['resource']
+        packet['player']     = data['player']
+        packet['npc']        = data['npc']
+        packet['pos']        = data['pos']
+        packet['wilderness'] = data['wilderness']
 
-        packet = json.dumps(self.packet).encode('utf8')
+        config = data['config']
+
+        print('Is Connected? : {}'.format(self.isConnected))
+        if not self.isConnected:
+            packet['map']    = data['environment']
+            packet['border'] = config.TERRAIN_BORDER
+            packet['size']   = config.TERRAIN_SIZE
+
+        if 'overlay' in data:
+           packet['overlay'] = data['overlay']
+           print('SENDING OVERLAY: ', len(packet['overlay']))
+
+        packet = json.dumps(packet).encode('utf8')
         self.sendMessage(packet, False)
 
 class WSServerFactory(WebSocketServerFactory):
     def __init__(self, ip, realm, step):
         super().__init__(ip)
         self.realm, self.step = realm, step
+        self.time = time.time()
         self.clients = []
 
+        self.pos = [40, 40]
+        self.cmd = None
         self.tickRate = 0.6
         self.tick = 0
 
-        self.step()
-        lc = LoopingCall(self.announce)
+        self.step(self.pos, self.cmd)
+        lc = LoopingCall(self.announce) #If this misses a tick, it waits for a whole cycle
         lc.start(self.tickRate)
 
     def announce(self):
         self.tick += 1
         uptime = np.round(self.tickRate*self.tick, 1)
-        print('Uptime: ', uptime, ', Tick: ', self.tick)
+        print('Wall Clock: ', time.time() - self.time, 'Uptime: ', uptime, ', Tick: ', self.tick)
+        self.time = time.time()
 
         for client in self.clients:
             client.sendUpdate()
+            if client.pos is not None:
+                self.pos = client.pos
+                self.cmd = client.cmd
 
-        self.step()
+        self.step(self.pos, self.cmd)
 
     def clientConnectionMade(self, client):
         self.clients.append(client)
@@ -122,7 +157,7 @@ class Application:
       log.startLogging(sys.stdout)
       port = 8080
 
-      factory = WSServerFactory(u'ws://localhost:' + str(port), realm, step)
+      factory          = WSServerFactory(u'ws://localhost:' + str(port), realm, step)
       factory.protocol = GodswordServerProtocol 
       resource         = WebSocketResource(factory)
 

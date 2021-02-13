@@ -5,6 +5,7 @@ import time
 from collections import defaultdict, deque
 
 from forge.blade.io.stimulus.static import Stimulus as Static
+from forge.blade.entity import Player
 
 def camel(string):
    '''Convert a string to camel case'''
@@ -42,12 +43,20 @@ class Stimulus:
 
    def add(static, obj, config, args):
       '''Pull attributes from game'''
+      #Cache observation representation
+      if obj.repr is None:
+          obj.repr = {}
+          for name, attr in static:
+             val = obj
+             for n in name:
+                val = val.__dict__[camel(n)]
+
+             obj.repr[attr] = attr(config)
+
       stim = {}
-      for name, attr in static:
-         val = obj
-         for n in name:
-            val = val.__dict__[camel(n)]
-         stim[attr] = val.get(*args)
+      for name, attr in obj.repr.items():
+         stim[name] = attr.get(*args)
+
       return stim
 
    def nop(template):
@@ -76,6 +85,8 @@ class Stimulus:
       stim = deque()
       for tile in env.ravel():
          for e in tile.ents.values():
+            if type(e) != Player:
+               continue
             raw.append(e)
             args = [ent, e]
             s = Stimulus.add(static, e, config, args)

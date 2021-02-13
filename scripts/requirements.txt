@@ -11,3 +11,4 @@ vec-noise==1.1.4
 bokeh==2.2.3
 imageio==2.8.0
 sphinx-rtd-theme==0.5.1
+tensorflow==2.4.1

@@ -1,4 +1,4 @@
-read -p "DEPENDENCIES: this script requires Anaconda Python 3.8, gcc, make, cmake, and zlib1g-dev. Installation will fail otherwise. Proceed [y/n]?" -n 1 -r
+read -p "DEPENDENCIES: this script requires Anaconda Python 3.8, gcc, make, cmake, and build-essential. Installation will fail otherwise. Proceed [y/n]?" -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then

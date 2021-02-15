@@ -1,5 +1,5 @@
 fire==0.4.0
-ray==1.1.0
+ray==1.2.0
 cloudpickle==1.2.2
 setproctitle==1.1.10
 redis==3.5.3

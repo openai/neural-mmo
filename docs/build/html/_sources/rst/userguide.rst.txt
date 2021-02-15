@@ -7,8 +7,7 @@
 
 |icon| Introduction
 ###################
-
-`[Demo Video] <https://youtu.be/y_f77u9vlLQ>`_ | `[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
+`[Demo Video] <https://youtu.be/d1mj8yzjr-w>`_ | `[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
 Neural MMO is a platform for agent-based intelligence research featuring hundreds of concurrent agents, multi-thousand-step time horizons, and procedurally-generated, million-tile maps. This release ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 

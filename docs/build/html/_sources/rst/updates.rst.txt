@@ -5,7 +5,7 @@
 |icon| Video Demos
 ##################
 
-`Neural MMO v1.4: A Massively Multiagent Environment for AI Research <https://youtu.be/y_f77u9vlLQ>`_
+`Neural MMO v1.5 Trailer <https://youtu.be/d1mj8yzjr-w>`_
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://youtu.be/DkHopV1RSxw>`_
 

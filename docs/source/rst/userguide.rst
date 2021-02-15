@@ -20,15 +20,15 @@ Neural MMO is a platform for agent-based intelligence research featuring hundred
 ###################
 
 .. code-block:: python
-   :caption: Ubuntu 20.04/18.04
+   :caption: Ubuntu (20.04 preferred)
 
-   git clone --single-branch --depth=1 --branch master https://github.com/jsuarez5341/neural-mmo
+   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
    git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client neural-mmo/forge/embyr
 
    cd neural-mmo && bash scripts/setup.sh
 
 .. code-block:: python
-   :caption: Windows 10 + WSL Ubuntu 20.04/18.04
+   :caption: Windows 10 + WSL Ubuntu
 
    #Execute in WSL Ubuntu
    git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo

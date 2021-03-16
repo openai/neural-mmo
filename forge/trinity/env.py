@@ -35,6 +35,8 @@ class Env:
       self.config    = config
       self.overlay   = None
 
+      #self.steps = 0
+
    ############################################################################
    ### Core API
    def reset(self, idx=None, step=True):
@@ -197,6 +199,9 @@ class Env:
 
          rewards[entID] = self.reward(entID)
          dones[entID]   = False
+
+      #self.steps += len(self.realm.players.items())
+      #print('World {} Tick {} Steps {}'.format(self.worldIdx, self.realm.tick, self.steps))
 
       for entID, ent in dead.items():
          self.log(ent)

@@ -11,17 +11,18 @@ class Base(core.Config):
    and non-RLlib-specific learning parameters'''
    
    #Hardware Scale
-   NUM_WORKERS             = 4
+   NUM_WORKERS             = 8
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
    LOCAL_MODE              = False
 
    #Memory/Batch Scale
-   TRAIN_BATCH_SIZE        = 400000
-   ROLLOUT_FRAGMENT_LENGTH = 100
+   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
+   ROLLOUT_FRAGMENT_LENGTH = 256
+   LSTM_BPTT_HORIZON       = 16
 
    #Optimization Scale
-   SGD_MINIBATCH_SIZE      = 128
+   SGD_MINIBATCH_SIZE      = min(512, TRAIN_BATCH_SIZE)
    NUM_SGD_ITER            = 1
 
    #Model Parameters 
@@ -77,8 +78,8 @@ class SmallMaps(Base):
    MODEL                   = 'small-map'
    SCRIPTED_EXPLORE        = False
 
-   TRAIN_HORIZON           = 1000
-   EVALUATION_HORIZON      = 1000
+   TRAIN_HORIZON           = 1024
+   EVALUATION_HORIZON      = 1024
 
    NENT                    = 128
    NMOB                    = 32

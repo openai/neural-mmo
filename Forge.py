@@ -61,14 +61,14 @@ def loadTrainer(config):
       'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
       'num_gpus': config.NUM_GPUS,
       'num_envs_per_worker': 1,
-      'train_batch_size': config.TRAIN_BATCH_SIZE,
+      'train_batch_size': config.TRAIN_BATCH_SIZE // 2,
       'rollout_fragment_length': config.ROLLOUT_FRAGMENT_LENGTH,
       'sgd_minibatch_size': config.SGD_MINIBATCH_SIZE,
       'num_sgd_iter': config.NUM_SGD_ITER,
       'framework': 'torch',
       'horizon': np.inf,
       'soft_horizon': False, 
-      '_use_trajectory_view_api': False,
+      '_use_trajectory_view_api': True,
       'no_done_at_end': False,
       'callbacks': wrapper.RLlibLogCallbacks,
       'env_config': {
@@ -77,11 +77,12 @@ def loadTrainer(config):
       'multiagent': {
          'policies': policies,
          'policy_mapping_fn': mapPolicy,
-         'count_steps_by': 'agent_steps'
+         'count_steps_by': 'env_steps'
       },
       'model': {
          'custom_model': 'godsword',
-         'custom_model_config': {'config': config}
+         'custom_model_config': {'config': config},
+         'max_seq_len': config.LSTM_BPTT_HORIZON
       },
    })
 

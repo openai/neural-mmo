@@ -17,6 +17,7 @@ from torch import nn
 
 from ray import rllib
 import ray.rllib.agents.ppo.ppo as ppo
+import ray.rllib.agents.ppo.appo as appo
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from ray.rllib.utils.spaces.flexdict import FlexDict
 from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
@@ -214,7 +215,8 @@ class SanePPOTrainer(ppo.PPOTrainer):
       training_logs = np.load(trainPath, allow_pickle=True).item()
 
       total_sample_time = 0
-      total_learn_time = 0
+      total_learn_time  = 0
+      total_steps       = 0
 
       epoch   = 0
       blocks  = []
@@ -225,24 +227,27 @@ class SanePPOTrainer(ppo.PPOTrainer):
           self.save()
           epoch += 1
 
-          if epoch == 1:
-            continue
-
-          #Time Stats
+          #Compute stats
+          info               = stats['info']
           timers             = stats['timers']
+
+          steps              = info['num_agent_steps_trained'] - total_steps
+          total_steps        = info['num_agent_steps_trained']
+
           sample_time        = timers['sample_time_ms'] / 1000
           learn_time         = timers['learn_time_ms'] / 1000
-          sample_throughput  = timers['sample_throughput']
-          learn_throughput   = timers['learn_throughput']
 
-          #Summary
-          nSteps             = stats['info']['num_steps_trained']
+          sample_throughput  = steps / sample_time
+          learn_throughput   = steps / learn_time
+         
           total_sample_time += sample_time
           total_learn_time  += learn_time
+
+          #Summary
           summary = formatting.box([formatting.line(
                 title  = 'Neural MMO v1.5',
                 keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
-                vals   = [epoch, nSteps/1000, total_sample_time, total_learn_time],
+                vals   = [epoch, total_steps/1000, total_sample_time, total_learn_time],
                 valFmt = '{:.1f}')])
 
           #Block Title
@@ -284,7 +289,10 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
           #Extend blocks
           if len(lines) > 0:
-             blocks.append(header + formatting.box(lines, indent=4))
+             lines = formatting.box(lines, indent=4) 
+             blocks.append(header + lines)
+          else:
+             blocks.append(header)
              
           if len(blocks) > 3:
              blocks = blocks[1:]

@@ -204,7 +204,7 @@ class Config(Template):
    TERRAIN_CENTER             = 1024
    '''Size of each map (number of tiles along each side)'''
 
-   TERRAIN_BORDER             = 10
+   TERRAIN_BORDER             = 16
    '''Number of lava border tiles surrounding each side of the map'''
 
    @property

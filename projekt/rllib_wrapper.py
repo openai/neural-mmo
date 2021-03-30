@@ -199,7 +199,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
    def restore(self):
       '''Restore model from path'''
       self.training_logs = np.load(
-            self.env.config.PATH_TRAINING_DATA,
+            self.envConfig.PATH_TRAINING_DATA,
             allow_pickle=True).item()
 
       path = os.path.join(

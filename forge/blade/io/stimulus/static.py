@@ -43,7 +43,7 @@ class Stimulus(Config):
             #self.min = -config.STIM
             #self.max = config.STIM
             self.min = 0
-            self.max = config.TERRAIN_SIZE
+            self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
 
       #You made this continuous
@@ -52,7 +52,7 @@ class Stimulus(Config):
             #self.min = -config.STIM
             #self.max = config.STIM
             self.min = 0
-            self.max = config.TERRAIN_SIZE
+            self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
 
       #Historical stats
@@ -94,20 +94,6 @@ class Stimulus(Config):
             self.max = 3
             self.scale = 0.3
 
-      class Immune(node.Continuous):
-         def init(self, config):
-            self.val = 0
-            self.max = config.IMMUNE_MAX
-            self.scale = 0.1
-
-      class Wilderness(node.Continuous):
-         def init(self, config):
-            #You set a low max here
-            self.val = -1 
-            self.min = -1
-            self.max = 99
-            self.scale = 0.01
-
    class Tile(Config):
       @staticmethod
       def N(config):
@@ -126,10 +112,10 @@ class Stimulus(Config):
 
       class R(node.Discrete):
          def init(self, config):
-            self.max = config.TERRAIN_SIZE
+            self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
  
       class C(node.Discrete):
          def init(self, config):
-            self.max = config.TERRAIN_SIZE
+            self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15

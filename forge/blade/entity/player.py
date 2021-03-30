@@ -6,6 +6,7 @@ from forge.blade.lib import material
 
 from forge.blade.systems.skill import Skills
 from forge.blade.systems.inventory import Inventory
+from forge.blade.systems.achievement import Diary
 from forge.blade.entity import entity
 from forge.blade.io.stimulus import Static
 
@@ -21,16 +22,10 @@ class Player(entity.Entity):
       self.vision = 7
 
       #Submodules
-      self.skills     = Skills(self)
+      self.skills       = Skills(self)
+      self.achievements = Diary(realm.config)
       #self.inventory = Inventory(dataframe)
       #self.chat      = Chat(dataframe)
-
-      #Update immune
-      mmul = realm.config.IMMUNE_MUL
-      madd = realm.config.IMMUNE_ADD
-      mmax = realm.config.IMMUNE_MAX
-      immune = min(mmul*len(realm.players) + madd, mmax)
-      self.status.immune.update(immune)
 
       self.dataframe.init(Static.Entity, self.entID, self.pos)
 
@@ -53,6 +48,8 @@ class Player(entity.Entity):
       
    def receiveDamage(self, source, dmg):
       if not super().receiveDamage(source, dmg):
+         if source:
+            source.history.playerKills += 1
          return 
 
       self.resources.food.decrement(dmg)
@@ -86,4 +83,5 @@ class Player(entity.Entity):
 
       self.resources.update(realm, self, actions)
       self.skills.update(realm, self, actions)
+      self.achievements.update(realm, self)
       #self.inventory.update(world, actions)

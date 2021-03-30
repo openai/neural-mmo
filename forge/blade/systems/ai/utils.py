@@ -14,9 +14,6 @@ def validTarget(ent, targ, rng):
       return False
    if lInf(ent, targ) > rng:
       return False
-   wild = min(ent.status.wilderness, targ.status.wilderness)
-   if abs(combat.level(ent.skills) - combat.level(targ.skills)) > wild:
-      return False
    return True
 
 

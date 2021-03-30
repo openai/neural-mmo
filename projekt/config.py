@@ -1,7 +1,8 @@
 from pdb import set_trace as T
-from forge.blade import core
+import numpy as np
 import os
 
+from forge.blade import core
 from forge.blade.systems.ai import behavior
 
 class Base(core.Config):
@@ -11,10 +12,13 @@ class Base(core.Config):
    and non-RLlib-specific learning parameters'''
    
    #Hardware Scale
-   NUM_WORKERS             = 8
+   NUM_WORKERS             = 6
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
    LOCAL_MODE              = False
+
+   TRAIN_EPOCHS            = 500
+   LOAD                    = True
 
    #Memory/Batch Scale
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
@@ -41,6 +45,22 @@ class Base(core.Config):
    #Scripted model parameters
    SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
    SCRIPTED_EXPLORE        = True       #Intentional exploration
+
+   PLAYER_KILLS_EASY       = 1
+   PLAYER_KILLS_NORMAL     = 3
+   PLAYER_KILLS_HARD       = 6
+
+   EQUIPMENT_EASY          = 1
+   EQUIPMENT_NORMAL        = 10
+   EQUIPMENT_HARD          = 20
+
+   EXPLORATION_EASY        = 32
+   EXPLORATION_NORMAL      = 64
+   EXPLORATION_HARD        = 127
+
+   FORAGING_EASY           = 20
+   FORAGING_NORMAL         = 35
+   FORAGING_HARD           = 50
 
 
 class LargeMaps(Base):
@@ -78,40 +98,47 @@ class SmallMaps(Base):
    MODEL                   = 'small-map'
    SCRIPTED_EXPLORE        = False
 
+   #Horizon
    TRAIN_HORIZON           = 1024
    EVALUATION_HORIZON      = 1024
 
+   #Scale
+   TERRAIN_CENTER          = 128
    NENT                    = 128
-   NMOB                    = 32
+   NMOB                    = 128
 
    #Path settings
    PATH_MAPS               = core.Config.PATH_MAPS_SMALL
    PATH_ROOT               = os.path.join(os.getcwd(), PATH_MAPS, 'map')
 
-   #Outside-in map design
-   SPAWN_CENTER            = False
-   INVERT_WILDERNESS       = True
-   WILDERNESS              = False
-
-   #Terrain generation parameters
-   TERRAIN_MODE            = 'contract'
-   TERRAIN_LERP            = False
-   TERRAIN_SIZE            = 80 
-   TERRAIN_OCTAVES         = 1
-   TERRAIN_FOREST_LOW      = 0.30
-   TERRAIN_FOREST_HIGH     = 0.75
-   TERRAIN_GRASS           = 0.715
-   TERRAIN_ALPHA           = -0.025
-   TERRAIN_BETA            = 0.035
-
    #Entity spawning parameters
    PLAYER_SPAWN_ATTEMPTS   = 1
-   NPC_LEVEL_MAX           = 35
+   NPC_LEVEL_MAX           = 30
    NPC_LEVEL_SPREAD        = 5
    NPC_SPAWN_PASSIVE       = 0.00
    NPC_SPAWN_NEUTRAL       = 0.60
    NPC_SPAWN_AGGRESSIVE    = 0.80
 
+class BattleRoyale(SmallMaps):
+   NPOP                    = 8
+   #N_TRAIN_MAPS            = 1
+   #N_EVAL_MAPS             = 0
+    
+
+   def SPAWN_BR(self):
+      left   = self.TERRAIN_BORDER
+      right  = self.TERRAIN_CENTER + self.TERRAIN_BORDER
+      rrange = np.arange(left+2, right, 4).tolist() 
+
+      lows   = (left+np.zeros(32, dtype=np.int)).tolist()
+      highs  = (right+np.zeros(32, dtype=np.int)).tolist()
+
+      s1     = list(zip(rrange, lows))
+      s2     = list(zip(lows, rrange))
+      s3     = list(zip(rrange, highs))
+      s4     = list(zip(highs, rrange))
+
+      return s1 + s2 + s3 + s4
 
 class Debug(SmallMaps):
    '''Debug Neural MMO training setting
@@ -122,6 +149,7 @@ class Debug(SmallMaps):
    LOCAL_MODE              = True
    NUM_WORKERS             = 1
 
+   SGD_MINIBATCH_SIZE      = 100
    TRAIN_BATCH_SIZE        = 400
    TRAIN_HORIZON           = 200
    EVALUATION_HORIZON      = 50

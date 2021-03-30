@@ -28,22 +28,13 @@ class Resources:
 class Status:
    def __init__(self, ent):
       self.config = ent.config
-
-      self.wilderness = Static.Entity.Wilderness(ent.dataframe, ent.entID)
-      self.immune     = Static.Entity.Immune(    ent.dataframe, ent.entID)
-      self.freeze     = Static.Entity.Freeze(    ent.dataframe, ent.entID)
+      self.freeze     = Static.Entity.Freeze(ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
-      self.immune.decrement()
       self.freeze.decrement()
-
-      wilderness = combat.wilderness(self.config, entity.pos)
-      self.wilderness.update(wilderness)
 
    def packet(self):
       data = {}
-      data['wilderness'] = self.wilderness.val
-      data['immune']     = self.immune.val
       data['freeze']     = self.freeze.val
       return data
 
@@ -54,6 +45,7 @@ class History:
   
       self.origPos     = ent.pos
       self.exploration = 0
+      self.playerKills = 0
 
       self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
       self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
@@ -65,7 +57,7 @@ class History:
       self.actions = actions
       self.damage.update(0)
 
-      exploration      = utils.l1(entity.pos, self.origPos)
+      exploration      = utils.linf(entity.pos, self.origPos)
       self.exploration = max(exploration, self.exploration)
 
       self.timeAlive.increment()
@@ -157,7 +149,7 @@ class Entity:
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
 
-      if not self.alive and source is not None:
+      if not self.alive and source:
          source.receiveLoot(self.loadout)
          return False
 

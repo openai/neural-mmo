@@ -111,7 +111,8 @@ def loadModel(config):
    '''Load NN weights and optimizer state'''
    trainer = loadTrainer(config)
    utils.modelSize(trainer.defaultModel())
-   trainer.restore(config.MODEL)
+   if config.LOAD:
+      trainer.restore()
    return trainer
 
 class Anvil():

@@ -49,7 +49,7 @@ class BokehServer:
 
       train_path = config.PATH_TRAINING_DATA.format(config.MODEL)
       if os.path.exists(train_path):
-         train_data = np.load(train_path, allow_pickle=True).tolist()
+         train_data = np.load(train_path, allow_pickle=True).tolist()['logs']
       else:
          print('VISUALIZE: No training logs for specified config')
 

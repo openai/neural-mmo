@@ -34,6 +34,7 @@ class Env:
 
       self.config    = config
       self.overlay   = None
+      self.spawned   = 0
 
       #self.steps = 0
 
@@ -196,6 +197,7 @@ class Env:
       for entID, ent in self.realm.players.items():
          ob             = self.realm.dataframe.get(ent)
          obs[entID]     = ob
+         self.dummy_ob  = ob
 
          rewards[entID] = self.reward(entID)
          dones[entID]   = False
@@ -213,7 +215,7 @@ class Env:
       for entID, ent in dead.items():
          rewards[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
-         obs[ent.entID]     = ob
+         obs[ent.entID]     = self.dummy_ob
 
       return obs, rewards, dones, {}
 
@@ -259,12 +261,14 @@ class Env:
             quill.HISTOGRAM, quill.SCATTER)
       blob.log(ent.history.exploration)
 
+      quill.stat('Achievement', ent.achievements.score)
+      for name, stat in ent.achievements.stats:
+         quill.stat(name, stat)
+
       quill.stat('Population', self.realm.population)
       quill.stat('Lifetime',  ent.history.timeAlive.val)
       quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
       quill.stat('Combat',    combat.level(ent.skills))
-      quill.stat('Equipment', ent.loadout.defense)
-      quill.stat('Exploration', ent.history.exploration)
 
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs
@@ -327,8 +331,10 @@ class Env:
          particular populations based on the current game state -- for example,
          current population sizes or performance.'''
 
-      pop = np.random.randint(self.config.NPOP)
-      return pop, 'Neural_'
+      popSize = self.config.NENT / self.config.NPOP
+      pop     = (self.spawned // popSize) % self.config.NPOP
+      self.spawned += 1
+      return int(pop), 'Neural_'
 
    ############################################################################
    ### Client data
@@ -342,7 +348,7 @@ class Env:
       packet = {
             'config': self.config,
             'pos': self.overlayPos,
-            'wilderness': combat.wilderness(self.config, self.overlayPos)
+            'wilderness': 0
             }
 
       packet = {**self.realm.packet(), **packet}

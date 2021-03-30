@@ -51,7 +51,7 @@ class Input(nn.Module):
       #TODO: implement obs scaling in a less hackey place
       inp['Entity']['Discrete'] *= 0
       tileWeight = torch.Tensor([0.0, 0.0, 0.02, 0.02])
-      entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.0, 0.0, 0.00])
+      entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.00])
 
       try:
          inp['Tile']['Continuous']   *= tileWeight

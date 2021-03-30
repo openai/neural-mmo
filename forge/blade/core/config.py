@@ -61,7 +61,7 @@ class Config(Template):
    ENV_NAME             = 'Neural_MMO'
    '''Environment Name'''
 
-   ENV_VERSION          = '1.5'
+   ENV_VERSION          = '1.5.1'
    '''Environment version'''
 
    v                    = False
@@ -115,21 +115,23 @@ class Config(Template):
    PATH_ALL_MODELS           = os.path.join(PATH_BASELINES, 'models')
    '''All models directory'''
 
-   PATH_CURRENT              = os.path.join(PATH_ALL_MODELS, 'current')
-   '''Current experiment model path'''
+   @property
+   def PATH_MODEL(self):
+      '''Model path'''
+      return os.path.join(self.PATH_ALL_MODELS, self.MODEL)
 
-   PATH_MODEL                = os.path.join(PATH_ALL_MODELS, '{}')
-   '''Model path -- format me with the model name'''
-
-   PATH_TRAINING_DATA        = os.path.join(PATH_MODEL, 'training.npy')
-   '''Model training data -- format me with the model name'''
+   @property
+   def PATH_TRAINING_DATA(self):
+      '''Model training data'''
+      return os.path.join(self.PATH_MODEL, 'training.npy')
 
    PATH_ALL_EVALUATIONS      = os.path.join(PATH_BASELINES, 'evaluations')
    '''All evaluations directory'''
 
-   PATH_EVALUATION           = os.path.join(PATH_ALL_EVALUATIONS, '{}', '{}.npy')
-   '''Evaluation path -- format me with the (config, model) names'''
-
+   @property
+   def PATH_EVALUATION(self):
+      '''Evaluation path'''
+      return os.path.join(self.PATH_ALL_EVALUATIONS, self.NAME, self.MODEL, '.npy')
 
    #Themes
    PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 
@@ -196,60 +198,45 @@ class Config(Template):
 
    ############################################################################
    ### Terrain Generation Parameters
-   TERRAIN_RENDER       = False
+   TERRAIN_RENDER             = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 
-   TERRAIN_SIZE         = 1024
+   TERRAIN_CENTER             = 1024
    '''Size of each map (number of tiles along each side)'''
 
-   TERRAIN_BORDER       = 10
+   TERRAIN_BORDER             = 10
    '''Number of lava border tiles surrounding each side of the map'''
 
-   TERRAIN_FREQUENCY    = (-3, -6)
-   '''Simplex noise frequence range (log2 space)'''
+   @property
+   def TERRAIN_SIZE(self):
+      return int(self.TERRAIN_CENTER + 2*self.TERRAIN_BORDER)
 
-   TERRAIN_OCTAVES      = 8
+   TERRAIN_FREQUENCY          = -3
+   '''Base noise frequency range (log2 space)'''
+
+   TERRAIN_FREQUENCY_OFFSET   = 7
+   '''Noise frequency octave offset (log2 space)'''
+
+   TERRAIN_LOG_INTERPOLATE_MIN = -2 
+   '''Minimum interpolation log-strength for noise frequencies'''
+
+   TERRAIN_LOG_INTERPOLATE_MAX= 0
+   '''Maximum interpolation log-strength for noise frequencies'''
+
+   TERRAIN_TILES_PER_OCTAVE   = 8
    '''Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range'''
 
-   TERRAIN_MODE         = 'expand'
-   '''expand or contract.
-
-   Specify normal generation (lower frequency at map center) or
-   inverted generation (lower frequency at map edges)'''
-
-   TERRAIN_LERP         = True 
-   '''Whether to apply a linear blend between terrain octaves'''
-
-   TERRAIN_ALPHA        = 0.15
-   '''Blend factor for FOREST_LOW (water adjacent)'''
-
-   TERRAIN_BETA         = 0.025
-   '''Blend factor for FOREST_HIGH (stone adjacent)'''
-
-   TERRAIN_LAVA         = 0.0
+   TERRAIN_LAVA               = 0.0
    '''Noise threshold for lava generation'''
 
-   TERRAIN_WATER        = 0.25
+   TERRAIN_WATER              = 0.30
    '''Noise threshold for water generation'''
 
-   TERRAIN_FOREST_LOW   = 0.35
-   '''Noise threshold for forest (water adjacent)'''
-
-   TERRAIN_GRASS        = 0.75
+   TERRAIN_GRASS              = 0.70
    '''Noise threshold for grass'''
 
-   TERRAIN_FOREST_HIGH  = 0.775
-   '''Noise threshold for forest (stone adjacent)'''
-
-   TERRAIN_WATER_RADIUS  = 3.5
-   '''Central water radius'''
-
-   TERRAIN_CENTER_REGION = 19 #Keep this number odd for large maps
-   '''Central water square cutout'''
-
-   TERRAIN_CENTER_WIDTH  = 3
-   '''Central square grass border'''
-
+   TERRAIN_FOREST             = 0.85
+   '''Noise threshold for forest'''
 
    ############################################################################
    ### Tile Parameters
@@ -346,31 +333,6 @@ class Config(Template):
    FREEZE_TIME             = 3
    '''Number of ticks successful Mage attacks freeze a target'''
 
-
-   ############################################################################
-   ### Spawn Protection Parameters                                             
-   IMMUNE_ADD              = 10
-   '''Minimum number of ticks an agent cannot be damaged after spawning'''
-
-   IMMUNE_MUL              = 0.05
-   '''Additional number of immunity ticks per population size'''
-
-   IMMUNE_MAX              = 50
-   '''Maximum number of immunity ticks'''
-
-   WILDERNESS              = True
-   '''Whether to bracket terrain into combat level ranges'''
-
-   INVERT_WILDERNESS       = False
-   '''Whether to invert wilderness level generation'''
-
-   WILDERNESS_MIN          = -1
-   '''Minimum wilderness level. -1 corresponds to a safe zone'''
-
-   WILDERNESS_MAX          = 99
-   '''Maximum wilderness level. 99 corresponds to unrestricted combat'''
-
-
    ############################################################################
    ### Spawn Parameters                                                   
    PLAYER_SPAWN_ATTEMPTS   = 3
@@ -421,32 +383,12 @@ class Config(Template):
             The position (row, col) to spawn the given agent
       '''
       #Spawn at edges
-      if self.TERRAIN_MODE == 'contract':
-         mmax = self.TERRAIN_SIZE - self.TERRAIN_BORDER - 1
-         mmin = self.TERRAIN_BORDER
+      mmax = self.TERRAIN_CENTER + self.TERRAIN_BORDER
+      mmin = self.TERRAIN_BORDER
 
-         var  = np.random.randint(mmin, mmax)
-         fixed = np.random.choice([mmin, mmax])
-         r, c = int(var), int(fixed)
-         if np.random.rand() > 0.5:
-             r, c = c, r 
-         return (r, c)
-      #Spawn at center
-      else:
-         spawnRadius = self.TERRAIN_CENTER_REGION
-         spawnWidth  = self.TERRAIN_CENTER_WIDTH
-
-         cent  = self.TERRAIN_SIZE // 2
-         left  = cent - self.TERRAIN_CENTER_REGION
-         right = cent + self.TERRAIN_CENTER_REGION
-
-         var  = np.random.randint(left, right)
-         if np.random.rand() > 0.5:
-            fixed = np.random.randint(left, left+spawnWidth)
-         else:
-            fixed = np.random.randint(right-spawnWidth, right)
-
-         r, c = int(var), int(fixed)
-         if np.random.rand() > 0.5:
-            r, c = c, r
-         return r, c
+      var  = np.random.randint(mmin, mmax)
+      fixed = np.random.choice([mmin, mmax])
+      r, c = int(var), int(fixed)
+      if np.random.rand() > 0.5:
+          r, c = c, r 
+      return (r, c)

@@ -52,7 +52,7 @@ class Move(Node):
       entity.history.lastPos = (r, c)
       rDelta, cDelta = direction.delta
       rNew, cNew = r+rDelta, c+cDelta
-
+      
       #One agent per cell
       tile = env.map.tiles[rNew, cNew] 
       if tile.occupied and not tile.lava:
@@ -125,15 +125,7 @@ class Attack(Node):
       for r in range(R-N, R+N+1):
          for c in range(C-N, C+N+1):
             for e in stim[r, c].ents.values():
-               if not config.WILDERNESS:
-                  rets.add(e)
-                  continue
-
-               minWilderness = min(entity.status.wilderness.val, e.status.wilderness.val)
-               selfLevel     = combat.level(entity.skills)
-               targLevel     = combat.level(e.skills)
-               if abs(selfLevel - targLevel) <= minWilderness:
-                  rets.add(e)
+               rets.add(e)
 
       rets = list(rets)
       return rets
@@ -144,21 +136,8 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(env, entity, style, targ):
-      #Can't attack if either party is immune
-      if entity.status.immune > 0 or targ.status.immune > 0:
-         return
-
       #Check if self targeted
       if entity.entID == targ.entID:
-         return
-
-      #Check wilderness level
-      wilderness = min(entity.status.wilderness, targ.status.wilderness)
-      selfLevel  = combat.level(entity.skills)
-      targLevel  = combat.level(targ.skills)
-
-      if (env.config.WILDERNESS and abs(selfLevel - targLevel) > wilderness
-            and entity.isPlayer and targ.isPlayer):
          return
 
       #Check attack range

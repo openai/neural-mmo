@@ -178,8 +178,7 @@ class Fishing(HarvestingSkill):
 
    def update(self, realm, entity):
       water = entity.resources.water
-      if entity.status.immune <= 0:
-         water.decrement(1)
+      water.decrement(1)
 
       if material.Water not in ai.utils.adjacentMats(
             realm.map.tiles, entity.pos):
@@ -199,8 +198,7 @@ class Hunting(HarvestingSkill):
 
    def update(self, realm, entity):
       food = entity.resources.food
-      if entity.status.immune <= 0:
-         food.decrement(1)
+      food.decrement(1)
 
       r, c = entity.pos
       if (type(realm.map.tiles[r, c].mat) not in [material.Forest] or

@@ -51,6 +51,7 @@ class EntityGroup(Mapping):
       for entID, ent in self.entities.items():
          self.dataframe.remove(Static.Entity, entID, ent.pos)
 
+      self.spawned  = False
       self.entities = {}
       self.dead     = {}
 
@@ -96,7 +97,9 @@ class NPCManager(EntityGroup):
          if len(self.entities) >= self.config.NMOB:
             break
 
-         r, c = np.random.randint(0, self.config.TERRAIN_SIZE, 2).tolist()
+         center = self.config.TERRAIN_CENTER
+         border = self.config.TERRAIN_BORDER
+         r, c   = np.random.randint(border, center+border, 2).tolist()
          if self.realm.map.tiles[r, c].occupied:
             continue
 
@@ -119,7 +122,25 @@ class PlayerManager(EntityGroup):
       self.palette = Palette(config.NPOP)
       self.idx     = 1
 
+   def spawnIndividual(self, r, c):
+      pop, name = self.identify()
+      color     = self.palette.colors[pop]
+      player    = Player(self.realm, (r, c), self.idx, pop, name, color)
+      super().spawn(player)
+      self.idx += 1
+
    def spawn(self):
+      if hasattr(self.config, 'SPAWN_BR'):
+         if self.spawned:
+            return 
+
+         self.spawned = True
+         for r, c in self.config.SPAWN_BR(self.config):
+            assert not self.realm.map.tiles[r, c].occupied
+            self.spawnIndividual(r, c)
+         return
+          
+      #MMO-style spawning
       for _ in range(self.config.PLAYER_SPAWN_ATTEMPTS):
          if len(self.entities) >= self.config.NENT:
             break
@@ -128,12 +149,10 @@ class PlayerManager(EntityGroup):
          if self.realm.map.tiles[r, c].occupied:
             continue
 
-         pop, name = self.identify()
-         color     = self.palette.colors[pop]
-         player    = Player(self.realm, (r, c), self.idx, pop, name, color)
+         self.spawnIndividual(r, c)
 
-         super().spawn(player)
-         self.idx += 1
+      while len(self.entities) == 0:
+         self.spawn()
 
 class Realm:
    '''Top-level world object'''
@@ -185,7 +204,6 @@ class Realm:
       Args:
          actions: Dict of agent actions
       '''
-
       #Prioritize actions
       npcActions = self.npcs.actions(self)
       merged     = defaultdict(list)
@@ -206,11 +224,8 @@ class Realm:
       dead = self.players.cull()
       self.npcs.cull()
 
-      self.npcs.spawn()
       self.players.spawn()
-
-      while len(self.players.entities) == 0:
-         self.players.spawn()
+      self.npcs.spawn()
 
       #Update map
       self.map.step()

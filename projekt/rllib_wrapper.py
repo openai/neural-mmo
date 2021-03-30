@@ -4,6 +4,7 @@ from collections import defaultdict
 from itertools import chain
 import shutil
 import contextlib
+import time
 import os
 import re
 
@@ -39,6 +40,13 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       self.config = config['config']
       super().__init__(self.config)
 
+   def reward(self, entID):
+      if entID not in self.realm.players:
+         return -1
+
+      player = self.realm.players[entID]
+      return player.achievements.update(self.realm, player) / 15
+
    def step(self, decisions, omitDead=False, preprocessActions=True):
       obs, rewards, dones, infos = super().step(
             decisions, omitDead, preprocessActions)
@@ -46,7 +54,10 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       config = self.config
       dones['__all__'] = False
       test = config.EVALUATE or config.RENDER
-      if not test and self.realm.tick  >= config.TRAIN_HORIZON:
+      
+      horizon    = self.realm.tick >= config.TRAIN_HORIZON
+      population = len(self.realm.players) == 0
+      if not test and (horizon or population):
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
@@ -151,8 +162,12 @@ class RLlibEvaluator(evaluator.Base):
           pos: Camera position (r, c) from the server)
           cmd: Console command from the server
       '''
-      actions, self.state, _ = self.trainer.compute_actions(
-            self.obs, state=self.state, policy_id='policy_0')
+      if len(self.obs) == 0:
+         actions = {}
+      else:
+         actions, self.state, _ = self.trainer.compute_actions(
+             self.obs, state=self.state, policy_id='policy_0')
+
       super().tick(self.obs, actions, pos, cmd)
 
 class SanePPOTrainer(ppo.PPOTrainer):
@@ -160,6 +175,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
    def __init__(self, config):
       self.envConfig = config['env_config']['config']
       super().__init__(env=self.envConfig.ENV_NAME, config=config)
+      self.training_logs = {}
 
    def save(self):
       '''Save model to file. Note: RLlib does not let us chose save paths'''
@@ -168,31 +184,29 @@ class SanePPOTrainer(ppo.PPOTrainer):
       saveDir  = os.path.dirname(saveFile)
       
       #Clear current save dir
-      shutil.rmtree(config.PATH_CURRENT, ignore_errors=True)
-      os.mkdir(config.PATH_CURRENT)
+      shutil.rmtree(config.PATH_MODEL, ignore_errors=True)
+      os.mkdir(config.PATH_MODEL)
 
       #Copy checkpoints
       for f in os.listdir(saveDir):
          stripped = re.sub('-\d+', '', f)
          src      = os.path.join(saveDir, f)
-         dst      = os.path.join(config.PATH_CURRENT, stripped) 
+         dst      = os.path.join(config.PATH_MODEL, stripped) 
          shutil.copy(src, dst)
 
       print('Saved to: {}'.format(saveDir))
 
-   def restore(self, model):
+   def restore(self):
       '''Restore model from path'''
-      config    = self.envConfig
+      self.training_logs = np.load(
+            self.env.config.PATH_TRAINING_DATA,
+            allow_pickle=True).item()
 
-      if model is None:
-         print('Initializing new model...')
-         trainPath = config.PATH_TRAINING_DATA.format('current')
-         np.save(trainPath, {})
-         return
+      path = os.path.join(
+            self.envConfig.PATH_MODEL,
+            'checkpoint')
 
-      modelPath = config.PATH_MODEL.format(config.MODEL)
-      print('Loading from: {}'.format(modelPath))
-      path     = os.path.join(modelPath, 'checkpoint')
+      print('Loading model from: {}'.format(path))
       super().restore(path)
 
    def policyID(self, idx):
@@ -206,26 +220,26 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
    def train(self):
       '''Train forever, printing per epoch'''
-      config = self.envConfig
+      training_logs = self.training_logs
+      config        = self.envConfig
 
-      logo   = open(config.PATH_LOGO).read().splitlines()
+      logo          = open(config.PATH_LOGO).read().splitlines()
 
       model         = config.MODEL if config.MODEL is not None else 'current'
-      trainPath     = config.PATH_TRAINING_DATA.format(model)
-      training_logs = np.load(trainPath, allow_pickle=True).item()
+      trainPath     = config.PATH_TRAINING_DATA
 
       total_sample_time = 0
       total_learn_time  = 0
       total_steps       = 0
+      total_time        = 0
+      start_time        = time.time()
 
-      epoch   = 0
       blocks  = []
 
-      while True:
+      for epoch in range(config.TRAIN_EPOCHS):
           #Train model
           stats = super().train()
           self.save()
-          epoch += 1
 
           #Compute stats
           info               = stats['info']
@@ -242,6 +256,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
          
           total_sample_time += sample_time
           total_learn_time  += learn_time
+          total_time         = time.time() - start_time
 
           #Summary
           summary = formatting.box([formatting.line(
@@ -273,7 +288,10 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
              training_logs[track][stat] += vals
 
-          np.save(trainPath, training_logs)
+          np.save(trainPath, {
+               'logs': training_logs,
+               'sample_time': total_sample_time,
+               'learn_time': total_learn_time})
 
           #Representation for CLI
           cli = {}

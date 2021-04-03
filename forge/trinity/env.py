@@ -34,6 +34,8 @@ class Env:
 
       self.config    = config
       self.overlay   = None
+
+      self.dead      = []
       self.spawned   = 0
 
       #self.steps = 0
@@ -192,27 +194,27 @@ class Env:
                      actions[entID][atn][arg] = ent
 
       #Step: Realm, Observations, Logs
-      dead = self.realm.step(actions)
+      self.dead = self.realm.step(actions)
       obs, rewards, dones, self.raw = {}, {}, {}, {}
       for entID, ent in self.realm.players.items():
          ob             = self.realm.dataframe.get(ent)
          obs[entID]     = ob
          self.dummy_ob  = ob
 
-         rewards[entID] = self.reward(entID)
+         rewards[entID] = self.reward(ent)
          dones[entID]   = False
 
       #self.steps += len(self.realm.players.items())
       #print('World {} Tick {} Steps {}'.format(self.worldIdx, self.realm.tick, self.steps))
 
-      for entID, ent in dead.items():
+      for entID, ent in self.dead.items():
          self.log(ent)
 
       #Postprocess dead agents
       if omitDead:
          return obs, rewards, dones, {}
 
-      for entID, ent in dead.items():
+      for entID, ent in self.dead.items():
          rewards[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob

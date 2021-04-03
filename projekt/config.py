@@ -120,7 +120,8 @@ class SmallMaps(Base):
    NPC_SPAWN_AGGRESSIVE    = 0.80
 
 class BattleRoyale(SmallMaps):
-   NPOP                    = 8
+   NPOP                    = 16
+   NPOLICIES               = 1
    #N_TRAIN_MAPS            = 1
    #N_EVAL_MAPS             = 0
     

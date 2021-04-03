@@ -124,7 +124,7 @@ class PlayerManager(EntityGroup):
 
    def spawnIndividual(self, r, c):
       pop, name = self.identify()
-      color     = self.palette.colors[pop]
+      color     = self.palette.color(pop)
       player    = Player(self.realm, (r, c), self.idx, pop, name, color)
       super().spawn(player)
       self.idx += 1

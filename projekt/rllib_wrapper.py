@@ -40,12 +40,20 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       self.config = config['config']
       super().__init__(self.config)
 
-   def reward(self, entID):
-      if entID not in self.realm.players:
-         return -1
+   def reward(self, ent):
+      reward, pop = 0, ent.pop
+      for p in self.dead.values():
+         if p.population == pop:
+            reward -= 1
 
-      player = self.realm.players[entID]
-      return player.achievements.update(self.realm, player) / 15
+      return reward
+
+      #if entID not in self.realm.players:
+      #   return -1
+      #return 0
+
+      #player = self.realm.players[entID]
+      #return player.achievements.update(self.realm, player) / 15
 
    def step(self, decisions, omitDead=False, preprocessActions=True):
       obs, rewards, dones, infos = super().step(

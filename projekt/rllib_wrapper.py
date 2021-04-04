@@ -41,16 +41,17 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       super().__init__(self.config)
 
    def reward(self, ent):
-      reward, pop = 0, ent.pop
-      for p in self.dead.values():
-         if p.population == pop:
-            reward -= 1
+      if self.config.COOP:
+         reward, pop = 0, ent.pop
+         for p in self.dead.values():
+            if p.population == pop:
+               reward -= 1
 
-      return reward
-
-      #if entID not in self.realm.players:
-      #   return -1
-      #return 0
+         return reward
+      else:
+         if ent.entID not in self.realm.players:
+           return -1
+         return 0
 
       #player = self.realm.players[entID]
       #return player.achievements.update(self.realm, player) / 15

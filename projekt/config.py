@@ -12,12 +12,12 @@ class Base(core.Config):
    and non-RLlib-specific learning parameters'''
    
    #Hardware Scale
-   NUM_WORKERS             = 6
+   NUM_WORKERS             = 32
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
    LOCAL_MODE              = False
 
-   TRAIN_EPOCHS            = 500
+   TRAIN_EPOCHS            = 1000
    LOAD                    = True
 
    #Memory/Batch Scale
@@ -61,6 +61,8 @@ class Base(core.Config):
    FORAGING_EASY           = 20
    FORAGING_NORMAL         = 35
    FORAGING_HARD           = 50
+
+   COOP = False
 
 
 class LargeMaps(Base):

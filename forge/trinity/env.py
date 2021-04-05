@@ -263,14 +263,10 @@ class Env:
             quill.HISTOGRAM, quill.SCATTER)
       blob.log(ent.history.exploration)
 
+      quill.stat('Lifetime',  ent.history.timeAlive.val)
       quill.stat('Achievement', ent.achievements.score)
       for name, stat in ent.achievements.stats:
          quill.stat(name, stat)
-
-      quill.stat('Population', self.realm.population)
-      quill.stat('Lifetime',  ent.history.timeAlive.val)
-      quill.stat('Skilling',  (ent.skills.fishing.level + ent.skills.hunting.level)/2.0)
-      quill.stat('Combat',    combat.level(ent.skills))
 
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs

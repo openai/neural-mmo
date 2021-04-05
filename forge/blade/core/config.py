@@ -131,7 +131,7 @@ class Config(Template):
    @property
    def PATH_EVALUATION(self):
       '''Evaluation path'''
-      return os.path.join(self.PATH_ALL_EVALUATIONS, self.NAME, self.MODEL, '.npy')
+      return os.path.join(self.PATH_ALL_EVALUATIONS, self.NAME, self.MODEL + '.npy')
 
    #Themes
    PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 

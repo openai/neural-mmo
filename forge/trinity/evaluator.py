@@ -47,8 +47,7 @@ class Base:
          log.update(self.env.terminal())
 
       #Save data
-      path = config.PATH_EVALUATION.format(config.NAME, config.MODEL)
-      np.save(path, log.packet)
+      np.save(config.PATH_EVALUATION, log.packet)
 
    def tick(self, obs, actions, pos, cmd, preprocessActions=True):
       '''Simulate a single timestep

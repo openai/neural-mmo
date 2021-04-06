@@ -16,13 +16,17 @@ class Diary:
    def stats(self):
       return [a.stats for a in self.achievements]
 
-   @property
-   def score(self):
-      return sum([a.score for a in self.achievements])
+   def score(self, aggregate=True):
+      score = [a.score for a in self.achievements]
+      if aggregate:
+         return sum(score)
+      return score
 
-   def update(self, realm, entity):
-      return sum([a.update(realm, entity)
-            for a in self.achievements])
+   def update(self, realm, entity, aggregate=True, dry=False):
+      scores = [a.update(realm, entity, dry) for a in self.achievements]
+      if aggregate:
+         return sum(scores)
+      return scores
 
 
 class Achievement:
@@ -47,13 +51,16 @@ class Achievement:
          return Tier.EASY
       return 0
 
-   def update(self, value):
+   def update(self, value, dry):
       if value <= self.progress:
          return 0
 
-      old           = self.score
-      self.progress = value
-      new           = self.score
+      old = self.score
+
+      if not dry:
+         self.progress = value
+
+      new = self.score
 
       if old == new:
          return 0
@@ -66,8 +73,8 @@ class PlayerKills(Achievement):
                        normal = config.PLAYER_KILLS_NORMAL,
                        hard   = config.PLAYER_KILLS_HARD)
 
-   def update(self, realm, entity):
-      return super().update(entity.history.playerKills)
+   def update(self, realm, entity, dry):
+      return super().update(entity.history.playerKills, dry)
 
 class Equipment(Achievement):
    def __init__(self, config):
@@ -75,8 +82,8 @@ class Equipment(Achievement):
                        normal = config.EQUIPMENT_NORMAL,
                        hard   = config.EQUIPMENT_HARD)
 
-   def update(self, realm, entity):
-      return super().update(entity.loadout.defense)
+   def update(self, realm, entity, dry):
+      return super().update(entity.loadout.defense, dry)
 
 class Exploration(Achievement):
    def __init__(self, config):
@@ -84,8 +91,8 @@ class Exploration(Achievement):
                        normal = config.EXPLORATION_NORMAL,
                        hard   = config.EXPLORATION_HARD)
 
-   def update(self, realm, entity):
-      return super().update(entity.history.exploration)
+   def update(self, realm, entity, dry):
+      return super().update(entity.history.exploration, dry)
 
 class Foraging(Achievement):
    def __init__(self, config):
@@ -93,7 +100,7 @@ class Foraging(Achievement):
                        normal = config.FORAGING_NORMAL,
                        hard   = config.FORAGING_HARD)
 
-   def update(self, realm, entity):
+   def update(self, realm, entity, dry):
       lvl = (entity.skills.fishing.level + entity.skills.hunting.level)/2.0
-      return super().update(lvl)
+      return super().update(lvl, dry)
 

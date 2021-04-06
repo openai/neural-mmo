@@ -55,20 +55,12 @@ class Skill:
       return int(lvl)
 
 ### Skill Subsets ###
-class Gathering(SkillGroup):
+class Harvesting(SkillGroup):
    def __init__(self, realm):
       super().__init__(realm)
 
       self.fishing      = Fishing(self)
       self.hunting      = Hunting(self)
-      self.mining       = Mining(self)
-
-class Processing(SkillGroup):
-   def __init__(self, realm):
-      super().__init__(realm)
-
-      self.cooking      = Cooking(self)
-      self.smithing     = Smithing(self)
 
 class Combat(SkillGroup):
    def __init__(self, realm):
@@ -87,20 +79,32 @@ class Combat(SkillGroup):
       return data
 
    def applyDamage(self, dmg, style):
-      config = self.config
-      scale = config.XP_SCALE
-      self.constitution.exp += scale * dmg * config.CONSTITUTION_XP_SCALE
+      if not self.config.game_system_enabled('Progression'):
+         return
 
-      skill = self.__dict__[style]
-      skill.exp += scale * dmg * config.COMBAT_XP_SCALE
+      config    = self.config
+      baseScale = config.PROGRESSION_BASE_XP_SCALE
+      combScale = config.PROGRESSION_COMBAT_XP_SCALE
+      conScale  = config.PROGRESSION_CONSTITUTION_XP_SCALE
+
+      self.constitution.exp += dmg * baseScale * conScale
+
+      skill      = self.__dict__[style]
+      skill.exp += dmg * baseScale * combScale
 
    def receiveDamage(self, dmg):
-      scale = self.config.XP_SCALE
-      self.constitution.exp += scale * dmg * 2
-      self.defense.exp      += scale * dmg * 4
+      if not self.config.game_system_enabled('Progression'):
+         return
 
+      config    = self.config
+      baseScale = config.PROGRESSION_BASE_XP_SCALE
+      combScale = config.PROGRESSION_COMBAT_XP_SCALE
+      conScale  = config.PROGRESSION_CONSTITUTION_XP_SCALE
 
-class Skills(Gathering, Processing, Combat):
+      self.constitution.exp += dmg * baseScale * conScale
+      self.defense.exp      += dmg * baseScale * combScale
+
+class Skills(Harvesting, Combat):
    pass
 
 ### Individual Skills ###
@@ -109,22 +113,26 @@ class CombatSkill(Skill): pass
 class Constitution(CombatSkill):
    def __init__(self, skillGroup):
       super().__init__(skillGroup)
-      self.setExpByLevel(self.config.HEALTH)
+      self.setExpByLevel(self.config.RESOURCE_BASE_HEALTH)
 
    def update(self, realm, entity):
       health = entity.resources.health
       food   = entity.resources.food
       water  = entity.resources.water
-
       config = self.config
 
       # Heal if above fractional resource threshold
-      foodThresh  = food > config.HEALTH_REGEN_THRESHOLD * entity.skills.hunting.level
-      waterThresh = water > config.HEALTH_REGEN_THRESHOLD * entity.skills.fishing.level
+      regen       = config.RESOURCE_HEALTH_REGEN_THRESHOLD
+      foodThresh  = food > regen * entity.skills.hunting.level
+      waterThresh = water > regen * entity.skills.fishing.level
 
       if foodThresh and waterThresh:
-         restore = np.floor(self.level * self.config.HEALTH_RESTORE)
+         restore = config.RESOURCE_HEALTH_RESTORE_FRACTION
+         restore = np.floor(restore * self.level)
          health.increment(restore)
+
+      if not config.game_system_enabled('Resource'):
+         return
 
       if food.empty:
          health.decrement(1)
@@ -137,86 +145,47 @@ class Range(CombatSkill): pass
 class Mage(CombatSkill): pass
 class Defense(CombatSkill): pass
 
-class NonCombatSkill(Skill):
-   def success(self, levelReq):
-      level = self.level
-      if level < levelReq:
-         return False
-      chance = 0.5 + 0.05*(level-levelReq)
-      if chance >= 1.0:
-         return True
-      return np.random.rand() < chance
-
-   def attempt(self, inv, item):
-      if (item.createSkill != self.__class__ or
-            self.level < item.createLevel):
-         return
-
-      if item.recipe is not None:
-         #Check that everything is available
-         if not inv.satisfies(item.recipe): return
-         inv.removeRecipe(item.recipe)
-
-      if item.alwaysSucceeds or self.success(item.createLevel):
-         inv.add(item, item.amtMade)
-         self.exp += item.exp
-         return True
-
-
-class HarvestingSkill(NonCombatSkill):
-   #Attempt each item from highest to lowest tier until success
-   def harvest(self, inv):
-      for e in self.skillItems:
-         if self.attempt(inv, e):
-            return
-
-
-class Fishing(HarvestingSkill):
+class Fishing(Skill):
    def __init__(self, skillGroup):
       super().__init__(skillGroup)
-      self.setExpByLevel(self.config.RESOURCE)
+      self.setExpByLevel(self.config.RESOURCE_BASE_FORAGING)
 
    def update(self, realm, entity):
       water = entity.resources.water
-      water.decrement(1)
+
+      if self.config.game_system_enabled('Resource'):
+         water.decrement(1)
 
       if material.Water not in ai.utils.adjacentMats(
             realm.map.tiles, entity.pos):
          return
 
-      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
+      restore = self.config.RESOURCE_HARVEST_RESTORE_FRACTION
+      restore = np.floor(restore * self.level)
       water.increment(restore)
 
-      scale     = self.config.XP_SCALE
-      self.exp += scale * restore
+      if self.config.game_system_enabled('Progression'):
+         self.exp += self.config.PROGRESSION_BASE_XP_SCALE * restore
 
-
-class Hunting(HarvestingSkill):
+class Hunting(Skill):
    def __init__(self, skillGroup):
       super().__init__(skillGroup)
-      self.setExpByLevel(self.config.RESOURCE)
+      self.setExpByLevel(self.config.RESOURCE_BASE_FORAGING)
 
    def update(self, realm, entity):
       food = entity.resources.food
-      food.decrement(1)
+
+      if self.config.game_system_enabled('Resource'):
+         food.decrement(1)
 
       r, c = entity.pos
       if (type(realm.map.tiles[r, c].mat) not in [material.Forest] or
             not realm.map.harvest(r, c)):
          return
 
-      restore = np.floor(self.level * self.config.RESOURCE_RESTORE)
+      restore = self.config.RESOURCE_HARVEST_RESTORE_FRACTION
+      restore = np.floor(restore * self.level)
       food.increment(restore)
 
-      scale     = self.config.XP_SCALE
-      self.exp += scale * restore
-
-
-class Mining(HarvestingSkill): pass
-
-class ProcessingSkill(NonCombatSkill):
-   def process(self, inv, item):
-      self.attempt(inv, item)
-
-class Cooking(ProcessingSkill): pass
-class Smithing(ProcessingSkill): pass
+      if self.config.game_system_enabled('Progression'):
+         self.exp += self.config.PROGRESSION_BASE_XP_SCALE * restore

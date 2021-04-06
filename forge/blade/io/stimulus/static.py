@@ -40,17 +40,12 @@ class Stimulus(Config):
 
       class R(node.Discrete):
          def init(self, config):
-            #self.min = -config.STIM
-            #self.max = config.STIM
             self.min = 0
             self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
 
-      #You made this continuous
       class C(node.Discrete):
          def init(self, config):
-            #self.min = -config.STIM
-            #self.max = config.STIM
             self.min = 0
             self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
@@ -71,20 +66,20 @@ class Stimulus(Config):
       #after init without messing up the embeddings
       class Food(node.Continuous):
          def init(self, config):
-            self.val = config.RESOURCE
-            self.max = config.RESOURCE
+            self.val = config.RESOURCE_BASE_FORAGING
+            self.max = config.RESOURCE_BASE_FORAGING
             self.scale = 0.1
 
       class Water(node.Continuous):
          def init(self, config):
-            self.val = config.RESOURCE
-            self.max = config.RESOURCE
+            self.val = config.RESOURCE_BASE_FORAGING
+            self.max = config.RESOURCE_BASE_FORAGING
             self.scale = 0.1
 
       class Health(node.Continuous):
          def init(self, config):
-            self.val = config.HEALTH 
-            self.max = config.HEALTH
+            self.val = config.RESOURCE_BASE_HEALTH
+            self.max = config.RESOURCE_BASE_HEALTH
             self.scale = 0.1
 
       #Status effects

@@ -41,20 +41,36 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       super().__init__(self.config)
 
    def reward(self, ent):
-      if self.config.COOP:
-         reward, pop = 0, ent.pop
-         for p in self.dead.values():
-            if p.population == pop:
-               reward -= 1
+      config      = self.config
 
-         return reward
-      else:
-         if ent.entID not in self.realm.players:
-           return -1
-         return 0
+      ACHIEVEMENT = config.REWARD_ACHIEVEMENT
+      SCALE       = config.ACHIEVEMENT_SCALE
+      COOP        = config.COOP
 
-      #player = self.realm.players[entID]
-      #return player.achievements.update(self.realm, player) / 15
+      individual  = 0 if ent.entID in self.realm.players else -1
+      team        = 0
+
+      if ACHIEVEMENT:
+         individual += SCALE*ent.achievements.update(self.realm, ent, dry=True)
+      if COOP:
+         nDead = len([p for p in self.dead.values() if p.population == ent.pop])
+         team  = -nDead / config.TEAM_SIZE
+      if COOP and ACHIEVEMENT:
+         pre, post = [], []
+         for p in self.realm.players.corporeal.values():
+            if p.population == ent.pop:
+               pre.append(p.achievements.score(aggregate=False))
+               post.append(p.achievements.update(
+                     self.realm, ent, aggregate=False, dry=True))
+        
+         pre   = np.array(pre).max(0)
+         post  = np.array(post).max(0)
+         team += SCALE*(post - pre).sum()
+
+      ent.achievements.update(self.realm, ent)
+
+      alpha  = config.TEAM_SPIRIT
+      return alpha*team + (1.0-alpha)*individual
 
    def step(self, decisions, omitDead=False, preprocessActions=True):
       obs, rewards, dones, infos = super().step(

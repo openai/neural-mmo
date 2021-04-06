@@ -36,9 +36,8 @@ class Forest(Material):
    degen       = Scrub
 
    def __init__(self, config):
-      self.capacity = config.FOREST_CAPACITY
-      self.respawn  = config.FOREST_RESPAWN
-      #self.dropTable = DropTable.DropTable()
+      self.capacity = config.RESOURCE_FOREST_CAPACITY
+      self.respawn  = config.RESOURCE_FOREST_RESPAWN
 
 class Stone(Material):
    tex   = 'stone'
@@ -52,8 +51,8 @@ class Orerock(Material):
    degen       = Stone
 
    def __init__(self, config):
-      self.capacity = config.OREROCK_CAPACITY
-      self.respawn  = config.OREROCK_RESPAWN
+      self.capacity = config.RESOURCE_OREROCK_CAPACITY
+      self.respawn  = config.RESOURCE_OREROCK_RESPAWN
       #self.dropTable = systems.DropTable()
       #self.dropTable.add(ore.Copper, 1)
 

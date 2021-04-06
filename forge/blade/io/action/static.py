@@ -16,9 +16,7 @@ class Action(Node):
 
    @staticproperty
    def edges():
-      #return [Move, Attack, Exchange, Skill]
       return [Move, Attack]
-      #return [Move]
 
    @staticproperty
    def n():
@@ -136,6 +134,9 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(env, entity, style, targ):
+      if entity.isPlayer and not env.config.game_system_enabled('Combat'):
+         return 
+
       #Check if self targeted
       if entity.entID == targ.entID:
          return
@@ -158,7 +159,7 @@ class Attack(Node):
 
       dmg = combat.attack(entity, targ, style.skill)
       if style.freeze and dmg > 0:
-         targ.status.freeze.update(env.config.FREEZE_TIME)
+         targ.status.freeze.update(env.config.COMBAT_FREEZE_TIME)
 
       return dmg
 
@@ -191,7 +192,7 @@ class Melee(Node):
    freeze=False
 
    def attackRange(config):
-      return config.MELEE_RANGE
+      return config.COMBAT_MELEE_REACH
 
    def skill(entity):
       return entity.skills.melee
@@ -202,7 +203,7 @@ class Range(Node):
    freeze=False
 
    def attackRange(config):
-      return config.RANGE_RANGE
+      return config.COMBAT_RANGE_REACH
 
    def skill(entity):
       return entity.skills.range
@@ -213,74 +214,20 @@ class Mage(Node):
    freeze=True
 
    def attackRange(config):
-      return config.MAGE_RANGE
+      return config.COMBAT_MAGE_REACH
 
    def skill(entity):
       return entity.skills.mage
 
-class Reproduce:
-   pass
-
-class Skill(Node):
-   nodeType = NodeType.SELECTION
-   @staticproperty
-   def edges():
-      return [Harvest, Process]
-
-   def args(stim, entity, config):
-      return Skill.edges
-
-class Harvest(Node):
-   nodeType = NodeType.SELECTION
-   @staticproperty
-   def edges():
-      return [Fish, Mine]
-
-   def args(stim, entity, config):
-      return Harvest.edges
-
-class Fish(Node):
-   nodeType = NodeType.ACTION
-
-class Mine(Node):
-   nodeType = NodeType.ACTION
-
-class Process(Node):
-   nodeType = NodeType.SELECTION
-   @staticproperty
-   def edges():
-      return [Cook, Smith]
-
-   def args(stim, entity, config):
-      return Process.edges
-
-class Cook(Node):
-   nodeType = NodeType.ACTION
-
-class Smith(Node):
-   nodeType = NodeType.ACTION
-
-class Exchange(Node):
-   nodeType = NodeType.SELECTION
-   @staticproperty
-   def edges():
-      return [Buy, Sell, CancelOffer]
-
-   def args(stim, entity, config):
-      return Exchange.edges
-
-class Buy(Node):
-   nodeType = NodeType.ACTION
-
-class Sell(Node):
-   nodeType = NodeType.ACTION
-
-class CancelOffer(Node):
-   nodeType = NodeType.ACTION
-
+#TODO: Add communication
 class Message:
    pass
 
+#TODO: Add trade
+class Exchange:
+   pass
+
+#TODO: Solve AGI
 class BecomeSkynet:
    pass
 

@@ -43,9 +43,12 @@ class EntityGroup(Mapping):
       return self.entities.items()
 
    @property
+   def corporeal(self):
+      return {**self.entities, **self.dead}
+
+   @property
    def packet(self):
-      corporeal = {**self.entities, **self.dead}
-      return {k: v.packet() for k, v in corporeal.items()}
+      return {k: v.packet() for k, v in self.corporeal.items()}
 
    def reset(self):
       for entID, ent in self.entities.items():
@@ -93,6 +96,9 @@ class NPCManager(EntityGroup):
       self.idx   = -1
  
    def spawn(self):
+      if not self.config.game_system_enabled('NPC'):
+         return
+
       for _ in range(self.config.NPC_SPAWN_ATTEMPTS):
          if len(self.entities) >= self.config.NMOB:
             break
@@ -130,12 +136,12 @@ class PlayerManager(EntityGroup):
       self.idx += 1
 
    def spawn(self):
-      if hasattr(self.config, 'SPAWN_BR'):
+      if self.config.SPAWN == self.config.SPAWN_CONCURRENT:
          if self.spawned:
             return 
 
          self.spawned = True
-         for r, c in self.config.SPAWN_BR(self.config):
+         for r, c in self.config.SPAWN():
             assert not self.realm.map.tiles[r, c].occupied
             self.spawnIndividual(r, c)
          return

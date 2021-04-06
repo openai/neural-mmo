@@ -3,6 +3,7 @@ import numpy as np
 import os
 
 from forge.blade import core
+from forge.blade.core import config
 from forge.blade.systems.ai import behavior
 
 class Base(core.Config):
@@ -12,7 +13,7 @@ class Base(core.Config):
    and non-RLlib-specific learning parameters'''
    
    #Hardware Scale
-   NUM_WORKERS             = 32
+   NUM_WORKERS             = 4
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
    LOCAL_MODE              = False
@@ -62,7 +63,11 @@ class Base(core.Config):
    FORAGING_NORMAL         = 35
    FORAGING_HARD           = 50
 
-   COOP = False
+   REWARD_ACHIEVEMENT      = False
+   ACHIEVEMENT_SCALE       = 1.0/15.0
+
+   COOP                    = False
+   TEAM_SPIRIT             = 0.0
 
 
 class LargeMaps(Base):
@@ -121,29 +126,7 @@ class SmallMaps(Base):
    NPC_SPAWN_NEUTRAL       = 0.60
    NPC_SPAWN_AGGRESSIVE    = 0.80
 
-class BattleRoyale(SmallMaps):
-   NPOP                    = 16
-   NPOLICIES               = 1
-   #N_TRAIN_MAPS            = 1
-   #N_EVAL_MAPS             = 0
-    
-
-   def SPAWN_BR(self):
-      left   = self.TERRAIN_BORDER
-      right  = self.TERRAIN_CENTER + self.TERRAIN_BORDER
-      rrange = np.arange(left+2, right, 4).tolist() 
-
-      lows   = (left+np.zeros(32, dtype=np.int)).tolist()
-      highs  = (right+np.zeros(32, dtype=np.int)).tolist()
-
-      s1     = list(zip(rrange, lows))
-      s2     = list(zip(lows, rrange))
-      s3     = list(zip(rrange, highs))
-      s4     = list(zip(highs, rrange))
-
-      return s1 + s2 + s3 + s4
-
-class Debug(SmallMaps):
+class Debug(SmallMaps, config.AllGameSystems):
    '''Debug Neural MMO training setting
 
    A version of the SmallMap setting with greatly reduced batch parameters.
@@ -159,5 +142,74 @@ class Debug(SmallMaps):
 
    HIDDEN                  = 2
    EMBED                   = 2
+
+#NeurlPS Experiments
+class MagnifyExploration(SmallMaps, config.Resource):
+   pass
+class Population1(MagnifyExploration):
+   MODEL = __qualname__
+   NENT  = 1
+class Population8(MagnifyExploration):
+   MODEL = __qualname__
+   NENT  = 8
+class Population32(MagnifyExploration):
+   MODEL = __qualname__
+   NENT  = 32
+class Population128(MagnifyExploration):
+   MODEL = __qualname__
+   NENT  = 128
+
+
+class EmergentComplexity(MagnifyExploration, config.Combat):
+   COOP                    = True
+
+   @property
+   def SPAWN(self):
+      return self.SPAWN_CONCURRENT
+class Team1(EmergentComplexity):
+   MODEL = __qualname__
+   NPOP  = 128
+class Team4(EmergentComplexity):
+   MODEL = __qualname__
+   NPOP  = 32
+class Team16(EmergentComplexity):
+   MODEL = __qualname__
+   NPOP  = 8
+class Team64(EmergentComplexity):
+   MODEL = __qualname__
+   NPOP  = 2
+
+
+class IntentionalSpecialization(EmergentComplexity, config.Progression):
+   MODEL                   = __qualname__
+   REWARD_ACHIEVEMENT      = True
+   NPOP                    = 32
+
+class MultimodalSkills(SmallMaps, config.AllGameSystems):
+   MODEL = __qualname__
+
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
+   MODEL = __qualname__
+
+
+#Same as Multimodal Skills above
+class CompetitionRound1(SmallMaps, config.AllGameSystems):
+   pass
+
+class CompetitionRound2(SmallMaps, config.AllGameSystems):
+   NPOP                    = 16
+   COOP                    = True
+
+   def SPAWN(self):
+      return self.SPAWN_CONCURRENT
+
+class CompetitionRound3(LargeMaps, config.AllGameSystems):
+   NPOP                    = 32
+   COOP                    = True
+
+   def SPAWN(self):
+      return self.SPAWN_CONCURRENT
+
+
 
 

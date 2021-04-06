@@ -58,14 +58,204 @@ class Config(Template):
    '''
    ############################################################################
    ### Meta-Parameters
-   ENV_NAME             = 'Neural_MMO'
+   ENV_NAME                = 'Neural_MMO'
    '''Environment Name'''
 
-   ENV_VERSION          = '1.5.1'
+   ENV_VERSION             = '1.5.1'
    '''Environment version'''
 
-   v                    = False
+   NAME_PREFIX             = 'Neural_'
+   '''Prefix used in agent names displayed by the client'''
+
+   v                       = False
    '''Verbose mode'''
+
+   def game_system_enabled(self, name) -> bool:
+      return hasattr(self, name)
+
+   ############################################################################
+   ### Population Parameters                                                   
+   #TODO: Find a way to auto-compute this
+   NTILE                   = 6
+   '''Number of distinct terrain tile types'''
+
+   NSTIM                   = 7
+   '''Number of tiles an agent can see in any direction'''
+
+   NMOB                    = 1024
+   '''Maximum number of NPCs spawnable in the environment'''
+
+   NENT                    = 256
+   '''Maximum number of agents spawnable in the environment'''
+
+   NPOP                    = 1
+   '''Number of distinct populations spawnable in the environment'''
+
+   @property
+   def TEAM_SIZE(self):
+      assert not self.NMOB % self.NPOP
+      return self.NMOB // self.NPOP
+
+   @property
+   def WINDOW(self):
+      '''Size of the square tile crop visible to an agent'''
+      return 2*self.NSTIM + 1
+
+
+   ############################################################################
+   ### Spawn Parameters                                                   
+   PLAYER_SPAWN_ATTEMPTS   = 3
+   '''Number of player spawn attempts per tick
+
+   Note that the env will attempt to spawn agents until success
+   if the current population size is zero.'''
+
+   def SPAWN_CONTINUOUS(self):
+      '''Generates spawn positions for new agents
+
+      Default behavior randomly selects a tile position
+      along the borders of the square game map
+
+      Returns:
+         tuple(int, int):
+
+         position:
+            The position (row, col) to spawn the given agent
+      '''
+      #Spawn at edges
+      mmax = self.TERRAIN_CENTER + self.TERRAIN_BORDER
+      mmin = self.TERRAIN_BORDER
+
+      var  = np.random.randint(mmin, mmax)
+      fixed = np.random.choice([mmin, mmax])
+      r, c = int(var), int(fixed)
+      if np.random.rand() > 0.5:
+          r, c = c, r 
+      return (r, c)
+
+   def SPAWN_CONCURRENT(self):
+      left   = self.TERRAIN_BORDER
+      right  = self.TERRAIN_CENTER + self.TERRAIN_BORDER
+      rrange = np.arange(left+2, right, 4).tolist()
+
+      assert not self.TERRAIN_CENTER % 4
+      per_side = self.TERRAIN_CENTER // 4
+      
+      lows   = (left+np.zeros(per_side, dtype=np.int)).tolist()
+      highs  = (right+np.zeros(per_side, dtype=np.int)).tolist()
+
+      s1     = list(zip(rrange, lows))
+      s2     = list(zip(lows, rrange))
+      s3     = list(zip(rrange, highs))
+      s4     = list(zip(highs, rrange))
+
+      return s1 + s2 + s3 + s4
+
+   @property
+   def SPAWN(self):
+      return self.SPAWN_CONTINUOUS
+
+   ############################################################################
+   ### Evaluation Parameters
+   EVALUATE             = False
+   '''Flag used by evaluation mode'''
+
+   RENDER               = False
+   '''Flag used by render mode'''
+
+   GENERALIZE           = True
+   '''Evaluate on maps not seen during training'''
+
+   EVAL_MAPS            = 5
+   '''Number of evaluation maps'''
+
+   TRAIN_SUMMARY_ENVS   = 10
+   '''Most recent envs to use for training summaries'''
+
+   TRAIN_DATA_RESAMPLE  = 200
+   '''Number of points to resample training data'''
+
+
+   ############################################################################
+   ### Terrain Generation Parameters
+   TERRAIN_TRAIN_MAPS            = 256
+   '''Number of training maps to generate'''
+
+   TERRAIN_EVAL_MAPS             = 64
+   '''Number of evaluation maps to generate'''
+
+   TERRAIN_RENDER             = False
+   '''Whether map generation should also save .png previews (slow + large file size)'''
+
+   TERRAIN_CENTER             = 1024
+   '''Size of each map (number of tiles along each side)'''
+
+   TERRAIN_BORDER             = 16
+   '''Number of lava border tiles surrounding each side of the map'''
+
+   @property
+   def TERRAIN_SIZE(self):
+      return int(self.TERRAIN_CENTER + 2*self.TERRAIN_BORDER)
+
+   TERRAIN_FREQUENCY          = -3
+   '''Base noise frequency range (log2 space)'''
+
+   TERRAIN_FREQUENCY_OFFSET   = 7
+   '''Noise frequency octave offset (log2 space)'''
+
+   TERRAIN_LOG_INTERPOLATE_MIN = -2 
+   '''Minimum interpolation log-strength for noise frequencies'''
+
+   TERRAIN_LOG_INTERPOLATE_MAX= 0
+   '''Maximum interpolation log-strength for noise frequencies'''
+
+   TERRAIN_TILES_PER_OCTAVE   = 8
+   '''Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range'''
+
+   TERRAIN_LAVA               = 0.0
+   '''Noise threshold for lava generation'''
+
+   TERRAIN_WATER              = 0.30
+   '''Noise threshold for water generation'''
+
+   TERRAIN_GRASS              = 0.70
+   '''Noise threshold for grass'''
+
+   TERRAIN_FOREST             = 0.85
+   '''Noise threshold for forest'''
+
+
+   ############################################################################
+   ### Visualization Parameters
+   VIS_THEME            = 'web'
+   '''Visualizer theme: web or publication'''
+
+   VIS_WIDTH            = 1920
+   '''Visualizer figure width (pixels)'''
+
+   VIS_HEIGHT           = 314
+   '''Visualizer per-plot height (pixels)'''
+
+   VIS_BORDER_WIDTH     = 20
+   '''Horizontal padding per figure side (pixels)'''
+
+   VIS_BORDER_HEIGHT    = 60
+   '''Vertical padding per figure side (pixels)'''
+
+   VIS_LEGEND_WIDTH     = 109
+   '''Width of legend label before offset'''
+   
+   VIS_LEGEND_OFFSET    = 71 
+   '''Width of legend label offset'''
+
+   VIS_TITLE_OFFSET     = 60
+   '''Width of left title offset'''
+
+   VIS_PORT             = 5006
+   '''Visualizer local Bokeh server port'''
+
+   VIS_TOOLS            = False
+   '''Visualizer display plot tools'''
 
 
    ############################################################################
@@ -143,252 +333,115 @@ class Config(Template):
    PATH_THEME_PUB       = os.path.join(PATH_THEMES, 'index_publication.html')
    '''Publication theme file'''
 
-   ############################################################################
-   ### Evaluation Parameters
-   EVALUATE             = False
-   '''Flag used by evaluation mode'''
+############################################################################
+### Game Systems (Static Mixins)
+class Resource:
+   '''Resource Game System'''
 
-   RENDER               = False
-   '''Flag used by rener mode'''
+   @property #Reserved flag
+   def Resource(self):
+      return True
 
-   EVAL_MAPS            = 5
-   '''Number of evaluation maps'''
-
-   GENERALIZE           = True
-   '''Evaluate on maps not seen during training'''
-
-   TRAIN_SUMMARY_ENVS   = 10
-   '''Most recent envs to use for training summaries'''
-
-   TRAIN_DATA_RESAMPLE  = 200
-   '''Number of points to resample training data'''
-
-
-   ############################################################################
-   ### Visualization Parameters
-   VIS_THEME            = 'web'
-   '''Visualizer theme: web or publication'''
-
-   VIS_WIDTH            = 1920
-   '''Visualizer figure width (pixels)'''
-
-   VIS_HEIGHT           = 314
-   '''Visualizer per-plot height (pixels)'''
-
-   VIS_BORDER_WIDTH     = 20
-   '''Horizontal padding per figure side (pixels)'''
-
-   VIS_BORDER_HEIGHT    = 60
-   '''Vertical padding per figure side (pixels)'''
-
-   VIS_LEGEND_WIDTH     = 109
-   '''Width of legend label before offset'''
-   
-   VIS_LEGEND_OFFSET    = 71 
-   '''Width of legend label offset'''
-
-   VIS_TITLE_OFFSET     = 60
-   '''Width of left title offset'''
-
-   VIS_PORT             = 5006
-   '''Visualizer local Bokeh server port'''
-
-   VIS_TOOLS            = False
-   '''Visualizer display plot tools'''
-
-   ############################################################################
-   ### Terrain Generation Parameters
-   TERRAIN_RENDER             = False
-   '''Whether map generation should also save .png previews (slow + large file size)'''
-
-   TERRAIN_CENTER             = 1024
-   '''Size of each map (number of tiles along each side)'''
-
-   TERRAIN_BORDER             = 16
-   '''Number of lava border tiles surrounding each side of the map'''
-
-   @property
-   def TERRAIN_SIZE(self):
-      return int(self.TERRAIN_CENTER + 2*self.TERRAIN_BORDER)
-
-   TERRAIN_FREQUENCY          = -3
-   '''Base noise frequency range (log2 space)'''
-
-   TERRAIN_FREQUENCY_OFFSET   = 7
-   '''Noise frequency octave offset (log2 space)'''
-
-   TERRAIN_LOG_INTERPOLATE_MIN = -2 
-   '''Minimum interpolation log-strength for noise frequencies'''
-
-   TERRAIN_LOG_INTERPOLATE_MAX= 0
-   '''Maximum interpolation log-strength for noise frequencies'''
-
-   TERRAIN_TILES_PER_OCTAVE   = 8
-   '''Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range'''
-
-   TERRAIN_LAVA               = 0.0
-   '''Noise threshold for lava generation'''
-
-   TERRAIN_WATER              = 0.30
-   '''Noise threshold for water generation'''
-
-   TERRAIN_GRASS              = 0.70
-   '''Noise threshold for grass'''
-
-   TERRAIN_FOREST             = 0.85
-   '''Noise threshold for forest'''
-
-   ############################################################################
-   ### Tile Parameters
-   FOREST_CAPACITY      = 1
-   '''Maximum number of harvests before a forest tile decays'''
-
-   FOREST_RESPAWN       = 0.025
-   '''Probability that a harvested forest tile will regenerate each tick'''
-
-   OREROCK_CAPACITY     = 1
-   '''Maximum number of harvests before an orerock tile decays'''
-
-   OREROCK_RESPAWN      = 0.05
-   '''Probability that a harvested orerock tile will regenerate each tick'''
- 
-   NTILE  = 6
-   '''Number of distinct terrain tile types'''
-
-
-   ############################################################################
-   ### Population Parameters                                                   
-   NENT                    = 256
-   '''Maximum number of agents spawnable in the environment'''
-
-   NMOB                    = 1024
-   '''Maximum number of NPCs spawnable in the environment'''
-
-   NPOP                    = 1
-   '''Number of distinct populations spawnable in the environment'''
-
-   N_TRAIN_MAPS            = 256
-   '''Number of training maps to generate'''
-
-   N_EVAL_MAPS             = 64
-   '''Number of evaluation maps to generate'''
-
-   ############################################################################
-   ### Agent Parameters
-   NAME_PREFIX             = 'Neural_'
-   '''Prefix used in agent names displayed by the client'''
-
-   STIM                    = 7
-   '''Number of tiles an agent can see in any direction'''
-
-
-   ############################################################################
-   ### Experience Parameters                                                   
-   XP_SCALE                = 10
-   '''Skill level progression speed as a multiplier of typical MMOs'''
-
-   CONSTITUTION_XP_SCALE   = 2
-   '''Multiplier on top of XP_SCALE for the Constitution skill'''
-
-   COMBAT_XP_SCALE         = 4
-   '''Multiplier on top of XP_SCALE for Combat skills'''
-
-
-   ############################################################################
-   ### Skill Parameters                                                   
-   RESOURCE                = 10
-   '''Initial level and capacity for Hunting + Fishing resource skills'''
-
-   HEALTH                  = 10
+   RESOURCE_BASE_HEALTH                = 10
    '''Initial Constitution level and agent health'''
 
-   HEALTH_REGEN_THRESHOLD  = 0.5
-   '''Fraction of maximum resource capacity required to regen health'''
+   RESOURCE_BASE_FORAGING              = 10
+   '''Initial level and capacity for Hunting + Fishing resource skills'''
 
-   RESOURCE_RESTORE        = 1.0 #Modified from .5... Small maps?
+   RESOURCE_FOREST_CAPACITY            = 1
+   '''Maximum number of harvests before a forest tile decays'''
+
+   RESOURCE_FOREST_RESPAWN             = 0.025
+   '''Probability that a harvested forest tile will regenerate each tick'''
+
+   RESOURCE_OREROCK_CAPACITY           = 1
+   '''Maximum number of harvests before an orerock tile decays'''
+
+   RESOURCE_OREROCK_RESPAWN            = 0.05
+   '''Probability that a harvested orerock tile will regenerate each tick'''
+
+   RESOURCE_HARVEST_RESTORE_FRACTION   = 1.0
    '''Fraction of maximum capacity restored upon collecting a resource'''
 
-   HEALTH_RESTORE          = 0.1
+   RESOURCE_HEALTH_REGEN_THRESHOLD     = 0.5
+   '''Fraction of maximum resource capacity required to regen health'''
+
+   RESOURCE_HEALTH_RESTORE_FRACTION    = 0.1
    '''Fraction of health restored per tick when above half food+water'''
 
-   DEFENSE_WEIGHT          = 0.3 
-   '''Fraction of defense that comes from the Defense skill'''   
+class Combat:
+   '''Combat Game System'''
 
-   DICE_SIDES              = 20
+   @property #Reserved flag
+   def Combat(self):
+      return True
+
+   COMBAT_DICE_SIDES                   = 20
    '''Number of sides for combat dice
 
    Attacks can only hit opponents up to the attacker's level plus
    DICE_SIDES/2. Increasing this value makes attacks more accurate
    and allows lower level attackers to hit stronger opponents'''
 
-   MELEE_RANGE             = 1
-   '''Range of attacks using the Melee skill'''
+   COMBAT_DEFENSE_WEIGHT               = 0.3 
+   '''Fraction of defense that comes from the Defense skill'''   
 
-   RANGE_RANGE             = 3
-   '''Range of attacks using the Range skill'''
+   COMBAT_MELEE_REACH                  = 1
+   '''Reach of attacks using the Melee skill'''
 
-   MAGE_RANGE              = 4
-   '''Range of attacks using the Mage skill'''
+   COMBAT_RANGE_REACH                  = 3
+   '''Reach of attacks using the Range skill'''
 
-   FREEZE_TIME             = 3
+   COMBAT_MAGE_REACH                   = 4
+   '''Reach of attacks using the Mage skill'''
+
+   COMBAT_FREEZE_TIME                  = 3
    '''Number of ticks successful Mage attacks freeze a target'''
 
-   ############################################################################
-   ### Spawn Parameters                                                   
-   PLAYER_SPAWN_ATTEMPTS   = 3
-   '''Number of player spawn attempts per tick
 
-   Note that the env will attempt to spawn agents until success
-   if the current population size is zero.'''
+class Progression:
+   '''Progression Game System'''
 
-   NPC_SPAWN_ATTEMPTS      = 25
+   @property #Reserved flag
+   def Progression(self):
+      return True
+
+   PROGRESSION_BASE_XP_SCALE           = 10
+   '''Skill level progression speed as a multiplier of typical MMOs'''
+
+   PROGRESSION_CONSTITUTION_XP_SCALE   = 2
+   '''Multiplier on top of XP_SCALE for the Constitution skill'''
+
+   PROGRESSION_COMBAT_XP_SCALE         = 4
+   '''Multiplier on top of XP_SCALE for Combat skills'''
+
+
+class NPC:
+   '''NPC & Equipment Game System'''
+
+   @property #Reserved flag
+   def NPC(self):
+      return True
+
+   NPC_SPAWN_ATTEMPTS                  = 25
    '''Number of NPC spawn attempts per tick'''
 
-   SPAWN_CENTER            = True
-   '''Whether to spawn agents from the map center or edges'''
-
-   NPC_SPAWN_AGGRESSIVE    = 0.75
+   NPC_SPAWN_AGGRESSIVE                = 0.75
    '''Percentage distance threshold from spawn for aggressive NPCs'''
 
-   NPC_SPAWN_NEUTRAL       = 0.40
+   NPC_SPAWN_NEUTRAL                   = 0.40
    '''Percentage distance threshold from spawn for neutral NPCs'''
 
-   NPC_SPAWN_PASSIVE       = 0.02
+   NPC_SPAWN_PASSIVE                   = 0.02
    '''Percentage distance threshold from spawn for passive NPCs'''
    
-   NPC_LEVEL_MIN           = 1
+   NPC_LEVEL_MIN                       = 1
    '''Minimum NPC level'''
 
-   NPC_LEVEL_MAX           = 99
+   NPC_LEVEL_MAX                       = 99
    '''Maximum NPC level'''
 
-   NPC_LEVEL_SPREAD        = 10 
+   NPC_LEVEL_SPREAD                    = 10 
    '''Level range for NPC spawns'''
 
-   @property
-   def WINDOW(self):
-      '''Size of the square tile crop visible to an agent'''
-      return 2*self.STIM + 1
-
-   def SPAWN(self):
-      '''Generates spawn positions for new agents
-
-      Default behavior randomly selects a tile position
-      along the borders of the square game map
-
-      Returns:
-         tuple(int, int):
-
-         position:
-            The position (row, col) to spawn the given agent
-      '''
-      #Spawn at edges
-      mmax = self.TERRAIN_CENTER + self.TERRAIN_BORDER
-      mmin = self.TERRAIN_BORDER
-
-      var  = np.random.randint(mmin, mmax)
-      fixed = np.random.choice([mmin, mmax])
-      r, c = int(var), int(fixed)
-      if np.random.rand() > 0.5:
-          r, c = c, r 
-      return (r, c)
+class AllGameSystems(Resource, Combat, Progression, NPC): pass

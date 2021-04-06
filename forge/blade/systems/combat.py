@@ -23,9 +23,10 @@ def attack(entity, targ, skillFn):
 
    targetDefense = targ.skills.defense.level + targ.loadout.defense
 
-   roll = np.random.randint(1, config.DICE_SIDES+1)
+   die  = config.COMBAT_DICE_SIDES
+   roll = np.random.randint(1, die+1)
    dc   = accuracy(config, entitySkill.level, targetSkill.level, targetDefense)
-   crit = roll == config.DICE_SIDES
+   crit = roll == die
 
    dmg = 1 #Chip dmg on a miss
    if roll >= dc or crit:
@@ -49,11 +50,11 @@ def damage(skill, level):
 #Max attack 198 - min def 1 = 197. Max 198 - max 198 = 0
 #REMOVE FACTOR OF 2 FROM ATTACK AFTER IMPLEMENTING WEAPONS
 def accuracy(config, entAtk, targAtk, targDef):
-   alpha   = config.DEFENSE_WEIGHT
+   alpha   = config.COMBAT_DEFENSE_WEIGHT
 
    attack  = entAtk
    defense = alpha*targDef + (1-alpha)*targAtk
-   dc      = defense - attack + config.DICE_SIDES//2
+   dc      = defense - attack + config.COMBAT_DICE_SIDES//2
 
    return dc
 

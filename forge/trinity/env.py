@@ -70,7 +70,7 @@ class Env:
       self.quill = log.Quill(self.realm.identify)
       
       if idx is None:
-         idx = np.random.randint(self.config.N_TRAIN_MAPS) + 1
+         idx = np.random.randint(self.config.TERRAIN_TRAIN_MAPS) + 1
 
       self.worldIdx = idx
       self.realm.reset(idx)
@@ -264,7 +264,7 @@ class Env:
       blob.log(ent.history.exploration)
 
       quill.stat('Lifetime',  ent.history.timeAlive.val)
-      quill.stat('Achievement', ent.achievements.score)
+      quill.stat('Achievement', ent.achievements.score())
       for name, stat in ent.achievements.stats:
          quill.stat(name, stat)
 

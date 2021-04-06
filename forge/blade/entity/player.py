@@ -5,7 +5,6 @@ from forge.blade.systems import ai, equipment
 from forge.blade.lib import material
 
 from forge.blade.systems.skill import Skills
-from forge.blade.systems.inventory import Inventory
 from forge.blade.systems.achievement import Diary
 from forge.blade.entity import entity
 from forge.blade.io.stimulus import Static
@@ -24,8 +23,6 @@ class Player(entity.Entity):
       #Submodules
       self.skills       = Skills(self)
       self.achievements = Diary(realm.config)
-      #self.inventory = Inventory(dataframe)
-      #self.chat      = Chat(dataframe)
 
       self.dataframe.init(Static.Entity, self.entID, self.pos)
 

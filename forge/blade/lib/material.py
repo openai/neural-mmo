@@ -36,8 +36,9 @@ class Forest(Material):
    degen       = Scrub
 
    def __init__(self, config):
-      self.capacity = config.RESOURCE_FOREST_CAPACITY
-      self.respawn  = config.RESOURCE_FOREST_RESPAWN
+      if config.game_system_enabled('Resource'):
+         self.capacity = config.RESOURCE_FOREST_CAPACITY
+         self.respawn  = config.RESOURCE_FOREST_RESPAWN
 
 class Stone(Material):
    tex   = 'stone'
@@ -51,10 +52,9 @@ class Orerock(Material):
    degen       = Stone
 
    def __init__(self, config):
-      self.capacity = config.RESOURCE_OREROCK_CAPACITY
-      self.respawn  = config.RESOURCE_OREROCK_RESPAWN
-      #self.dropTable = systems.DropTable()
-      #self.dropTable.add(ore.Copper, 1)
+      if config.game_system_enabled('Resource'):
+         self.capacity = config.RESOURCE_OREROCK_CAPACITY
+         self.respawn  = config.RESOURCE_OREROCK_RESPAWN
 
 class Meta(type):
    def __iter__(self):

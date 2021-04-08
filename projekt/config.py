@@ -172,7 +172,8 @@ class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
 class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
 
 
-class Test(SmallMaps, config.Progression): pass
+class Test(SmallMaps, config.AllGameSystems):
+   pass
 
 #Same as Multimodal Skills above
 class CompetitionRound1(SmallMaps, config.AllGameSystems):

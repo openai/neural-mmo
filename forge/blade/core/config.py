@@ -103,7 +103,14 @@ class Config(Template):
 
 
    ############################################################################
-   ### Spawn Parameters                                                   
+   ### Agent Parameters                                                   
+   BASE_HEALTH                = 10
+   '''Initial Constitution level and agent health'''
+
+   BASE_RESOURCE              = 20
+   '''Initial level and capacity for Hunting + Fishing resource skills'''
+
+
    PLAYER_SPAWN_ATTEMPTS   = 16
    '''Number of player spawn attempts per tick
 
@@ -342,10 +349,7 @@ class Resource:
    def Resource(self):
       return True
 
-   RESOURCE_BASE_HEALTH                = 10
-   '''Initial Constitution level and agent health'''
-
-   RESOURCE_BASE_FORAGING              = 10
+   RESOURCE_BASE_RESOURCE              = 25
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
    RESOURCE_FOREST_CAPACITY            = 1
@@ -405,6 +409,9 @@ class Progression:
    @property #Reserved flag
    def Progression(self):
       return True
+
+   PROGRESSION_BASE_RESOURCE           = 10
+   '''Initial level and capacity for Hunting + Fishing resource skills'''
 
    PROGRESSION_BASE_XP_SCALE           = 10
    '''Skill level progression speed as a multiplier of typical MMOs'''

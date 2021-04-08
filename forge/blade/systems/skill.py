@@ -113,13 +113,17 @@ class CombatSkill(Skill): pass
 class Constitution(CombatSkill):
    def __init__(self, skillGroup):
       super().__init__(skillGroup)
-      self.setExpByLevel(self.config.RESOURCE_BASE_HEALTH)
+      self.setExpByLevel(self.config.BASE_HEALTH)
 
    def update(self, realm, entity):
       health = entity.resources.health
       food   = entity.resources.food
       water  = entity.resources.water
       config = self.config
+
+      if not config.game_system_enabled('Resource'):
+         health.increment(1)
+         return
 
       # Heal if above fractional resource threshold
       regen       = config.RESOURCE_HEALTH_REGEN_THRESHOLD
@@ -130,9 +134,6 @@ class Constitution(CombatSkill):
          restore = config.RESOURCE_HEALTH_RESTORE_FRACTION
          restore = np.floor(restore * self.level)
          health.increment(restore)
-
-      if not config.game_system_enabled('Resource'):
-         return
 
       if food.empty:
          health.decrement(1)
@@ -148,13 +149,20 @@ class Defense(CombatSkill): pass
 class Fishing(Skill):
    def __init__(self, skillGroup):
       super().__init__(skillGroup)
-      self.setExpByLevel(self.config.RESOURCE_BASE_FORAGING)
+      config, level = self.config, 1
+      if config.game_system_enabled('Progression'):
+         level = config.PROGRESSION_BASE_RESOURCE
+      elif config.game_system_enabled('Resource'):
+         level = config.RESOURCE_BASE_RESOURCE
+
+      self.setExpByLevel(level)
 
    def update(self, realm, entity):
-      water = entity.resources.water
+      if not self.config.game_system_enabled('Resource'):
+         return
 
-      if self.config.game_system_enabled('Resource'):
-         water.decrement(1)
+      water = entity.resources.water
+      water.decrement(1)
 
       if material.Water not in ai.utils.adjacentMats(
             realm.map.tiles, entity.pos):
@@ -170,13 +178,20 @@ class Fishing(Skill):
 class Hunting(Skill):
    def __init__(self, skillGroup):
       super().__init__(skillGroup)
-      self.setExpByLevel(self.config.RESOURCE_BASE_FORAGING)
+      config, level = self.config, 1
+      if config.game_system_enabled('Progression'):
+         level = config.PROGRESSION_BASE_RESOURCE
+      elif config.game_system_enabled('Resource'):
+         level = config.RESOURCE_BASE_RESOURCE
+
+      self.setExpByLevel(level)
 
    def update(self, realm, entity):
-      food = entity.resources.food
+      if not self.config.game_system_enabled('Resource'):
+         return
 
-      if self.config.game_system_enabled('Resource'):
-         food.decrement(1)
+      food = entity.resources.food
+      food.decrement(1)
 
       r, c = entity.pos
       if (type(realm.map.tiles[r, c].mat) not in [material.Forest] or

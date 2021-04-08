@@ -66,20 +66,36 @@ class Stimulus(Config):
       #after init without messing up the embeddings
       class Food(node.Continuous):
          def init(self, config):
-            self.val = config.RESOURCE_BASE_FORAGING
-            self.max = config.RESOURCE_BASE_FORAGING
+            if config.game_system_enabled('Progression'):
+               self.val = config.PROGRESSION_BASE_RESOURCE
+               self.max = config.PROGRESSION_BASE_RESOURCE
+            elif config.game_system_enabled('Resource'):
+               self.val = config.RESOURCE_BASE_RESOURCE
+               self.max = config.RESOURCE_BASE_RESOURCE
+            else:
+               self.val = 1
+               self.max = 1
+    
             self.scale = 0.1
 
       class Water(node.Continuous):
          def init(self, config):
-            self.val = config.RESOURCE_BASE_FORAGING
-            self.max = config.RESOURCE_BASE_FORAGING
+            if config.game_system_enabled('Progression'):
+               self.val = config.PROGRESSION_BASE_RESOURCE
+               self.max = config.PROGRESSION_BASE_RESOURCE
+            elif config.game_system_enabled('Resource'):
+               self.val = config.RESOURCE_BASE_RESOURCE
+               self.max = config.RESOURCE_BASE_RESOURCE
+            else:
+               self.val = 1
+               self.max = 1
+ 
             self.scale = 0.1
 
       class Health(node.Continuous):
          def init(self, config):
-            self.val = config.RESOURCE_BASE_HEALTH
-            self.max = config.RESOURCE_BASE_HEALTH
+            self.val = config.BASE_HEALTH
+            self.max = config.BASE_HEALTH
             self.scale = 0.1
 
       #Status effects

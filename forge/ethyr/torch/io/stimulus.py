@@ -49,9 +49,12 @@ class Input(nn.Module):
       entityLookup = {}
 
       #TODO: implement obs scaling in a less hackey place
-      inp['Entity']['Discrete'] *= 0
-      tileWeight = torch.Tensor([0.0, 0.0, 0.02, 0.02])
-      entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.00])
+      #inp['Entity']['Discrete'] *= 0
+      #tileWeight = torch.Tensor([0.0, 0.0, 0.02, 0.02])
+      #entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.00])
+
+      tileWeight = torch.Tensor([1.0, 0.0, 0.02, 0.02])
+      entWeight  = torch.Tensor([1.0, 0.0, 0.02, 0.02, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3])
 
       try:
          inp['Tile']['Continuous']   *= tileWeight

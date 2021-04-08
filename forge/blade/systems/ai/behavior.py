@@ -31,9 +31,7 @@ def explore(realm, actions, entity):
    spawnR, spawnC = entity.spawnPos
    centR, centC   = sz//2, sz//2
 
-   vR, vC = spawnR-centR, spawnC-centC
-   if not realm.config.SPAWN_CENTER:
-      vR, vC = -vR, -vC
+   vR, vC = centR-spawnR, centC-spawnC
 
    mmag = max(abs(vR), abs(vC))
    rr   = r + int(np.round(entity.vision*vR/mmag))

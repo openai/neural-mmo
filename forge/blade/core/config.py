@@ -104,7 +104,7 @@ class Config(Template):
 
    ############################################################################
    ### Spawn Parameters                                                   
-   PLAYER_SPAWN_ATTEMPTS   = 3
+   PLAYER_SPAWN_ATTEMPTS   = 16
    '''Number of player spawn attempts per tick
 
    Note that the env will attempt to spawn agents until success
@@ -426,13 +426,13 @@ class NPC:
    NPC_SPAWN_ATTEMPTS                  = 25
    '''Number of NPC spawn attempts per tick'''
 
-   NPC_SPAWN_AGGRESSIVE                = 0.75
+   NPC_SPAWN_AGGRESSIVE                = 0.80
    '''Percentage distance threshold from spawn for aggressive NPCs'''
 
-   NPC_SPAWN_NEUTRAL                   = 0.40
+   NPC_SPAWN_NEUTRAL                   = 0.50
    '''Percentage distance threshold from spawn for neutral NPCs'''
 
-   NPC_SPAWN_PASSIVE                   = 0.02
+   NPC_SPAWN_PASSIVE                   = 0.00
    '''Percentage distance threshold from spawn for passive NPCs'''
    
    NPC_LEVEL_MIN                       = 1

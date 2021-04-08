@@ -6,47 +6,7 @@ from forge.blade import core
 from forge.blade.core import config
 from forge.blade.systems.ai import behavior
 
-class Base(core.Config):
-   '''Base config for RLlib Models
-
-   Extends core Config, which contains environment, evaluation,
-   and non-RLlib-specific learning parameters'''
-   
-   #Hardware Scale
-   NUM_WORKERS             = 4
-   NUM_GPUS_PER_WORKER     = 0
-   NUM_GPUS                = 1
-   LOCAL_MODE              = False
-
-   TRAIN_EPOCHS            = 1000
-   LOAD                    = True
-
-   #Memory/Batch Scale
-   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
-   ROLLOUT_FRAGMENT_LENGTH = 256
-   LSTM_BPTT_HORIZON       = 16
-
-   #Optimization Scale
-   SGD_MINIBATCH_SIZE      = min(512, TRAIN_BATCH_SIZE)
-   NUM_SGD_ITER            = 1
-
-   #Model Parameters 
-   #large-map:        Large maps baseline
-   #small-map:        Small maps baseline
-   #scripted-combat:  Scripted with combat
-   #scripted-forage:  Scripted without combat
-   #current:          Resume latest checkpoint
-   #None:             Train from scratch
-   MODEL                   = 'current'
-   N_AGENT_OBS             = 100
-   NPOLICIES               = 1
-   HIDDEN                  = 64
-   EMBED                   = 64
-
-   #Scripted model parameters
-   SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
-   SCRIPTED_EXPLORE        = True       #Intentional exploration
-
+class Achievement:
    PLAYER_KILLS_EASY       = 1
    PLAYER_KILLS_NORMAL     = 3
    PLAYER_KILLS_HARD       = 6
@@ -66,6 +26,42 @@ class Base(core.Config):
    REWARD_ACHIEVEMENT      = False
    ACHIEVEMENT_SCALE       = 1.0/15.0
 
+class Base(core.Config, Achievement):
+   '''Base config for RLlib Models
+
+   Extends core Config, which contains environment, evaluation,
+   and non-RLlib-specific learning parameters'''
+   
+   #Hardware Scale
+   NUM_GPUS_PER_WORKER     = 0
+   NUM_GPUS                = 1
+   NUM_WORKERS             = 6
+   LOCAL_MODE              = False
+   LOAD                    = True
+
+   #Memory/Batch Scale
+   TRAIN_EPOCHS            = 10000
+   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
+   ROLLOUT_FRAGMENT_LENGTH = 256
+   LSTM_BPTT_HORIZON       = 16
+   SGD_MINIBATCH_SIZE      = min(512, TRAIN_BATCH_SIZE)
+   NUM_SGD_ITER            = 1
+
+   #Model
+   N_AGENT_OBS             = 100
+   NPOLICIES               = 1
+   HIDDEN                  = 64
+   EMBED                   = 64
+
+   @property
+   def MODEL(self):
+      return self.__class__.__name__
+
+   #Scripted model parameters
+   SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
+   SCRIPTED_EXPLORE        = True       #Intentional exploration
+
+   #Reward
    COOP                    = False
    TEAM_SPIRIT             = 0.0
 
@@ -79,14 +75,14 @@ class LargeMaps(Base):
    This is the default setting as of v1.5 and allows for large
    scale multiagent research even on relatively modest hardware'''
 
-   NAME                    = __qualname__
-   MODEL                   = 'large-map'
-
+   #Path settings
    PATH_MAPS               = core.Config.PATH_MAPS_LARGE
 
-   TRAIN_HORIZON           = 5000
-   EVALUATION_HORIZON      = 10000
+   #Horizon
+   TRAIN_HORIZON           = 8192
+   EVALUATION_HORIZON      = 8192
 
+   #Scale
    NENT                    = 1024
    NMOB                    = 1024
 
@@ -101,9 +97,8 @@ class SmallMaps(Base):
    task for new ideas, a transfer target for agents trained on large maps,
    or as a primary research target for PCG methods.'''
 
-   NAME                    = __qualname__
-   MODEL                   = 'small-map'
-   SCRIPTED_EXPLORE        = False
+   #Path settings
+   PATH_MAPS               = core.Config.PATH_MAPS_SMALL
 
    #Horizon
    TRAIN_HORIZON           = 1024
@@ -111,20 +106,14 @@ class SmallMaps(Base):
 
    #Scale
    TERRAIN_CENTER          = 128
-   NENT                    = 128
+   NENT                    = 256
    NMOB                    = 128
 
-   #Path settings
-   PATH_MAPS               = core.Config.PATH_MAPS_SMALL
-   PATH_ROOT               = os.path.join(os.getcwd(), PATH_MAPS, 'map')
+   PLAYER_SPAWN_ATTEMPTS   = 2
 
-   #Entity spawning parameters
-   PLAYER_SPAWN_ATTEMPTS   = 1
+   #NPC parameters
    NPC_LEVEL_MAX           = 30
    NPC_LEVEL_SPREAD        = 5
-   NPC_SPAWN_PASSIVE       = 0.00
-   NPC_SPAWN_NEUTRAL       = 0.60
-   NPC_SPAWN_AGGRESSIVE    = 0.80
 
 class Debug(SmallMaps, config.AllGameSystems):
    '''Debug Neural MMO training setting
@@ -144,72 +133,63 @@ class Debug(SmallMaps, config.AllGameSystems):
    EMBED                   = 2
 
 #NeurlPS Experiments
-class MagnifyExploration(SmallMaps, config.Resource):
+class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
    pass
-class Population1(MagnifyExploration):
-   MODEL = __qualname__
-   NENT  = 1
 class Population8(MagnifyExploration):
-   MODEL = __qualname__
    NENT  = 8
 class Population32(MagnifyExploration):
-   MODEL = __qualname__
    NENT  = 32
 class Population128(MagnifyExploration):
-   MODEL = __qualname__
    NENT  = 128
+class Population512(MagnifyExploration):
+   NENT  = 512
 
 
 class EmergentComplexity(MagnifyExploration, config.Combat):
+   NENT                    = 128
    COOP                    = True
+   TEAM_SPIRIT             = 0.5
 
-   @property
+   @core.Config.SPAWN.getter
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
+
 class Team1(EmergentComplexity):
-   MODEL = __qualname__
    NPOP  = 128
 class Team4(EmergentComplexity):
-   MODEL = __qualname__
    NPOP  = 32
 class Team16(EmergentComplexity):
-   MODEL = __qualname__
    NPOP  = 8
 class Team64(EmergentComplexity):
-   MODEL = __qualname__
    NPOP  = 2
 
 
 class IntentionalSpecialization(EmergentComplexity, config.Progression):
-   MODEL                   = __qualname__
    REWARD_ACHIEVEMENT      = True
    NPOP                    = 32
 
-class MultimodalSkills(SmallMaps, config.AllGameSystems):
-   MODEL = __qualname__
+class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
 
-class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
-   MODEL = __qualname__
 
+class Test(SmallMaps, config.Progression): pass
 
 #Same as Multimodal Skills above
 class CompetitionRound1(SmallMaps, config.AllGameSystems):
-   pass
+   NENT                    = 128
 
-class CompetitionRound2(SmallMaps, config.AllGameSystems):
-   NPOP                    = 16
-   COOP                    = True
-
+   @core.Config.SPAWN.getter
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
+
+class CompetitionRound2(CompetitionRound1):
+   NPOP                    = 16
+   COOP                    = True
 
 class CompetitionRound3(LargeMaps, config.AllGameSystems):
    NPOP                    = 32
    COOP                    = True
 
+   @core.Config.SPAWN.getter
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
-
-
-
-

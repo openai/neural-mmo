@@ -285,7 +285,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
           #Summary
           summary = formatting.box([formatting.line(
-                title  = 'Neural MMO v1.5',
+                title  = ' '.join([config.ENV_NAME, config.ENV_VERSION]),
                 keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
                 vals   = [epoch, total_steps/1000, total_sample_time, total_learn_time],
                 valFmt = '{:.1f}')])
@@ -475,8 +475,8 @@ class RLlibLogCallbacks(DefaultCallbacks):
 
       for key, vals in env.terminal()['Stats'].items():
          logs = episode.hist_data
-         key  = '_' + key
 
+         key  = '_' + key
          logs[key + '_Min']  = [np.min(vals)]
          logs[key + '_Max']  = [np.max(vals)]
          logs[key + '_Mean'] = [np.mean(vals)]

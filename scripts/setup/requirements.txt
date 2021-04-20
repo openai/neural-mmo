@@ -1,4 +1,4 @@
-autobahn==19.2.1
+autobahn==20.12.3
 cloudpickle==0.5.2
 matplotlib==2.1.2
 noise==1.2.2

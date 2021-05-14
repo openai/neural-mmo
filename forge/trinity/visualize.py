@@ -53,7 +53,7 @@ class BokehServer:
       else:
          print('VISUALIZE: No training logs for specified config')
 
-      eval_path = config.PATH_EVALUATION.format(config.NAME, config.MODEL)
+      eval_path = config.PATH_EVALUATION
       if os.path.exists(eval_path):
          eval_data = np.load(eval_path, allow_pickle=True).tolist()
       else:

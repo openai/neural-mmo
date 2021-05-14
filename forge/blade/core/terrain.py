@@ -78,11 +78,11 @@ class MapGenerator:
 
       #Train and eval map indices
       msg    = 'Generating {} training and {} evaluation maps:'
-      evalMaps  = range(-config.N_EVAL_MAPS, 0)
-      trainMaps = range(1, config.N_TRAIN_MAPS+1)
-      print(msg.format(config.N_TRAIN_MAPS, config.N_EVAL_MAPS))
+      evalMaps  = range(-config.TERRAIN_EVAL_MAPS, 0)
+      trainMaps = range(1, config.TERRAIN_TRAIN_MAPS+1)
+      print(msg.format(config.TERRAIN_TRAIN_MAPS, config.TERRAIN_EVAL_MAPS))
 
-      llen = config.N_EVAL_MAPS + config.N_TRAIN_MAPS
+      llen = config.TERRAIN_EVAL_MAPS + config.TERRAIN_TRAIN_MAPS
       perm = np.random.RandomState(seed=0).permutation(llen)
       interpolaters = np.logspace(config.TERRAIN_LOG_INTERPOLATE_MIN,
                                   config.TERRAIN_LOG_INTERPOLATE_MAX,

@@ -88,11 +88,11 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   if config.MODEL not in ('scripted-forage', 'scripted-combat'):
+   if config.SCRIPTED not in ('forage', 'combat'):
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
    #Scripted policy backend
-   if config.MODEL == 'scripted-forage':
+   if config.SCRIPTED == 'forage':
       policy = ai.policy.forage 
    else:
       policy = ai.policy.combat
@@ -162,7 +162,7 @@ class Anvil():
    def visualize(self, **kwargs):
       '''Training/Evaluation results Web dashboard'''
       BokehServer(self.config)
-      
+     
 if __name__ == '__main__':
    def Display(lines, out):
         text = "\n".join(lines) + "\n"

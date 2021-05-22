@@ -32,7 +32,11 @@ class Template(metaclass=StaticIterable):
          self.set(k, v)
 
    def set(self, k, v):
-      setattr(self, k, v)
+      try:
+         setattr(self, k, v)
+      except:
+         print(k, v)
+         os.exit(0)
       self.data[k] = v
 
    def print(self):
@@ -173,7 +177,7 @@ class Config(Template):
    GENERALIZE           = True
    '''Evaluate on maps not seen during training'''
 
-   EVAL_MAPS            = 5
+   EVAL_MAPS            = 3
    '''Number of evaluation maps'''
 
    TRAIN_SUMMARY_ENVS   = 10
@@ -328,7 +332,7 @@ class Config(Template):
    @property
    def PATH_EVALUATION(self):
       '''Evaluation path'''
-      return os.path.join(self.PATH_ALL_EVALUATIONS, self.NAME, self.MODEL + '.npy')
+      return os.path.join(self.PATH_ALL_EVALUATIONS, self.MODEL + '.npy')
 
    #Themes
    PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 

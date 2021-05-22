@@ -44,7 +44,7 @@ class Base(core.Config, Achievement):
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
    ROLLOUT_FRAGMENT_LENGTH = 256
    LSTM_BPTT_HORIZON       = 16
-   SGD_MINIBATCH_SIZE      = min(512, TRAIN_BATCH_SIZE)
+   SGD_MINIBATCH_SIZE      = min(256, TRAIN_BATCH_SIZE)
    NUM_SGD_ITER            = 1
 
    #Model
@@ -58,6 +58,7 @@ class Base(core.Config, Achievement):
       return self.__class__.__name__
 
    #Scripted model parameters
+   SCRIPTED                = None
    SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
    SCRIPTED_EXPLORE        = True       #Intentional exploration
 
@@ -163,14 +164,29 @@ class Team16(EmergentComplexity):
 class Team64(EmergentComplexity):
    NPOP  = 2
 
+class Team4DirectReward(EmergentComplexity):
+   NPOP  = 32
 
 class IntentionalSpecialization(EmergentComplexity, config.Progression):
    REWARD_ACHIEVEMENT      = True
    NPOP                    = 32
 
 class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
-class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
 
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=256
+class LargeMultimodalSkillsMaps(LargeMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=256
+
+
+class SmallMultimodalSkills16384Map(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=16384
+class SmallMultimodalSkills256Map(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=256
+class SmallMultimodalSkills32Map(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=32
+class SmallMultimodalSkills1Map(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=1
 
 class Test(SmallMaps, config.AllGameSystems):
    pass
@@ -191,6 +207,7 @@ class CompetitionRound3(LargeMaps, config.AllGameSystems):
    NPOP                    = 32
    COOP                    = True
 
+   
    @core.Config.SPAWN.getter
    def SPAWN(self):
       return self.SPAWN_CONCURRENT

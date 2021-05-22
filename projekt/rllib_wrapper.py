@@ -175,7 +175,7 @@ class RLlibEvaluator(evaluator.Base):
       self.state    = {} 
 
    def render(self):
-      self.obs = self.env.reset(idx=1)
+      self.obs = self.env.reset(idx=-1)
       self.registry = RLlibOverlayRegistry(
             self.config, self.env).init(self.trainer, self.model)
       super().render()
@@ -380,7 +380,7 @@ class Attention(RLlibOverlay):
          player = players[playerID]
          r, c   = player.pos
 
-         rad     = self.config.STIM
+         rad     = self.config.NSTIM
          obTiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
 
          for tile, a in zip(obTiles, self.model.attention()[idx]):

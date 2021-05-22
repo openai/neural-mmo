@@ -141,6 +141,10 @@ class Attack(Node):
       if entity.entID == targ.entID:
          return
 
+      #ADDED: POPULATION IMMUNITY
+      #if entity.population == targ.population:
+      #   return
+
       #Check attack range
       rng     = style.attackRange(env.config)
       start   = np.array(entity.base.pos)

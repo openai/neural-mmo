@@ -46,6 +46,11 @@ def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
 def combat(realm, entity, explore=True, forage=behavior.forageDijkstra):
    return baseline(realm, entity, explore, forage, combat=True)
 
+def random(realm, entity, explore=None, forage=None):
+    actions = {}
+    behavior.meander(realm, actions, entity)
+    return  actions
+
 def baseline(realm, entity, explore, forage, combat):
    behavior.update(entity)
    actions = {}

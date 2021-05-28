@@ -42,3 +42,9 @@ Index
    :caption: Administrative
 
    rst/administrative
+
+.. toctree::
+   :maxdepth: 8
+   :caption: NeurIPS
+
+   rst/neurips

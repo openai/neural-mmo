@@ -145,6 +145,10 @@
 <li class="toctree-l1"><a class="reference internal" href="administrative.html#icon-assets"> Assets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="administrative.html#ags-namesake"> Namesake</a></li>
 </ul>
+<p class="caption"><span class="caption-text">NeurIPS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="neurips.html"> NeurIPS 2021 Dataset Track Supplementary Material</a></li>
+</ul>
 
             
           
@@ -234,8 +238,14 @@ generated automatically.</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">ENV_VERSION</code><em class="property"> = '1.5'</em></dt>
+<code class="sig-name descname">ENV_VERSION</code><em class="property"> = '1.5.1'</em></dt>
 <dd><p>Environment version</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">NAME_PREFIX</code><em class="property"> = 'Neural_'</em></dt>
+<dd><p>Prefix used in agent names displayed by the client</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -246,128 +256,78 @@ generated automatically.</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_ROOT</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs'</em></dt>
-<dd><p>Global repository directory</p>
+<code class="sig-name descname">NTILE</code><em class="property"> = 6</em></dt>
+<dd><p>Number of distinct terrain tile types</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_RESOURCE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource'</em></dt>
-<dd><p>Resource directory</p>
+<code class="sig-name descname">NSTIM</code><em class="property"> = 7</em></dt>
+<dd><p>Number of tiles an agent can see in any direction</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_MAPS</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/maps'</em></dt>
-<dd><p>Generated map directory</p>
+<code class="sig-name descname">NMOB</code><em class="property"> = 1024</em></dt>
+<dd><p>Maximum number of NPCs spawnable in the environment</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_MAP_SUFFIX</code><em class="property"> = 'map{}/map.npy'</em></dt>
-<dd><p>Map file name</p>
+<code class="sig-name descname">NENT</code><em class="property"> = 256</em></dt>
+<dd><p>Maximum number of agents spawnable in the environment</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_MAPS_SMALL</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/maps/procedural-small'</em></dt>
-<dd><p>Generated map directory for SmallMap config</p>
+<code class="sig-name descname">NPOP</code><em class="property"> = 1</em></dt>
+<dd><p>Number of distinct populations spawnable in the environment</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">WINDOW</code></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_MAPS_LARGE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/maps/procedural-large'</em></dt>
-<dd><p>Generated map directory for LargeMap config</p>
+<code class="sig-name descname">BASE_HEALTH</code><em class="property"> = 10</em></dt>
+<dd><p>Initial Constitution level and agent health</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_ASSETS</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/assets'</em></dt>
-<dd><p>Asset directory</p>
+<code class="sig-name descname">BASE_RESOURCE</code><em class="property"> = 20</em></dt>
+<dd><p>Initial level and capacity for Hunting + Fishing resource skills</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_TILE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/assets/tiles/{}.png'</em></dt>
-<dd><p>Tile path – format me with tile name</p>
+<code class="sig-name descname">PLAYER_SPAWN_ATTEMPTS</code><em class="property"> = 16</em></dt>
+<dd><p>Number of player spawn attempts per tick</p>
+<p>Note that the env will attempt to spawn agents until success
+if the current population size is zero.</p>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">PATH_TEXT</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/assets/text'</em></dt>
-<dd><p>Text directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_LOGO</code><em class="property"> = '/home/hex/FileStruct/Git/neural-standard/docs/resource/assets/text/ascii.txt'</em></dt>
-<dd><p>Logo file (Ascii art)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_CHECKPOINTS</code><em class="property"> = 'checkpoints'</em></dt>
-<dd><p>Checkpoints path</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_BASELINES</code><em class="property"> = 'baselines'</em></dt>
-<dd><p>Model and evaluation directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_ALL_MODELS</code><em class="property"> = 'baselines/models'</em></dt>
-<dd><p>All models directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_CURRENT</code><em class="property"> = 'baselines/models/current'</em></dt>
-<dd><p>Current experiment model path</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_MODEL</code><em class="property"> = 'baselines/models/{}'</em></dt>
-<dd><p>Model path – format me with the model name</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_TRAINING_DATA</code><em class="property"> = 'baselines/models/{}/training.npy'</em></dt>
-<dd><p>Model training data – format me with the model name</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_ALL_EVALUATIONS</code><em class="property"> = 'baselines/evaluations'</em></dt>
-<dd><p>All evaluations directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_EVALUATION</code><em class="property"> = 'baselines/evaluations/{}/{}.npy'</em></dt>
-<dd><p>Evaluation path – format me with the (config, model) names</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_THEMES</code><em class="property"> = 'forge/blade/systems/visualizer'</em></dt>
-<dd><p>Theme directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_THEME_WEB</code><em class="property"> = 'forge/blade/systems/visualizer/index_web.html'</em></dt>
-<dd><p>Web theme file</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_THEME_PUB</code><em class="property"> = 'forge/blade/systems/visualizer/index_publication.html'</em></dt>
-<dd><p>Publication theme file</p>
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -379,19 +339,19 @@ generated automatically.</p>
 <dl class="py attribute">
 <dt>
 <code class="sig-name descname">RENDER</code><em class="property"> = False</em></dt>
-<dd><p>Flag used by rener mode</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">EVAL_MAPS</code><em class="property"> = 5</em></dt>
-<dd><p>Number of evaluation maps</p>
+<dd><p>Flag used by render mode</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
 <code class="sig-name descname">GENERALIZE</code><em class="property"> = True</em></dt>
 <dd><p>Evaluate on maps not seen during training</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">EVAL_MAPS</code><em class="property"> = 3</em></dt>
+<dd><p>Number of evaluation maps</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -404,6 +364,90 @@ generated automatically.</p>
 <dt>
 <code class="sig-name descname">TRAIN_DATA_RESAMPLE</code><em class="property"> = 200</em></dt>
 <dd><p>Number of points to resample training data</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_TRAIN_MAPS</code><em class="property"> = 256</em></dt>
+<dd><p>Number of training maps to generate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_EVAL_MAPS</code><em class="property"> = 64</em></dt>
+<dd><p>Number of evaluation maps to generate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_RENDER</code><em class="property"> = False</em></dt>
+<dd><p>Whether map generation should also save .png previews (slow + large file size)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_CENTER</code><em class="property"> = 1024</em></dt>
+<dd><p>Size of each map (number of tiles along each side)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_BORDER</code><em class="property"> = 16</em></dt>
+<dd><p>Number of lava border tiles surrounding each side of the map</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_FREQUENCY</code><em class="property"> = -3</em></dt>
+<dd><p>Base noise frequency range (log2 space)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_FREQUENCY_OFFSET</code><em class="property"> = 7</em></dt>
+<dd><p>Noise frequency octave offset (log2 space)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_LOG_INTERPOLATE_MIN</code><em class="property"> = -2</em></dt>
+<dd><p>Minimum interpolation log-strength for noise frequencies</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_LOG_INTERPOLATE_MAX</code><em class="property"> = 0</em></dt>
+<dd><p>Maximum interpolation log-strength for noise frequencies</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_TILES_PER_OCTAVE</code><em class="property"> = 8</em></dt>
+<dd><p>Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_LAVA</code><em class="property"> = 0.0</em></dt>
+<dd><p>Noise threshold for lava generation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_WATER</code><em class="property"> = 0.3</em></dt>
+<dd><p>Noise threshold for water generation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_GRASS</code><em class="property"> = 0.7</em></dt>
+<dd><p>Noise threshold for grass</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">TERRAIN_FOREST</code><em class="property"> = 0.85</em></dt>
+<dd><p>Noise threshold for forest</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -473,389 +517,122 @@ generated automatically.</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_RENDER</code><em class="property"> = False</em></dt>
-<dd><p>Whether map generation should also save .png previews (slow + large file size)</p>
+<code class="sig-name descname">PATH_ROOT</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs'</em></dt>
+<dd><p>Global repository directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_SIZE</code><em class="property"> = 1024</em></dt>
-<dd><p>Size of each map (number of tiles along each side)</p>
+<code class="sig-name descname">PATH_RESOURCE</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource'</em></dt>
+<dd><p>Resource directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_BORDER</code><em class="property"> = 10</em></dt>
-<dd><p>Number of lava border tiles surrounding each side of the map</p>
+<code class="sig-name descname">PATH_MAPS</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/maps'</em></dt>
+<dd><p>Generated map directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_FREQUENCY</code><em class="property"> = (-3, -6)</em></dt>
-<dd><p>Simplex noise frequence range (log2 space)</p>
+<code class="sig-name descname">PATH_MAP_SUFFIX</code><em class="property"> = 'map{}/map.npy'</em></dt>
+<dd><p>Map file name</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_OCTAVES</code><em class="property"> = 8</em></dt>
-<dd><p>Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range</p>
+<code class="sig-name descname">PATH_MAPS_SMALL</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/maps/procedural-small'</em></dt>
+<dd><p>Generated map directory for SmallMap config</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_MODE</code><em class="property"> = 'expand'</em></dt>
-<dd><p>expand or contract.</p>
-<p>Specify normal generation (lower frequency at map center) or
-inverted generation (lower frequency at map edges)</p>
+<code class="sig-name descname">PATH_MAPS_LARGE</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/maps/procedural-large'</em></dt>
+<dd><p>Generated map directory for LargeMap config</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_LERP</code><em class="property"> = True</em></dt>
-<dd><p>Whether to apply a linear blend between terrain octaves</p>
+<code class="sig-name descname">PATH_ASSETS</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/assets'</em></dt>
+<dd><p>Asset directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_ALPHA</code><em class="property"> = 0.15</em></dt>
-<dd><p>Blend factor for FOREST_LOW (water adjacent)</p>
+<code class="sig-name descname">PATH_TILE</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/assets/tiles/{}.png'</em></dt>
+<dd><p>Tile path – format me with tile name</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_BETA</code><em class="property"> = 0.025</em></dt>
-<dd><p>Blend factor for FOREST_HIGH (stone adjacent)</p>
+<code class="sig-name descname">PATH_TEXT</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/assets/text'</em></dt>
+<dd><p>Text directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_LAVA</code><em class="property"> = 0.0</em></dt>
-<dd><p>Noise threshold for lava generation</p>
+<code class="sig-name descname">PATH_LOGO</code><em class="property"> = '/home/jsuarez/Git/neural-mmo/docs/resource/assets/text/ascii.txt'</em></dt>
+<dd><p>Logo file (Ascii art)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_WATER</code><em class="property"> = 0.25</em></dt>
-<dd><p>Noise threshold for water generation</p>
+<code class="sig-name descname">PATH_CHECKPOINTS</code><em class="property"> = 'checkpoints'</em></dt>
+<dd><p>Checkpoints path</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_FOREST_LOW</code><em class="property"> = 0.35</em></dt>
-<dd><p>Noise threshold for forest (water adjacent)</p>
+<code class="sig-name descname">PATH_BASELINES</code><em class="property"> = 'baselines'</em></dt>
+<dd><p>Model and evaluation directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">TERRAIN_GRASS</code><em class="property"> = 0.75</em></dt>
-<dd><p>Noise threshold for grass</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">TERRAIN_FOREST_HIGH</code><em class="property"> = 0.775</em></dt>
-<dd><p>Noise threshold for forest (stone adjacent)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">TERRAIN_WATER_RADIUS</code><em class="property"> = 3.5</em></dt>
-<dd><p>Central water radius</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">TERRAIN_CENTER_REGION</code><em class="property"> = 19</em></dt>
-<dd><p>Central water square cutout</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">TERRAIN_CENTER_WIDTH</code><em class="property"> = 3</em></dt>
-<dd><p>Central square grass border</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">FOREST_CAPACITY</code><em class="property"> = 1</em></dt>
-<dd><p>Maximum number of harvests before a forest tile decays</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">FOREST_RESPAWN</code><em class="property"> = 0.025</em></dt>
-<dd><p>Probability that a harvested forest tile will regenerate each tick</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">OREROCK_CAPACITY</code><em class="property"> = 1</em></dt>
-<dd><p>Maximum number of harvests before an orerock tile decays</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">OREROCK_RESPAWN</code><em class="property"> = 0.05</em></dt>
-<dd><p>Probability that a harvested orerock tile will regenerate each tick</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NTILE</code><em class="property"> = 6</em></dt>
-<dd><p>Number of distinct terrain tile types</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NENT</code><em class="property"> = 256</em></dt>
-<dd><p>Maximum number of agents spawnable in the environment</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NMOB</code><em class="property"> = 1024</em></dt>
-<dd><p>Maximum number of NPCs spawnable in the environment</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPOP</code><em class="property"> = 1</em></dt>
-<dd><p>Number of distinct populations spawnable in the environment</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">N_TRAIN_MAPS</code><em class="property"> = 256</em></dt>
-<dd><p>Number of training maps to generate</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">N_EVAL_MAPS</code><em class="property"> = 64</em></dt>
-<dd><p>Number of evaluation maps to generate</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NAME_PREFIX</code><em class="property"> = 'Neural_'</em></dt>
-<dd><p>Prefix used in agent names displayed by the client</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">STIM</code><em class="property"> = 7</em></dt>
-<dd><p>Number of tiles an agent can see in any direction</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">XP_SCALE</code><em class="property"> = 10</em></dt>
-<dd><p>Skill level progression speed as a multiplier of typical MMOs</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">CONSTITUTION_XP_SCALE</code><em class="property"> = 2</em></dt>
-<dd><p>Multiplier on top of XP_SCALE for the Constitution skill</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">COMBAT_XP_SCALE</code><em class="property"> = 4</em></dt>
-<dd><p>Multiplier on top of XP_SCALE for Combat skills</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">RESOURCE</code><em class="property"> = 10</em></dt>
-<dd><p>Initial level and capacity for Hunting + Fishing resource skills</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">HEALTH</code><em class="property"> = 10</em></dt>
-<dd><p>Initial Constitution level and agent health</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">HEALTH_REGEN_THRESHOLD</code><em class="property"> = 0.5</em></dt>
-<dd><p>Fraction of maximum resource capacity required to regen health</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">RESOURCE_RESTORE</code><em class="property"> = 1.0</em></dt>
-<dd><p>Fraction of maximum capacity restored upon collecting a resource</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">HEALTH_RESTORE</code><em class="property"> = 0.1</em></dt>
-<dd><p>Fraction of health restored per tick when above half food+water</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">DEFENSE_WEIGHT</code><em class="property"> = 0.3</em></dt>
-<dd><p>Fraction of defense that comes from the Defense skill</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">DICE_SIDES</code><em class="property"> = 20</em></dt>
-<dd><p>Number of sides for combat dice</p>
-<p>Attacks can only hit opponents up to the attacker’s level plus
-DICE_SIDES/2. Increasing this value makes attacks more accurate
-and allows lower level attackers to hit stronger opponents</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">MELEE_RANGE</code><em class="property"> = 1</em></dt>
-<dd><p>Range of attacks using the Melee skill</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">RANGE_RANGE</code><em class="property"> = 3</em></dt>
-<dd><p>Range of attacks using the Range skill</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">MAGE_RANGE</code><em class="property"> = 4</em></dt>
-<dd><p>Range of attacks using the Mage skill</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">FREEZE_TIME</code><em class="property"> = 3</em></dt>
-<dd><p>Number of ticks successful Mage attacks freeze a target</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">IMMUNE_ADD</code><em class="property"> = 10</em></dt>
-<dd><p>Minimum number of ticks an agent cannot be damaged after spawning</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">IMMUNE_MUL</code><em class="property"> = 0.05</em></dt>
-<dd><p>Additional number of immunity ticks per population size</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">IMMUNE_MAX</code><em class="property"> = 50</em></dt>
-<dd><p>Maximum number of immunity ticks</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">WILDERNESS</code><em class="property"> = True</em></dt>
-<dd><p>Whether to bracket terrain into combat level ranges</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">INVERT_WILDERNESS</code><em class="property"> = False</em></dt>
-<dd><p>Whether to invert wilderness level generation</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">WILDERNESS_MIN</code><em class="property"> = -1</em></dt>
-<dd><p>Minimum wilderness level. -1 corresponds to a safe zone</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">WILDERNESS_MAX</code><em class="property"> = 99</em></dt>
-<dd><p>Maximum wilderness level. 99 corresponds to unrestricted combat</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PLAYER_SPAWN_ATTEMPTS</code><em class="property"> = 3</em></dt>
-<dd><p>Number of player spawn attempts per tick</p>
-<p>Note that the env will attempt to spawn agents until success
-if the current population size is zero.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_SPAWN_ATTEMPTS</code><em class="property"> = 25</em></dt>
-<dd><p>Number of NPC spawn attempts per tick</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">SPAWN_CENTER</code><em class="property"> = True</em></dt>
-<dd><p>Whether to spawn agents from the map center or edges</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_SPAWN_AGGRESSIVE</code><em class="property"> = 0.75</em></dt>
-<dd><p>Percentage distance threshold from spawn for aggressive NPCs</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_SPAWN_NEUTRAL</code><em class="property"> = 0.4</em></dt>
-<dd><p>Percentage distance threshold from spawn for neutral NPCs</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_SPAWN_PASSIVE</code><em class="property"> = 0.02</em></dt>
-<dd><p>Percentage distance threshold from spawn for passive NPCs</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_LEVEL_MIN</code><em class="property"> = 1</em></dt>
-<dd><p>Minimum NPC level</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_LEVEL_MAX</code><em class="property"> = 99</em></dt>
-<dd><p>Maximum NPC level</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">NPC_LEVEL_SPREAD</code><em class="property"> = 10</em></dt>
-<dd><p>Level range for NPC spawns</p>
+<code class="sig-name descname">PATH_ALL_MODELS</code><em class="property"> = 'baselines/models'</em></dt>
+<dd><p>All models directory</p>
 </dd></dl>
 
 <dl class="py method">
 <dt>
-<em class="property">property </em><code class="sig-name descname">WINDOW</code></dt>
-<dd><p>Size of the square tile crop visible to an agent</p>
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code></dt>
+<dd><p>Model path</p>
 </dd></dl>
 
 <dl class="py method">
 <dt>
-<code class="sig-name descname">SPAWN</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Generates spawn positions for new agents</p>
-<p>Default behavior randomly selects a tile position
-along the borders of the square game map</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple(int, int)</p>
-</dd>
-</dl>
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">PATH_ALL_EVALUATIONS</code><em class="property"> = 'baselines/evaluations'</em></dt>
+<dd><p>All evaluations directory</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">PATH_THEMES</code><em class="property"> = 'forge/blade/systems/visualizer'</em></dt>
+<dd><p>Theme directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">PATH_THEME_WEB</code><em class="property"> = 'forge/blade/systems/visualizer/index_web.html'</em></dt>
+<dd><p>Web theme file</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">PATH_THEME_PUB</code><em class="property"> = 'forge/blade/systems/visualizer/index_publication.html'</em></dt>
+<dd><p>Publication theme file</p>
 </dd></dl>
 
 </dd></dl>

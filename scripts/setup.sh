@@ -12,7 +12,7 @@ pip install -r scripts/requirements.txt
 echo "Installing rllib"
 pip install ray[rllib]
 
-echo "Installing cuda torch"
-conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
+#echo "Installing cuda torch"
+#conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
 
 echo "Done. Errors? Check that dependencies have been met"

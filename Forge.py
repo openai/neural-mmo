@@ -88,14 +88,16 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   if config.SCRIPTED not in ('forage', 'combat'):
+   if config.SCRIPTED not in ('forage', 'combat', 'random'):
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
    #Scripted policy backend
    if config.SCRIPTED == 'forage':
       policy = ai.policy.forage 
-   else:
+   elif config.SCRIPTED == 'combat':
       policy = ai.policy.combat
+   else:
+      policy = ai.policy.random
 
    #Search backend
    err = 'SCRIPTED_BACKEND may be either dijkstra or dynamic_programming'

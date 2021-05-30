@@ -17,6 +17,7 @@ forge.blade.systems package
 .. toctree::
    :maxdepth: 4
 
+   forge.blade.systems.achievement
    forge.blade.systems.combat
    forge.blade.systems.droptable
    forge.blade.systems.equipment

@@ -172,6 +172,7 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       return torch.cat(logits, dim=1), state
 
    def value_function(self):
+      return torch.zeros(32)
       return self.model.value
 
    def attention(self):

@@ -53,9 +53,9 @@ class Base(core.Config, Achievement):
    HIDDEN                  = 64
    EMBED                   = 64
 
-   #@property
-   #def MODEL(self):
-   #   return self.__class__.__name__
+   @property
+   def MODEL(self):
+      return self.__class__.__name__
 
    #Scripted model parameters
    SCRIPTED                = None

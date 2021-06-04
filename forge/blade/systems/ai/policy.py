@@ -74,12 +74,17 @@ class Random:
         self.config = config
 
     def __call__(self, obs, state, seq_lens):
-        obs     = Observation(self.config, obs)
+        config  = self.config
+
+        obs     = Observation(config, obs)
         actions = defaultdict(lambda: defaultdict(list))
 
         actions[Action.Move][Action.Direction].append(torch.Tensor([1,0,0,0]))
         actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
-        actions[Action.Attack][Action.Target].append(torch.Tensor([1,0]))
+
+        targ = torch.zeros(config.N_AGENT_OBS)
+        targ[1] = 1
+        actions[Action.Attack][Action.Target].append(targ)
 
         for atnKey, atn in actions.items():
             for argKey, args in atn.items():

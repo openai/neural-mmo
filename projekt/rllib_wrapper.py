@@ -26,6 +26,7 @@ from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action.static import Action
 from forge.blade.lib import overlay
+from forge.blade.systems import ai
 
 from forge.ethyr.torch.policy import baseline
 
@@ -134,15 +135,28 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       self.space  = actionSpace(self.config).spaces
 
       #Select appropriate baseline model
-      if self.config.MODEL == 'attentional':
+      if self.config.SCRIPTED == 'forage':
+         self.model = ai.policy.forage
+      elif self.config.SCRIPTED == 'combat':
+         self.model = ai.policy.combat
+      elif self.config.SCRIPTED == 'meander':
+         self.model = ai.policy.random
+      elif self.config.SCRIPTED == 'random':
+         self.model = ai.policy.Random(self.config)
+      elif self.config.MODEL == 'attentional':
          self.model  = baseline.Attentional(self.config)
       elif self.config.MODEL == 'convolutional':
          self.model  = baseline.Simple(self.config)
       else:
          self.model  = baseline.Recurrent(self.config)
 
+      if not isinstance(self.model, nn.Module):
+         self.layer = nn.Linear(1, 1)
+ 
    #Initial hidden state for RLlib Trainer
    def get_initial_state(self):
+      if not isinstance(self.model, nn.Module):
+         return [0, 0]
       return [self.model.valueF.weight.new(1, self.config.HIDDEN).zero_(),
               self.model.valueF.weight.new(1, self.config.HIDDEN).zero_()]
 

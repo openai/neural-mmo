@@ -88,6 +88,7 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
+   return wrapper.RLlibEvaluator(config, loadModel(config))
    if config.SCRIPTED not in ('forage', 'combat', 'random'):
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
@@ -107,6 +108,7 @@ def loadEvaluator(config):
    elif config.SCRIPTED_BACKEND == 'dynamic_programming':
       backend = ai.behavior.forageDP
 
+   return wrapper.RLlibEvaluator(config, loadModel(config))
    return Evaluator(config, policy, config.SCRIPTED_EXPLORE, backend)
 
 def loadModel(config):

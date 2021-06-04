@@ -1,6 +1,10 @@
 from pdb import set_trace as T
 
+import torch
+from collections import defaultdict
+
 from forge.blade.systems.ai import behavior, move, attack, utils
+from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action import static as Action
 from forge.blade import systems
 
@@ -40,8 +44,53 @@ def hostile(realm, entity):
 
    return actions
 
-def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
-   return baseline(realm, entity, explore, forage, combat=False)
+class Attributes:
+    for objName, obj in Stimulus:
+        for idx, (attrName, attr) in enumerate(obj):
+            vars()[attrName] = idx
+
+class Observation:
+    def __init__(self, config, obs):
+        self.config = config
+        self.obs    = obs
+        self.delta  = config.NSTIM
+
+        self.tiles  = self.obs['Tile']
+        self.agents = self.obs['Entity']
+        self.n      = self.agents['N']
+
+    def pos(self, rDelta, cDelta):
+        return self.delta + rDelta, self.delta + cDelta
+
+    def tile(self, rDelta, cDelta):
+        pos = self.pos(rDelta, cDelta)
+        #return self.tiles[*pos]
+        
+    def agent(self, entID):
+        return self.agents[entID]
+
+class Random:
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, obs, state, seq_lens):
+        obs     = Observation(self.config, obs)
+        actions = defaultdict(lambda: defaultdict(list))
+
+        actions[Action.Move][Action.Direction].append(torch.Tensor([1,0,0,0]))
+        actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
+        actions[Action.Attack][Action.Target].append(torch.Tensor([1,0]))
+
+        for atnKey, atn in actions.items():
+            for argKey, args in atn.items():
+                actions[atnKey][argKey] = torch.stack(args)
+
+        return actions, state
+
+        #actions[Action.Move] = {Action.Direction: move.habitable(realm.map.tiles, entity)} 
+
+#def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
+#   return baseline(realm, entity, explore, forage, combat=False)
 
 def combat(realm, entity, explore=True, forage=behavior.forageDijkstra):
    return baseline(realm, entity, explore, forage, combat=True)

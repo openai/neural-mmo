@@ -53,9 +53,9 @@ class Base(core.Config, Achievement):
    HIDDEN                  = 64
    EMBED                   = 64
 
-   @property
-   def MODEL(self):
-      return self.__class__.__name__
+   #@property
+   #def MODEL(self):
+   #   return self.__class__.__name__
 
    #Scripted model parameters
    SCRIPTED                = None
@@ -133,21 +133,32 @@ class Debug(SmallMaps, config.AllGameSystems):
    HIDDEN                  = 2
    EMBED                   = 2
 
-#NeurlPS Experiments
+###NeurIPS Experiments
+class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
+   MODEL = 'SmallMultimodalSkills16384Map'
+
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
    pass
-class Population8(MagnifyExploration):
-   NENT  = 8
+class Population4(MagnifyExploration):
+   NENT  = 256
 class Population32(MagnifyExploration):
-   NENT  = 32
-class Population128(MagnifyExploration):
-   NENT  = 128
-class Population512(MagnifyExploration):
-   NENT  = 512
+   NENT  = 256
+class Population256(MagnifyExploration):
+   NENT  = 256
 
+class DomainRandomization16384(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=16384
+class DomainRandomization256(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=256
+class DomainRandomization32(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=32
+class DomainRandomization1(SmallMaps, config.AllGameSystems):
+   TERRAIN_TRAIN_MAPS=1
 
-class EmergentComplexity(MagnifyExploration, config.Combat):
+class TeamBased(MagnifyExploration, config.Combat):
    NENT                    = 128
+   NPOP                    = 32
    COOP                    = True
    TEAM_SPIRIT             = 0.5
 
@@ -155,43 +166,7 @@ class EmergentComplexity(MagnifyExploration, config.Combat):
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-class Team1(EmergentComplexity):
-   NPOP  = 128
-class Team4(EmergentComplexity):
-   NPOP  = 32
-class Team16(EmergentComplexity):
-   NPOP  = 8
-class Team64(EmergentComplexity):
-   NPOP  = 2
-
-class Team4DirectReward(EmergentComplexity):
-   NPOP  = 32
-
-class IntentionalSpecialization(EmergentComplexity, config.Progression):
-   REWARD_ACHIEVEMENT      = True
-   NPOP                    = 32
-
-class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
-
-class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=256
-class LargeMultimodalSkillsMaps(LargeMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=256
-
-
-class SmallMultimodalSkills16384Map(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=16384
-class SmallMultimodalSkills256Map(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=256
-class SmallMultimodalSkills32Map(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=32
-class SmallMultimodalSkills1Map(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=1
-
-class Test(SmallMaps, config.AllGameSystems):
-   pass
-
-#Same as Multimodal Skills above
+###Reserved for an upcoming competition
 class CompetitionRound1(SmallMaps, config.AllGameSystems):
    NENT                    = 128
 

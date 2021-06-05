@@ -3,6 +3,7 @@ import numpy as np
 
 from forge.blade.lib.utils import inBounds
 from forge.blade.systems import combat
+from forge.blade.io.stimulus.static import Stimulus
 from queue import PriorityQueue, Queue
 
 from forge.blade.systems.ai.dynamic_programming import map_to_rewards, \
@@ -172,6 +173,77 @@ def forageDijkstra(tiles, entity, cutoff=100):
 
          queue.put(nxt)
          backtrace[nxt] = cur
+
+def forageDijkstra(obs, actions, cutoff=100):
+   config = obs.config
+
+   Entity = Stimulus.Entity
+   Tile   = Stimulus.Tile
+
+   agent  = obs.agent
+   tile   = obs.tile(0, 0)
+   start  = (tile[Tile.R.index], tile[Tile.C.index])
+   sz     = config.WINDOW
+
+   queue = Queue()
+   queue.put(start)
+
+   backtrace = {start: None}
+
+   food      = agent[Entity.Food.index]
+   water     = agent[Entity.Water.index]
+   reward    = {start: (food, water)}
+
+   best      = -1000 
+   goal      = start
+
+   while not queue.empty():
+      cutoff -= 1
+      if cutoff <= 0:
+         while goal in backtrace and backtrace[goal] != start:
+            goal = backtrace[goal]
+
+         sr, sc = start
+         gr, gc = goal
+
+         return (gr - sr, gc - sc)
+
+      cur = queue.get()
+
+      for nxt in adjacentPos(cur):
+         if nxt in backtrace:
+            continue
+
+         #Occupied
+         if tile[Tile.NEnts.index]:
+            continue
+
+         if not inBounds(*nxt, (sz, sz)):
+            continue
+
+         food, water = reward[cur]
+         food  = max(0, food - 1)
+         water = max(0, water - 1)
+
+         if tiles[nxt].state.tex == 'forest':
+            food = min(food + entity.resources.food.max//2, entity.resources.food.max) 
+         for pos in adjacentPos(nxt):
+            if tiles[pos].state.tex == 'water':
+               water = min(water + entity.resources.water.max//2, entity.resources.water.max) 
+               break
+
+         reward[nxt] = (food, water)
+
+         total = min(food, water)
+         if total > best or (
+                 total == best and max(food, water) > max(reward[goal])):
+            best = total
+            goal = nxt
+
+         queue.put(nxt)
+         backtrace[nxt] = cur
+
+
 
 # A* Search
 def l1(start, goal):

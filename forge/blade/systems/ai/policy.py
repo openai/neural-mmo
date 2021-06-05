@@ -47,27 +47,26 @@ def hostile(realm, entity):
 class Attributes:
     for objName, obj in Stimulus:
         for idx, (attrName, attr) in enumerate(obj):
-            vars()[attrName] = idx
+            attr.index = idx
+            #Indexing error
+            #vars()[attrName] = idx
 
 class Observation:
-    def __init__(self, config, obs):
+    def __init__(self, config, obs, idx):
         self.config = config
         self.obs    = obs
         self.delta  = config.NSTIM
 
-        self.tiles  = self.obs['Tile']
-        self.agents = self.obs['Entity']
-        self.n      = self.agents['N']
-
-    def pos(self, rDelta, cDelta):
-        return self.delta + rDelta, self.delta + cDelta
+        self.tiles  = self.obs['Tile']['Continuous'][idx]
+        self.agents = self.obs['Entity']['Continuous'][idx]
+        #self.n      = self.agents['N']
 
     def tile(self, rDelta, cDelta):
-        pos = self.pos(rDelta, cDelta)
-        #return self.tiles[*pos]
-        
-    def agent(self, entID):
-        return self.agents[entID]
+        return self.tiles[self.config.WINDOW * (self.delta + rDelta) + self.delta + cDelta]
+
+    @property
+    def agent(self):
+        return self.agents[0]
 
 class Random:
     def __init__(self, config):
@@ -76,15 +75,20 @@ class Random:
     def __call__(self, obs, state, seq_lens):
         config  = self.config
 
-        obs     = Observation(config, obs)
-        actions = defaultdict(lambda: defaultdict(list))
+        actions = {}
+        n = obs['Entity']['Continuous'].shape[0]
+        for idx in range(n):
+            obs     = Observation(config, obs, idx)
 
-        actions[Action.Move][Action.Direction].append(torch.Tensor([1,0,0,0]))
-        actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
+            behavior.forageDijkstra(obs, actions)
 
-        targ = torch.zeros(config.N_AGENT_OBS)
-        targ[1] = 1
-        actions[Action.Attack][Action.Target].append(targ)
+            #actions = defaultdict(lambda: defaultdict(list))
+            actions[Action.Move][Action.Direction].append(torch.Tensor([1,0,0,0]))
+            actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
+
+            targ    = torch.zeros(config.N_AGENT_OBS)
+            targ[1] = 1
+            actions[Action.Attack][Action.Target].append(targ)
 
         for atnKey, atn in actions.items():
             for argKey, args in atn.items():
@@ -94,16 +98,17 @@ class Random:
 
         #actions[Action.Move] = {Action.Direction: move.habitable(realm.map.tiles, entity)} 
 
+
 #def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
 #   return baseline(realm, entity, explore, forage, combat=False)
 
 def combat(realm, entity, explore=True, forage=behavior.forageDijkstra):
    return baseline(realm, entity, explore, forage, combat=True)
 
-def random(realm, entity, explore=None, forage=None):
-    actions = {}
-    behavior.meander(realm, actions, entity)
-    return  actions
+#def random(realm, entity, explore=None, forage=None):
+#    actions = {}
+#    behavior.meander(realm, actions, entity)
+#    return  actions
 
 def baseline(realm, entity, explore, forage, combat):
    behavior.update(entity)

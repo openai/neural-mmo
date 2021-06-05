@@ -73,7 +73,6 @@ def forageDP(realm, actions, entity):
    direction            = utils.forageDP(realm.map.tiles, entity)
    actions[Action.Move] = {Action.Direction: move.towards(direction)}
 
-def forageDijkstra(realm, actions, entity):
-   direction            = utils.forageDijkstra(realm.map.tiles, entity)
+def forageDijkstra(obs, actions):
+   direction            = utils.forageDijkstra(obs, actions)
    actions[Action.Move] = {Action.Direction: move.towards(direction)}
-

@@ -130,3 +130,7 @@ class Stimulus(Config):
          def init(self, config):
             self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
+
+for objName, obj in Stimulus:
+   for idx, (attrName, attr) in enumerate(obj):
+      attr.index = idx 

@@ -36,9 +36,15 @@ Index
    :caption: Ideology
 
    rst/ideology
-
+ 
 .. toctree::
    :maxdepth: 8
    :caption: Administrative
 
    rst/administrative
+
+.. toctree::
+   :maxdepth: 8
+   :caption: NeurIPS
+
+   rst/neurips

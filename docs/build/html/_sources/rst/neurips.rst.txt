@@ -29,7 +29,7 @@ The most important differences from v1.5.0 are:
    - Modularized configuration options to support more types of research 
    - Changed spawning to place agents around the edges of large maps rather than at the center
 
-The v1.5-competition branch contains code and trained models for the experiments in the paper. You can also build the current v1.5 release if you just want to try out the environment and associated tools. Note that there is a GPU-specific and difficult to reproduce issue in a third-party dependency of v1.5. We intent to track down and fix this before the official release. If you encounter this bug, running in CPU mode should suffice to demo the platform.
+The v1.5-competition branch contains code and trained models for the experiments in the paper. You can also build the current v1.5 release if you just want to try out the environment and associated tools. Note that there is a GPU-specific and difficult to reproduce issue in a third-party dependency of v1.5. We intend to track down and fix this before the official release. If you encounter this bug, running in CPU mode should suffice to demo the platform.
 
 |icon| Source Material
 ----------------------

@@ -22,27 +22,8 @@ def update(entity):
    if not utils.validResource(entity, entity.water, entity.vision):
       entity.water = None
       
-def pathfind(realm, actions, entity, target):
-   actions[Action.Move]   = {Action.Direction: move.pathfind(realm.map.tiles, entity, target)}
-
-#def pathfind(config, ob, actions, rr, cc):
-#   actions[Action.Move]   = {Action.Direction: move.pathfind(config, ob, actions, rr, cc)}
-
-def explore(realm, actions, entity):
-   sz   = realm.config.TERRAIN_SIZE
-   r, c = entity.pos
-
-   spawnR, spawnC = entity.spawnPos
-   centR, centC   = sz//2, sz//2
-
-   vR, vC = centR-spawnR, centC-spawnC
-
-   mmag = max(abs(vR), abs(vC))
-   rr   = r + int(np.round(entity.vision*vR/mmag))
-   cc   = c + int(np.round(entity.vision*vC/mmag))
-
-   tile = realm.map.tiles[rr, cc]
-   pathfind(realm, actions, entity, tile)
+def pathfind(config, ob, actions, rr, cc):
+   actions[Action.Move]   = {Action.Direction: move.pathfind(config, ob, actions, rr, cc)}
 
 def explore(config, ob, actions, spawnR, spawnC):
    vision = config.NSTIM

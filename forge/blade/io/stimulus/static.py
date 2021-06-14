@@ -28,9 +28,13 @@ class Stimulus(Config):
 
       class Self(node.Discrete):
          def init(self, config):
-            self.val = 0
             self.max = 1
             self.scale = 1.0
+
+      class ID(node.Continuous):
+         def init(self, config):
+            self.min   = -np.inf
+            self.scale = 0.01
 
       class Population(node.Discrete):
          def init(self, config):

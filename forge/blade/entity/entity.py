@@ -82,7 +82,8 @@ class Base:
       self.c          = Static.Entity.C(ent.dataframe, ent.entID, c)
 
       self.population = Static.Entity.Population(ent.dataframe, ent.entID, pop)
-      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, True)
+      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, 1)
+      self.identity   = Static.Entity.ID(        ent.dataframe, ent.entID, ent.entID)
 
       ent.dataframe.init(Static.Entity, ent.entID, (r, c))
 

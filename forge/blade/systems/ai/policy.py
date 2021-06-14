@@ -51,56 +51,93 @@ class Attributes:
             #Indexing error
             #vars()[attrName] = idx
 
-class Observation:
-    def __init__(self, config, obs, idx):
-        self.config = config
-        self.obs    = obs
-        self.delta  = config.NSTIM
-
-        self.tiles  = self.obs['Tile']['Continuous'][idx]
-        self.agents = self.obs['Entity']['Continuous'][idx]
-        #self.n      = self.agents['N']
-
-    def tile(self, rDelta, cDelta):
-        return self.tiles[self.config.WINDOW * (self.delta + rDelta) + self.delta + cDelta]
-
-    @property
-    def agent(self):
-        return self.agents[0]
-
 class Random:
     def __init__(self, config):
-        self.config = config
+        self.config    = config
+        self.food_max  = 0
+        self.water_max = 0
+        self.spawnR    = None
+        self.spawnC    = None
+        self.target    = None
 
-    def __call__(self, obs, state, seq_lens):
+    def __call__(self, obs):
         config  = self.config
+        #agentID = ob.agentID
 
         actions = {}
-        n = obs['Entity']['Continuous'].shape[0]
-        for idx in range(n):
-            obs     = Observation(config, obs, idx)
+        ob      = utils.Observation(config, obs)
 
-            behavior.forageDijkstra(obs, actions)
+        agent  = ob.agent
+        food   = utils.Observation.attribute(agent, Stimulus.Entity.Food)
+        water  = utils.Observation.attribute(agent, Stimulus.Entity.Water)
 
-            #actions = defaultdict(lambda: defaultdict(list))
-            actions[Action.Move][Action.Direction].append(torch.Tensor([1,0,0,0]))
-            actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
+        if food > self.food_max:
+           self.food_max = food
+        if water > self.water_max:
+           self.water_max = water
 
-            targ    = torch.zeros(config.N_AGENT_OBS)
-            targ[1] = 1
-            actions[Action.Attack][Action.Target].append(targ)
+        if self.spawnR is None:
+            self.spawnR = utils.Observation.attribute(agent, Stimulus.Entity.R)
+        if self.spawnC is None:
+            self.spawnC = utils.Observation.attribute(agent, Stimulus.Entity.C)
 
-        for atnKey, atn in actions.items():
-            for argKey, args in atn.items():
-                actions[atnKey][argKey] = torch.stack(args)
+        min_level = 7
+        if (food <= min_level or water <= min_level):
+           behavior.forageDijkstra(config, ob, actions, self.food_max, self.water_max)
+        else:
+           behavior.explore(config, ob, actions, self.spawnR, self.spawnC)
 
-        return actions, state
+        targID, dist = utils.closestTarget(config, ob)
+        if targID is None:
+           return actions
+
+        style = None
+        if dist <= config.COMBAT_MELEE_REACH:
+            style = Action.Melee
+        elif dist <= config.COMBAT_RANGE_REACH:
+            style = Action.Range
+        elif dist <= config.COMBAT_MAGE_REACH:
+            style = Action.Mage
+
+        if not style:
+           return actions
+
+        actions[Action.Attack] = {
+              Action.Style: style,
+              Action.Target: targID}
+
+        return actions
+
+
+        '''
+        elif entity.attacker and combat:
+           entity.target = entity.attacker
+           behavior.evade(realm, actions, entity)
+           behavior.attack(realm, actions, entity)
+        elif entity.target and combat:
+           downtime(realm, actions, entity)
+           entLvl  = systems.combat.level(entity.skills)
+           targLvl = systems.combat.level(entity.target.skills)
+        if targLvl <=  entLvl <= 5 or entLvl >= targLvl+3:
+           behavior.attack(realm, actions, entity)
+        else:
+           downtime(realm, actions, entity)
+        '''
+
+ 
+        #behavior.forageDijkstra(config, ob, actions, self.food_max, self.water_max)
+        behavior.explore(config, ob, actions, self.spawnR, self.spawnC)
+
+        #actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
+        #actions[Action.Attack][Action.Style].append(torch.Tensor([1,0,0]))
+
+        return actions
 
         #actions[Action.Move] = {Action.Direction: move.habitable(realm.map.tiles, entity)} 
 
 
-#def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
-#   return baseline(realm, entity, explore, forage, combat=False)
+def forage(realm, entity, explore=True, forage=behavior.forageDijkstra):
+   return baseline(realm, entity, explore, forage, combat=False)
 
 def combat(realm, entity, explore=True, forage=behavior.forageDijkstra):
    return baseline(realm, entity, explore, forage, combat=True)

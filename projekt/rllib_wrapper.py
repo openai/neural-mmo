@@ -185,7 +185,6 @@ class RLlibEvaluator(evaluator.Base):
       super().__init__(config)
       self.trainer  = trainer
 
-      T()
       self.model    = self.trainer.get_policy('policy_0').model
       self.env      = RLlibEnv({'config': config})
       self.state    = {} 
@@ -203,7 +202,6 @@ class RLlibEvaluator(evaluator.Base):
           pos: Camera position (r, c) from the server)
           cmd: Console command from the server
       '''
-      T()
       if len(self.obs) == 0:
          actions = {}
       else:

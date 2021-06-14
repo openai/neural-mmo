@@ -16,8 +16,7 @@ import ray
 from ray import rllib
 
 from forge.ethyr.torch import utils
-from forge.blade.systems import ai
-
+from forge.trinity.scripted import baselines
 from forge.trinity.visualize import BokehServer
 from forge.trinity.evaluator import Evaluator
 
@@ -88,28 +87,20 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   return wrapper.RLlibEvaluator(config, loadModel(config))
-   if config.SCRIPTED not in ('forage', 'combat', 'random'):
+   if not config.SCRIPTED:
       return wrapper.RLlibEvaluator(config, loadModel(config))
 
    #Scripted policy backend
    if config.SCRIPTED == 'forage':
-      policy = ai.policy.forage 
+      policy = baselines.Forage
    elif config.SCRIPTED == 'combat':
-      policy = ai.policy.combat
-   else:
-      policy = ai.policy.random
+      policy = baselines.Combat
+   elif config.SCRIPTED == 'meander':
+      policy = baselines.Meander
+   elif config.SCRIPTED == 'random':
+      policy = baselines.Random
 
-   #Search backend
-   err = 'SCRIPTED_BACKEND may be either dijkstra or dynamic_programming'
-   assert config.SCRIPTED_BACKEND in ('dijkstra', 'dynamic_programming'), err
-   if config.SCRIPTED_BACKEND == 'dijkstra':
-      backend = ai.behavior.forageDijkstra
-   elif config.SCRIPTED_BACKEND == 'dynamic_programming':
-      backend = ai.behavior.forageDP
-
-   return wrapper.RLlibEvaluator(config, loadModel(config))
-   return Evaluator(config, policy, config.SCRIPTED_EXPLORE, backend)
+   return Evaluator(config, policy)
 
 def loadModel(config):
    '''Load NN weights and optimizer state'''

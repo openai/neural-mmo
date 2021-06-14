@@ -68,7 +68,7 @@ class Evaluator(Base):
    '''Evaluator for scripted models'''
    def __init__(self, config, policy, *args):
       super().__init__(config)
-      self.policy   = policy
+      self.policies = defaultdict(lambda: policy(config)) 
       self.args     = args
 
       self.env      = Env(config)
@@ -88,8 +88,14 @@ class Evaluator(Base):
       '''
       realm, actions    = self.env.realm, {}
       for agentID in self.obs:
-         agent              = realm.players[agentID]
-         agent.skills.style = Action.Range
-         actions[agentID]   = self.policy(realm, agent, *self.args)
+         agent  = realm.players[agentID]
+         policy = self.policies[agentID]
+         ob     = self.obs[agentID]
+
+         actions[agentID] = policy(ob, *self.args)
+         if Action.Attack in actions[agentID]:
+            targID = actions[agentID][Action.Attack][Action.Target]
+            actions[agentID][Action.Attack][Action.Target] = realm.entity(targID)
+         #actions[agentID]   = self.policy(realm, agent, *self.args)
 
       super().tick(self.obs, actions, pos, cmd, preprocessActions=False)

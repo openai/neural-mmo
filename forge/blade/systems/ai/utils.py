@@ -11,32 +11,6 @@ from queue import PriorityQueue, Queue
 from forge.blade.systems.ai.dynamic_programming import map_to_rewards, \
    compute_values, max_value_direction_around
 
-class Observation:
-    def __init__(self, config, obs):
-        self.config = config
-        self.obs    = obs
-        self.delta  = config.NSTIM
-
-        self.tiles  = self.obs['Tile']['Continuous']
-        self.agents = self.obs['Entity']['Continuous']
-        self.n      = int(self.obs['Entity']['N']) 
-
-    def tile(self, rDelta, cDelta):
-        #return self.tiles[int(r*self.config.WINDOW + c)]
-        return self.tiles[self.config.WINDOW * (self.delta + rDelta) + self.delta + cDelta]
-
-    @property
-    def agent(self):
-        return self.agents[0]
-
-    #@property
-    #def agentID(self):
-    #    return self.attribute(self.agent, Stimulus.Entity.ID
-
-    @staticmethod
-    def attribute(ary, attr):
-        return float(ary[attr.index])
-
 def validTarget(ent, targ, rng):
    if targ is None or not targ.alive:
       return False
@@ -78,40 +52,6 @@ def closestTarget(ent, tiles, rng=1):
          for e in tiles[sr + d, sc + r].ents.values():
             if e is not ent and validTarget(ent, e, rng): return e
 
-'''
-def closestTarget(config, ob):
-   shortestDist = np.inf
-   closestAgent = None
-
-   Entity = Stimulus.Entity
-   agent  = ob.agent
-
-   sr = Observation.attribute(agent, Entity.R)
-   sc = Observation.attribute(agent, Entity.C)
-   start = (sr, sc)
-
-   for target in ob.agents:
-      exists = Observation.attribute(target, Entity.Self)
-      if not exists:
-         continue
-
-      tr = Observation.attribute(target, Entity.R)
-      tc = Observation.attribute(target, Entity.C)
-
-      goal = (tr, tc)
-      dist = l1(start, goal)
-
-      if dist < shortestDist and dist != 0:
-          shortestDist = dist
-          closestAgent = target
-
-   if closestAgent is None:
-      return None, None
-
-   targID = Observation.attribute(closestAgent, Entity.ID)
-   return int(targID), shortestDist
-'''
-
 def distance(ent, targ):
    return l1(ent.pos, targ.pos)
 
@@ -132,21 +72,6 @@ def cropTilesAround(position: (int, int), horizon: int, tiles):
    return tiles[max(line - horizon, 0): min(line + horizon + 1, len(tiles)),
           max(column - horizon, 0): min(column + horizon + 1, len(tiles[0]))]
 
-
-def forageDP(tiles, entity):
-   horizon = entity.vision
-   line, column = entity.pos
-
-   tiles = cropTilesAround((line, column), horizon, tiles)
-
-   reward_matrix = map_to_rewards(tiles, entity)
-   value_matrix = compute_values(reward_matrix)
-
-   max_value_line, max_value_column = max_value_direction_around(
-      (min(horizon, len(value_matrix) - 1),
-       min(horizon, len(value_matrix[0]) - 1)), value_matrix)
-
-   return max_value_line, max_value_column
 
 def inSight(dr, dc, vision):
     return (
@@ -190,83 +115,6 @@ def meander(obs):
    if not cands:
       return (-1, 0)
    return random.choice(cands)
-
-
-def forageDijkstra(config, ob, food_max, water_max, cutoff=100):
-   vision = config.NSTIM
-   Entity = Stimulus.Entity
-   Tile   = Stimulus.Tile
-
-   agent  = ob.agent
-   food   = Observation.attribute(agent, Entity.Food)
-   water  = Observation.attribute(agent, Entity.Water)
-
-   best      = -1000 
-   start     = (0, 0)
-   goal      = (0, 0)
-
-   reward    = {start: (food, water)}
-   backtrace = {start: None}
-
-   queue = Queue()
-   queue.put(start)
-
-   while not queue.empty():
-      cutoff -= 1
-      if cutoff <= 0:
-         break
-
-      cur = queue.get()
-      for nxt in adjacentPos(cur):
-         if nxt in backtrace:
-            continue
-
-         if not inSight(*nxt, vision):
-            continue
-
-         tile     = ob.tile(*nxt)
-         matl     = Observation.attribute(tile, Tile.Index)
-         occupied = Observation.attribute(tile, Tile.NEnts)
-
-         if occupied:
-            continue
-
-         if matl in (material.Lava.index, material.Water.index, material.Stone.index, material.Orerock.index):
-            continue
-
-         food, water = reward[cur]
-         food  = max(0, food - 1)
-         water = max(0, water - 1)
-
-         if matl == material.Forest.index:
-            food = min(food+food_max//2, food_max)
-         for pos in adjacentPos(nxt):
-            if not inSight(*pos, vision):
-               continue
-
-            tile = ob.tile(*pos)
-            matl = Observation.attribute(tile, Tile.Index)
- 
-            if matl == material.Water.index:
-               water = min(water+water_max//2, water_max)
-               break
-
-         reward[nxt] = (food, water)
-
-         total = min(food, water)
-         if total > best or (
-                 total == best and max(food, water) > max(reward[goal])):
-            best = total
-            goal = nxt
-
-         queue.put(nxt)
-         backtrace[nxt] = cur
-
-   while goal in backtrace and backtrace[goal] != start:
-      goal = backtrace[goal]
-
-   return goal
-
 
 # A* Search
 def l1(start, goal):

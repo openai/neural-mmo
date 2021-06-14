@@ -25,9 +25,6 @@ def update(entity):
 def pathfind(realm, actions, entity, target):
    actions[Action.Move]   = {Action.Direction: move.pathfind(realm.map.tiles, entity, target)}
 
-#def pathfind(config, ob, actions, rr, cc):
-#   actions[Action.Move]   = {Action.Direction: move.pathfind(config, ob, actions, rr, cc)}
-
 def explore(realm, actions, entity):
    sz   = realm.config.TERRAIN_SIZE
    r, c = entity.pos
@@ -93,11 +90,3 @@ def attack(realm, actions, entity):
    actions[Action.Attack] = {Action.Style: entity.skills.style,
          Action.Target: entity.target}
 
-def forageDP(realm, actions, entity):
-   direction            = utils.forageDP(realm.map.tiles, entity)
-   actions[Action.Move] = {Action.Direction: move.towards(direction)}
-
-#def forageDijkstra(realm, actions, entity):
-def forageDijkstra(config, ob, actions, food_max, water_max):
-   direction                   = utils.forageDijkstra(config, ob, food_max, water_max)
-   actions[Action.Move] = {Action.Direction: move.towards(direction)}

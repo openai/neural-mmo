@@ -87,20 +87,10 @@ def loadTrainer(config):
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   if not config.SCRIPTED:
+   if config.SCRIPTED:
+       return Evaluator(config, getattr(baselines, config.SCRIPTED))
+   else:
       return wrapper.RLlibEvaluator(config, loadModel(config))
-
-   #Scripted policy backend
-   if config.SCRIPTED == 'forage':
-      policy = baselines.Forage
-   elif config.SCRIPTED == 'combat':
-      policy = baselines.Combat
-   elif config.SCRIPTED == 'meander':
-      policy = baselines.Meander
-   elif config.SCRIPTED == 'random':
-      policy = baselines.Random
-
-   return Evaluator(config, policy)
 
 def loadModel(config):
    '''Load NN weights and optimizer state'''

@@ -98,6 +98,19 @@ def explore(config, ob, actions, spawnR, spawnC):
    cc   = int(np.round(vision*vC/mmag))
    pathfind(config, ob, actions, rr, cc)
 
+def evade(config, ob, actions, attacker):
+   Entity = Stimulus.Entity
+
+   sr     = io.Observation.attribute(ob.agent, Entity.R)
+   sc     = io.Observation.attribute(ob.agent, Entity.C)
+
+   gr     = io.Observation.attribute(attacker, Entity.R)
+   gc     = io.Observation.attribute(attacker, Entity.C)
+
+   rr, cc = (2*sr - gr, 2*sc - gc)
+
+   pathfind(config, ob, actions, rr, cc)
+
 def forageDijkstra(config, ob, actions, food_max, water_max, cutoff=100):
    vision = config.NSTIM
    Entity = Stimulus.Entity
@@ -179,11 +192,11 @@ def aStar(config, ob, actions, rr, cc, cutoff=100):
    Tile   = Stimulus.Tile
    vision = config.NSTIM
 
-   if rr == 0 and cc == 0:
-      return (0, 0)
-
    start = (0, 0)
    goal  = (rr, cc)
+
+   if start == goal:
+      return (0, 0)
 
    pq = PriorityQueue()
    pq.put((0, start))
@@ -219,7 +232,8 @@ def aStar(config, ob, actions, rr, cc, cutoff=100):
          if occupied:
             continue
 
-         if matl in (material.Lava.index, material.Water.index, material.Stone.index, material.Orerock.index):
+         #Omitted water from the original implementation. Seems key
+         if matl in (material.Lava.index, material.Stone.index, material.Orerock.index):
             continue
 
 
@@ -239,17 +253,12 @@ def aStar(config, ob, actions, rr, cc, cutoff=100):
             pq.put((priority, nxt))
             backtrace[nxt] = cur
 
-   if goal not in backtrace:
-      goal = closestPos
+   #Not needed with scuffed material list above
+   #if goal not in backtrace:
+   #   goal = closestPos
 
    while goal in backtrace and backtrace[goal] != start:
       goal = backtrace[goal]
-
-   tile     = ob.tile(*goal)
-   matl     = io.Observation.attribute(tile, Tile.Index)
-
-   #if goal not in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-   #    T()
 
    return goal
 

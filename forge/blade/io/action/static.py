@@ -160,6 +160,7 @@ class Attack(Node):
       entity.history.attack['target'] = targ.entID
       entity.history.attack['style'] = style.__name__
       targ.attacker = entity
+      targ.attackerID.update(entity.entID)
 
       dmg = combat.attack(entity, targ, style.skill)
       if style.freeze and dmg > 0:

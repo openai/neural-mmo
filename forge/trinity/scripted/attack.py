@@ -34,5 +34,24 @@ def closestTarget(config, ob):
    if closestAgent is None:
       return None, None
 
-   targID = io.Observation.attribute(closestAgent, Entity.ID)
-   return int(targID), shortestDist
+   return closestAgent, shortestDist
+
+def attacker(config, ob):
+   Entity = Stimulus.Entity
+
+   sr = io.Observation.attribute(ob.agent, Entity.R)
+   sc = io.Observation.attribute(ob.agent, Entity.C)
+ 
+   attackerID = io.Observation.attribute(ob.agent, Entity.AttackerID)
+
+   if attackerID == 0:
+       return None, None
+
+   for target in ob.agents:
+      identity = io.Observation.attribute(target, Entity.ID)
+      if identity == attackerID:
+         tr = io.Observation.attribute(target, Entity.R)
+         tc = io.Observation.attribute(target, Entity.C)
+         dist = utils.l1((sr, sc), (tr, tc))
+         return target, dist
+   return None, None

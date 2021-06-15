@@ -34,7 +34,16 @@ class Stimulus(Config):
       class ID(node.Continuous):
          def init(self, config):
             self.min   = -np.inf
-            self.scale = 0.01
+            self.scale = 0.001
+
+      class AttackerID(node.Continuous):
+         def init(self, config):
+            self.min   = -np.inf
+            self.scale = 0.001
+
+      class Level(node.Continuous):
+         def init(self, config):
+            self.scale = 0.05
 
       class Population(node.Discrete):
          def init(self, config):

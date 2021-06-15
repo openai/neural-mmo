@@ -84,11 +84,12 @@ class Base:
       self.population = Static.Entity.Population(ent.dataframe, ent.entID, pop)
       self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, 1)
       self.identity   = Static.Entity.ID(        ent.dataframe, ent.entID, ent.entID)
+      self.level      = Static.Entity.Level(     ent.dataframe, ent.entID, 3)
 
       ent.dataframe.init(Static.Entity, ent.entID, (r, c))
 
    def update(self, realm, entity, actions):
-      pass
+      self.level.update(combat.level(entity.skills))
 
    @property
    def pos(self):
@@ -120,6 +121,8 @@ class Entity:
       self.closest      = None
       self.spawnPos     = pos
 
+      self.attackerID = Static.Entity.AttackerID(self.dataframe, self.entID, 0)
+
       #Submodules
       self.base      = Base(self, pos, iden, name, color, pop)
       self.status    = Status(self)
@@ -141,6 +144,7 @@ class Entity:
       '''Update occurs after actions, e.g. does not include history'''
       if self.history.damage == 0:
          self.attacker = None
+         self.attackerID.update(0)
 
       self.base.update(realm, self, actions)
       self.status.update(realm, self, actions)

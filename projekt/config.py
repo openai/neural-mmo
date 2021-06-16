@@ -6,32 +6,16 @@ from forge.blade import core
 from forge.blade.core import config
 from forge.blade.systems.ai import behavior
 
-class Achievement:
-   PLAYER_KILLS_EASY       = 1
-   PLAYER_KILLS_NORMAL     = 3
-   PLAYER_KILLS_HARD       = 6
-
-   EQUIPMENT_EASY          = 1
-   EQUIPMENT_NORMAL        = 10
-   EQUIPMENT_HARD          = 20
-
-   EXPLORATION_EASY        = 32
-   EXPLORATION_NORMAL      = 64
-   EXPLORATION_HARD        = 127
-
-   FORAGING_EASY           = 20
-   FORAGING_NORMAL         = 35
-   FORAGING_HARD           = 50
-
-   REWARD_ACHIEVEMENT      = False
-   ACHIEVEMENT_SCALE       = 1.0/15.0
-
-class Base(core.Config, Achievement):
+class Base(core.Config):
    '''Base config for RLlib Models
 
    Extends core Config, which contains environment, evaluation,
    and non-RLlib-specific learning parameters'''
-   
+
+   @property
+   def MODEL(self):
+      return self.__class__.__name__
+  
    #Hardware Scale
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
@@ -48,23 +32,16 @@ class Base(core.Config, Achievement):
    NUM_SGD_ITER            = 1
 
    #Model
+   SCRIPTED                = None
    N_AGENT_OBS             = 100
    NPOLICIES               = 1
    HIDDEN                  = 64
    EMBED                   = 64
 
-   @property
-   def MODEL(self):
-      return self.__class__.__name__
-
-   #Scripted model parameters
-   SCRIPTED                = None
-   SCRIPTED_BACKEND        = 'dijkstra' #Or 'dynamic_programming'
-   SCRIPTED_EXPLORE        = True       #Intentional exploration
-
    #Reward
    COOP                    = False
    TEAM_SPIRIT             = 0.0
+   ACHIEVEMENT_SCALE       = 1.0/15.0
 
 
 class LargeMaps(Base):
@@ -110,6 +87,7 @@ class SmallMaps(Base):
    NENT                    = 256
    NMOB                    = 128
 
+   #Players spawned per tick
    PLAYER_SPAWN_ATTEMPTS   = 2
 
    #NPC parameters
@@ -133,14 +111,10 @@ class Debug(SmallMaps, config.AllGameSystems):
    HIDDEN                  = 2
    EMBED                   = 2
 
-###NeurIPS Experiments
-class SmallMultimodalSkills(SmallMaps, config.AllGameSystems):
-   @property
-   def SPAWN(self):
-      return self.SPAWN_CONCURRENT
 
-class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
-   MODEL = 'SmallMultimodalSkills16384Map'
+### NeurIPS Experiments
+class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
 
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
    pass
@@ -170,8 +144,9 @@ class TeamBased(MagnifyExploration, config.Combat):
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-###Reserved for an upcoming competition
-class Competition(config.AllGameSystems):
+
+### AICrowd competition settings
+class Competition(config.AllGameSystems, config.Achievement):
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT

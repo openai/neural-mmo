@@ -106,6 +106,7 @@ class Config(Template):
       '''Size of the square tile crop visible to an agent'''
       return 2*self.NSTIM + 1
 
+   REWARD_ACHIEVEMENT      = False
 
    ############################################################################
    ### Agent Parameters                                                   
@@ -455,5 +456,24 @@ class NPC:
 
    NPC_LEVEL_SPREAD                    = 10 
    '''Level range for NPC spawns'''
+
+class Achievement:
+   PLAYER_KILLS_EASY       = 1
+   PLAYER_KILLS_NORMAL     = 3
+   PLAYER_KILLS_HARD       = 6
+
+   EQUIPMENT_EASY          = 1
+   EQUIPMENT_NORMAL        = 10
+   EQUIPMENT_HARD          = 20
+
+   EXPLORATION_EASY        = 32
+   EXPLORATION_NORMAL      = 64
+   EXPLORATION_HARD        = 127
+
+   FORAGING_EASY           = 20
+   FORAGING_NORMAL         = 35
+   FORAGING_HARD           = 50
+
+   REWARD_ACHIEVEMENT      = True
 
 class AllGameSystems(Resource, Combat, Progression, NPC): pass

@@ -32,11 +32,12 @@ class Template(metaclass=StaticIterable):
          self.set(k, v)
 
    def set(self, k, v):
-      try:
-         setattr(self, k, v)
-      except:
-         print(k, v)
-         os.exit(0)
+      if type(v) is not property:
+         try:
+            setattr(self, k, v)
+         except:
+            print('Cannot set attribute: {} to {}'.format(k, v))
+            quit()
       self.data[k] = v
 
    def print(self):
@@ -164,7 +165,7 @@ class Config(Template):
 
    @property
    def SPAWN(self):
-      return self.SPAWN_CONCURRENT
+      return self.SPAWN_CONTINUOUS
 
    ############################################################################
    ### Evaluation Parameters

@@ -134,7 +134,11 @@ class Debug(SmallMaps, config.AllGameSystems):
    EMBED                   = 2
 
 ###NeurIPS Experiments
-class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
+class SmallMultimodalSkills(SmallMaps, config.AllGameSystems):
+   @property
+   def SPAWN(self):
+      return self.SPAWN_CONCURRENT
+
 class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
    MODEL = 'SmallMultimodalSkills16384Map'
 
@@ -162,27 +166,27 @@ class TeamBased(MagnifyExploration, config.Combat):
    COOP                    = True
    TEAM_SPIRIT             = 0.5
 
-   @core.Config.SPAWN.getter
+   @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
 ###Reserved for an upcoming competition
-class CompetitionRound1(SmallMaps, config.AllGameSystems):
-   NENT                    = 128
-
-   @core.Config.SPAWN.getter
+class Competition(config.AllGameSystems):
+   @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-class CompetitionRound2(CompetitionRound1):
+class CompetitionRound1(Competition, SmallMaps):
+   NENT                    = 128
+   NPOP                    = 1
+   COOP                    = False
+
+class CompetitionRound2(Competition, SmallMaps):
+   NENT                    = 128
    NPOP                    = 16
    COOP                    = True
 
-class CompetitionRound3(LargeMaps, config.AllGameSystems):
+class CompetitionRound3(Competition, LargeMaps):
+   NENT                    = 128
    NPOP                    = 32
    COOP                    = True
-
-   
-   @core.Config.SPAWN.getter
-   def SPAWN(self):
-      return self.SPAWN_CONCURRENT

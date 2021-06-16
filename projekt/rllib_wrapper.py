@@ -133,30 +133,10 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       nn.Module.__init__(self)
 
       self.space  = actionSpace(self.config).spaces
+      self.model  = baseline.Recurrent(self.config)
 
-      #Select appropriate baseline model
-      if self.config.SCRIPTED == 'forage':
-         self.model = ai.policy.forage
-      elif self.config.SCRIPTED == 'combat':
-         self.model = ai.policy.combat
-      elif self.config.SCRIPTED == 'meander':
-         self.model = ai.policy.random
-      elif self.config.SCRIPTED == 'random':
-         self.model = ai.policy.Random(self.config)
-      elif self.config.MODEL == 'attentional':
-         self.model  = baseline.Attentional(self.config)
-      elif self.config.MODEL == 'convolutional':
-         self.model  = baseline.Simple(self.config)
-      else:
-         self.model  = baseline.Recurrent(self.config)
-
-      if not isinstance(self.model, nn.Module):
-         self.layer = nn.Linear(1, 1)
- 
    #Initial hidden state for RLlib Trainer
    def get_initial_state(self):
-      if not isinstance(self.model, nn.Module):
-         return [0, 0]
       return [self.model.valueF.weight.new(1, self.config.HIDDEN).zero_(),
               self.model.valueF.weight.new(1, self.config.HIDDEN).zero_()]
 
@@ -172,7 +152,6 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       return torch.cat(logits, dim=1), state
 
    def value_function(self):
-      return torch.zeros(32)
       return self.model.value
 
    def attention(self):

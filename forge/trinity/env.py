@@ -264,9 +264,11 @@ class Env:
       blob.log(ent.history.exploration)
 
       quill.stat('Lifetime',  ent.history.timeAlive.val)
-      quill.stat('Achievement', ent.achievements.score())
-      for name, stat in ent.achievements.stats:
-         quill.stat(name, stat)
+
+      if self.config.game_system_enabled('Achievement'):
+         quill.stat('Achievement', ent.achievements.score())
+         for name, stat in ent.achievements.stats:
+            quill.stat(name, stat)
 
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs

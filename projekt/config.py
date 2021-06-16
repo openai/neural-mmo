@@ -56,12 +56,22 @@ class LargeMaps(Base):
    #Path settings
    PATH_MAPS               = core.Config.PATH_MAPS_LARGE
 
+   #Harware Scale
+   NUM_WORKERS             = 16
+   LOCAL_MODE              = False
+   LOAD                    = True
+
+   #Memory/Batch Scale
+   TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS #Bug? This gets doubled
+   ROLLOUT_FRAGMENT_LENGTH = 32
+   SGD_MINIBATCH_SIZE      = 256
+
    #Horizon
    TRAIN_HORIZON           = 8192
    EVALUATION_HORIZON      = 8192
 
-   #Scale
-   NENT                    = 1024
+   #Population
+   NENT                    = 2048
    NMOB                    = 1024
 
 

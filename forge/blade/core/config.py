@@ -474,6 +474,4 @@ class Achievement:
    FORAGING_NORMAL         = 35
    FORAGING_HARD           = 50
 
-   REWARD_ACHIEVEMENT      = True
-
 class AllGameSystems(Resource, Combat, Progression, NPC): pass

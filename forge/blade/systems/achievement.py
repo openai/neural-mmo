@@ -7,8 +7,10 @@ class Tier:
 
 class Diary:
    def __init__(self, config):
-      self.achievements = [
-            PlayerKills, Equipment, Exploration, Foraging]
+      self.achievements = []
+
+      if config.game_system_enabled('Achievement'):
+         self.achievements = [PlayerKills, Equipment, Exploration, Foraging]
 
       self.achievements = [a(config) for a in self.achievements]
 
@@ -18,13 +20,13 @@ class Diary:
 
    def score(self, aggregate=True):
       score = [a.score for a in self.achievements]
-      if aggregate:
+      if score and aggregate:
          return sum(score)
       return score
 
    def update(self, realm, entity, aggregate=True, dry=False):
       scores = [a.update(realm, entity, dry) for a in self.achievements]
-      if aggregate:
+      if scores and aggregate:
          return sum(scores)
       return scores
 

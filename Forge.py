@@ -67,7 +67,6 @@ def loadTrainer(config):
       'framework': 'torch',
       'horizon': np.inf,
       'soft_horizon': False, 
-      '_use_trajectory_view_api': True,
       'no_done_at_end': False,
       'callbacks': wrapper.RLlibLogCallbacks,
       'env_config': {

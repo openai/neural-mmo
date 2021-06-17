@@ -172,6 +172,6 @@ class CompetitionRound2(Competition, SmallMaps):
    COOP                    = True
 
 class CompetitionRound3(Competition, LargeMaps):
-   NENT                    = 128
+   NENT                    = 1024
    NPOP                    = 32
    COOP                    = True

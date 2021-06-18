@@ -57,13 +57,18 @@ class Orerock(Material):
          self.respawn  = config.RESOURCE_OREROCK_RESPAWN
 
 class Meta(type):
+   def __init__(self, name, bases, dict):
+      self.indices = {mtl.index for mtl in self.materials}
+
    def __iter__(self):
       yield from self.materials
 
    def __contains__(self, mtl):
       if isinstance(mtl, Material):
          mtl = type(mtl)
-      return mtl in self.materials
+      if isinstance(mtl, type):
+         return mtl in self.materials
+      return mtl in self.indices
 
 class All(metaclass=Meta):
    materials = {Lava, Water, Grass, Scrub, Forest, Stone, Orerock}

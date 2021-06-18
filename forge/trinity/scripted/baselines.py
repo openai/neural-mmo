@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 
 from forge.trinity.scripted import behavior, move, attack, utils, io
+from forge.blade.lib import material
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action import static as Action
 

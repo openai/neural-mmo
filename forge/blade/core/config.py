@@ -458,6 +458,12 @@ class NPC:
    '''Level range for NPC spawns'''
 
 class Achievement:
+   '''Achievement Reward System'''
+
+   @property #Reserved flag
+   def Achievement(self):
+      return True
+
    PLAYER_KILLS_EASY       = 1
    PLAYER_KILLS_NORMAL     = 3
    PLAYER_KILLS_HARD       = 6

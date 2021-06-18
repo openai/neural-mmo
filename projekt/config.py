@@ -161,17 +161,17 @@ class Competition(config.AllGameSystems, config.Achievement):
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-class CompetitionRound1(Competition, SmallMaps):
+class CompetitionRound1(SmallMaps, Competition):
    NENT                    = 128
    NPOP                    = 1
    COOP                    = False
 
-class CompetitionRound2(Competition, SmallMaps):
+class CompetitionRound2(SmallMaps, Competition):
    NENT                    = 128
    NPOP                    = 16
    COOP                    = True
 
-class CompetitionRound3(Competition, LargeMaps):
+class CompetitionRound3(LargeMaps, Competition):
    NENT                    = 1024
    NPOP                    = 32
    COOP                    = True

@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge.blade.io.stimulus.static import Stimulus
+from forge.blade.io.action import static as Action
 
 from forge.trinity.scripted import io, utils
 
@@ -55,3 +56,9 @@ def attacker(config, ob):
          dist = utils.l1((sr, sc), (tr, tc))
          return target, dist
    return None, None
+
+def target(config, actions, style, targetID):
+   actions[Action.Attack] = {
+         Action.Style: style,
+         Action.Target: targetID}
+

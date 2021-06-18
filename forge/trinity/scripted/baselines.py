@@ -4,7 +4,7 @@ from forge.trinity.scripted import behavior, move, attack, utils, io
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action import static as Action
 
-class Base:
+class Scripted:
     def __init__(self, config):
         self.config    = config
 
@@ -14,7 +14,89 @@ class Base:
         self.spawnR    = None
         self.spawnC    = None
 
+    @property
+    def forage_criterion(self):
+        min_level = 7
+        return self.food <= min_level or self.water <= min_level
+
+    def forage(self):
+        move.forageDijkstra(self.config, self.ob, self.actions, self.food_max, self.water_max)
+
+    def explore(self):
+        move.explore(self.config, self.ob, self.actions, self.spawnR, self.spawnC)
+
+    @property
+    def downtime(self):
+        return not self.forage_criterion and self.attacker is None
+
+    def evade(self):
+        move.evade(self.config, self.ob, self.actions, self.attacker)
+        self.target     = self.attacker
+        self.targetID   = self.attackerID
+        self.targetDist = self.attackerDist
+
+    def attack(self):
+        if self.target is not None:
+           assert self.targetID is not None
+           attack.target(self.config, self.actions, self.style, self.targetID)
+
+    def select_combat_style(self):
+       if self.target is None:
+          return
+
+       if self.targetDist <= self.config.COMBAT_MELEE_REACH:
+          self.style = Action.Melee
+       elif self.targetDist <= self.config.COMBAT_RANGE_REACH:
+          self.style = Action.Range
+       else:
+          self.style = Action.Mage
+
+    def target_weak(self):
+        if self.closest is None:
+            return False
+
+        selfLevel = io.Observation.attribute(self.ob.agent, Stimulus.Entity.Level)
+        targLevel = io.Observation.attribute(self.closest, Stimulus.Entity.Level)
+        
+        if targLevel <= selfLevel <= 5 or selfLevel >= targLevel + 3:
+           self.target     = self.closest
+           self.targetID   = self.closestID
+           self.targetDist = self.closestDist
+
+    def scan_agents(self):
+        self.closest, self.closestDist   = attack.closestTarget(self.config, self.ob)
+        self.attacker, self.attackerDist = attack.attacker(self.config, self.ob)
+
+        self.closestID = None
+        if self.closest is not None:
+           self.closestID = io.Observation.attribute(self.closest, Stimulus.Entity.ID)
+
+        self.attackerID = None
+        if self.attacker is not None:
+           self.attackerID = io.Observation.attribute(self.attacker, Stimulus.Entity.ID)
+
+        self.style      = None
+        self.target     = None
+        self.targetID   = None
+        self.targetDist = None
+
+    def adaptive_control_and_targeting(self, explore=True):
+        self.scan_agents()
+
+        if self.attacker is not None:
+           self.evade()
+           return
+
+        if self.forage_criterion or not explore:
+           self.forage()
+        else:
+           self.explore()
+
+        self.target_weak()
+
     def __call__(self, obs):
+        self.actions = {}
+
         self.ob = io.Observation(self.config, obs)
         agent   = self.ob.agent
 
@@ -31,155 +113,68 @@ class Base:
         if self.spawnC is None:
             self.spawnC = io.Observation.attribute(agent, Stimulus.Entity.C)
 
-class Random(Base):
+class Random(Scripted):
     def __call__(self, obs):
         super().__call__(obs)
-        actions = {}
 
-        move.random(self.config, self.ob, actions)
-        return actions
+        move.random(self.config, self.ob, self.actions)
+        return self.actions
 
-class Meander(Base):
+class Meander(Scripted):
     def __call__(self, obs):
         super().__call__(obs)
-        actions = {}
 
-        move.meander(self.config, self.ob, actions)
-        return actions
+        move.meander(self.config, self.ob, self.actions)
+        return self.actions
 
-class ForageNoExplore(Base):
+class ForageNoExplore(Scripted):
     def __call__(self, obs):
         super().__call__(obs)
-        config  = self.config
-        actions = {}
 
-        move.forageDijkstra(config, self.ob, actions, self.food_max, self.water_max)
-        return actions
+        self.forage()
 
-class Forage(Base):
+        return self.actions
+
+class Forage(Scripted):
     def __call__(self, obs):
         super().__call__(obs)
-        config  = self.config
-        actions = {}
 
-        min_level = 7
-        if (self.food <= min_level or self.water <= min_level):
-           move.forageDijkstra(config, self.ob, actions, self.food_max, self.water_max)
+        if self.forage_criterion:
+           self.forage()
         else:
-           move.explore(config, self.ob, actions, self.spawnR, self.spawnC)
+           self.explore()
 
-        return actions
+        return self.actions
 
-class CombatBase(Base):
-   def __call__(self, obs):
+class CombatNoExplore(Scripted):
+    def __call__(self, obs):
         super().__call__(obs)
-        config  = self.config
 
-        agent                            = self.ob.agent
-        self.target, self.targetDist     = attack.closestTarget(config, self.ob)
-        self.attacker, self.attackerDist = attack.attacker(config, self.ob)
+        self.adaptive_control_and_targeting(explore=False)
 
-        self.targetID = None
-        if self.target is not None:
-           self.targetID   = io.Observation.attribute(self.target, Stimulus.Entity.ID)
+        self.style = Action.Range
+        self.attack()
 
-        self.attackerID = None
-        if self.attacker is not None:
-           self.attackerID = io.Observation.attribute(self.attacker, Stimulus.Entity.ID)
+        return self.actions
  
-class CombatNoExplore(CombatBase):
+class Combat(Scripted):
     def __call__(self, obs):
         super().__call__(obs)
-        agent   = self.ob.agent
-        config  = self.config
-        actions = {}
 
-        argumentID = None
-        min_level  = 7
-        if (self.food > min_level and self.water > min_level and self.attacker is not None):
-           move.evade(config, self.ob, actions, self.attacker)
-           argumentID = self.attackerID
-        else:
-           move.forageDijkstra(config, self.ob, actions, self.food_max, self.water_max)
-           if self.target is not None:
-              selfLevel = io.Observation.attribute(agent, Stimulus.Entity.Level)
-              targLevel = io.Observation.attribute(self.target, Stimulus.Entity.Level)
-              if targLevel <= selfLevel <= 5 or selfLevel >= targLevel + 3:
-                  argumentID = self.targetID
+        self.adaptive_control_and_targeting()
 
-        if argumentID is not None: 
-           actions[Action.Attack] = {
-                 Action.Style: Action.Range,
-                 Action.Target: argumentID}
+        self.style = Action.Range
+        self.attack()
 
-        return actions
- 
-class Combat(CombatBase):
+        return self.actions
+
+class CombatTribrid(Scripted):
     def __call__(self, obs):
         super().__call__(obs)
-        agent   = self.ob.agent
-        config  = self.config
-        actions = {}
 
-        argumentID = None
-        min_level  = 7
-        if (self.food <= min_level or self.water <= min_level):
-           move.forageDijkstra(config, self.ob, actions, self.food_max, self.water_max)
-        elif self.attacker is not None:
-           move.evade(config, self.ob, actions, self.attacker)
-           argumentID = self.attackerID
-        elif self.target is not None:
-           move.explore(config, self.ob, actions, self.spawnR, self.spawnC)
-           selfLevel = io.Observation.attribute(agent, Stimulus.Entity.Level)
-           targLevel = io.Observation.attribute(self.target, Stimulus.Entity.Level)
-           if targLevel <= selfLevel <= 5 or selfLevel >= targLevel + 3:
-              argumentID = self.targetID 
-        else:
-           move.explore(config, self.ob, actions, self.spawnR, self.spawnC)
+        self.adaptive_control_and_targeting()
 
-        if argumentID is not None: 
-           actions[Action.Attack] = {
-                 Action.Style: Action.Range,
-                 Action.Target: argumentID}
+        self.select_combat_style()
+        self.attack()
 
-        return actions
-
-class CombatTribrid(CombatBase):
-    def __call__(self, obs):
-        super().__call__(obs)
-        agent   = self.ob.agent
-        config  = self.config
-        actions = {}
-
-        argumentID = None
-        min_level  = 7
-        if (self.food <= min_level or self.water <= min_level):
-           move.forageDijkstra(config, self.ob, actions, self.food_max, self.water_max)
-        elif self.attacker is not None:
-           move.evade(config, self.ob, actions, self.attacker)
-           self.dist  = self.attackerDist
-           argumentID = self.attackerID
-        elif self.target is not None:
-           move.explore(config, self.ob, actions, self.spawnR, self.spawnC)
-           selfLevel = io.Observation.attribute(agent, Stimulus.Entity.Level)
-           targLevel = io.Observation.attribute(self.target, Stimulus.Entity.Level)
-           if targLevel <= selfLevel <= 5 or selfLevel >= targLevel + 3:
-              self.dist  = self.targetDist
-              argumentID = self.targetID 
-        else:
-           move.explore(config, self.ob, actions, self.spawnR, self.spawnC)
-
-        if argumentID is not None: 
-           style = None
-           if self.dist <= config.COMBAT_MELEE_REACH:
-              style = Action.Melee
-           elif self.dist <= config.COMBAT_RANGE_REACH:
-              style = Action.Range
-           else:
-              style = Action.Mage
- 
-           actions[Action.Attack] = {
-                 Action.Style: style,
-                 Action.Target: argumentID}
-
-        return actions
+        return self.actions

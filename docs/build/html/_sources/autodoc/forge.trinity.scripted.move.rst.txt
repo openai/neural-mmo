@@ -1,0 +1,7 @@
+forge.trinity.scripted.move module
+==================================
+
+.. automodule:: forge.trinity.scripted.move
+   :members:
+   :inherited-members:
+   :show-inheritance:

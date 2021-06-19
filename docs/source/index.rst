@@ -36,7 +36,7 @@ Index
    :caption: Ideology
 
    rst/ideology
-
+ 
 .. toctree::
    :maxdepth: 8
    :caption: Administrative

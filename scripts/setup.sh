@@ -9,10 +9,17 @@ fi
 echo "Installing conda pip packages"
 pip install -r scripts/requirements.txt
 
-echo "Installing rllib"
-pip install ray[rllib]
-
-#echo "Installing cuda torch"
-#conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
+if [[ $1 == "--CORE_ONLY" ]]; then 
+   echo "You have chosen not to install RLlib and associated dependencies for learned models"
+elif [[ $1 == "" ]]; then
+   echo "Installing additional RLlib dependencies..."
+   pip install -r scripts/rllib_requirements.txt
+   pip install ray[rllib]
+   echo "Installing cuda torch"
+   conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
+else
+   echo "Specify either --SERVER_ONLY or no argument"
+   exit 1
+fi
 
 echo "Done. Errors? Check that dependencies have been met"

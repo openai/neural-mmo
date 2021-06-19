@@ -1,0 +1,6 @@
+ray==1.4.0
+cloudpickle==1.2.2
+setproctitle==1.1.10
+redis==3.5.3
+dm-tree==0.1.5
+tensorflow==2.4.1

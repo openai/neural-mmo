@@ -60,6 +60,15 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
 
 .. figure:: /resource/legacy/v1-5_env.png
 
+**v1.5.1:** Competition Build
+   - Blade: 
+      - Modularized configs to enable dynamic environment customization
+      - Reworked terrain generation to create more diverse terrain
+      - Increased default map and population size
+      - Added competition configs and baselines
+   - Trinity: Formal API for scripted agents using the same observation interface as learned models
+   - Embyr: Culled vertices and recalculated normals to improve terrain smoothness and performance
+
 **v1.5:** Large maps, Dashboard, Scripted Baselines
    - Blade: Full rework to support large environments and scripted players/NPCs
       - Map representation

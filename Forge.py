@@ -16,8 +16,7 @@ import ray
 from ray import rllib
 
 from forge.ethyr.torch import utils
-from forge.blade.systems import ai
-
+from forge.trinity.scripted import baselines
 from forge.trinity.visualize import BokehServer
 from forge.trinity.evaluator import Evaluator
 
@@ -61,14 +60,13 @@ def loadTrainer(config):
       'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
       'num_gpus': config.NUM_GPUS,
       'num_envs_per_worker': 1,
-      'train_batch_size': config.TRAIN_BATCH_SIZE,
+      'train_batch_size': config.TRAIN_BATCH_SIZE // 2,
       'rollout_fragment_length': config.ROLLOUT_FRAGMENT_LENGTH,
       'sgd_minibatch_size': config.SGD_MINIBATCH_SIZE,
       'num_sgd_iter': config.NUM_SGD_ITER,
       'framework': 'torch',
       'horizon': np.inf,
       'soft_horizon': False, 
-      '_use_trajectory_view_api': False,
       'no_done_at_end': False,
       'callbacks': wrapper.RLlibLogCallbacks,
       'env_config': {
@@ -77,40 +75,28 @@ def loadTrainer(config):
       'multiagent': {
          'policies': policies,
          'policy_mapping_fn': mapPolicy,
-         'count_steps_by': 'agent_steps'
+         'count_steps_by': 'env_steps'
       },
       'model': {
          'custom_model': 'godsword',
-         'custom_model_config': {'config': config}
+         'custom_model_config': {'config': config},
+         'max_seq_len': config.LSTM_BPTT_HORIZON
       },
    })
 
 def loadEvaluator(config):
    '''Create test/render evaluator'''
-   if config.MODEL not in ('scripted-forage', 'scripted-combat'):
-      return wrapper.RLlibEvaluator(config, loadModel(config))
-
-   #Scripted policy backend
-   if config.MODEL == 'scripted-forage':
-      policy = ai.policy.forage 
+   if config.SCRIPTED:
+       return Evaluator(config, getattr(baselines, config.SCRIPTED))
    else:
-      policy = ai.policy.combat
-
-   #Search backend
-   err = 'SCRIPTED_BACKEND may be either dijkstra or dynamic_programming'
-   assert config.SCRIPTED_BACKEND in ('dijkstra', 'dynamic_programming'), err
-   if config.SCRIPTED_BACKEND == 'dijkstra':
-      backend = ai.behavior.forageDijkstra
-   elif config.SCRIPTED_BACKEND == 'dynamic_programming':
-      backend = ai.behavior.forageDP
-
-   return Evaluator(config, policy, config.SCRIPTED_EXPLORE, backend)
+      return wrapper.RLlibEvaluator(config, loadModel(config))
 
 def loadModel(config):
    '''Load NN weights and optimizer state'''
    trainer = loadTrainer(config)
    utils.modelSize(trainer.defaultModel())
-   trainer.restore(config.MODEL)
+   if config.LOAD:
+      trainer.restore()
    return trainer
 
 class Anvil():
@@ -160,7 +146,7 @@ class Anvil():
    def visualize(self, **kwargs):
       '''Training/Evaluation results Web dashboard'''
       BokehServer(self.config)
-      
+     
 if __name__ == '__main__':
    def Display(lines, out):
         text = "\n".join(lines) + "\n"

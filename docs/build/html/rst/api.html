@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Environment" href="forge.trinity.env.html" />
+    <link rel="next" title="Config" href="forge.blade.core.config.html" />
     <link rel="prev" title="Foreword" href="devguide.html" /> 
 </head>
 
@@ -110,8 +110,10 @@
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#"> User API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="forge.trinity.env.html">Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.blade.core.config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.env.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.scripted.baselines.html">Scripted Baselines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.trinity.scripted.io.html">Scripted Observation Wrapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.trinity.evaluator.html">Evaluator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.trinity.overlay.html">Overlay</a></li>
 <li class="toctree-l2"><a class="reference internal" href="forge.trinity.formatting.html">Formatting</a></li>
@@ -227,13 +229,15 @@
 <p>Neural MMO’s core Env API is a simple multiagent analog to the standard OpenAI Gym API. It also includes a configuration file for customizing everything from terrain generation to spawning behavior to game mechanics</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="forge.trinity.env.html">Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forge.blade.core.config.html">Config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.env.html">Environment</a></li>
 </ul>
 </div>
-<p>This is all that most environments provide. However, Neural MMO is not a single-task environment: it is a platform built to support a wide diversity of research. The current release includes a full evaluation and visualization suite for creating custom dashboards and in-game overlays. If you wish to make use of these custom features, familiarize yourself with the /projekt demo code and refer to these additional docs:</p>
+<p>This is all that most environments provide. However, Neural MMO is not a single-task environment: it is a platform built to support a wide diversity of research. The current release includes a scripted API and an evaluation + visualization suite for creating custom dashboards and in-game overlays. If you wish to make use of these custom features, familiarize yourself with the /projekt demo code and refer to these additional docs:</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.scripted.baselines.html">Scripted Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forge.trinity.scripted.io.html">Scripted Observation Wrapper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forge.trinity.evaluator.html">Evaluator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forge.trinity.overlay.html">Overlay</a></li>
 <li class="toctree-l1"><a class="reference internal" href="forge.trinity.formatting.html">Formatting</a></li>
@@ -280,18 +284,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.io.utils.html">forge.blade.io.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.item.html">forge.blade.item package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.armor.html">forge.blade.item.armor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.food.html">forge.blade.item.food module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.item.html">forge.blade.item.item module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.knife.html">forge.blade.item.knife module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.ore.html">forge.blade.item.ore module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.rawfish.html">forge.blade.item.rawfish module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.rawmeat.html">forge.blade.item.rawmeat module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.sword.html">forge.blade.item.sword module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.item.tool.html">forge.blade.item.tool module</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.lib.html">forge.blade.lib package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.comms.html">forge.blade.lib.comms module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.lib.enums.html">forge.blade.lib.enums module</a></li>
@@ -308,6 +300,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.blade.systems.html">forge.blade.systems package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.ai.html">forge.blade.systems.ai package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.visualizer.html">forge.blade.systems.visualizer namespace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.achievement.html">forge.blade.systems.achievement module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.combat.html">forge.blade.systems.combat module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.droptable.html">forge.blade.systems.droptable module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.blade.systems.equipment.html">forge.blade.systems.equipment module</a></li>
@@ -336,6 +329,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../autodoc/forge.trinity.html">forge.trinity package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.scripted.html">forge.trinity.scripted package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.trinity.scripted.attack.html">forge.trinity.scripted.attack module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.trinity.scripted.baselines.html">forge.trinity.scripted.baselines module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.trinity.scripted.behavior.html">forge.trinity.scripted.behavior module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.trinity.scripted.io.html">forge.trinity.scripted.io module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.trinity.scripted.move.html">forge.trinity.scripted.move module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autodoc/forge.trinity.scripted.utils.html">forge.trinity.scripted.utils module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.dataframe.html">forge.trinity.dataframe module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.env.html">forge.trinity.env module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autodoc/forge.trinity.evaluator.html">forge.trinity.evaluator module</a></li>
@@ -357,7 +359,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="forge.trinity.env.html" class="btn btn-neutral float-right" title="Environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="forge.blade.core.config.html" class="btn btn-neutral float-right" title="Config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="devguide.html" class="btn btn-neutral float-left" title="Foreword" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

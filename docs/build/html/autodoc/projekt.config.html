@@ -230,8 +230,26 @@
 <p>Extends core Config, which contains environment, evaluation,
 and non-RLlib-specific learning parameters</p>
 <dl class="py method">
-<dt id="projekt.config.Base.SPAWN">
-<code class="sig-name descname">SPAWN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Base.SPAWN" title="Permalink to this definition">¶</a></dt>
+<dt id="projekt.config.Base.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.Base.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Base.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.Base.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Base.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.Base.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Base.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Base.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates spawn positions for new agents</p>
 <p>Default behavior randomly selects a tile position
 along the borders of the square game map</p>
@@ -267,8 +285,26 @@ along the borders of the square game map</p>
 <p>This is the default setting as of v1.5 and allows for large
 scale multiagent research even on relatively modest hardware</p>
 <dl class="py method">
-<dt id="projekt.config.LargeMaps.SPAWN">
-<code class="sig-name descname">SPAWN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.LargeMaps.SPAWN" title="Permalink to this definition">¶</a></dt>
+<dt id="projekt.config.LargeMaps.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.LargeMaps.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMaps.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.LargeMaps.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMaps.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.LargeMaps.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMaps.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.LargeMaps.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates spawn positions for new agents</p>
 <p>Default behavior randomly selects a tile position
 along the borders of the square game map</p>
@@ -305,8 +341,26 @@ along the borders of the square game map</p>
 task for new ideas, a transfer target for agents trained on large maps,
 or as a primary research target for PCG methods.</p>
 <dl class="py method">
-<dt id="projekt.config.SmallMaps.SPAWN">
-<code class="sig-name descname">SPAWN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.SmallMaps.SPAWN" title="Permalink to this definition">¶</a></dt>
+<dt id="projekt.config.SmallMaps.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.SmallMaps.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMaps.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.SmallMaps.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMaps.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.SmallMaps.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMaps.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.SmallMaps.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates spawn positions for new agents</p>
 <p>Default behavior randomly selects a tile position
 along the borders of the square game map</p>
@@ -335,13 +389,31 @@ along the borders of the square game map</p>
 <dl class="py class">
 <dt id="projekt.config.Debug">
 <em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Debug</code><a class="headerlink" href="#projekt.config.Debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
 <p>Debug Neural MMO training setting</p>
 <p>A version of the SmallMap setting with greatly reduced batch parameters.
 Only intended as a tool for identifying bugs in the model or environment</p>
 <dl class="py method">
-<dt id="projekt.config.Debug.SPAWN">
-<code class="sig-name descname">SPAWN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Debug.SPAWN" title="Permalink to this definition">¶</a></dt>
+<dt id="projekt.config.Debug.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.Debug.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Debug.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.Debug.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Debug.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.Debug.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Debug.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Debug.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates spawn positions for new agents</p>
 <p>Default behavior randomly selects a tile position
 along the borders of the square game map</p>
@@ -362,6 +434,712 @@ along the borders of the square game map</p>
 <dl class="py method">
 <dt id="projekt.config.Debug.WINDOW">
 <em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.Debug.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.SmallMultimodalSkills">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">SmallMultimodalSkills</code><a class="headerlink" href="#projekt.config.SmallMultimodalSkills" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.SmallMultimodalSkills.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.SmallMultimodalSkills.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMultimodalSkills.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.SmallMultimodalSkills.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMultimodalSkills.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.SmallMultimodalSkills.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMultimodalSkills.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.SmallMultimodalSkills.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.SmallMultimodalSkills.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.SmallMultimodalSkills.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.LargeMultimodalSkills">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">LargeMultimodalSkills</code><a class="headerlink" href="#projekt.config.LargeMultimodalSkills" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.LargeMaps" title="projekt.config.LargeMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.LargeMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.LargeMultimodalSkills.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.LargeMultimodalSkills.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMultimodalSkills.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.LargeMultimodalSkills.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMultimodalSkills.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.LargeMultimodalSkills.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMultimodalSkills.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.LargeMultimodalSkills.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.LargeMultimodalSkills.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.LargeMultimodalSkills.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.MagnifyExploration">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">MagnifyExploration</code><a class="headerlink" href="#projekt.config.MagnifyExploration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Resource" title="forge.blade.core.config.Resource"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Resource</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Progression" title="forge.blade.core.config.Progression"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Progression</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.MagnifyExploration.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.MagnifyExploration.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.MagnifyExploration.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.MagnifyExploration.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.MagnifyExploration.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.MagnifyExploration.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.MagnifyExploration.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.MagnifyExploration.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.MagnifyExploration.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.MagnifyExploration.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.Population4">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Population4</code><a class="headerlink" href="#projekt.config.Population4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.MagnifyExploration" title="projekt.config.MagnifyExploration"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.MagnifyExploration</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.Population4.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.Population4.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population4.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.Population4.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population4.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.Population4.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population4.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Population4.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population4.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.Population4.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.Population32">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Population32</code><a class="headerlink" href="#projekt.config.Population32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.MagnifyExploration" title="projekt.config.MagnifyExploration"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.MagnifyExploration</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.Population32.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.Population32.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population32.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.Population32.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population32.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.Population32.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population32.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Population32.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population32.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.Population32.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.Population256">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Population256</code><a class="headerlink" href="#projekt.config.Population256" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.MagnifyExploration" title="projekt.config.MagnifyExploration"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.MagnifyExploration</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.Population256.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.Population256.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population256.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.Population256.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population256.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.Population256.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population256.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.Population256.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.Population256.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.Population256.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.DomainRandomization16384">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">DomainRandomization16384</code><a class="headerlink" href="#projekt.config.DomainRandomization16384" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization16384.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.DomainRandomization16384.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization16384.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.DomainRandomization16384.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization16384.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.DomainRandomization16384.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization16384.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.DomainRandomization16384.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization16384.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.DomainRandomization16384.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.DomainRandomization256">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">DomainRandomization256</code><a class="headerlink" href="#projekt.config.DomainRandomization256" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization256.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.DomainRandomization256.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization256.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.DomainRandomization256.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization256.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.DomainRandomization256.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization256.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.DomainRandomization256.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization256.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.DomainRandomization256.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.DomainRandomization32">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">DomainRandomization32</code><a class="headerlink" href="#projekt.config.DomainRandomization32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization32.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.DomainRandomization32.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization32.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.DomainRandomization32.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization32.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.DomainRandomization32.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization32.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.DomainRandomization32.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization32.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.DomainRandomization32.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.DomainRandomization1">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">DomainRandomization1</code><a class="headerlink" href="#projekt.config.DomainRandomization1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization1.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.DomainRandomization1.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization1.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.DomainRandomization1.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization1.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.DomainRandomization1.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization1.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.DomainRandomization1.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.DomainRandomization1.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.DomainRandomization1.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.TeamBased">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">TeamBased</code><a class="headerlink" href="#projekt.config.TeamBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.MagnifyExploration" title="projekt.config.MagnifyExploration"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.MagnifyExploration</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Combat" title="forge.blade.core.config.Combat"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Combat</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.TeamBased.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.TeamBased.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.TeamBased.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.TeamBased.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.TeamBased.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.TeamBased.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.TeamBased.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.TeamBased.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.TeamBased.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.TeamBased.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.Competition">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Competition</code><a class="headerlink" href="#projekt.config.Competition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Achievement" title="forge.blade.core.config.Achievement"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Achievement</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.CompetitionRound1">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">CompetitionRound1</code><a class="headerlink" href="#projekt.config.CompetitionRound1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="#projekt.config.Competition" title="projekt.config.Competition"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Competition</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound1.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.CompetitionRound1.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound1.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.CompetitionRound1.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound1.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.CompetitionRound1.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound1.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.CompetitionRound1.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound1.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.CompetitionRound1.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.CompetitionRound2">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">CompetitionRound2</code><a class="headerlink" href="#projekt.config.CompetitionRound2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="#projekt.config.Competition" title="projekt.config.Competition"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Competition</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound2.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.CompetitionRound2.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound2.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.CompetitionRound2.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound2.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.CompetitionRound2.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound2.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.CompetitionRound2.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound2.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.CompetitionRound2.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="projekt.config.CompetitionRound3">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">CompetitionRound3</code><a class="headerlink" href="#projekt.config.CompetitionRound3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.LargeMaps" title="projekt.config.LargeMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.LargeMaps</span></code></a>, <a class="reference internal" href="#projekt.config.Competition" title="projekt.config.Competition"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Competition</span></code></a></p>
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound3.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.CompetitionRound3.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound3.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#projekt.config.CompetitionRound3.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound3.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#projekt.config.CompetitionRound3.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound3.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#projekt.config.CompetitionRound3.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="projekt.config.CompetitionRound3.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#projekt.config.CompetitionRound3.WINDOW" title="Permalink to this definition">¶</a></dt>
 <dd><p>Size of the square tile crop visible to an agent</p>
 </dd></dl>
 

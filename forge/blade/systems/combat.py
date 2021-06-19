@@ -23,9 +23,10 @@ def attack(entity, targ, skillFn):
 
    targetDefense = targ.skills.defense.level + targ.loadout.defense
 
-   roll = np.random.randint(1, config.DICE_SIDES+1)
+   die  = config.COMBAT_DICE_SIDES
+   roll = np.random.randint(1, die+1)
    dc   = accuracy(config, entitySkill.level, targetSkill.level, targetDefense)
-   crit = roll == config.DICE_SIDES
+   crit = roll == die
 
    dmg = 1 #Chip dmg on a miss
    if roll >= dc or crit:
@@ -49,44 +50,26 @@ def damage(skill, level):
 #Max attack 198 - min def 1 = 197. Max 198 - max 198 = 0
 #REMOVE FACTOR OF 2 FROM ATTACK AFTER IMPLEMENTING WEAPONS
 def accuracy(config, entAtk, targAtk, targDef):
-   alpha   = config.DEFENSE_WEIGHT
+   alpha   = config.COMBAT_DEFENSE_WEIGHT
 
    attack  = entAtk
    defense = alpha*targDef + (1-alpha)*targAtk
-   dc      = defense - attack + config.DICE_SIDES//2
+   dc      = defense - attack + config.COMBAT_DICE_SIDES//2
 
    return dc
 
 def danger(config, pos, full=False):
-   cent = config.TERRAIN_SIZE // 2
-
-   #Distance from center
-   R   = int(abs(pos[0] - cent + 0.5))
-   C   = int(abs(pos[1] - cent + 0.5))
-   mag = max(R, C)
-
-   #Distance from border terrain to center
-   if config.INVERT_WILDERNESS:
-      R   = cent - R - config.TERRAIN_BORDER
-      C   = cent - C - config.TERRAIN_BORDER
-      mag = min(R, C)
-
-   #Normalize
-   norm = mag / (cent - config.TERRAIN_BORDER)
+   border = config.TERRAIN_BORDER
+   center = config.TERRAIN_CENTER
+   r, c   = pos
+  
+   #Distance from border
+   rDist  = min(r - border, center + border - r - 1)
+   cDist  = min(c - border, center + border - c - 1)
+   dist   = min(rDist, cDist)
+   norm   = 2 * dist / center
 
    if full:
       return norm, mag
+
    return norm
-      
-def wilderness(config, pos):
-   norm, raw = danger(config, pos, full=True)
-   wild      = int(100 * norm) - 1
-
-   if not config.WILDERNESS:
-      return 99
-   if wild < config.WILDERNESS_MIN:
-      return -1
-   if wild > config.WILDERNESS_MAX:
-      return config.WILDERNESS_MAX
-
-   return wild

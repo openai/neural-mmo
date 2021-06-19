@@ -70,12 +70,12 @@ def l1(pos1, pos2):
    r2, c2 = pos2
    return abs(r1 - r2) + abs(c1 - c2)
 
-def l2(pos, cent):
+def l2(pos1, pos2):
    r1, c1 = pos1
    r2, c2 = pos2
    return np.sqrt((r1 - r2)**2 + (c1 - c2)**2)
 
-def linf(pos, cent):
+def linf(pos1, pos2):
    r1, c1 = pos1
    r2, c2 = pos2
    return max(abs(r1 - r2), abs(c1 - c2))

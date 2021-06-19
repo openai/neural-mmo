@@ -1,0 +1,7 @@
+forge.trinity.scripted.attack module
+====================================
+
+.. automodule:: forge.trinity.scripted.attack
+   :members:
+   :inherited-members:
+   :show-inheritance:

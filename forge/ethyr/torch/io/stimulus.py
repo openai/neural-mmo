@@ -34,6 +34,14 @@ class Input(nn.Module):
          self.embeddings[entity.__name__] = embeddings(
                continuous=continuous, discrete=4096, config=config)
 
+      
+      #TODO: implement obs scaling in a less hackey place
+      self.tileWeight = torch.Tensor([1.0, 0.0, 0.02, 0.02])
+      self.entWeight  = torch.Tensor([1.0, 0.0, 0.0, 0.05, 0.00, 0.02, 0.02, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3])
+      if torch.cuda.is_available():
+         self.tileWeight = self.tileWeight.cuda()
+         self.entWeight  = self.entWeight.cuda()
+
    def forward(self, inp):
       '''Produces tensor representations from an IO object
 
@@ -48,17 +56,8 @@ class Input(nn.Module):
       #Pack entities of each attribute set
       entityLookup = {}
 
-      #TODO: implement obs scaling in a less hackey place
-      inp['Entity']['Discrete'] *= 0
-      tileWeight = torch.Tensor([0.0, 0.0, 0.02, 0.02])
-      entWeight  = torch.Tensor([0.0, 0.0, 0.00, 0.00, 0.0, 0.00, 0.1, 0.1, 0.1, 0.0, 0.0, 0.00])
-
-      try:
-         inp['Tile']['Continuous']   *= tileWeight
-         inp['Entity']['Continuous'] *= entWeight
-      except:
-         inp['Tile']['Continuous']   *= tileWeight.cuda()
-         inp['Entity']['Continuous'] *= entWeight.cuda()
+      inp['Tile']['Continuous']   *= self.tileWeight
+      inp['Entity']['Continuous'] *= self.entWeight
  
       entityLookup['N'] = inp['Entity'].pop('N')
       for name, entities in inp.items():

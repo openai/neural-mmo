@@ -69,10 +69,12 @@ class Tile:
  
    def addEnt(self, ent):
       assert ent.entID not in self.ents
+      self.nEnts.update(1)
       self.ents[ent.entID] = ent
 
    def delEnt(self, entID):
       assert entID in self.ents
+      self.nEnts.update(0)
       del self.ents[entID]
 
    def step(self):

@@ -4,6 +4,7 @@ from collections import defaultdict
 from itertools import chain
 import shutil
 import contextlib
+import time
 import os
 import re
 
@@ -17,6 +18,7 @@ from torch import nn
 
 from ray import rllib
 import ray.rllib.agents.ppo.ppo as ppo
+import ray.rllib.agents.ppo.appo as appo
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from ray.rllib.utils.spaces.flexdict import FlexDict
 from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
@@ -24,6 +26,7 @@ from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action.static import Action
 from forge.blade.lib import overlay
+from forge.blade.systems import ai
 
 from forge.ethyr.torch.policy import baseline
 
@@ -38,6 +41,38 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       self.config = config['config']
       super().__init__(self.config)
 
+   def reward(self, ent):
+      config      = self.config
+
+      ACHIEVEMENT = config.REWARD_ACHIEVEMENT
+      SCALE       = config.ACHIEVEMENT_SCALE
+      COOP        = config.COOP
+
+      individual  = 0 if ent.entID in self.realm.players else -1
+      team        = 0
+
+      if ACHIEVEMENT:
+         individual += SCALE*ent.achievements.update(self.realm, ent, dry=True)
+      if COOP:
+         nDead = len([p for p in self.dead.values() if p.population == ent.pop])
+         team  = -nDead / config.TEAM_SIZE
+      if COOP and ACHIEVEMENT:
+         pre, post = [], []
+         for p in self.realm.players.corporeal.values():
+            if p.population == ent.pop:
+               pre.append(p.achievements.score(aggregate=False))
+               post.append(p.achievements.update(
+                     self.realm, ent, aggregate=False, dry=True))
+        
+         pre   = np.array(pre).max(0)
+         post  = np.array(post).max(0)
+         team += SCALE*(post - pre).sum()
+
+      ent.achievements.update(self.realm, ent)
+
+      alpha  = config.TEAM_SPIRIT
+      return alpha*team + (1.0-alpha)*individual
+
    def step(self, decisions, omitDead=False, preprocessActions=True):
       obs, rewards, dones, infos = super().step(
             decisions, omitDead, preprocessActions)
@@ -45,7 +80,10 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       config = self.config
       dones['__all__'] = False
       test = config.EVALUATE or config.RENDER
-      if not test and self.realm.tick  >= config.TRAIN_HORIZON:
+      
+      horizon    = self.realm.tick >= config.TRAIN_HORIZON
+      population = len(self.realm.players) == 0
+      if not test and (horizon or population):
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
@@ -95,14 +133,7 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       nn.Module.__init__(self)
 
       self.space  = actionSpace(self.config).spaces
-
-      #Select appropriate baseline model
-      if self.config.MODEL == 'attentional':
-         self.model  = baseline.Attentional(self.config)
-      elif self.config.MODEL == 'convolutional':
-         self.model  = baseline.Simple(self.config)
-      else:
-         self.model  = baseline.Recurrent(self.config)
+      self.model  = baseline.Recurrent(self.config)
 
    #Initial hidden state for RLlib Trainer
    def get_initial_state(self):
@@ -138,7 +169,7 @@ class RLlibEvaluator(evaluator.Base):
       self.state    = {} 
 
    def render(self):
-      self.obs = self.env.reset(idx=1)
+      self.obs = self.env.reset(idx=-1)
       self.registry = RLlibOverlayRegistry(
             self.config, self.env).init(self.trainer, self.model)
       super().render()
@@ -150,8 +181,12 @@ class RLlibEvaluator(evaluator.Base):
           pos: Camera position (r, c) from the server)
           cmd: Console command from the server
       '''
-      actions, self.state, _ = self.trainer.compute_actions(
-            self.obs, state=self.state, policy_id='policy_0')
+      if len(self.obs) == 0:
+         actions = {}
+      else:
+         actions, self.state, _ = self.trainer.compute_actions(
+             self.obs, state=self.state, policy_id='policy_0')
+
       super().tick(self.obs, actions, pos, cmd)
 
 class SanePPOTrainer(ppo.PPOTrainer):
@@ -159,6 +194,7 @@ class SanePPOTrainer(ppo.PPOTrainer):
    def __init__(self, config):
       self.envConfig = config['env_config']['config']
       super().__init__(env=self.envConfig.ENV_NAME, config=config)
+      self.training_logs = {}
 
    def save(self):
       '''Save model to file. Note: RLlib does not let us chose save paths'''
@@ -167,31 +203,29 @@ class SanePPOTrainer(ppo.PPOTrainer):
       saveDir  = os.path.dirname(saveFile)
       
       #Clear current save dir
-      shutil.rmtree(config.PATH_CURRENT, ignore_errors=True)
-      os.mkdir(config.PATH_CURRENT)
+      shutil.rmtree(config.PATH_MODEL, ignore_errors=True)
+      os.mkdir(config.PATH_MODEL)
 
       #Copy checkpoints
       for f in os.listdir(saveDir):
          stripped = re.sub('-\d+', '', f)
          src      = os.path.join(saveDir, f)
-         dst      = os.path.join(config.PATH_CURRENT, stripped) 
+         dst      = os.path.join(config.PATH_MODEL, stripped) 
          shutil.copy(src, dst)
 
       print('Saved to: {}'.format(saveDir))
 
-   def restore(self, model):
+   def restore(self):
       '''Restore model from path'''
-      config    = self.envConfig
+      self.training_logs = np.load(
+            self.envConfig.PATH_TRAINING_DATA,
+            allow_pickle=True).item()
 
-      if model is None:
-         print('Initializing new model...')
-         trainPath = config.PATH_TRAINING_DATA.format('current')
-         np.save(trainPath, {})
-         return
+      path = os.path.join(
+            self.envConfig.PATH_MODEL,
+            'checkpoint')
 
-      modelPath = config.PATH_MODEL.format(config.MODEL)
-      print('Loading from: {}'.format(modelPath))
-      path     = os.path.join(modelPath, 'checkpoint')
+      print('Loading model from: {}'.format(path))
       super().restore(path)
 
    def policyID(self, idx):
@@ -205,44 +239,49 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
    def train(self):
       '''Train forever, printing per epoch'''
-      config = self.envConfig
+      training_logs = self.training_logs
+      config        = self.envConfig
 
-      logo   = open(config.PATH_LOGO).read().splitlines()
+      logo          = open(config.PATH_LOGO).read().splitlines()
 
       model         = config.MODEL if config.MODEL is not None else 'current'
-      trainPath     = config.PATH_TRAINING_DATA.format(model)
-      training_logs = np.load(trainPath, allow_pickle=True).item()
+      trainPath     = config.PATH_TRAINING_DATA
 
       total_sample_time = 0
-      total_learn_time = 0
+      total_learn_time  = 0
+      total_steps       = 0
+      total_time        = 0
+      start_time        = time.time()
 
-      epoch   = 0
       blocks  = []
 
-      while True:
+      for epoch in range(config.TRAIN_EPOCHS):
           #Train model
           stats = super().train()
           self.save()
-          epoch += 1
 
-          if epoch == 1:
-            continue
-
-          #Time Stats
+          #Compute stats
+          info               = stats['info']
           timers             = stats['timers']
+
+          steps              = info['num_agent_steps_trained'] - total_steps
+          total_steps        = info['num_agent_steps_trained']
+
           sample_time        = timers['sample_time_ms'] / 1000
           learn_time         = timers['learn_time_ms'] / 1000
-          sample_throughput  = timers['sample_throughput']
-          learn_throughput   = timers['learn_throughput']
 
-          #Summary
-          nSteps             = stats['info']['num_steps_trained']
+          sample_throughput  = steps / sample_time
+          learn_throughput   = steps / learn_time
+         
           total_sample_time += sample_time
           total_learn_time  += learn_time
+          total_time         = time.time() - start_time
+
+          #Summary
           summary = formatting.box([formatting.line(
-                title  = 'Neural MMO v1.5',
+                title  = ' '.join([config.ENV_NAME, config.ENV_VERSION]),
                 keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
-                vals   = [epoch, nSteps/1000, total_sample_time, total_learn_time],
+                vals   = [epoch, total_steps/1000, total_sample_time, total_learn_time],
                 valFmt = '{:.1f}')])
 
           #Block Title
@@ -268,7 +307,10 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
              training_logs[track][stat] += vals
 
-          np.save(trainPath, training_logs)
+          np.save(trainPath, {
+               'logs': training_logs,
+               'sample_time': total_sample_time,
+               'learn_time': total_learn_time})
 
           #Representation for CLI
           cli = {}
@@ -284,7 +326,10 @@ class SanePPOTrainer(ppo.PPOTrainer):
 
           #Extend blocks
           if len(lines) > 0:
-             blocks.append(header + formatting.box(lines, indent=4))
+             lines = formatting.box(lines, indent=4) 
+             blocks.append(header + lines)
+          else:
+             blocks.append(header)
              
           if len(blocks) > 3:
              blocks = blocks[1:]
@@ -329,7 +374,7 @@ class Attention(RLlibOverlay):
          player = players[playerID]
          r, c   = player.pos
 
-         rad     = self.config.STIM
+         rad     = self.config.NSTIM
          obTiles = self.realm.realm.map.tiles[r-rad:r+rad+1, c-rad:c+rad+1].ravel()
 
          for tile, a in zip(obTiles, self.model.attention()[idx]):
@@ -424,8 +469,8 @@ class RLlibLogCallbacks(DefaultCallbacks):
 
       for key, vals in env.terminal()['Stats'].items():
          logs = episode.hist_data
-         key  = '_' + key
 
+         key  = '_' + key
          logs[key + '_Min']  = [np.min(vals)]
          logs[key + '_Max']  = [np.max(vals)]
          logs[key + '_Mean'] = [np.mean(vals)]

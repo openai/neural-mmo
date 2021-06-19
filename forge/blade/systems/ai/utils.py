@@ -1,21 +1,20 @@
 from pdb import set_trace as T
 import numpy as np
+import random
 
 from forge.blade.lib.utils import inBounds
 from forge.blade.systems import combat
+from forge.blade.lib import material
+from forge.blade.io.stimulus.static import Stimulus
 from queue import PriorityQueue, Queue
 
 from forge.blade.systems.ai.dynamic_programming import map_to_rewards, \
    compute_values, max_value_direction_around
 
-
 def validTarget(ent, targ, rng):
    if targ is None or not targ.alive:
       return False
    if lInf(ent, targ) > rng:
-      return False
-   wild = min(ent.status.wilderness, targ.status.wilderness)
-   if abs(combat.level(ent.skills) - combat.level(targ.skills)) > wild:
       return False
    return True
 
@@ -53,37 +52,8 @@ def closestTarget(ent, tiles, rng=1):
          for e in tiles[sr + d, sc + r].ents.values():
             if e is not ent and validTarget(ent, e, rng): return e
 
-def closestResources(ent, tiles, rng=1):
-   sr, sc = ent.pos
-   food, water = None, None
-   for d in range(rng + 1):
-      for r in range(-d, d + 1):
-         if food is None and tiles[sr + r, sc - d].state.tex == 'forest':
-            food = tiles[sr + r, sc - d]
-         if water is None and tiles[sr + r, sc - d].state.tex == 'water':
-            water = tiles[sr + r, sc - d]
-
-         if food is None and tiles[sr + r, sc + d].state.tex == 'forest':
-            food = tiles[sr + r, sc + d]
-         if water is None and tiles[sr + r, sc + d].state.tex == 'water':
-            water = tiles[sr + r, sc + d]
-
-         if food is None and tiles[sr - d, sc + r].state.tex == 'forest':
-            food = tiles[sr - d, sc + r]
-         if water is None and tiles[sr - d, sc + r].state.tex == 'water':
-            water = tiles[sr - d, sc + r]
-
-         if food is None and tiles[sr + d, sc + r].state.tex == 'forest':
-            food = tiles[sr + d, sc + r]
-         if water is None and tiles[sr + d, sc + r].state.tex == 'water':
-            water = tiles[sr + d, sc + r]
-
-   return food, water
-
-
 def distance(ent, targ):
    return l1(ent.pos, targ.pos)
-
 
 def lInf(ent, targ):
    sr, sc = ent.pos
@@ -103,78 +73,48 @@ def cropTilesAround(position: (int, int), horizon: int, tiles):
           max(column - horizon, 0): min(column + horizon + 1, len(tiles[0]))]
 
 
-def forageDP(tiles, entity):
-   horizon = entity.vision
-   line, column = entity.pos
+def inSight(dr, dc, vision):
+    return (
+          dr >= -vision and
+          dc >= -vision and
+          dr <= vision and
+          dc <= vision)
 
-   tiles = cropTilesAround((line, column), horizon, tiles)
+def vacant(tile):
+   Tile     = Stimulus.Tile
+   occupied = Observation.attribute(tile, Tile.NEnts)
+   matl     = Observation.attribute(tile, Tile.Index)
 
-   reward_matrix = map_to_rewards(tiles, entity)
-   value_matrix = compute_values(reward_matrix)
+   lava    = material.Lava.index
+   water   = material.Water.index
+   grass   = material.Grass.index
+   scrub   = material.Scrub.index
+   forest  = material.Forest.index
+   stone   = material.Stone.index
+   orerock = material.Orerock.index
 
-   max_value_line, max_value_column = max_value_direction_around(
-      (min(horizon, len(value_matrix) - 1),
-       min(horizon, len(value_matrix[0]) - 1)), value_matrix)
+   return matl in (grass, scrub, forest) and not occupied
 
-   return max_value_line, max_value_column
+def meander(obs):
+   agent  = obs.agent
+   Entity = Stimulus.Entity
+   Tile   = Stimulus.Tile
 
+   r = Observation.attribute(agent, Entity.R)
+   c = Observation.attribute(agent, Entity.C)
 
-def forageDijkstra(tiles, entity, cutoff=100):
-   start = entity.pos
-
-   queue = Queue()
-   queue.put(start)
-
-   backtrace = {start: None}
-
-   reward    = {start: (entity.resources.food.val, entity.resources.water.val)}
-   best      = -1000 
-   goal      = start
-
-   while not queue.empty():
-      cutoff -= 1
-      if cutoff <= 0:
-         while goal in backtrace and backtrace[goal] != start:
-            goal = backtrace[goal]
-
-         sr, sc = start
-         gr, gc = goal
-
-         return (gr - sr, gc - sc)
-
-      cur = queue.get()
-
-      for nxt in adjacentPos(cur):
-         if nxt in backtrace:
-            continue
-
-         if tiles[nxt].occupied:
-            continue
-
-         if not inBounds(*nxt, tiles.shape):
-            continue
-
-         food, water = reward[cur]
-         food  = max(0, food - 1)
-         water = max(0, water - 1)
-
-         if tiles[nxt].state.tex == 'forest':
-            food = min(food + entity.resources.food.max//2, entity.resources.food.max) 
-         for pos in adjacentPos(nxt):
-            if tiles[pos].state.tex == 'water':
-               water = min(water + entity.resources.water.max//2, entity.resources.water.max) 
-               break
-
-         reward[nxt] = (food, water)
-
-         total = min(food, water)
-         if total > best or (
-                 total == best and max(food, water) > max(reward[goal])):
-            best = total
-            goal = nxt
-
-         queue.put(nxt)
-         backtrace[nxt] = cur
+   cands = []
+   if vacant(obs.tile(-1, 0)):
+      cands.append((-1, 0))
+   if vacant(obs.tile(1, 0)):
+      cands.append((1, 0))
+   if vacant(obs.tile(0, -1)):
+      cands.append((0, -1))
+   if vacant(obs.tile(0, 1)):
+      cands.append((0, 1))
+   if not cands:
+      return (-1, 0)
+   return random.choice(cands)
 
 # A* Search
 def l1(start, goal):
@@ -249,8 +189,6 @@ def aStar(tiles, start, goal, cutoff=100):
    gr, gc = goal
 
    return (gr - sr, gc - sc)
-
-
 # End A*
 
 # Adjacency functions

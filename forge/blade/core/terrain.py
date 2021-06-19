@@ -1,4 +1,7 @@
 from pdb import set_trace as T
+
+import scipy.stats as stats
+from matplotlib import pyplot as plt
 import numpy as np
 
 import os
@@ -50,24 +53,18 @@ class MapGenerator:
          key = mat.tex
          tex = imread(path.format(key))
          mat.tex = tex[:, :, :3][::4, ::4]
-         lookup[mat.index] = mat.tex
+         mat.tex = mat.tex.reshape(-1, 3).mean(0).astype(np.uint8)
+         lookup[mat.index] = mat.tex.reshape(1, 1, 3)
+         #lookup[mat.index] = mat.tex
          setattr(Terrain, key.upper(), mat.index)
       self.textures = lookup
 
-   def material(self, config, val, gamma=0):
-      assert 0 <= gamma <= 1
-      alpha = (1 - gamma) * config.TERRAIN_ALPHA
-      beta  = config.TERRAIN_BETA * gamma
-
-      if val == config.TERRAIN_LAVA:
-         return Terrain.LAVA
+   def material(self, config, val):
       if val <= config.TERRAIN_WATER:
          return Terrain.WATER
-      if val <= config.TERRAIN_FOREST_LOW - alpha:
-         return Terrain.FOREST
-      if val <= config.TERRAIN_GRASS + beta:
+      if val <= config.TERRAIN_GRASS:
          return Terrain.GRASS
-      if val <= config.TERRAIN_FOREST_HIGH:
+      if val <= config.TERRAIN_FOREST:
          return Terrain.FOREST
       return Terrain.STONE
 
@@ -82,92 +79,110 @@ class MapGenerator:
 
       #Train and eval map indices
       msg    = 'Generating {} training and {} evaluation maps:'
-      evalMaps  = range(-config.N_EVAL_MAPS, 0)
-      trainMaps = range(1, config.N_TRAIN_MAPS+1)
-      print(msg.format(config.N_TRAIN_MAPS, config.N_EVAL_MAPS))
+      evalMaps  = range(-config.TERRAIN_EVAL_MAPS, 0)
+      trainMaps = range(1, config.TERRAIN_TRAIN_MAPS+1)
+      print(msg.format(config.TERRAIN_TRAIN_MAPS, config.TERRAIN_EVAL_MAPS))
 
-      for seed in tqdm([*evalMaps, *trainMaps]):
+      llen = config.TERRAIN_EVAL_MAPS + config.TERRAIN_TRAIN_MAPS
+      perm = np.random.RandomState(seed=0).permutation(llen)
+      interpolaters = np.logspace(config.TERRAIN_LOG_INTERPOLATE_MIN,
+                                  config.TERRAIN_LOG_INTERPOLATE_MAX,
+                                  llen)[perm]
+
+      for idx, seed in enumerate(tqdm([*evalMaps, *trainMaps])):
          path = prefix + '/map' + str(seed)
          mkdir(prefix)
          mkdir(path)
 
-         terrain, tiles = self.grid(config, seed)
+         terrain, tiles = self.grid(config, seed, interpolaters[idx])
 
          Save.np(tiles, path)
          if config.TERRAIN_RENDER:
             Save.fractal(terrain, path+'/fractal.png')
             Save.render(tiles, self.textures, path+'/map.png')
 
-   def grid(self, config, seed):
-      sz          = config.TERRAIN_SIZE
-      frequency   = config.TERRAIN_FREQUENCY
-      octaves     = config.TERRAIN_OCTAVES
-      mode        = config.TERRAIN_MODE
-      lerp        = config.TERRAIN_LERP
+   def grid(self, config, seed, interpolate):
+      center      = config.TERRAIN_CENTER
       border      = config.TERRAIN_BORDER
-      waterRadius = config.TERRAIN_WATER_RADIUS
-      spawnRegion = config.TERRAIN_CENTER_REGION
-      spawnWidth  = config.TERRAIN_CENTER_WIDTH
+      size        = config.TERRAIN_SIZE
+      frequency   = config.TERRAIN_FREQUENCY
+      offset      = config.TERRAIN_FREQUENCY_OFFSET
+      octaves     = center // config.TERRAIN_TILES_PER_OCTAVE
 
-      assert mode in {'expand', 'contract', 'flat'}
-
-      val   = np.zeros((sz, sz, octaves))
-      s     = np.arange(sz)
+      #Data buffers
+      val   = np.zeros((size, size, octaves))
+      scale = np.zeros((size, size, octaves))
+      s     = np.arange(size)
       X, Y  = np.meshgrid(s, s)
 
       #Compute noise over logscaled octaves
-      start, end = frequency
+      start = frequency
+      end   = min(start, start - np.log2(center) + offset)
       for idx, freq in enumerate(np.logspace(start, end, octaves, base=2)):
-         val[:, :, idx] = 0.5 + 0.5*vec_noise.snoise2(seed*sz + freq*X, idx*sz + freq*Y)
+         val[:, :, idx] = vec_noise.snoise2(seed*size + freq*X, idx*size + freq*Y)
 
-      #Compute L1 and L2 distances
-      x      = np.concatenate([np.arange(sz//2, 0, -1), np.arange(1, sz//2+1)])
+      #Compute L1 distance
+      x      = np.abs(np.arange(size) - size//2)
       X, Y   = np.meshgrid(x, x)
       data   = np.stack((X, Y), -1)
       l1     = np.max(abs(data), -1)
-      l2     = np.sqrt(np.sum(data**2, -1))
-      thresh = l1
 
-      #Linear octave blend mask
-      if octaves > 1:
-         dist  = np.linspace(0.5/octaves, 1-0.5/octaves, octaves)[None, None, :]
-         norm  = 2 * l1[:, :, None] / sz 
-         if mode == 'contract':
-            v = 1 - abs(1 - norm - dist)
-         elif mode == 'expand':
-            v = 1 - abs(norm - dist)
+      #Interpolation Weights
+      rrange = np.linspace(-1, 1, 2*octaves-1)
+      pdf    = stats.norm.pdf(rrange, 0, interpolate)
+      pdf    = pdf / max(pdf)
+      high   = center / 2
+      delta  = high / octaves
 
-         v   = (2*octaves-1) * (v - 1) + 1
-         v   = np.clip(v, 0, 1)
-      
-         v  /= np.sum(v, -1)[:, :, None]
-         val = np.sum(v*val, -1)
-         l1  = 1 - 2*l1/sz
+      #Compute perlin mask
+      noise  = np.zeros((size, size))
+      X, Y   = np.meshgrid(s, s)
+      expand = int(np.log2(center)) - 2
+      for idx, octave in enumerate(range(expand, 1, -1)):
+         freq, mag = 1 / 2**octave, 1 / 2**idx
+         noise    += mag * vec_noise.snoise2(seed*size + freq*X, idx*size + freq*Y) 
 
-      #Compute distance from the edges inward
-      if mode == 'contract':
-         l1 = 1 - l1
+      #plt.imshow(noise)
+      #plt.show()
+      noise -= np.min(noise)
+      noise = octaves * noise / np.max(noise) - 1e-12
+      noise = noise.astype(np.int)
+      #plt.imshow(noise)
+      #plt.show()
 
-      if not lerp:
-         l1 = 0.5 + 0*l1
+      #Compute L1 and Perlin scale factor
+      for i in range(octaves):
+         start             = octaves - i - 1
+         scale[l1 <= high] = np.arange(start, start + octaves)
+         high             -= delta
+
+      start   = noise - 1
+      l1Scale = np.clip(l1, 0, size//2 - border - 2) 
+      l1Scale = l1Scale / np.max(l1Scale)
+      for i in range(octaves):
+         idxs           = l1Scale*scale[:, :, i] + (1-l1Scale)*(start + i)
+         scale[:, :, i] = pdf[idxs.astype(np.int)]
+
+      #Blend octaves
+      std = np.std(val)
+      val = val / std
+      val = scale * val
+      val = np.sum(scale * val, -1)
+      val = std * val / np.std(val)
+      val = 0.5 + np.clip(val, -1, 1)/2
 
       #Threshold to materials
-      matl = np.zeros((sz, sz), dtype=object)
-      for y in range(sz):
-         for x in range(sz):
-            matl[y, x] = self.material(config, val[y, x], l1[y, x])
+      matl = np.zeros((size, size), dtype=object)
+      for y in range(size):
+         for x in range(size):
+            matl[y, x] = self.material(config, val[y, x])
 
-      #Lava border and center crop
-      matl[thresh > sz//2 - border] = Terrain.LAVA
+      #Lava and grass border
+      matl[l1 > size/2 - border]       = Terrain.LAVA
+      matl[l1 == size//2 - border]     = Terrain.GRASS
 
-      #Grass border or center spawn region
-      if mode == 'expand':
-         matl[thresh <= spawnRegion]              = Terrain.GRASS
-         matl[thresh <= spawnRegion-spawnWidth]   = Terrain.STONE
-         matl[thresh <= spawnRegion-spawnWidth-1] = Terrain.WATER
-      elif mode == 'contract':
-         matl[thresh == sz//2 - border] = Terrain.GRASS
-         matl[l2 < waterRadius + 1]     = Terrain.GRASS
-         matl[l2 < waterRadius]         = Terrain.WATER
+      edge  = l1 == size//2 - border - 1
+      stone = (matl == Terrain.STONE) | (matl == Terrain.WATER)
+      matl[edge & stone] = Terrain.FOREST
 
       return val, matl

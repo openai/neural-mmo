@@ -45,8 +45,6 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.pos = [512, 512]
         self.cmd = None
 
-        self.WINDOW = 128
-
     def onOpen(self):
         print("Opened connection to server")
 

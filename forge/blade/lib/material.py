@@ -36,9 +36,9 @@ class Forest(Material):
    degen       = Scrub
 
    def __init__(self, config):
-      self.capacity = config.FOREST_CAPACITY
-      self.respawn  = config.FOREST_RESPAWN
-      #self.dropTable = DropTable.DropTable()
+      if config.game_system_enabled('Resource'):
+         self.capacity = config.RESOURCE_FOREST_CAPACITY
+         self.respawn  = config.RESOURCE_FOREST_RESPAWN
 
 class Stone(Material):
    tex   = 'stone'
@@ -52,19 +52,23 @@ class Orerock(Material):
    degen       = Stone
 
    def __init__(self, config):
-      self.capacity = config.OREROCK_CAPACITY
-      self.respawn  = config.OREROCK_RESPAWN
-      #self.dropTable = systems.DropTable()
-      #self.dropTable.add(ore.Copper, 1)
+      if config.game_system_enabled('Resource'):
+         self.capacity = config.RESOURCE_OREROCK_CAPACITY
+         self.respawn  = config.RESOURCE_OREROCK_RESPAWN
 
 class Meta(type):
+   def __init__(self, name, bases, dict):
+      self.indices = {mtl.index for mtl in self.materials}
+
    def __iter__(self):
       yield from self.materials
 
    def __contains__(self, mtl):
       if isinstance(mtl, Material):
          mtl = type(mtl)
-      return mtl in self.materials
+      if isinstance(mtl, type):
+         return mtl in self.materials
+      return mtl in self.indices
 
 class All(metaclass=Meta):
    materials = {Lava, Water, Grass, Scrub, Forest, Stone, Orerock}

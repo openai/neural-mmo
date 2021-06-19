@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from forge.blade.systems.ai import move, attack, utils
+from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action import static as Action
 
 def update(entity):
@@ -31,9 +32,7 @@ def explore(realm, actions, entity):
    spawnR, spawnC = entity.spawnPos
    centR, centC   = sz//2, sz//2
 
-   vR, vC = spawnR-centR, spawnC-centC
-   if not realm.config.SPAWN_CENTER:
-      vR, vC = -vR, -vC
+   vR, vC = centR-spawnR, centC-spawnC
 
    mmag = max(abs(vR), abs(vC))
    rr   = r + int(np.round(entity.vision*vR/mmag))
@@ -41,6 +40,26 @@ def explore(realm, actions, entity):
 
    tile = realm.map.tiles[rr, cc]
    pathfind(realm, actions, entity, tile)
+
+def explore(config, ob, actions, spawnR, spawnC):
+   vision = config.NSTIM
+   sz     = config.TERRAIN_SIZE
+   Entity = Stimulus.Entity
+   Tile   = Stimulus.Tile
+
+   agent  = ob.agent
+   r      = utils.Observation.attribute(agent, Entity.R)
+   c      = utils.Observation.attribute(agent, Entity.C)
+
+   centR, centC   = sz//2, sz//2
+
+   vR, vC = centR-spawnR, centC-spawnC
+
+   mmag = max(abs(vR), abs(vC))
+   rr   = int(np.round(vision*vR/mmag))
+   cc   = int(np.round(vision*vC/mmag))
+
+   pathfind(config, ob, actions, rr, cc)
 
 def meander(realm, actions, entity):
    actions[Action.Move] = {Action.Direction: move.habitable(realm.map.tiles, entity)}
@@ -70,12 +89,4 @@ def attack(realm, actions, entity):
 
    actions[Action.Attack] = {Action.Style: entity.skills.style,
          Action.Target: entity.target}
-
-def forageDP(realm, actions, entity):
-   direction            = utils.forageDP(realm.map.tiles, entity)
-   actions[Action.Move] = {Action.Direction: move.towards(direction)}
-
-def forageDijkstra(realm, actions, entity):
-   direction            = utils.forageDijkstra(realm.map.tiles, entity)
-   actions[Action.Move] = {Action.Direction: move.towards(direction)}
 

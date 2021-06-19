@@ -155,7 +155,7 @@ class GridTables:
 
       self.nRows      = prealloc
       self.expansion  = expansion
-      self.radius     = config.STIM
+      self.radius     = config.NSTIM
       self.pad        = pad
 
    def get(self, ent, radius=None, entity=False):

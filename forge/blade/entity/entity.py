@@ -28,22 +28,13 @@ class Resources:
 class Status:
    def __init__(self, ent):
       self.config = ent.config
-
-      self.wilderness = Static.Entity.Wilderness(ent.dataframe, ent.entID)
-      self.immune     = Static.Entity.Immune(    ent.dataframe, ent.entID)
-      self.freeze     = Static.Entity.Freeze(    ent.dataframe, ent.entID)
+      self.freeze     = Static.Entity.Freeze(ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
-      self.immune.decrement()
       self.freeze.decrement()
-
-      wilderness = combat.wilderness(self.config, entity.pos)
-      self.wilderness.update(wilderness)
 
    def packet(self):
       data = {}
-      data['wilderness'] = self.wilderness.val
-      data['immune']     = self.immune.val
       data['freeze']     = self.freeze.val
       return data
 
@@ -54,6 +45,7 @@ class History:
   
       self.origPos     = ent.pos
       self.exploration = 0
+      self.playerKills = 0
 
       self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
       self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
@@ -65,7 +57,7 @@ class History:
       self.actions = actions
       self.damage.update(0)
 
-      exploration      = utils.l1(entity.pos, self.origPos)
+      exploration      = utils.linf(entity.pos, self.origPos)
       self.exploration = max(exploration, self.exploration)
 
       self.timeAlive.increment()
@@ -90,12 +82,14 @@ class Base:
       self.c          = Static.Entity.C(ent.dataframe, ent.entID, c)
 
       self.population = Static.Entity.Population(ent.dataframe, ent.entID, pop)
-      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, True)
+      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, 1)
+      self.identity   = Static.Entity.ID(        ent.dataframe, ent.entID, ent.entID)
+      self.level      = Static.Entity.Level(     ent.dataframe, ent.entID, 3)
 
       ent.dataframe.init(Static.Entity, ent.entID, (r, c))
 
    def update(self, realm, entity, actions):
-      pass
+      self.level.update(combat.level(entity.skills))
 
    @property
    def pos(self):
@@ -127,6 +121,8 @@ class Entity:
       self.closest      = None
       self.spawnPos     = pos
 
+      self.attackerID = Static.Entity.AttackerID(self.dataframe, self.entID, 0)
+
       #Submodules
       self.base      = Base(self, pos, iden, name, color, pop)
       self.status    = Status(self)
@@ -148,6 +144,7 @@ class Entity:
       '''Update occurs after actions, e.g. does not include history'''
       if self.history.damage == 0:
          self.attacker = None
+         self.attackerID.update(0)
 
       self.base.update(realm, self, actions)
       self.status.update(realm, self, actions)
@@ -157,7 +154,7 @@ class Entity:
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
 
-      if not self.alive and source is not None:
+      if not self.alive and source:
          source.receiveLoot(self.loadout)
          return False
 

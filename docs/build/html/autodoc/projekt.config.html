@@ -225,7 +225,7 @@
 <dl class="py class">
 <dt id="projekt.config.Base">
 <em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Base</code><a class="headerlink" href="#projekt.config.Base" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Config" title="forge.blade.core.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Config</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Achievement</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Config" title="forge.blade.core.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Config</span></code></a></p>
 <p>Base config for RLlib Models</p>
 <p>Extends core Config, which contains environment, evaluation,
 and non-RLlib-specific learning parameters</p>
@@ -990,9 +990,15 @@ along the borders of the square game map</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="projekt.config.Competition">
+<em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">Competition</code><a class="headerlink" href="#projekt.config.Competition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.Achievement" title="forge.blade.core.config.Achievement"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.Achievement</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
 <dt id="projekt.config.CompetitionRound1">
 <em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">CompetitionRound1</code><a class="headerlink" href="#projekt.config.CompetitionRound1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="#projekt.config.Competition" title="projekt.config.Competition"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Competition</span></code></a></p>
 <dl class="py method">
 <dt id="projekt.config.CompetitionRound1.PATH_EVALUATION">
 <em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.CompetitionRound1.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
@@ -1042,7 +1048,7 @@ along the borders of the square game map</p>
 <dl class="py class">
 <dt id="projekt.config.CompetitionRound2">
 <em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">CompetitionRound2</code><a class="headerlink" href="#projekt.config.CompetitionRound2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#projekt.config.CompetitionRound1" title="projekt.config.CompetitionRound1"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.CompetitionRound1</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.SmallMaps" title="projekt.config.SmallMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.SmallMaps</span></code></a>, <a class="reference internal" href="#projekt.config.Competition" title="projekt.config.Competition"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Competition</span></code></a></p>
 <dl class="py method">
 <dt id="projekt.config.CompetitionRound2.PATH_EVALUATION">
 <em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.CompetitionRound2.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
@@ -1092,7 +1098,7 @@ along the borders of the square game map</p>
 <dl class="py class">
 <dt id="projekt.config.CompetitionRound3">
 <em class="property">class </em><code class="sig-prename descclassname">projekt.config.</code><code class="sig-name descname">CompetitionRound3</code><a class="headerlink" href="#projekt.config.CompetitionRound3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#projekt.config.LargeMaps" title="projekt.config.LargeMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.LargeMaps</span></code></a>, <a class="reference internal" href="forge.blade.core.config.html#forge.blade.core.config.AllGameSystems" title="forge.blade.core.config.AllGameSystems"><code class="xref py py-class docutils literal notranslate"><span class="pre">forge.blade.core.config.AllGameSystems</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#projekt.config.LargeMaps" title="projekt.config.LargeMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.LargeMaps</span></code></a>, <a class="reference internal" href="#projekt.config.Competition" title="projekt.config.Competition"><code class="xref py py-class docutils literal notranslate"><span class="pre">projekt.config.Competition</span></code></a></p>
 <dl class="py method">
 <dt id="projekt.config.CompetitionRound3.PATH_EVALUATION">
 <em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#projekt.config.CompetitionRound3.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>

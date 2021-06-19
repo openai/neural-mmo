@@ -21,8 +21,8 @@ Neural MMO is a platform for agent-based intelligence research featuring hundred
 .. code-block:: python
    :caption: Ubuntu (20.04 preferred)
 
-   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
-   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client neural-mmo/forge/embyr
+   git clone --single-branch --depth=1 --branch master https://github.com/jsuarez5341/neural-mmo
+   git clone --single-branch --depth=1 --branch v1.5.1 https://github.com/jsuarez5341/neural-mmo-client neural-mmo/forge/embyr
 
    cd neural-mmo && bash scripts/setup.sh
 
@@ -30,11 +30,11 @@ Neural MMO is a platform for agent-based intelligence research featuring hundred
    :caption: Windows 10 + WSL Ubuntu
 
    #Execute in WSL Ubuntu
-   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo
+   git clone --single-branch --depth=1 --branch master https://github.com/jsuarez5341/neural-mmo
    cd neural-mmo && bash scripts/setup.sh
 
    #Execute in Windows 10
-   git clone --single-branch --depth=1 --branch v1.5 https://github.com/jsuarez5341/neural-mmo-client
+   git clone --single-branch --depth=1 --branch v1.5.1 https://github.com/jsuarez5341/neural-mmo-client
 
 **Troubleshooting:**
   - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
@@ -134,7 +134,7 @@ Rendering the environment requires launching both a server and a client. To laun
 
 .. code-block:: python
 
-  python Forge.py render --config=SmallMaps
+  python Forge.py render --config=SmallMultimodalSkills
 
 | **Linux:** Launch *client.sh* in a separate shell or click the associated executable
 | **Windows:** Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10
@@ -156,13 +156,13 @@ Writing your own overlays is simple. You can find the source code for general ov
 |icon| Training
 ###############
 
-Evaluating on small/large maps will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:
+Evaluating on canonical configs will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:
 
 .. code-block:: python
   :caption: Train on small and large game maps
 
-  python Forge.py train --config=SmallMaps --MODEL=None
-  python Forge.py train --config=LargeMaps --MODEL=None
+  python Forge.py train --config=SmallMultimodalSkills --LOAD=False
+  python Forge.py train --config=LargeMultimodalSkills --LOAD=False
 
 .. code-block:: text
 
@@ -212,10 +212,10 @@ Evaluating on small/large maps will load the associated pretrained baseline by d
    ▏Neural MMO v1.5▕▏Epochs: 18.0▕▏kSamples: 236.8▕▏Sample Time: 1022.2▕▏Learn Time: 3797.6▕
    ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
-The training monitor above summarizes wall-clock time spent on sampling vs training and displays performance for the last three epochs. You can train reasonably good small-map models in a few hours and decent large-map models overnight on a single desktop with one GPU. See Baselines for exact training times and performances of our models. Specify the --MODEL=current flag throughout the remainder of these tutorials to load the model you just trained.
+The training monitor above summarizes wall-clock time spent on sampling vs training and displays performance for the last three epochs. You can train reasonably good small-map models in a few hours and decent large-map models overnight on a single desktop with one GPU. See Baselines for exact training times and performances of our models. 
 
 Note:
-  - Any subsequent training commands will overwrite your checkpoint files. We suggest copying your latest model (baselines/models/current/) to another directory in baselines/models. You can then load that model by specifying the directory name.
+  - Training from scratch will overwrite the baseline models. Override the MODEL property or create a copy of the config to avoid this.
   - The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.
 
 |icon| Evaluation
@@ -224,10 +224,10 @@ Note:
 Evaluation in open-ended massively multiagent settings is akin to that in the real world. There is not an obvious single real-number metric. It's like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO's suite of evaluation and visualization tools.
 
 .. code-block:: python
-   :caption: Evaluate the pretrained SmallMaps model and a scripted baseline
+   :caption: Evaluate a pretrained and scripted model
 
-   python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1
-   python Forge.py evaluate --config=SmallMaps --EVAL_MAPS=1 --MODEL=scripted-combat
+   python Forge.py evaluate --config=SmallMultimodalSkills --EVAL_MAPS=1
+   python Forge.py evaluate --config=SmallMultimodalSkills --EVAL_MAPS=1 --SCRIPTED=Combat
 
 .. code-block:: text
 
@@ -257,8 +257,8 @@ The "visualize" command creates summary tables and figures using the results of 
 .. code-block:: python
    :caption: Visualize evaluation results for pretrained and scripted baselines
 
-   python Forge.py visualize --config=SmallMaps --MODEL=small-maps
-   python Forge.py visualize --config=SmallMaps --MODEL=scripted-combat
+   python Forge.py visualize --config=SmallMultimodalSkills --MODEL=small-maps
+   python Forge.py visualize --config=SmallMultimodalSkills --MODEL=scripted-combat
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std

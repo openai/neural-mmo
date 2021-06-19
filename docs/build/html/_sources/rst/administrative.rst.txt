@@ -26,6 +26,10 @@
 
 I, `[Joseph Suarez] <https://github.com/jsuarez5341>`_, am the primary author of Neural MMO. I plan to continue development for at least the duration of my EECS PhD at MIT or until someone convinces me that there is a better way to solve AGI. Everything written in the source and documentation is my own opinion. I do not speak for OpenAI, MIT, Clare, Phillip, Igor, or anyone else involved in the project.
 
+2021 (summer): v1.5.1 release
+   - Neural MMO v1.5.1 AICrowd competition launched
+   - Neural MMO v1.5 presented at Ray Summit 2021
+
 2021 (winter): v1.5 release
    - Neural MMO v1.5 presented at English Week 2021, IUT Vannes
 

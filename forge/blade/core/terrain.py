@@ -55,6 +55,7 @@ class MapGenerator:
          mat.tex = tex[:, :, :3][::4, ::4]
          mat.tex = mat.tex.reshape(-1, 3).mean(0).astype(np.uint8)
          lookup[mat.index] = mat.tex.reshape(1, 1, 3)
+         #lookup[mat.index] = mat.tex
          setattr(Terrain, key.upper(), mat.index)
       self.textures = lookup
 

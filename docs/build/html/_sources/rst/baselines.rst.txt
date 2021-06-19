@@ -2,10 +2,12 @@
 
 .. figure:: /resource/image/environment.png
 
-   Neural MMO provides two standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.
+   Neural MMO provides standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.
 
 |icon| Evaluation Protocol
 ##########################
+
+**Versioning:** The evaluations below are for v1.5. If you are here for the competition, refer to the AICrowd page for results. If you are here for the publication, we are in the process of aggregating experiment results for v1.5.1 and generating figures. 
 
 Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.
 

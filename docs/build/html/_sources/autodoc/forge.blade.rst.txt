@@ -14,6 +14,5 @@ forge.blade package
    forge.blade.entity
    forge.blade.hook
    forge.blade.io
-   forge.blade.item
    forge.blade.lib
    forge.blade.systems

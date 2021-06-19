@@ -224,10 +224,11 @@
             
   <div class="figure align-default" id="id5">
 <img alt="../_images/environment.png" src="../_images/environment.png" />
-<p class="caption"><span class="caption-text">Neural MMO provides two standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Neural MMO provides standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <div class="section" id="icon-evaluation-protocol">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Evaluation Protocol<a class="headerlink" href="#icon-evaluation-protocol" title="Permalink to this headline">¶</a></h1>
+<p><strong>Versioning:</strong> The evaluations below are for v1.5. If you are here for the competition, refer to the AICrowd page for results. If you are here for the publication, we are in the process of aggregating experiment results for v1.5.1 and generating figures.</p>
 <p>Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.</p>
 <p>Publications including new models should clearly indicate training scale, domain knowledge assumptions, and any other significant changes to the default configuration. Ideally, they should also include a discussion of agent behavior and supporting training/evaluation plots, overlay figures, and/or other evidence specific to the associated work.</p>
 <p>To reproduce the tables and figures below, run the associated command. Run <em>train</em> or <em>evaluate</em> instead of <em>visualize</em> to verify results from scratch or from the pretrained model.</p>

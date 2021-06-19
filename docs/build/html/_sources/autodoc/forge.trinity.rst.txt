@@ -10,6 +10,12 @@ forge.trinity package
 .. toctree::
    :maxdepth: 4
 
+   forge.trinity.scripted
+
+
+.. toctree::
+   :maxdepth: 4
+
    forge.trinity.dataframe
    forge.trinity.env
    forge.trinity.evaluator

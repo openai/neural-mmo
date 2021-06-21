@@ -166,7 +166,7 @@ class Config(Template):
 
    @property
    def SPAWN(self):
-      return self.SPAWN_CONCURRENT
+      return self.SPAWN_CONTINUOUS
 
    ############################################################################
    ### Evaluation Parameters

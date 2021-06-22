@@ -7,3 +7,4 @@ bokeh==2.2.3
 imageio==2.8.0
 sphinx-rtd-theme==0.5.1
 tqdm==4.61.1
+matplotlib==3.1.3

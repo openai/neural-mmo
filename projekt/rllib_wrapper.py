@@ -73,9 +73,9 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       alpha  = config.TEAM_SPIRIT
       return alpha*team + (1.0-alpha)*individual
 
-   def step(self, decisions, omitDead=False, preprocessActions=True):
-      obs, rewards, dones, infos = super().step(
-            decisions, omitDead, preprocessActions)
+   def step(self, decisions, preprocess=None, omitDead=False):
+      preprocess = {entID: True for entID in decisions}
+      obs, rewards, dones, infos = super().step(decisions, preprocess, omitDead)
 
       config = self.config
       dones['__all__'] = False
@@ -187,7 +187,7 @@ class RLlibEvaluator(evaluator.Base):
          actions, self.state, _ = self.trainer.compute_actions(
              self.obs, state=self.state, policy_id='policy_0')
 
-      super().tick(self.obs, actions, pos, cmd)
+      super().tick(self.obs, actions, pos, cmd, preprocess=None)
 
 class SanePPOTrainer(ppo.PPOTrainer):
    '''Small utility class on top of RLlib's base trainer'''

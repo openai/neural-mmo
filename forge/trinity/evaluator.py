@@ -49,7 +49,7 @@ class Base:
       #Save data
       np.save(config.PATH_EVALUATION, log.packet)
 
-   def tick(self, obs, actions, pos, cmd, preprocess, omitDead=True):
+   def tick(self, obs, actions, pos, cmd, preprocess=set(), omitDead=True):
       '''Simulate a single timestep
 
       Args:
@@ -98,5 +98,4 @@ class Evaluator(Base):
             actions[agentID][Action.Attack][Action.Target] = realm.entity(targID)
          #actions[agentID]   = self.policy(realm, agent, *self.args)
 
-      preprocess = defaultdict(lambda entID: False)
-      super().tick(self.obs, actions, pos, cmd, preprocess)
+      super().tick(self.obs, actions, pos, cmd)

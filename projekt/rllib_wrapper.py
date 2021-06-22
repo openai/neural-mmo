@@ -74,7 +74,7 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       return alpha*team + (1.0-alpha)*individual
 
    def step(self, decisions, preprocess=None, omitDead=False):
-      preprocess = {entID: True for entID in decisions}
+      preprocess = {entID for entID in decisions}
       obs, rewards, dones, infos = super().step(decisions, preprocess, omitDead)
 
       config = self.config

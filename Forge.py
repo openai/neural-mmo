@@ -8,12 +8,8 @@ Associated docs and tutorials are hosted on jsuarez5341.github.io.'''
 from pdb import set_trace as T
 
 import numpy as np
-import torch
 
 from fire import Fire
-
-import ray
-from ray import rllib
 
 from forge.ethyr.torch import utils
 from forge.trinity.scripted import baselines
@@ -21,7 +17,6 @@ from forge.trinity.visualize import BokehServer
 from forge.trinity.evaluator import Evaluator
 
 import projekt
-from projekt import rllib_wrapper as wrapper
 from forge.blade.core import terrain
 
 def createPolicies(config, mapPolicy):
@@ -124,6 +119,13 @@ class Anvil():
          config = projekt.config.LargeMaps()
       config.override(**kwargs)
       self.config = config
+
+      if not config.SCRIPTED:
+         global torch, ray, rllib, wrapper
+         import torch
+         import ray
+         from ray import rllib
+         from projekt import rllib_wrapper as wrapper
 
    def train(self, **kwargs):
       '''Train a model starting with the current value of --MODEL'''

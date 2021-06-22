@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Introduction &mdash; Neural MMO v1.5 1.5 documentation</title>
+  <title>Introduction &mdash; Neural MMO v1.5 1.5.1 documentation</title>
   
 
   
@@ -248,6 +248,7 @@
 <dl class="simple">
 <dt><strong>Troubleshooting:</strong></dt><dd><ul class="simple">
 <li><p>Post installation errors in #support on the <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a></p></li>
+<li><p>If you are training on GPU and get an IndexError error on self.device, set gpu_ids=[0] in ray/rllib/policy/rotch_policy.py:150 (typically in ~/anaconda3/lib/python3.8/site-packages)</p></li>
 <li><p>Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor</p></li>
 <li><p>If you want full commit history, clone without <code class="docutils literal notranslate"><span class="pre">--depth=1</span></code> (including in scripts/setup.sh for the client). This flag is only included to cut down on download time</p></li>
 <li><p>The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.</p></li>

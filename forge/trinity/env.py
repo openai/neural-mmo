@@ -113,9 +113,10 @@ class Env:
             Perform this conditional processing to make batched action
             computation easier.
 
-         preprocess: Per-agentID dict of whether to treat actions as raw indices
-            or as game objects. Typically, this value should be True for
-            neural models and false for scripted baselines.
+         preprocess: set of agent IDs for which actions are returned as raw
+            indices and need to be preprocessed. Typically this should only
+            include IDs of agents controlled by neural models and exclude IDs
+            of scripted agents
 
          omitDead: Whether to omit dead agents observations from the returned
             obs. Provided for conformity with some optimizer APIs

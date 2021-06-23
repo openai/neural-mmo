@@ -49,7 +49,7 @@ class Base:
       #Save data
       np.save(config.PATH_EVALUATION, log.packet)
 
-   def tick(self, obs, actions, pos, cmd, preprocessActions=True):
+   def tick(self, obs, actions, pos, cmd, preprocess=set(), omitDead=True):
       '''Simulate a single timestep
 
       Args:
@@ -60,7 +60,7 @@ class Base:
           preprocessActions: Required for actions provided as indices
       '''
       self.obs, rewards, self.done, _ = self.env.step(
-            actions, omitDead=True, preprocessActions=preprocessActions)
+            actions, preprocess, omitDead)
       if self.config.RENDER:
          self.registry.step(obs, pos, cmd)
 
@@ -98,4 +98,4 @@ class Evaluator(Base):
             actions[agentID][Action.Attack][Action.Target] = realm.entity(targID)
          #actions[agentID]   = self.policy(realm, agent, *self.args)
 
-      super().tick(self.obs, actions, pos, cmd, preprocessActions=False)
+      super().tick(self.obs, actions, pos, cmd)

@@ -156,22 +156,30 @@ class TeamBased(MagnifyExploration, config.Combat):
 
 
 ### AICrowd competition settings
-class Competition(config.AllGameSystems, config.Achievement):
+class Competition(config.AllGameSystems, config.Achievement): pass
+class CompetitionRound1(SmallMaps, Competition):
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-class CompetitionRound1(SmallMaps, Competition):
    NENT                    = 128
    NPOP                    = 1
    COOP                    = False
 
 class CompetitionRound2(SmallMaps, Competition):
+   @property
+   def SPAWN(self):
+      return self.SPAWN_CONCURRENT
+
    NENT                    = 128
    NPOP                    = 16
    COOP                    = True
 
 class CompetitionRound3(LargeMaps, Competition):
+   @property
+   def SPAWN(self):
+      return self.SPAWN_CONCURRENT
+
    NENT                    = 1024
    NPOP                    = 32
    COOP                    = True

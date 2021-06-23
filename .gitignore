@@ -3,6 +3,10 @@
 *.swo
 *.swp
 baselines/models/current/*
-forge/embyr
+neural_mmo/forge/embyr
 docs/source/resource/maps/
 docs/source/autodoc/
+.idea
+dist
+build
+neural_mmo.egg-info

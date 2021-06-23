@@ -74,7 +74,8 @@ class EntityGroup(Mapping):
    def cull(self):
       self.dead = {}
       for entID in list(self.entities):
-         if not (player := self.entities[entID]).alive:
+         player = self.entities[entID]
+         if not player.alive:
             r, c  = player.base.pos
             entID = player.entID
             self.dead[entID] = player
@@ -109,7 +110,8 @@ class NPCManager(EntityGroup):
          if self.realm.map.tiles[r, c].occupied:
             continue
 
-         if npc := NPC.spawn(self.realm, (r, c), self.idx):
+         npc = NPC.spawn(self.realm, (r, c), self.idx)
+         if npc: 
             super().spawn(npc)
             self.idx -= 1
 

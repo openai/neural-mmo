@@ -1,4 +1,5 @@
--r base.txt
 ray[rllib]==1.4.0
 tensorflow==2.4.1
+dm-tree==0.1.5
+setproctitle==1.1.10
 torch

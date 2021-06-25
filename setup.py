@@ -37,6 +37,12 @@ def download_file(url, save_dir):
 
 
 def package_files(directory):
+    if os.path.relpath(directory) != directory:
+        return []
+
+    if directory.startswith("__"):
+        return []
+
     paths = []
     for (path, directories, filenames) in os.walk(directory):
         for filename in filenames:
@@ -91,8 +97,7 @@ def read_requirements_file(requirements_version):
 if __name__ == "__main__":
     setup_neural_mmo_client()
 
-# extra_dirs = ["resource", "neural_mmo/forge/embyr", "neural_mmo/baselines"]
-extra_dirs = ["resource", "baselines"]
+extra_dirs = ["resource", "baselines", "forge/embyr"]
 extra_files = []
 for extra_dir in extra_dirs:
     extra_files += package_files(str(current_dir / "neural_mmo" / extra_dir))
@@ -110,7 +115,7 @@ setup(
     version=VERSION,
     cmdclass=versioneer.get_cmdclass(),
     install_requires=read_requirements_file("base"),
-    extra_require={
+    extras_require={
         "rllib": read_requirements_file("rllib"),
     },
     entry_points={

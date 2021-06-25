@@ -1,7 +1,0 @@
-forge.blade.io.node module
-==========================
-
-.. automodule:: forge.blade.io.node
-   :members:
-   :inherited-members:
-   :show-inheritance:

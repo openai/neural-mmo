@@ -1,7 +1,0 @@
-forge.blade.systems.achievement module
-======================================
-
-.. automodule:: forge.blade.systems.achievement
-   :members:
-   :inherited-members:
-   :show-inheritance:

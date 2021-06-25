@@ -1,7 +1,0 @@
-forge.blade.systems.ai.behavior module
-======================================
-
-.. automodule:: forge.blade.systems.ai.behavior
-   :members:
-   :inherited-members:
-   :show-inheritance:

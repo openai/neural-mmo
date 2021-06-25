@@ -6,6 +6,8 @@ import os
 from collections import defaultdict
 from itertools import chain
 
+import neural_mmo
+
 class StaticIterable(type):
    def __iter__(cls):
       stack = list(cls.__dict__.items())
@@ -273,7 +275,7 @@ class Config(Template):
 
    ############################################################################
    ### Path Parameters
-   PATH_ROOT            = os.getcwd()
+   PATH_ROOT            = os.path.dirname(neural_mmo.__file__)
    '''Global repository directory'''
 
    PATH_RESOURCE        = os.path.join(PATH_ROOT, 'resource')

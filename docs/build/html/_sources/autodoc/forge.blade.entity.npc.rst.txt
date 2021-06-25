@@ -1,7 +1,0 @@
-forge.blade.entity.npc module
-=============================
-
-.. automodule:: forge.blade.entity.npc
-   :members:
-   :inherited-members:
-   :show-inheritance:

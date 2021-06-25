@@ -23,15 +23,15 @@ We manage major improvements and expansions through a Github Projects `[Scrum Bo
 
 Neural MMO is broken into four major modules
 
-|air| forge/ethyr: Neural networks. This module contains all code with PyTorch dependencies and associated tools.
+|air| neural_mmo/forge/ethyr: Neural networks. This module contains all code with PyTorch dependencies and associated tools.
 
-|water| forge/trinity: Infrastructure. This module contains everything positions between the environment code and the model code, including the core API, evaluation and visualization tools, and serialized observation representations.
+|water| neural_mmo/forge/trinity: Infrastructure. This module contains everything positions between the environment code and the model code, including the core API, evaluation and visualization tools, and serialized observation representations.
 
-|earth| forge/blade: Core game. This module contains the environment code with minimal dependencies on non-game elements.
+|earth| neural_mmo/forge/blade: Core game. This module contains the environment code with minimal dependencies on non-game elements.
 
-|fire| forge/embyr: 3D Unity client. This module contains the C# Unity project and associated executables.
+|fire| neural_mmo/forge/embyr: 3D Unity client. This module contains the C# Unity project and associated executables.
 
-Forge.py is the main file and the RLlib demo is implemented in /projekt
+neural_mmo/Forge.py is the main file and the RLlib demo is implemented in neural_mmo/projekt
 
 |icon| Style
 ############
@@ -45,7 +45,7 @@ The Neural MMO: `[Style Guide] <https://docs.google.com/presentation/d/1m0A65nZC
 
 **High-Level:** The server is written in Python 3.7. The client is a Unity3D project written in C#. The client is not required for training and is only used for rendering visualizations. These two layers communicate with each other through a Twisted WebSocket server. The documentation is written in Sphinx.
 
-**Server:** Broken into four modules as described in the User Guide. The biggest chunk of code is responsible for the environment game logic, as well as general purpose observation and action processing required for the OpenAI Gym derivative User API. The baselines are PyTorch models and our demo training code uses RLlib. The environment itself does not depend on PyTorch or RLlib (and shouldn't), but they are more or less mandatory if you want an out-of-the-box experience. There isn't a way around this with current frameworks. No frameworks currently support automatic input/output network definitions from complex Gym spaces. The best we could do is to replicate the current design in other frameworks (e.g. TensorFlow). That is too much work for me to do as an individual for too little benefit, but if you want to implement a TensorFlow port, go ahead and I'll merge to forge/ethyr/tensorflow.
+**Server:** Broken into four modules as described in the User Guide. The biggest chunk of code is responsible for the environment game logic, as well as general purpose observation and action processing required for the OpenAI Gym derivative User API. The baselines are PyTorch models and our demo training code uses RLlib. The environment itself does not depend on PyTorch or RLlib (and shouldn't), but they are more or less mandatory if you want an out-of-the-box experience. There isn't a way around this with current frameworks. No frameworks currently support automatic input/output network definitions from complex Gym spaces. The best we could do is to replicate the current design in other frameworks (e.g. TensorFlow). That is too much work for me to do as an individual for too little benefit, but if you want to implement a TensorFlow port, go ahead and I'll merge to neural_mmo/forge/ethyr/tensorflow.
 
 We use a slightly customized GoogleFire wrapper for environment and experiment configuration files (pure python with nice CLI support) and a pip requirements.txt for dependency management and installation
 
@@ -63,7 +63,7 @@ When the client first connects to the server, it receives a packet containing th
 |icon| Observation Representation
 #################################
 
-Agent observations are represented by a set of sets: they observe a set of nearby objects (agents and tiles) each parameterized by on the order of a dozen attributes (continuous and discrete values). This quickly becomes a lot of data: for an agent with a vision range of 7, they observe 15x15=256 tiles and up to 256 agents for a total of 512 entities. Multiply this value by up to a thousand agents per environment and we have a lot of data. More importantly, we have a lot of nested object traversals in order to extract the data for each observation from the environment. This is ridiculously slow -- before the following optimizations, observation processing consumed 98+ percent of environment computation time. The solution was to keep a serialized flat-tensor representation of the environment synchronized with the actual environment. Every time the environment updates one of the properties that is observable by agents, the change is reflected in an underlying tensor representation. This allows us to extract agent observations as flat tensor slices. This logic is in forge/trinity/dataframe.py. Be warned: it is essential to follow the patterns used by the Tile and Entity classes to avoid desync. The worst training bugs in Neural MMO invariably come from a mismatch between the game object state and the serialized state.
+Agent observations are represented by a set of sets: they observe a set of nearby objects (agents and tiles) each parameterized by on the order of a dozen attributes (continuous and discrete values). This quickly becomes a lot of data: for an agent with a vision range of 7, they observe 15x15=256 tiles and up to 256 agents for a total of 512 entities. Multiply this value by up to a thousand agents per environment and we have a lot of data. More importantly, we have a lot of nested object traversals in order to extract the data for each observation from the environment. This is ridiculously slow -- before the following optimizations, observation processing consumed 98+ percent of environment computation time. The solution was to keep a serialized flat-tensor representation of the environment synchronized with the actual environment. Every time the environment updates one of the properties that is observable by agents, the change is reflected in an underlying tensor representation. This allows us to extract agent observations as flat tensor slices. This logic is in neural_mmo/forge/trinity/dataframe.py. Be warned: it is essential to follow the patterns used by the Tile and Entity classes to avoid desync. The worst training bugs in Neural MMO invariably come from a mismatch between the game object state and the serialized state.
 
 |icon| Model IO
 ###############

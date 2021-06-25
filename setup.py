@@ -1,12 +1,13 @@
-import shutil
-from pathlib import Path
-from setuptools import setup, find_packages
-from urllib.request import urlretrieve
-import zipfile
 import os
-from tqdm import tqdm
-import versioneer
+import shutil
+import zipfile
+from pathlib import Path
+from urllib.request import urlretrieve
 
+from setuptools import find_packages, setup
+from tqdm import tqdm
+
+import versioneer
 
 README = Path("README.rst").read_text()
 REPO_URL = "https://github.com/jsuarez5341/neural-mmo"
@@ -73,11 +74,22 @@ def setup_neural_mmo_client():
             shutil.rmtree(extracted_client_path)
 
 
+def read_requirements_file(requirements_version):
+    with open(
+        str(current_dir / "requirements" / f"{requirements_version}.txt")
+    ) as reqs_file:
+        reqs = reqs_file.read().split()
+    lines_to_remove = []
+    for idx in range(len(reqs)):
+        if "-r " in reqs[idx]:
+            lines_to_remove.append(idx)
+    for idx in lines_to_remove:
+        reqs.pop(idx)
+    return reqs
+
+
 if __name__ == "__main__":
     setup_neural_mmo_client()
-
-with open(str(current_dir / "requirements" / "base.txt")) as reqs_file:
-    reqs = reqs_file.read().split()
 
 # extra_dirs = ["resource", "neural_mmo/forge/embyr", "neural_mmo/baselines"]
 extra_dirs = ["resource", "baselines"]
@@ -97,7 +109,10 @@ setup(
     },
     version=VERSION,
     cmdclass=versioneer.get_cmdclass(),
-    install_requires=reqs,
+    install_requires=read_requirements_file("base"),
+    extra_require={
+        "rllib": read_requirements_file("rllib"),
+    },
     entry_points={
         "console_scripts": [
             "neural-mmo-forge=neural_mmo.Forge:main",

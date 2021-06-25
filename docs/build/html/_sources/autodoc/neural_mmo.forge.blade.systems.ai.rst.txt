@@ -1,0 +1,19 @@
+neural\_mmo.forge.blade.systems.ai package
+==========================================
+
+.. automodule:: neural_mmo.forge.blade.systems.ai
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade.systems.ai.attack
+   neural_mmo.forge.blade.systems.ai.behavior
+   neural_mmo.forge.blade.systems.ai.dynamic_programming
+   neural_mmo.forge.blade.systems.ai.move
+   neural_mmo.forge.blade.systems.ai.oldai
+   neural_mmo.forge.blade.systems.ai.policy
+   neural_mmo.forge.blade.systems.ai.utils

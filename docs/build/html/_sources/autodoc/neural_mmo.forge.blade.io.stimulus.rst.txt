@@ -1,0 +1,16 @@
+neural\_mmo.forge.blade.io.stimulus package
+===========================================
+
+.. automodule:: neural_mmo.forge.blade.io.stimulus
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade.io.stimulus.dynamic
+   neural_mmo.forge.blade.io.stimulus.hook
+   neural_mmo.forge.blade.io.stimulus.node
+   neural_mmo.forge.blade.io.stimulus.static

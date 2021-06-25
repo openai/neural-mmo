@@ -1,0 +1,7 @@
+neural\_mmo.forge.trinity.dataframe module
+==========================================
+
+.. automodule:: neural_mmo.forge.trinity.dataframe
+   :members:
+   :inherited-members:
+   :show-inheritance:

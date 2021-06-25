@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.core.tile module
+========================================
+
+.. automodule:: neural_mmo.forge.blade.core.tile
+   :members:
+   :inherited-members:
+   :show-inheritance:

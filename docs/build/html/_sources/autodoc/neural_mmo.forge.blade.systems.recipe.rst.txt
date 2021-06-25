@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.recipe module
+=============================================
+
+.. automodule:: neural_mmo.forge.blade.systems.recipe
+   :members:
+   :inherited-members:
+   :show-inheritance:

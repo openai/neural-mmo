@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.SkillActions module
+=======================================
+
+.. automodule:: neural_mmo.jsuarez.SkillActions
+   :members:
+   :inherited-members:
+   :show-inheritance:

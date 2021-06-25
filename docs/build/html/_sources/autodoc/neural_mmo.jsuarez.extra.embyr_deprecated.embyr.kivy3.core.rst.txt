@@ -1,0 +1,15 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.kivy3.core package
+====================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.core
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.core.face3
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.core.geometry
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.core.object3d

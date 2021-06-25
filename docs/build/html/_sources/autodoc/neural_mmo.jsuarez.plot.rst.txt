@@ -1,0 +1,13 @@
+neural\_mmo.jsuarez.plot package
+================================
+
+.. automodule:: neural_mmo.jsuarez.plot
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.plot.bokehPlot

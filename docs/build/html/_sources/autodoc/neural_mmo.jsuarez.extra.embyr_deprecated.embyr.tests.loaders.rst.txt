@@ -1,0 +1,14 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.tests.loaders package
+=======================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.tests.loaders
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.tests.loaders.test_loader
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.tests.loaders.test_objloader

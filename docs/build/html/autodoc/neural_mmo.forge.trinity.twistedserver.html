@@ -1,0 +1,1220 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>neural_mmo.forge.trinity.twistedserver module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="neural_mmo.forge.trinity.visualize module" href="neural_mmo.forge.trinity.visualize.html" />
+    <link rel="prev" title="neural_mmo.forge.trinity.overlay module" href="neural_mmo.forge.trinity.overlay.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html"> Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-installation"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-cli"> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-terrain-generation"> Terrain Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-training"> Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-evaluation"> Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-dashboard-and-statistics"> Dashboard and Statistics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-contributing"> Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-code-structure"> Code Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-style"> Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-client-map-representation"> Client Map Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-observation-representation"> Observation Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-model-io"> Model IO</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.trinity.html">neural_mmo.forge.trinity package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.scripted.html">neural_mmo.forge.trinity.scripted package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.dataframe.html">neural_mmo.forge.trinity.dataframe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.env.html">neural_mmo.forge.trinity.env module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.evaluator.html">neural_mmo.forge.trinity.evaluator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.formatting.html">neural_mmo.forge.trinity.formatting module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.overlay.html">neural_mmo.forge.trinity.overlay module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">neural_mmo.forge.trinity.twistedserver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.trinity.visualize.html">neural_mmo.forge.trinity.visualize module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Baselines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/baselines.html"> Evaluation Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/baselines.html#icon-small-maps"> Small Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/baselines.html#icon-large-maps"> Large Maps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Updates</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html"> Video Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-presentations"> Presentations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-update-slides"> Update Slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-additional-links"> Additional Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ideology</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/ideology.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/ideology.html#icon-failure-modes"> Failure Modes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Administrative</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html#icon-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html#ags-namesake"> Namesake</a></li>
+</ul>
+<p class="caption"><span class="caption-text">NeurIPS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/neurips.html"> NeurIPS 2021 Dataset Track Supplementary Material</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO v1.5</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../rst/api.html"> User API</a> &raquo;</li>
+        
+          <li><a href="neural_mmo.forge.html">neural_mmo.forge package</a> &raquo;</li>
+        
+          <li><a href="neural_mmo.forge.trinity.html">neural_mmo.forge.trinity package</a> &raquo;</li>
+        
+      <li>neural_mmo.forge.trinity.twistedserver module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/autodoc/neural_mmo.forge.trinity.twistedserver.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-neural_mmo.forge.trinity.twistedserver">
+<span id="neural-mmo-forge-trinity-twistedserver-module"></span><h1>neural_mmo.forge.trinity.twistedserver module<a class="headerlink" href="#module-neural_mmo.forge.trinity.twistedserver" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.twistedserver.</span></span><span class="sig-name descname"><span class="pre">GodswordServerProtocol</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.twisted.websocket.WebSocketServerProtocol</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onOpen">
+<span class="sig-name descname"><span class="pre">onOpen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onOpen()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onClose">
+<span class="sig-name descname"><span class="pre">onClose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wasClean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onClose()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.connectionMade">
+<span class="sig-name descname"><span class="pre">connectionMade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.connectionMade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when a connection is made.</p>
+<p>This may be considered the initializer of the protocol, because
+it is called when the connection is completed.  For clients,
+this is called once the connection to the server has been
+established; for servers, this is called after an accept() call
+stops blocking and a socket has been received.  If you need to
+send any greeting or initial message, do it here.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.connectionLost">
+<span class="sig-name descname"><span class="pre">connectionLost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection is shut down.</p>
+<p>Clear any circular references here, and any external references
+to this Protocol.  The connection has been closed.</p>
+<p>&#64;type reason: L{twisted.python.failure.Failure}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessage">
+<span class="sig-name descname"><span class="pre">onMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isBinary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessage()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onConnect">
+<span class="sig-name descname"><span class="pre">onConnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback fired during WebSocket opening handshake when new WebSocket client
+connection is about to be established.</p>
+<p>When you want to accept the connection, return the accepted protocol
+from list of WebSocket (sub)protocols provided by client or <cite>None</cite> to
+speak no specific one or when the client protocol list was empty.</p>
+<p>You may also return a pair of <cite>(protocol, headers)</cite> to send additional
+HTTP headers, with <cite>headers</cite> being a dictionary of key-values.</p>
+<p>Throw <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.types.ConnectionDeny</span></code> when you don’t want
+to accept the WebSocket connection request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.ConnectionRequest</span></code>) – WebSocket connection request information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.beginMessage">
+<span class="sig-name descname"><span class="pre">beginMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isBinary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doNotCompress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.beginMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessage()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.beginMessageFrame">
+<span class="sig-name descname"><span class="pre">beginMessageFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.beginMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.beginMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.consumeData">
+<span class="sig-name descname"><span class="pre">consumeData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.consumeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume buffered (incoming) data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.dataReceived">
+<span class="sig-name descname"><span class="pre">dataReceived</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.dataReceived" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called whenever data is received.</p>
+<p>Use this method to translate to a higher-level message.  Usually, some
+callback will be made upon the receipt of each complete protocol
+message.</p>
+<dl class="simple">
+<dt>&#64;param data: a string of indeterminate length.  Please keep in mind</dt><dd><p>that you will probably need to buffer some data, as partial
+(or multiple) protocol messages may be received!  I recommend
+that unit tests for protocols call through to this method with
+differing chunk sizes, down to one byte at a time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.dropConnection">
+<span class="sig-name descname"><span class="pre">dropConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.dropConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop the underlying TCP connection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.endMessage">
+<span class="sig-name descname"><span class="pre">endMessage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.endMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.endMessage()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.failHandshake">
+<span class="sig-name descname"><span class="pre">failHandshake</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">responseHeaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.failHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>During opening handshake the client request was invalid, we send a HTTP
+error response and then drop the connection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.get_channel_id">
+<span class="sig-name descname"><span class="pre">get_channel_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tls-unique'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.get_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.wamp.interfaces.ITransport.get_channel_id()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logPrefix">
+<span class="sig-name descname"><span class="pre">logPrefix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a prefix matching the class name, to identify log messages
+related to this protocol instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logRxFrame">
+<span class="sig-name descname"><span class="pre">logRxFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frameHeader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logRxFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after WebSocket frame has been received and decoded,
+but only when self.logFrames == True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logRxOctets">
+<span class="sig-name descname"><span class="pre">logRxOctets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logRxOctets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after raw octets have been received, but only when
+self.logOctets == True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logTxFrame">
+<span class="sig-name descname"><span class="pre">logTxFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frameHeader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeatLength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chopsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logTxFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after WebSocket frame has been encoded and sent, but
+only when self.logFrames == True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logTxOctets">
+<span class="sig-name descname"><span class="pre">logTxOctets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logTxOctets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook fired right after raw octets have been sent, but only when
+self.logOctets == True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.makeConnection">
+<span class="sig-name descname"><span class="pre">makeConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.makeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a connection to a transport and a server.</p>
+<p>This sets the ‘transport’ attribute of this Protocol, and calls the
+connectionMade() callback.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onAutoPingTimeout">
+<span class="sig-name descname"><span class="pre">onAutoPingTimeout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onAutoPingTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>When doing automatic ping/pongs to detect broken connection, the peer
+did not reply in time to our ping. We drop the connection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onCloseFrame">
+<span class="sig-name descname"><span class="pre">onCloseFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reasonRaw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onCloseFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback when a Close frame was received. The default implementation answers by
+sending a Close when no Close was sent before. Otherwise it drops
+the TCP connection either immediately (when we are a server) or after a timeout
+(when we are a client and expect the server to drop the TCP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<em>int</em>) – Close status code, if there was one (<code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProtocol</span></code>.CLOSE_STATUS_CODE_*).</p></li>
+<li><p><strong>reasonRaw</strong> (<em>bytes</em>) – Close reason (when present, a status code MUST have been also be present).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onCloseHandshakeTimeout">
+<span class="sig-name descname"><span class="pre">onCloseHandshakeTimeout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onCloseHandshakeTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We expected the peer to respond to us initiating a close handshake. It didn’t
+respond (in time self.closeHandshakeTimeout) with a close response frame though.
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameBegin">
+<span class="sig-name descname"><span class="pre">onFrameBegin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin of receive new frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameData">
+<span class="sig-name descname"><span class="pre">onFrameData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>New data received within frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameEnd">
+<span class="sig-name descname"><span class="pre">onFrameEnd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>End of frame received.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageBegin">
+<span class="sig-name descname"><span class="pre">onMessageBegin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isBinary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageBegin()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageEnd">
+<span class="sig-name descname"><span class="pre">onMessageEnd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageEnd()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrame">
+<span class="sig-name descname"><span class="pre">onMessageFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameBegin">
+<span class="sig-name descname"><span class="pre">onMessageFrameBegin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameBegin()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameData">
+<span class="sig-name descname"><span class="pre">onMessageFrameData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameData()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameEnd">
+<span class="sig-name descname"><span class="pre">onMessageFrameEnd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onMessageFrameEnd()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onOpenHandshakeTimeout">
+<span class="sig-name descname"><span class="pre">onOpenHandshakeTimeout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onOpenHandshakeTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We expected the peer to complete the opening handshake with to us.
+It didn’t do so (in time self.openHandshakeTimeout).
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onPing">
+<span class="sig-name descname"><span class="pre">onPing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onPing()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onPong">
+<span class="sig-name descname"><span class="pre">onPong</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onPong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.onPong()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onServerConnectionDropTimeout">
+<span class="sig-name descname"><span class="pre">onServerConnectionDropTimeout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onServerConnectionDropTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>We (a client) expected the peer (a server) to drop the connection,
+but it didn’t (in time self.serverConnectionDropTimeout).
+So we drop the connection, but set self.wasClean = False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processControlFrame">
+<span class="sig-name descname"><span class="pre">processControlFrame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processControlFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a completely received control frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processData">
+<span class="sig-name descname"><span class="pre">processData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processData" title="Permalink to this definition">¶</a></dt>
+<dd><p>After WebSocket handshake has been completed, this procedure will do
+all subsequent processing of incoming bytes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processHandshake">
+<span class="sig-name descname"><span class="pre">processHandshake</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process WebSocket opening handshake request from client.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processProxyConnect">
+<span class="sig-name descname"><span class="pre">processProxyConnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processProxyConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process proxy connect.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.registerProducer">
+<span class="sig-name descname"><span class="pre">registerProducer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">producer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.registerProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a Twisted producer with this protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>producer</strong> (<em>object</em>) – A Twisted push or pull producer.</p></li>
+<li><p><strong>streaming</strong> (<em>bool</em>) – Producer type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendClose">
+<span class="sig-name descname"><span class="pre">sendClose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendClose()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendCloseFrame">
+<span class="sig-name descname"><span class="pre">sendCloseFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reasonUtf8</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isReply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendCloseFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a close frame and update protocol state. Note, that this is
+an internal method which deliberately allows not send close
+frame with invalid payload.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendData">
+<span class="sig-name descname"><span class="pre">sendData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chopsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for self.transport.write which allows to give a chopsize.
+When asked to chop up writing to TCP stream, we write only chopsize
+octets and then give up control to select() in underlying reactor so
+that bytes get onto wire immediately. Note that this is different from
+and unrelated to WebSocket data message fragmentation. Note that this
+is also different from the TcpNoDelay option which can be set on the
+socket.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendFrame">
+<span class="sig-name descname"><span class="pre">sendFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">b''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rsv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chopsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send out frame. Normally only used internally via sendMessage(),
+sendPing(), sendPong() and sendClose().</p>
+<p>This method deliberately allows to send invalid frames (that is frames
+invalid per-se, or frames invalid because of protocol state). Other
+than in fuzzing servers, calling methods will ensure that no invalid
+frames are sent.</p>
+<p>In addition, this method supports explicit specification of payload
+length. When payload_len is given, it will always write that many
+octets to the stream. It’ll wrap within payload, resending parts of
+that when more octets were requested The use case is again for fuzzing
+server which want to sent increasing amounts of payload data to peers
+without having to construct potentially large messages themselves.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendHtml">
+<span class="sig-name descname"><span class="pre">sendHtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">html</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendHtml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send HTML page HTTP response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendHttpErrorResponse">
+<span class="sig-name descname"><span class="pre">sendHttpErrorResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">responseHeaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendHttpErrorResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send out HTTP error response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessage">
+<span class="sig-name descname"><span class="pre">sendMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isBinary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragmentSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doNotCompress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessage()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrame">
+<span class="sig-name descname"><span class="pre">sendMessageFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessageFrame()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrameData">
+<span class="sig-name descname"><span class="pre">sendMessageFrameData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendMessageFrameData()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPing">
+<span class="sig-name descname"><span class="pre">sendPing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPing()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPong">
+<span class="sig-name descname"><span class="pre">sendPong</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPong()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPreparedMessage">
+<span class="sig-name descname"><span class="pre">sendPreparedMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preparedMsg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPreparedMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketChannel.sendPreparedMessage()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendRedirect">
+<span class="sig-name descname"><span class="pre">sendRedirect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendRedirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send HTTP Redirect (303) response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendServerStatus">
+<span class="sig-name descname"><span class="pre">sendServerStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">redirectUrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redirectAfter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendServerStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to send out server status/version upon receiving a HTTP/GET without
+upgrade to WebSocket header (and option serverStatus is True).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.setTrackTimings">
+<span class="sig-name descname"><span class="pre">setTrackTimings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.setTrackTimings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable tracking of detailed timings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – Turn time tracking on/off.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.succeedHandshake">
+<span class="sig-name descname"><span class="pre">succeedHandshake</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.succeedHandshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback after onConnect() returns successfully. Generates the response for the handshake.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.unregisterProducer">
+<span class="sig-name descname"><span class="pre">unregisterProducer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.unregisterProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregister Twisted producer with this protocol.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.is_closed">
+<span class="sig-name descname"><span class="pre">is_closed</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.is_closed" title="Permalink to this definition">¶</a></dt>
+<dd><p>a Future/Deferred that fires when we hit STATE_CLOSED</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.twistedserver.</span></span><span class="sig-name descname"><span class="pre">WSServerFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.twisted.websocket.WebSocketServerFactory</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.buildProtocol">
+<span class="sig-name descname"><span class="pre">buildProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.buildProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of a subclass of Protocol.</p>
+<p>The returned instance will handle input on an incoming server
+connection, and an attribute “factory” pointing to the creating
+factory.</p>
+<p>Alternatively, L{None} may be returned to immediately close the
+new connection.</p>
+<p>Override this method to alter how Protocol instances get created.</p>
+<p>&#64;param addr: an object implementing L{twisted.internet.interfaces.IAddress}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.doStart">
+<span class="sig-name descname"><span class="pre">doStart</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.doStart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure startFactory is called.</p>
+<p>Users should not call this function themselves!</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.doStop">
+<span class="sig-name descname"><span class="pre">doStop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.doStop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure stopFactory is called.</p>
+<p>Users should not call this function themselves!</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.forProtocol">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">forProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protocol</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.forProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a factory for the given protocol.</p>
+<p>It sets the C{protocol} attribute and returns the constructed factory
+instance.</p>
+<p>&#64;param protocol: A L{Protocol} subclass</p>
+<p>&#64;param args: Positional arguments for the factory.</p>
+<p>&#64;param kwargs: Keyword arguments for the factory.</p>
+<p>&#64;return: A L{Factory} instance wired up to C{protocol}.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.getConnectionCount">
+<span class="sig-name descname"><span class="pre">getConnectionCount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.getConnectionCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get number of currently connected clients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int – Number of currently connected clients.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.logPrefix">
+<span class="sig-name descname"><span class="pre">logPrefix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.logPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe this factory for log messages.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.prepareMessage">
+<span class="sig-name descname"><span class="pre">prepareMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isBinary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doNotCompress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.prepareMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare a WebSocket message. This can be later sent on multiple
+instances of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.WebSocketProtocol</span></code> using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">autobahn.websocket.WebSocketProtocol.sendPreparedMessage()</span></code>.</p>
+<p>By doing so, you can avoid the (small) overhead of framing the
+<em>same</em> payload into WebSocket messages multiple times when that
+same payload is to be sent out on multiple connections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>payload</strong> (<em>bytes</em>) – The message payload.</p></li>
+<li><p><strong>isBinary</strong> (<em>bool</em>) – <cite>True</cite> iff payload is binary, else the payload must be
+UTF-8 encoded text.</p></li>
+<li><p><strong>doNotCompress</strong> (<em>bool</em>) – Iff <cite>True</cite>, never compress this message. This
+only applies when WebSocket compression has been negotiated on the
+WebSocket connection. Use when you know the payload incompressible
+(e.g. encrypted or already compressed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>obj – An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.PreparedMessage</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.protocol">
+<span class="sig-name descname"><span class="pre">protocol</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">autobahn.websocket.protocol.WebSocketServerProtocol</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.resetProtocolOptions">
+<span class="sig-name descname"><span class="pre">resetProtocolOptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.resetProtocolOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketServerChannelFactory.resetProtocolOptions()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.setProtocolOptions">
+<span class="sig-name descname"><span class="pre">setProtocolOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">versions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">webStatus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utf8validateIncoming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maskServerFrames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requireMaskedClientFrames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">applyMask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxFramePayloadSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxMessagePayloadSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoFragmentSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failByDrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">echoCloseCodeReason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">openHandshakeTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closeHandshakeTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tcpNoDelay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perMessageCompressionAccept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoPingInterval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoPingTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoPingSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serveFlashSocketPolicy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flashSocketPolicy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowedOrigins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowNullOrigin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxConnections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trustXForwardedFor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.setProtocolOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketServerChannelFactory.setProtocolOptions()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.setSessionParameters">
+<span class="sig-name descname"><span class="pre">setSessionParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">externalPort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.setSessionParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements <code class="xref py py-func docutils literal notranslate"><span class="pre">autobahn.websocket.interfaces.IWebSocketServerChannelFactory.setSessionParameters()</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.startFactory">
+<span class="sig-name descname"><span class="pre">startFactory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.startFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will be called before I begin listening on a Port or Connector.</p>
+<p>It will only be called once, even if the factory is connected
+to multiple ports.</p>
+<p>This can be used to perform ‘unserialization’ tasks that
+are best put off until things are actually running, such
+as connecting to a database, opening files, etcetera.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.trinity.twistedserver.WSServerFactory.stopFactory">
+<span class="sig-name descname"><span class="pre">stopFactory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.twistedserver.WSServerFactory.stopFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will be called before I stop listening on all Ports/Connectors.</p>
+<p>This can be overridden to perform ‘shutdown’ tasks such as disconnecting
+database connections, closing files, etc.</p>
+<p>It will be called, for example, before an application shuts down,
+if it was connected to a port. User code should not call this function
+directly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="neural_mmo.forge.trinity.visualize.html" class="btn btn-neutral float-right" title="neural_mmo.forge.trinity.visualize module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="neural_mmo.forge.trinity.overlay.html" class="btn btn-neutral float-left" title="neural_mmo.forge.trinity.overlay module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Joseph Suarez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+      --link:       #ffffff;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    html.writer-html5 .rst-content table.docutils th {
+      border: 1px solid var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--text);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--text);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+      font-size: 150%
+    }
+
+    h2 {
+      color: var(--accent);
+      font-size: 125%
+    }
+
+    h3 {
+      color: var(--accent);
+    }
+
+    h4 {
+      color: var(--accent);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: var(--title); /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--link);
+    }
+
+    a:visited {
+      color: var(--link);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

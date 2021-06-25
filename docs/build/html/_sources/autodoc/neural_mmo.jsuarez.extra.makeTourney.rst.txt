@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.makeTourney module
+============================================
+
+.. automodule:: neural_mmo.jsuarez.extra.makeTourney
+   :members:
+   :inherited-members:
+   :show-inheritance:

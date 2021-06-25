@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.combatFormulas module
+=========================================
+
+.. automodule:: neural_mmo.jsuarez.combatFormulas
+   :members:
+   :inherited-members:
+   :show-inheritance:

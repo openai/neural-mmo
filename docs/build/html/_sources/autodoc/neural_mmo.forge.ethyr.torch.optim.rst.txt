@@ -1,0 +1,7 @@
+neural\_mmo.forge.ethyr.torch.optim module
+==========================================
+
+.. automodule:: neural_mmo.forge.ethyr.torch.optim
+   :members:
+   :inherited-members:
+   :show-inheritance:

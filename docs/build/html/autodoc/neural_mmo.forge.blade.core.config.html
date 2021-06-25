@@ -1,0 +1,1246 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>neural_mmo.forge.blade.core.config module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="neural_mmo.forge.blade.core.map module" href="neural_mmo.forge.blade.core.map.html" />
+    <link rel="prev" title="neural_mmo.forge.blade.core.market.visualizer module" href="neural_mmo.forge.blade.core.market.visualizer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html"> Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-installation"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-cli"> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-terrain-generation"> Terrain Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-training"> Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-evaluation"> Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/userguide.html#icon-dashboard-and-statistics"> Dashboard and Statistics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-contributing"> Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-code-structure"> Code Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-style"> Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-client-map-representation"> Client Map Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-observation-representation"> Observation Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/devguide.html#icon-model-io"> Model IO</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.entity.html">neural_mmo.forge.blade.entity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.hook.html">neural_mmo.forge.blade.hook package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.io.html">neural_mmo.forge.blade.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.lib.html">neural_mmo.forge.blade.lib package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.systems.html">neural_mmo.forge.blade.systems package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.trinity.html">neural_mmo.forge.trinity package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Baselines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/baselines.html"> Evaluation Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/baselines.html#icon-small-maps"> Small Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/baselines.html#icon-large-maps"> Large Maps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Updates</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html"> Video Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-publications"> Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-presentations"> Presentations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-update-slides"> Update Slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-additional-links"> Additional Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/updates.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ideology</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/ideology.html"> Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/ideology.html#icon-failure-modes"> Failure Modes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Administrative</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html"> Authorship, License, Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html#icon-assets"> Assets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/administrative.html#ags-namesake"> Namesake</a></li>
+</ul>
+<p class="caption"><span class="caption-text">NeurIPS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/neurips.html"> NeurIPS 2021 Dataset Track Supplementary Material</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Neural MMO v1.5</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../rst/api.html"> User API</a> &raquo;</li>
+        
+          <li><a href="neural_mmo.forge.html">neural_mmo.forge package</a> &raquo;</li>
+        
+          <li><a href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a> &raquo;</li>
+        
+          <li><a href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a> &raquo;</li>
+        
+      <li>neural_mmo.forge.blade.core.config module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/autodoc/neural_mmo.forge.blade.core.config.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-neural_mmo.forge.blade.core.config">
+<span id="neural-mmo-forge-blade-core-config-module"></span><h1>neural_mmo.forge.blade.core.config module<a class="headerlink" href="#module-neural_mmo.forge.blade.core.config" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.blade.core.config.Template</span></code></p>
+<p>An environment configuration object</p>
+<p>Global constants are defined as static class variables. You can override
+any Config variable using standard CLI syntax (e.g. –NENT=128).</p>
+<p class="rubric">Notes</p>
+<p>We use Google Fire internally to replace standard manual argparse
+definitions for each Config property. This means you can subclass
+Config to add new static attributes – CLI definitions will be
+generated automatically.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.ENV_NAME">
+<span class="sig-name descname"><span class="pre">ENV_NAME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Neural_MMO'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.ENV_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Environment Name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.ENV_VERSION">
+<span class="sig-name descname"><span class="pre">ENV_VERSION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'1.5.1'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.ENV_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Environment version</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.NAME_PREFIX">
+<span class="sig-name descname"><span class="pre">NAME_PREFIX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Neural_'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NAME_PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prefix used in agent names displayed by the client</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.v">
+<span class="sig-name descname"><span class="pre">v</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbose mode</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.NTILE">
+<span class="sig-name descname"><span class="pre">NTILE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NTILE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of distinct terrain tile types</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.NSTIM">
+<span class="sig-name descname"><span class="pre">NSTIM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NSTIM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of tiles an agent can see in any direction</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.NMOB">
+<span class="sig-name descname"><span class="pre">NMOB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1024</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NMOB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of NPCs spawnable in the environment</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.NENT">
+<span class="sig-name descname"><span class="pre">NENT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">256</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of agents spawnable in the environment</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.NPOP">
+<span class="sig-name descname"><span class="pre">NPOP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NPOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of distinct populations spawnable in the environment</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.WINDOW">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">WINDOW</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.BASE_HEALTH">
+<span class="sig-name descname"><span class="pre">BASE_HEALTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.BASE_HEALTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial Constitution level and agent health</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.BASE_RESOURCE">
+<span class="sig-name descname"><span class="pre">BASE_RESOURCE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">20</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.BASE_RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial level and capacity for Hunting + Fishing resource skills</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PLAYER_SPAWN_ATTEMPTS">
+<span class="sig-name descname"><span class="pre">PLAYER_SPAWN_ATTEMPTS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">16</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PLAYER_SPAWN_ATTEMPTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of player spawn attempts per tick</p>
+<p>Note that the env will attempt to spawn agents until success
+if the current population size is zero.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.SPAWN_CONTINUOUS">
+<span class="sig-name descname"><span class="pre">SPAWN_CONTINUOUS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.EVALUATE">
+<span class="sig-name descname"><span class="pre">EVALUATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.EVALUATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag used by evaluation mode</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.RENDER">
+<span class="sig-name descname"><span class="pre">RENDER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.RENDER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag used by render mode</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.GENERALIZE">
+<span class="sig-name descname"><span class="pre">GENERALIZE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.GENERALIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate on maps not seen during training</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.EVAL_MAPS">
+<span class="sig-name descname"><span class="pre">EVAL_MAPS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.EVAL_MAPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of evaluation maps</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TRAIN_SUMMARY_ENVS">
+<span class="sig-name descname"><span class="pre">TRAIN_SUMMARY_ENVS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TRAIN_SUMMARY_ENVS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Most recent envs to use for training summaries</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TRAIN_DATA_RESAMPLE">
+<span class="sig-name descname"><span class="pre">TRAIN_DATA_RESAMPLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">200</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TRAIN_DATA_RESAMPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of points to resample training data</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_TRAIN_MAPS">
+<span class="sig-name descname"><span class="pre">TERRAIN_TRAIN_MAPS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">256</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_TRAIN_MAPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of training maps to generate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_EVAL_MAPS">
+<span class="sig-name descname"><span class="pre">TERRAIN_EVAL_MAPS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">64</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_EVAL_MAPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of evaluation maps to generate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_RENDER">
+<span class="sig-name descname"><span class="pre">TERRAIN_RENDER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_RENDER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether map generation should also save .png previews (slow + large file size)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_CENTER">
+<span class="sig-name descname"><span class="pre">TERRAIN_CENTER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1024</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_CENTER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of each map (number of tiles along each side)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_BORDER">
+<span class="sig-name descname"><span class="pre">TERRAIN_BORDER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">16</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_BORDER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of lava border tiles surrounding each side of the map</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_FREQUENCY">
+<span class="sig-name descname"><span class="pre">TERRAIN_FREQUENCY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-3</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_FREQUENCY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base noise frequency range (log2 space)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_FREQUENCY_OFFSET">
+<span class="sig-name descname"><span class="pre">TERRAIN_FREQUENCY_OFFSET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_FREQUENCY_OFFSET" title="Permalink to this definition">¶</a></dt>
+<dd><p>Noise frequency octave offset (log2 space)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_LOG_INTERPOLATE_MIN">
+<span class="sig-name descname"><span class="pre">TERRAIN_LOG_INTERPOLATE_MIN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-2</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_LOG_INTERPOLATE_MIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum interpolation log-strength for noise frequencies</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_LOG_INTERPOLATE_MAX">
+<span class="sig-name descname"><span class="pre">TERRAIN_LOG_INTERPOLATE_MAX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_LOG_INTERPOLATE_MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum interpolation log-strength for noise frequencies</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_TILES_PER_OCTAVE">
+<span class="sig-name descname"><span class="pre">TERRAIN_TILES_PER_OCTAVE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_TILES_PER_OCTAVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of octaves sampled from log2 spaced TERRAIN_FREQUENCY range</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_LAVA">
+<span class="sig-name descname"><span class="pre">TERRAIN_LAVA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_LAVA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Noise threshold for lava generation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_WATER">
+<span class="sig-name descname"><span class="pre">TERRAIN_WATER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.3</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_WATER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Noise threshold for water generation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_GRASS">
+<span class="sig-name descname"><span class="pre">TERRAIN_GRASS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.7</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_GRASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Noise threshold for grass</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.TERRAIN_FOREST">
+<span class="sig-name descname"><span class="pre">TERRAIN_FOREST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.85</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.TERRAIN_FOREST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Noise threshold for forest</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_THEME">
+<span class="sig-name descname"><span class="pre">VIS_THEME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'web'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_THEME" title="Permalink to this definition">¶</a></dt>
+<dd><p>web or publication</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Visualizer theme</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_WIDTH">
+<span class="sig-name descname"><span class="pre">VIS_WIDTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1920</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizer figure width (pixels)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_HEIGHT">
+<span class="sig-name descname"><span class="pre">VIS_HEIGHT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">314</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_HEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizer per-plot height (pixels)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_BORDER_WIDTH">
+<span class="sig-name descname"><span class="pre">VIS_BORDER_WIDTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">20</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_BORDER_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal padding per figure side (pixels)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_BORDER_HEIGHT">
+<span class="sig-name descname"><span class="pre">VIS_BORDER_HEIGHT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">60</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_BORDER_HEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical padding per figure side (pixels)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_LEGEND_WIDTH">
+<span class="sig-name descname"><span class="pre">VIS_LEGEND_WIDTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">109</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_LEGEND_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of legend label before offset</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_LEGEND_OFFSET">
+<span class="sig-name descname"><span class="pre">VIS_LEGEND_OFFSET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">71</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_LEGEND_OFFSET" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of legend label offset</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_TITLE_OFFSET">
+<span class="sig-name descname"><span class="pre">VIS_TITLE_OFFSET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">60</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_TITLE_OFFSET" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of left title offset</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_PORT">
+<span class="sig-name descname"><span class="pre">VIS_PORT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">5006</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_PORT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizer local Bokeh server port</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.VIS_TOOLS">
+<span class="sig-name descname"><span class="pre">VIS_TOOLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.VIS_TOOLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizer display plot tools</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_ROOT">
+<span class="sig-name descname"><span class="pre">PATH_ROOT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ROOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Global repository directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_RESOURCE">
+<span class="sig-name descname"><span class="pre">PATH_RESOURCE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resource directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS">
+<span class="sig-name descname"><span class="pre">PATH_MAPS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/maps'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generated map directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_MAP_SUFFIX">
+<span class="sig-name descname"><span class="pre">PATH_MAP_SUFFIX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'map{}/map.npy'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAP_SUFFIX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map file name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS_SMALL">
+<span class="sig-name descname"><span class="pre">PATH_MAPS_SMALL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/maps/procedural-small'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_SMALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generated map directory for SmallMap config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS_LARGE">
+<span class="sig-name descname"><span class="pre">PATH_MAPS_LARGE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/maps/procedural-large'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_LARGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generated map directory for LargeMap config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_ASSETS">
+<span class="sig-name descname"><span class="pre">PATH_ASSETS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/assets'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ASSETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asset directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_TILE">
+<span class="sig-name descname"><span class="pre">PATH_TILE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/assets/tiles/{}.png'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TILE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tile path – format me with tile name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_TEXT">
+<span class="sig-name descname"><span class="pre">PATH_TEXT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/assets/text'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TEXT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Text directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_LOGO">
+<span class="sig-name descname"><span class="pre">PATH_LOGO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/jyotish/Playground/aicrowd/neuralmmo/neural-mmo/neural_mmo/resource/assets/text/ascii.txt'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_LOGO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logo file (Ascii art)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_CHECKPOINTS">
+<span class="sig-name descname"><span class="pre">PATH_CHECKPOINTS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'checkpoints'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_CHECKPOINTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checkpoints path</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_BASELINES">
+<span class="sig-name descname"><span class="pre">PATH_BASELINES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'baselines'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_BASELINES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model and evaluation directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_ALL_MODELS">
+<span class="sig-name descname"><span class="pre">PATH_ALL_MODELS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'baselines/models'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ALL_MODELS" title="Permalink to this definition">¶</a></dt>
+<dd><p>All models directory</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_MODEL">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">PATH_MODEL</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_TRAINING_DATA">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">PATH_TRAINING_DATA</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_ALL_EVALUATIONS">
+<span class="sig-name descname"><span class="pre">PATH_ALL_EVALUATIONS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'baselines/evaluations'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ALL_EVALUATIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>All evaluations directory</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_EVALUATION">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">PATH_EVALUATION</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_THEMES">
+<span class="sig-name descname"><span class="pre">PATH_THEMES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'forge/blade/systems/visualizer'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_THEMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Theme directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_THEME_WEB">
+<span class="sig-name descname"><span class="pre">PATH_THEME_WEB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'forge/blade/systems/visualizer/index_web.html'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_THEME_WEB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Web theme file</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Config.PATH_THEME_PUB">
+<span class="sig-name descname"><span class="pre">PATH_THEME_PUB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'forge/blade/systems/visualizer/index_publication.html'</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_THEME_PUB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Publication theme file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">Resource</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Resource Game System</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_BASE_RESOURCE">
+<span class="sig-name descname"><span class="pre">RESOURCE_BASE_RESOURCE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">25</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_BASE_RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial level and capacity for Hunting + Fishing resource skills</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_FOREST_CAPACITY">
+<span class="sig-name descname"><span class="pre">RESOURCE_FOREST_CAPACITY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_FOREST_CAPACITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of harvests before a forest tile decays</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_FOREST_RESPAWN">
+<span class="sig-name descname"><span class="pre">RESOURCE_FOREST_RESPAWN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.025</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_FOREST_RESPAWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probability that a harvested forest tile will regenerate each tick</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_OREROCK_CAPACITY">
+<span class="sig-name descname"><span class="pre">RESOURCE_OREROCK_CAPACITY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_OREROCK_CAPACITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of harvests before an orerock tile decays</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_OREROCK_RESPAWN">
+<span class="sig-name descname"><span class="pre">RESOURCE_OREROCK_RESPAWN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.05</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_OREROCK_RESPAWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Probability that a harvested orerock tile will regenerate each tick</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_HARVEST_RESTORE_FRACTION">
+<span class="sig-name descname"><span class="pre">RESOURCE_HARVEST_RESTORE_FRACTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_HARVEST_RESTORE_FRACTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of maximum capacity restored upon collecting a resource</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_HEALTH_REGEN_THRESHOLD">
+<span class="sig-name descname"><span class="pre">RESOURCE_HEALTH_REGEN_THRESHOLD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_HEALTH_REGEN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of maximum resource capacity required to regen health</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Resource.RESOURCE_HEALTH_RESTORE_FRACTION">
+<span class="sig-name descname"><span class="pre">RESOURCE_HEALTH_RESTORE_FRACTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.1</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Resource.RESOURCE_HEALTH_RESTORE_FRACTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of health restored per tick when above half food+water</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">Combat</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Combat Game System</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat.COMBAT_DICE_SIDES">
+<span class="sig-name descname"><span class="pre">COMBAT_DICE_SIDES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">20</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat.COMBAT_DICE_SIDES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of sides for combat dice</p>
+<p>Attacks can only hit opponents up to the attacker’s level plus
+DICE_SIDES/2. Increasing this value makes attacks more accurate
+and allows lower level attackers to hit stronger opponents</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat.COMBAT_DEFENSE_WEIGHT">
+<span class="sig-name descname"><span class="pre">COMBAT_DEFENSE_WEIGHT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.3</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat.COMBAT_DEFENSE_WEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of defense that comes from the Defense skill</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat.COMBAT_MELEE_REACH">
+<span class="sig-name descname"><span class="pre">COMBAT_MELEE_REACH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat.COMBAT_MELEE_REACH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reach of attacks using the Melee skill</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat.COMBAT_RANGE_REACH">
+<span class="sig-name descname"><span class="pre">COMBAT_RANGE_REACH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat.COMBAT_RANGE_REACH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reach of attacks using the Range skill</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat.COMBAT_MAGE_REACH">
+<span class="sig-name descname"><span class="pre">COMBAT_MAGE_REACH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat.COMBAT_MAGE_REACH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reach of attacks using the Mage skill</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Combat.COMBAT_FREEZE_TIME">
+<span class="sig-name descname"><span class="pre">COMBAT_FREEZE_TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Combat.COMBAT_FREEZE_TIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ticks successful Mage attacks freeze a target</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Progression">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">Progression</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Progression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Progression Game System</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Progression.PROGRESSION_BASE_RESOURCE">
+<span class="sig-name descname"><span class="pre">PROGRESSION_BASE_RESOURCE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_BASE_RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial level and capacity for Hunting + Fishing resource skills</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Progression.PROGRESSION_BASE_XP_SCALE">
+<span class="sig-name descname"><span class="pre">PROGRESSION_BASE_XP_SCALE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_BASE_XP_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skill level progression speed as a multiplier of typical MMOs</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Progression.PROGRESSION_CONSTITUTION_XP_SCALE">
+<span class="sig-name descname"><span class="pre">PROGRESSION_CONSTITUTION_XP_SCALE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_CONSTITUTION_XP_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplier on top of XP_SCALE for the Constitution skill</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Progression.PROGRESSION_COMBAT_XP_SCALE">
+<span class="sig-name descname"><span class="pre">PROGRESSION_COMBAT_XP_SCALE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_COMBAT_XP_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplier on top of XP_SCALE for Combat skills</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">NPC</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NPC &amp; Equipment Game System</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_ATTEMPTS">
+<span class="sig-name descname"><span class="pre">NPC_SPAWN_ATTEMPTS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">25</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_ATTEMPTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of NPC spawn attempts per tick</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_AGGRESSIVE">
+<span class="sig-name descname"><span class="pre">NPC_SPAWN_AGGRESSIVE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_AGGRESSIVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage distance threshold from spawn for aggressive NPCs</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_NEUTRAL">
+<span class="sig-name descname"><span class="pre">NPC_SPAWN_NEUTRAL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_NEUTRAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage distance threshold from spawn for neutral NPCs</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_PASSIVE">
+<span class="sig-name descname"><span class="pre">NPC_SPAWN_PASSIVE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_PASSIVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage distance threshold from spawn for passive NPCs</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_MIN">
+<span class="sig-name descname"><span class="pre">NPC_LEVEL_MIN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_MIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum NPC level</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_MAX">
+<span class="sig-name descname"><span class="pre">NPC_LEVEL_MAX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">99</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum NPC level</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_SPREAD">
+<span class="sig-name descname"><span class="pre">NPC_LEVEL_SPREAD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_SPREAD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Level range for NPC spawns</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.Achievement">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">Achievement</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Achievement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Achievement Reward System</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.config.AllGameSystems">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.config.</span></span><span class="sig-name descname"><span class="pre">AllGameSystems</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.AllGameSystems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.blade.core.config.Resource" title="neural_mmo.forge.blade.core.config.Resource"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.blade.core.config.Resource</span></code></a>, <a class="reference internal" href="#neural_mmo.forge.blade.core.config.Combat" title="neural_mmo.forge.blade.core.config.Combat"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.blade.core.config.Combat</span></code></a>, <a class="reference internal" href="#neural_mmo.forge.blade.core.config.Progression" title="neural_mmo.forge.blade.core.config.Progression"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.blade.core.config.Progression</span></code></a>, <a class="reference internal" href="#neural_mmo.forge.blade.core.config.NPC" title="neural_mmo.forge.blade.core.config.NPC"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.blade.core.config.NPC</span></code></a></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="neural_mmo.forge.blade.core.map.html" class="btn btn-neutral float-right" title="neural_mmo.forge.blade.core.map module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="neural_mmo.forge.blade.core.market.visualizer.html" class="btn btn-neutral float-left" title="neural_mmo.forge.blade.core.market.visualizer module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Joseph Suarez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    :root {
+      --foreground: #000000;
+      --background: #000e0e;
+      --accent:     #005050;
+      --text:       #bbbbbb;
+      --title:      #00bbbb;
+      --monochrome: #bbbbbb;
+      --link:       #ffffff;
+    }
+
+    body {
+      color: var(--text);
+    }
+
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: var(--background);
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: var(--foreground);
+    }
+    .wy-nav-content {
+      background: var(--background);
+    }
+    .wy-nav-content-wrap {
+      background: var(--foreground);
+    }
+
+    .wy-table-responsive table td, .wy-table-responsive table th {
+      /* !important prevents the common CSS stylesheets from
+             overriding this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+       
+    .wy-table-responsive {
+      overflow: visible !important;
+    }
+
+    //This one is the one that does something?
+    .row-odd {
+      background: #ff0000;
+    }
+
+    .row-even {
+      background: var(--accent);
+    }
+
+    html.writer-html5 .rst-content table.docutils th {
+      border: 1px solid var(--accent);
+    }
+
+    /* Top line */
+    hr {
+      border-top-color: teal;
+      border-top-style: solid;
+      border-top-width: 3px;
+    }
+
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+      background: var(--foreground);
+      color: var(--text);
+      border-top: var(--accent);
+    }
+
+
+
+    /* ****** Begin Tables ****** */
+
+    /*Don't even think about changing this.
+    Spent 3 hours pulling this from an rtd bitbucket PR*/ 
+    wy-table-odd td, .wy-table-striped tr:nth-child(2n-1) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td {
+      background-color: var(--foreground);
+    }
+
+    wy-table-even td, .wy-table-striped tr:nth-child(2n) td, .rst-content table.docutils:not(.field-list) tr:nth-child(2n) td {
+      background-color: var(--background);
+    }
+
+    /* Outer table */
+    .wy-table-bordered-all, .rst-content table.docutils {
+      border: 1px solid #0f0;
+        border-top-color: var(--accent);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: var(--accent);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: var(--accent);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: var(--accent);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+    }
+
+    /* Table header underline */
+    .wy-table thead th, .rst-content table.docutils thead th, .rst-content table.field-list thead th {
+        font-weight: bold;
+        border-bottom-color: rgb(055, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+    }
+
+    /* Inner table border */
+    .wy-table-bordered-all td, .rst-content table.docutils td {
+        border-bottom-color: rgb(255, 0, 0);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(255, 0, 0);
+        border-left-style: solid;
+        border-left-width: 0px;
+    }
+    /* ****** End Tables ****** */
+
+    /* ****** Start selection for left sidebar ****** */
+    .wy-menu-vertical li.current{
+      background: var(--foreground);
+    }
+
+    .wy-menu-vertical li.toctree-l1.current > a{
+      background: var(--foreground);
+      border-top-color: lime;
+      border-top-style: solid;
+      border-top-width: 3px;
+      border-bottom-color: lime;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      
+    }
+
+    .rst-content pre.literal-block, .rst-content div[class^="highlight"] {
+      border-top-color: var(--accent);
+      border-top-style: solid;
+      border-top-width: 1px;
+      border-right-color: var(--accent);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-bottom-color: var(--accent);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-left-color: var(--accent);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--accent);
+      padding: .4045em 4.045em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current > a {
+      background: var(--foreground);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 5.663em;
+    }
+
+    .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+      display: block;
+      background: var(--foreground);
+      padding: .4045em 4.045em;
+    }
+
+    /* ****** End selection for left sidebar ****** */
+
+    /* Bullet(?) blocks */
+    .rst-content dl:not(.docutils) dt {
+      display: table;
+      margin: 6px 0;
+      margin-top: 6px;
+      font-size: 90%;
+      line-height: normal;
+      background: var(--foreground);
+      color: var(--text);
+      border-top: solid 6px var(--accent);
+      padding: 6px;
+      position: relative;
+    }
+
+    /* ****** Start Code Blocks ****** */
+    .highlight-python {
+      background: var(--accent);
+      border: var(--accent);
+    }
+
+    .highlight {
+      background: var(--foreground);
+      color: var(--accent);
+    }
+    /* ****** End Code Blocks ****** */
+
+    /* Buttons */
+    .btn-neutral {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    /* Buttons */
+    .btn-neutral:visited {
+      background-color: var(--accent) !important;
+      color: var(--title) !important;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      margin-bottom: 6px;
+      border-left: solid 0px var(--foreground);
+      background: var(--background);
+      color: var(--text);
+      }
+
+    code, .rst-content tt, .rst-content code {
+      background-color: var(--foreground);
+      border-top-width: 0px;
+      border-bottom-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    .rst-content dl:not(.docutils) dl dt {
+      border-left-color: var(--background);
+    }
+
+    .rst-content tt, .rst-content tt, .rst-content code {
+      color: var(--title);
+    }
+
+    .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref, .rst-content code.xref, a .rst-content tt, a .rst-content code {
+      color: var(--title);
+    }
+
+    .wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+      color: var(--text);
+    }
+
+    .wy-menu-vertical li.on a, .wy-menu-vertical li.current > a {
+      color: #00ff00;
+    }
+
+    .wy-menu-vertical li.current a {
+      border-right: solid 1px (--background);
+      padding: .4045em 2.427em;
+    }
+
+    .wy-menu-vertical header, .wy-menu-vertical p.caption {
+       color: var(--title);
+       line-height: 32px;
+       font-weight: bold;
+       text-transform: uppercase;
+       font-size: 85%;
+       white-space: nowrap;
+    }
+
+    footer {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text);
+    }
+    h1 {
+      color: var(--title);
+      font-size: 150%
+    }
+
+    h2 {
+      color: var(--accent);
+      font-size: 125%
+    }
+
+    h3 {
+      color: var(--accent);
+    }
+
+    h4 {
+      color: var(--accent);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding-left: 1em; 
+      text-indent: -.7em;
+    }
+
+    li {
+      content: "• ";
+      color: var(--title); /* or whatever color you prefer */
+      }
+
+    a:link {
+      color: var(--link);
+    }
+
+    a:visited {
+      color: var(--link);
+    }
+
+    a:hover {
+      color: lime;
+    }
+
+    a:active {
+      color: lime;
+    }
+
+
+  </style>
+
+
+</body>
+</html>

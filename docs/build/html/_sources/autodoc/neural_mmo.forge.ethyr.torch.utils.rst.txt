@@ -1,0 +1,7 @@
+neural\_mmo.forge.ethyr.torch.utils module
+==========================================
+
+.. automodule:: neural_mmo.forge.ethyr.torch.utils
+   :members:
+   :inherited-members:
+   :show-inheritance:

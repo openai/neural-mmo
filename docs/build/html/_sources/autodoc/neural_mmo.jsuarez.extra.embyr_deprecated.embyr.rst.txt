@@ -1,0 +1,38 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr package
+=========================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.examples
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.tests
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.EnvViewport3D
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.application
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.client
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.embyr
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.embyr3D
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.enums
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.example1
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.example2
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.examplecust
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.modules
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.oldapp
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.oldnewapi
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.oldtrans
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.render
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.setup
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.texture
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.transform
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.utils

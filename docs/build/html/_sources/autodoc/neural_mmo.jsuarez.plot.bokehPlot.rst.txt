@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.plot.bokehPlot module
+=========================================
+
+.. automodule:: neural_mmo.jsuarez.plot.bokehPlot
+   :members:
+   :inherited-members:
+   :show-inheritance:

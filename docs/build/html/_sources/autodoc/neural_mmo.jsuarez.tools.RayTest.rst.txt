@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.tools.RayTest module
+========================================
+
+.. automodule:: neural_mmo.jsuarez.tools.RayTest
+   :members:
+   :inherited-members:
+   :show-inheritance:

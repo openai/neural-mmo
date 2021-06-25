@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.entity.player module
+============================================
+
+.. automodule:: neural_mmo.forge.blade.entity.player
+   :members:
+   :inherited-members:
+   :show-inheritance:

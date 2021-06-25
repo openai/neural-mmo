@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.envfig module
+=======================================
+
+.. automodule:: neural_mmo.jsuarez.extra.envfig
+   :members:
+   :inherited-members:
+   :show-inheritance:

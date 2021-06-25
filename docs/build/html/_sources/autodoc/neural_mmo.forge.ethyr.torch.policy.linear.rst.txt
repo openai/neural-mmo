@@ -1,0 +1,7 @@
+neural\_mmo.forge.ethyr.torch.policy.linear module
+==================================================
+
+.. automodule:: neural_mmo.forge.ethyr.torch.policy.linear
+   :members:
+   :inherited-members:
+   :show-inheritance:

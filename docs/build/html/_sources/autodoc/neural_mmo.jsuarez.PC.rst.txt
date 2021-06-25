@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.PC module
+=============================
+
+.. automodule:: neural_mmo.jsuarez.PC
+   :members:
+   :inherited-members:
+   :show-inheritance:

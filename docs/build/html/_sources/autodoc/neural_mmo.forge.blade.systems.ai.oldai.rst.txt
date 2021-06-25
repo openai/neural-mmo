@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.ai.oldai module
+===============================================
+
+.. automodule:: neural_mmo.forge.blade.systems.ai.oldai
+   :members:
+   :inherited-members:
+   :show-inheritance:

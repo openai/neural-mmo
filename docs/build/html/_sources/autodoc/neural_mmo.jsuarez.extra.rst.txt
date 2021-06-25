@@ -1,0 +1,24 @@
+neural\_mmo.jsuarez.extra package
+=================================
+
+.. automodule:: neural_mmo.jsuarez.extra
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.envfig
+   neural_mmo.jsuarez.extra.envgif
+   neural_mmo.jsuarez.extra.figures
+   neural_mmo.jsuarez.extra.makeTourney
+   neural_mmo.jsuarez.extra.plottourney
+   neural_mmo.jsuarez.extra.returns

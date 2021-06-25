@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.CPUUtils module
+===================================
+
+.. automodule:: neural_mmo.jsuarez.CPUUtils
+   :members:
+   :inherited-members:
+   :show-inheritance:

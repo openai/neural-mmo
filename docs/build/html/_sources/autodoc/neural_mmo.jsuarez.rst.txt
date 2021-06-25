@@ -1,0 +1,46 @@
+neural\_mmo.jsuarez package
+===========================
+
+.. automodule:: neural_mmo.jsuarez
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra
+   neural_mmo.jsuarez.plot
+   neural_mmo.jsuarez.stim
+   neural_mmo.jsuarez.tools
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.Baselines
+   neural_mmo.jsuarez.BatchSnippets
+   neural_mmo.jsuarez.CPUUtils
+   neural_mmo.jsuarez.Color256
+   neural_mmo.jsuarez.ColorEnts
+   neural_mmo.jsuarez.Curiosity
+   neural_mmo.jsuarez.Desciple
+   neural_mmo.jsuarez.ES
+   neural_mmo.jsuarez.Handler
+   neural_mmo.jsuarez.MPIUtils
+   neural_mmo.jsuarez.MapMaker
+   neural_mmo.jsuarez.NPCHandler
+   neural_mmo.jsuarez.PC
+   neural_mmo.jsuarez.PCHandler
+   neural_mmo.jsuarez.SkillActions
+   neural_mmo.jsuarez.api
+   neural_mmo.jsuarez.ascend
+   neural_mmo.jsuarez.combatFormulas
+   neural_mmo.jsuarez.figures
+   neural_mmo.jsuarez.logs
+   neural_mmo.jsuarez.oldMobs
+   neural_mmo.jsuarez.stim
+   neural_mmo.jsuarez.timed
+   neural_mmo.jsuarez.trinity
+   neural_mmo.jsuarez.visualize

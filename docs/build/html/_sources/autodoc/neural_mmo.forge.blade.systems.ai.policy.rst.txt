@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.ai.policy module
+================================================
+
+.. automodule:: neural_mmo.forge.blade.systems.ai.policy
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.stim.dynamic module
+=======================================
+
+.. automodule:: neural_mmo.jsuarez.stim.dynamic
+   :members:
+   :inherited-members:
+   :show-inheritance:

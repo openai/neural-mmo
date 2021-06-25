@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.stim.static module
+======================================
+
+.. automodule:: neural_mmo.jsuarez.stim.static
+   :members:
+   :inherited-members:
+   :show-inheritance:

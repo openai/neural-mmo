@@ -1,0 +1,15 @@
+neural\_mmo.forge package
+=========================
+
+.. automodule:: neural_mmo.forge
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade
+   neural_mmo.forge.ethyr
+   neural_mmo.forge.trinity

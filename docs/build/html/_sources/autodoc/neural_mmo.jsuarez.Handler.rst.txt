@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.Handler module
+==================================
+
+.. automodule:: neural_mmo.jsuarez.Handler
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,14 @@
+neural\_mmo.forge.blade.io.action package
+=========================================
+
+.. automodule:: neural_mmo.forge.blade.io.action
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade.io.action.node
+   neural_mmo.forge.blade.io.action.static

@@ -1,0 +1,14 @@
+neural\_mmo.jsuarez.stim package
+================================
+
+.. automodule:: neural_mmo.jsuarez.stim
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.stim.dynamic
+   neural_mmo.jsuarez.stim.static

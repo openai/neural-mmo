@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.kivy3.math.vectors module
+===========================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.math.vectors
+   :members:
+   :inherited-members:
+   :show-inheritance:

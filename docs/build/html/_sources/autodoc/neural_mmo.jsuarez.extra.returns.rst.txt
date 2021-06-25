@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.returns module
+========================================
+
+.. automodule:: neural_mmo.jsuarez.extra.returns
+   :members:
+   :inherited-members:
+   :show-inheritance:

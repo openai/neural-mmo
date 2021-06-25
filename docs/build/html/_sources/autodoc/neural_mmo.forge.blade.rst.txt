@@ -1,0 +1,18 @@
+neural\_mmo.forge.blade package
+===============================
+
+.. automodule:: neural_mmo.forge.blade
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade.core
+   neural_mmo.forge.blade.entity
+   neural_mmo.forge.blade.hook
+   neural_mmo.forge.blade.io
+   neural_mmo.forge.blade.lib
+   neural_mmo.forge.blade.systems

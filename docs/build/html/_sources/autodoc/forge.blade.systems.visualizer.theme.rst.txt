@@ -1,7 +1,0 @@
-forge.blade.systems.visualizer.theme module
-===========================================
-
-.. automodule:: forge.blade.systems.visualizer.theme
-   :members:
-   :inherited-members:
-   :show-inheritance:

@@ -1,7 +1,0 @@
-forge.blade.systems.oldEquipment module
-=======================================
-
-.. automodule:: forge.blade.systems.oldEquipment
-   :members:
-   :inherited-members:
-   :show-inheritance:

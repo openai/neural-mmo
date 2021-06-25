@@ -40,7 +40,7 @@ Exploration          0.00        73.00         8.23         6.34
 
 .. figure:: /resource/image/baselines/SmallMaps/small-map.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=small-map
+   **Reproduction:** neural-mmo-forge visualize --config=SmallMaps --MODEL=small-map
 
 Untrained
 *********
@@ -60,7 +60,7 @@ Exploration          0.00        26.00         2.22         2.72
 
 .. figure:: /resource/image/baselines/SmallMaps/None.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=None
+   **Reproduction:** neural-mmo-forge visualize --config=SmallMaps --MODEL=None
 
 
 Zero-Shot Transfer
@@ -81,7 +81,7 @@ Exploration          0.00       102.00        11.59        13.54
 
 .. figure:: /resource/image/baselines/SmallMaps/large-map.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=large-map
+   **Reproduction:** neural-mmo-forge visualize --config=SmallMaps --MODEL=large-map
 
 Scripted Foraging
 *****************
@@ -101,7 +101,7 @@ Exploration          0.00       111.00        17.50        13.12
 
 .. figure:: /resource/image/baselines/SmallMaps/scripted-forage.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=scripted-forage
+   **Reproduction:** neural-mmo-forge visualize --config=SmallMaps --MODEL=scripted-forage
 
 Scripted Foraging + Combat
 **************************
@@ -121,7 +121,7 @@ Exploration          0.00       101.00        14.94        10.80
 
 .. figure:: /resource/image/baselines/SmallMaps/scripted-combat.png
 
-   **Reproduction:** python Forge.py visualize --config=SmallMaps --MODEL=scripted-combat
+   **Reproduction:** neural-mmo-forge visualize --config=SmallMaps --MODEL=scripted-combat
 
 |icon| Large Maps
 #################
@@ -148,7 +148,7 @@ Exploration          0.00       580.00        30.50        44.57
 
 .. figure:: /resource/image/baselines/LargeMaps/large-map.png
 
-   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=large-map
+   **Reproduction:** neural-mmo-forge visualize --config=LargeMaps --MODEL=large-map
 
 Untrained
 *********
@@ -168,7 +168,7 @@ Exploration          0.00        42.00         6.25         2.80
 
 .. figure:: /resource/image/baselines/LargeMaps/None.png
 
-   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=None
+   **Reproduction:** neural-mmo-forge visualize --config=LargeMaps --MODEL=None
 
 Zero-Shot Transfer
 ******************
@@ -188,7 +188,7 @@ Exploration          0.00       431.00         8.98        10.13
 
 .. figure:: /resource/image/baselines/LargeMaps/small-map.png
 
-   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=small-map
+   **Reproduction:** neural-mmo-forge visualize --config=LargeMaps --MODEL=small-map
 
 Scripted Foraging
 *****************
@@ -208,7 +208,7 @@ Exploration          0.00       570.00       222.63       144.32
 
 .. figure:: /resource/image/baselines/LargeMaps/scripted-forage.png
 
-    **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=scripted-forage
+    **Reproduction:** neural-mmo-forge visualize --config=LargeMaps --MODEL=scripted-forage
 
 
 Scripted Combat
@@ -227,4 +227,4 @@ Exploration          0.00       532.00        49.50        61.95
 
 .. figure:: /resource/image/baselines/LargeMaps/scripted-combat.png
 
-   **Reproduction:** python Forge.py visualize --config=LargeMaps --MODEL=scripted-combat
+   **Reproduction:** neural-mmo-forge visualize --config=LargeMaps --MODEL=scripted-combat

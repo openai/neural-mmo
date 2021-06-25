@@ -1,7 +1,0 @@
-forge.trinity.scripted.behavior module
-======================================
-
-.. automodule:: forge.trinity.scripted.behavior
-   :members:
-   :inherited-members:
-   :show-inheritance:

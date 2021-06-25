@@ -1,7 +1,0 @@
-forge.trinity.dataframe module
-==============================
-
-.. automodule:: forge.trinity.dataframe
-   :members:
-   :inherited-members:
-   :show-inheritance:

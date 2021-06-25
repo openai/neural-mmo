@@ -1,7 +1,0 @@
-forge.trinity.evaluator module
-==============================
-
-.. automodule:: forge.trinity.evaluator
-   :members:
-   :inherited-members:
-   :show-inheritance:

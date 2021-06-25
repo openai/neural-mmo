@@ -1,0 +1,15 @@
+neural\_mmo.forge.blade.entity package
+======================================
+
+.. automodule:: neural_mmo.forge.blade.entity
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade.entity.entity
+   neural_mmo.forge.blade.entity.npc
+   neural_mmo.forge.blade.entity.player

@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.visualize module
+====================================
+
+.. automodule:: neural_mmo.jsuarez.visualize
+   :members:
+   :inherited-members:
+   :show-inheritance:

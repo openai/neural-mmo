@@ -1,0 +1,20 @@
+neural\_mmo.forge.ethyr.torch.policy package
+============================================
+
+.. automodule:: neural_mmo.forge.ethyr.torch.policy
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.ethyr.torch.policy.attention
+   neural_mmo.forge.ethyr.torch.policy.baseline
+   neural_mmo.forge.ethyr.torch.policy.conv
+   neural_mmo.forge.ethyr.torch.policy.embed
+   neural_mmo.forge.ethyr.torch.policy.functional
+   neural_mmo.forge.ethyr.torch.policy.linear
+   neural_mmo.forge.ethyr.torch.policy.recurrent
+   neural_mmo.forge.ethyr.torch.policy.transformer

@@ -1,0 +1,15 @@
+neural\_mmo package
+===================
+
+.. automodule:: neural_mmo
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge
+   neural_mmo.jsuarez
+   neural_mmo.projekt

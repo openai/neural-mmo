@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.tools.SeedTest module
+=========================================
+
+.. automodule:: neural_mmo.jsuarez.tools.SeedTest
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.visualizer.plot module
+======================================================
+
+.. automodule:: neural_mmo.forge.blade.systems.visualizer.plot
+   :members:
+   :inherited-members:
+   :show-inheritance:

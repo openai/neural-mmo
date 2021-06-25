@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.figures module
+==================================
+
+.. automodule:: neural_mmo.jsuarez.figures
+   :members:
+   :inherited-members:
+   :show-inheritance:

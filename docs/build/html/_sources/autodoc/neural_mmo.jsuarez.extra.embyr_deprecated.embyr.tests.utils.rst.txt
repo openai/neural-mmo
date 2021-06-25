@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.tests.utils module
+====================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.tests.utils
+   :members:
+   :inherited-members:
+   :show-inheritance:

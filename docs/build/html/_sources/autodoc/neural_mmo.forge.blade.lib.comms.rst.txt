@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.lib.comms module
+========================================
+
+.. automodule:: neural_mmo.forge.blade.lib.comms
+   :members:
+   :inherited-members:
+   :show-inheritance:

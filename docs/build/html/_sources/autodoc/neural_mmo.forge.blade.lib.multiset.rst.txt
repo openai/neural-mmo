@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.lib.multiset module
+===========================================
+
+.. automodule:: neural_mmo.forge.blade.lib.multiset
+   :members:
+   :inherited-members:
+   :show-inheritance:

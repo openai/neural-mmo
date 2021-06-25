@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.MPIUtils module
+===================================
+
+.. automodule:: neural_mmo.jsuarez.MPIUtils
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -8,5 +8,5 @@ docs/source/resource/maps/
 docs/source/autodoc/
 .idea
 dist
-build
+/build
 neural_mmo.egg-info

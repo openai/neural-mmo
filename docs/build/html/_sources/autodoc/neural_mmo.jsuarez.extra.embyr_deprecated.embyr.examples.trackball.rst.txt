@@ -1,0 +1,13 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.examples.trackball package
+============================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.examples.trackball
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.examples.trackball.main

@@ -1,0 +1,7 @@
+neural\_mmo.projekt.config module
+=================================
+
+.. automodule:: neural_mmo.projekt.config
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,15 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.kivy3.cameras package
+=======================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.cameras
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.cameras.camera
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.cameras.orthographic_camera
+   neural_mmo.jsuarez.extra.embyr_deprecated.embyr.kivy3.cameras.perspective_camera

@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.ascend module
+=================================
+
+.. automodule:: neural_mmo.jsuarez.ascend
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.Baselines module
+====================================
+
+.. automodule:: neural_mmo.jsuarez.Baselines
+   :members:
+   :inherited-members:
+   :show-inheritance:

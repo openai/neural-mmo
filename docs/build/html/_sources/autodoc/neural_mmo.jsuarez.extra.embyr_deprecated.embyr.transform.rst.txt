@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.transform module
+==================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.transform
+   :members:
+   :inherited-members:
+   :show-inheritance:

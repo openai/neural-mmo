@@ -1,0 +1,13 @@
+neural\_mmo.forge.ethyr package
+===============================
+
+.. automodule:: neural_mmo.forge.ethyr
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.ethyr.torch

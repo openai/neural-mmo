@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.lib.enums module
+========================================
+
+.. automodule:: neural_mmo.forge.blade.lib.enums
+   :members:
+   :inherited-members:
+   :show-inheritance:

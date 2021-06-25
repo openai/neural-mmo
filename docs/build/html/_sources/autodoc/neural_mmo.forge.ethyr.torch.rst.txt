@@ -1,0 +1,25 @@
+neural\_mmo.forge.ethyr.torch package
+=====================================
+
+.. automodule:: neural_mmo.forge.ethyr.torch
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.ethyr.torch.io
+   neural_mmo.forge.ethyr.torch.policy
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.ethyr.torch.loss
+   neural_mmo.forge.ethyr.torch.model
+   neural_mmo.forge.ethyr.torch.optim
+   neural_mmo.forge.ethyr.torch.param
+   neural_mmo.forge.ethyr.torch.save
+   neural_mmo.forge.ethyr.torch.utils

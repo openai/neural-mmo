@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.tools.ColorTransform module
+===============================================
+
+.. automodule:: neural_mmo.jsuarez.tools.ColorTransform
+   :members:
+   :inherited-members:
+   :show-inheritance:

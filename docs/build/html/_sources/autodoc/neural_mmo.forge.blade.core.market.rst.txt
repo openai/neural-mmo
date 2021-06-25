@@ -1,0 +1,15 @@
+neural\_mmo.forge.blade.core.market package
+===========================================
+
+.. automodule:: neural_mmo.forge.blade.core.market
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+.. toctree::
+   :maxdepth: 4
+
+   neural_mmo.forge.blade.core.market.config
+   neural_mmo.forge.blade.core.market.new_visualizer
+   neural_mmo.forge.blade.core.market.visualizer

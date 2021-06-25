@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.tools.TensorboardExample module
+===================================================
+
+.. automodule:: neural_mmo.jsuarez.tools.TensorboardExample
+   :members:
+   :inherited-members:
+   :show-inheritance:

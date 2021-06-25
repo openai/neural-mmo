@@ -1,0 +1,7 @@
+neural\_mmo.forge.trinity.scripted.attack module
+================================================
+
+.. automodule:: neural_mmo.forge.trinity.scripted.attack
+   :members:
+   :inherited-members:
+   :show-inheritance:

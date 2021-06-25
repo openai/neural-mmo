@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.oldnewapi module
+==================================================================
+
+.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.oldnewapi
+   :members:
+   :inherited-members:
+   :show-inheritance:

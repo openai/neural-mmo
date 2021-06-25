@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.inventory module
+================================================
+
+.. automodule:: neural_mmo.forge.blade.systems.inventory
+   :members:
+   :inherited-members:
+   :show-inheritance:

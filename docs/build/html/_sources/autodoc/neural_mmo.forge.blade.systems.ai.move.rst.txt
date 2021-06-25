@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.ai.move module
+==============================================
+
+.. automodule:: neural_mmo.forge.blade.systems.ai.move
+   :members:
+   :inherited-members:
+   :show-inheritance:

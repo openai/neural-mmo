@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.ColorEnts module
+====================================
+
+.. automodule:: neural_mmo.jsuarez.ColorEnts
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.exchange module
+===============================================
+
+.. automodule:: neural_mmo.forge.blade.systems.exchange
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.logs module
+===============================
+
+.. automodule:: neural_mmo.jsuarez.logs
+   :members:
+   :inherited-members:
+   :show-inheritance:

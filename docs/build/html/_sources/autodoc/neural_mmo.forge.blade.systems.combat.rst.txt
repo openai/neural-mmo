@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.combat module
+=============================================
+
+.. automodule:: neural_mmo.forge.blade.systems.combat
+   :members:
+   :inherited-members:
+   :show-inheritance:

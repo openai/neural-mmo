@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.visualizer.theme module
+=======================================================
+
+.. automodule:: neural_mmo.forge.blade.systems.visualizer.theme
+   :members:
+   :inherited-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+neural\_mmo.forge.trinity.scripted.behavior module
+==================================================
+
+.. automodule:: neural_mmo.forge.trinity.scripted.behavior
+   :members:
+   :inherited-members:
+   :show-inheritance:

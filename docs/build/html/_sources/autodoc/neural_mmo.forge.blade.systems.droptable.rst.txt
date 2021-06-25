@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.systems.droptable module
+================================================
+
+.. automodule:: neural_mmo.forge.blade.systems.droptable
+   :members:
+   :inherited-members:
+   :show-inheritance:

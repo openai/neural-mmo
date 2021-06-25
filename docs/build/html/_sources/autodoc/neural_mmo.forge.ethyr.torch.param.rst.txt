@@ -1,0 +1,7 @@
+neural\_mmo.forge.ethyr.torch.param module
+==========================================
+
+.. automodule:: neural_mmo.forge.ethyr.torch.param
+   :members:
+   :inherited-members:
+   :show-inheritance:

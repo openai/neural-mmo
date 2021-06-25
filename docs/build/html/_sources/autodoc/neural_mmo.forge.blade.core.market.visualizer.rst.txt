@@ -1,0 +1,7 @@
+neural\_mmo.forge.blade.core.market.visualizer module
+=====================================================
+
+.. automodule:: neural_mmo.forge.blade.core.market.visualizer
+   :members:
+   :inherited-members:
+   :show-inheritance:

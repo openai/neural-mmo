@@ -1,0 +1,7 @@
+neural\_mmo.jsuarez.tools.TestDropbox module
+============================================
+
+.. automodule:: neural_mmo.jsuarez.tools.TestDropbox
+   :members:
+   :inherited-members:
+   :show-inheritance:

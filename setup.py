@@ -6,6 +6,7 @@ from urllib.request import urlretrieve
 
 from setuptools import find_packages, setup
 from tqdm import tqdm
+import glob
 
 import versioneer
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
 extra_dirs = ["resource", "baselines", "forge/embyr"]
 extra_files = []
 for extra_dir in extra_dirs:
-    extra_files += package_files(str(current_dir / "neural_mmo" / extra_dir))
+    extra_files += list(glob.iglob(str(current_dir / "neural_mmo" / extra_dir) + "/**", recursive=True))
 
 setup(
     name="neural-mmo",

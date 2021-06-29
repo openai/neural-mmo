@@ -120,26 +120,32 @@ class Anvil():
       config.override(**kwargs)
       self.config = config
 
-      if not config.SCRIPTED:
-         global torch, ray, rllib, wrapper, utils
-         from neural_mmo.forge.ethyr.torch import utils
-         import torch
-         import ray
-         from ray import rllib
-         from projekt import rllib_wrapper as wrapper
+   def imports(self):
+      '''conditional rl imports'''
+      global torch, ray, rllib, wrapper, utils
+      from neural_mmo.forge.ethyr.torch import utils
+      import torch
+      import ray
+      from ray import rllib
+      from projekt import rllib_wrapper as wrapper
 
    def train(self, **kwargs):
       '''Train a model starting with the current value of --MODEL'''
+      self.imports()
       loadModel(self.config).train()
 
    def evaluate(self, **kwargs):
       '''Evaluate a model on --EVAL_MAPS maps'''
       self.config.EVALUATE = True
+      if not self.config.SCRIPTED:
+         self.imports()
       loadEvaluator(self.config).evaluate(self.config.GENERALIZE)
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''
       self.config.RENDER = True
+      if not self.config.SCRIPTED:
+         self.imports()
       loadEvaluator(self.config).render()
 
    def generate(self, **kwargs):

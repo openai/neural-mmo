@@ -11,5 +11,3 @@ neural\_mmo package
    :maxdepth: 4
 
    neural_mmo.forge
-   neural_mmo.jsuarez
-   neural_mmo.projekt

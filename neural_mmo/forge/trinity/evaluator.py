@@ -19,7 +19,7 @@ class Base:
       '''Rendering launches a Twisted WebSocket server with a fixed
       tick rate. This is a blocking call; the server will handle 
       environment execution using the provided tick function.'''
-      from forge.trinity.twistedserver import Application
+      from neural_mmo.forge.trinity.twistedserver import Application
       Application(self.env, self.tick)
 
    def evaluate(self, generalize=True):

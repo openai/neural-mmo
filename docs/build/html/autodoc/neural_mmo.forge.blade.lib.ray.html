@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.blade.lib.ray module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a></li>
@@ -236,11 +232,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.blade.lib.ray">
+  <div class="section" id="module-neural_mmo.forge.blade.lib.ray">
 <span id="neural-mmo-forge-blade-lib-ray-module"></span><h1>neural_mmo.forge.blade.lib.ray module<a class="headerlink" href="#module-neural_mmo.forge.blade.lib.ray" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.lib.ray.flush_redis_unsafe">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.lib.ray.</span></span><span class="sig-name descname"><span class="pre">flush_redis_unsafe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.lib.ray.flush_redis_unsafe" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.lib.ray.flush_redis_unsafe">
+<code class="sig-prename descclassname">neural_mmo.forge.blade.lib.ray.</code><code class="sig-name descname">flush_redis_unsafe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.lib.ray.flush_redis_unsafe" title="Permalink to this definition">¶</a></dt>
 <dd><p>This removes some non-critical state from the primary Redis shard.</p>
 <p>This removes the log files as well as the event log from Redis. This can
 be used to try to address out-of-memory errors caused by the accumulation
@@ -250,8 +246,8 @@ flushed.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.lib.ray.flush_task_and_object_metadata_unsafe">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.lib.ray.</span></span><span class="sig-name descname"><span class="pre">flush_task_and_object_metadata_unsafe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.lib.ray.flush_task_and_object_metadata_unsafe" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.lib.ray.flush_task_and_object_metadata_unsafe">
+<code class="sig-prename descclassname">neural_mmo.forge.blade.lib.ray.</code><code class="sig-name descname">flush_task_and_object_metadata_unsafe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.lib.ray.flush_task_and_object_metadata_unsafe" title="Permalink to this definition">¶</a></dt>
 <dd><p>This removes some critical state from the Redis shards.</p>
 <p>This removes all of the object and task metadata. This can be used to try
 to address out-of-memory errors caused by the accumulation of metadata in
@@ -259,7 +255,7 @@ Redis. However, after running this command, fault tolerance will most
 likely not work.</p>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

@@ -339,7 +339,7 @@ class Config(Template):
       return os.path.join(self.PATH_ALL_EVALUATIONS, self.MODEL + '.npy')
 
    #Themes
-   PATH_THEMES          = os.path.join('forge', 'blade', 'systems', 'visualizer') 
+   PATH_THEMES          = os.path.join('neural_mmo', 'forge', 'blade', 'systems', 'visualizer') 
    '''Theme directory'''
 
    PATH_THEME_WEB       = os.path.join(PATH_THEMES, 'index_web.html')

@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.examples.monkey module
-========================================================================
-
-.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.examples.monkey
-   :members:
-   :inherited-members:
-   :show-inheritance:

@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.trinity.dataframe module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a></li>
@@ -236,7 +232,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.trinity.dataframe">
+  <div class="section" id="module-neural_mmo.forge.trinity.dataframe">
 <span id="neural-mmo-forge-trinity-dataframe-module"></span><h1>neural_mmo.forge.trinity.dataframe module<a class="headerlink" href="#module-neural_mmo.forge.trinity.dataframe" title="Permalink to this headline">¶</a></h1>
 <p>Infrastructure layer for representing agent observations</p>
 <p>Maintains a synchronized + serialized representation of agent observations in
@@ -246,36 +242,36 @@ slices instead of a lengthy traversal over hundreds of game properties.</p>
 to follow the correct instantiation protocol, e.g. as used for defining
 agent/tile observations, when adding new types observations to the code</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.dataframe.Index">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.dataframe.</span></span><span class="sig-name descname"><span class="pre">Index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prealloc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.Index" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.dataframe.Index">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.dataframe.</code><code class="sig-name descname">Index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prealloc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.Index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Lookup index of attribute names</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.dataframe.ContinuousTable">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.dataframe.</span></span><span class="sig-name descname"><span class="pre">ContinuousTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">config</span></em>, <em class="sig-param"><span class="pre">obj</span></em>, <em class="sig-param"><span class="pre">prealloc</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.ContinuousTable" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.dataframe.ContinuousTable">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.dataframe.</code><code class="sig-name descname">ContinuousTable</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">obj</em>, <em class="sig-param">prealloc</em>, <em class="sig-param">dtype=&lt;class 'numpy.float32'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.ContinuousTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Flat tensor representation for a set of continuous attributes</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.dataframe.DiscreteTable">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.dataframe.</span></span><span class="sig-name descname"><span class="pre">DiscreteTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">config</span></em>, <em class="sig-param"><span class="pre">obj</span></em>, <em class="sig-param"><span class="pre">prealloc</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.int32'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.DiscreteTable" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.dataframe.DiscreteTable">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.dataframe.</code><code class="sig-name descname">DiscreteTable</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">obj</em>, <em class="sig-param">prealloc</em>, <em class="sig-param">dtype=&lt;class 'numpy.int32'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.DiscreteTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.dataframe.ContinuousTable" title="neural_mmo.forge.trinity.dataframe.ContinuousTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.dataframe.ContinuousTable</span></code></a></p>
 <p>Flat tensor representation for a set of discrete attributes</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.dataframe.Grid">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.dataframe.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.Grid" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.dataframe.Grid">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.dataframe.</code><code class="sig-name descname">Grid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">C</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.Grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Flat representation of tile/agent positions</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.dataframe.GridTables">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.dataframe.</span></span><span class="sig-name descname"><span class="pre">GridTables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prealloc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.GridTables" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.dataframe.GridTables">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.dataframe.</code><code class="sig-name descname">GridTables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">pad</span></em>, <em class="sig-param"><span class="n">prealloc</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">expansion</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.GridTables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Combines a Grid + Index + Continuous and Discrete tables</p>
 <p>Together, these data structures provide a robust and efficient
@@ -284,13 +280,13 @@ such as agents or tiles</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.dataframe.Dataframe">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.dataframe.</span></span><span class="sig-name descname"><span class="pre">Dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.Dataframe" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.dataframe.Dataframe">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.dataframe.</code><code class="sig-name descname">Dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.dataframe.Dataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Infrastructure wrapper class</p>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

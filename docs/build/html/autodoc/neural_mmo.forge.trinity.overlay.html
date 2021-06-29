@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.trinity.overlay module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a></li>
@@ -236,93 +232,93 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.trinity.overlay">
+  <div class="section" id="module-neural_mmo.forge.trinity.overlay">
 <span id="neural-mmo-forge-trinity-overlay-module"></span><h1>neural_mmo.forge.trinity.overlay module<a class="headerlink" href="#module-neural_mmo.forge.trinity.overlay" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Overlay">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.overlay.</span></span><span class="sig-name descname"><span class="pre">Overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Overlay" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Overlay">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.overlay.</code><code class="sig-name descname">Overlay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">realm</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Overlay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Define a overlay for visualization in the client</p>
 <p>Overlays are color images of the same size as the game map.
 They are rendered over the environment with transparency and
 can be used to gain insight about agent behaviors.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Overlay.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Overlay.update" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Overlay.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Overlay.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute per-tick updates to this overlay</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Overlay.register">
-<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Overlay.register" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Overlay.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Overlay.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the overlay and register it within realm</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Skills">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.overlay.</span></span><span class="sig-name descname"><span class="pre">Skills</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Skills" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Skills">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.overlay.</code><code class="sig-name descname">Skills</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">realm</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Skills" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay" title="neural_mmo.forge.trinity.overlay.Overlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.overlay.Overlay</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Skills.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Skills.update" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Skills.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Skills.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a count-based exploration map by painting
 tiles as agents walk over them</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Skills.register">
-<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Skills.register" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Skills.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Skills.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the overlay and register it within realm</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Counts">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.overlay.</span></span><span class="sig-name descname"><span class="pre">Counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Counts" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Counts">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.overlay.</code><code class="sig-name descname">Counts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">realm</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Counts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay" title="neural_mmo.forge.trinity.overlay.Overlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.overlay.Overlay</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Counts.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Counts.update" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Counts.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Counts.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a count-based exploration map by painting
 tiles as agents walk over them</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Counts.register">
-<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Counts.register" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Counts.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Counts.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the overlay and register it within realm</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Wilderness">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.overlay.</span></span><span class="sig-name descname"><span class="pre">Wilderness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Wilderness">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.overlay.</code><code class="sig-name descname">Wilderness</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">realm</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay" title="neural_mmo.forge.trinity.overlay.Overlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.overlay.Overlay</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Wilderness.init">
-<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness.init" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Wilderness.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the local wilderness level</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Wilderness.register">
-<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness.register" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Wilderness.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the overlay and register it within realm</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.overlay.Wilderness.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness.update" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.overlay.Wilderness.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.overlay.Wilderness.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute per-tick updates to this overlay</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

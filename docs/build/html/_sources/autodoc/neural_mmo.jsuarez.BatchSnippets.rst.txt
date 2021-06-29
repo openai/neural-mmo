@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.BatchSnippets module
-========================================
-
-.. automodule:: neural_mmo.jsuarez.BatchSnippets
-   :members:
-   :inherited-members:
-   :show-inheritance:

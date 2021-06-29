@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.trinity module
-==================================
-
-.. automodule:: neural_mmo.jsuarez.trinity
-   :members:
-   :inherited-members:
-   :show-inheritance:

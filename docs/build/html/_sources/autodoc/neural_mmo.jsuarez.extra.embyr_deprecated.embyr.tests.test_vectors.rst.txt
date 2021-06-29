@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr.tests.test\_vectors module
-============================================================================
-
-.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr.tests.test_vectors
-   :members:
-   :inherited-members:
-   :show-inheritance:

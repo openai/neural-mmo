@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.Desciple module
-===================================
-
-.. automodule:: neural_mmo.jsuarez.Desciple
-   :members:
-   :inherited-members:
-   :show-inheritance:

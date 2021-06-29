@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.blade.systems.exchange module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a></li>
@@ -236,15 +232,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.blade.systems.exchange">
+  <div class="section" id="module-neural_mmo.forge.blade.systems.exchange">
 <span id="neural-mmo-forge-blade-systems-exchange-module"></span><h1>neural_mmo.forge.blade.systems.exchange module<a class="headerlink" href="#module-neural_mmo.forge.blade.systems.exchange" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.systems.exchange.</span></span><span class="sig-name descname"><span class="pre">PQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.blade.systems.exchange.</code><code class="sig-name descname">PQ</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">maxsize</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">queue.PriorityQueue</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.empty">
-<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.empty" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.empty">
+<code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the queue is empty, False otherwise (not reliable!).</p>
 <p>This method is likely to be removed at some point.  Use qsize() == 0
 as a direct substitute, but be aware that either approach risks a race
@@ -255,8 +251,8 @@ completed, the preferred technique is to use the join() method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.full">
-<span class="sig-name descname"><span class="pre">full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.full" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.full">
+<code class="sig-name descname">full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.full" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the queue is full, False otherwise (not reliable!).</p>
 <p>This method is likely to be removed at some point.  Use qsize() &gt;= n
 as a direct substitute, but be aware that either approach risks a race
@@ -265,8 +261,8 @@ qsize() can be used.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.get" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">block</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove and return an item from the queue.</p>
 <p>If optional args ‘block’ is true and ‘timeout’ is None (the default),
 block if necessary until an item is available. If ‘timeout’ is
@@ -278,16 +274,16 @@ in that case).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.get_nowait">
-<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.get_nowait" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.get_nowait">
+<code class="sig-name descname">get_nowait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.get_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove and return an item from the queue without blocking.</p>
 <p>Only get an item if one is immediately available. Otherwise
 raise the Empty exception.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.join">
-<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.join" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.join">
+<code class="sig-name descname">join</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks until all items in the Queue have been gotten and processed.</p>
 <p>The count of unfinished tasks goes up whenever an item is added to the
 queue. The count goes down whenever a consumer thread calls task_done()
@@ -296,8 +292,8 @@ to indicate the item was retrieved and all work on it is complete.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.put">
-<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.put" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.put">
+<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">block</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put an item into the queue.</p>
 <p>If optional args ‘block’ is true and ‘timeout’ is None (the default),
 block if necessary until a free slot is available. If ‘timeout’ is
@@ -309,22 +305,22 @@ is ignored in that case).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.put_nowait">
-<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.put_nowait" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.put_nowait">
+<code class="sig-name descname">put_nowait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.put_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put an item into the queue without blocking.</p>
 <p>Only enqueue the item if a free slot is immediately available.
 Otherwise raise the Full exception.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.qsize">
-<span class="sig-name descname"><span class="pre">qsize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.qsize" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.qsize">
+<code class="sig-name descname">qsize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.qsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the approximate size of the queue (not reliable!).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.systems.exchange.PQ.task_done">
-<span class="sig-name descname"><span class="pre">task_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.task_done" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.systems.exchange.PQ.task_done">
+<code class="sig-name descname">task_done</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.systems.exchange.PQ.task_done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate that a formerly enqueued task is complete.</p>
 <p>Used by Queue consumer threads.  For each get() used to fetch a task,
 a subsequent call to task_done() tells the queue that the processing
@@ -338,7 +334,7 @@ placed in the queue.</p>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

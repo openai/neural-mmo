@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.Curiosity module
-====================================
-
-.. automodule:: neural_mmo.jsuarez.Curiosity
-   :members:
-   :inherited-members:
-   :show-inheritance:

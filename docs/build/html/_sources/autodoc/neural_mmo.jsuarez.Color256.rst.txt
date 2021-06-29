@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.Color256 module
-===================================
-
-.. automodule:: neural_mmo.jsuarez.Color256
-   :members:
-   :inherited-members:
-   :show-inheritance:

@@ -1,1 +1,0 @@
-rm resource/logs/events*

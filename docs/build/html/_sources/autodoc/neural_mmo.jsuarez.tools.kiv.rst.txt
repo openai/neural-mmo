@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.tools.kiv module
-====================================
-
-.. automodule:: neural_mmo.jsuarez.tools.kiv
-   :members:
-   :inherited-members:
-   :show-inheritance:

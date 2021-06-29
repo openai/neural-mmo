@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.api module
-==============================
-
-.. automodule:: neural_mmo.jsuarez.api
-   :members:
-   :inherited-members:
-   :show-inheritance:

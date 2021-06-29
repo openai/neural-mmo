@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.timed module
-================================
-
-.. automodule:: neural_mmo.jsuarez.timed
-   :members:
-   :inherited-members:
-   :show-inheritance:

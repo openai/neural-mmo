@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Scripted Baselines &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -222,547 +219,547 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.trinity.scripted.baselines">
+  <div class="section" id="module-neural_mmo.forge.trinity.scripted.baselines">
 <span id="scripted-baselines"></span><h1>Scripted Baselines<a class="headerlink" href="#module-neural_mmo.forge.trinity.scripted.baselines" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">Scripted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Scripted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Template class for scripted models.</p>
 <p>You may either subclass directly or mirror the __call__ function</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">Random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Random</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Moves randomly</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Random.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">Meander</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Meander</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Moves randomly on safe terrain</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">ForageNoExplore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">ForageNoExplore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages using Dijkstra’s algorithm</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">Forage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Forage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages using Dijkstra’s algorithm and actively explores</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">CombatNoExplore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">CombatNoExplore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages using Dijkstra’s algorithm and fights nearby agents</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">Combat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Combat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages, fights, and explores</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.</span></span><span class="sig-name descname"><span class="pre">CombatTribrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">CombatTribrid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages, fights, and explores.</p>
 <p>Uses a slightly more sophisticated attack routine</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting">
-<span class="sig-name descname"><span class="pre">adaptive_control_and_targeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">explore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting">
+<code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Balanced foraging, evasion, and exploration</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack">
+<code class="sig-name descname">attack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attack the current target</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">downtime</span></span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime">
+<em class="property">property </em><code class="sig-name descname">downtime</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if agent is not occupied with a high-priority action</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade">
-<span class="sig-name descname"><span class="pre">evade</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade">
+<code class="sig-name descname">evade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target and path away from an attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore">
+<code class="sig-name descname">explore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Route away from spawn</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage">
-<span class="sig-name descname"><span class="pre">forage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage">
+<code class="sig-name descname">forage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Min/max food and water using Dijkstra’s algorithm</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">forage_criterion</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion">
+<em class="property">property </em><code class="sig-name descname">forage_criterion</code><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if low on food or water</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents">
-<span class="sig-name descname"><span class="pre">scan_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents">
+<code class="sig-name descname">scan_agents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scan the nearby area for agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style">
-<span class="sig-name descname"><span class="pre">select_combat_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style">
+<code class="sig-name descname">select_combat_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a combat style based on distance from the current target</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak">
-<span class="sig-name descname"><span class="pre">target_weak</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak">
+<code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

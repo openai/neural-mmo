@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.blade.core.realm module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a></li>
@@ -236,22 +232,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.blade.core.realm">
+  <div class="section" id="module-neural_mmo.forge.blade.core.realm">
 <span id="neural-mmo-forge-blade-core-realm-module"></span><h1>neural_mmo.forge.blade.core.realm module<a class="headerlink" href="#module-neural_mmo.forge.blade.core.realm" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.prioritized">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.realm.</span></span><span class="sig-name descname"><span class="pre">prioritized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entities</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.prioritized" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.realm.prioritized">
+<code class="sig-prename descclassname">neural_mmo.forge.blade.core.realm.</code><code class="sig-name descname">prioritized</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entities</span><span class="p">:</span> <span class="n">Dict</span></em>, <em class="sig-param"><span class="n">merged</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.prioritized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sort actions into merged according to priority</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.Realm">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.realm.</span></span><span class="sig-name descname"><span class="pre">Realm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identify</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.realm.Realm">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.blade.core.realm.</code><code class="sig-name descname">Realm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">identify</span><span class="p">:</span> <span class="n">Callable</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Top-level world object</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.Realm.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.realm.Realm.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the environment and load the specified map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -261,26 +257,26 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.Realm.packet">
-<span class="sig-name descname"><span class="pre">packet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.packet" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.realm.Realm.packet">
+<code class="sig-name descname">packet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.packet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Client packet</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.Realm.population">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">population</span></span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.population" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="neural_mmo.forge.blade.core.realm.Realm.population">
+<em class="property">property </em><code class="sig-name descname">population</code><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.population" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of player agents</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.Realm.entity">
-<span class="sig-name descname"><span class="pre">entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entID</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.entity" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.realm.Realm.entity">
+<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get entity by ID</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.realm.Realm.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.step" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.realm.Realm.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">actions</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.realm.Realm.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run game logic for one tick</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -291,7 +287,7 @@
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

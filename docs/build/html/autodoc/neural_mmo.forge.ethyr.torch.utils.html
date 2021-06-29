@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.ethyr.torch.utils module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a><ul class="current">
@@ -231,23 +227,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.ethyr.torch.utils">
+  <div class="section" id="module-neural_mmo.forge.ethyr.torch.utils">
 <span id="neural-mmo-forge-ethyr-torch-utils-module"></span><h1>neural_mmo.forge.ethyr.torch.utils module<a class="headerlink" href="#module-neural_mmo.forge.ethyr.torch.utils" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.utils.modelSize">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.utils.</span></span><span class="sig-name descname"><span class="pre">modelSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.modelSize" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.utils.modelSize">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.utils.</code><code class="sig-name descname">modelSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">net</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.modelSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print model size</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.utils.ModuleList">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.utils.</span></span><span class="sig-name descname"><span class="pre">ModuleList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.ModuleList" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.utils.ModuleList">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.utils.</code><code class="sig-name descname">ModuleList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.ModuleList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repeat module n times</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.utils.initWeights">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.utils.</span></span><span class="sig-name descname"><span class="pre">initWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'orthogonal'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.initWeights" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.utils.initWeights">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.utils.</code><code class="sig-name descname">initWeights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">net</span></em>, <em class="sig-param"><span class="n">scheme</span><span class="o">=</span><span class="default_value">'orthogonal'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.initWeights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides multiple weight initialization schemes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -260,18 +256,18 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.utils.pack">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.utils.</span></span><span class="sig-name descname"><span class="pre">pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.pack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.utils.pack">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.utils.</code><code class="sig-name descname">pack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.pack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pack values to tensor</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.utils.unpack">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.utils.</span></span><span class="sig-name descname"><span class="pre">unpack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lens</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.unpack" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.utils.unpack">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.utils.</code><code class="sig-name descname">unpack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vals</span></em>, <em class="sig-param"><span class="n">lens</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.utils.unpack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unpack value tensor using provided lens</p>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

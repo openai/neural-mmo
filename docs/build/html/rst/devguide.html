@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Foreword &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -211,18 +208,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <figure class="align-default">
+  <div class="figure align-default">
 <img alt="../_images/splash.png" src="../_images/splash.png" />
-</figure>
-<section id="icon-foreword">
+</div>
+<div class="section" id="icon-foreword">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Foreword<a class="headerlink" href="#icon-foreword" title="Permalink to this headline">¶</a></h1>
 <p>We’re actively looking for academic collaborators and open source contributors for all aspects of the project, including those that do not involve any AI or ML. This guide serves as a brief organizational overview of Neural MMO for new contributors and links to the scrum board. It also contains information on some of the more important technical decisions in this project, some of which may be important to you depending on which portion of the project you are interested in.</p>
-</section>
-<section id="icon-contributing">
+</div>
+<div class="section" id="icon-contributing">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Contributing<a class="headerlink" href="#icon-contributing" title="Permalink to this headline">¶</a></h1>
 <p>We manage major improvements and expansions through a Github Projects <a class="reference external" href="https://github.com/jsuarez5341/neural-mmo/projects">[Scrum Board]</a> as of v1.5. This is a non-exhaustive list. Feel free to propose new efforts. Also, come introduce yourself on Discord!</p>
-</section>
-<section id="icon-code-structure">
+</div>
+<div class="section" id="icon-code-structure">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Code Structure<a class="headerlink" href="#icon-code-structure" title="Permalink to this headline">¶</a></h1>
 <p>Neural MMO is broken into four major modules</p>
 <p><img alt="air" src="../_images/air.png" /> neural_mmo/forge/ethyr: Neural networks. This module contains all code with PyTorch dependencies and associated tools.</p>
@@ -230,13 +227,13 @@
 <p><img alt="earth" src="../_images/earth.png" /> neural_mmo/forge/blade: Core game. This module contains the environment code with minimal dependencies on non-game elements.</p>
 <p><img alt="fire" src="../_images/fire.png" /> neural_mmo/forge/embyr: 3D Unity client. This module contains the C# Unity project and associated executables.</p>
 <p>neural_mmo/Forge.py is the main file and the RLlib demo is implemented in neural_mmo/projekt</p>
-</section>
-<section id="icon-style">
+</div>
+<div class="section" id="icon-style">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Style<a class="headerlink" href="#icon-style" title="Permalink to this headline">¶</a></h1>
 <p>We mostly follow PEP8. The only notable exceptions are three-space indents and camel case names – you don’t need to follow these in new modules, but avoid mixing styles or autoformatting large swaths of old code.</p>
 <p>The Neural MMO: <a class="reference external" href="https://docs.google.com/presentation/d/1m0A65nZCFIQTJm70klQigsX08MRkWcLYea85u83MaZA/edit?usp=sharing">[Style Guide]</a> provides canonical color schemes for the website, figures, and presentations. It is not designed for traditional light-on-dark publications – arXiv and conference papers should significantly downplay fonts/colors to avoid overly high-contrast figures.</p>
-</section>
-<section id="icon-tech-stack">
+</div>
+<div class="section" id="icon-tech-stack">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Tech Stack<a class="headerlink" href="#icon-tech-stack" title="Permalink to this headline">¶</a></h1>
 <p><strong>High-Level:</strong> The server is written in Python 3.7. The client is a Unity3D project written in C#. The client is not required for training and is only used for rendering visualizations. These two layers communicate with each other through a Twisted WebSocket server. The documentation is written in Sphinx.</p>
 <p><strong>Server:</strong> Broken into four modules as described in the User Guide. The biggest chunk of code is responsible for the environment game logic, as well as general purpose observation and action processing required for the OpenAI Gym derivative User API. The baselines are PyTorch models and our demo training code uses RLlib. The environment itself does not depend on PyTorch or RLlib (and shouldn’t), but they are more or less mandatory if you want an out-of-the-box experience. There isn’t a way around this with current frameworks. No frameworks currently support automatic input/output network definitions from complex Gym spaces. The best we could do is to replicate the current design in other frameworks (e.g. TensorFlow). That is too much work for me to do as an individual for too little benefit, but if you want to implement a TensorFlow port, go ahead and I’ll merge to neural_mmo/forge/ethyr/tensorflow.</p>
@@ -244,19 +241,19 @@
 <p><strong>Client:</strong> Embyr is the Neural MMO renderer. The v1.0 client was written in THREE.js. Since then, we have migrated to Unity3D with a C# code base. The renderer functions much like an MMO game client: rather than directly simulating game logic, it renders the current game state from packets communicated by the Neural MMO server over a Twisted WebSocket. This design cuts out the overhead of running a bulky game engine during training and also enables us to keep the environment in pure Python for faster development. Embyr is maintained in a separate repository for historical reasons as well as because it is large and not required on remote servers during distributed training. The terrain is made of a large number of snappable 3D tiles modeled in Blender. The only significant library we use outside of base Unity is websocket-sharp for communicating with the server.</p>
 <p><strong>Dashboard:</strong> The interactive Dashboard is implemented as a Bokeh server and renders in-browser.</p>
 <p><strong>Documentation:</strong> We use Sphinx to autogenerate documentation. The User API is created manually in docs/source/public. The Developer API is a dump of all doctrings using Sphinx Autodoc. The website template is defined in source/_templates and is a reskinned readthedocs.io theme.</p>
-</section>
-<section id="icon-client-map-representation">
+</div>
+<div class="section" id="icon-client-map-representation">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Client Map Representation<a class="headerlink" href="#icon-client-map-representation" title="Permalink to this headline">¶</a></h1>
 <p>When the client first connects to the server, it receives a packet containing the material types of all tiles. In order to build the map, the client selects the correct snappable 3D asset for each tile depending on its material and surrounding tiles. This loading process occurs in chunks of configurable size, and each chunk is welded together into a single object after being loaded. Maps in v1.5+ can have over a million tiles – performance is crucial. We leverage Unity’s DOTS/ECS (Data Oriented Tech Stac/Entity Component System), which allows us to represent tiles/chunks with structs instead of heavier GameObjects. However, this system is not perfect. We cannot change tile types without reloading an entire chunk. As such, the food resource (forest tile) is represented using a separate 3d model. These are also represented using ECS, but it still places a significant load on the client. Large maps can also contain up to 2048 entities (players and NPCs). This has started to become a performance bottleneck as well, and we have not yet integrated ECS into the player logic. ECS is great for performance, but it makes development significantly more complicated, as we essentially lose the conveniences of OOP.</p>
-</section>
-<section id="icon-observation-representation">
+</div>
+<div class="section" id="icon-observation-representation">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Observation Representation<a class="headerlink" href="#icon-observation-representation" title="Permalink to this headline">¶</a></h1>
 <p>Agent observations are represented by a set of sets: they observe a set of nearby objects (agents and tiles) each parameterized by on the order of a dozen attributes (continuous and discrete values). This quickly becomes a lot of data: for an agent with a vision range of 7, they observe 15x15=256 tiles and up to 256 agents for a total of 512 entities. Multiply this value by up to a thousand agents per environment and we have a lot of data. More importantly, we have a lot of nested object traversals in order to extract the data for each observation from the environment. This is ridiculously slow – before the following optimizations, observation processing consumed 98+ percent of environment computation time. The solution was to keep a serialized flat-tensor representation of the environment synchronized with the actual environment. Every time the environment updates one of the properties that is observable by agents, the change is reflected in an underlying tensor representation. This allows us to extract agent observations as flat tensor slices. This logic is in neural_mmo/forge/trinity/dataframe.py. Be warned: it is essential to follow the patterns used by the Tile and Entity classes to avoid desync. The worst training bugs in Neural MMO invariably come from a mismatch between the game object state and the serialized state.</p>
-</section>
-<section id="icon-model-io">
+</div>
+<div class="section" id="icon-model-io">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Model IO<a class="headerlink" href="#icon-model-io" title="Permalink to this headline">¶</a></h1>
 <p>Each agent observes discrete and continuous tensors for each objects type (currently Tiles and Entities). Discrete values have been flat-indexed to fit a single embedding layer. This enables us to compute discrete/continuous embedding vectors using a single lookup/weight multiply per entity type. The embeddings are then passed to an attentional preprocessor which squashes the variable-length set of objects to a fixed-size representation. It may then be passed to a standard model, currently an LSTM, before being fed to the action model. In order to support variable-length actions such as targeting nearby agents, we use a hard-attentional mechanism. That is, the model hidden state is keyed (dot producted) with action argument embeddings. This allows us to keep the entire model end-to-end differentiable.</p>
-</section>
+</div>
 
 
            </div>

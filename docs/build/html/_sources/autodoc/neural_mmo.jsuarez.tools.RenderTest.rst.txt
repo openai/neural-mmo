@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.tools.RenderTest module
-===========================================
-
-.. automodule:: neural_mmo.jsuarez.tools.RenderTest
-   :members:
-   :inherited-members:
-   :show-inheritance:

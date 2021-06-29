@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.tools.Colors module
-=======================================
-
-.. automodule:: neural_mmo.jsuarez.tools.Colors
-   :members:
-   :inherited-members:
-   :show-inheritance:

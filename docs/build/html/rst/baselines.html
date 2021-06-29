@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Evaluation Protocol &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -225,24 +222,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <figure class="align-default" id="id5">
+  <div class="figure align-default" id="id5">
 <img alt="../_images/environment.png" src="../_images/environment.png" />
-<figcaption>
-<p><span class="caption-text">Neural MMO provides standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-<section id="icon-evaluation-protocol">
+<p class="caption"><span class="caption-text">Neural MMO provides standard training and evaluation settings along with pretrained and scripted baselines. You can learn more about them below.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="icon-evaluation-protocol">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Evaluation Protocol<a class="headerlink" href="#icon-evaluation-protocol" title="Permalink to this headline">¶</a></h1>
 <p><strong>Versioning:</strong> The evaluations below are for v1.5. If you are here for the competition, refer to the AICrowd page for results. If you are here for the publication, we are in the process of aggregating experiment results for v1.5.1 and generating figures.</p>
 <p>Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.</p>
 <p>Publications including new models should clearly indicate training scale, domain knowledge assumptions, and any other significant changes to the default configuration. Ideally, they should also include a discussion of agent behavior and supporting training/evaluation plots, overlay figures, and/or other evidence specific to the associated work.</p>
 <p>To reproduce the tables and figures below, run the associated command. Run <em>train</em> or <em>evaluate</em> instead of <em>visualize</em> to verify results from scratch or from the pretrained model.</p>
-</section>
-<section id="icon-small-maps">
+</div>
+<div class="section" id="icon-small-maps">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Small Maps<a class="headerlink" href="#icon-small-maps" title="Permalink to this headline">¶</a></h1>
 <p>This setting includes 256 80x80 maps (60x60 excluding lava) and supports up to 128 agents/32 NPCs. It is intended for training and evaluation horizons of 1000 timesteps, or 10 minutes in real time. Evaluation takes only a few minutes.</p>
 <img alt="../_images/small_isometric.png" src="../_images/small_isometric.png" />
-<section id="neural-baseline">
+<div class="section" id="neural-baseline">
 <h2>Neural Baseline<a class="headerlink" href="#neural-baseline" title="Permalink to this headline">¶</a></h2>
 <p>Our baseline is trained using an RTX 3080 + 64 cores for ~(100k maps/1000 epochs/4 days). The first skills to emerge are survival/foraging/exploration, followed by combat, followed much later by attacking NPCs for equipment. Training for an extra ~500 epochs did not result in any substantial improvements.</p>
 <table class="docutils align-default">
@@ -300,14 +295,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id6">
+<div class="figure align-default" id="id6">
 <img alt="../_images/small-map.png" src="../_images/small-map.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=small-map</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="untrained">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=small-map</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="untrained">
 <h2>Untrained<a class="headerlink" href="#untrained" title="Permalink to this headline">¶</a></h2>
 <p>A randomly initialized copy of the trained model architecture</p>
 <table class="docutils align-default">
@@ -365,14 +358,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id7">
+<div class="figure align-default" id="id7">
 <img alt="../_images/None.png" src="../_images/None.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=None</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="zero-shot-transfer">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=None</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="zero-shot-transfer">
 <h2>Zero-Shot Transfer<a class="headerlink" href="#zero-shot-transfer" title="Permalink to this headline">¶</a></h2>
 <p>Evaluation of the large-map model on the SmallMaps domain</p>
 <table class="docutils align-default">
@@ -430,14 +421,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id8">
+<div class="figure align-default" id="id8">
 <img alt="../_images/large-map.png" src="../_images/large-map.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=large-map</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="scripted-foraging">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=large-map</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="scripted-foraging">
 <h2>Scripted Foraging<a class="headerlink" href="#scripted-foraging" title="Permalink to this headline">¶</a></h2>
 <p>A scripted model that forages for food and only fights back when attacked by NPCs.</p>
 <table class="docutils align-default">
@@ -495,14 +484,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id9">
+<div class="figure align-default" id="id9">
 <img alt="../_images/scripted-forage.png" src="../_images/scripted-forage.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=scripted-forage</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="scripted-foraging-combat">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=scripted-forage</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="scripted-foraging-combat">
 <h2>Scripted Foraging + Combat<a class="headerlink" href="#scripted-foraging-combat" title="Permalink to this headline">¶</a></h2>
 <p>A scripted model that forages for food and actively fights other scripted agents and NPCs</p>
 <table class="docutils align-default">
@@ -560,19 +547,17 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id10">
+<div class="figure align-default" id="id10">
 <img alt="../_images/scripted-combat.png" src="../_images/scripted-combat.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=scripted-combat</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-</section>
-<section id="icon-large-maps">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=SmallMaps –MODEL=scripted-combat</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="icon-large-maps">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Large Maps<a class="headerlink" href="#icon-large-maps" title="Permalink to this headline">¶</a></h1>
 <p>This setting includes 256 1024x1024 maps (1004x1004 excluding lava) and supports up to 1024 agents/1024 NPCs. It is intended for training and evaluation horizons of 6000-12000+ timesteps, or 1-2 hours in real time. Evaluation takes several hours. Reasonable policies are trainable with 4 CPU cores and a single GPU in a few days. Our baseline is trained using an RTX 3080 + 16 cores for ~5 days. The bounds of scaling with additional compute are unknown – note that this setting is typically RAM bound.</p>
 <img alt="../_images/large_isometric.png" src="../_images/large_isometric.png" />
-<section id="id1">
+<div class="section" id="id1">
 <h2>Neural Baseline<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>Our baseline is trained using an RTX 3080 + 16 cores for ~(7.5k maps/100 epochs/1 day).  The first skill to emerge is capable foraging and exploration, followed by combat and some equipment farming. Training for an extra ~740 epochs results in improved combat and equipment farming but greatly decreased lifetime/foraging/exploration.</p>
 <table class="docutils align-default">
@@ -630,14 +615,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id11">
+<div class="figure align-default" id="id11">
 <img alt="../_images/large-map1.png" src="../_images/large-map1.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=large-map</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="id2">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=large-map</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="id2">
 <h2>Untrained<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>A randomly initialized copy of the trained model architecture</p>
 <table class="docutils align-default">
@@ -695,14 +678,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id12">
+<div class="figure align-default" id="id12">
 <img alt="../_images/None1.png" src="../_images/None1.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=None</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="id3">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=None</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="id3">
 <h2>Zero-Shot Transfer<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>Evaluation of the small-map model on the LargeMaps domain</p>
 <table class="docutils align-default">
@@ -760,14 +741,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id13">
+<div class="figure align-default" id="id13">
 <img alt="../_images/small-map1.png" src="../_images/small-map1.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=small-map</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="id4">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=small-map</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="id4">
 <h2>Scripted Foraging<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>A scripted model that forages for food and only fights back when attacked by NPCs.</p>
 <table class="docutils align-default">
@@ -825,14 +804,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id14">
+<div class="figure align-default" id="id14">
 <img alt="../_images/scripted-forage1.png" src="../_images/scripted-forage1.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=scripted-forage</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="scripted-combat">
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=scripted-forage</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="scripted-combat">
 <h2>Scripted Combat<a class="headerlink" href="#scripted-combat" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
@@ -889,14 +866,12 @@
 </tr>
 </tbody>
 </table>
-<figure class="align-default" id="id15">
+<div class="figure align-default" id="id15">
 <img alt="../_images/scripted-combat1.png" src="../_images/scripted-combat1.png" />
-<figcaption>
-<p><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=scripted-combat</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-</section>
+<p class="caption"><span class="caption-text"><strong>Reproduction:</strong> neural-mmo-forge visualize –config=LargeMaps –MODEL=scripted-combat</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
 
 
            </div>

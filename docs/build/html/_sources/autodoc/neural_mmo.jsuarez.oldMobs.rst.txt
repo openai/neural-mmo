@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.oldMobs module
-==================================
-
-.. automodule:: neural_mmo.jsuarez.oldMobs
-   :members:
-   :inherited-members:
-   :show-inheritance:

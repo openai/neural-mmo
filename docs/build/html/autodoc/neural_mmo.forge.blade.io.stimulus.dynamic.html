@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.blade.io.stimulus.dynamic module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a></li>
@@ -238,24 +234,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.blade.io.stimulus.dynamic">
+  <div class="section" id="module-neural_mmo.forge.blade.io.stimulus.dynamic">
 <span id="neural-mmo-forge-blade-io-stimulus-dynamic-module"></span><h1>neural_mmo.forge.blade.io.stimulus.dynamic module<a class="headerlink" href="#module-neural_mmo.forge.blade.io.stimulus.dynamic" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.io.stimulus.dynamic.camel">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.io.stimulus.dynamic.</span></span><span class="sig-name descname"><span class="pre">camel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.camel" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.io.stimulus.dynamic.camel">
+<code class="sig-prename descclassname">neural_mmo.forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">camel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.camel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a string to camel case</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.io.stimulus.dynamic.</span></span><span class="sig-name descname"><span class="pre">Stimulus</span></span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.blade.io.stimulus.dynamic.</code><code class="sig-name descname">Stimulus</code><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Static IO class used for interacting with game observations</p>
 <p>The environment returns game objects in observations.
 This class assembles them into usable data packets</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">ent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility for preprocessing game observations</p>
 <p>Built to be semi-automatic and only require small updates
 for large new classes of observations</p>
@@ -271,26 +267,26 @@ for large new classes of observations</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pull attributes from game</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.tile">
-<span class="sig-name descname"><span class="pre">tile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.tile">
+<code class="sig-name descname">tile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ent</span></em>, <em class="sig-param"><span class="n">static</span></em>, <em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.tile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for tile objects</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.entity">
-<span class="sig-name descname"><span class="pre">entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.entity">
+<code class="sig-name descname">entity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ent</span></em>, <em class="sig-param"><span class="n">static</span></em>, <em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal processor for player objects. Always returns self first</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

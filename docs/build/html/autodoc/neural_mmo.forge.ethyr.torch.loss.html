@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.ethyr.torch.loss module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a><ul class="current">
@@ -231,11 +227,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.ethyr.torch.loss">
+  <div class="section" id="module-neural_mmo.forge.ethyr.torch.loss">
 <span id="neural-mmo-forge-ethyr-torch-loss-module"></span><h1>neural_mmo.forge.ethyr.torch.loss module<a class="headerlink" href="#module-neural_mmo.forge.ethyr.torch.loss" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.loss.advantage">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.loss.</span></span><span class="sig-name descname"><span class="pre">advantage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.advantage" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.loss.advantage">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.loss.</code><code class="sig-name descname">advantage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">returns</span></em>, <em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.advantage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a mean centered advantage function
 using a value function baseline.</p>
 <dl class="field-list simple">
@@ -255,8 +251,8 @@ using a value function baseline.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.loss.policyLoss">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.loss.</span></span><span class="sig-name descname"><span class="pre">policyLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logProb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.policyLoss" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.loss.policyLoss">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.loss.</code><code class="sig-name descname">policyLoss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">logProb</span></em>, <em class="sig-param"><span class="n">atn</span></em>, <em class="sig-param"><span class="n">adv</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.policyLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Policy gradient loss</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -276,8 +272,8 @@ using a value function baseline.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.loss.valueLoss">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.loss.</span></span><span class="sig-name descname"><span class="pre">valueLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.valueLoss" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.loss.valueLoss">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.loss.</code><code class="sig-name descname">valueLoss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">returns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.valueLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Value function loss</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -296,8 +292,8 @@ using a value function baseline.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.loss.entropyLoss">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.loss.</span></span><span class="sig-name descname"><span class="pre">entropyLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logProb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.entropyLoss" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.loss.entropyLoss">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.loss.</code><code class="sig-name descname">entropyLoss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prob</span></em>, <em class="sig-param"><span class="n">logProb</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.entropyLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entropy computation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -316,8 +312,8 @@ using a value function baseline.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.ethyr.torch.loss.PG">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.ethyr.torch.loss.</span></span><span class="sig-name descname"><span class="pre">PG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.PG" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.ethyr.torch.loss.PG">
+<code class="sig-prename descclassname">neural_mmo.forge.ethyr.torch.loss.</code><code class="sig-name descname">PG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pi</span></em>, <em class="sig-param"><span class="n">atn</span></em>, <em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">returns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.ethyr.torch.loss.PG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes losses for the policy gradient algorithm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -338,7 +334,7 @@ entLoss : Entropy loss</p>
 </dl>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

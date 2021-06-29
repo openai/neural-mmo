@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.extra.embyr\_deprecated.embyr2d.render module
-=================================================================
-
-.. automodule:: neural_mmo.jsuarez.extra.embyr_deprecated.embyr2d.render
-   :members:
-   :inherited-members:
-   :show-inheritance:

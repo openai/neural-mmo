@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.blade.core.market.visualizer module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="neural_mmo.forge.blade.core.html">neural_mmo.forge.blade.core package</a></li>
@@ -238,29 +234,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.blade.core.market.visualizer">
+  <div class="section" id="module-neural_mmo.forge.blade.core.market.visualizer">
 <span id="neural-mmo-forge-blade-core-market-visualizer-module"></span><h1>neural_mmo.forge.blade.core.market.visualizer module<a class="headerlink" href="#module-neural_mmo.forge.blade.core.market.visualizer" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.market.visualizer.random">
-<span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.market.visualizer.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">x</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">interval</span> <span class="pre">[0,</span> <span class="pre">1).</span><a class="headerlink" href="#neural_mmo.forge.blade.core.market.visualizer.random" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.market.visualizer.random">
+<code class="sig-prename descclassname">neural_mmo.forge.blade.core.market.visualizer.</code><code class="sig-name descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; x in the interval [0, 1).<a class="headerlink" href="#neural_mmo.forge.blade.core.market.visualizer.random" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.blade.core.market.visualizer.</span></span><span class="sig-name descname"><span class="pre">MarketVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_len</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'NeuralMMO</span> <span class="pre">Market</span> <span class="pre">Data'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'tick'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'Dummy</span> <span class="pre">Values'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.blade.core.market.visualizer.</code><code class="sig-name descname">MarketVisualizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keys</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">history_len</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'NeuralMMO Market Data'</span></em>, <em class="sig-param"><span class="n">x</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'tick'</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Dummy Values'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Market Visualizer
 Visualizes a stream of data, automatically refreshes on update()</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer.update" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update fuction to be used externally.
 data (dict): updated data to be added to market, including tick value</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

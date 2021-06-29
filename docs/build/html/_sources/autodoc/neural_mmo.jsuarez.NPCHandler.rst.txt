@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.NPCHandler module
-=====================================
-
-.. automodule:: neural_mmo.jsuarez.NPCHandler
-   :members:
-   :inherited-members:
-   :show-inheritance:

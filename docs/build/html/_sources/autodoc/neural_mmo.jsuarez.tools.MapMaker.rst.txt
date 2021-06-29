@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.tools.MapMaker module
-=========================================
-
-.. automodule:: neural_mmo.jsuarez.tools.MapMaker
-   :members:
-   :inherited-members:
-   :show-inheritance:

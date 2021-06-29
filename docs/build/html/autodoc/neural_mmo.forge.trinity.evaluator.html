@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>neural_mmo.forge.trinity.evaluator module &mdash; Neural MMO v1.5 1.5.1 documentation</title>
@@ -14,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -32,10 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -114,7 +111,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../rst/api.html"> User API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../rst/api.html#icon-developer-api"> Developer API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neural_mmo.projekt.html">neural_mmo.projekt package</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="neural_mmo.forge.html">neural_mmo.forge package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.blade.html">neural_mmo.forge.blade package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="neural_mmo.forge.ethyr.html">neural_mmo.forge.ethyr package</a></li>
@@ -236,30 +232,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-neural_mmo.forge.trinity.evaluator">
+  <div class="section" id="module-neural_mmo.forge.trinity.evaluator">
 <span id="neural-mmo-forge-trinity-evaluator-module"></span><h1>neural_mmo.forge.trinity.evaluator module<a class="headerlink" href="#module-neural_mmo.forge.trinity.evaluator" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Base">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.evaluator.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Base">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.evaluator.</code><code class="sig-name descname">Base</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for test-time evaluators</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Base.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base.render" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Base.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rendering launches a Twisted WebSocket server with a fixed
 tick rate. This is a blocking call; the server will handle
 environment execution using the provided tick function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Base.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base.evaluate" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Base.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">generalize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the model on maps according to config params</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Base.tick">
-<span class="sig-name descname"><span class="pre">tick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omitDead</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base.tick" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Base.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">actions</span></em>, <em class="sig-param"><span class="n">pos</span></em>, <em class="sig-param"><span class="n">cmd</span></em>, <em class="sig-param"><span class="n">preprocess</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">omitDead</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Base.tick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a single timestep</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -277,19 +273,19 @@ environment execution using the provided tick function.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Evaluator">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">neural_mmo.forge.trinity.evaluator.</span></span><span class="sig-name descname"><span class="pre">Evaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Evaluator">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.evaluator.</code><code class="sig-name descname">Evaluator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">policy</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base" title="neural_mmo.forge.trinity.evaluator.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.evaluator.Base</span></code></a></p>
 <p>Evaluator for scripted models</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Evaluator.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator.render" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Evaluator.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render override for scripted models</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Evaluator.tick">
-<span class="sig-name descname"><span class="pre">tick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator.tick" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Evaluator.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pos</span></em>, <em class="sig-param"><span class="n">cmd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator.tick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a single timestep</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -302,14 +298,14 @@ environment execution using the provided tick function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neural_mmo.forge.trinity.evaluator.Evaluator.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator.evaluate" title="Permalink to this definition">¶</a></dt>
+<dt id="neural_mmo.forge.trinity.evaluator.Evaluator.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">generalize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.evaluator.Evaluator.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the model on maps according to config params</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

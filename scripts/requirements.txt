@@ -1,0 +1,10 @@
+fire==0.4.0
+autobahn==19.3.3
+Twisted==19.2.0
+gym==0.17.2
+vec-noise==1.1.4
+bokeh==2.2.3
+imageio==2.8.0
+sphinx-rtd-theme==0.5.1
+tqdm==4.61.1
+matplotlib==3.1.3

@@ -18,23 +18,27 @@ Neural MMO is a platform for agent-based intelligence research featuring hundred
 |icon| Installation
 ###################
 
-.. code-block:: python
-   :caption: Ubuntu (20.04 preferred)
-
-   git clone --single-branch --depth=1 --branch master https://github.com/jsuarez5341/neural-mmo
-   git clone --single-branch --depth=1 --branch v1.5.1 https://github.com/jsuarez5341/neural-mmo-client neural-mmo/forge/embyr
-
-   cd neural-mmo && bash scripts/setup.sh
+Tested on Ubuntu 20.04, Windows 10 + WSL, and MacOS
 
 .. code-block:: python
-   :caption: Windows 10 + WSL Ubuntu
+   :caption: Competition setup
 
-   #Execute in WSL Ubuntu
+   git clone https://gitlab.aicrowd.com/jyotish/neuralmmo-starter-kit
+   pip install neural-mmo
+
+.. code-block:: python
+   :caption: Environment source. Setup with --CORE_ONLY to omit RLlib requirements
+
    git clone --single-branch --depth=1 --branch master https://github.com/jsuarez5341/neural-mmo
-   cd neural-mmo && bash scripts/setup.sh
+   cd neural-mmo && bash scripts/setup.sh 
 
-   #Execute in Windows 10
+.. code-block:: python
+   :caption: Download the UnityClient client
+ 
    git clone --single-branch --depth=1 --branch v1.5.1 https://github.com/jsuarez5341/neural-mmo-client
+   
+   #If not on WSL:
+   mv neural-mmo-client neural-mmo/forge/embyr
 
 **Troubleshooting:**
   - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
@@ -47,25 +51,25 @@ Neural MMO is a platform for agent-based intelligence research featuring hundred
 |icon| CLI
 ##########
 
-neural-mmo-forge is the main file for the included demo and starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. To view documentation:
+Forge is the main file for the included demo and starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. To view documentation:
 
 .. code-block:: python
 
-  neural-mmo-forge --help
+  python Forge.py --help
 
 .. code-block:: text
 
   NAME
-      neural-mmo-forge --help - Neural MMO CLI powered by Google Fire
+      python Forge.py --help - Neural MMO CLI powered by Google Fire
 
   SYNOPSIS
-      neural-mmo-forge --help - GROUP | COMMAND
+      python Forge.py --help - GROUP | COMMAND
 
   DESCRIPTION
       Main file for the RLlib demo included with Neural MMO.
 
       Usage:
-         neural-mmo-forge <COMMAND> --config=<CONFIG> --ARG1=<ARG1> ...
+         python Forge.py <COMMAND> --config=<CONFIG> --ARG1=<ARG1> ...
 
       The User API documents core env flags. Additional config options specific
       to this demo are available in projekt/config.py.
@@ -110,8 +114,8 @@ We're going to need some maps to play with in the tutorials below. If you're fol
 .. code-block:: python
   :caption: Generate small and large game maps
 
-  neural-mmo-forge generate --config=SmallMaps --TERRAIN_RENDER
-  neural-mmo-forge generate --config=LargeMaps
+  python Forge.py generate --config=SmallMaps --TERRAIN_RENDER
+  python Forge.py generate --config=LargeMaps
 
 .. code-block:: text
 
@@ -135,9 +139,9 @@ Rendering the environment requires launching both a server and a client. To laun
 
 .. code-block:: python
 
-  neural-mmo-forge render --config=SmallMultimodalSkills
+  python Forge.py render --config=SmallMultimodalSkills
 
-| **Linux:** Launch *client.sh* in a separate shell or click the associated executable
+| **Linux/MacOS:** Launch *client.sh* in a separate shell or click the associated executable
 | **Windows:** Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10
 
 The server will take a few seconds to load the pretrained policy and connect to the client.
@@ -162,8 +166,8 @@ Evaluating on canonical configs will load the associated pretrained baseline by 
 .. code-block:: python
   :caption: Train on small and large game maps
 
-  neural-mmo-forge train --config=SmallMultimodalSkills --LOAD=False
-  neural-mmo-forge train --config=LargeMultimodalSkills --LOAD=False
+  python Forge.py train --config=SmallMultimodalSkills --LOAD=False
+  python Forge.py --config=LargeMultimodalSkills --LOAD=False
 
 .. code-block:: text
 
@@ -227,8 +231,8 @@ Evaluation in open-ended massively multiagent settings is akin to that in the re
 .. code-block:: python
    :caption: Evaluate a pretrained and scripted model
 
-   neural-mmo-forge evaluate --config=SmallMultimodalSkills --EVAL_MAPS=1
-   neural-mmo-forge evaluate --config=SmallMultimodalSkills --EVAL_MAPS=1 --SCRIPTED=Combat
+   python Forge.py evaluate --config=SmallMultimodalSkills --EVAL_MAPS=1
+   python Forge.py evaluate --config=SmallMultimodalSkills --EVAL_MAPS=1 --SCRIPTED=Combat
 
 .. code-block:: text
 
@@ -258,8 +262,8 @@ The "visualize" command creates summary tables and figures using the results of 
 .. code-block:: python
    :caption: Visualize evaluation results for pretrained and scripted baselines
 
-   neural-mmo-forge visualize --config=SmallMultimodalSkills --MODEL=small-maps
-   neural-mmo-forge visualize --config=SmallMultimodalSkills --MODEL=scripted-combat
+   python Forge.py visualize --config=SmallMultimodalSkills
+   python Forge.py visualize --config=SmallMultimodalSkills SCRIPTED=CombatTribrid
 
 ============ ============ ============ ============ ============
 Metric       Min          Max          Mean         Std

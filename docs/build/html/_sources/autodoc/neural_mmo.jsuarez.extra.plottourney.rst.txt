@@ -1,7 +1,0 @@
-neural\_mmo.jsuarez.extra.plottourney module
-============================================
-
-.. automodule:: neural_mmo.jsuarez.extra.plottourney
-   :members:
-   :inherited-members:
-   :show-inheritance:

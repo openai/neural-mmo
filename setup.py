@@ -12,7 +12,6 @@ import versioneer
 
 README = Path("README.md").read_text()
 REPO_URL = "https://github.com/jsuarez5341/neural-mmo"
-CLIENT_REPO_URL = "https://github.com/jsuarez5341/neural-mmo-client"
 VERSION = versioneer.get_version()
 
 current_dir = Path(__file__).resolve().parent
@@ -31,11 +30,6 @@ def read_requirements_file(requirements_version):
         reqs.pop(idx)
     return reqs
 
-extra_dirs = []
-extra_files = []
-for extra_dir in extra_dirs:
-    extra_files += list(glob.iglob(str(current_dir / "neural_mmo" / extra_dir) + "/**", recursive=True))
-
 setup(
     name="neural-mmo",
     description="Neural MMO is a massively multiagent environment for artificial intelligence research inspired by "
@@ -43,9 +37,6 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    package_data={
-        "": extra_files,
-    },
     version=VERSION,
     cmdclass=versioneer.get_cmdclass(),
     install_requires=read_requirements_file("base"),

@@ -1,3 +1,8 @@
+from pdb import set_trace as T
+
+import os
+import shutil
+import zipfile
 from pathlib import Path
 
 from setuptools import find_packages, setup
@@ -25,7 +30,6 @@ def read_requirements_file(requirements_version):
     for idx in lines_to_remove:
         reqs.pop(idx)
     return reqs
-
 
 extra_dirs = []
 extra_files = []

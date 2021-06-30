@@ -103,11 +103,11 @@ class Anvil():
       python Forge.py <COMMAND> --config=<CONFIG> --ARG1=<ARG1> ...
 
    The User API documents core env flags. Additional config options specific
-   to this demo are available in projekt/config.py. 
+   to this demo are available in projekt. 
 
    The --config flag may be used to load an entire group of options at once.
    The Debug, SmallMaps, and LargeMaps options are included in this demo with
-   the latter being the default -- or write your own in projekt/config.py
+   the latter being the default -- or write your own in projekt
    '''
    def __init__(self, **kwargs):
       if 'help' in kwargs:

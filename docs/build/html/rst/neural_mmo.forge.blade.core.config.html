@@ -227,6 +227,9 @@
 <dd><p>An environment configuration object</p>
 <p>Global constants are defined as static class variables. You can override
 any Config variable using standard CLI syntax (e.g. –NENT=128).</p>
+<p>The default config as of v1.5 uses 1024x1024 maps with up to 2048 agents
+and 1024 NPCs. It is suitable to time horizons of 8192+ steps. For smaller
+experiments, consider the SmallMaps config.</p>
 <p class="rubric">Notes</p>
 <p>We use Google Fire internally to replace standard manual argparse
 definitions for each Config property. This means you can subclass
@@ -276,7 +279,7 @@ generated automatically.</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">NENT</code><em class="property"> = 256</em></dt>
+<code class="sig-name descname">NENT</code><em class="property"> = 2048</em></dt>
 <dd><p>Maximum number of agents spawnable in the environment</p>
 </dd></dl>
 
@@ -284,6 +287,12 @@ generated automatically.</p>
 <dt>
 <code class="sig-name descname">NPOP</code><em class="property"> = 1</em></dt>
 <dd><p>Number of distinct populations spawnable in the environment</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">COOPERATIVE</code><em class="property"> = True</em></dt>
+<dd><p>Whether to treat populations as teams</p>
 </dd></dl>
 
 <dl class="py method">
@@ -519,20 +528,14 @@ along the borders of the square game map</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_ROOT</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo'</em></dt>
+<code class="sig-name descname">PATH_ROOT</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs'</em></dt>
 <dd><p>Global repository directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_RESOURCE</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource'</em></dt>
+<code class="sig-name descname">PATH_RESOURCE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource'</em></dt>
 <dd><p>Resource directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt>
-<code class="sig-name descname">PATH_MAPS</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/maps'</em></dt>
-<dd><p>Generated map directory</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -543,37 +546,43 @@ along the borders of the square game map</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_MAPS_SMALL</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/maps/procedural-small'</em></dt>
+<code class="sig-name descname">PATH_MAPS_SMALL</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/maps/procedural-small'</em></dt>
 <dd><p>Generated map directory for SmallMap config</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_MAPS_LARGE</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/maps/procedural-large'</em></dt>
+<code class="sig-name descname">PATH_MAPS_LARGE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/maps/procedural-large'</em></dt>
 <dd><p>Generated map directory for LargeMap config</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_ASSETS</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets'</em></dt>
+<code class="sig-name descname">PATH_MAPS</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/maps/procedural-large'</em></dt>
+<dd><p>Generated map directory</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">PATH_ASSETS</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets'</em></dt>
 <dd><p>Asset directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_TILE</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets/tiles/{}.png'</em></dt>
+<code class="sig-name descname">PATH_TILE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets/tiles/{}.png'</em></dt>
 <dd><p>Tile path – format me with tile name</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_TEXT</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets/text'</em></dt>
+<code class="sig-name descname">PATH_TEXT</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets/text'</em></dt>
 <dd><p>Text directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">PATH_LOGO</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets/text/ascii.txt'</em></dt>
+<code class="sig-name descname">PATH_LOGO</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets/text/ascii.txt'</em></dt>
 <dd><p>Logo file (Ascii art)</p>
 </dd></dl>
 

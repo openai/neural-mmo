@@ -96,7 +96,7 @@ def read_requirements_file(requirements_version):
 
 
 if __name__ == "__main__":
-    #setup_neural_mmo_client()
+    pass#setup_neural_mmo_client()
 
 #extra_dirs = ["resource", "baselines", "forge/embyr"]
 extra_dirs = []

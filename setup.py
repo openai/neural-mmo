@@ -96,9 +96,10 @@ def read_requirements_file(requirements_version):
 
 
 if __name__ == "__main__":
-    setup_neural_mmo_client()
+    #setup_neural_mmo_client()
 
-extra_dirs = ["resource", "baselines", "forge/embyr"]
+#extra_dirs = ["resource", "baselines", "forge/embyr"]
+extra_dirs = []
 extra_files = []
 for extra_dir in extra_dirs:
     extra_files += list(glob.iglob(str(current_dir / "neural_mmo" / extra_dir) + "/**", recursive=True))

@@ -5,7 +5,7 @@ import glob
 
 import versioneer
 
-README = Path("README.rst").read_text()
+README = Path("README.md").read_text()
 REPO_URL = "https://github.com/jsuarez5341/neural-mmo"
 CLIENT_REPO_URL = "https://github.com/jsuarez5341/neural-mmo-client"
 VERSION = versioneer.get_version()

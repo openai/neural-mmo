@@ -42,7 +42,7 @@ Tested on Ubuntu 20.04, Windows 10 + WSL, and MacOS
 
 **Troubleshooting:**
   - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
-  - If you are training on GPU and get an IndexError error on self.device, set gpu_ids=[0] in ray/rllib/policy/rotch_policy.py:150 (typically in ~/anaconda3/lib/python3.8/site-packages)
+  - If you are training on GPU and get an IndexError error on self.device, set gpu_ids=[0] in ray/rllib/policy/torch_policy.py:150 (typically in ~/anaconda3/lib/python3.8/site-packages)
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
   - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
   - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.

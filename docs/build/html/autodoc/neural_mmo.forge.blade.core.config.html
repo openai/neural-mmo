@@ -241,6 +241,9 @@
 <p>An environment configuration object</p>
 <p>Global constants are defined as static class variables. You can override
 any Config variable using standard CLI syntax (e.g. –NENT=128).</p>
+<p>The default config as of v1.5 uses 1024x1024 maps with up to 2048 agents
+and 1024 NPCs. It is suitable to time horizons of 8192+ steps. For smaller
+experiments, consider the SmallMaps config.</p>
 <p class="rubric">Notes</p>
 <p>We use Google Fire internally to replace standard manual argparse
 definitions for each Config property. This means you can subclass
@@ -290,7 +293,7 @@ generated automatically.</p>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.NENT">
-<code class="sig-name descname">NENT</code><em class="property"> = 256</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NENT" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">NENT</code><em class="property"> = 2048</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NENT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximum number of agents spawnable in the environment</p>
 </dd></dl>
 
@@ -298,6 +301,12 @@ generated automatically.</p>
 <dt id="neural_mmo.forge.blade.core.config.Config.NPOP">
 <code class="sig-name descname">NPOP</code><em class="property"> = 1</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.NPOP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of distinct populations spawnable in the environment</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="neural_mmo.forge.blade.core.config.Config.COOPERATIVE">
+<code class="sig-name descname">COOPERATIVE</code><em class="property"> = True</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.COOPERATIVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to treat populations as teams</p>
 </dd></dl>
 
 <dl class="py method">
@@ -533,20 +542,14 @@ along the borders of the square game map</p>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_ROOT">
-<code class="sig-name descname">PATH_ROOT</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ROOT" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_ROOT</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ROOT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Global repository directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_RESOURCE">
-<code class="sig-name descname">PATH_RESOURCE</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_RESOURCE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_RESOURCE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_RESOURCE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resource directory</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS">
-<code class="sig-name descname">PATH_MAPS</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/maps'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generated map directory</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -557,37 +560,43 @@ along the borders of the square game map</p>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS_SMALL">
-<code class="sig-name descname">PATH_MAPS_SMALL</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/maps/procedural-small'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_SMALL" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_MAPS_SMALL</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/maps/procedural-small'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_SMALL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generated map directory for SmallMap config</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS_LARGE">
-<code class="sig-name descname">PATH_MAPS_LARGE</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/maps/procedural-large'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_LARGE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_MAPS_LARGE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/maps/procedural-large'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_LARGE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generated map directory for LargeMap config</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="neural_mmo.forge.blade.core.config.Config.PATH_MAPS">
+<code class="sig-name descname">PATH_MAPS</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/maps/procedural-large'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_MAPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generated map directory</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_ASSETS">
-<code class="sig-name descname">PATH_ASSETS</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ASSETS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_ASSETS</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_ASSETS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asset directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_TILE">
-<code class="sig-name descname">PATH_TILE</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets/tiles/{}.png'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TILE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_TILE</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets/tiles/{}.png'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TILE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tile path – format me with tile name</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_TEXT">
-<code class="sig-name descname">PATH_TEXT</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets/text'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TEXT" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_TEXT</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets/text'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_TEXT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Text directory</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_LOGO">
-<code class="sig-name descname">PATH_LOGO</code><em class="property"> = '/home/jsuarez/neural-mmo/neural_mmo/resource/assets/text/ascii.txt'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_LOGO" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">PATH_LOGO</code><em class="property"> = '/home/hex/FileStruct/Git/neural-mmo/docs/resource/assets/text/ascii.txt'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_LOGO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logo file (Ascii art)</p>
 </dd></dl>
 
@@ -649,6 +658,59 @@ along the borders of the square game map</p>
 <dt id="neural_mmo.forge.blade.core.config.Config.PATH_THEME_PUB">
 <code class="sig-name descname">PATH_THEME_PUB</code><em class="property"> = 'neural_mmo/forge/blade/systems/visualizer/index_publication.html'</em><a class="headerlink" href="#neural_mmo.forge.blade.core.config.Config.PATH_THEME_PUB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Publication theme file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="neural_mmo.forge.blade.core.config.SmallMaps">
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.blade.core.config.</code><code class="sig-name descname">SmallMaps</code><a class="headerlink" href="#neural_mmo.forge.blade.core.config.SmallMaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.blade.core.config.Config" title="neural_mmo.forge.blade.core.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.blade.core.config.Config</span></code></a></p>
+<p>A smaller config modeled off of v1.4 and below featuring 128x128 maps
+with up to 256 agents and 128 NPCs. It is suitable to time horizons of 1024+
+steps. For larger experiments, consider the default config.</p>
+<dl class="py method">
+<dt id="neural_mmo.forge.blade.core.config.SmallMaps.PATH_EVALUATION">
+<em class="property">property </em><code class="sig-name descname">PATH_EVALUATION</code><a class="headerlink" href="#neural_mmo.forge.blade.core.config.SmallMaps.PATH_EVALUATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="neural_mmo.forge.blade.core.config.SmallMaps.PATH_MODEL">
+<em class="property">property </em><code class="sig-name descname">PATH_MODEL</code><a class="headerlink" href="#neural_mmo.forge.blade.core.config.SmallMaps.PATH_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="neural_mmo.forge.blade.core.config.SmallMaps.PATH_TRAINING_DATA">
+<em class="property">property </em><code class="sig-name descname">PATH_TRAINING_DATA</code><a class="headerlink" href="#neural_mmo.forge.blade.core.config.SmallMaps.PATH_TRAINING_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model training data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="neural_mmo.forge.blade.core.config.SmallMaps.SPAWN_CONTINUOUS">
+<code class="sig-name descname">SPAWN_CONTINUOUS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.blade.core.config.SmallMaps.SPAWN_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates spawn positions for new agents</p>
+<p>Default behavior randomly selects a tile position
+along the borders of the square game map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>position:</dt><dd><p>The position (row, col) to spawn the given agent</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="neural_mmo.forge.blade.core.config.SmallMaps.WINDOW">
+<em class="property">property </em><code class="sig-name descname">WINDOW</code><a class="headerlink" href="#neural_mmo.forge.blade.core.config.SmallMaps.WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the square tile crop visible to an agent</p>
 </dd></dl>
 
 </dd></dl>

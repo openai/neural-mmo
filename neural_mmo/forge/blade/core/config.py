@@ -56,6 +56,10 @@ class Config(Template):
 
    Global constants are defined as static class variables. You can override
    any Config variable using standard CLI syntax (e.g. --NENT=128). 
+
+   The default config as of v1.5 uses 1024x1024 maps with up to 2048 agents
+   and 1024 NPCs. It is suitable to time horizons of 8192+ steps. For smaller
+   experiments, consider the SmallMaps config.
    
    Notes:
       We use Google Fire internally to replace standard manual argparse
@@ -92,11 +96,14 @@ class Config(Template):
    NMOB                    = 1024
    '''Maximum number of NPCs spawnable in the environment'''
 
-   NENT                    = 256
+   NENT                    = 2048
    '''Maximum number of agents spawnable in the environment'''
 
    NPOP                    = 1
    '''Number of distinct populations spawnable in the environment'''
+
+   COOPERATIVE             = True
+   '''Whether to treat populations as teams'''
 
    @property
    def TEAM_SIZE(self):
@@ -275,14 +282,13 @@ class Config(Template):
 
    ############################################################################
    ### Path Parameters
-   PATH_ROOT            = os.path.dirname(neural_mmo.__file__)
+   #PATH_ROOT            = os.path.dirname(neural_mmo.__file__)
+   PATH_ROOT            = os.getcwd()
    '''Global repository directory'''
 
    PATH_RESOURCE        = os.path.join(PATH_ROOT, 'resource')
    '''Resource directory'''
 
-
-   #Maps
    PATH_MAPS            = os.path.join(PATH_RESOURCE, 'maps')
    '''Generated map directory'''
 
@@ -294,6 +300,9 @@ class Config(Template):
 
    PATH_MAPS_LARGE      = os.path.join(PATH_MAPS, 'procedural-large')
    '''Generated map directory for LargeMap config'''
+
+   PATH_MAPS            = PATH_MAPS_LARGE
+   '''Generated map directory'''
 
 
    #Assets
@@ -347,6 +356,26 @@ class Config(Template):
 
    PATH_THEME_PUB       = os.path.join(PATH_THEMES, 'index_publication.html')
    '''Publication theme file'''
+
+class SmallMaps(Config):
+   '''A smaller config modeled off of v1.4 and below featuring 128x128 maps
+   with up to 256 agents and 128 NPCs. It is suitable to time horizons of 1024+
+   steps. For larger experiments, consider the default config.'''
+
+   PATH_MAPS               = Config.PATH_MAPS_SMALL
+
+   #Scale
+   TERRAIN_CENTER          = 128
+   NENT                    = 256
+   NMOB                    = 128
+
+   #Players spawned per tick
+   PLAYER_SPAWN_ATTEMPTS   = 2
+
+   #NPC parameters
+   NPC_LEVEL_MAX           = 30
+   NPC_LEVEL_SPREAD        = 5
+
 
 ############################################################################
 ### Game Systems (Static Mixins)

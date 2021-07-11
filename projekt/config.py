@@ -134,9 +134,9 @@ class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
    pass
 class Population4(MagnifyExploration):
-   NENT  = 256
+   NENT  = 4
 class Population32(MagnifyExploration):
-   NENT  = 256
+   NENT  = 32
 class Population256(MagnifyExploration):
    NENT  = 256
 

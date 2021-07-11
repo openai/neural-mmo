@@ -5,7 +5,6 @@ import random
 from neural_mmo.forge.blade.lib.utils import inBounds
 from neural_mmo.forge.blade.systems import combat
 from neural_mmo.forge.blade.lib import material
-from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from queue import PriorityQueue, Queue
 
 from neural_mmo.forge.blade.systems.ai.dynamic_programming import map_to_rewards, \
@@ -81,6 +80,7 @@ def inSight(dr, dc, vision):
           dc <= vision)
 
 def vacant(tile):
+   from neural_mmo.forge.blade.io.stimulus.static import Stimulus
    Tile     = Stimulus.Tile
    occupied = Observation.attribute(tile, Tile.NEnts)
    matl     = Observation.attribute(tile, Tile.Index)
@@ -96,6 +96,8 @@ def vacant(tile):
    return matl in (grass, scrub, forest) and not occupied
 
 def meander(obs):
+   from neural_mmo.forge.blade.io.stimulus.static import Stimulus
+
    agent  = obs.agent
    Entity = Stimulus.Entity
    Tile   = Stimulus.Tile

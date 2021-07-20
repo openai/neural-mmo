@@ -70,7 +70,7 @@ class Evaluator(Base):
 
    def render(self):
       '''Render override for scripted models'''
-      self.obs      = self.env.reset()
+      self.obs      = self.env.reset(idx=-1)
       self.registry = OverlayRegistry(self.config, self.env).init()
       super().render()
 

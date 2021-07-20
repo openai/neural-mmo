@@ -130,8 +130,12 @@ class PlayerManager(EntityGroup):
       self.palette = Palette(config.NPOP)
       self.idx     = 1
 
-   def spawnIndividual(self, r, c):
-      pop, name = self.identify()
+   def spawnIndividual(self, r, c, name=None):
+      if name:
+         pop, _ = self.identify()
+      else:
+         pop, name = self.identify()
+
       color     = self.palette.color(pop)
       player    = Player(self.realm, (r, c), self.idx, pop, name, color)
       super().spawn(player)
@@ -143,9 +147,9 @@ class PlayerManager(EntityGroup):
             return 
 
          self.spawned = True
-         for r, c in self.config.SPAWN():
+         for r, c, name in self.config.SPAWN():
             assert not self.realm.map.tiles[r, c].occupied
-            self.spawnIndividual(r, c)
+            self.spawnIndividual(r, c, name)
          return
           
       #MMO-style spawning

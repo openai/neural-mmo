@@ -171,7 +171,8 @@ class Config(Template):
       s3     = list(zip(rrange, highs))
       s4     = list(zip(highs, rrange))
 
-      return s1 + s2 + s3 + s4
+      positions = s1 + s2 + s3 + s4
+      return [(r, c, 'Neural_') for r, c in positions]
 
    @property
    def SPAWN(self):

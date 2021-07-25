@@ -9,21 +9,22 @@
 ###################
 `[Demo Video] <https://youtu.be/d1mj8yzjr-w>`_ | `[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Neural MMO is a platform for agent-based intelligence research featuring hundreds of concurrent agents, multi-thousand-step time horizons, and procedurally-generated, million-tile maps. This release ships with pretrained models, scripted baselines, evaluation tools, a customizable dashboard, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+Neural MMO is a computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems -- with support for up to a thousand agents and one square kilometer maps over several thousand time steps. The platform provides a Python API for scripting agents, `[RLlib] <https://docs.ray.io/en/master/rllib.html>`_ integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+
 
 .. figure:: /resource/image/large_isometric_zoom.png
 
 **Abstract:** Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
 
-|icon| Installation
-###################
+Installation
+************
 
 Tested on Ubuntu 20.04, Windows 10 + WSL, and MacOS
 
 .. code-block:: python
    :caption: Competition setup
 
-   git clone https://gitlab.aicrowd.com/jyotish/neuralmmo-starter-kit
+   git clone https://gitlab.aicrowd.com/neural-mmo/neural-mmo-starter-kit
    pip install neural-mmo
 
 .. code-block:: python
@@ -48,8 +49,8 @@ Tested on Ubuntu 20.04, Windows 10 + WSL, and MacOS
   - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
 
 
-|icon| CLI
-##########
+CLI
+***
 
 Forge is the main file for the included demo and starter project (/projekt). It includes commands for map generation, training, evaluation, visualization, and rendering. To view documentation:
 
@@ -105,11 +106,52 @@ Forge is the main file for the included demo and starter project (/projekt). It 
        visualize
          Web dashboard for the latest evaluation/generalization results
 
+|icon| Generate Environments
+############################
+         
+Configuration
+*************
 
-|icon| Terrain Generation
-#########################
+We recommend that new users start with one of the default configurations provided with the environment. Similarly, competition participants should start with the configuration provided for the current round.
 
-We're going to need some maps to play with in the tutorials below. If you're following along interactively and want to keep things quick, we suggest only generating the small maps. Generating image previews of each map can be useful in certain circumstances. The files for large maps are huge, so we'll only generate PNGs for small maps.
+Experienced users can create custom environments that are better suited to their specific research interests. We further recommend reviewing the game wiki's description of the vanilla mechanics before heavily modifying them. Enable a specific set of game systems by inheriting from their respective configs, in addition to the base class. For example:
+
+.. code-block:: python
+  :caption: Example config enabling the resource and progression systems
+
+  class ExampleSelectGameSystemsConfig(SmallMaps, config.Resource, config.Progression):
+      pass
+
+Customize each game system by overriding exposed config properties:
+
+.. code-block:: python
+  :caption: Example config enabling the resource and progression systems
+
+  class ExampleCustomizeGameSystemsConfig(SmallMaps, config.Resource, config.Progression):
+      # Example core config customization
+      NMOB                    = 512
+      NENT                    = 128    
+  
+      # Example terrain generation customization
+      TERRAIN_CENTER             = 512
+      TERRAIN_WATER              = 0.40
+      TERRAIN_GRASS              = 0.55
+
+      # Example progression system customization
+      PROGRESSION_BASE_XP_SCALE           = 10
+      PROGRESSION_CONSTITUTION_XP_SCALE   = 2
+
+A full list of config properties is available here:
+
+.. toctree::
+  :maxdepth: 4
+
+  neural_mmo.forge.blade.core.config
+
+Procedural Terrain
+******************
+
+Once you have selected or written a config, you will need to generate maps for training and/or evaluation. Generating image previews of each map can be useful in certain circumstances, but note that this will take additional space and time. The previews for max sized maps are huge, so we'll only generate PNGs for smaller ones.
 
 .. code-block:: python
   :caption: Generate small and large game maps
@@ -132,34 +174,27 @@ Generating small maps without rendering takes 5-10 seconds on a modern CPU.
 
 Terrain generation is controlled by a number of parameters prefixed with TERRAIN_. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in neural_mmo/forgeblade/core/terrain.py.
 
-|icon| Rendering and Overlays
-#############################
+|icon| Create Policies
+######################
 
-Rendering the environment requires launching both a server and a client. To launch the server:
+Scripted API
+************
 
-.. code-block:: python
+Neural MMO provides compact tensor observations that are difficult to integrate with scripted policies and change from version to version. We therefore provide a simple wrapper class that enables users to extract named attributes without direct dependence on the underlying structure of observations, documented here:
 
-  python Forge.py render --config=SmallMultimodalSkills
+.. toctree::
+  :maxdepth: 4
 
-| **Linux/MacOS:** Launch *client.sh* in a separate shell or click the associated executable
-| **Windows:** Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10
+  neural_mmo.forge.trinity.scripted.io
 
-The server will take a few seconds to load the pretrained policy and connect to the client.
+We will occasionally modify the set of available attributes. In these instances, we will publish upgrade scripts where possible and lists of larger changes requiring individual attention where needed.
 
-.. figure:: /resource/image/ui.png
+Each Neural MMO release will include a set of `[scripted baselines] <https://github.com/jsuarez5341/neural-mmo/blob/master/neural_mmo/forge/trinity/scripted/baselines.py>`_. You may find these useful as references for creating your own models. You are also free to leverage any of the utility classes included with these baselines, but do note that these are not part of the official API and may change from version to version.
 
-   You should see this view once the map loads
+RLlib Integration
+*****************
 
-The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. Note that the LargeMaps config requires a good workstation to render and you should avoid zooming all the way out.
-
-.. image:: /resource/image/overlays.png
-
-The counts (exploration) overlay is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.
-
-Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in neural_mmo/forgetrinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.
-
-|icon| Training
-###############
+The baseline model and associated training and evaluation code in projekt/rllib_wrapper.py demonstrate how to use RLlib with Neural MMO. Note that RLlib is not a hard dependency of the platform: Neural MMO provides an otherwise-standard Gym interface extended for multiagent. That said, all of our trained baselines rely on RLlib, and we strongly suggest using it unless you fancy writing your own segmented trajectory collectors, hierarchical observation/action processing, variable agent population batching, etc. 
 
 Evaluating on canonical configs will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:
 
@@ -223,10 +258,21 @@ Note:
   - Training from scratch will overwrite the baseline models. Override the MODEL property or create a copy of the config to avoid this.
   - The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.
 
-|icon| Evaluation
-#################
+|icon| Evaluate Agents
+######################
 
-Evaluation in open-ended massively multiagent settings is akin to that in the real world. There is not an obvious single real-number metric. It's like trying to order people from best to worst. Nonetheless, we can still make meaningful insights about agent behavior and draw well-evidenced conclusions about relative performance. This section will introduce you to Neural MMO's suite of evaluation and visualization tools.
+Evaluation in open-ended massively multiagent settings is akin to that in the real world. Unlike in most single-agent and some multiagent environments, there is no absolute metric of performance. We therefore provide two evaluation options: *tournaments*, which measure relative performance against various opponents, and *self-contained* simulations, which measure qualitative behaviors. 
+
+Tournaments
+***********
+
+This evaluation mode is new as of v1.5.1 and is being used in the current `competition <https://www.aicrowd.com/challenges/the-neural-mmo-challenge>`_. Instead of evaluating agents against many copies of themselves, tournament mode places one (or a few) of the user's agent(s) into an environment with opponents that have different policies. We currently use relatively simple scripted baselines for this but will begin using other users' submissions as we receive them. You can download a local tournament evaluation toolkit from the `competition <https://www.aicrowd.com/challenges/the-neural-mmo-challenge>`_ page and submit agents for evaluation against other users. After the competition, we will integrate these tools into the main repository, along with additional users' bots (provided we are able to obtain permission to do so).
+
+
+Self-Contained
+**************
+
+This is the classic evaluation setup used in older versions of Neural MMO. It suffers from a lack of ability to compare policies directly, but it is still well-suited to artificial life work targeting emergent behaviors in large populations. To collect statistics over the course of a simulation:
 
 .. code-block:: python
    :caption: Evaluate a pretrained and scripted model
@@ -241,10 +287,10 @@ Evaluation in open-ended massively multiagent settings is akin to that in the re
   Number of evaluation maps: 1
   100%|██████████████████████████████████████████████| 1000/1000 [01:01<00:00, 16.17it/s]
 
-Note that we have used a single evaluation map here to keep runtime short -- our baselines average over several maps, and you should follow the protocol detailed in Baselines in formal comparisons.
+We will cover how to visualize the results in the Visualization section below. Note that we have used a single evaluation map here to keep runtime short -- our baselines average over several maps, and you should follow the protocol detailed in Baselines in formal comparisons.
 
-Advanced
-********
+Evaluation Distribution
+***********************
 
 Neural MMO provides three sets of evaluation settings:
 
@@ -254,8 +300,11 @@ Neural MMO provides three sets of evaluation settings:
 
 **Transfer Maps:** Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). *Enable by setting the appropriate --config*
 
-|icon| Dashboard and Statistics
-###############################
+|icon| Visualization Results
+############################
+
+Dashboard and Statistics
+************************
 
 The "visualize" command creates summary tables and figures using the results of training and evaluation
 
@@ -306,3 +355,30 @@ And before you ask, yes: there's a boring publication theme: specify --VIS_THEME
 .. figure:: /resource/image/publication_theme.png
 
    Publication theme
+
+
+Rendering and Overlays
+**********************
+
+Rendering the environment requires launching both a server and a client. To launch the server:
+
+.. code-block:: python
+
+  python Forge.py render --config=SmallMultimodalSkills
+
+| **Linux/MacOS:** Launch *client.sh* in a separate shell or click the associated executable
+| **Windows:** Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10
+
+The server will take a few seconds to load the pretrained policy and connect to the client.
+
+.. figure:: /resource/image/ui.png
+
+  You should see this view once the map loads
+
+The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. Note that the LargeMaps config requires a good workstation to render and you should avoid zooming all the way out.
+
+.. image:: /resource/image/overlays.png
+
+The counts (exploration) overlay is computed by splatting the agent's current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.
+
+Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in neural_mmo/forgetrinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.

@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.core.config module
-==========================================
-
-.. automodule:: neural_mmo.forge.blade.core.config
-   :members:
-   :inherited-members:
-   :show-inheritance:

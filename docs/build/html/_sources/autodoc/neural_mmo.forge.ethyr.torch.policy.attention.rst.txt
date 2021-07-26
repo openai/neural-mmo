@@ -1,7 +1,0 @@
-neural\_mmo.forge.ethyr.torch.policy.attention module
-=====================================================
-
-.. automodule:: neural_mmo.forge.ethyr.torch.policy.attention
-   :members:
-   :inherited-members:
-   :show-inheritance:

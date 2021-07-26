@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.io.action.node module
-=============================================
-
-.. automodule:: neural_mmo.forge.blade.io.action.node
-   :members:
-   :inherited-members:
-   :show-inheritance:

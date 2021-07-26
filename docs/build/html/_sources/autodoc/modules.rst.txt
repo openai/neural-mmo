@@ -1,7 +1,7 @@
-neural_mmo
-==========
+projekt
+=======
 
 .. toctree::
    :maxdepth: 4
 
-   neural_mmo
+   projekt

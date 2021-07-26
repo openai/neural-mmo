@@ -91,21 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="rst/userguide.html#icon-evaluate-agents"> Evaluate Agents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/userguide.html#icon-visualization-results"> Visualization Results</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer Guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html"> Foreword</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-contributing"> Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-code-structure"> Code Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-style"> Style</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-tech-stack"> Tech Stack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-client-map-representation"> Client Map Representation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-observation-representation"> Observation Representation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-model-io"> Model IO</a></li>
-</ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rst/api.html"> User API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/api.html#icon-developer-api"> Developer API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Game Wiki</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rst/game_wiki.html"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/game_wiki.html#icon-game-systems"> Game Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/game_wiki.html#icon-resource-system"> Resource System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/game_wiki.html#icon-combat"> Combat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/game_wiki.html#icon-npc-equipment"> NPC &amp; Equipment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/game_wiki.html#icon-progression"> Progression</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Baselines</span></p>
 <ul>
@@ -121,6 +119,17 @@
 <li class="toctree-l1"><a class="reference internal" href="rst/updates.html#icon-update-slides"> Update Slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/updates.html#icon-additional-links"> Additional Links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/updates.html#icon-patch-notes-version-history"> Patch Notes + Version History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html"> Foreword</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-contributing"> Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-code-structure"> Code Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-style"> Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-tech-stack"> Tech Stack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-client-map-representation"> Client Map Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-observation-representation"> Observation Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/devguide.html#icon-model-io"> Model IO</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Ideology</span></p>
 <ul>
@@ -211,77 +220,63 @@
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
- | <a href="#G"><strong>G</strong></a>
- | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
- | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
- | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
- | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
- | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Achievement">Achievement (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting">adaptive_control_and_targeting() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.adaptive_control_and_targeting">adaptive_control_and_targeting() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.adaptive_control_and_targeting">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.add">add() (neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#neural_mmo.forge.ethyr.torch.loss.advantage">advantage() (in module neural_mmo.forge.ethyr.torch.loss)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.agent">agent() (neural_mmo.forge.trinity.scripted.io.Observation property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.agent">agent() (neural_mmo.forge.trinity.scripted.io.Observation property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.agent">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.AllGameSystems">AllGameSystems (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.attack">attack() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.attack">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.attack">attack() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.attack">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.attack">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.attack">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.attack">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.attack">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.attack">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.attack">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.attack">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.attack">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.attack">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.attack">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.attack">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.attribute">attribute() (neural_mmo.forge.trinity.scripted.io.Observation static method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.attribute">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.attribute">attribute() (neural_mmo.forge.trinity.scripted.io.Observation static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -289,27 +284,13 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.optim.html#neural_mmo.forge.ethyr.torch.optim.backward">backward() (in module neural_mmo.forge.ethyr.torch.optim)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base">Base (class in neural_mmo.forge.trinity.evaluator)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.BASE_HEALTH">BASE_HEALTH (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.BASE_RESOURCE">BASE_RESOURCE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.beginMessage">beginMessage() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base">Base (class in neural_mmo.forge.trinity.evaluator)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.beginMessageFrame">beginMessageFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.box">box() (in module neural_mmo.forge.trinity.formatting)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.visualize.html#neural_mmo.forge.trinity.visualize.BokehServer">BokehServer (class in neural_mmo.forge.trinity.visualize)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.box">box() (in module neural_mmo.forge.trinity.formatting)</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.box">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.box_stats">box_stats() (in module neural_mmo.forge.trinity.formatting)</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.box_stats">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.buildProtocol">buildProtocol() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.box_stats">box_stats() (in module neural_mmo.forge.trinity.formatting)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -317,55 +298,23 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#neural_mmo.forge.blade.io.stimulus.dynamic.camel">camel() (in module neural_mmo.forge.blade.io.stimulus.dynamic)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat">Combat (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#neural_mmo.forge.ethyr.torch.model.Model.checkpoint">checkpoint() (neural_mmo.forge.ethyr.torch.model.Model method)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#neural_mmo.forge.ethyr.torch.save.Saver.checkpoint">(neural_mmo.forge.ethyr.torch.save.Saver method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore">CombatNoExplore (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.functional.html#neural_mmo.forge.ethyr.torch.policy.functional.classify">classify() (in module neural_mmo.forge.ethyr.torch.policy.functional)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid">CombatTribrid (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat">Combat (class in neural_mmo.forge.blade.core.config)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat">(class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat">[1]</a>
-</li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat.COMBAT_DEFENSE_WEIGHT">COMBAT_DEFENSE_WEIGHT (neural_mmo.forge.blade.core.config.Combat attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat.COMBAT_DICE_SIDES">COMBAT_DICE_SIDES (neural_mmo.forge.blade.core.config.Combat attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat.COMBAT_FREEZE_TIME">COMBAT_FREEZE_TIME (neural_mmo.forge.blade.core.config.Combat attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat.COMBAT_MAGE_REACH">COMBAT_MAGE_REACH (neural_mmo.forge.blade.core.config.Combat attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat.COMBAT_MELEE_REACH">COMBAT_MELEE_REACH (neural_mmo.forge.blade.core.config.Combat attribute)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.Competition">Competition (class in projekt.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Combat.COMBAT_RANGE_REACH">COMBAT_RANGE_REACH (neural_mmo.forge.blade.core.config.Combat attribute)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound1">CompetitionRound1 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore">CombatNoExplore (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore">[1]</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound2">CompetitionRound2 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid">CombatTribrid (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid">[1]</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound3">CompetitionRound3 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config">Config (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.connectionLost">connectionLost() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.connectionMade">connectionMade() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.consumeData">consumeData() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#neural_mmo.forge.trinity.dataframe.ContinuousTable">ContinuousTable (class in neural_mmo.forge.trinity.dataframe)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.conv.html#neural_mmo.forge.ethyr.torch.policy.conv.Conv2d">Conv2d() (in module neural_mmo.forge.ethyr.torch.policy.conv)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.COOPERATIVE">COOPERATIVE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts">Counts (class in neural_mmo.forge.trinity.overlay)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts">Counts (class in neural_mmo.forge.trinity.overlay)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -373,118 +322,84 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#neural_mmo.forge.trinity.dataframe.Dataframe">Dataframe (class in neural_mmo.forge.trinity.dataframe)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.Debug">Debug (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.dataReceived">dataReceived() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization1">DomainRandomization1 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.utils.html#neural_mmo.forge.blade.lib.utils.staticproperty.deleter">deleter() (neural_mmo.forge.blade.lib.utils.staticproperty method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization16384">DomainRandomization16384 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.dense">dense() (neural_mmo.forge.trinity.env.Env method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization256">DomainRandomization256 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#neural_mmo.forge.trinity.dataframe.DiscreteTable">DiscreteTable (class in neural_mmo.forge.trinity.dataframe)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization32">DomainRandomization32 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.doStart">doStart() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.doStop">doStop() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.functional.html#neural_mmo.forge.ethyr.torch.policy.functional.dot">dot() (in module neural_mmo.forge.ethyr.torch.policy.functional)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.downtime">downtime() (neural_mmo.forge.trinity.scripted.baselines.Combat property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.downtime">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.downtime">downtime() (neural_mmo.forge.trinity.scripted.baselines.Combat property)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.downtime">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.downtime">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.downtime">(neural_mmo.forge.trinity.scripted.baselines.Forage property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.downtime">(neural_mmo.forge.trinity.scripted.baselines.Forage property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.downtime">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.downtime">(neural_mmo.forge.trinity.scripted.baselines.Meander property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.downtime">(neural_mmo.forge.trinity.scripted.baselines.Meander property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.downtime">(neural_mmo.forge.trinity.scripted.baselines.Random property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.downtime">(neural_mmo.forge.trinity.scripted.baselines.Random property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime">(neural_mmo.forge.trinity.scripted.baselines.Scripted property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.downtime">(neural_mmo.forge.trinity.scripted.baselines.Scripted property)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.dropConnection">dropConnection() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.empty">empty() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.endMessage">endMessage() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.enums.html#neural_mmo.forge.blade.lib.enums.Entity">Entity (class in neural_mmo.forge.blade.lib.enums)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.Realm.entity">entity() (neural_mmo.forge.blade.core.realm.Realm method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.evade">evade() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.entity">(neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus method)</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.evade">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.evade">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.evade">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.evade">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#neural_mmo.forge.ethyr.torch.loss.entropyLoss">entropyLoss() (in module neural_mmo.forge.ethyr.torch.loss)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env">Env (class in neural_mmo.forge.trinity.env)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.ENV_NAME">ENV_NAME (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.ENV_VERSION">ENV_VERSION (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.evade">evade() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.evade">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.evaluate">evaluate() (neural_mmo.forge.trinity.evaluator.Base method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.evade">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.evade">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.evade">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.evade">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.evade">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.evade">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.evade">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.evade">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.evade">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.evade">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.evade">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.evaluate">(neural_mmo.forge.trinity.evaluator.Evaluator method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.EVAL_MAPS">EVAL_MAPS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator">Evaluator (class in neural_mmo.forge.trinity.evaluator)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.EVALUATE">EVALUATE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.evaluate">evaluate() (neural_mmo.forge.trinity.evaluator.Base method)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.evaluate">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.explore">explore() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.evaluate">(neural_mmo.forge.trinity.evaluator.Evaluator method)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.evaluate">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator">Evaluator (class in neural_mmo.forge.trinity.evaluator)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.explore">explore() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.explore">[1]</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.explore">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.explore">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.explore">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.explore">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.explore">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.explore">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.explore">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.explore">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.explore">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.explore">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.explore">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.explore">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.explore">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.explore">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.explore">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -493,95 +408,47 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.failHandshake">failHandshake() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage">Forage (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.ray.html#neural_mmo.forge.blade.lib.ray.flush_redis_unsafe">flush_redis_unsafe() (in module neural_mmo.forge.blade.lib.ray)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.ray.html#neural_mmo.forge.blade.lib.ray.flush_task_and_object_metadata_unsafe">flush_task_and_object_metadata_unsafe() (in module neural_mmo.forge.blade.lib.ray)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage">Forage (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.forage">forage() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.forage">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.forage">forage() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.forage">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.forage">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.forage">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.forage">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.forage">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.forage">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion">forage_criterion() (neural_mmo.forge.trinity.scripted.baselines.Combat property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.forage_criterion">forage_criterion() (neural_mmo.forge.trinity.scripted.baselines.Combat property)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Forage property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Forage property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Meander property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Meander property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Random property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Random property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Scripted property)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.forage_criterion">(neural_mmo.forge.trinity.scripted.baselines.Scripted property)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore">ForageNoExplore (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.forProtocol">forProtocol() (neural_mmo.forge.trinity.twistedserver.WSServerFactory class method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.full">full() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="G">G</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.GENERALIZE">GENERALIZE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.get">get() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.get_channel_id">get_channel_id() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.get_nowait">get_nowait() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.getConnectionCount">getConnectionCount() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#neural_mmo.forge.ethyr.torch.param.getGrads">getGrads() (in module neural_mmo.forge.ethyr.torch.param)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#neural_mmo.forge.ethyr.torch.param.getParameters">getParameters() (in module neural_mmo.forge.ethyr.torch.param)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.utils.html#neural_mmo.forge.blade.lib.utils.staticproperty.getter">getter() (neural_mmo.forge.blade.lib.utils.staticproperty method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol">GodswordServerProtocol (class in neural_mmo.forge.trinity.twistedserver)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#neural_mmo.forge.trinity.dataframe.Grid">Grid (class in neural_mmo.forge.trinity.dataframe)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#neural_mmo.forge.trinity.dataframe.GridTables">GridTables (class in neural_mmo.forge.trinity.dataframe)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="H">H</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#neural_mmo.forge.blade.core.map.Map.harvest">harvest() (neural_mmo.forge.blade.core.map.Map method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore">ForageNoExplore (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -589,21 +456,7 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#neural_mmo.forge.trinity.dataframe.Index">Index (class in neural_mmo.forge.trinity.dataframe)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.init">init() (neural_mmo.forge.trinity.overlay.Wilderness method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.init">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#neural_mmo.forge.ethyr.torch.utils.initWeights">initWeights() (in module neural_mmo.forge.ethyr.torch.utils)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="J">J</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.join">join() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.init">init() (neural_mmo.forge.trinity.overlay.Wilderness method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -611,33 +464,13 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.line">line() (in module neural_mmo.forge.trinity.formatting)</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.line">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#neural_mmo.forge.ethyr.torch.model.Model.load">load() (neural_mmo.forge.ethyr.torch.model.Model method)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#neural_mmo.forge.ethyr.torch.save.Saver.load">(neural_mmo.forge.ethyr.torch.save.Saver method)</a>
-</li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.visualize.html#neural_mmo.forge.trinity.visualize.BokehServer.load_theme">load_theme() (neural_mmo.forge.trinity.visualize.BokehServer method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.log">log() (neural_mmo.forge.trinity.env.Env method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.LargeMaps">LargeMaps (class in projekt.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logPrefix">logPrefix() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.logPrefix">(neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.LargeMultimodalSkills">LargeMultimodalSkills (class in projekt.config)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logRxFrame">logRxFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logRxOctets">logRxOctets() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logTxFrame">logTxFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.logTxOctets">logTxOctets() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.line">line() (in module neural_mmo.forge.trinity.formatting)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -645,991 +478,101 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.makeConnection">makeConnection() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.MagnifyExploration">MagnifyExploration (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#neural_mmo.forge.blade.core.map.Map">Map (class in neural_mmo.forge.blade.core.map)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.market.visualizer.html#neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer">MarketVisualizer (class in neural_mmo.forge.blade.core.market.visualizer)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander">Meander (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.optim.html#neural_mmo.forge.ethyr.torch.optim.merge">merge() (in module neural_mmo.forge.ethyr.torch.optim)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#neural_mmo.forge.ethyr.torch.model.Model">Model (class in neural_mmo.forge.ethyr.torch.model)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#neural_mmo.forge.ethyr.torch.utils.modelSize">modelSize() (in module neural_mmo.forge.ethyr.torch.utils)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander">Meander (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="autodoc/neural_mmo.html#module-neural_mmo">neural_mmo</a>
+        <li><a href="rst/neural_mmo.forge.blade.io.action.static.html#module-neural_mmo.forge.blade.io.action.static">neural_mmo.forge.blade.io.action.static</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.html#module-neural_mmo.forge">neural_mmo.forge</a>
+        <li><a href="rst/neural_mmo.forge.blade.io.stimulus.static.html#module-neural_mmo.forge.blade.io.stimulus.static">neural_mmo.forge.blade.io.stimulus.static</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.html#module-neural_mmo.forge.blade">neural_mmo.forge.blade</a>
+        <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#module-neural_mmo.forge.trinity.evaluator">neural_mmo.forge.trinity.evaluator</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.html#module-neural_mmo.forge.blade.core">neural_mmo.forge.blade.core</a>
+        <li><a href="rst/neural_mmo.forge.trinity.formatting.html#module-neural_mmo.forge.trinity.formatting">neural_mmo.forge.trinity.formatting</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#module-neural_mmo.forge.blade.core.config">neural_mmo.forge.blade.core.config</a>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#module-neural_mmo.forge.trinity.overlay">neural_mmo.forge.trinity.overlay</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#module-neural_mmo.forge.blade.core.map">neural_mmo.forge.blade.core.map</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#module-neural_mmo.forge.trinity.scripted.baselines">neural_mmo.forge.trinity.scripted.baselines</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.html#module-neural_mmo.forge.blade.core.market">neural_mmo.forge.blade.core.market</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.io.html#module-neural_mmo.forge.trinity.scripted.io">neural_mmo.forge.trinity.scripted.io</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.config.html#module-neural_mmo.forge.blade.core.market.config">neural_mmo.forge.blade.core.market.config</a>
+        <li><a href="autodoc/projekt.html#module-projekt">projekt</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.new_visualizer.html#module-neural_mmo.forge.blade.core.market.new_visualizer">neural_mmo.forge.blade.core.market.new_visualizer</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.visualizer.html#module-neural_mmo.forge.blade.core.market.visualizer">neural_mmo.forge.blade.core.market.visualizer</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#module-neural_mmo.forge.blade.core.realm">neural_mmo.forge.blade.core.realm</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.terrain.html#module-neural_mmo.forge.blade.core.terrain">neural_mmo.forge.blade.core.terrain</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.tile.html#module-neural_mmo.forge.blade.core.tile">neural_mmo.forge.blade.core.tile</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.html#module-neural_mmo.forge.blade.entity">neural_mmo.forge.blade.entity</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.entity.html#module-neural_mmo.forge.blade.entity.entity">neural_mmo.forge.blade.entity.entity</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.npc.html#module-neural_mmo.forge.blade.entity.npc">neural_mmo.forge.blade.entity.npc</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.player.html#module-neural_mmo.forge.blade.entity.player">neural_mmo.forge.blade.entity.player</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.hook.html#module-neural_mmo.forge.blade.hook">neural_mmo.forge.blade.hook</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.hook.modules.html#module-neural_mmo.forge.blade.hook.modules">neural_mmo.forge.blade.hook.modules</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.html#module-neural_mmo.forge.blade.io">neural_mmo.forge.blade.io</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.action.html#module-neural_mmo.forge.blade.io.action">neural_mmo.forge.blade.io.action</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.action.static.html#module-neural_mmo.forge.blade.io.action.static">neural_mmo.forge.blade.io.action.static</a>, <a href="rst/neural_mmo.forge.blade.io.action.static.html#module-neural_mmo.forge.blade.io.action.static">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.node.html#module-neural_mmo.forge.blade.io.node">neural_mmo.forge.blade.io.node</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.html#module-neural_mmo.forge.blade.io.stimulus">neural_mmo.forge.blade.io.stimulus</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#module-neural_mmo.forge.blade.io.stimulus.dynamic">neural_mmo.forge.blade.io.stimulus.dynamic</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.hook.html#module-neural_mmo.forge.blade.io.stimulus.hook">neural_mmo.forge.blade.io.stimulus.hook</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.node.html#module-neural_mmo.forge.blade.io.stimulus.node">neural_mmo.forge.blade.io.stimulus.node</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.static.html#module-neural_mmo.forge.blade.io.stimulus.static">neural_mmo.forge.blade.io.stimulus.static</a>, <a href="rst/neural_mmo.forge.blade.io.stimulus.static.html#module-neural_mmo.forge.blade.io.stimulus.static">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.utils.html#module-neural_mmo.forge.blade.io.utils">neural_mmo.forge.blade.io.utils</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.html#module-neural_mmo.forge.blade.lib">neural_mmo.forge.blade.lib</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.comms.html#module-neural_mmo.forge.blade.lib.comms">neural_mmo.forge.blade.lib.comms</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.enums.html#module-neural_mmo.forge.blade.lib.enums">neural_mmo.forge.blade.lib.enums</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.log.html#module-neural_mmo.forge.blade.lib.log">neural_mmo.forge.blade.lib.log</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.material.html#module-neural_mmo.forge.blade.lib.material">neural_mmo.forge.blade.lib.material</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.multiset.html#module-neural_mmo.forge.blade.lib.multiset">neural_mmo.forge.blade.lib.multiset</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.overlay.html#module-neural_mmo.forge.blade.lib.overlay">neural_mmo.forge.blade.lib.overlay</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.priorityqueue.html#module-neural_mmo.forge.blade.lib.priorityqueue">neural_mmo.forge.blade.lib.priorityqueue</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.ray.html#module-neural_mmo.forge.blade.lib.ray">neural_mmo.forge.blade.lib.ray</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.stattrak.html#module-neural_mmo.forge.blade.lib.stattrak">neural_mmo.forge.blade.lib.stattrak</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.utils.html#module-neural_mmo.forge.blade.lib.utils">neural_mmo.forge.blade.lib.utils</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.html#module-neural_mmo.forge.blade.systems">neural_mmo.forge.blade.systems</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.achievement.html#module-neural_mmo.forge.blade.systems.achievement">neural_mmo.forge.blade.systems.achievement</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.html#module-neural_mmo.forge.blade.systems.ai">neural_mmo.forge.blade.systems.ai</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.attack.html#module-neural_mmo.forge.blade.systems.ai.attack">neural_mmo.forge.blade.systems.ai.attack</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.behavior.html#module-neural_mmo.forge.blade.systems.ai.behavior">neural_mmo.forge.blade.systems.ai.behavior</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.dynamic_programming.html#module-neural_mmo.forge.blade.systems.ai.dynamic_programming">neural_mmo.forge.blade.systems.ai.dynamic_programming</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.move.html#module-neural_mmo.forge.blade.systems.ai.move">neural_mmo.forge.blade.systems.ai.move</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.oldai.html#module-neural_mmo.forge.blade.systems.ai.oldai">neural_mmo.forge.blade.systems.ai.oldai</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.policy.html#module-neural_mmo.forge.blade.systems.ai.policy">neural_mmo.forge.blade.systems.ai.policy</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.utils.html#module-neural_mmo.forge.blade.systems.ai.utils">neural_mmo.forge.blade.systems.ai.utils</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.combat.html#module-neural_mmo.forge.blade.systems.combat">neural_mmo.forge.blade.systems.combat</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.droptable.html#module-neural_mmo.forge.blade.systems.droptable">neural_mmo.forge.blade.systems.droptable</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.equipment.html#module-neural_mmo.forge.blade.systems.equipment">neural_mmo.forge.blade.systems.equipment</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#module-neural_mmo.forge.blade.systems.exchange">neural_mmo.forge.blade.systems.exchange</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.experience.html#module-neural_mmo.forge.blade.systems.experience">neural_mmo.forge.blade.systems.experience</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.recipe.html#module-neural_mmo.forge.blade.systems.recipe">neural_mmo.forge.blade.systems.recipe</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.skill.html#module-neural_mmo.forge.blade.systems.skill">neural_mmo.forge.blade.systems.skill</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.html#module-neural_mmo.forge.blade.systems.visualizer">neural_mmo.forge.blade.systems.visualizer</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.config.html#module-neural_mmo.forge.blade.systems.visualizer.config">neural_mmo.forge.blade.systems.visualizer.config</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.plot.html#module-neural_mmo.forge.blade.systems.visualizer.plot">neural_mmo.forge.blade.systems.visualizer.plot</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.theme.html#module-neural_mmo.forge.blade.systems.visualizer.theme">neural_mmo.forge.blade.systems.visualizer.theme</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.visualizer.html#module-neural_mmo.forge.blade.systems.visualizer.visualizer">neural_mmo.forge.blade.systems.visualizer.visualizer</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.html#module-neural_mmo.forge.ethyr">neural_mmo.forge.ethyr</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.html#module-neural_mmo.forge.ethyr.torch">neural_mmo.forge.ethyr.torch</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.io.html#module-neural_mmo.forge.ethyr.torch.io">neural_mmo.forge.ethyr.torch.io</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.io.action.html#module-neural_mmo.forge.ethyr.torch.io.action">neural_mmo.forge.ethyr.torch.io.action</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.io.stimulus.html#module-neural_mmo.forge.ethyr.torch.io.stimulus">neural_mmo.forge.ethyr.torch.io.stimulus</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#module-neural_mmo.forge.ethyr.torch.loss">neural_mmo.forge.ethyr.torch.loss</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#module-neural_mmo.forge.ethyr.torch.model">neural_mmo.forge.ethyr.torch.model</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.optim.html#module-neural_mmo.forge.ethyr.torch.optim">neural_mmo.forge.ethyr.torch.optim</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#module-neural_mmo.forge.ethyr.torch.param">neural_mmo.forge.ethyr.torch.param</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.html#module-neural_mmo.forge.ethyr.torch.policy">neural_mmo.forge.ethyr.torch.policy</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.attention.html#module-neural_mmo.forge.ethyr.torch.policy.attention">neural_mmo.forge.ethyr.torch.policy.attention</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.baseline.html#module-neural_mmo.forge.ethyr.torch.policy.baseline">neural_mmo.forge.ethyr.torch.policy.baseline</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.conv.html#module-neural_mmo.forge.ethyr.torch.policy.conv">neural_mmo.forge.ethyr.torch.policy.conv</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.embed.html#module-neural_mmo.forge.ethyr.torch.policy.embed">neural_mmo.forge.ethyr.torch.policy.embed</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.functional.html#module-neural_mmo.forge.ethyr.torch.policy.functional">neural_mmo.forge.ethyr.torch.policy.functional</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.linear.html#module-neural_mmo.forge.ethyr.torch.policy.linear">neural_mmo.forge.ethyr.torch.policy.linear</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.recurrent.html#module-neural_mmo.forge.ethyr.torch.policy.recurrent">neural_mmo.forge.ethyr.torch.policy.recurrent</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.transformer.html#module-neural_mmo.forge.ethyr.torch.policy.transformer">neural_mmo.forge.ethyr.torch.policy.transformer</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#module-neural_mmo.forge.ethyr.torch.save">neural_mmo.forge.ethyr.torch.save</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#module-neural_mmo.forge.ethyr.torch.utils">neural_mmo.forge.ethyr.torch.utils</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.html#module-neural_mmo.forge.trinity">neural_mmo.forge.trinity</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#module-neural_mmo.forge.trinity.dataframe">neural_mmo.forge.trinity.dataframe</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.env.html#module-neural_mmo.forge.trinity.env">neural_mmo.forge.trinity.env</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#module-neural_mmo.forge.trinity.evaluator">neural_mmo.forge.trinity.evaluator</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#module-neural_mmo.forge.trinity.evaluator">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#module-neural_mmo.forge.trinity.formatting">neural_mmo.forge.trinity.formatting</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#module-neural_mmo.forge.trinity.formatting">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#module-neural_mmo.forge.trinity.overlay">neural_mmo.forge.trinity.overlay</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#module-neural_mmo.forge.trinity.overlay">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.html#module-neural_mmo.forge.trinity.scripted">neural_mmo.forge.trinity.scripted</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.attack.html#module-neural_mmo.forge.trinity.scripted.attack">neural_mmo.forge.trinity.scripted.attack</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#module-neural_mmo.forge.trinity.scripted.baselines">neural_mmo.forge.trinity.scripted.baselines</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#module-neural_mmo.forge.trinity.scripted.baselines">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.behavior.html#module-neural_mmo.forge.trinity.scripted.behavior">neural_mmo.forge.trinity.scripted.behavior</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.io.html#module-neural_mmo.forge.trinity.scripted.io">neural_mmo.forge.trinity.scripted.io</a>, <a href="rst/neural_mmo.forge.trinity.scripted.io.html#module-neural_mmo.forge.trinity.scripted.io">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.move.html#module-neural_mmo.forge.trinity.scripted.move">neural_mmo.forge.trinity.scripted.move</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.utils.html#module-neural_mmo.forge.trinity.scripted.utils">neural_mmo.forge.trinity.scripted.utils</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#module-neural_mmo.forge.trinity.twistedserver">neural_mmo.forge.trinity.twistedserver</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.visualize.html#module-neural_mmo.forge.trinity.visualize">neural_mmo.forge.trinity.visualize</a>
+        <li><a href="autodoc/projekt.config.html#module-projekt.config">projekt.config</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#neural_mmo.forge.ethyr.torch.utils.ModuleList">ModuleList() (in module neural_mmo.forge.ethyr.torch.utils)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.NAME_PREFIX">NAME_PREFIX (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.NENT">NENT (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li>
-    neural_mmo
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.html#module-neural_mmo">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.html#module-neural_mmo.forge">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.html#module-neural_mmo.forge.blade">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.html#module-neural_mmo.forge.blade.core">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.config
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#module-neural_mmo.forge.blade.core.config">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.map
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#module-neural_mmo.forge.blade.core.map">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.market
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.html#module-neural_mmo.forge.blade.core.market">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.market.config
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.config.html#module-neural_mmo.forge.blade.core.market.config">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.market.new_visualizer
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.new_visualizer.html#module-neural_mmo.forge.blade.core.market.new_visualizer">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.market.visualizer
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.visualizer.html#module-neural_mmo.forge.blade.core.market.visualizer">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.realm
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#module-neural_mmo.forge.blade.core.realm">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.terrain
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.terrain.html#module-neural_mmo.forge.blade.core.terrain">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.core.tile
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.tile.html#module-neural_mmo.forge.blade.core.tile">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.entity
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.html#module-neural_mmo.forge.blade.entity">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.entity.entity
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.entity.html#module-neural_mmo.forge.blade.entity.entity">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.entity.npc
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.npc.html#module-neural_mmo.forge.blade.entity.npc">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.entity.player
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.entity.player.html#module-neural_mmo.forge.blade.entity.player">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.hook
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.hook.html#module-neural_mmo.forge.blade.hook">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.hook.modules
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.hook.modules.html#module-neural_mmo.forge.blade.hook.modules">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.html#module-neural_mmo.forge.blade.io">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.action
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.action.html#module-neural_mmo.forge.blade.io.action">module</a>
-</li>
-      </ul></li>
       <li>
     neural_mmo.forge.blade.io.action.static
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.action.static.html#module-neural_mmo.forge.blade.io.action.static">module</a>, <a href="rst/neural_mmo.forge.blade.io.action.static.html#module-neural_mmo.forge.blade.io.action.static">[1]</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.node
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.node.html#module-neural_mmo.forge.blade.io.node">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.stimulus
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.html#module-neural_mmo.forge.blade.io.stimulus">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.stimulus.dynamic
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#module-neural_mmo.forge.blade.io.stimulus.dynamic">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.stimulus.hook
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.hook.html#module-neural_mmo.forge.blade.io.stimulus.hook">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.stimulus.node
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.node.html#module-neural_mmo.forge.blade.io.stimulus.node">module</a>
+        <li><a href="rst/neural_mmo.forge.blade.io.action.static.html#module-neural_mmo.forge.blade.io.action.static">module</a>
 </li>
       </ul></li>
       <li>
     neural_mmo.forge.blade.io.stimulus.static
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.static.html#module-neural_mmo.forge.blade.io.stimulus.static">module</a>, <a href="rst/neural_mmo.forge.blade.io.stimulus.static.html#module-neural_mmo.forge.blade.io.stimulus.static">[1]</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.io.utils
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.io.utils.html#module-neural_mmo.forge.blade.io.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.html#module-neural_mmo.forge.blade.lib">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.comms
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.comms.html#module-neural_mmo.forge.blade.lib.comms">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.enums
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.enums.html#module-neural_mmo.forge.blade.lib.enums">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.log
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.log.html#module-neural_mmo.forge.blade.lib.log">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.material
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.material.html#module-neural_mmo.forge.blade.lib.material">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.multiset
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.multiset.html#module-neural_mmo.forge.blade.lib.multiset">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.overlay
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.overlay.html#module-neural_mmo.forge.blade.lib.overlay">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.priorityqueue
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.priorityqueue.html#module-neural_mmo.forge.blade.lib.priorityqueue">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.ray
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.ray.html#module-neural_mmo.forge.blade.lib.ray">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.stattrak
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.stattrak.html#module-neural_mmo.forge.blade.lib.stattrak">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.lib.utils
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.lib.utils.html#module-neural_mmo.forge.blade.lib.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.html#module-neural_mmo.forge.blade.systems">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.achievement
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.achievement.html#module-neural_mmo.forge.blade.systems.achievement">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.html#module-neural_mmo.forge.blade.systems.ai">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.attack
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.attack.html#module-neural_mmo.forge.blade.systems.ai.attack">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.behavior
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.behavior.html#module-neural_mmo.forge.blade.systems.ai.behavior">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.dynamic_programming
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.dynamic_programming.html#module-neural_mmo.forge.blade.systems.ai.dynamic_programming">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.move
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.move.html#module-neural_mmo.forge.blade.systems.ai.move">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.oldai
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.oldai.html#module-neural_mmo.forge.blade.systems.ai.oldai">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.policy
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.policy.html#module-neural_mmo.forge.blade.systems.ai.policy">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.ai.utils
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.utils.html#module-neural_mmo.forge.blade.systems.ai.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.combat
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.combat.html#module-neural_mmo.forge.blade.systems.combat">module</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    neural_mmo.forge.blade.systems.droptable
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.droptable.html#module-neural_mmo.forge.blade.systems.droptable">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.equipment
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.equipment.html#module-neural_mmo.forge.blade.systems.equipment">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.exchange
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#module-neural_mmo.forge.blade.systems.exchange">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.experience
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.experience.html#module-neural_mmo.forge.blade.systems.experience">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.recipe
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.recipe.html#module-neural_mmo.forge.blade.systems.recipe">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.skill
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.skill.html#module-neural_mmo.forge.blade.systems.skill">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.visualizer
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.html#module-neural_mmo.forge.blade.systems.visualizer">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.visualizer.config
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.config.html#module-neural_mmo.forge.blade.systems.visualizer.config">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.visualizer.plot
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.plot.html#module-neural_mmo.forge.blade.systems.visualizer.plot">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.visualizer.theme
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.theme.html#module-neural_mmo.forge.blade.systems.visualizer.theme">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.blade.systems.visualizer.visualizer
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.visualizer.html#module-neural_mmo.forge.blade.systems.visualizer.visualizer">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.html#module-neural_mmo.forge.ethyr">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.html#module-neural_mmo.forge.ethyr.torch">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.io
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.io.html#module-neural_mmo.forge.ethyr.torch.io">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.io.action
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.io.action.html#module-neural_mmo.forge.ethyr.torch.io.action">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.io.stimulus
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.io.stimulus.html#module-neural_mmo.forge.ethyr.torch.io.stimulus">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.loss
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#module-neural_mmo.forge.ethyr.torch.loss">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.model
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#module-neural_mmo.forge.ethyr.torch.model">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.optim
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.optim.html#module-neural_mmo.forge.ethyr.torch.optim">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.param
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#module-neural_mmo.forge.ethyr.torch.param">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.html#module-neural_mmo.forge.ethyr.torch.policy">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.attention
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.attention.html#module-neural_mmo.forge.ethyr.torch.policy.attention">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.baseline
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.baseline.html#module-neural_mmo.forge.ethyr.torch.policy.baseline">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.conv
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.conv.html#module-neural_mmo.forge.ethyr.torch.policy.conv">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.embed
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.embed.html#module-neural_mmo.forge.ethyr.torch.policy.embed">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.functional
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.functional.html#module-neural_mmo.forge.ethyr.torch.policy.functional">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.linear
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.linear.html#module-neural_mmo.forge.ethyr.torch.policy.linear">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.recurrent
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.recurrent.html#module-neural_mmo.forge.ethyr.torch.policy.recurrent">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.policy.transformer
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.policy.transformer.html#module-neural_mmo.forge.ethyr.torch.policy.transformer">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.save
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#module-neural_mmo.forge.ethyr.torch.save">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.ethyr.torch.utils
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#module-neural_mmo.forge.ethyr.torch.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.html#module-neural_mmo.forge.trinity">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.dataframe
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.dataframe.html#module-neural_mmo.forge.trinity.dataframe">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.env
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.env.html#module-neural_mmo.forge.trinity.env">module</a>
+        <li><a href="rst/neural_mmo.forge.blade.io.stimulus.static.html#module-neural_mmo.forge.blade.io.stimulus.static">module</a>
 </li>
       </ul></li>
       <li>
     neural_mmo.forge.trinity.evaluator
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#module-neural_mmo.forge.trinity.evaluator">module</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#module-neural_mmo.forge.trinity.evaluator">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#module-neural_mmo.forge.trinity.evaluator">module</a>
 </li>
       </ul></li>
       <li>
     neural_mmo.forge.trinity.formatting
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#module-neural_mmo.forge.trinity.formatting">module</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#module-neural_mmo.forge.trinity.formatting">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.formatting.html#module-neural_mmo.forge.trinity.formatting">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     neural_mmo.forge.trinity.overlay
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#module-neural_mmo.forge.trinity.overlay">module</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#module-neural_mmo.forge.trinity.overlay">[1]</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.scripted
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.html#module-neural_mmo.forge.trinity.scripted">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.scripted.attack
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.attack.html#module-neural_mmo.forge.trinity.scripted.attack">module</a>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#module-neural_mmo.forge.trinity.overlay">module</a>
 </li>
       </ul></li>
       <li>
     neural_mmo.forge.trinity.scripted.baselines
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#module-neural_mmo.forge.trinity.scripted.baselines">module</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#module-neural_mmo.forge.trinity.scripted.baselines">[1]</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.scripted.behavior
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.behavior.html#module-neural_mmo.forge.trinity.scripted.behavior">module</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#module-neural_mmo.forge.trinity.scripted.baselines">module</a>
 </li>
       </ul></li>
       <li>
     neural_mmo.forge.trinity.scripted.io
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.io.html#module-neural_mmo.forge.trinity.scripted.io">module</a>, <a href="rst/neural_mmo.forge.trinity.scripted.io.html#module-neural_mmo.forge.trinity.scripted.io">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.io.html#module-neural_mmo.forge.trinity.scripted.io">module</a>
 </li>
       </ul></li>
-      <li>
-    neural_mmo.forge.trinity.scripted.move
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.move.html#module-neural_mmo.forge.trinity.scripted.move">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.scripted.utils
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.utils.html#module-neural_mmo.forge.trinity.scripted.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.twistedserver
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#module-neural_mmo.forge.trinity.twistedserver">module</a>
-</li>
-      </ul></li>
-      <li>
-    neural_mmo.forge.trinity.visualize
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.visualize.html#module-neural_mmo.forge.trinity.visualize">module</a>
-</li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.NMOB">NMOB (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.node.html#neural_mmo.forge.blade.io.node.NodeType">NodeType (class in neural_mmo.forge.blade.io.node)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC">NPC (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_MAX">NPC_LEVEL_MAX (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_MIN">NPC_LEVEL_MIN (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_LEVEL_SPREAD">NPC_LEVEL_SPREAD (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_AGGRESSIVE">NPC_SPAWN_AGGRESSIVE (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_ATTEMPTS">NPC_SPAWN_ATTEMPTS (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_NEUTRAL">NPC_SPAWN_NEUTRAL (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.NPC.NPC_SPAWN_PASSIVE">NPC_SPAWN_PASSIVE (neural_mmo.forge.blade.core.config.NPC attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.NPOP">NPOP (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.NSTIM">NSTIM (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.NTILE">NTILE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation">Observation (class in neural_mmo.forge.trinity.scripted.io)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onAutoPingTimeout">onAutoPingTimeout() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onClose">onClose() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onCloseFrame">onCloseFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onCloseHandshakeTimeout">onCloseHandshakeTimeout() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onConnect">onConnect() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameBegin">onFrameBegin() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameData">onFrameData() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onFrameEnd">onFrameEnd() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessage">onMessage() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageBegin">onMessageBegin() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation">Observation (class in neural_mmo.forge.trinity.scripted.io)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageEnd">onMessageEnd() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrame">onMessageFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameBegin">onMessageFrameBegin() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameData">onMessageFrameData() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onMessageFrameEnd">onMessageFrameEnd() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onOpen">onOpen() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onOpenHandshakeTimeout">onOpenHandshakeTimeout() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onPing">onPing() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onPong">onPong() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.onServerConnectionDropTimeout">onServerConnectionDropTimeout() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay">Overlay (class in neural_mmo.forge.trinity.overlay)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay">Overlay (class in neural_mmo.forge.trinity.overlay)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1637,207 +580,165 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.utils.html#neural_mmo.forge.blade.io.utils.pack">pack() (in module neural_mmo.forge.blade.io.utils)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound1.PATH_EVALUATION">PATH_EVALUATION() (projekt.config.CompetitionRound1 property)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#neural_mmo.forge.ethyr.torch.utils.pack">(in module neural_mmo.forge.ethyr.torch.utils)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound2.PATH_EVALUATION">(projekt.config.CompetitionRound2 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound3.PATH_EVALUATION">(projekt.config.CompetitionRound3 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Debug.PATH_EVALUATION">(projekt.config.Debug property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization1.PATH_EVALUATION">(projekt.config.DomainRandomization1 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization16384.PATH_EVALUATION">(projekt.config.DomainRandomization16384 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization256.PATH_EVALUATION">(projekt.config.DomainRandomization256 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization32.PATH_EVALUATION">(projekt.config.DomainRandomization32 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMaps.PATH_EVALUATION">(projekt.config.LargeMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMultimodalSkills.PATH_EVALUATION">(projekt.config.LargeMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.MagnifyExploration.PATH_EVALUATION">(projekt.config.MagnifyExploration property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population256.PATH_EVALUATION">(projekt.config.Population256 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population32.PATH_EVALUATION">(projekt.config.Population32 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population4.PATH_EVALUATION">(projekt.config.Population4 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMaps.PATH_EVALUATION">(projekt.config.SmallMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMultimodalSkills.PATH_EVALUATION">(projekt.config.SmallMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.TeamBased.PATH_EVALUATION">(projekt.config.TeamBased property)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#neural_mmo.forge.blade.core.map.Map.packet">packet() (neural_mmo.forge.blade.core.map.Map property)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound1.PATH_MODEL">PATH_MODEL() (projekt.config.CompetitionRound1 property)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.Realm.packet">(neural_mmo.forge.blade.core.realm.Realm method)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound2.PATH_MODEL">(projekt.config.CompetitionRound2 property)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.packet">(neural_mmo.forge.trinity.env.Env property)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound3.PATH_MODEL">(projekt.config.CompetitionRound3 property)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_ALL_EVALUATIONS">PATH_ALL_EVALUATIONS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Debug.PATH_MODEL">(projekt.config.Debug property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_ALL_MODELS">PATH_ALL_MODELS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization1.PATH_MODEL">(projekt.config.DomainRandomization1 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_ASSETS">PATH_ASSETS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization16384.PATH_MODEL">(projekt.config.DomainRandomization16384 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_BASELINES">PATH_BASELINES (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization256.PATH_MODEL">(projekt.config.DomainRandomization256 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_CHECKPOINTS">PATH_CHECKPOINTS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization32.PATH_MODEL">(projekt.config.DomainRandomization32 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_EVALUATION">PATH_EVALUATION() (neural_mmo.forge.blade.core.config.Config property)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.SmallMaps.PATH_EVALUATION">(neural_mmo.forge.blade.core.config.SmallMaps property)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMaps.PATH_MODEL">(projekt.config.LargeMaps property)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_LOGO">PATH_LOGO (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMultimodalSkills.PATH_MODEL">(projekt.config.LargeMultimodalSkills property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_MAP_SUFFIX">PATH_MAP_SUFFIX (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.MagnifyExploration.PATH_MODEL">(projekt.config.MagnifyExploration property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_MAPS">PATH_MAPS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population256.PATH_MODEL">(projekt.config.Population256 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_LARGE">PATH_MAPS_LARGE (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population32.PATH_MODEL">(projekt.config.Population32 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_MAPS_SMALL">PATH_MAPS_SMALL (neural_mmo.forge.blade.core.config.Config attribute)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population4.PATH_MODEL">(projekt.config.Population4 property)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_MODEL">PATH_MODEL() (neural_mmo.forge.blade.core.config.Config property)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.SmallMaps.PATH_MODEL">(neural_mmo.forge.blade.core.config.SmallMaps property)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMaps.PATH_MODEL">(projekt.config.SmallMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMultimodalSkills.PATH_MODEL">(projekt.config.SmallMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.TeamBased.PATH_MODEL">(projekt.config.TeamBased property)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_RESOURCE">PATH_RESOURCE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_ROOT">PATH_ROOT (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_TEXT">PATH_TEXT (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_THEME_PUB">PATH_THEME_PUB (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_THEME_WEB">PATH_THEME_WEB (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_THEMES">PATH_THEMES (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_TILE">PATH_TILE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PATH_TRAINING_DATA">PATH_TRAINING_DATA() (neural_mmo.forge.blade.core.config.Config property)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound1.PATH_TRAINING_DATA">PATH_TRAINING_DATA() (projekt.config.CompetitionRound1 property)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.SmallMaps.PATH_TRAINING_DATA">(neural_mmo.forge.blade.core.config.SmallMaps property)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound2.PATH_TRAINING_DATA">(projekt.config.CompetitionRound2 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound3.PATH_TRAINING_DATA">(projekt.config.CompetitionRound3 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Debug.PATH_TRAINING_DATA">(projekt.config.Debug property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization1.PATH_TRAINING_DATA">(projekt.config.DomainRandomization1 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization16384.PATH_TRAINING_DATA">(projekt.config.DomainRandomization16384 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization256.PATH_TRAINING_DATA">(projekt.config.DomainRandomization256 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization32.PATH_TRAINING_DATA">(projekt.config.DomainRandomization32 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMaps.PATH_TRAINING_DATA">(projekt.config.LargeMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMultimodalSkills.PATH_TRAINING_DATA">(projekt.config.LargeMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.MagnifyExploration.PATH_TRAINING_DATA">(projekt.config.MagnifyExploration property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population256.PATH_TRAINING_DATA">(projekt.config.Population256 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population32.PATH_TRAINING_DATA">(projekt.config.Population32 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population4.PATH_TRAINING_DATA">(projekt.config.Population4 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMaps.PATH_TRAINING_DATA">(projekt.config.SmallMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMultimodalSkills.PATH_TRAINING_DATA">(projekt.config.SmallMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.TeamBased.PATH_TRAINING_DATA">(projekt.config.TeamBased property)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#neural_mmo.forge.ethyr.torch.save.Saver.perf">perf() (neural_mmo.forge.ethyr.torch.save.Saver method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.Population256">Population256 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#neural_mmo.forge.ethyr.torch.loss.PG">PG() (in module neural_mmo.forge.ethyr.torch.loss)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.Population32">Population32 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.visualizer.html#neural_mmo.forge.blade.systems.visualizer.visualizer.pickle_read">pickle_read() (in module neural_mmo.forge.blade.systems.visualizer.visualizer)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.Population4">Population4 (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.visualizer.html#neural_mmo.forge.blade.systems.visualizer.visualizer.pickle_write">pickle_write() (in module neural_mmo.forge.blade.systems.visualizer.visualizer)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.precomputed_stats">precomputed_stats() (in module neural_mmo.forge.trinity.formatting)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.PLAYER_SPAWN_ATTEMPTS">PLAYER_SPAWN_ATTEMPTS (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#neural_mmo.forge.ethyr.torch.loss.policyLoss">policyLoss() (in module neural_mmo.forge.ethyr.torch.loss)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.Realm.population">population() (neural_mmo.forge.blade.core.realm.Realm property)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ">PQ (class in neural_mmo.forge.blade.systems.exchange)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.precomputed_stats">precomputed_stats() (in module neural_mmo.forge.trinity.formatting)</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.precomputed_stats">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.prepareMessage">prepareMessage() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#neural_mmo.forge.ethyr.torch.model.Model.printParams">printParams() (neural_mmo.forge.ethyr.torch.model.Model method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.prioritized">prioritized() (in module neural_mmo.forge.blade.core.realm)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.process">process() (neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processControlFrame">processControlFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processData">processData() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processHandshake">processHandshake() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.processProxyConnect">processProxyConnect() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Progression">Progression (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_BASE_RESOURCE">PROGRESSION_BASE_RESOURCE (neural_mmo.forge.blade.core.config.Progression attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_BASE_XP_SCALE">PROGRESSION_BASE_XP_SCALE (neural_mmo.forge.blade.core.config.Progression attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_COMBAT_XP_SCALE">PROGRESSION_COMBAT_XP_SCALE (neural_mmo.forge.blade.core.config.Progression attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Progression.PROGRESSION_CONSTITUTION_XP_SCALE">PROGRESSION_CONSTITUTION_XP_SCALE (neural_mmo.forge.blade.core.config.Progression attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.protocol">protocol (neural_mmo.forge.trinity.twistedserver.WSServerFactory attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.put">put() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.put_nowait">put_nowait() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-  </ul></td>
-</tr></table>
+      <li>
+    projekt
 
-<h2 id="Q">Q</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.qsize">qsize() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
+      <ul>
+        <li><a href="autodoc/projekt.html#module-projekt">module</a>
 </li>
+      </ul></li>
+      <li>
+    projekt.config
+
+      <ul>
+        <li><a href="autodoc/projekt.config.html#module-projekt.config">module</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random">Random (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random">Random (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.market.new_visualizer.html#neural_mmo.forge.blade.core.market.new_visualizer.random">random() (in module neural_mmo.forge.blade.core.market.new_visualizer)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts.register">register() (neural_mmo.forge.trinity.overlay.Counts method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.visualizer.html#neural_mmo.forge.blade.core.market.visualizer.random">(in module neural_mmo.forge.blade.core.market.visualizer)</a>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay.register">(neural_mmo.forge.trinity.overlay.Overlay method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.blade.systems.visualizer.visualizer.html#neural_mmo.forge.blade.systems.visualizer.visualizer.random">(in module neural_mmo.forge.blade.systems.visualizer.visualizer)</a>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills.register">(neural_mmo.forge.trinity.overlay.Skills method)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.Realm">Realm (class in neural_mmo.forge.blade.core.realm)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.register">register() (neural_mmo.forge.trinity.env.Env method)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts.register">(neural_mmo.forge.trinity.overlay.Counts method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts.register">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay.register">(neural_mmo.forge.trinity.overlay.Overlay method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay.register">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills.register">(neural_mmo.forge.trinity.overlay.Skills method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills.register">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.register">(neural_mmo.forge.trinity.overlay.Wilderness method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.register">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.register">(neural_mmo.forge.trinity.overlay.Wilderness method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.registerProducer">registerProducer() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.RENDER">RENDER (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.render">render() (neural_mmo.forge.trinity.evaluator.Base method)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.render">[1]</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.render">(neural_mmo.forge.trinity.evaluator.Evaluator method)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.render">[1]</a>
-</li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#neural_mmo.forge.blade.core.map.Map.repr">repr() (neural_mmo.forge.blade.core.map.Map property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#neural_mmo.forge.blade.core.map.Map.reset">reset() (neural_mmo.forge.blade.core.map.Map method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.render">render() (neural_mmo.forge.trinity.evaluator.Base method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.Realm.reset">(neural_mmo.forge.blade.core.realm.Realm method)</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.reset">(neural_mmo.forge.trinity.env.Env method)</a>
+        <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.render">(neural_mmo.forge.trinity.evaluator.Evaluator method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.resetProtocolOptions">resetProtocolOptions() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#neural_mmo.forge.ethyr.torch.save.Resetter">Resetter (class in neural_mmo.forge.ethyr.torch.save)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource">Resource (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_BASE_RESOURCE">RESOURCE_BASE_RESOURCE (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_FOREST_CAPACITY">RESOURCE_FOREST_CAPACITY (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_FOREST_RESPAWN">RESOURCE_FOREST_RESPAWN (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_HARVEST_RESTORE_FRACTION">RESOURCE_HARVEST_RESTORE_FRACTION (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_HEALTH_REGEN_THRESHOLD">RESOURCE_HEALTH_REGEN_THRESHOLD (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_HEALTH_RESTORE_FRACTION">RESOURCE_HEALTH_RESTORE_FRACTION (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_OREROCK_CAPACITY">RESOURCE_OREROCK_CAPACITY (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Resource.RESOURCE_OREROCK_RESPAWN">RESOURCE_OREROCK_RESPAWN (neural_mmo.forge.blade.core.config.Resource attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.reward">reward() (neural_mmo.forge.trinity.env.Env method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.RLlibConfig">RLlibConfig (class in projekt.config)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1845,121 +746,89 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#neural_mmo.forge.ethyr.torch.save.Saver">Saver (class in neural_mmo.forge.ethyr.torch.save)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents">scan_agents() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.scan_agents">scan_agents() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.scan_agents">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted">Scripted (class in neural_mmo.forge.trinity.scripted.baselines)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted">Scripted (class in neural_mmo.forge.trinity.scripted.baselines)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style">select_combat_style() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.select_combat_style">select_combat_style() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.select_combat_style">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendClose">sendClose() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills">Skills (class in neural_mmo.forge.trinity.overlay)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendCloseFrame">sendCloseFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendData">sendData() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendFrame">sendFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendHtml">sendHtml() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendHttpErrorResponse">sendHttpErrorResponse() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessage">sendMessage() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrame">sendMessageFrame() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.SmallMaps">SmallMaps (class in projekt.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendMessageFrameData">sendMessageFrameData() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.SmallMultimodalSkills">SmallMultimodalSkills (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPing">sendPing() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPong">sendPong() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendPreparedMessage">sendPreparedMessage() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendRedirect">sendRedirect() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.sendServerStatus">sendServerStatus() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#neural_mmo.forge.ethyr.torch.param.setGrads">setGrads() (in module neural_mmo.forge.ethyr.torch.param)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#neural_mmo.forge.ethyr.torch.param.setParameters">setParameters() (in module neural_mmo.forge.ethyr.torch.param)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.setProtocolOptions">setProtocolOptions() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.setSessionParameters">setSessionParameters() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.utils.html#neural_mmo.forge.blade.lib.utils.staticproperty.setter">setter() (neural_mmo.forge.blade.lib.utils.staticproperty method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.setTrackTimings">setTrackTimings() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills">Skills (class in neural_mmo.forge.trinity.overlay)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.SmallMaps">SmallMaps (class in neural_mmo.forge.blade.core.config)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.spawn">spawn() (neural_mmo.forge.trinity.env.Env method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.SPAWN_CONTINUOUS">SPAWN_CONTINUOUS() (neural_mmo.forge.blade.core.config.Config method)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound1.SPAWN_CONTINUOUS">SPAWN_CONTINUOUS() (projekt.config.CompetitionRound1 method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.SmallMaps.SPAWN_CONTINUOUS">(neural_mmo.forge.blade.core.config.SmallMaps method)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound2.SPAWN_CONTINUOUS">(projekt.config.CompetitionRound2 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound3.SPAWN_CONTINUOUS">(projekt.config.CompetitionRound3 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Debug.SPAWN_CONTINUOUS">(projekt.config.Debug method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization1.SPAWN_CONTINUOUS">(projekt.config.DomainRandomization1 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization16384.SPAWN_CONTINUOUS">(projekt.config.DomainRandomization16384 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization256.SPAWN_CONTINUOUS">(projekt.config.DomainRandomization256 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization32.SPAWN_CONTINUOUS">(projekt.config.DomainRandomization32 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMaps.SPAWN_CONTINUOUS">(projekt.config.LargeMaps method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMultimodalSkills.SPAWN_CONTINUOUS">(projekt.config.LargeMultimodalSkills method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.MagnifyExploration.SPAWN_CONTINUOUS">(projekt.config.MagnifyExploration method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population256.SPAWN_CONTINUOUS">(projekt.config.Population256 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population32.SPAWN_CONTINUOUS">(projekt.config.Population32 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population4.SPAWN_CONTINUOUS">(projekt.config.Population4 method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMaps.SPAWN_CONTINUOUS">(projekt.config.SmallMaps method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMultimodalSkills.SPAWN_CONTINUOUS">(projekt.config.SmallMultimodalSkills method)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.TeamBased.SPAWN_CONTINUOUS">(projekt.config.TeamBased method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.startFactory">startFactory() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.lib.utils.html#neural_mmo.forge.blade.lib.utils.staticproperty">staticproperty (class in neural_mmo.forge.blade.lib.utils)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.stats">stats() (in module neural_mmo.forge.trinity.formatting)</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.stats">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.map.html#neural_mmo.forge.blade.core.map.Map.step">step() (neural_mmo.forge.blade.core.map.Map method)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.realm.html#neural_mmo.forge.blade.core.realm.Realm.step">(neural_mmo.forge.blade.core.realm.Realm method)</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.save.html#neural_mmo.forge.ethyr.torch.save.Resetter.step">(neural_mmo.forge.ethyr.torch.save.Resetter method)</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.step">(neural_mmo.forge.trinity.env.Env method)</a>
-</li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus">Stimulus (class in neural_mmo.forge.blade.io.stimulus.dynamic)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory.stopFactory">stopFactory() (neural_mmo.forge.trinity.twistedserver.WSServerFactory method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.succeedHandshake">succeedHandshake() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.stats">stats() (in module neural_mmo.forge.trinity.formatting)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1967,75 +836,37 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak">target_weak() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Combat.target_weak">target_weak() (neural_mmo.forge.trinity.scripted.baselines.Combat method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore.target_weak">(neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak">(neural_mmo.forge.trinity.scripted.baselines.CombatTribrid method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Forage.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Forage method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore.target_weak">(neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Meander.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Meander method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Random.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Random method)</a>
 </li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.scripted.baselines.html#neural_mmo.forge.trinity.scripted.baselines.Scripted.target_weak">(neural_mmo.forge.trinity.scripted.baselines.Scripted method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.exchange.html#neural_mmo.forge.blade.systems.exchange.PQ.task_done">task_done() (neural_mmo.forge.blade.systems.exchange.PQ method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.env.html#neural_mmo.forge.trinity.env.Env.terminal">terminal() (neural_mmo.forge.trinity.env.Env method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_BORDER">TERRAIN_BORDER (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_CENTER">TERRAIN_CENTER (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_EVAL_MAPS">TERRAIN_EVAL_MAPS (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_FOREST">TERRAIN_FOREST (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_FREQUENCY">TERRAIN_FREQUENCY (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_FREQUENCY_OFFSET">TERRAIN_FREQUENCY_OFFSET (neural_mmo.forge.blade.core.config.Config attribute)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.TeamBased">TeamBased (class in projekt.config)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_GRASS">TERRAIN_GRASS (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_LAVA">TERRAIN_LAVA (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_LOG_INTERPOLATE_MAX">TERRAIN_LOG_INTERPOLATE_MAX (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_LOG_INTERPOLATE_MIN">TERRAIN_LOG_INTERPOLATE_MIN (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_RENDER">TERRAIN_RENDER (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_TILES_PER_OCTAVE">TERRAIN_TILES_PER_OCTAVE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_TRAIN_MAPS">TERRAIN_TRAIN_MAPS (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TERRAIN_WATER">TERRAIN_WATER (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.tick">tick() (neural_mmo.forge.trinity.evaluator.Base method)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.tick">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Base.tick">tick() (neural_mmo.forge.trinity.evaluator.Base method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.tick">(neural_mmo.forge.trinity.evaluator.Evaluator method)</a>, <a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.tick">[1]</a>
+        <li><a href="rst/neural_mmo.forge.trinity.evaluator.html#neural_mmo.forge.trinity.evaluator.Evaluator.tick">(neural_mmo.forge.trinity.evaluator.Evaluator method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.stimulus.dynamic.html#neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus.tile">tile() (neural_mmo.forge.blade.io.stimulus.dynamic.Stimulus method)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.tile">(neural_mmo.forge.trinity.scripted.io.Observation method)</a>, <a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.tile">[1]</a>
+      <li><a href="rst/neural_mmo.forge.trinity.scripted.io.html#neural_mmo.forge.trinity.scripted.io.Observation.tile">tile() (neural_mmo.forge.trinity.scripted.io.Observation method)</a>
 </li>
-      </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.times">times() (in module neural_mmo.forge.trinity.formatting)</a>, <a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.times">[1]</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TRAIN_DATA_RESAMPLE">TRAIN_DATA_RESAMPLE (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.TRAIN_SUMMARY_ENVS">TRAIN_SUMMARY_ENVS (neural_mmo.forge.blade.core.config.Config attribute)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.formatting.html#neural_mmo.forge.trinity.formatting.times">times() (in module neural_mmo.forge.trinity.formatting)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2043,92 +874,60 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.io.utils.html#neural_mmo.forge.blade.io.utils.unpack">unpack() (in module neural_mmo.forge.blade.io.utils)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts.update">update() (neural_mmo.forge.trinity.overlay.Counts method)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.ethyr.torch.utils.html#neural_mmo.forge.ethyr.torch.utils.unpack">(in module neural_mmo.forge.ethyr.torch.utils)</a>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay.update">(neural_mmo.forge.trinity.overlay.Overlay method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills.update">(neural_mmo.forge.trinity.overlay.Skills method)</a>
+</li>
+        <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.update">(neural_mmo.forge.trinity.overlay.Wilderness method)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol.unregisterProducer">unregisterProducer() (neural_mmo.forge.trinity.twistedserver.GodswordServerProtocol method)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.systems.ai.behavior.html#neural_mmo.forge.blade.systems.ai.behavior.update">update() (in module neural_mmo.forge.blade.systems.ai.behavior)</a>
-
-      <ul>
-        <li><a href="autodoc/neural_mmo.forge.trinity.scripted.behavior.html#neural_mmo.forge.trinity.scripted.behavior.update">(in module neural_mmo.forge.trinity.scripted.behavior)</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.market.visualizer.html#neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer.update">(neural_mmo.forge.blade.core.market.visualizer.MarketVisualizer method)</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts.update">(neural_mmo.forge.trinity.overlay.Counts method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Counts.update">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay.update">(neural_mmo.forge.trinity.overlay.Overlay method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Overlay.update">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills.update">(neural_mmo.forge.trinity.overlay.Skills method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Skills.update">[1]</a>
-</li>
-        <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.update">(neural_mmo.forge.trinity.overlay.Wilderness method)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness.update">[1]</a>
-</li>
-      </ul></li>
-  </ul></td>
-</tr></table>
-
-<h2 id="V">V</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.v">v (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.loss.html#neural_mmo.forge.ethyr.torch.loss.valueLoss">valueLoss() (in module neural_mmo.forge.ethyr.torch.loss)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_BORDER_HEIGHT">VIS_BORDER_HEIGHT (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_BORDER_WIDTH">VIS_BORDER_WIDTH (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_HEIGHT">VIS_HEIGHT (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_LEGEND_OFFSET">VIS_LEGEND_OFFSET (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_LEGEND_WIDTH">VIS_LEGEND_WIDTH (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_PORT">VIS_PORT (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_THEME">VIS_THEME (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_TITLE_OFFSET">VIS_TITLE_OFFSET (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_TOOLS">VIS_TOOLS (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.VIS_WIDTH">VIS_WIDTH (neural_mmo.forge.blade.core.config.Config attribute)</a>
-</li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.visualize.html#neural_mmo.forge.trinity.visualize.BokehServer.visualize">visualize() (neural_mmo.forge.trinity.visualize.BokehServer method)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.model.html#neural_mmo.forge.ethyr.torch.model.Model.weights">weights() (neural_mmo.forge.ethyr.torch.model.Model property)</a>
+      <li><a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness">Wilderness (class in neural_mmo.forge.trinity.overlay)</a>
 </li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness">Wilderness (class in neural_mmo.forge.trinity.overlay)</a>, <a href="rst/neural_mmo.forge.trinity.overlay.html#neural_mmo.forge.trinity.overlay.Wilderness">[1]</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.Config.WINDOW">WINDOW() (neural_mmo.forge.blade.core.config.Config property)</a>
+      <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound1.WINDOW">WINDOW() (projekt.config.CompetitionRound1 property)</a>
 
       <ul>
-        <li><a href="autodoc/neural_mmo.forge.blade.core.config.html#neural_mmo.forge.blade.core.config.SmallMaps.WINDOW">(neural_mmo.forge.blade.core.config.SmallMaps property)</a>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound2.WINDOW">(projekt.config.CompetitionRound2 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.CompetitionRound3.WINDOW">(projekt.config.CompetitionRound3 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Debug.WINDOW">(projekt.config.Debug property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization1.WINDOW">(projekt.config.DomainRandomization1 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization16384.WINDOW">(projekt.config.DomainRandomization16384 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization256.WINDOW">(projekt.config.DomainRandomization256 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.DomainRandomization32.WINDOW">(projekt.config.DomainRandomization32 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMaps.WINDOW">(projekt.config.LargeMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.LargeMultimodalSkills.WINDOW">(projekt.config.LargeMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.MagnifyExploration.WINDOW">(projekt.config.MagnifyExploration property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population256.WINDOW">(projekt.config.Population256 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population32.WINDOW">(projekt.config.Population32 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.Population4.WINDOW">(projekt.config.Population4 property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMaps.WINDOW">(projekt.config.SmallMaps property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.SmallMultimodalSkills.WINDOW">(projekt.config.SmallMultimodalSkills property)</a>
+</li>
+        <li><a href="autodoc/projekt.config.html#projekt.config.TeamBased.WINDOW">(projekt.config.TeamBased property)</a>
 </li>
       </ul></li>
-      <li><a href="autodoc/neural_mmo.forge.trinity.twistedserver.html#neural_mmo.forge.trinity.twistedserver.WSServerFactory">WSServerFactory (class in neural_mmo.forge.trinity.twistedserver)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="Z">Z</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autodoc/neural_mmo.forge.ethyr.torch.param.html#neural_mmo.forge.ethyr.torch.param.zeroGrads">zeroGrads() (in module neural_mmo.forge.ethyr.torch.param)</a>
-</li>
   </ul></td>
 </tr></table>
 

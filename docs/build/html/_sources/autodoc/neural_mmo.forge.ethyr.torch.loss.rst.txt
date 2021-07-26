@@ -1,7 +1,0 @@
-neural\_mmo.forge.ethyr.torch.loss module
-=========================================
-
-.. automodule:: neural_mmo.forge.ethyr.torch.loss
-   :members:
-   :inherited-members:
-   :show-inheritance:

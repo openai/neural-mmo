@@ -9,15 +9,15 @@ Index
 
 .. toctree::
    :maxdepth: 8
-   :caption: Developer Guide
-
-   rst/devguide
-
-.. toctree::
-   :maxdepth: 8
    :caption: Documentation
 
    rst/api
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Game Wiki
+
+   rst/game_wiki
 
 .. toctree::
    :maxdepth: 8
@@ -30,6 +30,12 @@ Index
    :caption: Updates
 
    rst/updates
+
+.. toctree::
+   :maxdepth: 8
+   :caption: Developer Guide
+
+   rst/devguide
 
 .. toctree::
    :maxdepth: 8

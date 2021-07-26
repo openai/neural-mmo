@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.io.action.static module
-===============================================
-
-.. automodule:: neural_mmo.forge.blade.io.action.static
-   :members:
-   :inherited-members:
-   :show-inheritance:

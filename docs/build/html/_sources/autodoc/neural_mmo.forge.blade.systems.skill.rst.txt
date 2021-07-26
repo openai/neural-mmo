@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.systems.skill module
-============================================
-
-.. automodule:: neural_mmo.forge.blade.systems.skill
-   :members:
-   :inherited-members:
-   :show-inheritance:

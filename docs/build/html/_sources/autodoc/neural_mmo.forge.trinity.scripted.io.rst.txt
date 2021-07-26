@@ -1,7 +1,0 @@
-neural\_mmo.forge.trinity.scripted.io module
-============================================
-
-.. automodule:: neural_mmo.forge.trinity.scripted.io
-   :members:
-   :inherited-members:
-   :show-inheritance:

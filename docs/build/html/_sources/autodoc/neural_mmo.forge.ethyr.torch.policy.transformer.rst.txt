@@ -1,7 +1,0 @@
-neural\_mmo.forge.ethyr.torch.policy.transformer module
-=======================================================
-
-.. automodule:: neural_mmo.forge.ethyr.torch.policy.transformer
-   :members:
-   :inherited-members:
-   :show-inheritance:

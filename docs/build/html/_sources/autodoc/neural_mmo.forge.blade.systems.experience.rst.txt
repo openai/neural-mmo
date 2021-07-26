@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.systems.experience module
-=================================================
-
-.. automodule:: neural_mmo.forge.blade.systems.experience
-   :members:
-   :inherited-members:
-   :show-inheritance:

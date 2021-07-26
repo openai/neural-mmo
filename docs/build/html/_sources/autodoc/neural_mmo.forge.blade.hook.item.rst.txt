@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.hook.item module
-========================================
-
-.. automodule:: neural_mmo.forge.blade.hook.item
-   :members:
-   :inherited-members:
-   :show-inheritance:

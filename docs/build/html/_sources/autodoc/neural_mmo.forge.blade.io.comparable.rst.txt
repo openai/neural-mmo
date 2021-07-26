@@ -1,7 +1,0 @@
-neural\_mmo.forge.blade.io.comparable module
-============================================
-
-.. automodule:: neural_mmo.forge.blade.io.comparable
-   :members:
-   :inherited-members:
-   :show-inheritance:

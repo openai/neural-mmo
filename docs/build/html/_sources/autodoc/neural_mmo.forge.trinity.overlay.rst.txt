@@ -1,7 +1,0 @@
-neural\_mmo.forge.trinity.overlay module
-========================================
-
-.. automodule:: neural_mmo.forge.trinity.overlay
-   :members:
-   :inherited-members:
-   :show-inheritance:

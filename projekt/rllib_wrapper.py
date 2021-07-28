@@ -1,15 +1,11 @@
 from pdb import set_trace as TT
 
 from collections import defaultdict
-from itertools import chain
-import shutil
-import time
-import os
-import re
 
 from tqdm import tqdm
 import numpy as np
 import gym
+import wandb
 
 import torch
 from torch import nn
@@ -19,6 +15,7 @@ from ray import rllib
 import ray.rllib.agents.ppo.ppo as ppo
 import ray.rllib.agents.ppo.appo as appo
 from ray.rllib.agents.callbacks import DefaultCallbacks
+from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.rllib.utils.spaces.flexdict import FlexDict
 from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
 
@@ -338,159 +335,6 @@ class RLlibEvaluator(evaluator.Base):
 
       super().tick(self.obs, actions, pos, cmd, preprocess=None)
 
-class SanePPOTrainer(ppo.PPOTrainer):
-   '''Small utility class on top of RLlib's base trainer'''
-   def __init__(self, config):
-      self.envConfig = config['env_config']['config']
-      super().__init__(env=self.envConfig.ENV_NAME, config=config)
-      self.training_logs = {}
-
-   def save(self):
-      '''Save model to file. Note: RLlib does not let us chose save paths'''
-      config   = self.envConfig
-      saveFile = super().save(config.PATH_CHECKPOINTS)
-      saveDir  = os.path.dirname(saveFile)
-      
-      #Clear current save dir
-      shutil.rmtree(config.PATH_MODEL, ignore_errors=True)
-      os.mkdir(config.PATH_MODEL)
-
-      #Copy checkpoints
-      for f in os.listdir(saveDir):
-         stripped = re.sub('-\d+', '', f)
-         src      = os.path.join(saveDir, f)
-         dst      = os.path.join(config.PATH_MODEL, stripped) 
-         shutil.copy(src, dst)
-
-      print('Saved to: {}'.format(saveDir))
-
-   def restore(self):
-      '''Restore model from path'''
-      self.training_logs = np.load(
-            self.envConfig.PATH_TRAINING_DATA,
-            allow_pickle=True).item()
-
-      path = os.path.join(
-            self.envConfig.PATH_MODEL,
-            'checkpoint')
-
-      print('Loading model from: {}'.format(path))
-      super().restore(path)
-
-   def policyID(self, idx):
-      return 'policy_{}'.format(idx)
-
-   def model(self, policyID):
-      return self.get_policy(policyID).model
-
-   def defaultModel(self):
-      return self.model(self.policyID(0))
-
-   def train(self):
-      '''Train forever, printing per epoch'''
-      training_logs = self.training_logs
-      config        = self.envConfig
-
-      logo          = open(config.PATH_LOGO).read().splitlines()
-
-      model         = config.MODEL if config.MODEL is not None else 'current'
-      trainPath     = config.PATH_TRAINING_DATA
-
-      total_sample_time = 0
-      total_learn_time  = 0
-      total_steps       = 0
-      total_time        = 0
-      start_time        = time.time()
-
-      blocks  = []
-
-      for epoch in range(config.TRAIN_EPOCHS):
-          #Train model
-          stats = super().train()
-          self.save()
-
-          #Compute stats
-          info               = stats['info']
-          timers             = stats['timers']
-
-          steps              = info['num_agent_steps_trained'] - total_steps
-          total_steps        = info['num_agent_steps_trained']
-
-          sample_time        = timers['sample_time_ms'] / 1000
-          learn_time         = timers['learn_time_ms'] / 1000
-
-          sample_throughput  = steps / sample_time
-          learn_throughput   = steps / learn_time
-         
-          total_sample_time += sample_time
-          total_learn_time  += learn_time
-          total_time         = time.time() - start_time
-
-          #Summary
-          summary = formatting.box([formatting.line(
-                title  = ' '.join([config.ENV_NAME, config.ENV_VERSION]),
-                keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
-                vals   = [epoch, total_steps/1000, total_sample_time, total_learn_time],
-                valFmt = '{:.1f}')])
-
-          #Block Title
-          sample_stat = '{:.1f}/s ({:.1f}s)'.format(sample_throughput, sample_time)
-          learn_stat  = '{:.1f}/s ({:.1f}s)'.format(learn_throughput, learn_time)
-          header = formatting.box([formatting.line(
-                keys   = 'Epoch Sample Train'.split(),
-                vals   = [epoch, sample_stat, learn_stat],
-                valFmt = '{}')])
-
-          #Format stats (RLlib callback format limitation)
-          for k, vals in stats['hist_stats'].items():
-             if not k.startswith('_'):
-                continue
-             k                 = k.lstrip('_')
-             track, stat       = re.split('_', k)
-
-             if track not in training_logs:
-                training_logs[track] = {}
-
-             if stat not in training_logs[track]:
-                training_logs[track][stat] = []
-
-             training_logs[track][stat] += vals
-
-          np.save(trainPath, {
-               'logs': training_logs,
-               'sample_time': total_sample_time,
-               'learn_time': total_learn_time})
-
-          #Representation for CLI
-          cli = {}
-          for track, stats in training_logs.items():
-             cli[track] = {}
-             for stat, vals in stats.items():
-                mmean = np.mean(vals[-config.TRAIN_SUMMARY_ENVS:])
-                cli[track][stat] = mmean
-
-          lines = formatting.precomputed_stats(cli)
-          if config.v:
-             lines += formatting.timings(timings)
-
-          #Extend blocks
-          if len(lines) > 0:
-             lines = formatting.box(lines, indent=4) 
-             blocks.append(header + lines)
-          else:
-             blocks.append(header)
-             
-          if len(blocks) > 3:
-             blocks = blocks[1:]
-          
-          #Assemble Summary Bar Title
-          lines = logo.copy() + list(chain.from_iterable(blocks)) + summary
-
-          #Cross-platform clear screen
-          os.system('cls' if os.name == 'nt' else 'clear')
-          for idx, line in enumerate(lines):
-             print(line)
-
 
 ###############################################################################
 ### RLlib Wrappers: Env, Overlays
@@ -570,7 +414,6 @@ def observationSpace(config):
    obs['Entity']['N']   = gym.spaces.Box(
          low=0, high=config.N_AGENT_OBS, shape=(1,),
          dtype=DataType.DISCRETE)
-
    return obs
 
 def actionSpace(config):
@@ -702,14 +545,6 @@ class RLlibLogCallbacks(DefaultCallbacks):
    def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
       assert len(base_env.envs) == 1, 'One env per worker'
       env    = base_env.envs[0]
-      config = env.config
 
       for key, vals in env.terminal()['Stats'].items():
-         logs = episode.hist_data
-
-         key  = '_' + key
-         logs[key + '_Min']  = [np.min(vals)]
-         logs[key + '_Max']  = [np.max(vals)]
-         logs[key + '_Mean'] = [np.mean(vals)]
-         logs[key + '_Std']  = [np.std(vals)]
-
+         episode.custom_metrics[key] = np.mean(vals)

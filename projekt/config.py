@@ -69,10 +69,10 @@ class SmallMaps(config.SmallMaps, RLlibConfig, config.AllGameSystems):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 6 #32
+   NUM_WORKERS             = 32
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
    ROLLOUT_FRAGMENT_LENGTH = 256
-   SGD_MINIBATCH_SIZE      = min(256, TRAIN_BATCH_SIZE)
+   SGD_MINIBATCH_SIZE      = min(128, TRAIN_BATCH_SIZE)
  
    #Horizon
    TRAIN_HORIZON           = 1024

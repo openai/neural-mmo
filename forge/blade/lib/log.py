@@ -37,10 +37,9 @@ class Quill:
    def plot(idx):
       return Quill.PLOTS[idx] 
 
-   def __init__(self, realm):
+   def __init__(self):
       self.blobs = defaultdict(Blob)
       self.stats = defaultdict(list)
-      self.realm = realm #Game map index
 
    def stat(self, key, val):
       self.stats[key].append(val)

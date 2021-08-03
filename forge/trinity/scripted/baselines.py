@@ -1,20 +1,21 @@
 from pdb import set_trace as T
 
+from forge.trinity.agent import Agent
 from forge.trinity.scripted import behavior, move, attack, utils, io
 from forge.blade.io.stimulus.static import Stimulus
 from forge.blade.io.action import static as Action
 
-class Scripted:
+class Scripted(Agent):
     '''Template class for scripted models.
 
     You may either subclass directly or mirror the __call__ function'''
-    def __init__(self, config):
+    scripted = True
+    def __init__(self, config, idx):
         '''
         Args:
            config : A forge.blade.core.Config object or subclass object
         ''' 
-        self.config    = config
-
+        super().__init__(config, idx)
         self.food_max  = 0
         self.water_max = 0
 

@@ -4,7 +4,12 @@ import os
 
 from forge.blade import core
 from forge.blade.core import config
+from forge.blade.io.stimulus.static import Stimulus
+from forge.trinity.scripted import baselines
+from forge.trinity.agent import Agent
 from forge.blade.systems.ai import behavior
+from projekt import rllib_wrapper
+
 
 class Base(core.Config):
    '''Base config for RLlib Models
@@ -42,6 +47,8 @@ class Base(core.Config):
    COOP                    = False
    TEAM_SPIRIT             = 0.0
    ACHIEVEMENT_SCALE       = 1.0/15.0
+
+   AGENTS                  = [baselines.Combat, Agent]
 
 
 class LargeMaps(Base):

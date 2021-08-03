@@ -5,8 +5,20 @@ import os
 
 from collections import defaultdict
 from itertools import chain
-
 import neural_mmo
+
+class SequentialLoader:
+    def __init__(self, items):
+        self.items = items
+        self.idx   = -1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.idx = (self.idx + 1) % len(self.items)
+        return self.items[self.idx]
+
 
 class StaticIterable(type):
    def __iter__(cls):
@@ -86,8 +98,12 @@ class Config(Template):
 
    ############################################################################
    ### Population Parameters                                                   
-   #TODO: Find a way to auto-compute this
+   AGENTS                  = []
+
+   AGENT_LOADER            = SequentialLoader
+
    NTILE                   = 6
+   #TODO: Find a way to auto-compute this
    '''Number of distinct terrain tile types'''
 
    NSTIM                   = 7
@@ -171,8 +187,7 @@ class Config(Template):
       s3     = list(zip(rrange, highs))
       s4     = list(zip(highs, rrange))
 
-      positions = s1 + s2 + s3 + s4
-      return [(r, c, 'Neural_') for r, c in positions]
+      return s1 + s2 + s3 + s4
 
    @property
    def SPAWN(self):

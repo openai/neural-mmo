@@ -8,6 +8,7 @@ from copy import deepcopy
 from neural_mmo.forge.blade import entity, core
 from neural_mmo.forge.blade.io import stimulus
 from neural_mmo.forge.blade.io.stimulus import Static
+from neural_mmo.forge.blade.io.action import static as Action
 from neural_mmo.forge.blade.systems import combat
 
 from neural_mmo.forge.blade.lib.enums import Palette
@@ -30,13 +31,10 @@ class Env:
          config : A forge.blade.core.Config object or subclass object
       '''
       super().__init__()
-      self.realm     = core.Realm(config, self.spawn)
+      self.realm     = core.Realm(config)
 
       self.config    = config
       self.overlay   = None
-
-      self.dead      = []
-      self.spawned   = 0
 
       #self.steps = 0
 
@@ -67,7 +65,10 @@ class Env:
       Returns:
          observations, as documented by step()
       '''
-      self.quill = log.Quill(self.realm.identify)
+      self.actions   = {}
+      self.dead      = []
+ 
+      self.quill = log.Quill()
       
       if idx is None:
          idx = np.random.randint(self.config.TERRAIN_TRAIN_MAPS) + 1
@@ -177,44 +178,55 @@ class Env:
          infos:
             An empty dictionary provided only for conformity with OpenAI Gym.
       '''
-      #Preprocess actions
-      for entID in preprocess:
+      #Preprocess actions for neural models
+      for entID in list(actions.keys()):
          ent = self.realm.players[entID]
          if not ent.alive:
             continue
 
+         self.actions[entID] = {}
          for atn, args in actions[entID].items():
+            self.actions[entID][atn] = {}
             for arg, val in args.items():
                if len(arg.edges) > 0:
-                  actions[entID][atn][arg] = arg.edges[val]
+                  self.actions[entID][atn][arg] = arg.edges[val]
                elif val < len(ent.targets):
                   targ                     = ent.targets[val]
-                  actions[entID][atn][arg] = self.realm.entity(targ)
+                  self.actions[entID][atn][arg] = self.realm.entity(targ)
                else: #Need to fix -inf in classifier before removing this
-                  actions[entID][atn][arg] = ent
+                  self.actions[entID][atn][arg] = ent
 
       #Step: Realm, Observations, Logs
-      self.dead = self.realm.step(actions)
+      self.dead    = self.realm.step(self.actions)
+      self.actions = {}
+
       obs, rewards, dones, self.raw = {}, {}, {}, {}
       for entID, ent in self.realm.players.items():
          ob             = self.realm.dataframe.get(ent)
-         obs[entID]     = ob
-         self.dummy_ob  = ob
+         if ent.agent.scripted:
+            atns = ent.agent(ob)
+            if Action.Attack in atns:
+               atn  = atns[Action.Attack]
+               targ = atn[Action.Target]
+               atn[Action.Target] = self.realm.entity(targ)
+            self.actions[entID] = atns
+         else:
+            obs[entID]     = ob
+            self.dummy_ob  = ob
 
-         rewards[entID] = self.reward(ent)
-         dones[entID]   = False
-
-      #self.steps += len(self.realm.players.items())
-      #print('World {} Tick {} Steps {}'.format(self.worldIdx, self.realm.tick, self.steps))
+            rewards[entID] = self.reward(ent)
+            dones[entID]   = False
 
       for entID, ent in self.dead.items():
          self.log(ent)
 
       #Postprocess dead agents
-      if omitDead:
-         return obs, rewards, dones, {}
+      #if omitDead:
+      #   return obs, rewards, dones, {}
 
       for entID, ent in self.dead.items():
+         if ent.agent.scripted:
+            continue
          rewards[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
@@ -310,31 +322,6 @@ class Env:
       if entID not in self.realm.players:
          return -1
       return 0
-
-   def spawn(self):
-      '''Called when an agent is added to the environment
-
-      Override this method to specify name/population upon spawning.
-
-      Returns:
-         (int, str):
-
-         popID:
-            An integer used to identity membership within a population
-
-         prefix:
-            The agent will be named prefix + entID
-
-      Notes:
-         Mainly intended for population-based research. In particular, it
-         allows you to define behavior that selectively spawns agents into
-         particular populations based on the current game state -- for example,
-         current population sizes or performance.'''
-
-      popSize = self.config.NENT / self.config.NPOP
-      pop     = (self.spawned // popSize) % self.config.NPOP
-      self.spawned += 1
-      return int(pop), 'Neural_'
 
    ############################################################################
    ### Client data

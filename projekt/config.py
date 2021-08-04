@@ -19,22 +19,22 @@ class RLlibConfig:
       return self.__class__.__name__
   
    #Policy specification
-   AGENTS = [baselines.Combat, Agent]
+   AGENTS      = [Agent]
+   EVAL_AGENTS = [baselines.Combat, Agent]
+   LOAD        = True
 
-   #Hardware Scale
+   #Hardware and debug
+   NUM_WORKERS             = 1
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
-   NUM_WORKERS             = 1
+   EVALUATION_NUM_WORKERS  = 1
    LOCAL_MODE              = False
    LOG_LEVEL               = 1
 
-   #Evaluation settings
+   #Training and evaluation settings
    EVALUATION_INTERVAL     = 1
    EVALUATION_NUM_EPISODES = 1
    EVALUATION_PARALLEL     = True
-   LOAD                    = True
-
-   #Training settings
    TRAINING_ITERATIONS     = 1000
    KEEP_CHECKPOINTS_NUM    = 5
    CHECKPOINT_FREQ         = 1
@@ -85,7 +85,7 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 30 
+   NUM_WORKERS             = 30
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = min(128, TRAIN_BATCH_SIZE)

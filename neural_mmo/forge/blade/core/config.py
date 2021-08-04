@@ -198,21 +198,11 @@ class Config(Template):
    EVALUATE             = False
    '''Flag used by evaluation mode'''
 
-   RENDER               = False
-   '''Flag used by render mode'''
-
    GENERALIZE           = True
    '''Evaluate on maps not seen during training'''
 
-   EVAL_MAPS            = 3
-   '''Number of evaluation maps'''
-
-   TRAIN_SUMMARY_ENVS   = 10
-   '''Most recent envs to use for training summaries'''
-
-   TRAIN_DATA_RESAMPLE  = 200
-   '''Number of points to resample training data'''
-
+   RENDER               = False
+   '''Flag used by render mode'''
 
    ############################################################################
    ### Terrain Generation Parameters

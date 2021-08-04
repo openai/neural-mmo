@@ -9,6 +9,7 @@ from pdb import set_trace as T
 
 from fire import Fire
 import os
+from copy import deepcopy
 
 import numpy as np
 
@@ -83,6 +84,9 @@ class Anvil():
          key           = mapPolicy(i, None)
          policies[key] = (None, obs, atns, params)
 
+      eval_config = deepcopy(config)
+      eval_config.EVALUATE = True
+      eval_config.AGENTS   = eval_config.EVAL_AGENTS
 
       #Create rllib config
       rllib_config={
@@ -102,6 +106,11 @@ class Anvil():
          'env_config': {
             'config': config
          },
+         'evaluation_config': {
+            'env_config': {
+               'config': eval_config
+            },
+         },
          'multiagent': {
             'policies': policies,
             'policy_mapping_fn': mapPolicy,
@@ -115,6 +124,7 @@ class Anvil():
          'callbacks': wrapper.RLlibLogCallbacks,
          'evaluation_interval': config.EVALUATION_INTERVAL,
          'evaluation_num_episodes': config.EVALUATION_NUM_EPISODES,
+         'evaluation_num_workers': config.EVALUATION_NUM_WORKERS,
          'evaluation_parallel_to_training': config.EVALUATION_PARALLEL,
       }
 
@@ -153,8 +163,10 @@ class Anvil():
 
    def evaluate(self, **kwargs):
       '''Evaluate a model on --EVAL_MAPS maps'''
-      self.config.EVALUATE = True
-      self.evaluator.evaluate(self.config.GENERALIZE)
+      self.config.EVALUATE            = True
+      self.config.TRAINING_ITERATIONS = 0
+      #self.evaluator.evaluate(self.config.GENERALIZE)
+      self.train(**kwargs)
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''

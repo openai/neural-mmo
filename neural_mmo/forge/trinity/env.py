@@ -36,8 +36,6 @@ class Env:
       self.config    = config
       self.overlay   = None
 
-      #self.steps = 0
-
    ############################################################################
    ### Core API
    def reset(self, idx=None, step=True):
@@ -70,7 +68,11 @@ class Env:
  
       self.quill = log.Quill()
       
-      if idx is None:
+      if idx is not None:
+         pass
+      elif self.config.EVALUATE and self.config.GENERALIZE:
+         idx = -np.random.randint(self.config.TERRAIN_EVAL_MAPS) - 1
+      else:
          idx = np.random.randint(self.config.TERRAIN_TRAIN_MAPS) + 1
 
       self.worldIdx = idx

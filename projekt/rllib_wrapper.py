@@ -19,8 +19,8 @@ from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.rllib.utils.spaces.flexdict import FlexDict
 from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
 
-from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.io.action.static import Action, Fixed
+from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.lib import overlay
 from neural_mmo.forge.blade.systems import ai
 

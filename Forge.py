@@ -9,11 +9,14 @@ from pdb import set_trace as T
 
 from fire import Fire
 import os
+from copy import deepcopy
 
 import numpy as np
 
 import projekt
+from projekt import config as base_config
 
+from neural_mmo.forge.blade.io.action.static import Action
 from neural_mmo.forge.trinity.scripted import baselines
 from neural_mmo.forge.trinity.visualize import BokehServer
 from neural_mmo.forge.trinity.evaluator import Evaluator
@@ -38,7 +41,7 @@ class Anvil():
          kwargs.pop('help')
       if 'config' in kwargs:
          config = kwargs.pop('config')
-         config = getattr(projekt.config, config)()
+         config = getattr(base_config, config)()
       else:
          config = projekt.config.LargeMaps()
       config.override(**kwargs)
@@ -67,7 +70,7 @@ class Anvil():
 
       #Create policies
       rllib.models.ModelCatalog.register_custom_model('godsword', wrapper.RLlibPolicy)
-      mapPolicy = lambda agentID: 'policy_{}'.format(agentID % config.NPOLICIES)
+      mapPolicy = lambda agentID, episode: 'policy_{}'.format(agentID % config.NPOLICIES)
 
       obs  = wrapper.observationSpace(config)
       atns = wrapper.actionSpace(config)
@@ -78,9 +81,12 @@ class Anvil():
                "agent_id": i,
                "obs_space_dict": obs,
                "act_space_dict": atns}
-         key           = mapPolicy(i)
+         key           = mapPolicy(i, None)
          policies[key] = (None, obs, atns, params)
 
+      eval_config = deepcopy(config)
+      eval_config.EVALUATE = True
+      eval_config.AGENTS   = eval_config.EVAL_AGENTS
 
       #Create rllib config
       rllib_config={
@@ -88,7 +94,7 @@ class Anvil():
          'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
          'num_gpus': config.NUM_GPUS,
          'num_envs_per_worker': 1,
-         'train_batch_size': config.TRAIN_BATCH_SIZE // 2,
+         'train_batch_size': config.TRAIN_BATCH_SIZE // 2, #RLlib bug doubles batch size
          'rollout_fragment_length': config.ROLLOUT_FRAGMENT_LENGTH,
          'sgd_minibatch_size': config.SGD_MINIBATCH_SIZE,
          'num_sgd_iter': config.NUM_SGD_ITER,
@@ -99,6 +105,11 @@ class Anvil():
          'env': 'Neural_MMO',
          'env_config': {
             'config': config
+         },
+         'evaluation_config': {
+            'env_config': {
+               'config': eval_config
+            },
          },
          'multiagent': {
             'policies': policies,
@@ -111,9 +122,10 @@ class Anvil():
             'max_seq_len': config.LSTM_BPTT_HORIZON
          },
          'callbacks': wrapper.RLlibLogCallbacks,
-         'evaluation_interval': 5,
-         'evaluation_num_episodes': 1,
-         'evaluation_parallel_to_training': False,
+         'evaluation_interval': config.EVALUATION_INTERVAL,
+         'evaluation_num_episodes': config.EVALUATION_NUM_EPISODES,
+         'evaluation_num_workers': config.EVALUATION_NUM_WORKERS,
+         'evaluation_parallel_to_training': config.EVALUATION_PARALLEL,
       }
 
       self.rllib_config  = rllib_config
@@ -128,15 +140,16 @@ class Anvil():
               os.system('cls' if os.name == 'nt' else 'clear') 
               super().report(trials, done, *sys_info)
 
+      config = self.config
       tune.run(self.trainer_class,
          config = self.rllib_config,
-         name = self.config.__class__.__name__,
-         verbose = 1,
-         stop = {'training_iteration': 1000},
-         resume = self.config.LOAD,
+         name = config.__class__.__name__,
+         verbose = config.LOG_LEVEL,
+         stop = {'training_iteration': config.TRAINING_ITERATIONS},
+         resume = config.LOAD,
          local_dir = 'experiments',
-         keep_checkpoints_num = 5,
-         checkpoint_freq = 1,
+         keep_checkpoints_num = config.KEEP_CHECKPOINTS_NUM,
+         checkpoint_freq = config.CHECKPOINT_FREQ,
          checkpoint_at_end = True,
          trial_dirname_creator = lambda _: self.trainer_class.__name__,
          progress_reporter = ConsoleLog(),
@@ -150,8 +163,10 @@ class Anvil():
 
    def evaluate(self, **kwargs):
       '''Evaluate a model on --EVAL_MAPS maps'''
-      self.config.EVALUATE = True
-      self.evaluator.evaluate(self.config.GENERALIZE)
+      self.config.EVALUATE            = True
+      self.config.TRAINING_ITERATIONS = 0
+      #self.evaluator.evaluate(self.config.GENERALIZE)
+      self.train(**kwargs)
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''

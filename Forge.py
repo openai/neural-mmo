@@ -70,7 +70,7 @@ class Anvil():
 
       #Create policies
       rllib.models.ModelCatalog.register_custom_model('godsword', wrapper.RLlibPolicy)
-      mapPolicy = lambda agentID, episode: 'policy_{}'.format(agentID % config.NPOLICIES)
+      mapPolicy = lambda agentID : 'policy_{}'.format(agentID % config.NPOLICIES)
 
       obs  = wrapper.observationSpace(config)
       atns = wrapper.actionSpace(config)
@@ -81,7 +81,7 @@ class Anvil():
                "agent_id": i,
                "obs_space_dict": obs,
                "act_space_dict": atns}
-         key           = mapPolicy(i, None)
+         key           = mapPolicy(i)
          policies[key] = (None, obs, atns, params)
 
       eval_config = deepcopy(config)

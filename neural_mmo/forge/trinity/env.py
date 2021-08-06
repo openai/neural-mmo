@@ -284,6 +284,11 @@ class Env:
          for name, stat in ent.achievements.stats:
             quill.stat(name, stat)
 
+      if not self.config.EVALUATE:
+         return
+
+      quill.stat('PolicyID', ent.agent.policyID)
+
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs
 

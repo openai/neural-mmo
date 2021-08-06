@@ -20,7 +20,8 @@ class RLlibConfig:
   
    #Policy specification
    AGENTS      = [Agent]
-   EVAL_AGENTS = [baselines.Combat, Agent]
+   EVAL_AGENTS = [baselines.Meander, baselines.Forage, baselines.Combat, Agent]
+   EVALUATE    = False #Reserved param
    LOAD        = True
 
    #Hardware and debug
@@ -65,7 +66,7 @@ class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
 
    #Memory/Batch Scale
    NUM_WORKERS             = 14
-   TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS #Bug? This gets doubled
+   TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 32
    SGD_MINIBATCH_SIZE      = 256
 
@@ -86,7 +87,8 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
 
    #Memory/Batch Scale
    NUM_WORKERS             = 30
-   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
+   NUM_WORKERS             = 1
+   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = min(128, TRAIN_BATCH_SIZE)
  

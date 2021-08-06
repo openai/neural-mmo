@@ -9,6 +9,9 @@ import neural_mmo
 
 class SequentialLoader:
     def __init__(self, items):
+        for idx, itm in enumerate(items):
+           itm.policyID = idx 
+
         self.items = items
         self.idx   = -1
 

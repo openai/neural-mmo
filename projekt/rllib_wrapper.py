@@ -6,6 +6,7 @@ from tqdm import tqdm
 import numpy as np
 import gym
 import wandb
+import trueskill
 
 import torch
 from torch import nn
@@ -28,6 +29,7 @@ from neural_mmo.forge.ethyr.torch import policy
 from neural_mmo.forge.ethyr.torch.policy import attention
 
 from neural_mmo.forge.trinity import Env, evaluator, formatting
+from neural_mmo.forge.trinity.scripted import baselines
 from neural_mmo.forge.trinity.dataframe import DataType
 from neural_mmo.forge.trinity.overlay import Overlay, OverlayRegistry
 
@@ -383,9 +385,15 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       dones['__all__'] = False
       test = config.EVALUATE or config.RENDER
       
-      horizon    = self.realm.tick >= config.TRAIN_HORIZON
-      population = len(self.realm.players) == 0
-      if not test and (horizon or population):
+      if config.EVALUATE:
+         horizon = config.EVALUATION_HORIZON
+      else:
+         horizon = config.TRAIN_HORIZON
+
+      population  = len(self.realm.players) == 0
+      hit_horizon = self.realm.tick >= horizon
+      
+      if not config.RENDER and (hit_horizon or population):
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
@@ -546,5 +554,50 @@ class RLlibLogCallbacks(DefaultCallbacks):
       assert len(base_env.envs) == 1, 'One env per worker'
       env    = base_env.envs[0]
 
-      for key, vals in env.terminal()['Stats'].items():
+      logs = env.terminal()
+      for key, vals in logs['Stats'].items():
          episode.custom_metrics[key] = np.mean(vals)
+
+      if not env.config.EVALUATE:
+         return 
+
+      agents = defaultdict(list)
+
+      stats      = logs['Stats']
+      policy_ids = stats['PolicyID']
+      scores     = stats['Achievement']
+
+      invMap = {agent.policyID: agent for agent in env.config.AGENTS}
+
+      for policyID, score in zip(policy_ids, scores):
+         policy = invMap[policyID]
+         agents[policy].append(score)
+      
+      for agent in agents:
+         agents[agent] = np.mean(agents[agent])
+
+      policies = list(agents.keys())
+      scores   = list(agents.values())
+
+      ranks   = np.argsort(scores)[::-1]
+      ratings = [tuple([policy.rating]) for policy in policies]
+      ratings = trueskill.rate(ratings, ranks)
+      ratings = [rating[0] for rating in ratings]
+
+      for agent, rating in zip(agents, ratings):
+         agent.rating = rating
+
+         name = agent.__name__
+         key  = 'SR_{}'.format(name)
+  
+      best  = baselines.Combat.rating.mu
+      worst = baselines.Meander.rating.mu
+      if best != worst:
+         scale = 1000 / (best - worst)
+      else:
+         scale = best
+      delta = 500 - worst * scale
+
+      for agent, rating in zip(agents, ratings):
+         scaled = rating.mu * scale + delta
+         episode.custom_metrics[agent.__name__] = scaled

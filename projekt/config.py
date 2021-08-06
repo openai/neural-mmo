@@ -87,7 +87,6 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
 
    #Memory/Batch Scale
    NUM_WORKERS             = 30
-   NUM_WORKERS             = 1
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = min(128, TRAIN_BATCH_SIZE)

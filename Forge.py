@@ -21,6 +21,13 @@ from neural_mmo.forge.trinity.scripted import baselines
 from neural_mmo.forge.trinity.visualize import BokehServer
 from neural_mmo.forge.trinity.evaluator import Evaluator
 
+def trainer_wrapper(trainer):
+   def train(self):
+      stats = self.train()
+
+   trainer.train = train
+   return trainer
+
 class Anvil():
    '''Neural MMO CLI powered by Google Fire
 
@@ -62,6 +69,10 @@ class Anvil():
       import ray.rllib.agents.ppo.ppo as ppo
 
       torch.set_num_threads(1)
+      os.environ['MKL_NUM_THREADS']     = '1'
+      os.environ['OMP_NUM_THREADS']     = '1'
+      os.environ['NUMEXPR_NUM_THREADS'] = '1'
+ 
       ray.init(local_mode=config.LOCAL_MODE)
 
       #Register custom env
@@ -129,6 +140,7 @@ class Anvil():
       }
 
       self.rllib_config  = rllib_config
+      #self.trainer_class = trainer_wrapper(ppo.PPOTrainer)
       self.trainer_class = ppo.PPOTrainer
       self.trainer       = self.trainer_class(rllib_config)
       self.evaluator     = wrapper.RLlibEvaluator(config, self.trainer)

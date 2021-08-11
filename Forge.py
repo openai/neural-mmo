@@ -140,8 +140,8 @@ class Anvil():
       }
 
       self.rllib_config  = rllib_config
-      #self.trainer_class = trainer_wrapper(ppo.PPOTrainer)
-      self.trainer_class = ppo.PPOTrainer
+      self.trainer_class = wrapper.RLlibTrainer
+      #self.trainer_class = ppo.PPOTrainer
       self.trainer       = self.trainer_class(rllib_config)
       self.evaluator     = wrapper.RLlibEvaluator(config, self.trainer)
 

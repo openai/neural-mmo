@@ -27,7 +27,7 @@ class RLlibConfig:
    #Hardware and debug
    NUM_WORKERS             = 1
    NUM_GPUS_PER_WORKER     = 0
-   NUM_GPUS                = 1
+   NUM_GPUS                = 0
    EVALUATION_NUM_WORKERS  = 1
    LOCAL_MODE              = False
    LOG_LEVEL               = 1
@@ -86,7 +86,7 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 30
+   NUM_WORKERS             = 3
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = min(128, TRAIN_BATCH_SIZE)

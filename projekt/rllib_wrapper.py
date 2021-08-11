@@ -546,6 +546,59 @@ class EntityValues(GlobalValues):
       requires a forward pass for every tile and will be slow on large maps'''
       super().init(zeroKey)
 
+class RLlibTrainer(ppo.PPOTrainer):
+   def __init__(self, config, env=None, logger_creator=None):
+      super().__init__(config, env, logger_creator)
+      self.env_config = config['env_config']['config']
+
+   def post_mean(self, stats):
+      for key, vals in stats.items():
+          if type(vals) == list:
+              stats[key] = np.mean(vals)
+
+   def train(self):
+      stats = super().train()
+      self.post_mean(stats['custom_metrics'])
+      return stats
+
+   def evaluate(self):
+      stat_dict = super().evaluate()
+      stats = stat_dict['evaluation']['custom_metrics']
+ 
+      name_map = {agent.__name__: agent for agent in self.env_config.EVAL_AGENTS}
+      rank_map = {agent: -1 for agent in self.env_config.EVAL_AGENTS}
+
+      for key in list(stats.keys()):
+         if key.startswith('Rank_'):
+             stat = stats[key]
+             del stats[key]
+             key = key[5:]
+             agent = name_map[key]
+             rank_map[agent] = stat
+
+      
+      best  = baselines.Combat.rating.mu
+      worst = baselines.Meander.rating.mu
+      if best != worst:
+         scale = 1000 / (best - worst)
+      else:
+         scale = best
+      delta = 500 - worst * scale
+
+      ranks   = rank_map.values()
+      ratings = [tuple([agent.rating]) for agent in rank_map]
+      ratings = trueskill.rate(ratings, ranks)
+      ratings = [rating[0] for rating in ratings]
+
+      for agent, rating in zip(rank_map, ratings):
+         agent.rating  = rating
+         scaled_rating = rating.mu * scale + delta
+
+         key  = 'SR_{}'.format(agent.__name__)
+         stats[key] = scaled_rating
+
+      return stat_dict
+
 
 ###############################################################################
 ### Logging
@@ -580,24 +633,8 @@ class RLlibLogCallbacks(DefaultCallbacks):
       scores   = list(agents.values())
 
       ranks   = np.argsort(scores)[::-1]
-      ratings = [tuple([policy.rating]) for policy in policies]
-      ratings = trueskill.rate(ratings, ranks)
-      ratings = [rating[0] for rating in ratings]
+      for agent, rank in zip(agents, ranks):
+          name = agent.__name__
+          key  = 'Rank_{}'.format(name)
+          episode.custom_metrics[key] = rank
 
-      for agent, rating in zip(agents, ratings):
-         agent.rating = rating
-
-         name = agent.__name__
-         key  = 'SR_{}'.format(name)
-  
-      best  = baselines.Combat.rating.mu
-      worst = baselines.Meander.rating.mu
-      if best != worst:
-         scale = 1000 / (best - worst)
-      else:
-         scale = best
-      delta = 500 - worst * scale
-
-      for agent, rating in zip(agents, ratings):
-         scaled = rating.mu * scale + delta
-         episode.custom_metrics[agent.__name__] = scaled

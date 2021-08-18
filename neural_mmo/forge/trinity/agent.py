@@ -12,7 +12,7 @@ class Agent:
     name     = 'Neural_'
     color    = enums.Neon.CYAN
     pop      = 0
-    rating   = trueskill.Rating()
+    rating   = trueskill.Rating(mu=1000, sigma=2*100/3)
 
     def __init__(self, config, idx):
        self.config = config

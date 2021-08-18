@@ -27,14 +27,14 @@ class RLlibConfig:
    #Hardware and debug
    NUM_WORKERS             = 1
    NUM_GPUS_PER_WORKER     = 0
-   NUM_GPUS                = 0
-   EVALUATION_NUM_WORKERS  = 1
+   NUM_GPUS                = 1
+   EVALUATION_NUM_WORKERS  = 3
    LOCAL_MODE              = False
    LOG_LEVEL               = 1
 
    #Training and evaluation settings
    EVALUATION_INTERVAL     = 1
-   EVALUATION_NUM_EPISODES = 1
+   EVALUATION_NUM_EPISODES = 3
    EVALUATION_PARALLEL     = True
    TRAINING_ITERATIONS     = 1000
    KEEP_CHECKPOINTS_NUM    = 5
@@ -68,7 +68,7 @@ class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
    NUM_WORKERS             = 14
    TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 32
-   SGD_MINIBATCH_SIZE      = 256
+   SGD_MINIBATCH_SIZE      = 128
 
    #Horizon
    TRAIN_HORIZON           = 8192
@@ -86,10 +86,10 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 3
+   NUM_WORKERS             = 28
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
-   SGD_MINIBATCH_SIZE      = min(128, TRAIN_BATCH_SIZE)
+   SGD_MINIBATCH_SIZE      = 256
  
    #Horizon
    TRAIN_HORIZON           = 1024

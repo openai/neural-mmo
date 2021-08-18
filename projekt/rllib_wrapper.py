@@ -15,6 +15,7 @@ from torch.nn.utils import rnn
 from ray import rllib
 import ray.rllib.agents.ppo.ppo as ppo
 import ray.rllib.agents.ppo.appo as appo
+import ray.rllib.agents.impala.impala as impala
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.rllib.utils.spaces.flexdict import FlexDict
@@ -61,10 +62,6 @@ class Input(nn.Module):
       #Hackey obs scaling
       self.tileWeight = torch.Tensor([1.0, 0.0, 0.02, 0.02])
       self.entWeight  = torch.Tensor([1.0, 0.0, 0.0, 0.05, 0.00, 0.02, 0.02, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3])
-      if torch.cuda.is_available():
-         self.tileWeight = self.tileWeight.cuda()
-         self.entWeight  = self.entWeight.cuda()
-
    def forward(self, inp):
       '''Produces tensor representations from an IO object
 
@@ -77,8 +74,9 @@ class Input(nn.Module):
       #Pack entities of each attribute set
       entityLookup = {}
 
-      inp['Tile']['Continuous']   *= self.tileWeight
-      inp['Entity']['Continuous'] *= self.entWeight
+      device                       = inp['Tile']['Continuous'].device
+      inp['Tile']['Continuous']   *= self.tileWeight.to(device)
+      inp['Entity']['Continuous'] *= self.entWeight.to(device)
  
       entityLookup['N'] = inp['Entity'].pop('N')
       for name, entities in inp.items():
@@ -261,15 +259,17 @@ class Recurrent(Encoder):
                          batch_first=True)
 
       #Main recurrent network
+      oldHidden = hidden
       hidden, state = self.lstm(hidden, state)
+      newHidden = hidden
 
       #Unpack (batch, seq, hidden) -> (batch x seq, hidden)
       hidden, _     = rnn.pad_packed_sequence(
                          sequence=hidden,
-                         batch_first=True)
+                         batch_first=True,
+                         total_length=T)
 
       return hidden.reshape(TB, H), state
-
 
 ###############################################################################
 ### RLlib Policy, Evaluator, Trainer
@@ -551,6 +551,20 @@ class RLlibTrainer(ppo.PPOTrainer):
       super().__init__(config, env, logger_creator)
       self.env_config = config['env_config']['config']
 
+      #1/sqrt(2)=76% win chance within beta, 95% win chance vs 3*beta=100 SR
+      trueskill.setup(mu=1000, sigma=2*100/3, beta=100/3, tau=2/3, draw_probability=0)
+
+      self.ratings = [{agent.__name__: trueskill.Rating(mu=1000, sigma=2*100/3)}
+            for agent in self.env_config.EVAL_AGENTS]
+
+      self.reset_scripted()
+
+   def reset_scripted(self):
+      for rating_dict in self.ratings:
+         for agent, rating in rating_dict.items():
+            if agent == 'Combat':
+               rating_dict[agent] = trueskill.Rating(mu=1500, sigma=1)
+
    def post_mean(self, stats):
       for key, vals in stats.items():
           if type(vals) == list:
@@ -565,37 +579,22 @@ class RLlibTrainer(ppo.PPOTrainer):
       stat_dict = super().evaluate()
       stats = stat_dict['evaluation']['custom_metrics']
  
-      name_map = {agent.__name__: agent for agent in self.env_config.EVAL_AGENTS}
-      rank_map = {agent: -1 for agent in self.env_config.EVAL_AGENTS}
-
+      ranks = {agent.__name__: -1 for agent in self.env_config.EVAL_AGENTS}
       for key in list(stats.keys()):
          if key.startswith('Rank_'):
              stat = stats[key]
              del stats[key]
-             key = key[5:]
-             agent = name_map[key]
-             rank_map[agent] = stat
+             agent = key[5:]
+             ranks[agent] = stat
 
-      
-      best  = baselines.Combat.rating.mu
-      worst = baselines.Meander.rating.mu
-      if best != worst:
-         scale = 1000 / (best - worst)
-      else:
-         scale = best
-      delta = 500 - worst * scale
+      ranks        = list(ranks.values())
+      self.ratings = trueskill.rate(self.ratings, ranks)
 
-      ranks   = rank_map.values()
-      ratings = [tuple([agent.rating]) for agent in rank_map]
-      ratings = trueskill.rate(ratings, ranks)
-      ratings = [rating[0] for rating in ratings]
-
-      for agent, rating in zip(rank_map, ratings):
-         agent.rating  = rating
-         scaled_rating = rating.mu * scale + delta
-
-         key  = 'SR_{}'.format(agent.__name__)
-         stats[key] = scaled_rating
+      self.reset_scripted()
+      for rating in self.ratings:
+         key  = 'SR_{}'.format(list(rating.keys())[0])
+         val  = list(rating.values())[0]
+         stats[key] = val.mu
 
       return stat_dict
 
@@ -632,9 +631,9 @@ class RLlibLogCallbacks(DefaultCallbacks):
       policies = list(agents.keys())
       scores   = list(agents.values())
 
-      ranks   = np.argsort(scores)[::-1]
-      for agent, rank in zip(agents, ranks):
-          name = agent.__name__
-          key  = 'Rank_{}'.format(name)
+      idxs     = np.argsort(-np.array(scores))
+
+      for rank, idx in enumerate(idxs):
+          key = 'Rank_{}'.format(policies[idx].__name__)
           episode.custom_metrics[key] = rank
 

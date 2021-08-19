@@ -31,10 +31,11 @@ class Env:
          config : A forge.blade.core.Config object or subclass object
       '''
       super().__init__()
-      self.realm     = core.Realm(config)
+      self.realm   = core.Realm(config)
 
-      self.config    = config
-      self.overlay   = None
+      self.config  = config
+      self.overlay = None
+      self.client  = None
 
    ############################################################################
    ### Core API
@@ -82,6 +83,7 @@ class Env:
       if step:
          obs, _, _, _ = self.step({})
 
+      self.obs = obs
       return obs
 
    def step(self, actions, preprocess=set(), omitDead=True):
@@ -233,6 +235,7 @@ class Env:
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
+      self.obs = obs
       return obs, rewards, dones, {}
 
    ############################################################################
@@ -332,13 +335,18 @@ class Env:
 
    ############################################################################
    ### Client data
-   @property
-   def packet(self):
+   def render(self):
       '''Data packet used by the renderer
 
       Returns:
          packet: A packet of data for the client
       '''
+      if not self.client:
+         from neural_mmo.forge.trinity.twistedserver import Application
+         self.client = Application(self) 
+
+      #self.registry.step(self.obs, pos, cmd)
+
       packet = {
             'config': self.config,
             'pos': self.overlayPos,
@@ -352,7 +360,7 @@ class Env:
          packet['overlay'] = self.overlay
          self.overlay      = None
 
-      return packet
+      self.client.update(packet)
 
    def register(self, overlay):
       '''Register an overlay to be sent to the client

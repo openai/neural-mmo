@@ -99,6 +99,7 @@ def run_tune_experiment(config):
          'custom_model_config': {'config': config},
          'max_seq_len': config.LSTM_BPTT_HORIZON
       },
+      'render_env': True,
       'callbacks': wrapper.RLlibLogCallbacks,
       'evaluation_interval': config.EVALUATION_INTERVAL,
       'evaluation_num_episodes': config.EVALUATION_NUM_EPISODES,

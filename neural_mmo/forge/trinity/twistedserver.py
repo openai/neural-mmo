@@ -80,15 +80,14 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.realm = realm
         self.frame += 1
 
-        data = self.serverPacket()
-        self.sendUpdate()
+        #data = self.serverPacket()
+        #self.sendUpdate()
 
     def serverPacket(self):
         data = self.realm.packet
         return data
 
-    def sendUpdate(self):
-        data = self.serverPacket()
+    def sendUpdate(self, data):
 
         packet               = {}
         packet['resource']   = data['resource']
@@ -113,9 +112,9 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.sendMessage(packet, False)
 
 class WSServerFactory(WebSocketServerFactory):
-    def __init__(self, ip, realm, step):
+    def __init__(self, ip, realm):
         super().__init__(ip)
-        self.realm, self.step = realm, step
+        self.realm = realm
         self.time = time.time()
         self.clients = []
 
@@ -124,23 +123,23 @@ class WSServerFactory(WebSocketServerFactory):
         self.tickRate = 0.6
         self.tick = 0
 
-        self.step(self.pos, self.cmd)
-        lc = LoopingCall(self.announce) #If this misses a tick, it waits for a whole cycle
-        lc.start(self.tickRate)
+        #self.step(self.pos, self.cmd)
+        #lc = LoopingCall(self.announce) #If this misses a tick, it waits for a whole cycle
+        #lc.start(self.tickRate)
 
-    def announce(self):
+    def update(self, packet):
         self.tick += 1
         uptime = np.round(self.tickRate*self.tick, 1)
         print('Wall Clock: ', time.time() - self.time, 'Uptime: ', uptime, ', Tick: ', self.tick)
         self.time = time.time()
 
         for client in self.clients:
-            client.sendUpdate()
+            client.sendUpdate(packet)
             if client.pos is not None:
                 self.pos = client.pos
                 self.cmd = client.cmd
 
-        self.step(self.pos, self.cmd)
+        #self.step(self.pos, self.cmd)
 
     def clientConnectionMade(self, client):
         self.clients.append(client)
@@ -149,15 +148,15 @@ class WSServerFactory(WebSocketServerFactory):
         self.clients.remove(client)
 
 class Application:
-   def __init__(self, realm, step):
+   def __init__(self, realm):
       signal(SIGINT, self.kill)
       self.realm = realm
       log.startLogging(sys.stdout)
       port = 8080
 
-      factory          = WSServerFactory(u'ws://localhost:' + str(port), realm, step)
-      factory.protocol = GodswordServerProtocol 
-      resource         = WebSocketResource(factory)
+      self.factory          = WSServerFactory(u'ws://localhost:' + str(port), realm)
+      self.factory.protocol = GodswordServerProtocol 
+      resource              = WebSocketResource(self.factory)
 
       # We server static files under "/" and our WebSocket 
       # server under "/ws" (note that Twisted uses bytes 
@@ -167,7 +166,17 @@ class Application:
       site = Site(root)
 
       reactor.listenTCP(port, site)
-      reactor.run()
+
+      import threading
+      
+      def run():
+          reactor.run()
+
+      threading.Thread(target=run).start()
+      #reactor.run()
+
+   def update(self, packet):
+      self.factory.update(packet)
 
    def kill(*args):
       print("Killed by user")

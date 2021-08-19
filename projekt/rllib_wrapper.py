@@ -377,6 +377,13 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       alpha  = config.TEAM_SPIRIT
       return alpha*team + (1.0-alpha)*individual
 
+   def render(self):
+      #self.obs = self.reset(idx=-1)
+      self.overlayPos=[256]
+      #self.registry = RLlibOverlayRegistry(
+      #      self.config, self).init(self.trainer, self.model)
+      super().render()
+
    def step(self, decisions, preprocess=None, omitDead=False):
       preprocess = {entID for entID in decisions}
       obs, rewards, dones, infos = super().step(decisions, preprocess, omitDead)

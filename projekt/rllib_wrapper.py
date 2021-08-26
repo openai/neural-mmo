@@ -30,8 +30,7 @@ from neural_mmo.forge.blade.systems import ai
 from neural_mmo.forge.ethyr.torch import policy
 from neural_mmo.forge.ethyr.torch.policy import attention
 
-from neural_mmo.forge.trinity import Env, evaluator, formatting
-from neural_mmo.forge.trinity.scripted import baselines
+from neural_mmo.forge.trinity import Env
 from neural_mmo.forge.trinity.dataframe import DataType
 from neural_mmo.forge.trinity.overlay import Overlay, OverlayRegistry
 

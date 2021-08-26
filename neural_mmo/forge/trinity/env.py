@@ -11,8 +11,9 @@ from neural_mmo.forge.blade.io.stimulus import Static
 from neural_mmo.forge.blade.io.action import static as Action
 from neural_mmo.forge.blade.systems import combat
 
-from neural_mmo.forge.blade.lib.enums import Palette
 from neural_mmo.forge.blade.lib import log
+
+from neural_mmo.forge.trinity.overlay import OverlayRegistry
 
 class Env:
    '''Environment wrapper for Neural MMO
@@ -31,11 +32,14 @@ class Env:
          config : A forge.blade.core.Config object or subclass object
       '''
       super().__init__()
-      self.realm   = core.Realm(config)
+      self.realm      = core.Realm(config)
+      self.registry   = OverlayRegistry(config, self)
 
-      self.config  = config
-      self.overlay = None
-      self.client  = None
+      self.config     = config
+      self.overlay    = None
+      self.overlayPos = [256, 256]
+      self.client     = None
+      self.obs        = None
 
    ############################################################################
    ### Core API
@@ -203,10 +207,12 @@ class Env:
       #Step: Realm, Observations, Logs
       self.dead    = self.realm.step(self.actions)
       self.actions = {}
+      self.obs     = {}
 
       obs, rewards, dones, self.raw = {}, {}, {}, {}
       for entID, ent in self.realm.players.items():
-         ob             = self.realm.dataframe.get(ent)
+         ob = self.realm.dataframe.get(ent)
+         self.obs[entID] = ob
          if ent.agent.scripted:
             atns = ent.agent(ob)
             if Action.Attack in atns:
@@ -341,12 +347,6 @@ class Env:
       Returns:
          packet: A packet of data for the client
       '''
-      if not self.client:
-         from neural_mmo.forge.trinity.twistedserver import Application
-         self.client = Application(self) 
-
-      #self.registry.step(self.obs, pos, cmd)
-
       packet = {
             'config': self.config,
             'pos': self.overlayPos,
@@ -360,7 +360,13 @@ class Env:
          packet['overlay'] = self.overlay
          self.overlay      = None
 
-      self.client.update(packet)
+      if not self.client:
+         from neural_mmo.forge.trinity.twistedserver import Application
+         self.client = Application(self) 
+
+      pos, cmd = self.client.update(packet)
+      if self.obs:
+         self.registry.step(self.obs, pos, cmd)
 
    def register(self, overlay):
       '''Register an overlay to be sent to the client

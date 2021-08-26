@@ -99,12 +99,13 @@ def run_tune_experiment(config):
          'custom_model_config': {'config': config},
          'max_seq_len': config.LSTM_BPTT_HORIZON
       },
-      'render_env': True,
+      'render_env': config.RENDER,
       'callbacks': wrapper.RLlibLogCallbacks,
       'evaluation_interval': config.EVALUATION_INTERVAL,
       'evaluation_num_episodes': config.EVALUATION_NUM_EPISODES,
       'evaluation_num_workers': config.EVALUATION_NUM_WORKERS,
       'evaluation_parallel_to_training': config.EVALUATION_PARALLEL,
+      'create_env_on_driver': False,
    }
 
    tune.run(wrapper.RLlibTrainer,
@@ -152,28 +153,30 @@ class Anvil():
       config.override(**kwargs)
       self.config = config
 
+      #Round and round the num_threads flags go
+      #Which are needed nobody knows!
       torch.set_num_threads(1)
       os.environ['MKL_NUM_THREADS']     = '1'
       os.environ['OMP_NUM_THREADS']     = '1'
       os.environ['NUMEXPR_NUM_THREADS'] = '1'
  
    def train(self, **kwargs):
-      '''Train a model starting with the current value of --MODEL'''
+      '''Train a model'''
       run_tune_experiment(self.config)
 
    def evaluate(self, **kwargs):
-      '''Evaluate a model on --EVAL_MAPS maps'''
+      '''Evaluate a model against specified opponents'''
       self.config.TRAINING_ITERATIONS     = 0
       self.config.EVALUATE                = True
-      self.config.EVALUATION_NUM_EPISODES = 30
       self.config.EVALUATION_NUM_WORKERS  = self.config.NUM_WORKERS
 
       run_tune_experiment(self.config)
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''
-      self.config.RENDER = True
-      self.evaluator.render()
+      self.config.RENDER                  = True
+      self.config.NUM_WORKERS             = 1
+      self.evaluate(**kwargs)
 
    def generate(self, **kwargs):
       '''Generate game maps for the current --config setting'''

@@ -125,6 +125,7 @@ class PlayerManager(EntityGroup):
    def __init__(self, config, realm):
       super().__init__(config, realm)
 
+      self.palette = Palette(config.NPOP)
       self.agents = config.AGENT_LOADER(config.AGENTS) 
       self.realm  = realm
       self.idx    = 1

@@ -54,7 +54,6 @@ class RLlibConfig:
    ACHIEVEMENT_SCALE       = 1.0/15.0
 
 
-
 class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
    '''Large scale Neural MMO training setting
 
@@ -86,7 +85,7 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 1 # 28
+   NUM_WORKERS             = 5 # 28
    TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = 128

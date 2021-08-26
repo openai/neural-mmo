@@ -121,7 +121,7 @@ class Config(Template):
    NPOP                    = 1
    '''Number of distinct populations spawnable in the environment'''
 
-   COOPERATIVE             = True
+   COOPERATIVE             = False
    '''Whether to treat populations as teams'''
 
    @property

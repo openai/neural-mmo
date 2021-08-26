@@ -1,5 +1,3 @@
-from pdb import set_trace as TT
-
 from collections import defaultdict
 
 from tqdm import tqdm
@@ -13,6 +11,9 @@ from torch import nn
 from torch.nn.utils import rnn
 
 from ray import rllib
+from ray.util import pdb
+TT = pdb.set_trace
+
 import ray.rllib.agents.ppo.ppo as ppo
 import ray.rllib.agents.ppo.appo as appo
 import ray.rllib.agents.impala.impala as impala
@@ -62,6 +63,7 @@ class Input(nn.Module):
       #Hackey obs scaling
       self.tileWeight = torch.Tensor([1.0, 0.0, 0.02, 0.02])
       self.entWeight  = torch.Tensor([1.0, 0.0, 0.0, 0.05, 0.00, 0.02, 0.02, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3])
+
    def forward(self, inp):
       '''Produces tensor representations from an IO object
 
@@ -305,45 +307,16 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
    def attention(self):
       return self.model.attn
 
-class RLlibEvaluator(evaluator.Base):
-   '''Test-time evaluation with communication to
-   the Unity3D client. Makes use of batched GPU inference'''
-   def __init__(self, config, trainer):
-      super().__init__(config)
-      self.trainer  = trainer
-
-      self.model    = self.trainer.get_policy('policy_0').model
-      self.env      = RLlibEnv({'config': config})
-      self.state    = {} 
-
-   def render(self):
-      self.obs = self.env.reset(idx=-1)
-      self.registry = RLlibOverlayRegistry(
-            self.config, self.env).init(self.trainer, self.model)
-      super().render()
-
-   def tick(self, pos, cmd):
-      '''Simulate a single timestep
-
-      Args:
-          pos: Camera position (r, c) from the server)
-          cmd: Console command from the server
-      '''
-      if len(self.obs) == 0:
-         actions = {}
-      else:
-         actions, self.state, _ = self.trainer.compute_actions(
-             self.obs, state=self.state, policy_id='policy_0')
-
-      super().tick(self.obs, actions, pos, cmd, preprocess=None)
-
 
 ###############################################################################
 ### RLlib Wrappers: Env, Overlays
 class RLlibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
+
+   def reset(self):
       super().__init__(self.config)
+      return super().reset()
 
    def reward(self, ent):
       config      = self.config
@@ -376,13 +349,6 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
 
       alpha  = config.TEAM_SPIRIT
       return alpha*team + (1.0-alpha)*individual
-
-   def render(self):
-      #self.obs = self.reset(idx=-1)
-      self.overlayPos=[256]
-      #self.registry = RLlibOverlayRegistry(
-      #      self.config, self).init(self.trainer, self.model)
-      super().render()
 
    def step(self, decisions, preprocess=None, omitDead=False):
       preprocess = {entID for entID in decisions}
@@ -441,8 +407,8 @@ def actionSpace(config):
 
 class RLlibOverlayRegistry(OverlayRegistry):
    '''Host class for RLlib Map overlays'''
-   def __init__(self, config, realm):
-      super().__init__(config, realm)
+   def __init__(self, realm):
+      super().__init__(realm.config, realm)
 
       self.overlays['values']       = Values
       self.overlays['attention']    = Attention
@@ -552,6 +518,7 @@ class EntityValues(GlobalValues):
       '''Compute a global value function map excluding tiles. This
       requires a forward pass for every tile and will be slow on large maps'''
       super().init(zeroKey)
+
 
 class RLlibTrainer(ppo.PPOTrainer):
    def __init__(self, config, env=None, logger_creator=None):

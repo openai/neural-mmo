@@ -105,7 +105,6 @@ def run_tune_experiment(config):
       'evaluation_num_episodes': config.EVALUATION_NUM_EPISODES,
       'evaluation_num_workers': config.EVALUATION_NUM_WORKERS,
       'evaluation_parallel_to_training': config.EVALUATION_PARALLEL,
-      'create_env_on_driver': False,
    }
 
    tune.run(wrapper.RLlibTrainer,

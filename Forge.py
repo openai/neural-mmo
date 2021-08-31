@@ -72,7 +72,7 @@ def run_tune_experiment(config):
       'num_gpus_per_worker': config.NUM_GPUS_PER_WORKER,
       'num_gpus': config.NUM_GPUS,
       'num_envs_per_worker': 1,
-      'train_batch_size': config.TRAIN_BATCH_SIZE // 2, #RLlib bug doubles batch size
+      'train_batch_size': config.TRAIN_BATCH_SIZE,
       'rollout_fragment_length': config.ROLLOUT_FRAGMENT_LENGTH,
       'sgd_minibatch_size': config.SGD_MINIBATCH_SIZE,
       'num_sgd_iter': config.NUM_SGD_ITER,
@@ -92,7 +92,7 @@ def run_tune_experiment(config):
       'multiagent': {
          'policies': policies,
          'policy_mapping_fn': mapPolicy,
-         'count_steps_by': 'env_steps'
+         'count_steps_by': 'agent_steps'
       },
       'model': {
          'custom_model': 'godsword',
@@ -175,7 +175,6 @@ class Anvil():
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''
-      T()
       self.config.RENDER                  = True
       self.config.NUM_WORKERS             = 1
       self.evaluate(**kwargs)

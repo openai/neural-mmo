@@ -20,7 +20,7 @@ class RLlibConfig:
 
    #Checkpointing. Resume will load the latest trial, e.g. to continue training
    #Restore (overrides resume) will force load a specific checkpoint (e.g. for rendering)
-   RESUME      = True
+   RESUME      = False
    RESTORE     = 'experiments/CompetitionRound1/Dev_9fe1/checkpoint_001000/checkpoint-1000'
 
    #Policy specification
@@ -69,7 +69,7 @@ class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
 
    #Memory/Batch Scale
    NUM_WORKERS             = 14
-   TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS
+   TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 32
    SGD_MINIBATCH_SIZE      = 128
 
@@ -89,8 +89,8 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 28
-   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS
+   NUM_WORKERS             = 5
+   TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = 128
  

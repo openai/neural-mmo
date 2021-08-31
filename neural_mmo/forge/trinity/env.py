@@ -347,6 +347,10 @@ class Env:
       Returns:
          packet: A packet of data for the client
       '''
+      #RLlib likes rendering for no reason
+      if not self.config.RENDER:
+         return 
+
       packet = {
             'config': self.config,
             'pos': self.overlayPos,

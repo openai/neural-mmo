@@ -11,8 +11,7 @@ from torch import nn
 from torch.nn.utils import rnn
 
 from ray import rllib
-from ray.util import pdb
-TT = pdb.set_trace
+from pdb import set_trace as TT
 
 import ray.rllib.agents.ppo.ppo as ppo
 import ray.rllib.agents.ppo.appo as appo
@@ -312,10 +311,7 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 class RLlibEnv(Env, rllib.MultiAgentEnv):
    def __init__(self, config):
       self.config = config['config']
-
-   def reset(self):
       super().__init__(self.config)
-      return super().reset()
 
    def reward(self, ent):
       config      = self.config

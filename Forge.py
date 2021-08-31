@@ -112,12 +112,13 @@ def run_tune_experiment(config):
       name = config.__class__.__name__,
       verbose = config.LOG_LEVEL,
       stop = {'training_iteration': config.TRAINING_ITERATIONS},
-      resume = config.LOAD,
+      resume = config.RESUME,
+      restore= config.RESTORE,
       local_dir = 'experiments',
       keep_checkpoints_num = config.KEEP_CHECKPOINTS_NUM,
       checkpoint_freq = config.CHECKPOINT_FREQ,
       checkpoint_at_end = True,
-      trial_dirname_creator = lambda _: 'Dev',
+      trial_dirname_creator = lambda _: 'Run',
       progress_reporter = ConsoleLog(),
       reuse_actors = True,
       callbacks=[WandbLoggerCallback(
@@ -168,11 +169,13 @@ class Anvil():
       self.config.TRAINING_ITERATIONS     = 0
       self.config.EVALUATE                = True
       self.config.EVALUATION_NUM_WORKERS  = self.config.NUM_WORKERS
+      self.config.EVALUATION_NUM_EPISODES = 3
 
       run_tune_experiment(self.config)
 
    def render(self, **kwargs):
       '''Start a WebSocket server that autoconnects to the 3D Unity client'''
+      T()
       self.config.RENDER                  = True
       self.config.NUM_WORKERS             = 1
       self.evaluate(**kwargs)

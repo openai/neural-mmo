@@ -4,12 +4,14 @@ from neural_mmo.forge.trinity.agent import Agent
 from neural_mmo.forge.trinity.scripted import behavior, move, attack, utils, io
 from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.io.action import static as Action
+from neural_mmo.forge.blade.lib import enums
 
 class Scripted(Agent):
     '''Template class for scripted models.
 
     You may either subclass directly or mirror the __call__ function'''
     scripted = True
+    color    = enums.Neon.SKY
     def __init__(self, config, idx):
         '''
         Args:
@@ -137,6 +139,7 @@ class Scripted(Agent):
             self.spawnC = io.Observation.attribute(agent, Stimulus.Entity.C)
 
 class Random(Scripted):
+    name = 'Random_'
     '''Moves randomly'''
     def __call__(self, obs):
         super().__call__(obs)
@@ -145,6 +148,7 @@ class Random(Scripted):
         return self.actions
 
 class Meander(Scripted):
+    name = 'Meander_'
     '''Moves randomly on safe terrain'''
     def __call__(self, obs):
         super().__call__(obs)
@@ -154,6 +158,7 @@ class Meander(Scripted):
 
 class ForageNoExplore(Scripted):
     '''Forages using Dijkstra's algorithm'''
+    name = 'ForageNE_'
     def __call__(self, obs):
         super().__call__(obs)
 
@@ -163,6 +168,7 @@ class ForageNoExplore(Scripted):
 
 class Forage(Scripted):
     '''Forages using Dijkstra's algorithm and actively explores'''
+    name = 'Forage_'
     def __call__(self, obs):
         super().__call__(obs)
 
@@ -175,6 +181,7 @@ class Forage(Scripted):
 
 class CombatNoExplore(Scripted):
     '''Forages using Dijkstra's algorithm and fights nearby agents'''
+    name = 'CombatNE_'
     def __call__(self, obs):
         super().__call__(obs)
 
@@ -187,6 +194,7 @@ class CombatNoExplore(Scripted):
  
 class Combat(Scripted):
     '''Forages, fights, and explores'''
+    name = 'Combat_'
     def __call__(self, obs):
         super().__call__(obs)
 
@@ -198,6 +206,7 @@ class Combat(Scripted):
         return self.actions
 
 class CombatTribrid(Scripted):
+    name = 'CombatTri_'
     '''Forages, fights, and explores.
 
     Uses a slightly more sophisticated attack routine'''

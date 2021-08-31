@@ -17,17 +17,21 @@ class RLlibConfig:
    @property
    def MODEL(self):
       return self.__class__.__name__
-  
+
+   #Checkpointing. Resume will load the latest trial, e.g. to continue training
+   #Restore (overrides resume) will force load a specific checkpoint (e.g. for rendering)
+   RESUME      = True
+   RESTORE     = 'experiments/CompetitionRound1/Dev_9fe1/checkpoint_001000/checkpoint-1000'
+
    #Policy specification
    AGENTS      = [Agent]
    EVAL_AGENTS = [baselines.Meander, baselines.Forage, baselines.Combat, Agent]
    EVALUATE    = False #Reserved param
-   LOAD        = True
 
    #Hardware and debug
    NUM_WORKERS             = 1
    NUM_GPUS_PER_WORKER     = 0
-   NUM_GPUS                = 1
+   NUM_GPUS                = 0
    EVALUATION_NUM_WORKERS  = 3
    LOCAL_MODE              = False
    LOG_LEVEL               = 1

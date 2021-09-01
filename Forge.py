@@ -140,10 +140,12 @@ class Anvil():
    to this demo are available in projekt/config.py. 
 
    The --config flag may be used to load an entire group of options at once.
-   The Debug, SmallMaps, and LargeMaps options are included in this demo with
-   the latter being the default -- or write your own in projekt/config.py
+   Select one of the defaults from projekt/config.py or write your own.
    '''
    def __init__(self, **kwargs):
+      if 'help' in kwargs:
+         return 
+
       assert 'config' in kwargs, 'Specify a config'
       config = kwargs.pop('config')
       config = getattr(base_config, config)()
@@ -158,11 +160,11 @@ class Anvil():
       os.environ['NUMEXPR_NUM_THREADS'] = '1'
  
    def train(self, **kwargs):
-      '''Train a model'''
+      '''Train a model using the current --config setting'''
       run_tune_experiment(self.config)
 
    def evaluate(self, **kwargs):
-      '''Evaluate a model against specified opponents'''
+      '''Evaluate a model against EVAL_AGENTS models'''
       self.config.TRAINING_ITERATIONS     = 0
       self.config.EVALUATE                = True
       self.config.EVALUATION_NUM_WORKERS  = self.config.NUM_WORKERS

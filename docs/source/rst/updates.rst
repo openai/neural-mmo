@@ -69,13 +69,13 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
          - Changed batching mode to agent steps, yielding a large policy improvement
    - Trinity:
       - Added support for simulations with both scripted and trained agents
-      - Added ability to name scripted agents based on their policy  
+      - Added ability to name scripted agents based on their policy
    - Embyr:
-      - Minor aesthetic changes to prefer a flat-shaded style 
+      - Minor aesthetic changes to prefer a flat-shaded style
       - Broke some overlay features :/ RLlib bug under construction
- 
+
 **v1.5.1:** Competition Build
-   - Blade: 
+   - Blade:
       - Modularized configs to enable dynamic environment customization
       - Reworked terrain generation to create more diverse terrain
       - Increased default map and population size

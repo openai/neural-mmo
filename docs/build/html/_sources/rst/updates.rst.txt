@@ -60,8 +60,22 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
 
 .. figure:: /resource/legacy/v1-5_env.png
 
+**v1.5.1:** Ray Tune and WanDB Integrations
+  - Blade:
+      - /projekt
+         - Replaced Bokeh dashboard with WanDB integration
+         - Wrapped RLlib trainers in Ray Tune to enable parallel evaluation during training
+         - Added Skill Rating (SR) metric for direct comparison to scripted baselines
+         - Changed batching mode to agent steps, yielding a large policy improvement
+   - Trinity:
+      - Added support for simulations with both scripted and trained agents
+      - Added ability to name scripted agents based on their policy
+   - Embyr:
+      - Minor aesthetic changes to prefer a flat-shaded style
+      - Broke some overlay features :/ RLlib bug under construction
+
 **v1.5.1:** Competition Build
-   - Blade: 
+   - Blade:
       - Modularized configs to enable dynamic environment customization
       - Reworked terrain generation to create more diverse terrain
       - Increased default map and population size

@@ -91,7 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-generate-environments"> Generate Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-create-policies"> Create Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-evaluate-agents"> Evaluate Agents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-visualization-results"> Visualization Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul class="current">
@@ -229,8 +229,8 @@
 <span id="scripted-baselines"></span><h1>Scripted Baselines<a class="headerlink" href="#module-neural_mmo.forge.trinity.scripted.baselines" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Scripted">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Scripted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Scripted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.agent.Agent</span></code></p>
 <p>Template class for scripted models.</p>
 <p>You may either subclass directly or mirror the __call__ function</p>
 <dl class="py method">
@@ -297,9 +297,14 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Random">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Random</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Random</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
-<p>Moves randomly</p>
+<dl class="py attribute">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Random.name">
+<code class="sig-name descname">name</code><em class="property"> = 'Random_'</em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves randomly</p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting">
 <code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Random.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
@@ -364,9 +369,14 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Meander">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Meander</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Meander</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
-<p>Moves randomly on safe terrain</p>
+<dl class="py attribute">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.name">
+<code class="sig-name descname">name</code><em class="property"> = 'Meander_'</em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves randomly on safe terrain</p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting">
 <code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Meander.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
@@ -431,7 +441,7 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">ForageNoExplore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">ForageNoExplore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.ForageNoExplore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages using Dijkstra’s algorithm</p>
 <dl class="py method">
@@ -498,7 +508,7 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Forage">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Forage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Forage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Forage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages using Dijkstra’s algorithm and actively explores</p>
 <dl class="py method">
@@ -565,7 +575,7 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">CombatNoExplore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">CombatNoExplore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatNoExplore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages using Dijkstra’s algorithm and fights nearby agents</p>
 <dl class="py method">
@@ -632,7 +642,7 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.Combat">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Combat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">Combat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.Combat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
 <p>Forages, fights, and explores</p>
 <dl class="py method">
@@ -699,10 +709,8 @@
 
 <dl class="py class">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid">
-<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">CombatTribrid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">neural_mmo.forge.trinity.scripted.baselines.</code><code class="sig-name descname">CombatTribrid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#neural_mmo.forge.trinity.scripted.baselines.Scripted" title="neural_mmo.forge.trinity.scripted.baselines.Scripted"><code class="xref py py-class docutils literal notranslate"><span class="pre">neural_mmo.forge.trinity.scripted.baselines.Scripted</span></code></a></p>
-<p>Forages, fights, and explores.</p>
-<p>Uses a slightly more sophisticated attack routine</p>
 <dl class="py method">
 <dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting">
 <code class="sig-name descname">adaptive_control_and_targeting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">explore</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.adaptive_control_and_targeting" title="Permalink to this definition">¶</a></dt>
@@ -761,6 +769,13 @@
 <dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak">
 <code class="sig-name descname">target_weak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.target_weak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target the nearest agent if it is weak</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.name">
+<code class="sig-name descname">name</code><em class="property"> = 'CombatTri_'</em><a class="headerlink" href="#neural_mmo.forge.trinity.scripted.baselines.CombatTribrid.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forages, fights, and explores.</p>
+<p>Uses a slightly more sophisticated attack routine</p>
 </dd></dl>
 
 </dd></dl>

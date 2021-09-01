@@ -28,12 +28,12 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Project information -----------------------------------------------------
 
-project = 'Neural MMO v1.5'
+project = 'Neural MMO v1.5.2'
 copyright = '2020, Joseph Suarez'
 author = 'Joseph Suarez'
 
 # The full version, including alpha/beta/rc tags
-release = '1.5.1'
+release = '1.5.2'
 
 # -- General configuration ---------------------------------------------------
 

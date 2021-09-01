@@ -2,7 +2,11 @@ from pdb import set_trace as T
 
 from neural_mmo.forge.blade import core
 from neural_mmo.forge.blade.core import config
-
+from neural_mmo.forge.blade.io.stimulus.static import Stimulus
+from neural_mmo.forge.trinity.scripted import baselines
+from neural_mmo.forge.trinity.agent import Agent
+from neural_mmo.forge.blade.systems.ai import behavior
+from projekt import rllib_wrapper
 
 class RLlibConfig:
    '''Base config for RLlib Models
@@ -13,16 +17,32 @@ class RLlibConfig:
    @property
    def MODEL(self):
       return self.__class__.__name__
-  
-   #Hardware Scale
+
+   #Checkpointing. Resume will load the latest trial, e.g. to continue training
+   #Restore (overrides resume) will force load a specific checkpoint (e.g. for rendering)
+   RESUME      = False
+   RESTORE     = 'experiments/CompetitionRound1/Dev_9fe1/checkpoint_001000/checkpoint-1000'
+
+   #Policy specification
+   AGENTS      = [Agent]
+   EVAL_AGENTS = [baselines.Meander, baselines.Forage, baselines.Combat, Agent]
+   EVALUATE    = False #Reserved param
+
+   #Hardware and debug
+   NUM_WORKERS             = 1
    NUM_GPUS_PER_WORKER     = 0
    NUM_GPUS                = 1
-   NUM_WORKERS             = 1
+   EVALUATION_NUM_WORKERS  = 3
    LOCAL_MODE              = False
-   LOAD                    = True
+   LOG_LEVEL               = 1
 
-   #Memory/Batch Scale
-   TRAIN_EPOCHS            = 10000
+   #Training and evaluation settings
+   EVALUATION_INTERVAL     = 1
+   EVALUATION_NUM_EPISODES = 3
+   EVALUATION_PARALLEL     = True
+   TRAINING_ITERATIONS     = 1000
+   KEEP_CHECKPOINTS_NUM    = 5
+   CHECKPOINT_FREQ         = 1
    LSTM_BPTT_HORIZON       = 16
    NUM_SGD_ITER            = 1
 
@@ -48,17 +68,17 @@ class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
    scale multiagent research even on relatively modest hardware'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 1 #16
-   TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS #Bug? This gets doubled
+   NUM_WORKERS             = 14
+   TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 32
-   SGD_MINIBATCH_SIZE      = 256
+   SGD_MINIBATCH_SIZE      = 128
 
    #Horizon
    TRAIN_HORIZON           = 8192
    EVALUATION_HORIZON      = 8192
 
 
-class SmallMaps(config.SmallMaps, RLlibConfig, config.AllGameSystems):
+class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    '''Small scale Neural MMO training setting
 
    Features up to 128 concurrent agents and 32 concurrent NPCs,
@@ -69,10 +89,10 @@ class SmallMaps(config.SmallMaps, RLlibConfig, config.AllGameSystems):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 6 #32
-   TRAIN_BATCH_SIZE        = 256 * NUM_WORKERS #Bug? This gets doubled
+   NUM_WORKERS             = 28
+   TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
-   SGD_MINIBATCH_SIZE      = min(256, TRAIN_BATCH_SIZE)
+   SGD_MINIBATCH_SIZE      = 128
  
    #Horizon
    TRAIN_HORIZON           = 1024
@@ -98,8 +118,7 @@ class Debug(SmallMaps, config.AllGameSystems):
 
 
 ### AICrowd competition settings
-class Competition(config.AllGameSystems, config.Achievement): pass
-class CompetitionRound1(SmallMaps, Competition):
+class CompetitionRound1(config.Achievement, SmallMaps):
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -107,7 +126,7 @@ class CompetitionRound1(SmallMaps, Competition):
    NENT                    = 128
    NPOP                    = 1
 
-class CompetitionRound2(SmallMaps, Competition):
+class CompetitionRound2(config.Achievement, SmallMaps):
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -116,7 +135,7 @@ class CompetitionRound2(SmallMaps, Competition):
    NPOP                    = 16
    COOPERATIVE             = True
 
-class CompetitionRound3(LargeMaps, Competition):
+class CompetitionRound3(config.Achievement, LargeMaps):
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT

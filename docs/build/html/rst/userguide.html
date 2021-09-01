@@ -114,11 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#evaluation-distribution">Evaluation Distribution</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#icon-visualization-results"> Visualization Results</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dashboard-and-statistics">Dashboard and Statistics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#rendering-and-overlays">Rendering and Overlays</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -254,6 +250,13 @@
 <p><strong>Abstract:</strong> Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games – self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><strong>New in v1.5.2:</strong></dt><dd><ul class="simple">
+<li><p>Create a file wandb_api_key in the repo root and paste in your WanDB API key. This new integration is now so important to logging and evaluation that we are requiring it by default. Do not commit this file.</p></li>
+<li><p>We coincidentally now require ray v1.5.2 (not v1.6). You will have to make one small change to the rllib metrics file (usually ~/anaconda3/lib/python3.8/site-packages/ray/rllib/evaluation/metrics.py): add <cite>custom_metrics[k] = filt; continue</cite> after line 175.</p></li>
+</ul>
+</dd>
+</dl>
 <p>Tested on Ubuntu 20.04, Windows 10 + WSL, and MacOS</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Competition setup</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
@@ -271,7 +274,7 @@
 </div>
 <div class="literal-block-wrapper docutils container" id="id6">
 <div class="code-block-caption"><span class="caption-text">Download the UnityClient client</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">single</span><span class="o">-</span><span class="n">branch</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">branch</span> <span class="n">v1</span><span class="o">.</span><span class="mf">5.1</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">single</span><span class="o">-</span><span class="n">branch</span> <span class="o">--</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">branch</span> <span class="n">v1</span><span class="o">.</span><span class="mf">5.2</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jsuarez5341</span><span class="o">/</span><span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span>
 
 <span class="c1">#If not on WSL:</span>
 <span class="n">mv</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">-</span><span class="n">client</span> <span class="n">neural</span><span class="o">-</span><span class="n">mmo</span><span class="o">/</span><span class="n">forge</span><span class="o">/</span><span class="n">embyr</span>
@@ -296,10 +299,10 @@
 </pre></div>
 </div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>NAME
-    python Forge.py --help - Neural MMO CLI powered by Google Fire
+    Forge.py --help - Neural MMO CLI powered by Google Fire
 
 SYNOPSIS
-    python Forge.py --help - GROUP | COMMAND
+    Forge.py --help - COMMAND
 
 DESCRIPTION
     Main file for the RLlib demo included with Neural MMO.
@@ -311,23 +314,13 @@ DESCRIPTION
     to this demo are available in projekt/config.py.
 
     The --config flag may be used to load an entire group of options at once.
-    The Debug, SmallMaps, and LargeMaps options are included in this demo with
-    the latter being the default -- or write your own in projekt/config.py
-
-GROUPS
-    GROUP is one of the following:
-
-     config
-       Large scale Neural MMO training setting
+    Select one of the defaults from projekt/config.py or write your own.
 
 COMMANDS
     COMMAND is one of the following:
 
      evaluate
-       Evaluate a model on --EVAL_MAPS maps from the training set
-
-     generalize
-       Evaluate a model on --EVAL_MAPS maps not seen during training
+       Evaluate a model against EVAL_AGENTS models
 
      generate
        Generate game maps for the current --config setting
@@ -336,10 +329,7 @@ COMMANDS
        Start a WebSocket server that autoconnects to the 3D Unity client
 
      train
-       Train a model starting with the current value of --MODEL
-
-     visualize
-       Web dashboard for the latest evaluation/generalization results
+       Train a model using the current --config setting
 </pre></div>
 </div>
 </div>
@@ -404,7 +394,7 @@ Generating 256 training and 64 evaluation maps:
 <img alt="../_images/map1.png" src="../_images/map1.png" />
 <p class="caption"><span class="caption-text">Example map from resource/maps/procedural-small/map1/map.png</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
-<p>Terrain generation is controlled by a number of parameters prefixed with <a href="#id18"><span class="problematic" id="id19">TERRAIN_</span></a>. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in neural_mmo/forgeblade/core/terrain.py.</p>
+<p>Terrain generation is controlled by a number of parameters prefixed with <a href="#id13"><span class="problematic" id="id14">TERRAIN_</span></a>. The config documentation details them all, and you can experiment with larger modifications to the procedural generation source in neural_mmo/forgeblade/core/terrain.py.</p>
 </div>
 </div>
 <div class="section" id="icon-create-policies">
@@ -423,69 +413,15 @@ Generating 256 training and 64 evaluation maps:
 <div class="section" id="rllib-integration">
 <h2>RLlib Integration<a class="headerlink" href="#rllib-integration" title="Permalink to this headline">¶</a></h2>
 <p>The baseline model and associated training and evaluation code in projekt/rllib_wrapper.py demonstrate how to use RLlib with Neural MMO. Note that RLlib is not a hard dependency of the platform: Neural MMO provides an otherwise-standard Gym interface extended for multiagent. That said, all of our trained baselines rely on RLlib, and we strongly suggest using it unless you fancy writing your own segmented trajectory collectors, hierarchical observation/action processing, variable agent population batching, etc.</p>
-<p>Evaluating on canonical configs will load the associated pretrained baseline by default. To reproduce our baselines by training from scratch:</p>
+<p>To re-evaluate or re-train the pretrained baseline:</p>
 <div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">Train on small and large game maps</span><a class="headerlink" href="#id11" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">train</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMultimodalSkills</span> <span class="o">--</span><span class="n">LOAD</span><span class="o">=</span><span class="kc">False</span>
-<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">LargeMultimodalSkills</span> <span class="o">--</span><span class="n">LOAD</span><span class="o">=</span><span class="kc">False</span>
+<div class="code-block-caption"><span class="caption-text">Training and evaluation through Ray Tune with WanDB logging</span><a class="headerlink" href="#id11" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">evaluate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">CompetitionRound1</span>
+<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">train</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">CompetitionRound1</span> <span class="o">--</span><span class="n">RESTORE</span><span class="o">=</span><span class="kc">None</span>
 </pre></div>
 </div>
 </div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>     ___           ___           ___           ___
-    /__/\         /__/\         /__/\         /  /\
-    \  \:\       |  |::\       |  |::\       /  /::\     An open source
-     \  \:\      |  |:|:\      |  |:|:\     /  /:/\:\    project originally
- _____\__\:\   __|__|:|\:\   __|__|:|\:\   /  /:/  \:\   founded by Joseph Suarez
-/__/::::::::\ /__/::::| \:\ /__/::::| \:\ /__/:/ \__\:\  and formalized at OpenAI
-\  \:\~~\~~\/ \  \:\~~\__\/ \  \:\~~\__\/ \  \:\ /  /:/
- \  \:\  ~~~   \  \:\        \  \:\        \  \:\  /:/   Now developed and
-  \  \:\        \  \:\        \  \:\        \  \:\/:/    maintained at MIT in
-   \  \:\        \  \:\        \  \:\        \  \::/     Phillip Isola&#39;s lab
-    \__\/         \__\/         \__\/         \__\/
-
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-▏Epoch: 16▕▏Sample: 8923.8/s (64.0s)▕▏Train: 35.4/s (235.2s)▕
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-   ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
-   ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
-   ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
-   ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
-   ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
-   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-▏Epoch: 17▕▏Sample: 8910.2/s (62.2s)▕▏Train: 33.7/s (227.8s)▕
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-   ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
-   ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
-   ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
-   ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
-   ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
-   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-▏Epoch: 18▕▏Sample: 8885.9/s (59.5s)▕▏Train: 32.4/s (217.2s)▕
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-   ▏Population  ▕▏Min:      1.0▕▏Max:    103.0▕▏Mean:     51.6▕▏Std:     21.9▕
-   ▏Lifetime    ▕▏Min:      0.0▕▏Max:    998.0▕▏Mean:     50.8▕▏Std:     69.9▕
-   ▏Skilling    ▕▏Min:     10.0▕▏Max:     46.5▕▏Mean:     14.3▕▏Std:      4.9▕
-   ▏Combat      ▕▏Min:      3.0▕▏Max:     10.0▕▏Mean:      3.2▕▏Std:      0.5▕
-   ▏Equipment   ▕▏Min:      0.0▕▏Max:      8.0▕▏Mean:      0.0▕▏Std:      0.1▕
-   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-▏Neural MMO v1.5▕▏Epochs: 18.0▕▏kSamples: 236.8▕▏Sample Time: 1022.2▕▏Learn Time: 3797.6▕
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-</pre></div>
-</div>
-<p>The training monitor above summarizes wall-clock time spent on sampling vs training and displays performance for the last three epochs. You can train reasonably good small-map models in a few hours and decent large-map models overnight on a single desktop with one GPU. See Baselines for exact training times and performances of our models.</p>
-<dl class="simple">
-<dt>Note:</dt><dd><ul class="simple">
-<li><p>Training from scratch will overwrite the baseline models. Override the MODEL property or create a copy of the config to avoid this.</p></li>
-<li><p>The training monitor receives performance updates when environments reset, which is independent of epoch boundaries. As such, multiple contiguous epochs may have identical summary statistics.</p></li>
-</ul>
-</dd>
-</dl>
+<p>If a job crashes, you can resume training with <cite>–RESUME=True –RESTORE=None</cite></p>
 </div>
 </div>
 <div class="section" id="icon-evaluate-agents">
@@ -493,25 +429,11 @@ Generating 256 training and 64 evaluation maps:
 <p>Evaluation in open-ended massively multiagent settings is akin to that in the real world. Unlike in most single-agent and some multiagent environments, there is no absolute metric of performance. We therefore provide two evaluation options: <em>tournaments</em>, which measure relative performance against various opponents, and <em>self-contained</em> simulations, which measure qualitative behaviors.</p>
 <div class="section" id="tournaments">
 <h2>Tournaments<a class="headerlink" href="#tournaments" title="Permalink to this headline">¶</a></h2>
-<p>This evaluation mode is new as of v1.5.1 and is being used in the current <a class="reference external" href="https://www.aicrowd.com/challenges/the-neural-mmo-challenge">competition</a>. Instead of evaluating agents against many copies of themselves, tournament mode places one (or a few) of the user’s agent(s) into an environment with opponents that have different policies. We currently use relatively simple scripted baselines for this but will begin using other users’ submissions as we receive them. You can download a local tournament evaluation toolkit from the <a class="reference external" href="https://www.aicrowd.com/challenges/the-neural-mmo-challenge">competition</a> page and submit agents for evaluation against other users. After the competition, we will integrate these tools into the main repository, along with additional users’ bots (provided we are able to obtain permission to do so).</p>
+<p>This evaluation mode is the default as of v1.5.2 and is being used in the current <a class="reference external" href="https://www.aicrowd.com/challenges/the-neural-mmo-challenge">competition</a>. Agents train against many copies of themselves but are evaluated against scripted opponents with different policies. As of this minor update, these evaluation tournaments are run parallel to training, allowing you to monitor progress relative to scripted baselines in real time. You can submit your agents to the live AICrowd <a class="reference external" href="https://www.aicrowd.com/challenges/the-neural-mmo-challenge">competition</a> for evaluation against other users. After the competition, we will integrate additional users’ bots (provided we are able to obtain permission to do so) into the main repository.</p>
 </div>
 <div class="section" id="self-contained">
 <h2>Self-Contained<a class="headerlink" href="#self-contained" title="Permalink to this headline">¶</a></h2>
-<p>This is the classic evaluation setup used in older versions of Neural MMO. It suffers from a lack of ability to compare policies directly, but it is still well-suited to artificial life work targeting emergent behaviors in large populations. To collect statistics over the course of a simulation:</p>
-<div class="literal-block-wrapper docutils container" id="id12">
-<div class="code-block-caption"><span class="caption-text">Evaluate a pretrained and scripted model</span><a class="headerlink" href="#id12" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">evaluate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMultimodalSkills</span> <span class="o">--</span><span class="n">EVAL_MAPS</span><span class="o">=</span><span class="mi">1</span>
-<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">evaluate</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMultimodalSkills</span> <span class="o">--</span><span class="n">EVAL_MAPS</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">SCRIPTED</span><span class="o">=</span><span class="n">Combat</span>
-</pre></div>
-</div>
-</div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Number of evaluation maps: 1
-100%|██████████████████████████████████████████████| 1000/1000 [00:32&lt;00:00, 31.10it/s]
-Number of evaluation maps: 1
-100%|██████████████████████████████████████████████| 1000/1000 [01:01&lt;00:00, 16.17it/s]
-</pre></div>
-</div>
-<p>We will cover how to visualize the results in the Visualization section below. Note that we have used a single evaluation map here to keep runtime short – our baselines average over several maps, and you should follow the protocol detailed in Baselines in formal comparisons.</p>
+<p>This is the classic evaluation setup used in older versions of Neural MMO measures policy quality according to a number of summary stats collected over the course of training. It suffers from a lack of ability to compare policies directly, but it is still well-suited to artificial life work targeting emergent behaviors in large populations. These statistics are automatically sent to WanDB.</p>
 </div>
 <div class="section" id="evaluation-distribution">
 <h2>Evaluation Distribution<a class="headerlink" href="#evaluation-distribution" title="Permalink to this headline">¶</a></h2>
@@ -521,149 +443,11 @@ Number of evaluation maps: 1
 <p><strong>Transfer Maps:</strong> Evaluate large-map models on small maps (hard) or small-map models on large maps (very hard). <em>Enable by setting the appropriate –config</em></p>
 </div>
 </div>
-<div class="section" id="icon-visualization-results">
-<h1><img alt="icon" src="../_images/icon_pixel.png" /> Visualization Results<a class="headerlink" href="#icon-visualization-results" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dashboard-and-statistics">
-<h2>Dashboard and Statistics<a class="headerlink" href="#dashboard-and-statistics" title="Permalink to this headline">¶</a></h2>
-<p>The “visualize” command creates summary tables and figures using the results of training and evaluation</p>
-<div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">Visualize evaluation results for pretrained and scripted baselines</span><a class="headerlink" href="#id13" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">visualize</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMultimodalSkills</span>
-<span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">visualize</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMultimodalSkills</span> <span class="n">SCRIPTED</span><span class="o">=</span><span class="n">CombatTribrid</span>
-</pre></div>
-</div>
-</div>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Metric</p></th>
-<th class="head"><p>Min</p></th>
-<th class="head"><p>Max</p></th>
-<th class="head"><p>Mean</p></th>
-<th class="head"><p>Std</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Population</p></td>
-<td><p>18.00</p></td>
-<td><p>57.00</p></td>
-<td><p>45.95</p></td>
-<td><p>4.09</p></td>
-</tr>
-<tr class="row-odd"><td><p>Lifetime</p></td>
-<td><p>0.00</p></td>
-<td><p>1000.00</p></td>
-<td><p>46.49</p></td>
-<td><p>110.78</p></td>
-</tr>
-<tr class="row-even"><td><p>Skilling</p></td>
-<td><p>10.00</p></td>
-<td><p>50.50</p></td>
-<td><p>14.06</p></td>
-<td><p>5.92</p></td>
-</tr>
-<tr class="row-odd"><td><p>Combat</p></td>
-<td><p>3.00</p></td>
-<td><p>28.00</p></td>
-<td><p>4.64</p></td>
-<td><p>3.06</p></td>
-</tr>
-<tr class="row-even"><td><p>Equipment</p></td>
-<td><p>0.00</p></td>
-<td><p>18.00</p></td>
-<td><p>0.22</p></td>
-<td><p>1.36</p></td>
-</tr>
-<tr class="row-odd"><td><p>Exploration</p></td>
-<td><p>0.00</p></td>
-<td><p>73.00</p></td>
-<td><p>8.23</p></td>
-<td><p>6.34</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Metric</p></th>
-<th class="head"><p>Min</p></th>
-<th class="head"><p>Max</p></th>
-<th class="head"><p>Mean</p></th>
-<th class="head"><p>Std</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Population</p></td>
-<td><p>27.00</p></td>
-<td><p>62.00</p></td>
-<td><p>49.50</p></td>
-<td><p>4.43</p></td>
-</tr>
-<tr class="row-odd"><td><p>Lifetime</p></td>
-<td><p>0.00</p></td>
-<td><p>994.00</p></td>
-<td><p>50.92</p></td>
-<td><p>74.27</p></td>
-</tr>
-<tr class="row-even"><td><p>Skilling</p></td>
-<td><p>10.00</p></td>
-<td><p>53.00</p></td>
-<td><p>15.04</p></td>
-<td><p>5.54</p></td>
-</tr>
-<tr class="row-odd"><td><p>Combat</p></td>
-<td><p>3.00</p></td>
-<td><p>33.00</p></td>
-<td><p>4.35</p></td>
-<td><p>2.77</p></td>
-</tr>
-<tr class="row-even"><td><p>Equipment</p></td>
-<td><p>0.00</p></td>
-<td><p>26.00</p></td>
-<td><p>0.10</p></td>
-<td><p>1.04</p></td>
-</tr>
-<tr class="row-odd"><td><p>Exploration</p></td>
-<td><p>0.00</p></td>
-<td><p>101.00</p></td>
-<td><p>14.94</p></td>
-<td><p>10.80</p></td>
-</tr>
-</tbody>
-</table>
-<p>Your results may vary slightly from ours, which were obtained using a slightly larger evaluation for stability. From the summary stats, the models look pretty comparable. Since the scripted baseline performs an exact min-max search using a ton of hand-coded domain knowledge, this is actually quite a good result. But it would be nice to have finer-grained insights – both to aid in future development and for the paper. The “visualize” command also loads a browser-based interactive dashboard:</p>
-<div class="figure align-default" id="id14">
-<img alt="../_images/small-map.png" src="../_images/small-map.png" />
-<p class="caption"><span class="caption-text">Pretrained neural baseline</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-default" id="id15">
-<img alt="../_images/scripted-combat.png" src="../_images/scripted-combat.png" />
-<p class="caption"><span class="caption-text">Scripted baseline</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
-</div>
-<p>Each row of the dashboard contains multiple visualization styles for one row of the summary table. In this particular instance, the Skill Level bar chart is most illuminating – notice how the scripted model uses only Ranged combat whereas the pretrained model uses a mix of Ranged and Mage. I set the scripted model to only use range combat because I thought it was probably stronger overall, but apparently Range and Mage are somewhat balanced. The pretrained model avoids Melee even though it does the most damage, probably because the current movement system makes it difficult to close distance to an opponent – perhaps I should consider changing the movement system in a future update.</p>
-<p>So, why do we need 15 plots when only one turned out to be important? First of all, we didn’t know which plot would highlight an interesting difference ahead of time. Second, there are some smaller observations we can make, such as the pretrained model obtaining significantly more equipment pickups while the scripted model obtained fewer and better pickups (Equipment scatter plots). Or that the pretrained model has a slightly heavier Lifetime right tail, as seen in the Lifetime Gantt plot. Many of our most successful experiments (and worst bug fixes) were motivated by an unusual disparity in the dashboard.</p>
-<p>And before you ask, yes: there’s a boring publication theme: specify –VIS_THEME=publication. In fact, you can create custom logging with a highly configurable dashboard to go with it in only a few lines of code – just override the log method of neural_mmo/forgetrinity/env.py to specify your own data tracks and plot styles.</p>
-<div class="figure align-default" id="id16">
-<img alt="../_images/publication_theme.png" src="../_images/publication_theme.png" />
-<p class="caption"><span class="caption-text">Publication theme</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="rendering-and-overlays">
-<h2>Rendering and Overlays<a class="headerlink" href="#rendering-and-overlays" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="icon-rendering-and-overlays">
+<h1><img alt="icon" src="../_images/icon_pixel.png" /> Rendering and Overlays<a class="headerlink" href="#icon-rendering-and-overlays" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.5.2:</strong> Overlays are broken due to a Ray Tune bug. We’re working on fixing this and have pushed the version regardless because of the importance of Ray Tune and WanDB evaluation. We’re working on this. In the meanwhile, you can copy your checkpoint files over to a v1.5.1 install if needed. The models are compatible, and the v1.5.2 client should work fine too.</p>
 <p>Rendering the environment requires launching both a server and a client. To launch the server:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">render</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">SmallMultimodalSkills</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">Forge</span><span class="o">.</span><span class="n">py</span> <span class="n">render</span> <span class="o">--</span><span class="n">config</span><span class="o">=</span><span class="n">CompetitionRound1</span>
 </pre></div>
 </div>
 <div class="line-block">
@@ -671,15 +455,14 @@ Number of evaluation maps: 1
 <div class="line"><strong>Windows:</strong> Launch neural-mmo-client/UnityClient/neural-mmo.exe from Windows 10</div>
 </div>
 <p>The server will take a few seconds to load the pretrained policy and connect to the client.</p>
-<div class="figure align-default" id="id17">
+<div class="figure align-default" id="id12">
 <img alt="../_images/ui.png" src="../_images/ui.png" />
-<p class="caption"><span class="caption-text">You should see this view once the map loads</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">You should see this view once the map loads</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
 </div>
 <p>The on-screen instructions demonstrate how to pan and zoom in the environment. You can also click on agents to examine their skill levels. The in-game console (which you can toggle with the tilde key) give you access to a number of overlays. Note that the LargeMaps config requires a good workstation to render and you should avoid zooming all the way out.</p>
 <img alt="../_images/overlays.png" src="../_images/overlays.png" />
 <p>The counts (exploration) overlay is computed by splatting the agent’s current position to a counts map. Most other overlays are computed analogously. However, you can also do more impressive things with a bit more compute. For example, the tileValues and entityValues overlays simulate an agent on every tile and computes the value function with respect to local tiles/entities. Note that some overlays, such as counts and skills, are well-defined for all models. Others, such as value function and attention, do not exist for scripted baselines.</p>
 <p>Writing your own overlays is simple. You can find the source code for general overlays (those computable by scripted baselines) in neural_mmo/forgetrinity/overlay.py. RLlib-specific overlays that require access to the trainer/model are included in projekt/rllib_wrapper.py. Details are also included in the User API.</p>
-</div>
 </div>
 
 

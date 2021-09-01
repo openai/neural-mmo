@@ -122,22 +122,17 @@ class NPCManager(EntityGroup):
       return actions
        
 class PlayerManager(EntityGroup):
-   def __init__(self, config, realm, identify: Callable):
+   def __init__(self, config, realm):
       super().__init__(config, realm)
-      self.identify = identify
-      self.realm    = realm
 
       self.palette = Palette(config.NPOP)
-      self.idx     = 1
+      self.agents = config.AGENT_LOADER(config.AGENTS) 
+      self.realm  = realm
+      self.idx    = 1
 
-   def spawnIndividual(self, r, c, name=None):
-      if name:
-         pop, _ = self.identify()
-      else:
-         pop, name = self.identify()
-
-      color     = self.palette.color(pop)
-      player    = Player(self.realm, (r, c), self.idx, pop, name, color)
+   def spawnIndividual(self, r, c):
+      agent  = next(self.agents)(self.config, self.idx)
+      player = Player(self.realm, (r, c), agent)
       super().spawn(player)
       self.idx += 1
 
@@ -147,9 +142,9 @@ class PlayerManager(EntityGroup):
             return 
 
          self.spawned = True
-         for r, c, name in self.config.SPAWN():
+         for r, c in self.config.SPAWN():
             assert not self.realm.map.tiles[r, c].occupied
-            self.spawnIndividual(r, c, name)
+            self.spawnIndividual(r, c)
          return
           
       #MMO-style spawning
@@ -168,16 +163,15 @@ class PlayerManager(EntityGroup):
 
 class Realm:
    '''Top-level world object'''
-   def __init__(self, config, identify: Callable):
+   def __init__(self, config):
       self.config   = config
-      self.identify = identify
 
       #Load the world file
       self.dataframe = trinity.Dataframe(config)
       self.map       = core.Map(config, self)
 
       #Entity handlers
-      self.players  = PlayerManager(config, self, identify)
+      self.players  = PlayerManager(config, self)
       self.npcs     = NPCManager(config, self)
 
    def reset(self, idx):

@@ -91,7 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-generate-environments"> Generate Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-create-policies"> Create Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-evaluate-agents"> Evaluate Agents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-visualization-results"> Visualization Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#icon-rendering-and-overlays"> Rendering and Overlays</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -256,7 +256,37 @@
 <div class="figure align-default">
 <img alt="../_images/v1-5_env.png" src="../_images/v1-5_env.png" />
 </div>
-<dl class="simple">
+<dl>
+<dt><strong>v1.5.2:</strong> Ray Tune and WanDB Integrations</dt><dd><ul>
+<li><dl class="simple">
+<dt>Trinity:</dt><dd><ul class="simple">
+<li><p>Added support for simulations with both scripted and trained agents</p></li>
+<li><p>Added ability to name scripted agents based on their policy</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Embyr:</dt><dd><ul class="simple">
+<li><p>Minor aesthetic changes to prefer a flat-shaded style</p></li>
+<li><p>Broke some overlay features :/ RLlib bug under construction</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="option-list">
+<dt><kbd><span class="option">/projekt</span></kbd></dt>
+<dd><ul class="simple">
+<li><p>Replaced Bokeh dashboard with WanDB integration</p></li>
+<li><p>Wrapped RLlib trainers in Ray Tune to enable parallel evaluation during training</p></li>
+<li><p>Added Skill Rating (SR) metric for direct comparison to scripted baselines</p></li>
+<li><p>Changed batching mode to agent steps, yielding a large policy improvement</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
 <dt><strong>v1.5.1:</strong> Competition Build</dt><dd><ul class="simple">
 <li><dl class="simple">
 <dt>Blade:</dt><dd><ul>

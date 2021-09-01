@@ -8,10 +8,12 @@ from copy import deepcopy
 from neural_mmo.forge.blade import entity, core
 from neural_mmo.forge.blade.io import stimulus
 from neural_mmo.forge.blade.io.stimulus import Static
+from neural_mmo.forge.blade.io.action import static as Action
 from neural_mmo.forge.blade.systems import combat
 
-from neural_mmo.forge.blade.lib.enums import Palette
 from neural_mmo.forge.blade.lib import log
+
+from neural_mmo.forge.trinity.overlay import OverlayRegistry
 
 class Env:
    '''Environment wrapper for Neural MMO
@@ -30,15 +32,14 @@ class Env:
          config : A forge.blade.core.Config object or subclass object
       '''
       super().__init__()
-      self.realm     = core.Realm(config, self.spawn)
+      self.realm      = core.Realm(config)
+      self.registry   = OverlayRegistry(config, self)
 
-      self.config    = config
-      self.overlay   = None
-
-      self.dead      = []
-      self.spawned   = 0
-
-      #self.steps = 0
+      self.config     = config
+      self.overlay    = None
+      self.overlayPos = [256, 256]
+      self.client     = None
+      self.obs        = None
 
    ############################################################################
    ### Core API
@@ -67,9 +68,16 @@ class Env:
       Returns:
          observations, as documented by step()
       '''
-      self.quill = log.Quill(self.realm.identify)
+      self.actions   = {}
+      self.dead      = []
+ 
+      self.quill = log.Quill()
       
-      if idx is None:
+      if idx is not None:
+         pass
+      elif self.config.EVALUATE and self.config.GENERALIZE:
+         idx = -np.random.randint(self.config.TERRAIN_EVAL_MAPS) - 1
+      else:
          idx = np.random.randint(self.config.TERRAIN_TRAIN_MAPS) + 1
 
       self.worldIdx = idx
@@ -79,6 +87,7 @@ class Env:
       if step:
          obs, _, _, _ = self.step({})
 
+      self.obs = obs
       return obs
 
    def step(self, actions, preprocess=set(), omitDead=True):
@@ -177,48 +186,62 @@ class Env:
          infos:
             An empty dictionary provided only for conformity with OpenAI Gym.
       '''
-      #Preprocess actions
-      for entID in preprocess:
+      #Preprocess actions for neural models
+      for entID in list(actions.keys()):
          ent = self.realm.players[entID]
          if not ent.alive:
             continue
 
+         self.actions[entID] = {}
          for atn, args in actions[entID].items():
+            self.actions[entID][atn] = {}
             for arg, val in args.items():
                if len(arg.edges) > 0:
-                  actions[entID][atn][arg] = arg.edges[val]
+                  self.actions[entID][atn][arg] = arg.edges[val]
                elif val < len(ent.targets):
                   targ                     = ent.targets[val]
-                  actions[entID][atn][arg] = self.realm.entity(targ)
+                  self.actions[entID][atn][arg] = self.realm.entity(targ)
                else: #Need to fix -inf in classifier before removing this
-                  actions[entID][atn][arg] = ent
+                  self.actions[entID][atn][arg] = ent
 
       #Step: Realm, Observations, Logs
-      self.dead = self.realm.step(actions)
+      self.dead    = self.realm.step(self.actions)
+      self.actions = {}
+      self.obs     = {}
+
       obs, rewards, dones, self.raw = {}, {}, {}, {}
       for entID, ent in self.realm.players.items():
-         ob             = self.realm.dataframe.get(ent)
-         obs[entID]     = ob
-         self.dummy_ob  = ob
+         ob = self.realm.dataframe.get(ent)
+         self.obs[entID] = ob
+         if ent.agent.scripted:
+            atns = ent.agent(ob)
+            if Action.Attack in atns:
+               atn  = atns[Action.Attack]
+               targ = atn[Action.Target]
+               atn[Action.Target] = self.realm.entity(targ)
+            self.actions[entID] = atns
+         else:
+            obs[entID]     = ob
+            self.dummy_ob  = ob
 
-         rewards[entID] = self.reward(ent)
-         dones[entID]   = False
-
-      #self.steps += len(self.realm.players.items())
-      #print('World {} Tick {} Steps {}'.format(self.worldIdx, self.realm.tick, self.steps))
+            rewards[entID] = self.reward(ent)
+            dones[entID]   = False
 
       for entID, ent in self.dead.items():
          self.log(ent)
 
       #Postprocess dead agents
-      if omitDead:
-         return obs, rewards, dones, {}
+      #if omitDead:
+      #   return obs, rewards, dones, {}
 
       for entID, ent in self.dead.items():
+         if ent.agent.scripted:
+            continue
          rewards[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
+      self.obs = obs
       return obs, rewards, dones, {}
 
    ############################################################################
@@ -270,6 +293,11 @@ class Env:
          for name, stat in ent.achievements.stats:
             quill.stat(name, stat)
 
+      if not self.config.EVALUATE:
+         return
+
+      quill.stat('PolicyID', ent.agent.policyID)
+
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs
 
@@ -311,40 +339,18 @@ class Env:
          return -1
       return 0
 
-   def spawn(self):
-      '''Called when an agent is added to the environment
-
-      Override this method to specify name/population upon spawning.
-
-      Returns:
-         (int, str):
-
-         popID:
-            An integer used to identity membership within a population
-
-         prefix:
-            The agent will be named prefix + entID
-
-      Notes:
-         Mainly intended for population-based research. In particular, it
-         allows you to define behavior that selectively spawns agents into
-         particular populations based on the current game state -- for example,
-         current population sizes or performance.'''
-
-      popSize = self.config.NENT / self.config.NPOP
-      pop     = (self.spawned // popSize) % self.config.NPOP
-      self.spawned += 1
-      return int(pop), 'Neural_'
-
    ############################################################################
    ### Client data
-   @property
-   def packet(self):
+   def render(self):
       '''Data packet used by the renderer
 
       Returns:
          packet: A packet of data for the client
       '''
+      #RLlib likes rendering for no reason
+      if not self.config.RENDER:
+         return 
+
       packet = {
             'config': self.config,
             'pos': self.overlayPos,
@@ -358,7 +364,13 @@ class Env:
          packet['overlay'] = self.overlay
          self.overlay      = None
 
-      return packet
+      if not self.client:
+         from neural_mmo.forge.trinity.twistedserver import Application
+         self.client = Application(self) 
+
+      pos, cmd = self.client.update(packet)
+      if self.obs:
+         self.registry.step(self.obs, pos, cmd)
 
    def register(self, overlay):
       '''Register an overlay to be sent to the client

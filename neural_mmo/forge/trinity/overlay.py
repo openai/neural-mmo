@@ -1,3 +1,4 @@
+from pdb import set_trace as T
 import numpy as np
 
 from neural_mmo.forge.blade.lib import overlay
@@ -16,10 +17,8 @@ class OverlayRegistry:
               'skills':     Skills,
               'wilderness': Wilderness}
 
-   def init(self, *args):
       for cmd, overlay in self.overlays.items():
-         self.overlays[cmd] = overlay(self.config, self.realm, *args)
-      return self
+         self.overlays[cmd] = overlay(self.config, self.realm)
 
    def step(self, obs, pos, cmd):
       '''Per-tick updates'''

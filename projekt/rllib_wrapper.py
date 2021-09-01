@@ -1,36 +1,35 @@
-from pdb import set_trace as TT
-
 from collections import defaultdict
-from itertools import chain
-import shutil
-import time
-import os
-import re
 
 from tqdm import tqdm
 import numpy as np
 import gym
+import wandb
+import trueskill
 
 import torch
 from torch import nn
 from torch.nn.utils import rnn
 
 from ray import rllib
+from pdb import set_trace as TT
+
 import ray.rllib.agents.ppo.ppo as ppo
 import ray.rllib.agents.ppo.appo as appo
+import ray.rllib.agents.impala.impala as impala
 from ray.rllib.agents.callbacks import DefaultCallbacks
+from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.rllib.utils.spaces.flexdict import FlexDict
 from ray.rllib.models.torch.recurrent_net import RecurrentNetwork
 
-from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.io.action.static import Action, Fixed
+from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.lib import overlay
 from neural_mmo.forge.blade.systems import ai
 
 from neural_mmo.forge.ethyr.torch import policy
 from neural_mmo.forge.ethyr.torch.policy import attention
 
-from neural_mmo.forge.trinity import Env, evaluator, formatting
+from neural_mmo.forge.trinity import Env
 from neural_mmo.forge.trinity.dataframe import DataType
 from neural_mmo.forge.trinity.overlay import Overlay, OverlayRegistry
 
@@ -62,9 +61,6 @@ class Input(nn.Module):
       #Hackey obs scaling
       self.tileWeight = torch.Tensor([1.0, 0.0, 0.02, 0.02])
       self.entWeight  = torch.Tensor([1.0, 0.0, 0.0, 0.05, 0.00, 0.02, 0.02, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3])
-      if torch.cuda.is_available():
-         self.tileWeight = self.tileWeight.cuda()
-         self.entWeight  = self.entWeight.cuda()
 
    def forward(self, inp):
       '''Produces tensor representations from an IO object
@@ -78,8 +74,9 @@ class Input(nn.Module):
       #Pack entities of each attribute set
       entityLookup = {}
 
-      inp['Tile']['Continuous']   *= self.tileWeight
-      inp['Entity']['Continuous'] *= self.entWeight
+      device                       = inp['Tile']['Continuous'].device
+      inp['Tile']['Continuous']   *= self.tileWeight.to(device)
+      inp['Entity']['Continuous'] *= self.entWeight.to(device)
  
       entityLookup['N'] = inp['Entity'].pop('N')
       for name, entities in inp.items():
@@ -262,15 +259,17 @@ class Recurrent(Encoder):
                          batch_first=True)
 
       #Main recurrent network
+      oldHidden = hidden
       hidden, state = self.lstm(hidden, state)
+      newHidden = hidden
 
       #Unpack (batch, seq, hidden) -> (batch x seq, hidden)
       hidden, _     = rnn.pad_packed_sequence(
                          sequence=hidden,
-                         batch_first=True)
+                         batch_first=True,
+                         total_length=T)
 
       return hidden.reshape(TB, H), state
-
 
 ###############################################################################
 ### RLlib Policy, Evaluator, Trainer
@@ -305,191 +304,6 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 
    def attention(self):
       return self.model.attn
-
-class RLlibEvaluator(evaluator.Base):
-   '''Test-time evaluation with communication to
-   the Unity3D client. Makes use of batched GPU inference'''
-   def __init__(self, config, trainer):
-      super().__init__(config)
-      self.trainer  = trainer
-
-      self.model    = self.trainer.get_policy('policy_0').model
-      self.env      = RLlibEnv({'config': config})
-      self.state    = {} 
-
-   def render(self):
-      self.obs = self.env.reset(idx=-1)
-      self.registry = RLlibOverlayRegistry(
-            self.config, self.env).init(self.trainer, self.model)
-      super().render()
-
-   def tick(self, pos, cmd):
-      '''Simulate a single timestep
-
-      Args:
-          pos: Camera position (r, c) from the server)
-          cmd: Console command from the server
-      '''
-      if len(self.obs) == 0:
-         actions = {}
-      else:
-         actions, self.state, _ = self.trainer.compute_actions(
-             self.obs, state=self.state, policy_id='policy_0')
-
-      super().tick(self.obs, actions, pos, cmd, preprocess=None)
-
-class SanePPOTrainer(ppo.PPOTrainer):
-   '''Small utility class on top of RLlib's base trainer'''
-   def __init__(self, config):
-      self.envConfig = config['env_config']['config']
-      super().__init__(env=self.envConfig.ENV_NAME, config=config)
-      self.training_logs = {}
-
-   def save(self):
-      '''Save model to file. Note: RLlib does not let us chose save paths'''
-      config   = self.envConfig
-      saveFile = super().save(config.PATH_CHECKPOINTS)
-      saveDir  = os.path.dirname(saveFile)
-      
-      #Clear current save dir
-      shutil.rmtree(config.PATH_MODEL, ignore_errors=True)
-      os.mkdir(config.PATH_MODEL)
-
-      #Copy checkpoints
-      for f in os.listdir(saveDir):
-         stripped = re.sub('-\d+', '', f)
-         src      = os.path.join(saveDir, f)
-         dst      = os.path.join(config.PATH_MODEL, stripped) 
-         shutil.copy(src, dst)
-
-      print('Saved to: {}'.format(saveDir))
-
-   def restore(self):
-      '''Restore model from path'''
-      self.training_logs = np.load(
-            self.envConfig.PATH_TRAINING_DATA,
-            allow_pickle=True).item()
-
-      path = os.path.join(
-            self.envConfig.PATH_MODEL,
-            'checkpoint')
-
-      print('Loading model from: {}'.format(path))
-      super().restore(path)
-
-   def policyID(self, idx):
-      return 'policy_{}'.format(idx)
-
-   def model(self, policyID):
-      return self.get_policy(policyID).model
-
-   def defaultModel(self):
-      return self.model(self.policyID(0))
-
-   def train(self):
-      '''Train forever, printing per epoch'''
-      training_logs = self.training_logs
-      config        = self.envConfig
-
-      logo          = open(config.PATH_LOGO).read().splitlines()
-
-      model         = config.MODEL if config.MODEL is not None else 'current'
-      trainPath     = config.PATH_TRAINING_DATA
-
-      total_sample_time = 0
-      total_learn_time  = 0
-      total_steps       = 0
-      total_time        = 0
-      start_time        = time.time()
-
-      blocks  = []
-
-      for epoch in range(config.TRAIN_EPOCHS):
-          #Train model
-          stats = super().train()
-          self.save()
-
-          #Compute stats
-          info               = stats['info']
-          timers             = stats['timers']
-
-          steps              = info['num_agent_steps_trained'] - total_steps
-          total_steps        = info['num_agent_steps_trained']
-
-          sample_time        = timers['sample_time_ms'] / 1000
-          learn_time         = timers['learn_time_ms'] / 1000
-
-          sample_throughput  = steps / sample_time
-          learn_throughput   = steps / learn_time
-         
-          total_sample_time += sample_time
-          total_learn_time  += learn_time
-          total_time         = time.time() - start_time
-
-          #Summary
-          summary = formatting.box([formatting.line(
-                title  = ' '.join([config.ENV_NAME, config.ENV_VERSION]),
-                keys   = ['Epochs', 'kSamples', 'Sample Time', 'Learn Time'],
-                vals   = [epoch, total_steps/1000, total_sample_time, total_learn_time],
-                valFmt = '{:.1f}')])
-
-          #Block Title
-          sample_stat = '{:.1f}/s ({:.1f}s)'.format(sample_throughput, sample_time)
-          learn_stat  = '{:.1f}/s ({:.1f}s)'.format(learn_throughput, learn_time)
-          header = formatting.box([formatting.line(
-                keys   = 'Epoch Sample Train'.split(),
-                vals   = [epoch, sample_stat, learn_stat],
-                valFmt = '{}')])
-
-          #Format stats (RLlib callback format limitation)
-          for k, vals in stats['hist_stats'].items():
-             if not k.startswith('_'):
-                continue
-             k                 = k.lstrip('_')
-             track, stat       = re.split('_', k)
-
-             if track not in training_logs:
-                training_logs[track] = {}
-
-             if stat not in training_logs[track]:
-                training_logs[track][stat] = []
-
-             training_logs[track][stat] += vals
-
-          np.save(trainPath, {
-               'logs': training_logs,
-               'sample_time': total_sample_time,
-               'learn_time': total_learn_time})
-
-          #Representation for CLI
-          cli = {}
-          for track, stats in training_logs.items():
-             cli[track] = {}
-             for stat, vals in stats.items():
-                mmean = np.mean(vals[-config.TRAIN_SUMMARY_ENVS:])
-                cli[track][stat] = mmean
-
-          lines = formatting.precomputed_stats(cli)
-          if config.v:
-             lines += formatting.timings(timings)
-
-          #Extend blocks
-          if len(lines) > 0:
-             lines = formatting.box(lines, indent=4) 
-             blocks.append(header + lines)
-          else:
-             blocks.append(header)
-             
-          if len(blocks) > 3:
-             blocks = blocks[1:]
-          
-          #Assemble Summary Bar Title
-          lines = logo.copy() + list(chain.from_iterable(blocks)) + summary
-
-          #Cross-platform clear screen
-          os.system('cls' if os.name == 'nt' else 'clear')
-          for idx, line in enumerate(lines):
-             print(line)
 
 
 ###############################################################################
@@ -539,9 +353,15 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       dones['__all__'] = False
       test = config.EVALUATE or config.RENDER
       
-      horizon    = self.realm.tick >= config.TRAIN_HORIZON
-      population = len(self.realm.players) == 0
-      if not test and (horizon or population):
+      if config.EVALUATE:
+         horizon = config.EVALUATION_HORIZON
+      else:
+         horizon = config.TRAIN_HORIZON
+
+      population  = len(self.realm.players) == 0
+      hit_horizon = self.realm.tick >= horizon
+      
+      if not config.RENDER and (hit_horizon or population):
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
@@ -570,7 +390,6 @@ def observationSpace(config):
    obs['Entity']['N']   = gym.spaces.Box(
          low=0, high=config.N_AGENT_OBS, shape=(1,),
          dtype=DataType.DISCRETE)
-
    return obs
 
 def actionSpace(config):
@@ -583,8 +402,8 @@ def actionSpace(config):
 
 class RLlibOverlayRegistry(OverlayRegistry):
    '''Host class for RLlib Map overlays'''
-   def __init__(self, config, realm):
-      super().__init__(config, realm)
+   def __init__(self, realm):
+      super().__init__(realm.config, realm)
 
       self.overlays['values']       = Values
       self.overlays['attention']    = Attention
@@ -696,20 +515,100 @@ class EntityValues(GlobalValues):
       super().init(zeroKey)
 
 
+class RLlibTrainer(ppo.PPOTrainer):
+   def __init__(self, config, env=None, logger_creator=None):
+      super().__init__(config, env, logger_creator)
+      self.env_config = config['env_config']['config']
+
+      #1/sqrt(2)=76% win chance within beta, 95% win chance vs 3*beta=100 SR
+      trueskill.setup(mu=1000, sigma=2*100/3, beta=100/3, tau=2/3, draw_probability=0)
+
+      self.ratings = [{agent.__name__: trueskill.Rating(mu=1000, sigma=2*100/3)}
+            for agent in self.env_config.EVAL_AGENTS]
+
+      self.reset_scripted()
+
+   def reset_scripted(self):
+      for rating_dict in self.ratings:
+         for agent, rating in rating_dict.items():
+            if agent == 'Combat':
+               rating_dict[agent] = trueskill.Rating(mu=1500, sigma=1)
+
+   def post_mean(self, stats):
+      for key, vals in stats.items():
+          if type(vals) == list:
+              stats[key] = np.mean(vals)
+
+   def train(self):
+      stats = super().train()
+      self.post_mean(stats['custom_metrics'])
+      return stats
+
+   def evaluate(self):
+      stat_dict = super().evaluate()
+      stats = stat_dict['evaluation']['custom_metrics']
+ 
+      ranks = {agent.__name__: -1 for agent in self.env_config.EVAL_AGENTS}
+      for key in list(stats.keys()):
+         if key.startswith('Rank_'):
+             stat = stats[key]
+             del stats[key]
+             agent = key[5:]
+             ranks[agent] = stat
+
+      ranks = list(ranks.values())
+      nEnvs = len(ranks[0])
+      
+      #Once RLlib adds better custom metric support,
+      #there should be a cleaner way to divide episodes into blocks
+      for i in range(nEnvs): 
+         env_ranks = [e[i] for e in ranks]
+         self.ratings = trueskill.rate(self.ratings, env_ranks)
+         self.reset_scripted()
+
+      for rating in self.ratings:
+         key  = 'SR_{}'.format(list(rating.keys())[0])
+         val  = list(rating.values())[0]
+         stats[key] = val.mu
+     
+      return stat_dict
+
+
 ###############################################################################
 ### Logging
 class RLlibLogCallbacks(DefaultCallbacks):
    def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
       assert len(base_env.envs) == 1, 'One env per worker'
       env    = base_env.envs[0]
-      config = env.config
 
-      for key, vals in env.terminal()['Stats'].items():
-         logs = episode.hist_data
+      logs = env.terminal()
+      for key, vals in logs['Stats'].items():
+         episode.custom_metrics[key] = np.mean(vals)
 
-         key  = '_' + key
-         logs[key + '_Min']  = [np.min(vals)]
-         logs[key + '_Max']  = [np.max(vals)]
-         logs[key + '_Mean'] = [np.mean(vals)]
-         logs[key + '_Std']  = [np.std(vals)]
+      if not env.config.EVALUATE:
+         return 
+
+      agents = defaultdict(list)
+
+      stats      = logs['Stats']
+      policy_ids = stats['PolicyID']
+      scores     = stats['Achievement']
+
+      invMap = {agent.policyID: agent for agent in env.config.AGENTS}
+
+      for policyID, score in zip(policy_ids, scores):
+         policy = invMap[policyID]
+         agents[policy].append(score)
+      
+      for agent in agents:
+         agents[agent] = np.mean(agents[agent])
+
+      policies = list(agents.keys())
+      scores   = list(agents.values())
+
+      idxs     = np.argsort(-np.array(scores))
+
+      for rank, idx in enumerate(idxs):
+          key = 'Rank_{}'.format(policies[idx].__name__)
+          episode.custom_metrics[key] = rank
 

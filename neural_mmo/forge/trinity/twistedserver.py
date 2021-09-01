@@ -3,6 +3,7 @@ import numpy as np
 
 from signal import signal, SIGINT
 import sys, os, json, pickle, time
+import threading
 import ray
 
 from twisted.internet import reactor
@@ -15,34 +16,17 @@ from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol
 from autobahn.twisted.resource import WebSocketResource
 
-def sign(x):
-    return int(np.sign(x))
-
-def softmax(x):
-    exp = np.exp(x)
-    return exp / np.sum(exp)
-
-def move(orig, targ):
-    ro, co = orig
-    rt, ct = targ
-    dr = rt - ro
-    dc = ct - co
-    if abs(dr) > abs(dc):
-        return ro + sign(dr), co
-    elif abs(dc) > abs(dr):
-        return ro, co + sign(dc)
-    else:
-        return ro + sign(dr), co + sign(dc)
-
 class GodswordServerProtocol(WebSocketServerProtocol):
     def __init__(self):
         super().__init__()
         print("Created a server")
-        self.frame  = 0
+        self.frame = 0
 
         #"connected" is already used by WSSP
-        self.isConnected = False
-        self.pos = [512, 512]
+        self.sent_environment = False
+        self.isConnected      = False
+
+        self.pos = [0, 0]
         self.cmd = None
 
     def onOpen(self):
@@ -59,6 +43,7 @@ class GodswordServerProtocol(WebSocketServerProtocol):
     def connectionLost(self, reason):
         super().connectionLost(reason)
         self.factory.clientConnectionLost(self)
+        self.sent_environment = False
 
     #Not used without player interaction
     def onMessage(self, packet, isBinary):
@@ -66,7 +51,7 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         packet    = packet.decode()
         _, packet = packet.split(';') #Strip headeer
         r, c, cmd = packet.split(' ') #Split camera coords
-        if len(cmd) == 0:
+        if len(cmd) == 0 or cmd == '\t':
             cmd = None
 
         self.pos = [int(r), int(c)]
@@ -80,16 +65,11 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.realm = realm
         self.frame += 1
 
-        data = self.serverPacket()
-        self.sendUpdate()
-
     def serverPacket(self):
         data = self.realm.packet
         return data
 
-    def sendUpdate(self):
-        data = self.serverPacket()
-
+    def sendUpdate(self, data):
         packet               = {}
         packet['resource']   = data['resource']
         packet['player']     = data['player']
@@ -100,7 +80,7 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         config = data['config']
 
         print('Is Connected? : {}'.format(self.isConnected))
-        if not self.isConnected:
+        if not self.sent_environment:
             packet['map']    = data['environment']
             packet['border'] = config.TERRAIN_BORDER
             packet['size']   = config.TERRAIN_SIZE
@@ -113,34 +93,34 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         self.sendMessage(packet, False)
 
 class WSServerFactory(WebSocketServerFactory):
-    def __init__(self, ip, realm, step):
+    def __init__(self, ip, realm):
         super().__init__(ip)
-        self.realm, self.step = realm, step
+        self.realm = realm
         self.time = time.time()
         self.clients = []
 
-        self.pos = [40, 40]
+        self.pos = [0, 0]
         self.cmd = None
         self.tickRate = 0.6
         self.tick = 0
 
-        self.step(self.pos, self.cmd)
-        lc = LoopingCall(self.announce) #If this misses a tick, it waits for a whole cycle
-        lc.start(self.tickRate)
-
-    def announce(self):
+    def update(self, packet):
         self.tick += 1
         uptime = np.round(self.tickRate*self.tick, 1)
-        print('Wall Clock: ', time.time() - self.time, 'Uptime: ', uptime, ', Tick: ', self.tick)
+        delta = time.time() - self.time
+        print('Wall Clock: ', str(delta)[:5], 'Uptime: ', uptime, ', Tick: ', self.tick)
+        delta = self.tickRate - delta    
+        if delta > 0:
+           time.sleep(delta)
         self.time = time.time()
 
         for client in self.clients:
-            client.sendUpdate()
+            client.sendUpdate(packet)
             if client.pos is not None:
                 self.pos = client.pos
                 self.cmd = client.cmd
 
-        self.step(self.pos, self.cmd)
+        return self.pos, self.cmd
 
     def clientConnectionMade(self, client):
         self.clients.append(client)
@@ -149,28 +129,30 @@ class WSServerFactory(WebSocketServerFactory):
         self.clients.remove(client)
 
 class Application:
-   def __init__(self, realm, step):
+   def __init__(self, realm):
       signal(SIGINT, self.kill)
-      self.realm = realm
       log.startLogging(sys.stdout)
+
       port = 8080
+      self.factory          = WSServerFactory(u'ws://localhost:{}'.format(port), realm)
+      self.factory.protocol = GodswordServerProtocol 
+      resource              = WebSocketResource(self.factory)
 
-      factory          = WSServerFactory(u'ws://localhost:' + str(port), realm, step)
-      factory.protocol = GodswordServerProtocol 
-      resource         = WebSocketResource(factory)
-
-      # We server static files under "/" and our WebSocket 
-      # server under "/ws" (note that Twisted uses bytes 
-      # for URIs) under one Twisted Web Site
       root = File(".")
       root.putChild(b"ws", resource)
       site = Site(root)
 
       reactor.listenTCP(port, site)
-      reactor.run()
+
+      def run():
+          reactor.run(installSignalHandlers=0)
+
+      threading.Thread(target=run).start()
+
+   def update(self, packet):
+      return self.factory.update(packet)
 
    def kill(*args):
       print("Killed by user")
       reactor.stop()
       os._exit(0)
-

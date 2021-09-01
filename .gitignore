@@ -10,3 +10,4 @@ docs/source/autodoc/
 dist
 /build
 neural_mmo.egg-info
+wandb_api_key

@@ -556,15 +556,21 @@ class RLlibTrainer(ppo.PPOTrainer):
              agent = key[5:]
              ranks[agent] = stat
 
-      ranks        = list(ranks.values())
-      self.ratings = trueskill.rate(self.ratings, ranks)
+      ranks = list(ranks.values())
+      nEnvs = len(ranks[0])
+      
+      #Once RLlib adds better custom metric support,
+      #there should be a cleaner way to divide episodes into blocks
+      for i in range(nEnvs): 
+         env_ranks = [e[i] for e in ranks]
+         self.ratings = trueskill.rate(self.ratings, env_ranks)
+         self.reset_scripted()
 
-      self.reset_scripted()
       for rating in self.ratings:
          key  = 'SR_{}'.format(list(rating.keys())[0])
          val  = list(rating.values())[0]
          stats[key] = val.mu
-
+     
       return stat_dict
 
 

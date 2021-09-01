@@ -144,9 +144,6 @@ class Anvil():
    the latter being the default -- or write your own in projekt/config.py
    '''
    def __init__(self, **kwargs):
-      if 'help' in kwargs:
-         kwargs.pop('help')
-
       assert 'config' in kwargs, 'Specify a config'
       config = kwargs.pop('config')
       config = getattr(base_config, config)()
@@ -169,7 +166,7 @@ class Anvil():
       self.config.TRAINING_ITERATIONS     = 0
       self.config.EVALUATE                = True
       self.config.EVALUATION_NUM_WORKERS  = self.config.NUM_WORKERS
-      self.config.EVALUATION_NUM_EPISODES = 3
+      self.config.EVALUATION_NUM_EPISODES = self.config.NUM_WORKERS
 
       run_tune_experiment(self.config)
 

@@ -57,17 +57,10 @@ class Achievement:
       if value <= self.progress:
          return 0
 
-      old = self.score
-
       if not dry:
          self.progress = value
 
-      new = self.score
-
-      if old == new:
-         return 0
-
-      return new - old
+      return value - self.score
       
 class PlayerKills(Achievement):
    def __init__(self, config):

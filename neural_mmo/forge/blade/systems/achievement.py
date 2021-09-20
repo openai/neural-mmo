@@ -19,7 +19,7 @@ class Diary:
       return [a.stats for a in self.achievements]
 
    def score(self, aggregate=True):
-      score = [a.score for a in self.achievements]
+      score = [a.score() for a in self.achievements]
       if score and aggregate:
          return sum(score)
       return score
@@ -43,13 +43,14 @@ class Achievement:
    def stats(self):
       return self.__class__.__name__, self.progress
 
-   @property
-   def score(self):
-      if self.hard and self.progress >= self.hard:
+   def score(self, progress=None):
+      if not progress:
+         progress = self.progress
+      if self.hard and progress >= self.hard:
          return Tier.HARD
-      elif self.normal and self.progress >= self.normal:
+      elif self.normal and progress >= self.normal:
          return Tier.NORMAL
-      elif self.easy and self.progress >= self.easy:
+      elif self.easy and progress >= self.easy:
          return Tier.EASY
       return 0
 
@@ -57,10 +58,14 @@ class Achievement:
       if value <= self.progress:
          return 0
 
+      #Progress to score conversion
+      old = self.score(self.progress)
+      new = self.score(value)
+
       if not dry:
          self.progress = value
 
-      return value - self.score
+      return new - old
       
 class PlayerKills(Achievement):
    def __init__(self, config):

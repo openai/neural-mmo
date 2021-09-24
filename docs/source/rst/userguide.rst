@@ -11,8 +11,14 @@
 
 Neural MMO is a computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems -- with support for up to a thousand agents and one square kilometer maps over several thousand time steps. The platform provides a Python API for scripting agents, `[RLlib] <https://docs.ray.io/en/master/rllib.html>`_ integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
+.. raw:: html
 
-.. figure:: /resource/image/large_isometric_zoom.png
+    <center>
+      <video width=100% height="auto" nocontrols autoplay muted loop>
+        <source src="_static/zoom.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </center>
 
 **Abstract:** Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
 

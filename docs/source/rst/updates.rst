@@ -5,6 +5,8 @@
 |icon| Video Demos
 ##################
 
+`Neural MMO NeurIPS 2021 <https://www.youtube.com/watch?v=hYYA8_wFF7Q>`_
+
 `Neural MMO v1.5 Trailer <https://youtu.be/d1mj8yzjr-w>`_
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <https://youtu.be/DkHopV1RSxw>`_
@@ -72,7 +74,7 @@ The `[OpenAI] <https://github.com/openai/neural-mmo>`_ repository only hosts v1.
       - Wrapped RLlib trainers in Ray Tune to enable parallel evaluation during training
       - Added Skill Rating (SR) metric for direct comparison to scripted baselines
       - Changed batching mode to agent steps, yielding a large policy improvement
- 
+
 **v1.5.1:** Competition Build
    - Blade:
       - Modularized configs to enable dynamic environment customization

@@ -7,20 +7,42 @@
 
 |icon| Introduction
 ###################
-`[Demo Video] <https://youtu.be/d1mj8yzjr-w>`_ | `[User API] <https://jsuarez5341.github.io/neural-mmo/build/html/rst/api.html>`_ | `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
+`[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Neural MMO is a computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems -- with support for up to a thousand agents and one square kilometer maps over several thousand time steps. The platform provides a Python API for scripting agents, `[RLlib] <https://docs.ray.io/en/master/rllib.html>`_ integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems -- with support for up to a thousand agents and one square kilometer maps over several thousand time steps.
 
 .. raw:: html
 
     <center>
       <video width=100% height="auto" nocontrols autoplay muted loop>
         <source src="_static/zoom.mp4" type="video/mp4">
-        Your browser does not support the video tag.
+        Your browser does not support this mp4.
       </video>
     </center>
 
-**Abstract:** Progress in multiagent intelligence research is fundamentally limited by the complexity of environments available for study. Neural MMO is a massively multiagent AI research environment inspired by Massively Multiplayer Online (MMO) role playing games -- self-contained worlds featuring thousands of agents per persistent macrocosm, diverse skilling systems, local and global economies, complex emergent social structures, and ad-hoc high-stakes single and team based conflict.  Our goal is not to simulate the near-infinite physical processes of life on Earth but instead to construct an efficient facsimile that incentivizes the emergence of high-level social and general artificial intelligence. To this end, we consider MMOs the best proxy for the real world among human games.
+The platform provides a Python API for scripting agents, `[RLlib] <https://docs.ray.io/en/master/rllib.html>`_ integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+
+Neural MMO at NeurIPS 2021
+**************************
+
+Our latest publication summarizing the platform's capabilities and baselines. In the associated presentation, I coin the term **Foundation Policies**, analogous to **Foundation Models**, as a grounding motivation for investing in environment complexity and generality. A key contribution of Neural MMO is to do so efficiently and interpretably by adapting techniques from classic MMO development for deep learning.
+
+.. youtube:: hYYA8_wFF7Q
+   :width: 100%
+
+.. code-block:: text
+
+  @proceedings{NEURIPS2021,
+    author = {Joseph Suarez, Yilun Du, Clare Zhu, Igor Mordatch, Phillip Isola},
+    booktitle = {Advances in Neural Information Processing Systems},
+    title = {The Neural MMO Platform for Massively Multiagent Research},
+    url = {https://neuralmmo.github.io},
+    volume = {33},
+    year = {2021}
+  }
+
+
+Citation to be updated upon the release of NeurIPS 2021 proceedings. See Updates for a full list of demos, publications, presentations, and patch notes.
 
 Installation
 ************

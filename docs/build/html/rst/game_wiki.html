@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Overview &mdash; Neural MMO v1.5.2 1.5.2 documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -228,13 +231,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="figure align-default">
+  <figure class="align-default">
 <img alt="../_images/splash.png" src="../_images/splash.png" />
-</div>
-<div class="section" id="icon-overview">
+</figure>
+<section id="icon-overview">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Overview<a class="headerlink" href="#icon-overview" title="Permalink to this headline">¶</a></h1>
 <p>This wiki is devoted to Neural MMO as a game. The current mechanics are fairly straightforward, but there is still some nuance – especially for those unfamiliar with MMOs. Familiarizing yourself with the game itself will help you understand how to script or train better agents, whether your agents are acting intelligently, and which mistakes suggest potential bugs in your code. While all of the documentation is open to user contributions, that is especially true for this wiki – simply edit the game_wiki rst and make a pull request. I’ll handle rebuilding the docs and testing.</p>
-<div class="section" id="glossary">
+<section id="glossary">
 <h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
 <p>A quick reference of standard game terms for those unfamiliar:
 - <strong>Tick:</strong> The simulation interval of the server; a timestep. With rendering enabled, the server targets 0.6s/tick.
@@ -242,32 +245,32 @@
 - <strong>Spawn:</strong> Entering into the game, e.g. <em>players spawn with 10 health</em>
 - <strong>RPG:</strong> Role-Playing Game, e.g. a game in which the player takes on a particular role, usually one removed from modern reality, such as that of a knight or wizard. <em>MMO</em> is short for <em>MMORPG</em>, as most MMOs are also role-playing games.
 - <strong>XP (exp):</strong> Experience, a stat associated with progression systems to represent levels.</p>
-</div>
-<div class="section" id="agent-actions">
+</section>
+<section id="agent-actions">
 <h2>Agent Actions<a class="headerlink" href="#agent-actions" title="Permalink to this headline">¶</a></h2>
 <p>Agents may move North, South, East, or West. Submitting a move action is not required, in which case the agent will remain stationary.</p>
 <p>If the Combat system (see Game Systems) is enabled, agents may Attack a nearby player or NPC with Melee, Range, and Mage. Submitting an attack is not required, in which case the agent will not attack. Agents cannot damage themselves.</p>
-</div>
-<div class="section" id="terrain">
+</section>
+<section id="terrain">
 <h2>Terrain<a class="headerlink" href="#terrain" title="Permalink to this headline">¶</a></h2>
 <p>Game maps are made of two core materials: Grass and Stone. Players may only walk on stone, and each map is surrounded by a lava border, which kills players on contact. In the current version of the environment, the Resource system adds Forest and Scrub tiles (both of which are traversable), and no other systems add additional tile types.</p>
-</div>
-</div>
-<div class="section" id="icon-game-systems">
+</section>
+</section>
+<section id="icon-game-systems">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Game Systems<a class="headerlink" href="#icon-game-systems" title="Permalink to this headline">¶</a></h1>
 <p>While each game system is individually togggleable and configurable, we will assume the cannonical version of the game with all systems enabled and reference interactions between systems. Any such interactions will not be present if that/those game systems are disabled. All numerical values stated below are configurable.</p>
 <p>In the base game with no systems enables, players have 10 health and may wander around the map. That’s about it.</p>
-</div>
-<div class="section" id="icon-resource-system">
+</section>
+<section id="icon-resource-system">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Resource System<a class="headerlink" href="#icon-resource-system" title="Permalink to this headline">¶</a></h1>
 <p>Adds Food and Water resources. Players spawn with 10 food and 10 water. They lose 1 food and 1 water each tick. Players regenerate 10% health per tick (rounded down) while over 50% food and water.</p>
 <p>This system adds a Forest tile, which contains food. Walking over a Forest tile depletes it, replacing it with a Scrub tile and restoring 100% food to the player. Scrub tiles have a 2.5% chance to regenerate into Forest tiles each tick. Walking adjacent to a Water tile restores 100% water to the player.</p>
-</div>
-<div class="section" id="icon-combat">
+</section>
+<section id="icon-combat">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Combat<a class="headerlink" href="#icon-combat" title="Permalink to this headline">¶</a></h1>
 <p>Adds the ability for players to attack other players (and NPCs) with Melee, Range, and Mage combat. These attack styles are usable from 1, 3, and 4 tiles and inflict 7, 3, and 1 damage on a hit respectively. Hit chance is 50% by default. Mage attacks freeze the target in place for 3 ticks by default; this utility and their added range compensates for low damage.</p>
-</div>
-<div class="section" id="icon-npc-equipment">
+</section>
+<section id="icon-npc-equipment">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> NPC &amp; Equipment<a class="headerlink" href="#icon-npc-equipment" title="Permalink to this headline">¶</a></h1>
 <p>This system adds NPCs that may be defeated for equipment to the environment.</p>
 <dl>
@@ -280,56 +283,56 @@
 <p>Upon defeat, NPCs drop equipment for the character that dealt the final blow. Equipment provides a defensive bonus that reduces the accuracy of incoming attacks. Higher level NPCs are likely to have higher level armor, which confers better bonuses.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="icon-progression">
+</section>
+<section id="icon-progression">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Progression<a class="headerlink" href="#icon-progression" title="Permalink to this headline">¶</a></h1>
 <p>This system allows players to improve at the abilities provided by other game systems by representing them as trainable skills. MMOs typically feature a very slow leveling system spanning hundreds to thousands of hours; in order to make progression relevant to the settings we are currently considering in Neural MMO, we have set a global PROGRESSION_BASE_XP_SCALE multiplier to around 10x that of traditional MMOs.</p>
-<div class="section" id="fishing">
+<section id="fishing">
 <h2>Fishing<a class="headerlink" href="#fishing" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 10</p>
 <p>XP Gained: base * water restored</p>
 <p>Enables players to carry more water, equal to their current level</p>
-</div>
-<div class="section" id="hunting">
+</section>
+<section id="hunting">
 <h2>Hunting<a class="headerlink" href="#hunting" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 10</p>
 <p>XP Gained: base * food restored</p>
 <p>Enables players to carry more food, equal to their current level</p>
-</div>
-<div class="section" id="constitution">
+</section>
+<section id="constitution">
 <h2>Constitution<a class="headerlink" href="#constitution" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 10</p>
 <p>XP Gained: 2 * base * (damage received + damage dealt)</p>
 <p>Increases player health, equal to their current level</p>
-</div>
-<div class="section" id="defense">
+</section>
+<section id="defense">
 <h2>Defense<a class="headerlink" href="#defense" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 1</p>
 <p>XP Gained: 4 * base * damage received</p>
 <p>Decreased attacker accuracy. When a player makes an attack, the level of their offensive skill is used as the attack stat. The defense stat is 70% of the target’s corresponding attack skill plus 30% of their defense skill. The difference between the attack and defense stats is used to compute a difficulty, which the game rolls against to determine whether the attack hits.</p>
-</div>
-<div class="section" id="melee">
+</section>
+<section id="melee">
 <h2>Melee<a class="headerlink" href="#melee" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 1</p>
 <p>XP Gained: 4 * base * damage dealt</p>
 <p>Enables players to inflict more damage with melee according to:</p>
 <p>Damage = floor(7 + level * 63 / 99)</p>
-</div>
-<div class="section" id="range">
+</section>
+<section id="range">
 <h2>Range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 1</p>
 <p>XP Gained: 4 * base * damage dealt</p>
 <p>Enables players to inflict more damage with range according to:</p>
 <p>Damage = floor(3 + level * 32 / 99)</p>
-</div>
-<div class="section" id="mage">
+</section>
+<section id="mage">
 <h2>Mage<a class="headerlink" href="#mage" title="Permalink to this headline">¶</a></h2>
 <p>Base Level: 1</p>
 <p>XP Gained: 4 * base * damage dealt</p>
 <p>Enables players to inflict more damage with mage according to:</p>
 <p>Damage = floor(1 + level * 24 / 99)</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

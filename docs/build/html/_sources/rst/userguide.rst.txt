@@ -25,7 +25,7 @@ The platform provides a Python API for scripting agents, `[RLlib] <https://docs.
 Neural MMO at NeurIPS 2021
 **************************
 
-Our latest publication summarizing the platform's capabilities and baselines. In the associated presentation, I coin the term **Foundation Policies**, analogous to **Foundation Models**, as a grounding motivation for investing in environment complexity and generality. A key contribution of Neural MMO is to do so efficiently and interpretably by adapting techniques from classic MMO development for deep learning.
+Our latest `[publication] <http://arxiv.org/abs/2110.07594>`_ summarizing the platform's capabilities and baselines. In the associated presentation, I coin the term **Foundation Policies**, analogous to **Foundation Models**, as a grounding motivation for investing in environment complexity and generality. A key contribution of Neural MMO is to do so efficiently and interpretably by adapting techniques from classic MMO development for deep learning.
 
 .. youtube:: hYYA8_wFF7Q
    :width: 100%
@@ -36,7 +36,7 @@ Our latest publication summarizing the platform's capabilities and baselines. In
     author = {Joseph Suarez, Yilun Du, Clare Zhu, Igor Mordatch, Phillip Isola},
     booktitle = {Advances in Neural Information Processing Systems},
     title = {The Neural MMO Platform for Massively Multiagent Research},
-    url = {https://neuralmmo.github.io},
+    url = {http://arxiv.org/abs/2110.07594},
     volume = {33},
     year = {2021}
   }

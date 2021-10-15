@@ -18,6 +18,8 @@
 |icon| Publications
 ###################
 
+`The Neural MMO Platform for Massively Multiagent Research <http://arxiv.org/abs/2110.07594>`_ (NeurIPS 2021) (v1.5.2)
+
 :download:`[Poster] </resource/update/NMMO_ICML2020_Poster.pdf>` :download:`Neural MMO: Ingredients for Massively Multiagent Artificial Intelligence Research  </resource/update/nmmo_icml2020.pdf>` (ICML 2020 LAOW Workshop) (v1.4)
 
 `Neural MMO v1.3: A Massively Multiagent Game Environment for Training and Evaluating Neural Networks <http://ifaamas.org/Proceedings/aamas2020/pdfs/p2020.pdf>`_ (AAMAS Extended Abstract, 2020)

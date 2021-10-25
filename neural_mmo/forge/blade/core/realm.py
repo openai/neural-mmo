@@ -126,13 +126,14 @@ class PlayerManager(EntityGroup):
       super().__init__(config, realm)
 
       self.palette = Palette(config.NPOP)
-      self.agents = config.AGENT_LOADER(config.AGENTS) 
+      self.agents = config.AGENT_LOADER(config)
       self.realm  = realm
       self.idx    = 1
 
    def spawnIndividual(self, r, c):
-      agent  = next(self.agents)(self.config, self.idx)
-      player = Player(self.realm, (r, c), agent)
+      pop, agent = next(self.agents)
+      agent      = agent(self.config, self.idx)
+      player     = Player(self.realm, (r, c), agent, pop)
       super().spawn(player)
       self.idx += 1
 

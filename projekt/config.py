@@ -131,9 +131,16 @@ class CompetitionRound2(config.Achievement, SmallMaps):
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-   NENT                    = 128
+   @property
+   def NENT(self):
+      return 8 * len(self.AGENTS)
+
    NPOP                    = 16
+   AGENTS                  = NPOP*[Agent]
+
+   AGENT_LOADER            = config.TeamLoader
    COOPERATIVE             = True
+   TEAM_SPIRIT             = 1.0
 
 class CompetitionRound3(config.Achievement, LargeMaps):
    @property
@@ -143,6 +150,8 @@ class CompetitionRound3(config.Achievement, LargeMaps):
    NENT                    = 1024
    NPOP                    = 32
    COOPERATIVE             = True
+   TEAM_SPIRIT             = 1.0
+   AGENT_LOADER            = config.TeamLoader
 
 
 ### NeurIPS Experiments

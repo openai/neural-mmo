@@ -56,6 +56,15 @@ class Color256:
       return colors
    colors = make256()
 
+class Color16:
+   def make():
+      hues   = np.linspace(0, 1, 16)
+      idxs   = np.arange(256)
+      params = zip(idxs, hues)
+      colors = [makeColor(idx, h=h, s=1, v=1) for idx, h in params]
+      return colors
+   colors = make()
+
 class Tier:
    BLACK    = Color('BLACK', '#000000')
    WOOD     = Color('WOOD', '#784d1d')

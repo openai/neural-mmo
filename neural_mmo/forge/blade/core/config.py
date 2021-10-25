@@ -8,7 +8,8 @@ from itertools import chain
 import neural_mmo
 
 class SequentialLoader:
-    def __init__(self, items):
+    def __init__(self, config):
+        items = config.AGENTS
         for idx, itm in enumerate(items):
            itm.policyID = idx 
 
@@ -20,7 +21,26 @@ class SequentialLoader:
 
     def __next__(self):
         self.idx = (self.idx + 1) % len(self.items)
-        return self.items[self.idx]
+        return self.idx, self.items[self.idx]
+
+class TeamLoader:
+    def __init__(self, config):
+        items = config.AGENTS
+        self.team_size = config.NENT // config.NPOP
+
+        for idx, itm in enumerate(items):
+           itm.policyID = idx 
+
+        self.items = items
+        self.idx   = -1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.idx += 1
+        team_size = self.idx // self.team_size
+        return team_size, self.items[team_size]
 
 
 class StaticIterable(type):
@@ -126,8 +146,8 @@ class Config(Template):
 
    @property
    def TEAM_SIZE(self):
-      assert not self.NMOB % self.NPOP
-      return self.NMOB // self.NPOP
+      assert not self.NENT % self.NPOP
+      return self.NENT // self.NPOP
 
    @property
    def WINDOW(self):

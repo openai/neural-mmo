@@ -3,6 +3,7 @@ from pdb import set_trace as T
 
 from neural_mmo.forge.blade.systems import ai, equipment
 from neural_mmo.forge.blade.lib import material
+from neural_mmo.forge.blade.lib import enums
 
 from neural_mmo.forge.blade.systems.skill import Skills
 from neural_mmo.forge.blade.systems.achievement import Diary
@@ -10,10 +11,13 @@ from neural_mmo.forge.blade.entity import entity
 from neural_mmo.forge.blade.io.stimulus import Static
 
 class Player(entity.Entity):
-   def __init__(self, realm, pos, agent):
-      super().__init__(realm, pos, agent.iden, agent.name, agent.color, agent.pop)
+   def __init__(self, realm, pos, agent, pop):
+      super().__init__(realm, pos,
+            agent.iden, agent.name,
+            enums.Color16.colors[pop], pop)
+
       self.agent  = agent
-      self.pop    = agent.pop
+      self.pop    = pop
 
       #Scripted hooks
       self.target = None

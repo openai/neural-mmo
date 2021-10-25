@@ -524,7 +524,7 @@ class RLlibTrainer(ppo.PPOTrainer):
       trueskill.setup(mu=1000, sigma=2*100/3, beta=100/3, tau=2/3, draw_probability=0)
 
       self.ratings = [{agent.__name__: trueskill.Rating(mu=1000, sigma=2*100/3)}
-            for agent in self.env_config.EVAL_AGENTS]
+            for agent in set(self.env_config.EVAL_AGENTS)]
 
       self.reset_scripted()
 
@@ -548,7 +548,7 @@ class RLlibTrainer(ppo.PPOTrainer):
       stat_dict = super().evaluate()
       stats = stat_dict['evaluation']['custom_metrics']
  
-      ranks = {agent.__name__: -1 for agent in self.env_config.EVAL_AGENTS}
+      ranks = {agent.__name__: -1 for agent in set(self.env_config.EVAL_AGENTS)}
       for key in list(stats.keys()):
          if key.startswith('Rank_'):
              stat = stats[key]
@@ -563,7 +563,10 @@ class RLlibTrainer(ppo.PPOTrainer):
       #there should be a cleaner way to divide episodes into blocks
       for i in range(nEnvs): 
          env_ranks = [e[i] for e in ranks]
-         self.ratings = trueskill.rate(self.ratings, env_ranks)
+         try:
+            self.ratings = trueskill.rate(self.ratings, env_ranks)
+         except:
+            TT()
          self.reset_scripted()
 
       for rating in self.ratings:

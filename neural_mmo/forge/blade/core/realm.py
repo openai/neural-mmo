@@ -125,10 +125,14 @@ class PlayerManager(EntityGroup):
    def __init__(self, config, realm):
       super().__init__(config, realm)
 
+      self.loader  = config.AGENT_LOADER
       self.palette = Palette(config.NPOP)
-      self.agents = config.AGENT_LOADER(config)
-      self.realm  = realm
-      self.idx    = 1
+      self.realm   = realm
+
+   def reset(self):
+      super().reset()
+      self.agents  = self.loader(self.config)
+      self.idx     = 1
 
    def spawnIndividual(self, r, c):
       pop, agent = next(self.agents)
@@ -143,7 +147,9 @@ class PlayerManager(EntityGroup):
             return 
 
          self.spawned = True
+         idx = 0
          for r, c in self.config.SPAWN():
+            idx += 1
             assert not self.realm.map.tiles[r, c].occupied
             self.spawnIndividual(r, c)
          return

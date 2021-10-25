@@ -39,8 +39,8 @@ class TeamLoader:
 
     def __next__(self):
         self.idx += 1
-        team_size = self.idx // self.team_size
-        return team_size, self.items[team_size]
+        team_idx  = self.idx // self.team_size
+        return team_idx, self.items[team_idx]
 
 
 class StaticIterable(type):

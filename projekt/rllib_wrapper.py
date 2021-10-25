@@ -563,10 +563,7 @@ class RLlibTrainer(ppo.PPOTrainer):
       #there should be a cleaner way to divide episodes into blocks
       for i in range(nEnvs): 
          env_ranks = [e[i] for e in ranks]
-         try:
-            self.ratings = trueskill.rate(self.ratings, env_ranks)
-         except:
-            TT()
+         self.ratings = trueskill.rate(self.ratings, env_ranks)
          self.reset_scripted()
 
       for rating in self.ratings:

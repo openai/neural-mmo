@@ -137,7 +137,7 @@ class CompetitionRound2(config.Achievement, SmallMaps):
 
    NPOP                    = 16
    AGENTS                  = NPOP*[Agent]
-   EVAL_AGENTS             = 4*[baselines.Meander, baselines.Forage, baselines.Combat, Agent]
+   EVAL_AGENTS             = 8*[baselines.Meander, baselines.Forage, baselines.Combat, Agent]
 
    AGENT_LOADER            = config.TeamLoader
    COOPERATIVE             = True

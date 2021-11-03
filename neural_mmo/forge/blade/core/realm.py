@@ -73,12 +73,16 @@ class EntityGroup(Mapping):
  
    def cull(self):
       self.dead = {}
+      while self.temp_indices:
+          self.indices.append(self.temp_indices.pop())
+
       for entID in list(self.entities):
          player = self.entities[entID]
          if not player.alive:
             r, c  = player.base.pos
             entID = player.entID
             self.dead[entID] = player
+            self.temp_indices.append(entID)
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
@@ -93,8 +97,12 @@ class EntityGroup(Mapping):
 class NPCManager(EntityGroup):
    def __init__(self, config, realm):
       super().__init__(config, realm)
-      self.realm = realm
-      self.idx   = -1
+      self.realm   = realm
+
+   def reset(self):
+      super().reset()
+      self.indices = list(range(-self.config.NMOB, 0))
+      self.temp_indices = []
  
    def spawn(self):
       if not self.config.game_system_enabled('NPC'):
@@ -110,10 +118,14 @@ class NPCManager(EntityGroup):
          if self.realm.map.tiles[r, c].occupied:
             continue
 
-         npc = NPC.spawn(self.realm, (r, c), self.idx)
+         if not self.indices:
+            return
+
+         idx = self.indices[-1]
+         npc = NPC.spawn(self.realm, (r, c), idx)
          if npc: 
             super().spawn(npc)
-            self.idx -= 1
+            self.indices.pop()
 
    def actions(self, realm):
       actions = {}
@@ -132,14 +144,19 @@ class PlayerManager(EntityGroup):
    def reset(self):
       super().reset()
       self.agents  = self.loader(self.config)
-      self.idx     = 1
+      self.indices = list(range(1, self.config.NENT+1))
+      self.temp_indices = []
 
    def spawnIndividual(self, r, c):
       pop, agent = next(self.agents)
-      agent      = agent(self.config, self.idx)
+
+      if not self.indices:
+         return
+
+      idx        = self.indices.pop()
+      agent      = agent(self.config, idx)
       player     = Player(self.realm, (r, c), agent, pop)
       super().spawn(player)
-      self.idx += 1
 
    def spawn(self):
       if self.config.SPAWN == self.config.SPAWN_CONCURRENT:
@@ -233,12 +250,13 @@ class Realm:
             ent = self.entity(entID)
             atn.call(self, ent, *args)
 
-      #Cull dead agents and spawn new ones
-      dead = self.players.cull()
-      self.npcs.cull()
-
+      #Spawn new agent and cull dead ones
+      #TODO: Place cull before spawn once PettingZoo API fixes respawn on same tick as death bug
       self.players.spawn()
       self.npcs.spawn()
+
+      dead = self.players.cull()
+      self.npcs.cull()
 
       #Update map
       self.map.step()

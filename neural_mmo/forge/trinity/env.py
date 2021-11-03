@@ -4,18 +4,25 @@ import numpy as np
 from collections import defaultdict
 from itertools import chain
 from copy import deepcopy
+import functools
 
 from neural_mmo.forge.blade import entity, core
 from neural_mmo.forge.blade.io import stimulus
-from neural_mmo.forge.blade.io.stimulus import Static
+from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.io.action import static as Action
 from neural_mmo.forge.blade.systems import combat
 
 from neural_mmo.forge.blade.lib import log
 
 from neural_mmo.forge.trinity.overlay import OverlayRegistry
+from neural_mmo.forge.trinity.dataframe import DataType
 
-class Env:
+import gym
+from pettingzoo import ParallelEnv
+from pettingzoo.utils import agent_selector
+from pettingzoo.utils import wrappers
+
+class Env(ParallelEnv):
    '''Environment wrapper for Neural MMO
 
    Note that the contents of (ob, reward, done, info) returned by the standard
@@ -26,6 +33,9 @@ class Env:
    advantage of our prebuilt baseline implementations, but any framework that
    supports RLlib's fairly popular environment API and extended OpenAI
    gym.spaces observation/action definitions should work as well.'''
+
+   metadata = {'render.modes': ['human'], 'name': 'neural-mmo'}
+
    def __init__(self, config):
       '''
       Args:
@@ -41,6 +51,48 @@ class Env:
       self.client     = None
       self.obs        = None
 
+      ### Initialize IO spaces
+      self.possible_agents    = set(range(1, config.NENT+1))
+
+   @functools.lru_cache(maxsize=None)
+   def observation_space(self, agent):
+      observation = {}
+      for entity in sorted(Stimulus.values()):
+         rows       = entity.N(self.config)
+         continuous = 0
+         discrete   = 0
+
+         for _, attr in entity:
+            if attr.DISCRETE:
+               discrete += 1
+            if attr.CONTINUOUS:
+               continuous += 1
+
+         name = entity.__name__
+         observation[name] = {
+               'Continuous': gym.spaces.Box(low=-2**20, high=2**20, shape=(rows, continuous), dtype=DataType.CONTINUOUS),
+               'Discrete'  : gym.spaces.Box(low=0, high=4096, shape=(rows, discrete), dtype=DataType.DISCRETE)}
+
+         if name == 'Entity':
+            observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.N_AGENT_OBS, shape=(1,), dtype=DataType.DISCRETE)
+
+         observation[name] = gym.spaces.Dict(observation[name])
+
+      return gym.spaces.Dict(observation)
+
+   @functools.lru_cache(maxsize=None)
+   def action_space(self, agent):
+      actions = {}
+      for atn in sorted(Action.Action.edges):
+         actions[atn] = {}
+         for arg in sorted(atn.edges):
+            n                       = arg.N(self.config)
+            actions[atn][arg] = gym.spaces.Discrete(n)
+
+         actions[atn] = gym.spaces.Dict(actions[atn])
+
+      return gym.spaces.Dict(actions)
+ 
    ############################################################################
    ### Core API
    def reset(self, idx=None, step=True):
@@ -68,9 +120,7 @@ class Env:
       Returns:
          observations, as documented by step()
       '''
-      self.actions   = {}
-      self.dead      = []
- 
+
       self.quill = log.Quill()
       
       if idx is not None:
@@ -83,12 +133,18 @@ class Env:
       self.worldIdx = idx
       self.realm.reset(idx)
 
-      obs = None
-      if step:
-         obs, _, _, _ = self.step({})
+      self.actions = {}
 
-      self.obs = obs
-      return obs
+      if step:
+         self.obs, _, _, _ = self.step({})
+
+      return self.obs
+
+   def observe(self, agent):
+       return self.obs[agent]
+
+   def close(self):
+       pass
 
    def step(self, actions, preprocess=set(), omitDead=True):
       '''OpenAI Gym API step function simulating one game tick or timestep
@@ -241,8 +297,15 @@ class Env:
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
+      #Pettingzoo API
+      self.agents = list(self.realm.players.keys())
+
+      infos = {}
+      for agent in obs:
+         infos[agent] = None
+
       self.obs = obs
-      return obs, rewards, dones, {}
+      return obs, rewards, dones, infos
 
    ############################################################################
    ### Logging
@@ -341,7 +404,7 @@ class Env:
 
    ############################################################################
    ### Client data
-   def render(self):
+   def render(self, mode='human'):
       '''Data packet used by the renderer
 
       Returns:
@@ -436,7 +499,7 @@ class Env:
 
             obs = self.realm.dataframe.get(ent)
             if n == 0:
-               self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
+               self.realm.dataframe.remove(Stimulus.Entity, entID, ent.pos)
 
             observations[entID] = obs
             ents[entID] = ent

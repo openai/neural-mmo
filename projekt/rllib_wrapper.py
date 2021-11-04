@@ -280,7 +280,7 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       super().__init__(*args, **kwargs)
       nn.Module.__init__(self)
 
-      self.space  = actionSpace(self.config).spaces
+      #self.space  = actionSpace(self.config).spaces
       self.model  = Recurrent(self.config)
 
    #Initial hidden state for RLlib Trainer
@@ -293,9 +293,9 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 
       logits = []
       #Flatten structured logits for RLlib
-      for atnKey, atn in sorted(self.space.items()):
-         for argKey, arg in sorted(atn.spaces.items()):
-            logits.append(logitDict[atnKey][argKey])
+      for atnKey, atn in logitDict.items():
+         for argKey, arg in atn.items():
+            logits.append(arg)
 
       return torch.cat(logits, dim=1), state
 
@@ -599,7 +599,7 @@ class RLlibLogCallbacks(DefaultCallbacks):
       for policyID, score in zip(policy_ids, scores):
          policy = invMap[policyID]
          agents[policy].append(score)
-      
+
       for agent in agents:
          agents[agent] = np.mean(agents[agent])
 

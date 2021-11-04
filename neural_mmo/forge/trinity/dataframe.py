@@ -13,6 +13,7 @@ import numpy as np
 
 from collections import defaultdict
 
+from neural_mmo.forge.blade.core import terrain
 from neural_mmo.forge.blade.io.stimulus import Static
 
 class DataType:

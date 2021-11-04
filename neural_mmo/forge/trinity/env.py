@@ -51,8 +51,11 @@ class Env(ParallelEnv):
       self.client     = None
       self.obs        = None
 
-      ### Initialize IO spaces
-      self.possible_agents    = set(range(1, config.NENT+1))
+      ### Initialize IO spaces. Big buffer of agents for now due to a rllib/pettingzoo integration bug with respawning
+      self.possible_agents    = list(range(1, 2048+1))
+
+      self.observation_spaces = {idx: self.observation_space(idx) for idx in self.possible_agents}
+      self.action_spaces      = {idx: self.action_space(idx) for idx in self.possible_agents}
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent):

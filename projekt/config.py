@@ -99,7 +99,7 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    EVALUATION_HORIZON      = 1024
 
 
-class Debug(SmallMaps, config.AllGameSystems):
+class Debug(config.Achievement, SmallMaps):
    '''Debug Neural MMO training setting
 
    A version of the SmallMap setting with greatly reduced batch parameters.
@@ -156,8 +156,8 @@ class CompetitionRound3(config.Achievement, LargeMaps):
 
 
 ### NeurIPS Experiments
-class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
-class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
+class SmallMultimodalSkills(config.Achievement, SmallMaps): pass
+class LargeMultimodalSkills(config.Achievement, LargeMaps): pass
 
 
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):

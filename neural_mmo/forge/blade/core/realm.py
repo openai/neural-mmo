@@ -73,16 +73,12 @@ class EntityGroup(Mapping):
  
    def cull(self):
       self.dead = {}
-      while self.temp_indices:
-          self.indices.append(self.temp_indices.pop())
-
       for entID in list(self.entities):
          player = self.entities[entID]
          if not player.alive:
             r, c  = player.base.pos
             entID = player.entID
             self.dead[entID] = player
-            self.temp_indices.append(entID)
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
@@ -101,9 +97,8 @@ class NPCManager(EntityGroup):
 
    def reset(self):
       super().reset()
-      self.indices = list(range(-self.config.NMOB, 0))
-      self.temp_indices = []
- 
+      self.idx     = -1
+
    def spawn(self):
       if not self.config.game_system_enabled('NPC'):
          return
@@ -118,14 +113,10 @@ class NPCManager(EntityGroup):
          if self.realm.map.tiles[r, c].occupied:
             continue
 
-         if not self.indices:
-            return
-
-         idx = self.indices[-1]
-         npc = NPC.spawn(self.realm, (r, c), idx)
+         npc = NPC.spawn(self.realm, (r, c), self.idx)
          if npc: 
             super().spawn(npc)
-            self.indices.pop()
+            self.idx -= 1
 
    def actions(self, realm):
       actions = {}
@@ -144,19 +135,14 @@ class PlayerManager(EntityGroup):
    def reset(self):
       super().reset()
       self.agents  = self.loader(self.config)
-      self.indices = list(range(1, self.config.NENT+1))
-      self.temp_indices = []
+      self.idx     = 1
 
    def spawnIndividual(self, r, c):
       pop, agent = next(self.agents)
-
-      if not self.indices:
-         return
-
-      idx        = self.indices.pop()
-      agent      = agent(self.config, idx)
+      agent      = agent(self.config, self.idx)
       player     = Player(self.realm, (r, c), agent, pop)
       super().spawn(player)
+      self.idx   += 1
 
    def spawn(self):
       if self.config.SPAWN == self.config.SPAWN_CONCURRENT:

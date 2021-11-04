@@ -293,8 +293,9 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 
       logits = []
       #Flatten structured logits for RLlib
-      for atnKey, atn in logitDict.items():
-         for argKey, arg in atn.items():
+      #TODO: better to use the space directly here in case of missing keys
+      for atnKey, atn in sorted(logitDict.items()):
+         for argKey, arg in sorted(atn.items()):
             logits.append(arg)
 
       return torch.cat(logits, dim=1), state

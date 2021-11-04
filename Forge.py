@@ -23,8 +23,13 @@ from projekt import rllib_wrapper as wrapper
 import projekt
 from projekt import config as base_config
 
+from neural_mmo.forge.blade.core import terrain
+from neural_mmo.forge.trinity.env import Env
+
 from neural_mmo.forge.blade.io.action.static import Action
 from neural_mmo.forge.ethyr.torch import utils
+
+from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
 
 class ConsoleLog(CLIReporter):
    def report(self, trials, done, *sys_info):
@@ -41,25 +46,32 @@ def run_tune_experiment(config):
    ray.init(local_mode=config.LOCAL_MODE)
 
    #Obs and actions
-   obs  = wrapper.observationSpace(config)
-   atns = wrapper.actionSpace(config)
+   #obs  = wrapper.observationSpace(config)
+   #atns = wrapper.actionSpace(config)
 
    #Register custom env and policies
    ray.tune.registry.register_env("Neural_MMO",
+         #lambda config: ParallelPettingZooEnv(Env(config['config'])))
          lambda config: wrapper.RLlibEnv(config))
+
+   #ray.tune.registry.register_env("Neural_MMO",
+   #      lambda config: ParallelPettingZooEnv(wrapper.RLlibEnv(config)))
+
+
    rllib.models.ModelCatalog.register_custom_model(
          'godsword', wrapper.RLlibPolicy)
    mapPolicy = lambda agentID : 'policy_{}'.format(
          agentID % config.NPOLICIES)
 
    policies = {}
+   env = Env(config)
    for i in range(config.NPOLICIES):
       params = {
             "agent_id": i,
-            "obs_space_dict": obs,
-            "act_space_dict": atns}
+            "obs_space_dict": env.observation_space(i),
+            "act_space_dict": env.action_space(i)}
       key           = mapPolicy(i)
-      policies[key] = (None, obs, atns, params)
+      policies[key] = (None, env.observation_space(i), env.action_space(i), params)
 
    #Evaluation config
    eval_config = deepcopy(config)

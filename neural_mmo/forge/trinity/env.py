@@ -123,6 +123,8 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
+      self.actions = {}
+      self.dead    = []
 
       self.quill = log.Quill()
       
@@ -135,8 +137,6 @@ class Env(ParallelEnv):
 
       self.worldIdx = idx
       self.realm.reset(idx)
-
-      self.actions = {}
 
       if step:
          self.obs, _, _, _ = self.step({})

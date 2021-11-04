@@ -142,6 +142,7 @@ class PlayerManager(EntityGroup):
       agent      = agent(self.config, self.idx)
       player     = Player(self.realm, (r, c), agent, pop)
       super().spawn(player)
+      print('Spawn')
       self.idx   += 1
 
    def spawn(self):

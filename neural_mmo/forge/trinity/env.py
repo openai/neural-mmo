@@ -7,6 +7,7 @@ from copy import deepcopy
 import functools
 
 from neural_mmo.forge.blade import entity, core
+from neural_mmo.forge.blade.core.config import Config
 from neural_mmo.forge.blade.io import stimulus
 from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.io.action import static as Action
@@ -23,16 +24,14 @@ from pettingzoo.utils import agent_selector
 from pettingzoo.utils import wrappers
 
 class Env(ParallelEnv):
-   '''Environment wrapper for Neural MMO
+   '''Environment wrapper for Neural MMO using the Parallel PettingZoo API
 
-   Note that the contents of (ob, reward, done, info) returned by the standard
-   OpenAI Gym API reset() and step(actions) methods have been generalized to
-   support variable agent populations and more expressive observation/action
-   spaces. This means you cannot use preexisting optimizer implementations that
-   strictly expect the OpenAI Gym API. We recommend PyTorch+RLlib to take
-   advantage of our prebuilt baseline implementations, but any framework that
-   supports RLlib's fairly popular environment API and extended OpenAI
-   gym.spaces observation/action definitions should work as well.'''
+   Neural MMO provides complex environments featuring structured observations/actions,
+   variably sized agent populations, and long time horizons. Usage in conjunction
+   with RLlib as demonstrated in the /projekt wrapper is highly recommended.
+
+   Due to a limitation in current RLlib support for PettingZoo, this wrapper
+   preallocates 2048 agents by default.'''
 
    metadata = {'render.modes': ['human'], 'name': 'neural-mmo'}
 
@@ -45,20 +44,36 @@ class Env(ParallelEnv):
       self.realm      = core.Realm(config)
       self.registry   = OverlayRegistry(config, self)
 
+      if __debug__:
+         err = 'Config {} is not a config instance (did you pass the class?)'
+         assert isinstance(config, Config), err.format(config)
+
       self.config     = config
       self.overlay    = None
       self.overlayPos = [256, 256]
       self.client     = None
       self.obs        = None
 
-      ### Initialize IO spaces. Big buffer of agents for now due to a rllib/pettingzoo integration bug with respawning
-      self.possible_agents    = list(range(1, 2048+1))
+      ### Initialize IO spaces. Buffer of agents for now due to a rllib/pettingzoo integration bug with respawning
+      self.possible_agents    = list(range(1, config.NENT+1))
 
       self.observation_spaces = {idx: self.observation_space(idx) for idx in self.possible_agents}
       self.action_spaces      = {idx: self.action_space(idx) for idx in self.possible_agents}
 
    @functools.lru_cache(maxsize=None)
-   def observation_space(self, agent):
+   def observation_space(self, agent: int):
+      '''Neural MMO Observation Space
+
+      Args:
+         agent: Agent ID
+
+      Returns:
+         observation: gym.spaces object contained the structured observation
+         for the specified agent. Each visible object is represented by
+         continuous and discrete vectors of attributes. A 2-layer attentional
+         encoder can be used to convert this structured observation into
+         a flat vector embedding.'''
+
       observation = {}
       for entity in sorted(Stimulus.values()):
          rows       = entity.N(self.config)
@@ -85,6 +100,18 @@ class Env(ParallelEnv):
 
    @functools.lru_cache(maxsize=None)
    def action_space(self, agent):
+      '''Neural MMO Action Space
+
+      Args:
+         agent: Agent ID
+
+      Returns:
+         actions: gym.spaces object contained the structured actions
+         for the specified agent. Each action is parameterized by a list
+         of discrete-valued arguments. These consist of both fixed, k-way
+         choices (such as movement direction) and selections from the
+         observation space (such as targeting)'''
+
       actions = {}
       for atn in sorted(Action.Action.edges):
          actions[atn] = {}
@@ -143,14 +170,12 @@ class Env(ParallelEnv):
 
       return self.obs
 
-   def observe(self, agent):
-       return self.obs[agent]
-
    def close(self):
+       '''For conformity with the PettingZoo API only; rendering is external'''
        pass
 
    def step(self, actions, preprocess=set(), omitDead=True):
-      '''OpenAI Gym API step function simulating one game tick or timestep
+      '''Simulates one game tick or timestep
 
       Args:
          actions: A dictionary of agent decisions of format::
@@ -202,12 +227,8 @@ class Env(ParallelEnv):
                ]
 
             Where agent_i is the integer index of the i\'th agent and
-            obs_i is the observation of the i\'th' agent. Note that obs_i
-            is a structured datatype -- not a flat tensor. It is automatically
-            interpretable under an extended OpenAI gym.spaces API. Our demo
-            code shows how do to this in RLlib. Other frameworks must
-            implement the same extended gym.spaces API to do the same.
-            
+            obs_i is specified by the observation_space function.
+           
          rewards:
             A dictionary of agent rewards of format::
 
@@ -237,13 +258,21 @@ class Env(ParallelEnv):
             done_i is a boolean denoting whether the i\'th agent has died.
 
             Note that obs_i will be a garbage placeholder if done_i is true.
-            This is provided only for conformity with OpenAI Gym. Your
+            This is provided only for conformity with PettingZoo. Your
             algorithm should not attempt to leverage observations outside of
             trajectory bounds. You can omit garbage obs_i values by setting
             omitDead=True.
 
          infos:
-            An empty dictionary provided only for conformity with OpenAI Gym.
+            A dictionary of agent infos of format:
+
+               {
+                  agent_1: None,
+                  agent_2: None,
+                  ...
+               ]
+
+            Provided for conformity with PettingZoo
       '''
       #Preprocess actions for neural models
       for entID in list(actions.keys()):

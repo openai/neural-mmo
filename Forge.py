@@ -45,21 +45,13 @@ def run_tune_experiment(config):
 
    ray.init(local_mode=config.LOCAL_MODE)
 
-   #Obs and actions
-   #obs  = wrapper.observationSpace(config)
-   #atns = wrapper.actionSpace(config)
-
    #Register custom env and policies
    ray.tune.registry.register_env("Neural_MMO",
-         #lambda config: ParallelPettingZooEnv(Env(config['config'])))
          lambda config: wrapper.RLlibEnv(config))
-
-   #ray.tune.registry.register_env("Neural_MMO",
-   #      lambda config: ParallelPettingZooEnv(wrapper.RLlibEnv(config)))
-
 
    rllib.models.ModelCatalog.register_custom_model(
          'godsword', wrapper.RLlibPolicy)
+
    mapPolicy = lambda agentID : 'policy_{}'.format(
          agentID % config.NPOLICIES)
 

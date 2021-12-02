@@ -168,11 +168,11 @@ class CompetitionRound3(config.Achievement, LargeMaps):
 
 
 ### NeurIPS Experiments
-class SmallMultimodalSkills(SmallMaps, config.Achievement):
+class SmallMultimodalSkills(config.Achievement, SmallMaps):
    ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
    TERRAIN_TRAIN_MAPS      = 16384
 
-class LargeMultimodalSkills(LargeMaps, config.Achievement):
+class LargeMultimodalSkills(config.Achievement, LargeMaps):
    ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
    pass
 

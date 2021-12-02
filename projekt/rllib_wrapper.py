@@ -495,6 +495,10 @@ class RLlibTrainer(ppo.PPOTrainer):
 
       self.reset_scripted()
 
+   @classmethod
+   def name(cls):
+      return cls.__bases__[0].__name__
+
    def reset_scripted(self):
       for rating_dict in self.ratings:
          for agent, rating in rating_dict.items():
@@ -523,6 +527,8 @@ class RLlibTrainer(ppo.PPOTrainer):
              agent = key[5:]
              ranks[agent] = stat
 
+      #Getting a type(int) exception?
+      #Achievement system is off
       ranks = list(ranks.values())
       nEnvs = len(ranks[0])
       

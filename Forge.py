@@ -110,19 +110,29 @@ def run_tune_experiment(config):
       'evaluation_num_workers': config.EVALUATION_NUM_WORKERS,
       'evaluation_parallel_to_training': config.EVALUATION_PARALLEL,
    }
+ 
+   restore     = None
+   config_name = config.__class__.__name__
+   exp_name    = wrapper.RLlibTrainer.name()
+   if config.RESTORE:
+      if config.RESTORE_ID:
+         exp_name = '{}_{}'.format(exp_name, config.RESTORE_ID)
+
+      restore   = '{0}/{1}/{2}/checkpoint_{3:06d}/checkpoint-{3}'.format(
+            config.EXPERIMENT_DIR, config_name, exp_name, config.RESTORE_CHECKPOINT)
 
    tune.run(wrapper.RLlibTrainer,
-      config = rllib_config,
-      name = config.__class__.__name__,
-      verbose = config.LOG_LEVEL,
-      stop = {'training_iteration': config.TRAINING_ITERATIONS},
-      resume = config.RESUME,
-      restore= config.RESTORE,
-      local_dir = 'experiments',
+      config    = rllib_config,
+      name      = config_name,
+      verbose   = config.LOG_LEVEL,
+      stop      = {'training_iteration': config.TRAINING_ITERATIONS},
+      restore   = restore,
+      resume    = config.RESUME,
+      local_dir = config.EXPERIMENT_DIR,
       keep_checkpoints_num = config.KEEP_CHECKPOINTS_NUM,
       checkpoint_freq = config.CHECKPOINT_FREQ,
       checkpoint_at_end = True,
-      trial_dirname_creator = lambda _: 'Run',
+      trial_dirname_creator = lambda _: wrapper.RLlibTrainer.name(),
       progress_reporter = ConsoleLog(),
       reuse_actors = True,
       callbacks=[WandbLoggerCallback(

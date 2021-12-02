@@ -154,8 +154,6 @@ class Config(Template):
       '''Size of the square tile crop visible to an agent'''
       return 2*self.NSTIM + 1
 
-   REWARD_ACHIEVEMENT      = False
-
    ############################################################################
    ### Agent Parameters                                                   
    BASE_HEALTH                = 10

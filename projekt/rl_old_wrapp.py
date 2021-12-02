@@ -1,3 +1,5 @@
+from pdb import set_trace as TT
+
 from collections import defaultdict
 
 from tqdm import tqdm
@@ -11,11 +13,8 @@ from torch import nn
 from torch.nn.utils import rnn
 
 from ray import rllib
-from pdb import set_trace as TT
-
 import ray.rllib.agents.ppo.ppo as ppo
 import ray.rllib.agents.ppo.appo as appo
-import ray.rllib.agents.impala.impala as impala
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.rllib.utils.spaces.flexdict import FlexDict
@@ -29,7 +28,8 @@ from neural_mmo.forge.blade.systems import ai
 from neural_mmo.forge.ethyr.torch import policy
 from neural_mmo.forge.ethyr.torch.policy import attention
 
-from neural_mmo.forge.trinity import Env
+from neural_mmo.forge.trinity import Env, evaluator, formatting
+from neural_mmo.forge.trinity.scripted import baselines
 from neural_mmo.forge.trinity.dataframe import DataType
 from neural_mmo.forge.trinity.overlay import Overlay, OverlayRegistry
 
@@ -61,6 +61,9 @@ class Input(nn.Module):
       #Hackey obs scaling
       self.tileWeight = torch.Tensor([1.0, 0.0, 0.02, 0.02])
       self.entWeight  = torch.Tensor([1.0, 0.0, 0.0, 0.05, 0.00, 0.02, 0.02, 0.1, 0.01, 0.1, 0.1, 0.1, 0.3])
+      if torch.cuda.is_available():
+         self.tileWeight = self.tileWeight.cuda()
+         self.entWeight  = self.entWeight.cuda()
 
    def forward(self, inp):
       '''Produces tensor representations from an IO object
@@ -74,9 +77,8 @@ class Input(nn.Module):
       #Pack entities of each attribute set
       entityLookup = {}
 
-      device                       = inp['Tile']['Continuous'].device
-      inp['Tile']['Continuous']   *= self.tileWeight.to(device)
-      inp['Entity']['Continuous'] *= self.entWeight.to(device)
+      inp['Tile']['Continuous']   *= self.tileWeight
+      inp['Entity']['Continuous'] *= self.entWeight
  
       entityLookup['N'] = inp['Entity'].pop('N')
       for name, entities in inp.items():
@@ -259,17 +261,15 @@ class Recurrent(Encoder):
                          batch_first=True)
 
       #Main recurrent network
-      oldHidden = hidden
       hidden, state = self.lstm(hidden, state)
-      newHidden = hidden
 
       #Unpack (batch, seq, hidden) -> (batch x seq, hidden)
       hidden, _     = rnn.pad_packed_sequence(
                          sequence=hidden,
-                         batch_first=True,
-                         total_length=T)
+                         batch_first=True)
 
       return hidden.reshape(TB, H), state
+
 
 ###############################################################################
 ### RLlib Policy, Evaluator, Trainer
@@ -280,7 +280,7 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       super().__init__(*args, **kwargs)
       nn.Module.__init__(self)
 
-      #self.space  = actionSpace(self.config).spaces
+      self.space  = actionSpace(self.config).spaces
       self.model  = Recurrent(self.config)
 
    #Initial hidden state for RLlib Trainer
@@ -293,10 +293,9 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 
       logits = []
       #Flatten structured logits for RLlib
-      #TODO: better to use the space directly here in case of missing keys
-      for atnKey, atn in sorted(logitDict.items()):
-         for argKey, arg in sorted(atn.items()):
-            logits.append(arg)
+      for atnKey, atn in sorted(self.space.items()):
+         for argKey, arg in sorted(atn.spaces.items()):
+            logits.append(logitDict[atnKey][argKey])
 
       return torch.cat(logits, dim=1), state
 
@@ -305,6 +304,38 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 
    def attention(self):
       return self.model.attn
+
+class RLlibEvaluator(evaluator.Base):
+   '''Test-time evaluation with communication to
+   the Unity3D client. Makes use of batched GPU inference'''
+   def __init__(self, config, trainer):
+      super().__init__(config)
+      self.trainer  = trainer
+
+      self.model    = self.trainer.get_policy('policy_0').model
+      self.env      = RLlibEnv({'config': config})
+      self.state    = {} 
+
+   def render(self):
+      self.obs = self.env.reset(idx=-1)
+      self.registry = RLlibOverlayRegistry(
+            self.config, self.env).init(self.trainer, self.model)
+      super().render()
+
+   def tick(self, pos, cmd):
+      '''Simulate a single timestep
+
+      Args:
+          pos: Camera position (r, c) from the server)
+          cmd: Console command from the server
+      '''
+      if len(self.obs) == 0:
+         actions = {}
+      else:
+         actions, self.state, _ = self.trainer.compute_actions(
+             self.obs, state=self.state, policy_id='policy_0')
+
+      super().tick(self.obs, actions, pos, cmd, preprocess=None)
 
 
 ###############################################################################
@@ -367,10 +398,44 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
 
       return obs, rewards, dones, infos
 
+def observationSpace(config):
+   obs = FlexDict(defaultdict(FlexDict))
+   for entity in sorted(Stimulus.values()):
+      nRows       = entity.N(config)
+      nContinuous = 0
+      nDiscrete   = 0
+
+      for _, attr in entity:
+         if attr.DISCRETE:
+            nDiscrete += 1
+         if attr.CONTINUOUS:
+            nContinuous += 1
+
+      obs[entity.__name__]['Continuous'] = gym.spaces.Box(
+            low=-2**20, high=2**20, shape=(nRows, nContinuous),
+            dtype=DataType.CONTINUOUS)
+
+      obs[entity.__name__]['Discrete']   = gym.spaces.Box(
+            low=0, high=4096, shape=(nRows, nDiscrete),
+            dtype=DataType.DISCRETE)
+
+   obs['Entity']['N']   = gym.spaces.Box(
+         low=0, high=config.N_AGENT_OBS, shape=(1,),
+         dtype=DataType.DISCRETE)
+   return obs
+
+def actionSpace(config):
+   atns = FlexDict(defaultdict(FlexDict))
+   for atn in sorted(Action.edges):
+      for arg in sorted(atn.edges):
+         n              = arg.N(config)
+         atns[atn][arg] = gym.spaces.Discrete(n)
+   return atns
+
 class RLlibOverlayRegistry(OverlayRegistry):
    '''Host class for RLlib Map overlays'''
-   def __init__(self, realm):
-      super().__init__(realm.config, realm)
+   def __init__(self, config, realm):
+      super().__init__(config, realm)
 
       self.overlays['values']       = Values
       self.overlays['attention']    = Attention
@@ -482,76 +547,83 @@ class EntityValues(GlobalValues):
       super().init(zeroKey)
 
 
+###############################################################################
+### Logging
+
 class RLlibTrainer(ppo.PPOTrainer):
-   def __init__(self, config, env=None, logger_creator=None):
-      super().__init__(config, env, logger_creator)
-      self.env_config = config['env_config']['config']
-
-      #1/sqrt(2)=76% win chance within beta, 95% win chance vs 3*beta=100 SR
-      trueskill.setup(mu=1000, sigma=2*100/3, beta=100/3, tau=2/3, draw_probability=0)
-
-      self.ratings = [{agent.__name__: trueskill.Rating(mu=1000, sigma=2*100/3)}
-            for agent in set(self.env_config.EVAL_AGENTS)]
-
-      self.reset_scripted()
-
-   @classmethod
-   def name(cls):
-      return cls.__bases__[0].__name__
-
-   def reset_scripted(self):
-      for rating_dict in self.ratings:
-         for agent, rating in rating_dict.items():
-            if agent == 'Combat':
-               rating_dict[agent] = trueskill.Rating(mu=1500, sigma=1)
-
-   def post_mean(self, stats):
-      for key, vals in stats.items():
-          if type(vals) == list:
-              stats[key] = np.mean(vals)
+   def undo_post(self, stats):
+      for key in list(stats.keys()):
+         val = stats[key]
+         if key.endswith('_min') or key.endswith('_max'):
+            del stats[key]
+         elif key.endswith('_mean'):
+            del stats[key]
+            key = key[:-5]
+            stats[key] = val
 
    def train(self):
-      stats = super().train()
-      self.post_mean(stats['custom_metrics'])
-      return stats
+      stat_dict = super().train()
 
-   def evaluate(self):
-      stat_dict = super().evaluate()
-      stats = stat_dict['evaluation']['custom_metrics']
- 
-      ranks = {agent.__name__: -1 for agent in set(self.env_config.EVAL_AGENTS)}
-      for key in list(stats.keys()):
-         if key.startswith('Rank_'):
-             stat = stats[key]
-             del stats[key]
-             agent = key[5:]
-             ranks[agent] = stat
+      stats = stat_dict['custom_metrics']
+      self.undo_post(stats)
 
-      #Getting a type(int) exception?
-      #Achievement system is off
-      ranks = list(ranks.values())
-      nEnvs = len(ranks[0])
-      
-      #Once RLlib adds better custom metric support,
-      #there should be a cleaner way to divide episodes into blocks
-      for i in range(nEnvs): 
-         env_ranks = [e[i] for e in ranks]
-         self.ratings = trueskill.rate(self.ratings, env_ranks)
-         self.reset_scripted()
-
-      for rating in self.ratings:
-         key  = 'SR_{}'.format(list(rating.keys())[0])
-         val  = list(rating.values())[0]
-         stats[key] = val.mu
-     
       return stat_dict
 
 
-###############################################################################
-### Logging
+   def evaluate(self):
+      stat_dict = super().evaluate()
+
+      agents = defaultdict(list)
+
+      stats = stat_dict['evaluation']['custom_metrics']
+      self.undo_post(stats)
+
+      
+      '''
+      stats      = logs['Stats']
+      policy_ids = stats['PolicyID']
+      scores     = stats['Achievement']
+
+      invMap = {agent.policyID: agent for agent in env.config.AGENTS}
+
+      for policyID, score in zip(policy_ids, scores):
+         policy = invMap[policyID]
+         agents[policy].append(score)
+      
+      for agent in agents:
+         agents[agent] = np.mean(agents[agent])
+
+      policies = list(agents.keys())
+      scores   = list(agents.values())
+
+      ranks   = np.argsort(scores)[::-1]
+      ratings = [tuple([policy.rating]) for policy in policies]
+      ratings = trueskill.rate(ratings, ranks)
+      ratings = [rating[0] for rating in ratings]
+
+      for agent, rating in zip(agents, ratings):
+         agent.rating = rating
+
+         name = agent.__name__
+         key  = 'SR_{}'.format(name)
+  
+      best  = baselines.Combat.rating.mu
+      worst = baselines.Meander.rating.mu
+      if best != worst:
+         scale = 1000 / (best - worst)
+      else:
+         scale = best
+      delta = 500 - worst * scale
+
+      for agent, rating in zip(agents, ratings):
+         scaled = rating.mu * scale + delta
+         episode.custom_metrics[agent.__name__] = scaled
+      '''
+
+      return stat_dict
+ 
 class RLlibLogCallbacks(DefaultCallbacks):
    def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
-      print('Episode ended')
       assert len(base_env.envs) == 1, 'One env per worker'
       env    = base_env.envs[0]
 
@@ -573,16 +645,32 @@ class RLlibLogCallbacks(DefaultCallbacks):
       for policyID, score in zip(policy_ids, scores):
          policy = invMap[policyID]
          agents[policy].append(score)
-
+      
       for agent in agents:
          agents[agent] = np.mean(agents[agent])
 
       policies = list(agents.keys())
       scores   = list(agents.values())
 
-      idxs     = np.argsort(-np.array(scores))
+      ranks   = np.argsort(scores)[::-1]
+      ratings = [tuple([policy.rating]) for policy in policies]
+      ratings = trueskill.rate(ratings, ranks)
+      ratings = [rating[0] for rating in ratings]
 
-      for rank, idx in enumerate(idxs):
-          key = 'Rank_{}'.format(policies[idx].__name__)
-          episode.custom_metrics[key] = rank
+      for agent, rating in zip(agents, ratings):
+         agent.rating = rating
 
+         name = agent.__name__
+         key  = 'SR_{}'.format(name)
+  
+      best  = baselines.Combat.rating.mu
+      worst = baselines.Meander.rating.mu
+      if best != worst:
+         scale = 1000 / (best - worst)
+      else:
+         scale = best
+      delta = 500 - worst * scale
+
+      for agent, rating in zip(agents, ratings):
+         scaled = rating.mu * scale + delta
+         episode.custom_metrics[agent.__name__] = scaled

@@ -2,13 +2,11 @@ from pdb import set_trace as T
 
 from neural_mmo.forge.blade import core
 from neural_mmo.forge.blade.core import config
+from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.trinity.scripted import baselines
 from neural_mmo.forge.trinity.agent import Agent
-from neural_mmo.forge.blade.systems import achievement
+from neural_mmo.forge.blade.systems.ai import behavior
 from projekt import rllib_wrapper
-
-#Default achievements -- or write your own
-DEFAULT_ACHIEVEMENTS = [achievement.PlayerKills, achievement.Equipment, achievement.Exploration, achievement.Foraging]
 
 class RLlibConfig:
    '''Base config for RLlib Models
@@ -19,20 +17,12 @@ class RLlibConfig:
    @property
    def MODEL(self):
       return self.__class__.__name__
-
-   #Checkpointing. Resume will load the latest trial, e.g. to continue training
-   #Restore (overrides resume) will force load a specific checkpoint (e.g. for rendering)
-   EXPERIMENT_DIR         = 'experiments'
-   RESUME                 = False
-
-   RESTORE                = None
-   RESTORE_ID             = '6831' #Experiment name suffix
-   RESTORE_CHECKPOINT     = 1
-
+  
    #Policy specification
    AGENTS      = [Agent]
    EVAL_AGENTS = [baselines.Meander, baselines.Forage, baselines.Combat, Agent]
    EVALUATE    = False #Reserved param
+   LOAD        = True
 
    #Hardware and debug
    NUM_WORKERS             = 1
@@ -47,7 +37,7 @@ class RLlibConfig:
    EVALUATION_NUM_EPISODES = 3
    EVALUATION_PARALLEL     = True
    TRAINING_ITERATIONS     = 1000
-   KEEP_CHECKPOINTS_NUM    = 3
+   KEEP_CHECKPOINTS_NUM    = 5
    CHECKPOINT_FREQ         = 1
    LSTM_BPTT_HORIZON       = 16
    NUM_SGD_ITER            = 1
@@ -62,7 +52,6 @@ class RLlibConfig:
    #Reward
    TEAM_SPIRIT             = 0.0
    ACHIEVEMENT_SCALE       = 1.0/15.0
-   REWARD_ACHIEVEMENT      = True
 
 
 class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
@@ -76,7 +65,7 @@ class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
 
    #Memory/Batch Scale
    NUM_WORKERS             = 14
-   TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
+   TRAIN_BATCH_SIZE        = 32 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 32
    SGD_MINIBATCH_SIZE      = 128
 
@@ -97,22 +86,20 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
 
    #Memory/Batch Scale
    NUM_WORKERS             = 28
-   TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
+   TRAIN_BATCH_SIZE        = 64 * 128 * NUM_WORKERS
+   SGD_MINIBATCH_SIZE      = 1 * 128
    ROLLOUT_FRAGMENT_LENGTH = 256
-   SGD_MINIBATCH_SIZE      = 128
  
    #Horizon
    TRAIN_HORIZON           = 1024
    EVALUATION_HORIZON      = 1024
 
 
-class Debug(config.Achievement, SmallMaps):
+class Debug(SmallMaps, config.AllGameSystems):
    '''Debug Neural MMO training setting
 
    A version of the SmallMap setting with greatly reduced batch parameters.
    Only intended as a tool for identifying bugs in the model or environment'''
-   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-
    LOAD                    = False
    LOCAL_MODE              = True
    NUM_WORKERS             = 1
@@ -128,8 +115,6 @@ class Debug(config.Achievement, SmallMaps):
 
 ### AICrowd competition settings
 class CompetitionRound1(config.Achievement, SmallMaps):
-   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -138,27 +123,15 @@ class CompetitionRound1(config.Achievement, SmallMaps):
    NPOP                    = 1
 
 class CompetitionRound2(config.Achievement, SmallMaps):
-   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
 
-   @property
-   def NENT(self):
-      return 8 * len(self.AGENTS)
-
+   NENT                    = 128
    NPOP                    = 16
-   AGENTS                  = NPOP*[Agent]
-   EVAL_AGENTS             = 8*[baselines.Meander, baselines.Forage, baselines.Combat, Agent]
-
-   AGENT_LOADER            = config.TeamLoader
    COOPERATIVE             = True
-   TEAM_SPIRIT             = 1.0
 
 class CompetitionRound3(config.Achievement, LargeMaps):
-   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -166,21 +139,15 @@ class CompetitionRound3(config.Achievement, LargeMaps):
    NENT                    = 1024
    NPOP                    = 32
    COOPERATIVE             = True
-   TEAM_SPIRIT             = 1.0
-   AGENT_LOADER            = config.TeamLoader
 
 
 ### NeurIPS Experiments
-class SmallMultimodalSkills(config.Achievement, SmallMaps):
-   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-   TERRAIN_TRAIN_MAPS      = 16384
+class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
 
-class LargeMultimodalSkills(config.Achievement, LargeMaps):
-   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-   pass
 
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
-   ACHIEVEMENTS            = [achievement.Lifetime]
+   pass
 class Population4(MagnifyExploration):
    NENT  = 4
 class Population32(MagnifyExploration):
@@ -189,20 +156,17 @@ class Population256(MagnifyExploration):
    NENT  = 256
 
 
-class DomainRandomization(SmallMaps, config.AllGameSystems):
-   ACHIEVEMENTS            = [achievement.Lifetime]
-class DomainRandomization16384(DomainRandomization):
+class DomainRandomization16384(SmallMaps, config.AllGameSystems):
    TERRAIN_TRAIN_MAPS=16384
-class DomainRandomization256(DomainRandomization):
+class DomainRandomization256(SmallMaps, config.AllGameSystems):
    TERRAIN_TRAIN_MAPS=256
-class DomainRandomization32(DomainRandomization):
+class DomainRandomization32(SmallMaps, config.AllGameSystems):
    TERRAIN_TRAIN_MAPS=32
-class DomainRandomization1(DomainRandomization):
+class DomainRandomization1(SmallMaps, config.AllGameSystems):
    TERRAIN_TRAIN_MAPS=1
 
 
 class TeamBased(MagnifyExploration, config.Combat):
-   ACHIEVEMENTS            = [achievement.Lifetime]
    NENT                    = 128
    NPOP                    = 32
    COOPERATIVE             = True

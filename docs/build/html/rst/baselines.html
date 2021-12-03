@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Evaluation Protocol &mdash; Neural MMO v1.5.2 1.5.2 documentation</title>
+  <title>Evaluation Protocol &mdash; Neural MMO v1.5.3 1.5.3 documentation</title>
   
 
   
@@ -54,7 +54,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5.2
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5.3
           
 
           
@@ -176,7 +176,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO v1.5.2</a>
+          <a href="../index.html">Neural MMO v1.5.3</a>
         
       </nav>
 
@@ -234,7 +234,15 @@
 </div>
 <div class="section" id="icon-evaluation-protocol">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Evaluation Protocol<a class="headerlink" href="#icon-evaluation-protocol" title="Permalink to this headline">¶</a></h1>
-<p><strong>Versioning:</strong> The evaluations below are for v1.5. If you are here for the competition, refer to the AICrowd page for results. If you are here for the publication, we are in the process of aggregating experiment results for v1.5.1 and generating figures.</p>
+<dl class="simple">
+<dt><strong>Versioning:</strong></dt><dd><ul class="simple">
+<li><p>The evaluations below are for v1.5(.0)</p></li>
+<li><p>Competition baselines and results are available on AICrowd</p></li>
+<li><p>NeurIPS 2021 baselines are rerunning now. We have chosen to include v1.5.3 (pettingzoo support) last minute to provide the best possible user experience and hope you will pardon the delay. Baselines should be up within a few days. Contact me on Discord if you take issue with this and want additional details.</p></li>
+<li><p>The visualization suite seen below has been deprecated in favor of WanDB support. We will post new baselines as WanDB report links soon.</p></li>
+</ul>
+</dd>
+</dl>
 <p>Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.</p>
 <p>Publications including new models should clearly indicate training scale, domain knowledge assumptions, and any other significant changes to the default configuration. Ideally, they should also include a discussion of agent behavior and supporting training/evaluation plots, overlay figures, and/or other evidence specific to the associated work.</p>
 <p>To reproduce the tables and figures below, run the associated command. Run <em>train</em> or <em>evaluate</em> instead of <em>visualize</em> to verify results from scratch or from the pretrained model.</p>

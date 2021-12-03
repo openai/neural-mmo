@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Introduction &mdash; Neural MMO v1.5.2 1.5.2 documentation</title>
+  <title>Introduction &mdash; Neural MMO v1.5.3 1.5.3 documentation</title>
   
 
   
@@ -54,7 +54,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5.2
+            <a href="../index.html" class="icon icon-home"> Neural MMO v1.5.3
           
 
           
@@ -186,7 +186,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Neural MMO v1.5.2</a>
+          <a href="../index.html">Neural MMO v1.5.3</a>
         
       </nav>
 
@@ -244,19 +244,22 @@
 <div class="section" id="icon-introduction">
 <h1><img alt="icon" src="../_images/icon_pixel.png" /> Introduction<a class="headerlink" href="#icon-introduction" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://github.com/jsuarez5341/neural-mmo">[Github]</a> | <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a> | <a class="reference external" href="https://twitter.com/jsuarez5341">[Twitter]</a></p>
-<p>Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems – with support for up to a thousand agents and one square kilometer maps over several thousand time steps.</p>
+<p>Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Environments are configurable for a variety of problems and scales – from basic foraging tasks involving a few agents for a couple of minutes to joint survival, exploration, and combat over a couple of hours with a thousand agents.</p>
 <center>
   <video width=100% height="auto" nocontrols autoplay muted loop>
     <source src="_static/zoom.mp4" type="video/mp4">
     Your browser does not support this mp4.
   </video>
-</center><p>The platform provides a Python API for scripting agents, <a class="reference external" href="https://docs.ray.io/en/master/rllib.html">[RLlib]</a> integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community <a class="reference external" href="https://discord.gg/BkMmFUC">[Discord]</a> for support, discussion, and dev updates. This is the best place to contact me.</p>
+</center><p>The platform provides a Python API for scripting agents and <a class="reference external" href="https://docs.ray.io/en/master/rllib.html">RLlib</a>  + <a class="reference external" href="https://wandb.ai">WanDB</a> integrations for reinforcement learning, evaluation, and logging. An interactive 3D client provides futher visualization tools for debugging and showcasing agent policies. The guides below contain everything you need to get started. We also run a community <a class="reference external" href="https://discord.gg/BkMmFUC">Discord</a> for support, discussion, and dev updates. This is the best place to contact me.</p>
 <div class="section" id="neural-mmo-at-neurips-2021">
 <h2>Neural MMO at NeurIPS 2021<a class="headerlink" href="#neural-mmo-at-neurips-2021" title="Permalink to this headline">¶</a></h2>
 <p>Our latest <a class="reference external" href="http://arxiv.org/abs/2110.07594">[publication]</a> summarizing the platform’s capabilities and baselines. In the associated presentation, I coin the term <strong>Foundation Policies</strong>, analogous to <strong>Foundation Models</strong>, as a grounding motivation for investing in environment complexity and generality. A key contribution of Neural MMO is to do so efficiently and interpretably by adapting techniques from classic MMO development for deep learning.</p>
 <div class="video_wrapper" style="padding-bottom: 56.250000%; padding-top: 30px; position: relative; width: 100%">
 <iframe allowfullscreen="true" src="https://www.youtube.com/embed/hYYA8_wFF7Q" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%">
-</iframe></div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@proceedings{NEURIPS2021,
+</iframe></div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@proceedings{NEURIPS2021,
   author = {Joseph Suarez, Yilun Du, Clare Zhu, Igor Mordatch, Phillip Isola},
   booktitle = {Advances in Neural Information Processing Systems},
   title = {The Neural MMO Platform for Massively Multiagent Research},
@@ -271,7 +274,7 @@
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
-<dt><strong>New in v1.5.2:</strong></dt><dd><ul class="simple">
+<dt><strong>New as of v1.5.2+:</strong></dt><dd><ul class="simple">
 <li><p>Create a file wandb_api_key in the repo root and paste in your WanDB API key. This new integration is now so important to logging and evaluation that we are requiring it by default. Do not commit this file.</p></li>
 <li><p>We coincidentally now require ray v1.5.2 (not v1.6). You will have to make one small change to the rllib metrics file (usually ~/anaconda3/lib/python3.8/site-packages/ray/rllib/evaluation/metrics.py): add <cite>custom_metrics[k] = filt; continue</cite> after line 175.</p></li>
 </ul>

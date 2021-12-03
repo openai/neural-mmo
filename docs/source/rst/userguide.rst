@@ -9,7 +9,7 @@
 ###################
 `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems -- with support for up to a thousand agents and one square kilometer maps over several thousand time steps.
+Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Environments are configurable for a variety of problems and scales -- from basic foraging tasks involving a few agents for a couple of minutes to joint survival, exploration, and combat over a couple of hours with a thousand agents.
 
 .. raw:: html
 
@@ -20,7 +20,7 @@ Neural MMO is an open-source and computationally accessible research platform th
       </video>
     </center>
 
-The platform provides a Python API for scripting agents, `[RLlib] <https://docs.ray.io/en/master/rllib.html>`_ integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+The platform provides a Python API for scripting agents and `RLlib <https://docs.ray.io/en/master/rllib.html>`_  + `WanDB <https://wandb.ai>`_ integrations for reinforcement learning, evaluation, and logging. An interactive 3D client provides futher visualization tools for debugging and showcasing agent policies. The guides below contain everything you need to get started. We also run a community `Discord <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
 Neural MMO at NeurIPS 2021
 **************************
@@ -30,6 +30,7 @@ Our latest `[publication] <http://arxiv.org/abs/2110.07594>`_ summarizing the pl
 .. youtube:: hYYA8_wFF7Q
    :width: 100%
 
+|
 .. code-block:: text
 
   @proceedings{NEURIPS2021,
@@ -41,13 +42,12 @@ Our latest `[publication] <http://arxiv.org/abs/2110.07594>`_ summarizing the pl
     year = {2021}
   }
 
-
 Citation to be updated upon the release of NeurIPS 2021 proceedings. See Updates for a full list of demos, publications, presentations, and patch notes.
 
 Installation
 ************
 
-**New in v1.5.2:**
+**New as of v1.5.2+:**
    - Create a file wandb_api_key in the repo root and paste in your WanDB API key. This new integration is now so important to logging and evaluation that we are requiring it by default. Do not commit this file.
    - We coincidentally now require ray v1.5.2 (not v1.6). You will have to make one small change to the rllib metrics file (usually ~/anaconda3/lib/python3.8/site-packages/ray/rllib/evaluation/metrics.py): add `custom_metrics[k] = filt; continue` after line 175.
 

@@ -551,7 +551,6 @@ class RLlibTrainer(ppo.PPOTrainer):
 ### Logging
 class RLlibLogCallbacks(DefaultCallbacks):
    def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
-      print('Episode ended')
       assert len(base_env.envs) == 1, 'One env per worker'
       env    = base_env.envs[0]
 

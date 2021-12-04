@@ -22,6 +22,8 @@ Neural MMO is an open-source and computationally accessible research platform th
 
 The platform provides a Python API for scripting agents and `RLlib <https://docs.ray.io/en/master/rllib.html>`_  + `WanDB <https://wandb.ai>`_ integrations for reinforcement learning, evaluation, and logging. An interactive 3D client provides futher visualization tools for debugging and showcasing agent policies. The guides below contain everything you need to get started. We also run a community `Discord <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
 
+.. figure:: /resource/figure/web/NMMO_NeurIPS2021_Poster.jpg
+
 Neural MMO at NeurIPS 2021
 **************************
 

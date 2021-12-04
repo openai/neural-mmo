@@ -7,7 +7,11 @@
 |icon| Evaluation Protocol
 ##########################
 
-**Versioning:** The evaluations below are for v1.5. If you are here for the competition, refer to the AICrowd page for results. If you are here for the publication, we are in the process of aggregating experiment results for v1.5.1 and generating figures. 
+**Versioning:**
+  - The evaluations below are for v1.5(.0)
+  - Competition baselines and results are available on AICrowd
+  - NeurIPS 2021 baselines are rerunning now. We have chosen to include v1.5.3 (pettingzoo support) last minute to provide the best possible user experience and hope you will pardon the delay. Baselines should be up within a few days. Contact me on Discord if you take issue with this and want additional details.
+  - The visualization suite seen below has been deprecated in favor of WanDB support. We will post new baselines as WanDB report links soon.
 
 Training is performed on a pool of N_TRAIN_MAPS procedurally generated maps simulated for TRAIN_HORIZON timesteps per episode. Evaluation is performed on EVAL_MAPS maps never seen during training (GENERALIZE=False) for EVALUATION_HORIZON timesteps. Approaches that modify these parameters, alter the reward function, or substantially modify the environment configuration are not directly comparable to the baselines below.
 

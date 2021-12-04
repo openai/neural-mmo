@@ -11,4 +11,6 @@ projekt package
    :maxdepth: 4
 
    projekt.config
+   projekt.countconfig
+   projekt.rl_old_wrapp
    projekt.rllib_wrapper

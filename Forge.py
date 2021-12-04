@@ -123,7 +123,7 @@ def run_tune_experiment(config):
 
    tune.run(wrapper.RLlibTrainer,
       config    = rllib_config,
-      name      = config_name,
+      name      = wrapper.RLlibTrainer.name(),
       verbose   = config.LOG_LEVEL,
       stop      = {'training_iteration': config.TRAINING_ITERATIONS},
       restore   = restore,
@@ -132,7 +132,7 @@ def run_tune_experiment(config):
       keep_checkpoints_num = config.KEEP_CHECKPOINTS_NUM,
       checkpoint_freq = config.CHECKPOINT_FREQ,
       checkpoint_at_end = True,
-      trial_dirname_creator = lambda _: wrapper.RLlibTrainer.name(),
+      trial_dirname_creator = lambda _: config_name,
       progress_reporter = ConsoleLog(),
       reuse_actors = True,
       callbacks=[WandbLoggerCallback(

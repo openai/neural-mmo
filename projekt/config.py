@@ -173,11 +173,9 @@ class CompetitionRound3(config.Achievement, LargeMaps):
 ### NeurIPS Experiments
 class SmallMultimodalSkills(config.Achievement, SmallMaps):
    ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-   TERRAIN_TRAIN_MAPS      = 16384
 
 class LargeMultimodalSkills(config.Achievement, LargeMaps):
    ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
-   pass
 
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
    ACHIEVEMENTS            = [achievement.Lifetime]

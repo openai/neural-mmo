@@ -367,7 +367,8 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
       return obs, rewards, dones, infos
 
 def observationSpace(config):
-   obs = FlexDict(defaultdict(FlexDict))
+   obs = defaultdict(dict)
+   #obs = FlexDict(defaultdict(FlexDict))
    for entity in sorted(Stimulus.values()):
       nRows       = entity.N(config)
       nContinuous = 0
@@ -390,14 +391,22 @@ def observationSpace(config):
    obs['Entity']['N']   = gym.spaces.Box(
          low=0, high=config.N_AGENT_OBS, shape=(1,),
          dtype=DataType.DISCRETE)
+
+   for k, v in obs.items():
+      obs[k] = gym.spaces.Dict(v)
+   obs = gym.spaces.Dict(obs)
+
    return obs
 
 def actionSpace(config):
-   atns = FlexDict(defaultdict(FlexDict))
+   atns = defaultdict(dict)
+   #atns = FlexDict(defaultdict(FlexDict))
    for atn in sorted(Action.edges):
       for arg in sorted(atn.edges):
          n              = arg.N(config)
          atns[atn][arg] = gym.spaces.Discrete(n)
+      atns[atn] = gym.spaces.Dict(atns[atn])
+   atns = gym.spaces.Dict(atns)
    return atns
 
 class RLlibOverlayRegistry(OverlayRegistry):

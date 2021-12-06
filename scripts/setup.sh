@@ -18,7 +18,7 @@ elif [[ $1 == "" ]]; then
    echo "Installing cuda torch"
    conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
 else
-   echo "Specify either --SERVER_ONLY or no argument"
+   echo "Specify either --CORE_ONLY or no argument"
    exit 1
 fi
 

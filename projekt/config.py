@@ -31,9 +31,9 @@ class RLlibConfig(config.Achievement):
    EXPERIMENT_DIR         = 'experiments'
    RESUME                 = False
 
-   RESTORE                = None
-   RESTORE_ID             = '6831' #Experiment name suffix
-   RESTORE_CHECKPOINT     = 1
+   RESTORE                = True
+   RESTORE_ID             = '627d' #Experiment name suffix
+   RESTORE_CHECKPOINT     = 882
 
    #Policy specification
    AGENTS      = [Agent]

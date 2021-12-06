@@ -113,13 +113,13 @@ def run_tune_experiment(config):
  
    restore     = None
    config_name = config.__class__.__name__
-   exp_name    = wrapper.RLlibTrainer.name()
+   algorithm   = wrapper.RLlibTrainer.name()
    if config.RESTORE:
       if config.RESTORE_ID:
-         exp_name = '{}_{}'.format(exp_name, config.RESTORE_ID)
+         config_name = '{}_{}'.format(config_name, config.RESTORE_ID)
 
       restore   = '{0}/{1}/{2}/checkpoint_{3:06d}/checkpoint-{3}'.format(
-            config.EXPERIMENT_DIR, config_name, exp_name, config.RESTORE_CHECKPOINT)
+            config.EXPERIMENT_DIR, algorithm, config_name, config.RESTORE_CHECKPOINT)
 
    tune.run(wrapper.RLlibTrainer,
       config    = rllib_config,

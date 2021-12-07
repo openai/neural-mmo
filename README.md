@@ -2,7 +2,7 @@
 
 # ![icon](docs/source/resource/icon/icon_pixel.png) Welcome to the Platform!
 
-[![Discord Chat](https://img.shields.io/discord/657211973435392011.svg)](https://discord.gg/BkMmFUC)
+[![Discord Chat](https://img.shields.io/discord/569049269051457537.svg)](https://discord.gg/BkMmFUC)
 <a href="https://twitter.com/jsuarez5341?ref_src=twsrc%5Etfw" target="_blank">
   <img src="http://jpillora.com/github-twitter-button/img/tweet.png"
        alt="tweet button" title="Follow"></img>

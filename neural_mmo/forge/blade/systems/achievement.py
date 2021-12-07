@@ -10,7 +10,7 @@ class Diary:
       self.achievements = []
 
       if config.game_system_enabled('Achievement'):
-         self.achievements = [PlayerKills, Equipment, Exploration, Foraging]
+         self.achievements = config.ACHIEVEMENTS
 
       self.achievements = [a(config) for a in self.achievements]
 
@@ -66,7 +66,16 @@ class Achievement:
          self.progress = value
 
       return new - old
-      
+
+class Lifetime(Achievement):
+   def score(self, progress=None):
+      if not progress:
+         progress = self.progress
+      return progress
+
+   def update(self, realm, entity, dry):
+      return super().update(entity.history.timeAlive.val, dry)
+     
 class PlayerKills(Achievement):
    def __init__(self, config):
       super().__init__(easy   = config.PLAYER_KILLS_EASY,

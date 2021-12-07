@@ -93,9 +93,12 @@ class EntityGroup(Mapping):
 class NPCManager(EntityGroup):
    def __init__(self, config, realm):
       super().__init__(config, realm)
-      self.realm = realm
-      self.idx   = -1
- 
+      self.realm   = realm
+
+   def reset(self):
+      super().reset()
+      self.idx     = -1
+
    def spawn(self):
       if not self.config.game_system_enabled('NPC'):
          return
@@ -139,7 +142,7 @@ class PlayerManager(EntityGroup):
       agent      = agent(self.config, self.idx)
       player     = Player(self.realm, (r, c), agent, pop)
       super().spawn(player)
-      self.idx += 1
+      self.idx   += 1
 
    def spawn(self):
       if self.config.SPAWN == self.config.SPAWN_CONCURRENT:
@@ -233,12 +236,13 @@ class Realm:
             ent = self.entity(entID)
             atn.call(self, ent, *args)
 
-      #Cull dead agents and spawn new ones
-      dead = self.players.cull()
-      self.npcs.cull()
-
+      #Spawn new agent and cull dead ones
+      #TODO: Place cull before spawn once PettingZoo API fixes respawn on same tick as death bug
       self.players.spawn()
       self.npcs.spawn()
+
+      dead = self.players.cull()
+      self.npcs.cull()
 
       #Update map
       self.map.step()

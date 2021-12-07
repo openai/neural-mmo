@@ -9,7 +9,7 @@
 ###################
 `[Github] <https://github.com/jsuarez5341/neural-mmo>`_ | `[Discord] <https://discord.gg/BkMmFUC>`_ | `[Twitter] <https://twitter.com/jsuarez5341>`_
 
-Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Users select from a set of provided game systems to create environments for their specific research problems -- with support for up to a thousand agents and one square kilometer maps over several thousand time steps.
+Neural MMO is an open-source and computationally accessible research platform that simulates populations of agents in procedurally generated virtual worlds. Environments are configurable for a variety of problems and scales -- from basic foraging tasks involving a few agents for a couple of minutes to joint survival, exploration, and combat over a couple of hours with a thousand agents.
 
 .. raw:: html
 
@@ -20,7 +20,9 @@ Neural MMO is an open-source and computationally accessible research platform th
       </video>
     </center>
 
-The platform provides a Python API for scripting agents, `[RLlib] <https://docs.ray.io/en/master/rllib.html>`_ integration for reinforcement learning approaches, an evaluation suite for comparing and interpreting agent policies, and an interactive 3D client packed with visualization tools. The guides below contain everything you need to get started. We also run a community `[Discord] <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+The platform provides a Python API for scripting agents and `RLlib <https://docs.ray.io/en/master/rllib.html>`_  + `WanDB <https://wandb.ai>`_ integrations for reinforcement learning, evaluation, and logging. An interactive 3D client provides futher visualization tools for debugging and showcasing agent policies. The guides below contain everything you need to get started. We also run a community `Discord <https://discord.gg/BkMmFUC>`_ for support, discussion, and dev updates. This is the best place to contact me.
+
+.. figure:: /resource/figure/web/NMMO_NeurIPS2021_Poster.jpg
 
 Neural MMO at NeurIPS 2021
 **************************
@@ -30,6 +32,7 @@ Our latest `[publication] <http://arxiv.org/abs/2110.07594>`_ summarizing the pl
 .. youtube:: hYYA8_wFF7Q
    :width: 100%
 
+|
 .. code-block:: text
 
   @proceedings{NEURIPS2021,
@@ -41,45 +44,40 @@ Our latest `[publication] <http://arxiv.org/abs/2110.07594>`_ summarizing the pl
     year = {2021}
   }
 
-
 Citation to be updated upon the release of NeurIPS 2021 proceedings. See Updates for a full list of demos, publications, presentations, and patch notes.
 
 Installation
 ************
 
-**New in v1.5.2:**
-   - Create a file wandb_api_key in the repo root and paste in your WanDB API key. This new integration is now so important to logging and evaluation that we are requiring it by default. Do not commit this file.
-   - We coincidentally now require ray v1.5.2 (not v1.6). You will have to make one small change to the rllib metrics file (usually ~/anaconda3/lib/python3.8/site-packages/ray/rllib/evaluation/metrics.py): add `custom_metrics[k] = filt; continue` after line 175.
-
-Tested on Ubuntu 20.04, Windows 10 + WSL, and MacOS
+Official support: Ubuntu 20.04, Windows 10 + WSL, and MacOS
 
 .. code-block:: python
-   :caption: Competition setup
+   :caption: AICrowd Competition setup
 
    git clone https://gitlab.aicrowd.com/neural-mmo/neural-mmo-starter-kit
    pip install neural-mmo
 
 .. code-block:: python
-   :caption: Environment source. Setup with --CORE_ONLY to omit RLlib requirements
+   :caption: Setup from source (Recommended). Windows + WSL Users: Install the server on WSL and the client on Windows.
 
-   git clone --single-branch --depth=1 --branch master https://github.com/jsuarez5341/neural-mmo
-   cd neural-mmo && bash scripts/setup.sh
+   git clone --single-branch --depth=1 https://github.com/jsuarez5341/neural-mmo
+   cd neural-mmo && bash scripts/setup.sh # --CORE_ONLY to omit RLlib requirements
 
-.. code-block:: python
-   :caption: Download the UnityClient client
+   git clone --single-branch --depth=1 https://github.com/jsuarez5341/neural-mmo-client
+   mv neural-mmo-client neural-mmo/forge/embyr # Do not run on WSL
 
-   git clone --single-branch --depth=1 --branch v1.5.2 https://github.com/jsuarez5341/neural-mmo-client
+**Required Configuration**
+   - Edit projekt/config.py as per the instructions therein to match your hardware specs
+   - Create a file wandb_api_key in the repo root and paste in your WanDB API key. This new integration is now so important to logging and evaluation that we are requiring it by default. Do not commit this file.
+   - Add `custom_metrics[k] = filt; continue` after line 175 in your RLlib metrics file (usually ~/anaconda3/lib/python3.8/site-packages/ray/rllib/evaluation/metrics.py). This is an RLlib limitation which we hope to resolve in the next version.
 
-   #If not on WSL:
-   mv neural-mmo-client neural-mmo/forge/embyr
-
-**Troubleshooting:**
-  - Post installation errors in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_
+**Troubleshooting**
   - If you are training on GPU and get an IndexError error on self.device, set gpu_ids=[0] in ray/rllib/policy/torch_policy.py:150 (typically in ~/anaconda3/lib/python3.8/site-packages)
   - Most compatibility issues with the client and unsupported operating systems can be resolved by opening the project in the Unity Editor
   - If you want full commit history, clone without ``--depth=1`` (including in scripts/setup.sh for the client). This flag is only included to cut down on download time
   - The master branch will always contain the latest stable version. Each previous version release is archived in a separate branch. Dev branches are not nightly builds and may be flammable.
 
+Problems? Post in #support on the `[Discord] <https://discord.gg/BkMmFUC>`_. Seriously, do this. Do not raise Github issues for support. You will get a reply much faster (often instantly) on Discord.
 
 CLI
 ***
@@ -133,7 +131,7 @@ Configuration
 
 We recommend that new users start with one of the default configurations provided with the environment. Similarly, competition participants should start with the configuration provided for the current round.
 
-Experienced users can create custom environments that are better suited to their specific research interests. We further recommend reviewing the game wiki's description of the vanilla mechanics before heavily modifying them. Enable a specific set of game systems by inheriting from their respective configs, in addition to the base class. For example:
+Experienced users can create custom environments that are better suited to their specific research interests. We further recommend reviewing the game wiki's description of the vanilla mechanics before heavily modifying them. Enable a specific set of game systems by inheriting from their respective configs, in addition to the base class. **Note that you must inherit from game systems last.** For example:
 
 .. code-block:: python
   :caption: Example config enabling the resource and progression systems
@@ -185,7 +183,7 @@ Once you have selected or written a config, you will need to generate maps for t
   Generating 256 training and 64 evaluation maps:
   100%|████████████████████████████████████████████████| 320/320 [09:53<00:00,  1.85s/it]
 
-Generating small maps without rendering takes 5-10 seconds on a modern CPU.
+Generating small maps without rendering takes around 10 seconds on a modern CPU.
 
 .. figure:: /resource/image/map.png
 
@@ -254,7 +252,7 @@ Neural MMO provides three sets of evaluation settings:
 |icon| Rendering and Overlays
 #############################
 
-**v1.5.2:** Overlays are broken due to a Ray Tune bug. We're working on fixing this and have pushed the version regardless because of the importance of Ray Tune and WanDB evaluation. We're working on this. In the meanwhile, you can copy your checkpoint files over to a v1.5.1 install if needed. The models are compatible, and the v1.5.2 client should work fine too.
+**v1.5.2-3:** Overlays are broken due to a Ray Tune bug. We're working on fixing this and have pushed the version regardless because of the importance of Ray Tune and WanDB evaluation. We're working on this. In the meanwhile, you can copy your checkpoint files over to a v1.5.1 install if needed. The models are compatible, and the v1.5.2 client should work fine too.
 
 Rendering the environment requires launching both a server and a client. To launch the server:
 

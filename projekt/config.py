@@ -2,17 +2,25 @@ from pdb import set_trace as T
 
 from neural_mmo.forge.blade import core
 from neural_mmo.forge.blade.core import config
-from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.trinity.scripted import baselines
 from neural_mmo.forge.trinity.agent import Agent
-from neural_mmo.forge.blade.systems.ai import behavior
+from neural_mmo.forge.blade.systems import achievement
 from projekt import rllib_wrapper
 
-class RLlibConfig:
+#Default achievements -- or write your own
+DEFAULT_ACHIEVEMENTS = [achievement.PlayerKills, achievement.Equipment, achievement.Exploration, achievement.Foraging]
+
+class RLlibConfig(config.Achievement):
    '''Base config for RLlib Models
 
    Extends core Config, which contains environment, evaluation,
-   and non-RLlib-specific learning parameters'''
+   and non-RLlib-specific learning parameters
+
+   IMPORTANT: Configure NUM_GPUS and NUM_WORKERS for your hardware
+   Note that EVALUATION_NUM_WORKERS cores are reserved for evaluation
+   and one additional core is reserved for the driver process.
+   Therefore set NUM_WORKERS <= cores - EVALUATION_NUM_WORKERS - 1
+   '''
 
    @property
    def MODEL(self):
@@ -20,8 +28,12 @@ class RLlibConfig:
 
    #Checkpointing. Resume will load the latest trial, e.g. to continue training
    #Restore (overrides resume) will force load a specific checkpoint (e.g. for rendering)
-   RESUME      = False
-   RESTORE     = 'experiments/CompetitionRound1/Dev_9fe1/checkpoint_001000/checkpoint-1000'
+   EXPERIMENT_DIR         = 'experiments'
+   RESUME                 = False
+
+   RESTORE                = True
+   RESTORE_ID             = '627d' #Experiment name suffix
+   RESTORE_CHECKPOINT     = 882
 
    #Policy specification
    AGENTS      = [Agent]
@@ -29,9 +41,8 @@ class RLlibConfig:
    EVALUATE    = False #Reserved param
 
    #Hardware and debug
-   NUM_WORKERS             = 1
    NUM_GPUS_PER_WORKER     = 0
-   NUM_GPUS                = 1
+   NUM_GPUS                = 0
    EVALUATION_NUM_WORKERS  = 3
    LOCAL_MODE              = False
    LOG_LEVEL               = 1
@@ -41,7 +52,7 @@ class RLlibConfig:
    EVALUATION_NUM_EPISODES = 3
    EVALUATION_PARALLEL     = True
    TRAINING_ITERATIONS     = 1000
-   KEEP_CHECKPOINTS_NUM    = 5
+   KEEP_CHECKPOINTS_NUM    = 3
    CHECKPOINT_FREQ         = 1
    LSTM_BPTT_HORIZON       = 16
    NUM_SGD_ITER            = 1
@@ -56,9 +67,10 @@ class RLlibConfig:
    #Reward
    TEAM_SPIRIT             = 0.0
    ACHIEVEMENT_SCALE       = 1.0/15.0
+   REWARD_ACHIEVEMENT      = True
 
 
-class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
+class LargeMaps(RLlibConfig, core.Config):
    '''Large scale Neural MMO training setting
 
    Features up to 1000 concurrent agents and 1000 concurrent NPCs,
@@ -78,7 +90,7 @@ class LargeMaps(core.Config, RLlibConfig, config.AllGameSystems):
    EVALUATION_HORIZON      = 8192
 
 
-class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
+class SmallMaps(RLlibConfig, config.SmallMaps):
    '''Small scale Neural MMO training setting
 
    Features up to 128 concurrent agents and 32 concurrent NPCs,
@@ -89,7 +101,7 @@ class SmallMaps(RLlibConfig, config.AllGameSystems, config.SmallMaps):
    or as a primary research target for PCG methods.'''
 
    #Memory/Batch Scale
-   NUM_WORKERS             = 28
+   NUM_WORKERS             = 1 #Baseline uses 28 cores
    TRAIN_BATCH_SIZE        = 64 * 256 * NUM_WORKERS
    ROLLOUT_FRAGMENT_LENGTH = 256
    SGD_MINIBATCH_SIZE      = 128
@@ -104,6 +116,8 @@ class Debug(SmallMaps, config.AllGameSystems):
 
    A version of the SmallMap setting with greatly reduced batch parameters.
    Only intended as a tool for identifying bugs in the model or environment'''
+   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
+
    LOAD                    = False
    LOCAL_MODE              = True
    NUM_WORKERS             = 1
@@ -118,7 +132,9 @@ class Debug(SmallMaps, config.AllGameSystems):
 
 
 ### AICrowd competition settings
-class CompetitionRound1(config.Achievement, SmallMaps):
+class CompetitionRound1(SmallMaps, config.AllGameSystems):
+   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
+
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -126,7 +142,9 @@ class CompetitionRound1(config.Achievement, SmallMaps):
    NENT                    = 128
    NPOP                    = 1
 
-class CompetitionRound2(config.Achievement, SmallMaps):
+class CompetitionRound2(SmallMaps, config.AllGameSystems):
+   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
+
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -143,7 +161,9 @@ class CompetitionRound2(config.Achievement, SmallMaps):
    COOPERATIVE             = True
    TEAM_SPIRIT             = 1.0
 
-class CompetitionRound3(config.Achievement, LargeMaps):
+class CompetitionRound3(LargeMaps, config.AllGameSystems):
+   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
+
    @property
    def SPAWN(self):
       return self.SPAWN_CONCURRENT
@@ -156,12 +176,25 @@ class CompetitionRound3(config.Achievement, LargeMaps):
 
 
 ### NeurIPS Experiments
-class SmallMultimodalSkills(SmallMaps, config.AllGameSystems): pass
-class LargeMultimodalSkills(LargeMaps, config.AllGameSystems): pass
+class SmallMultimodalSkills(SmallMaps, config.AllGameSystems):
+   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
 
+class LargeMultimodalSkills(LargeMaps, config.AllGameSystems):
+   ACHIEVEMENTS            = DEFAULT_ACHIEVEMENTS
+
+class DomainRandomization(SmallMaps, config.AllGameSystems):
+   ACHIEVEMENTS            = [achievement.Lifetime]
+class DomainRandomization16384(DomainRandomization):
+   TERRAIN_TRAIN_MAPS=16384
+class DomainRandomization256(DomainRandomization):
+   TERRAIN_TRAIN_MAPS=256
+class DomainRandomization32(DomainRandomization):
+   TERRAIN_TRAIN_MAPS=32
+class DomainRandomization1(DomainRandomization):
+   TERRAIN_TRAIN_MAPS=1
 
 class MagnifyExploration(SmallMaps, config.Resource, config.Progression):
-   pass
+   ACHIEVEMENTS            = [achievement.Lifetime]
 class Population4(MagnifyExploration):
    NENT  = 4
 class Population32(MagnifyExploration):
@@ -169,18 +202,8 @@ class Population32(MagnifyExploration):
 class Population256(MagnifyExploration):
    NENT  = 256
 
-
-class DomainRandomization16384(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=16384
-class DomainRandomization256(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=256
-class DomainRandomization32(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=32
-class DomainRandomization1(SmallMaps, config.AllGameSystems):
-   TERRAIN_TRAIN_MAPS=1
-
-
 class TeamBased(MagnifyExploration, config.Combat):
+   ACHIEVEMENTS            = [achievement.Lifetime]
    NENT                    = 128
    NPOP                    = 32
    COOPERATIVE             = True

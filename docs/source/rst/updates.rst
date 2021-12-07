@@ -5,7 +5,7 @@
 |icon| Video Demos
 ##################
 
-`Neural MMO NeurIPS 2021 <https://www.youtube.com/watch?v=hYYA8_wFF7Q>`_
+`Neural MMO v1.5.3 NeurIPS 2021 <https://www.youtube.com/watch?v=hYYA8_wFF7Q>`_
 
 `Neural MMO v1.5 Trailer <https://youtu.be/d1mj8yzjr-w>`_
 
@@ -18,7 +18,7 @@
 |icon| Publications
 ###################
 
-`The Neural MMO Platform for Massively Multiagent Research <http://arxiv.org/abs/2110.07594>`_ (NeurIPS 2021) (v1.5.2)
+:download:`[Poster] </resource/update/NMMO_NeurIPS2021_Poster.pdf>` `The Neural MMO Platform for Massively Multiagent Research <http://arxiv.org/abs/2110.07594>`_ (NeurIPS 2021) (v1.5.3)
 
 :download:`[Poster] </resource/update/NMMO_ICML2020_Poster.pdf>` :download:`Neural MMO: Ingredients for Massively Multiagent Artificial Intelligence Research  </resource/update/nmmo_icml2020.pdf>` (ICML 2020 LAOW Workshop) (v1.4)
 

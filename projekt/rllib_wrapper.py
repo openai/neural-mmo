@@ -280,7 +280,7 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
       super().__init__(*args, **kwargs)
       nn.Module.__init__(self)
 
-      self.space  = actionSpace(self.config).spaces
+      #self.space  = actionSpace(self.config).spaces
       self.model  = Recurrent(self.config)
 
    #Initial hidden state for RLlib Trainer
@@ -293,9 +293,10 @@ class RLlibPolicy(RecurrentNetwork, nn.Module):
 
       logits = []
       #Flatten structured logits for RLlib
-      for atnKey, atn in sorted(self.space.items()):
-         for argKey, arg in sorted(atn.spaces.items()):
-            logits.append(logitDict[atnKey][argKey])
+      #TODO: better to use the space directly here in case of missing keys
+      for atnKey, atn in sorted(logitDict.items()):
+         for argKey, arg in sorted(atn.items()):
+            logits.append(arg)
 
       return torch.cat(logits, dim=1), state
 
@@ -365,49 +366,6 @@ class RLlibEnv(Env, rllib.MultiAgentEnv):
          dones['__all__'] = True
 
       return obs, rewards, dones, infos
-
-def observationSpace(config):
-   obs = defaultdict(dict)
-   #obs = FlexDict(defaultdict(FlexDict))
-   for entity in sorted(Stimulus.values()):
-      nRows       = entity.N(config)
-      nContinuous = 0
-      nDiscrete   = 0
-
-      for _, attr in entity:
-         if attr.DISCRETE:
-            nDiscrete += 1
-         if attr.CONTINUOUS:
-            nContinuous += 1
-
-      obs[entity.__name__]['Continuous'] = gym.spaces.Box(
-            low=-2**20, high=2**20, shape=(nRows, nContinuous),
-            dtype=DataType.CONTINUOUS)
-
-      obs[entity.__name__]['Discrete']   = gym.spaces.Box(
-            low=0, high=4096, shape=(nRows, nDiscrete),
-            dtype=DataType.DISCRETE)
-
-   obs['Entity']['N']   = gym.spaces.Box(
-         low=0, high=config.N_AGENT_OBS, shape=(1,),
-         dtype=DataType.DISCRETE)
-
-   for k, v in obs.items():
-      obs[k] = gym.spaces.Dict(v)
-   obs = gym.spaces.Dict(obs)
-
-   return obs
-
-def actionSpace(config):
-   atns = defaultdict(dict)
-   #atns = FlexDict(defaultdict(FlexDict))
-   for atn in sorted(Action.edges):
-      for arg in sorted(atn.edges):
-         n              = arg.N(config)
-         atns[atn][arg] = gym.spaces.Discrete(n)
-      atns[atn] = gym.spaces.Dict(atns[atn])
-   atns = gym.spaces.Dict(atns)
-   return atns
 
 class RLlibOverlayRegistry(OverlayRegistry):
    '''Host class for RLlib Map overlays'''
@@ -537,6 +495,10 @@ class RLlibTrainer(ppo.PPOTrainer):
 
       self.reset_scripted()
 
+   @classmethod
+   def name(cls):
+      return cls.__bases__[0].__name__
+
    def reset_scripted(self):
       for rating_dict in self.ratings:
          for agent, rating in rating_dict.items():
@@ -565,6 +527,8 @@ class RLlibTrainer(ppo.PPOTrainer):
              agent = key[5:]
              ranks[agent] = stat
 
+      #Getting a type(int) exception?
+      #Achievement system is off
       ranks = list(ranks.values())
       nEnvs = len(ranks[0])
       
@@ -608,7 +572,7 @@ class RLlibLogCallbacks(DefaultCallbacks):
       for policyID, score in zip(policy_ids, scores):
          policy = invMap[policyID]
          agents[policy].append(score)
-      
+
       for agent in agents:
          agents[agent] = np.mean(agents[agent])
 

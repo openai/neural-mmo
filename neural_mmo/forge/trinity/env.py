@@ -4,28 +4,37 @@ import numpy as np
 from collections import defaultdict
 from itertools import chain
 from copy import deepcopy
+import functools
 
 from neural_mmo.forge.blade import entity, core
+from neural_mmo.forge.blade.core.config import Config
 from neural_mmo.forge.blade.io import stimulus
-from neural_mmo.forge.blade.io.stimulus import Static
+from neural_mmo.forge.blade.io.stimulus.static import Stimulus
 from neural_mmo.forge.blade.io.action import static as Action
 from neural_mmo.forge.blade.systems import combat
 
 from neural_mmo.forge.blade.lib import log
 
 from neural_mmo.forge.trinity.overlay import OverlayRegistry
+from neural_mmo.forge.trinity.dataframe import DataType
 
-class Env:
-   '''Environment wrapper for Neural MMO
+import gym
+from pettingzoo import ParallelEnv
+from pettingzoo.utils import agent_selector
+from pettingzoo.utils import wrappers
 
-   Note that the contents of (ob, reward, done, info) returned by the standard
-   OpenAI Gym API reset() and step(actions) methods have been generalized to
-   support variable agent populations and more expressive observation/action
-   spaces. This means you cannot use preexisting optimizer implementations that
-   strictly expect the OpenAI Gym API. We recommend PyTorch+RLlib to take
-   advantage of our prebuilt baseline implementations, but any framework that
-   supports RLlib's fairly popular environment API and extended OpenAI
-   gym.spaces observation/action definitions should work as well.'''
+class Env(ParallelEnv):
+   '''Environment wrapper for Neural MMO using the Parallel PettingZoo API
+
+   Neural MMO provides complex environments featuring structured observations/actions,
+   variably sized agent populations, and long time horizons. Usage in conjunction
+   with RLlib as demonstrated in the /projekt wrapper is highly recommended.
+
+   Due to a limitation in current RLlib support for PettingZoo, this wrapper
+   preallocates 2048 agents by default.'''
+
+   metadata = {'render.modes': ['human'], 'name': 'neural-mmo'}
+
    def __init__(self, config):
       '''
       Args:
@@ -35,12 +44,79 @@ class Env:
       self.realm      = core.Realm(config)
       self.registry   = OverlayRegistry(config, self)
 
+      if __debug__:
+         err = 'Config {} is not a config instance (did you pass the class?)'
+         assert isinstance(config, Config), err.format(config)
+
       self.config     = config
       self.overlay    = None
       self.overlayPos = [256, 256]
       self.client     = None
       self.obs        = None
 
+   @functools.lru_cache(maxsize=None)
+   def observation_space(self, agent: int):
+      '''Neural MMO Observation Space
+
+      Args:
+         agent: Agent ID
+
+      Returns:
+         observation: gym.spaces object contained the structured observation
+         for the specified agent. Each visible object is represented by
+         continuous and discrete vectors of attributes. A 2-layer attentional
+         encoder can be used to convert this structured observation into
+         a flat vector embedding.'''
+
+      observation = {}
+      for entity in sorted(Stimulus.values()):
+         rows       = entity.N(self.config)
+         continuous = 0
+         discrete   = 0
+
+         for _, attr in entity:
+            if attr.DISCRETE:
+               discrete += 1
+            if attr.CONTINUOUS:
+               continuous += 1
+
+         name = entity.__name__
+         observation[name] = {
+               'Continuous': gym.spaces.Box(low=-2**20, high=2**20, shape=(rows, continuous), dtype=DataType.CONTINUOUS),
+               'Discrete'  : gym.spaces.Box(low=0, high=4096, shape=(rows, discrete), dtype=DataType.DISCRETE)}
+
+         if name == 'Entity':
+            observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.N_AGENT_OBS, shape=(1,), dtype=DataType.DISCRETE)
+
+         observation[name] = gym.spaces.Dict(observation[name])
+
+      return gym.spaces.Dict(observation)
+
+   @functools.lru_cache(maxsize=None)
+   def action_space(self, agent):
+      '''Neural MMO Action Space
+
+      Args:
+         agent: Agent ID
+
+      Returns:
+         actions: gym.spaces object contained the structured actions
+         for the specified agent. Each action is parameterized by a list
+         of discrete-valued arguments. These consist of both fixed, k-way
+         choices (such as movement direction) and selections from the
+         observation space (such as targeting)'''
+
+      actions = {}
+      for atn in sorted(Action.Action.edges):
+         actions[atn] = {}
+         for arg in sorted(atn.edges):
+            n                       = arg.N(self.config)
+            actions[atn][arg] = gym.spaces.Discrete(n)
+
+         actions[atn] = gym.spaces.Dict(actions[atn])
+
+      return gym.spaces.Dict(actions)
+ 
    ############################################################################
    ### Core API
    def reset(self, idx=None, step=True):
@@ -68,9 +144,9 @@ class Env:
       Returns:
          observations, as documented by step()
       '''
-      self.actions   = {}
-      self.dead      = []
- 
+      self.actions = {}
+      self.dead    = []
+
       self.quill = log.Quill()
       
       if idx is not None:
@@ -83,15 +159,17 @@ class Env:
       self.worldIdx = idx
       self.realm.reset(idx)
 
-      obs = None
       if step:
-         obs, _, _, _ = self.step({})
+         self.obs, _, _, _ = self.step({})
 
-      self.obs = obs
-      return obs
+      return self.obs
+
+   def close(self):
+       '''For conformity with the PettingZoo API only; rendering is external'''
+       pass
 
    def step(self, actions, preprocess=set(), omitDead=True):
-      '''OpenAI Gym API step function simulating one game tick or timestep
+      '''Simulates one game tick or timestep
 
       Args:
          actions: A dictionary of agent decisions of format::
@@ -143,12 +221,8 @@ class Env:
                ]
 
             Where agent_i is the integer index of the i\'th agent and
-            obs_i is the observation of the i\'th' agent. Note that obs_i
-            is a structured datatype -- not a flat tensor. It is automatically
-            interpretable under an extended OpenAI gym.spaces API. Our demo
-            code shows how do to this in RLlib. Other frameworks must
-            implement the same extended gym.spaces API to do the same.
-            
+            obs_i is specified by the observation_space function.
+           
          rewards:
             A dictionary of agent rewards of format::
 
@@ -178,13 +252,21 @@ class Env:
             done_i is a boolean denoting whether the i\'th agent has died.
 
             Note that obs_i will be a garbage placeholder if done_i is true.
-            This is provided only for conformity with OpenAI Gym. Your
+            This is provided only for conformity with PettingZoo. Your
             algorithm should not attempt to leverage observations outside of
             trajectory bounds. You can omit garbage obs_i values by setting
             omitDead=True.
 
          infos:
-            An empty dictionary provided only for conformity with OpenAI Gym.
+            A dictionary of agent infos of format:
+
+               {
+                  agent_1: None,
+                  agent_2: None,
+                  ...
+               ]
+
+            Provided for conformity with PettingZoo
       '''
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
@@ -241,8 +323,15 @@ class Env:
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
+      #Pettingzoo API
+      self.agents = list(self.realm.players.keys())
+
+      infos = {}
+      for agent in obs:
+         infos[agent] = {}
+
       self.obs = obs
-      return obs, rewards, dones, {}
+      return obs, rewards, dones, infos
 
    ############################################################################
    ### Logging
@@ -341,7 +430,7 @@ class Env:
 
    ############################################################################
    ### Client data
-   def render(self):
+   def render(self, mode='human'):
       '''Data packet used by the renderer
 
       Returns:
@@ -436,7 +525,7 @@ class Env:
 
             obs = self.realm.dataframe.get(ent)
             if n == 0:
-               self.realm.dataframe.remove(Static.Entity, entID, ent.pos)
+               self.realm.dataframe.remove(Stimulus.Entity, entID, ent.pos)
 
             observations[entID] = obs
             ents[entID] = ent

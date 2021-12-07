@@ -23,8 +23,13 @@ from projekt import rllib_wrapper as wrapper
 import projekt
 from projekt import config as base_config
 
+from neural_mmo.forge.blade.core import terrain
+from neural_mmo.forge.trinity.env import Env
+
 from neural_mmo.forge.blade.io.action.static import Action
 from neural_mmo.forge.ethyr.torch import utils
+
+from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
 
 class ConsoleLog(CLIReporter):
    def report(self, trials, done, *sys_info):
@@ -40,26 +45,25 @@ def run_tune_experiment(config):
 
    ray.init(local_mode=config.LOCAL_MODE)
 
-   #Obs and actions
-   obs  = wrapper.observationSpace(config)
-   atns = wrapper.actionSpace(config)
-
    #Register custom env and policies
    ray.tune.registry.register_env("Neural_MMO",
          lambda config: wrapper.RLlibEnv(config))
+
    rllib.models.ModelCatalog.register_custom_model(
          'godsword', wrapper.RLlibPolicy)
+
    mapPolicy = lambda agentID : 'policy_{}'.format(
          agentID % config.NPOLICIES)
 
    policies = {}
+   env = Env(config)
    for i in range(config.NPOLICIES):
       params = {
             "agent_id": i,
-            "obs_space_dict": obs,
-            "act_space_dict": atns}
+            "obs_space_dict": env.observation_space(i),
+            "act_space_dict": env.action_space(i)}
       key           = mapPolicy(i)
-      policies[key] = (None, obs, atns, params)
+      policies[key] = (None, env.observation_space(i), env.action_space(i), params)
 
    #Evaluation config
    eval_config = deepcopy(config)
@@ -106,19 +110,29 @@ def run_tune_experiment(config):
       'evaluation_num_workers': config.EVALUATION_NUM_WORKERS,
       'evaluation_parallel_to_training': config.EVALUATION_PARALLEL,
    }
+ 
+   restore     = None
+   config_name = config.__class__.__name__
+   algorithm   = wrapper.RLlibTrainer.name()
+   if config.RESTORE:
+      if config.RESTORE_ID:
+         config_name = '{}_{}'.format(config_name, config.RESTORE_ID)
+
+      restore   = '{0}/{1}/{2}/checkpoint_{3:06d}/checkpoint-{3}'.format(
+            config.EXPERIMENT_DIR, algorithm, config_name, config.RESTORE_CHECKPOINT)
 
    tune.run(wrapper.RLlibTrainer,
-      config = rllib_config,
-      name = config.__class__.__name__,
-      verbose = config.LOG_LEVEL,
-      stop = {'training_iteration': config.TRAINING_ITERATIONS},
-      resume = config.RESUME,
-      restore= config.RESTORE,
-      local_dir = 'experiments',
+      config    = rllib_config,
+      name      = wrapper.RLlibTrainer.name(),
+      verbose   = config.LOG_LEVEL,
+      stop      = {'training_iteration': config.TRAINING_ITERATIONS},
+      restore   = restore,
+      resume    = config.RESUME,
+      local_dir = config.EXPERIMENT_DIR,
       keep_checkpoints_num = config.KEEP_CHECKPOINTS_NUM,
       checkpoint_freq = config.CHECKPOINT_FREQ,
       checkpoint_at_end = True,
-      trial_dirname_creator = lambda _: 'Run',
+      trial_dirname_creator = lambda _: config_name,
       progress_reporter = ConsoleLog(),
       reuse_actors = True,
       callbacks=[WandbLoggerCallback(

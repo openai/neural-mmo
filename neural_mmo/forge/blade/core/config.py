@@ -107,7 +107,7 @@ class Config(Template):
    ENV_NAME                = 'Neural_MMO'
    '''Environment Name'''
 
-   ENV_VERSION             = '1.5.1'
+   ENV_VERSION             = '1.5.3'
    '''Environment version'''
 
    NAME_PREFIX             = 'Neural_'
@@ -333,13 +333,10 @@ class Config(Template):
 
 
    #Assets
-   PATH_ASSETS          = os.path.join(PATH_RESOURCE, 'assets')
-   '''Asset directory'''
-
-   PATH_TILE            = os.path.join(PATH_ASSETS, 'tiles/{}.png')
+   PATH_TILE            = os.path.join(PATH_RESOURCE, 'tiles/{}.png')
    '''Tile path -- format me with tile name'''
 
-   PATH_TEXT            = os.path.join(PATH_ASSETS, 'text')
+   PATH_TEXT            = os.path.join(PATH_RESOURCE, 'text')
    '''Text directory'''
 
    PATH_LOGO            = os.path.join(PATH_TEXT, 'ascii.txt')

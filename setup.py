@@ -1,66 +1,50 @@
-from pdb import set_trace as T
-
-import os
-import shutil
-import zipfile
-from pathlib import Path
-
 from setuptools import find_packages, setup
-import glob
+from neuralmmo import version
 
-import versioneer
-
-README = Path("README.md").read_text()
-REPO_URL = "https://github.com/jsuarez5341/neural-mmo"
-VERSION = versioneer.get_version()
-
-current_dir = Path(__file__).resolve().parent
-
-
-def read_requirements_file(requirements_version):
-    with open(
-        str(current_dir / "requirements" / f"{requirements_version}.txt")
-    ) as reqs_file:
-        reqs = reqs_file.read().split()
-    lines_to_remove = []
-    for idx in range(len(reqs)):
-        if "-r " in reqs[idx]:
-            lines_to_remove.append(idx)
-    for idx in lines_to_remove:
-        reqs.pop(idx)
-    return reqs
+README = open("README.md").read()
+REPO_URL = "https://github.com/neuralmmo/environment"
 
 setup(
-    name="neural-mmo",
-    description="Neural MMO is a massively multiagent environment for artificial intelligence research inspired by "
+    name="nmmo",
+    description="Neural MMO is a platform for multiagent intelligence research inspired by "
     "Massively Multiplayer Online (MMO) role-playing games",
     long_description=README,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    version=VERSION,
-    cmdclass=versioneer.get_cmdclass(),
-    install_requires=read_requirements_file("base"),
+    version=version,
+    install_requires=[
+        'fire==0.4.0',
+        'setproctitle==1.1.10',
+        'autobahn==19.3.3',
+        'Twisted==19.2.0',
+        'gym==0.17.2',
+        'vec-noise==1.1.4',
+        'imageio==2.8.0',
+        'tqdm==4.61.1',
+    ],
     extras_require={
-        "rllib": read_requirements_file("rllib"),
+        'docs': [
+            'sphinx-rtd-theme==0.5.1',
+        ],
+        'rllib': [
+            'ray[rllib]@https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-2.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl',
+            'tensorflow==2.4.1',
+            'dm-tree==0.1.5',
+            'torch'
+        ],
     },
-    entry_points={
-        "console_scripts": [
-            "neural-mmo-forge=neural_mmo.Forge:main",
-        ]
-    },
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     license="MIT",
     author="Joseph Suarez",
-    author_email="sealsuarez@gmail.com",
+    author_email="jsuarez@mit.edu",
     url=REPO_URL,
     keywords=["Neural MMO", "MMO"],
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
         "Environment :: Console",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],

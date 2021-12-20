@@ -94,6 +94,8 @@ class Config(Template):
    '''
 
    def __init__(self):
+      super().__init__()
+
       if __debug__:
          err = 'config.Config is a base class. Use config.{Small, Medium Large}'''
          assert type(self) != Config, err

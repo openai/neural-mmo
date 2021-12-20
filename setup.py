@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     version=version,
     install_requires=[
+        'pytest-benchmark',
         'fire==0.4.0',
         'setproctitle==1.1.10',
         'autobahn==19.3.3',

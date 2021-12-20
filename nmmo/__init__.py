@@ -1,6 +1,6 @@
 import os
 
-version = '1.5.3.0'
+version = '1.5.3.1'
 motd = open(os.path.dirname(__file__) + '/resource/ascii.txt').read().format(version)
 
 

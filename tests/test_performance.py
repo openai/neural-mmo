@@ -1,12 +1,12 @@
 from pdb import set_trace as T
 import pytest
 
-from neural_mmo.infra.env import Env
-from neural_mmo.core.config import Config, SmallMaps, Resource, Combat, Progression, NPC, AllGameSystems
+import nmmo
+from nmmo.core.config import Config, SmallMaps, Resource, Combat, Progression, NPC, AllGameSystems
 
 # Test utils
 def create_and_reset(conf):
-    env = Env(conf())
+    env = nmmo.Env(conf())
     env.reset(idx=1)
 
 def create_config(base, *systems):
@@ -24,7 +24,7 @@ def benchmark_config(benchmark, base, nent, *systems):
     conf      = create_config(base, *systems)
     conf.NENT = nent
 
-    env = Env(conf)
+    env = nmmo.Env(conf)
     env.reset()
 
     benchmark(env.step, actions={})
@@ -37,10 +37,10 @@ def benchmark_env(benchmark, env, nent):
 
 # Small map tests -- fast with greater coverage for individual game systems
 def test_small_env_creation(benchmark):
-    benchmark(lambda: Env(SmallMaps()))
+    benchmark(lambda: nmmo.Env(SmallMaps()))
 
 def test_small_env_reset(benchmark):
-    env = Env(SmallMaps())
+    env = nmmo.Env(SmallMaps())
     benchmark(lambda: env.reset(idx=1))
 
 def test_fps_small_base_1_pop(benchmark):
@@ -72,14 +72,14 @@ def test_fps_small_all_100_pop(benchmark):
 
 # Reuse large maps since we aren't benchmarking the reset function
 def test_large_env_creation(benchmark):
-    benchmark(lambda: Env(Config()))
+    benchmark(lambda: nmmo.Env(Config()))
 
 def test_large_env_reset(benchmark):
-    env = Env(Config())
+    env = nmmo.Env(Config())
     benchmark(lambda: env.reset(idx=1))
 
-LargeMapsRCP = Env(create_config(Config, Resource, Combat, Progression))
-LargeMapsAll = Env(create_config(Config, AllGameSystems))
+LargeMapsRCP = nmmo.Env(create_config(Config, Resource, Combat, Progression))
+LargeMapsAll = nmmo.Env(create_config(Config, AllGameSystems))
 
 def test_fps_large_rcp_1_pop(benchmark):
     benchmark_env(benchmark, LargeMapsRCP, 1)

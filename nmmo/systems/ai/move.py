@@ -2,23 +2,23 @@ from pdb import set_trace as T
 import numpy as np
 import random as rand
 
+import nmmo
 from nmmo.systems.ai import utils
-from nmmo.io.action import static as Action
 
 def random():
-   return rand.choice(Action.Direction.edges)
+   return rand.choice(nmmo.action.Direction.edges)
 
 def randomSafe(tiles, ent):
    r, c  = ent.base.pos
    cands = []
    if not tiles[r-1, c].lava:
-      cands.append(Action.North)
+      cands.append(nmmo.action.North)
    if not tiles[r+1, c].lava:
-      cands.append(Action.South)
+      cands.append(nmmo.action.South)
    if not tiles[r, c-1].lava:
-      cands.append(Action.West)
+      cands.append(nmmo.action.West)
    if not tiles[r, c+1].lava:
-      cands.append(Action.East)
+      cands.append(nmmo.action.East)
    
    return rand.choice(cands)
 
@@ -26,28 +26,28 @@ def habitable(tiles, ent):
    r, c  = ent.base.pos
    cands = []
    if tiles[r-1, c].vacant:
-      cands.append(Action.North)
+      cands.append(nmmo.action.North)
    if tiles[r+1, c].vacant:
-      cands.append(Action.South)
+      cands.append(nmmo.action.South)
    if tiles[r, c-1].vacant:
-      cands.append(Action.West)
+      cands.append(nmmo.action.West)
    if tiles[r, c+1].vacant:
-      cands.append(Action.East)
+      cands.append(nmmo.action.East)
    
    if len(cands) == 0:
-      return Action.North
+      return nmmo.action.North
 
    return rand.choice(cands)
 
 def towards(direction):
    if direction == (-1, 0):
-      return Action.North
+      return nmmo.action.North
    elif direction == (1, 0):
-      return Action.South
+      return nmmo.action.South
    elif direction == (0, -1):
-      return Action.West
+      return nmmo.action.West
    elif direction == (0, 1):
-      return Action.East
+      return nmmo.action.East
    else:
       return random()
 

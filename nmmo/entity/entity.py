@@ -1,17 +1,15 @@
 from pdb import set_trace as T
 import numpy as np
 
+import nmmo
 from nmmo.systems import skill, droptable, combat, equipment
 from nmmo.lib import material, utils
 
-from nmmo.io.action import static as Action
-from nmmo.io.stimulus import Static
-
 class Resources:
    def __init__(self, ent):
-      self.health = Static.Entity.Health(ent.dataframe, ent.entID)
-      self.water  = Static.Entity.Water( ent.dataframe, ent.entID)
-      self.food   = Static.Entity.Food(  ent.dataframe, ent.entID)
+      self.health = nmmo.Serialized.Entity.Health(ent.dataframe, ent.entID)
+      self.water  = nmmo.Serialized.Entity.Water( ent.dataframe, ent.entID)
+      self.food   = nmmo.Serialized.Entity.Food(  ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
       self.health.max = entity.skills.constitution.level
@@ -28,7 +26,7 @@ class Resources:
 class Status:
    def __init__(self, ent):
       self.config = ent.config
-      self.freeze     = Static.Entity.Freeze(ent.dataframe, ent.entID)
+      self.freeze     = nmmo.Serialized.Entity.Freeze(ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
       self.freeze.decrement()
@@ -47,8 +45,8 @@ class History:
       self.exploration = 0
       self.playerKills = 0
 
-      self.damage    = Static.Entity.Damage(   ent.dataframe, ent.entID)
-      self.timeAlive = Static.Entity.TimeAlive(ent.dataframe, ent.entID)
+      self.damage    = nmmo.Serialized.Entity.Damage(   ent.dataframe, ent.entID)
+      self.timeAlive = nmmo.Serialized.Entity.TimeAlive(ent.dataframe, ent.entID)
 
       self.lastPos = None
 
@@ -78,15 +76,15 @@ class Base:
       self.color = color
       r, c       = pos
 
-      self.r          = Static.Entity.R(ent.dataframe, ent.entID, r)
-      self.c          = Static.Entity.C(ent.dataframe, ent.entID, c)
+      self.r          = nmmo.Serialized.Entity.R(ent.dataframe, ent.entID, r)
+      self.c          = nmmo.Serialized.Entity.C(ent.dataframe, ent.entID, c)
 
-      self.population = Static.Entity.Population(ent.dataframe, ent.entID, pop)
-      self.self       = Static.Entity.Self(      ent.dataframe, ent.entID, 1)
-      self.identity   = Static.Entity.ID(        ent.dataframe, ent.entID, ent.entID)
-      self.level      = Static.Entity.Level(     ent.dataframe, ent.entID, 3)
+      self.population = nmmo.Serialized.Entity.Population(ent.dataframe, ent.entID, pop)
+      self.self       = nmmo.Serialized.Entity.Self(      ent.dataframe, ent.entID, 1)
+      self.identity   = nmmo.Serialized.Entity.ID(        ent.dataframe, ent.entID, ent.entID)
+      self.level      = nmmo.Serialized.Entity.Level(     ent.dataframe, ent.entID, 3)
 
-      ent.dataframe.init(Static.Entity, ent.entID, (r, c))
+      ent.dataframe.init(nmmo.Serialized.Entity, ent.entID, (r, c))
 
    def update(self, realm, entity, actions):
       self.level.update(combat.level(entity.skills))
@@ -121,7 +119,7 @@ class Entity:
       self.closest      = None
       self.spawnPos     = pos
 
-      self.attackerID = Static.Entity.AttackerID(self.dataframe, self.entID, 0)
+      self.attackerID = nmmo.Serialized.Entity.AttackerID(self.dataframe, self.entID, 0)
 
       #Submodules
       self.base      = Base(self, pos, iden, name, color, pop)

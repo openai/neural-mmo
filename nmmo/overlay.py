@@ -2,13 +2,18 @@ from pdb import set_trace as T
 import numpy as np
 
 from nmmo.lib import overlay
-from nmmo.lib.enums import Neon
+from nmmo.lib.colors import Neon
 from nmmo.systems import combat
 
 
 class OverlayRegistry:
    def __init__(self, config, realm):
-      '''Manager class for overlays'''
+      '''Manager class for overlays
+
+      Args:
+          config: A Config object
+          realm: An environment
+      '''
       self.config = config
       self.realm  = realm
 
@@ -21,7 +26,13 @@ class OverlayRegistry:
          self.overlays[cmd] = overlay(self.config, self.realm)
 
    def step(self, obs, pos, cmd):
-      '''Per-tick updates'''
+      '''Per-tick overlay updates
+
+      Args:
+          obs: Observation returned by the environment
+          pos: Client camera focus position
+          cmd: User command returned by the client
+      '''
       self.realm.overlayPos = pos
       for overlay in self.overlays.values():
           overlay.update(obs)
@@ -36,6 +47,11 @@ class Overlay:
    They are rendered over the environment with transparency and
    can be used to gain insight about agent behaviors.'''
    def __init__(self, config, realm, *args):
+      '''
+      Args:
+          config: A Config object
+          realm: An environment
+      '''
       self.config     = config
       self.realm      = realm
 
@@ -43,11 +59,15 @@ class Overlay:
       self.values     = np.zeros((self.size, self.size))
 
    def update(self, obs):
-       '''Compute per-tick updates to this overlay'''
+       '''Compute per-tick updates to this overlay. Override per overlay.
+
+       Args:
+           obs: Observation returned by the environment
+       '''
        pass
 
    def register(self):
-       '''Compute the overlay and register it within realm'''
+       '''Compute the overlay and register it within realm. Override per overlay.'''
        pass
 
 class Skills(Overlay):

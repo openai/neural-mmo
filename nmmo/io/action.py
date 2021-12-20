@@ -1,11 +1,46 @@
 from pdb import set_trace as T
 import numpy as np
 
-from nmmo.lib import utils, material
+from enum import Enum, auto
+
+import nmmo
+from nmmo.lib import utils
 from nmmo.lib.utils import staticproperty
-from nmmo.io.node import Node, NodeType
-from nmmo.systems import combat
-from nmmo.io.stimulus import Static
+
+class NodeType(Enum):
+   #Tree edges
+   STATIC = auto()    #Traverses all edges without decisions
+   SELECTION = auto() #Picks an edge to follow
+
+   #Executable actions
+   ACTION    = auto() #No arguments
+   CONSTANT  = auto() #Constant argument
+   VARIABLE  = auto() #Variable argument
+
+class Node(metaclass=utils.IterableNameComparable):
+   @staticproperty
+   def edges():
+      return []
+
+   #Fill these in
+   @staticproperty
+   def priority():
+      return None
+
+   @staticproperty
+   def type():
+      return None
+
+   @staticproperty
+   def leaf():
+      return False
+
+   @classmethod
+   def N(cls, config):
+      return len(cls.edges)
+
+   def args(stim, entity, config):
+      return []
 
 class Fixed:
    pass
@@ -16,6 +51,7 @@ class Action(Node):
 
    @staticproperty
    def edges():
+      '''List of valid actions'''
       return [Move, Attack]
 
    @staticproperty
@@ -23,7 +59,7 @@ class Action(Node):
       return len(Action.arguments)
 
    def args(stim, entity, config):
-      return Static.edges 
+      return nmmo.Serialized.edges 
 
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
@@ -59,7 +95,7 @@ class Move(Node):
       if entity.status.freeze > 0:
          return
 
-      env.dataframe.move(Static.Entity, entID, (r, c), (rNew, cNew))
+      env.dataframe.move(nmmo.Serialized.Entity, entID, (r, c), (rNew, cNew))
       entity.base.r.update(rNew)
       entity.base.c.update(cNew)
 
@@ -162,7 +198,9 @@ class Attack(Node):
       targ.attacker = entity
       targ.attackerID.update(entity.entID)
 
+      from nmmo.systems import combat
       dmg = combat.attack(entity, targ, style.skill)
+
       if style.freeze and dmg > 0:
          targ.status.freeze.update(env.config.COMBAT_FREEZE_TIME)
 

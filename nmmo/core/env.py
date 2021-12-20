@@ -1,37 +1,23 @@
 from pdb import set_trace as T
 import numpy as np
 
-from collections import defaultdict
-from itertools import chain
-from copy import deepcopy
 import functools
-
-from nmmo import entity, core
-from nmmo.core.config import Config, SmallMaps
-from nmmo.io import stimulus
-from nmmo.io.stimulus.static import Stimulus
-from nmmo.io.action import static as Action
-from nmmo.systems import combat
-
-from nmmo.lib import log
-
-from nmmo.infra.overlay import OverlayRegistry
-from nmmo.infra.dataframe import DataType
 
 import gym
 from pettingzoo import ParallelEnv
-from pettingzoo.utils import agent_selector
-from pettingzoo.utils import wrappers
+
+import nmmo
+from nmmo import entity, core
+
+from nmmo.lib import log
+from nmmo.infrastructure import DataType
 
 class Env(ParallelEnv):
    '''Environment wrapper for Neural MMO using the Parallel PettingZoo API
 
    Neural MMO provides complex environments featuring structured observations/actions,
    variably sized agent populations, and long time horizons. Usage in conjunction
-   with RLlib as demonstrated in the /projekt wrapper is highly recommended.
-
-   Due to a limitation in current RLlib support for PettingZoo, this wrapper
-   preallocates 2048 agents by default.'''
+   with RLlib as demonstrated in the /projekt wrapper is highly recommended.'''
 
    metadata = {'render.modes': ['human'], 'name': 'neural-mmo'}
 
@@ -43,18 +29,18 @@ class Env(ParallelEnv):
       super().__init__()
 
       if config is None:
-          config = SmallMaps()
+          config = nmmo.config.Small()
 
       if not config.AGENTS:
-          from nmmo.infra import scripting
-          config.AGENTS = [scripting.Random]
+          from nmmo import agent
+          config.AGENTS = [agent.Random]
 
       if __debug__:
          err = 'Config {} is not a config instance (did you pass the class?)'
-         assert isinstance(config, Config), err.format(config)
+         assert isinstance(config, nmmo.config.Config), err.format(config)
 
       self.realm      = core.Realm(config)
-      self.registry   = OverlayRegistry(config, self)
+      self.registry   = nmmo.OverlayRegistry(config, self)
 
       self.config     = config
       self.overlay    = None
@@ -77,7 +63,7 @@ class Env(ParallelEnv):
          a flat vector embedding.'''
 
       observation = {}
-      for entity in sorted(Stimulus.values()):
+      for entity in sorted(nmmo.Serialized.values()):
          rows       = entity.N(self.config)
          continuous = 0
          discrete   = 0
@@ -115,7 +101,7 @@ class Env(ParallelEnv):
          observation space (such as targeting)'''
 
       actions = {}
-      for atn in sorted(Action.Action.edges):
+      for atn in sorted(nmmo.Action.edges):
          actions[atn] = {}
          for arg in sorted(atn.edges):
             n                       = arg.N(self.config)
@@ -176,7 +162,7 @@ class Env(ParallelEnv):
        '''For conformity with the PettingZoo API only; rendering is external'''
        pass
 
-   def step(self, actions, preprocess=set(), omitDead=True):
+   def step(self, actions):
       '''Simulates one game tick or timestep
 
       Args:
@@ -207,14 +193,6 @@ class Env(ParallelEnv):
             A well-formed algorithm should do none of the above. We only
             Perform this conditional processing to make batched action
             computation easier.
-
-         preprocess: set of agent IDs for which actions are returned as raw
-            indices and need to be preprocessed. Typically this should only
-            include IDs of agents controlled by neural models and exclude IDs
-            of scripted agents
-
-         omitDead: Whether to omit dead agents observations from the returned
-            obs. Provided for conformity with some optimizer APIs
 
       Returns:
          (dict, dict, dict, None):
@@ -305,10 +283,10 @@ class Env(ParallelEnv):
          self.obs[entID] = ob
          if ent.agent.scripted:
             atns = ent.agent(ob)
-            if Action.Attack in atns:
-               atn  = atns[Action.Attack]
-               targ = atn[Action.Target]
-               atn[Action.Target] = self.realm.entity(targ)
+            if nmmo.action.Attack in atns:
+               atn  = atns[nmmo.action.Attack]
+               targ = atn[nmmo.action.Target]
+               atn[nmmo.action.Target] = self.realm.entity(targ)
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
@@ -319,10 +297,6 @@ class Env(ParallelEnv):
 
       for entID, ent in self.dead.items():
          self.log(ent)
-
-      #Postprocess dead agents
-      #if omitDead:
-      #   return obs, rewards, dones, {}
 
       for entID, ent in self.dead.items():
          if ent.agent.scripted:
@@ -399,11 +373,11 @@ class Env(ParallelEnv):
       performs that logging and returns the associated a data structure
       containing logs for the entire evaluation
 
-      Returns:
-         Log datastructure
-         
       Args:
          ent: An agent
+
+      Returns:
+         Log datastructure
       '''
 
       for entID, ent in self.realm.players.entities.items():
@@ -420,9 +394,10 @@ class Env(ParallelEnv):
       access to the environment state via self.realm. Our baselines do not
       modify this method; specify any changes when comparing to baselines
 
-      Returns:
-         float:
+      Args:
+         entID: Agent ID
 
+      Returns:
          reward:
             The reward for the actions on the previous timestep of the
             entity identified by entID.
@@ -433,7 +408,7 @@ class Env(ParallelEnv):
 
    ############################################################################
    ### Client data
-   def render(self, mode='human'):
+   def render(self, mode='human') -> None:
       '''Data packet used by the renderer
 
       Returns:
@@ -457,14 +432,14 @@ class Env(ParallelEnv):
          self.overlay      = None
 
       if not self.client:
-         from nmmo.infra.twistedserver import Application
+         from nmmo.websocket import Application
          self.client = Application(self) 
 
       pos, cmd = self.client.update(packet)
       if self.obs:
          self.registry.step(self.obs, pos, cmd)
 
-   def register(self, overlay):
+   def register(self, overlay) -> None:
       '''Register an overlay to be sent to the client
 
       The intended use of this function is: User types overlay ->
@@ -528,7 +503,7 @@ class Env(ParallelEnv):
 
             obs = self.realm.dataframe.get(ent)
             if n == 0:
-               self.realm.dataframe.remove(Stimulus.Entity, entID, ent.pos)
+               self.realm.dataframe.remove(nmmo.Serialized.Entity, entID, ent.pos)
 
             observations[entID] = obs
             ents[entID] = ent

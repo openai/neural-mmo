@@ -1,14 +1,19 @@
-version = '1.5.3'
+import os
 
-motd = (
-"      ___           ___           ___           ___       Version {:<8}\n"
-"     /__/\         /__/\         /__/\         /  /\\\n"
-"     \  \:\       |  |::\       |  |::\       /  /::\     An open source\n"
-"      \  \:\      |  |:|:\      |  |:|:\     /  /:/\:\    project originally\n"
-"  _____\__\:\   __|__|:|\:\   __|__|:|\:\   /  /:/  \:\   founded by Joseph Suarez\n"
-" /__/::::::::\ /__/::::| \:\ /__/::::| \:\ /__/:/ \__\:\  and formalized at OpenAI\n"
-" \  \:\~~\~~\/ \  \:\~~\__\/ \  \:\~~\__\/ \  \:\ /  /:/\n"
-"  \  \:\  ~~~   \  \:\        \  \:\        \  \:\  /:/   Now developed and\n"
-"   \  \:\        \  \:\        \  \:\        \  \:\/:/    maintained at MIT in\n"
-"    \  \:\        \  \:\        \  \:\        \  \::/     Phillip Isola's lab\n"
-"     \__\/         \__\/         \__\/         \__\/\n".format(version))
+version = '1.5.3.0'
+motd = open(os.path.dirname(__file__) + '/resource/ascii.txt').read().format(version)
+
+
+from . import scripting
+from .lib import material
+from .overlay import Overlay, OverlayRegistry
+from .io import action
+from .io.stimulus import Serialized
+from .io.action import Action
+from .core import config, agent
+from .core.agent import Agent
+from .core.env import Env
+
+__all__ = ['Env', 'config', 'scripting', 'agent', 'Agent',
+        'Serialized', 'action', 'Action', 'scripting', 'material',
+        'Overlay', 'OverlayRegistry']

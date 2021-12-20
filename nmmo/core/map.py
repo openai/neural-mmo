@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 from nmmo import core
+from nmmo.core import terrain
 from nmmo.lib import material
 
 import os
@@ -38,8 +39,9 @@ class Map:
       '''Reuse the current tile objects to load a new map'''
 
       path_maps = os.path.join(self.config.PATH_CWD, self.config.PATH_MAPS)
+      os.makedirs(path_maps, exist_ok=True)
       if not os.listdir(path_maps):
-         core.terrain.MapGenerator(self.config).generate()
+         terrain.MapGenerator(self.config).generate()
 
       self.updateList = set()
       materials = {mat.index: mat for mat in material.All}

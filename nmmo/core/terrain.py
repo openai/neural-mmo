@@ -161,7 +161,7 @@ class MapGenerator:
       l1Scale = l1Scale / np.max(l1Scale)
       for i in range(octaves):
          idxs           = l1Scale*scale[:, :, i] + (1-l1Scale)*(start + i)
-         scale[:, :, i] = pdf[idxs.astype(np.int)]
+         scale[:, :, i] = pdf[idxs.astype(int)]
 
       #Blend octaves
       std = np.std(val)

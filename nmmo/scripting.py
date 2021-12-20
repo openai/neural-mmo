@@ -1,6 +1,3 @@
-from nmmo.infra.agent import Agent
-from nmmo.io.action import static as Action
-
 class Observation:
    '''Unwraps observation tensors for use with scripted agents'''
    def __init__(self, config, obs):
@@ -22,6 +19,9 @@ class Observation:
       Args:
          rDelta: row offset from current agent
          cDelta: col offset from current agent
+
+      Returns:
+         Vector corresponding to the specified tile
       '''
       return self.tiles[self.config.WINDOW * (self.delta + rDelta) + self.delta + cDelta]
 
@@ -39,7 +39,3 @@ class Observation:
          attr: A forge.blade.io.stimulus.static stimulus class
       '''
       return float(ary[attr.index])
-
-class Random(Agent):
-   def __call__(self, obs):
-      return {Action.Move: {Action.Direction: rand.choice(Action.Direction.edges)}}

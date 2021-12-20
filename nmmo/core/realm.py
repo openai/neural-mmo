@@ -5,13 +5,11 @@ from collections import defaultdict
 from collections.abc import Mapping
 from typing import Dict, Callable
 
-from nmmo import core
-from nmmo.lib.enums import Palette
+import nmmo
+from nmmo import core, infrastructure
 from nmmo.entity.npc import NPC
 from nmmo.entity import Player
-from nmmo import infra
-
-from nmmo.io.stimulus import Static
+from nmmo.lib import colors
 
 def prioritized(entities: Dict, merged: Dict):
    '''Sort actions into merged according to priority'''
@@ -53,7 +51,7 @@ class EntityGroup(Mapping):
 
    def reset(self):
       for entID, ent in self.entities.items():
-         self.dataframe.remove(Static.Entity, entID, ent.pos)
+         self.dataframe.remove(nmmo.Serialized.Entity, entID, ent.pos)
 
       self.spawned  = False
       self.entities = {}
@@ -83,7 +81,7 @@ class EntityGroup(Mapping):
 
             self.realm.map.tiles[r, c].delEnt(entID)
             del self.entities[entID]
-            self.realm.dataframe.remove(Static.Entity, entID, player.pos)
+            self.realm.dataframe.remove(nmmo.Serialized.Entity, entID, player.pos)
 
       return self.dead
 
@@ -130,7 +128,7 @@ class PlayerManager(EntityGroup):
       super().__init__(config, realm)
 
       self.loader  = config.AGENT_LOADER
-      self.palette = Palette(config.NPOP)
+      self.palette = colors.Palette()
       self.realm   = realm
 
    def reset(self):
@@ -141,7 +139,7 @@ class PlayerManager(EntityGroup):
    def spawnIndividual(self, r, c):
       pop, agent = next(self.agents)
       agent      = agent(self.config, self.idx)
-      player     = Player(self.realm, (r, c), agent, pop)
+      player     = Player(self.realm, (r, c), agent, self.palette.color(pop), pop)
       super().spawn(player)
       self.idx   += 1
 
@@ -178,7 +176,7 @@ class Realm:
       self.config   = config
 
       #Load the world file
-      self.dataframe = infra.Dataframe(config)
+      self.dataframe = infrastructure.Dataframe(config)
       self.map       = core.Map(config, self)
 
       #Entity handlers

@@ -1,5 +1,5 @@
 from pdb import set_trace as T
-from nmmo.lib.enums import Tier
+from nmmo.lib.colors import Tier
 
 class Loadout:
    def __init__(self, chest=0, legs=0):

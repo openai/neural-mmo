@@ -13,8 +13,7 @@ import numpy as np
 
 from collections import defaultdict
 
-from nmmo.core import terrain
-from nmmo.io.stimulus import Static
+import nmmo
 
 class DataType:
    CONTINUOUS = np.float32
@@ -218,7 +217,7 @@ class Dataframe:
    '''Infrastructure wrapper class'''
    def __init__(self, config):
       self.config, self.data = config, defaultdict(dict)
-      for (objKey,), obj in Static:
+      for (objKey,), obj in nmmo.Serialized:
          self.data[objKey] = GridTables(config, obj, pad=obj.N(config))
 
    def update(self, node, val):

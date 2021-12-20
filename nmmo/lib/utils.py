@@ -1,8 +1,8 @@
-import itertools
-import time
-
+from pdb import set_trace as T
 import numpy as np
-from collections import defaultdict
+
+from collections import defaultdict, deque
+import inspect
 
 class staticproperty(property):
     def __get__(self, cls, owner):
@@ -13,6 +13,55 @@ class classproperty(object):
         self.f = f
     def __get__(self, obj, owner):
         return self.f(owner)
+
+class Iterable(type):
+   def __iter__(cls):
+      queue = deque(cls.__dict__.items())
+      while len(queue) > 0:
+         name, attr = queue.popleft()
+         if type(name) != tuple:
+            name = tuple([name])
+         if not inspect.isclass(attr):
+            continue
+         yield name, attr
+
+   def values(cls):
+      return [e[1] for e in cls]
+
+class StaticIterable(type):
+    def __iter__(cls):
+        stack = list(cls.__dict__.items())
+        for name, attr in cls.__dict__.items():
+            if name == '__module__':
+                continue
+            if name.startswith('__'):
+                break
+            yield name, attr
+
+class NameComparable(type):
+   def __hash__(self):
+      return hash(self.__name__)
+
+   def __eq__(self, other):
+      return self.__name__ == other.__name__
+
+   def __ne__(self, other):
+      return self.__name__ != other.__name__
+
+   def __lt__(self, other):
+      return self.__name__ < other.__name__
+
+   def __le__(self, other):
+      return self.__name__ <= other.__name__
+
+   def __gt__(self, other):
+      return self.__name__ > other.__name__
+
+   def __ge__(self, other):
+      return self.__name__ >= other.__name__
+
+class IterableNameComparable(Iterable, NameComparable):
+   pass
 
 def seed():
    return int(np.random.randint(0, 2**32))
@@ -31,3 +80,4 @@ def inBounds(r, c, shape, border=0):
          r < R - border and
          c < C - border
          )
+

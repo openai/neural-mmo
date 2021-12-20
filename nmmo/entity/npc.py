@@ -2,12 +2,11 @@ from pdb import set_trace as T
 import numpy as np
 
 import random
-from nmmo.entity import Player
+
+import nmmo
 from nmmo.entity import entity
 from nmmo.systems import combat, equipment, ai, combat, skill
-from nmmo.lib.enums import Neon
-from nmmo.io.action import static as Action
-from nmmo.io.stimulus import Static
+from nmmo.lib.colors import Neon
 
 class NPC(entity.Entity):
    def __init__(self, realm, pos, iden, name, color, pop):
@@ -52,7 +51,7 @@ class NPC(entity.Entity):
       ent.skills.mage.setExpByLevel(mage)
 
       ent.skills.style = random.choice(
-         (Action.Melee, Action.Range, Action.Mage))
+         (nmmo.action.Melee, nmmo.action.Range, nmmo.action.Mage))
 
       #Set equipment levels
       ent.loadout.chestplate.level = NPC.gearLevel(defense)
@@ -103,7 +102,7 @@ class NPC(entity.Entity):
 class Passive(NPC):
    def __init__(self, realm, pos, iden):
       super().__init__(realm, pos, iden, 'Passive', Neon.GREEN, -1)
-      self.dataframe.init(Static.Entity, iden, pos)
+      self.dataframe.init(nmmo.Serialized.Entity, iden, pos)
 
    def decide(self, realm):
       return ai.policy.passive(realm, self)
@@ -111,7 +110,7 @@ class Passive(NPC):
 class PassiveAggressive(NPC):
    def __init__(self, realm, pos, iden):
       super().__init__(realm, pos, iden, 'Neutral', Neon.ORANGE, -2)
-      self.dataframe.init(Static.Entity, iden, pos)
+      self.dataframe.init(nmmo.Serialized.Entity, iden, pos)
 
    def decide(self, realm):
       return ai.policy.neutral(realm, self)
@@ -119,9 +118,9 @@ class PassiveAggressive(NPC):
 class Aggressive(NPC):
    def __init__(self, realm, pos, iden):
       super().__init__(realm, pos, iden, 'Hostile', Neon.RED, -3)
-      self.dataframe.init(Static.Entity, iden, pos)
+      self.dataframe.init(nmmo.Serialized.Entity, iden, pos)
       self.vision = int(max(self.vision, 1 + combat.level(self.skills) // 10))
-      self.dataframe.init(Static.Entity, self.entID, self.pos)
+      self.dataframe.init(nmmo.Serialized.Entity, self.entID, self.pos)
 
    def decide(self, realm):
       return ai.policy.hostile(realm, self)

@@ -3,10 +3,10 @@
 from pdb import set_trace as T
 import pytest
 
-from neural_mmo.infra.env import Env
+import nmmo
 
 if __name__ == '__main__':
-    env = Env()
+    env = nmmo.Env()
     env.config.RENDER = True
 
     env.reset()

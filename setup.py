@@ -1,14 +1,12 @@
 from setuptools import find_packages, setup
-from neuralmmo import version
+from nmmo import version
 
-README = open("README.md").read()
 REPO_URL = "https://github.com/neuralmmo/environment"
 
 setup(
     name="nmmo",
     description="Neural MMO is a platform for multiagent intelligence research inspired by "
-    "Massively Multiplayer Online (MMO) role-playing games",
-    long_description=README,
+    "Massively Multiplayer Online (MMO) role-playing games. Documentation hosted at neuralmmo.github.io.",
     long_description_content_type="text/markdown",
     packages=find_packages(),
     version=version,
@@ -27,7 +25,7 @@ setup(
             'sphinx-rtd-theme==0.5.1',
         ],
         'rllib': [
-            'ray[rllib]@https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-2.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl',
+            'ray==1.5.2',
             'tensorflow==2.4.1',
             'dm-tree==0.1.5',
             'torch'

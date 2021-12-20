@@ -1,13 +1,12 @@
 from pdb import set_trace as T
 import numpy as np
-import inspect
 import os
 
-from collections import defaultdict
-from itertools import chain
 import nmmo
+from nmmo.lib import utils
 
 class SequentialLoader:
+    '''config.AGENT_LOADER that spreads out agent populations'''
     def __init__(self, config):
         items = config.AGENTS
         for idx, itm in enumerate(items):
@@ -24,6 +23,7 @@ class SequentialLoader:
         return self.idx, self.items[self.idx]
 
 class TeamLoader:
+    '''config.AGENT_LOADER that loads agent populations adjacent'''
     def __init__(self, config):
         items = config.AGENTS
         self.team_size = config.NENT // config.NPOP
@@ -43,17 +43,7 @@ class TeamLoader:
         return team_idx, self.items[team_idx]
 
 
-class StaticIterable(type):
-   def __iter__(cls):
-      stack = list(cls.__dict__.items())
-      for name, attr in cls.__dict__.items():
-         if name == '__module__':
-            continue
-         if name.startswith('__'):
-            break
-         yield name, attr
-
-class Template(metaclass=StaticIterable):
+class Template(metaclass=utils.StaticIterable):
    def __init__(self):
       self.data = {}
       cls       = type(self)
@@ -102,6 +92,12 @@ class Config(Template):
       Config to add new static attributes -- CLI definitions will be
       generated automatically.
    '''
+
+   def __init__(self):
+      if __debug__:
+         err = 'config.Config is a base class. Use config.{Small, Medium Large}'''
+         assert type(self) != Config, err
+
    ############################################################################
    ### Meta-Parameters
 
@@ -127,10 +123,10 @@ class Config(Template):
    NSTIM                   = 7
    '''Number of tiles an agent can see in any direction'''
 
-   NMOB                    = 1024
+   NMOB                    = None
    '''Maximum number of NPCs spawnable in the environment'''
 
-   NENT                    = 2048
+   NENT                    = None
    '''Maximum number of agents spawnable in the environment'''
 
    NPOP                    = 1
@@ -161,7 +157,7 @@ class Config(Template):
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
 
-   PLAYER_SPAWN_ATTEMPTS   = 16
+   PLAYER_SPAWN_ATTEMPTS      = None
    '''Number of player spawn attempts per tick
 
    Note that the env will attempt to spawn agents until success
@@ -234,7 +230,7 @@ class Config(Template):
    TERRAIN_RENDER             = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 
-   TERRAIN_CENTER             = 1024
+   TERRAIN_CENTER             = None
    '''Size of each map (number of tiles along each side)'''
 
    TERRAIN_BORDER             = 16
@@ -319,7 +315,7 @@ class Config(Template):
    PATH_TILE            = os.path.join(PATH_RESOURCE, '{}.png')
    '''Tile path -- format me with tile name'''
 
-   PATH_MAPS            = 'maps/procedural-large'
+   PATH_MAPS            = None
    '''Generated map directory'''
 
    PATH_MAP_SUFFIX      = 'map{}/map.npy'
@@ -363,26 +359,6 @@ class Config(Template):
 
    PATH_THEME_PUB       = os.path.join(PATH_THEMES, 'index_publication.html')
    '''Publication theme file'''
-
-class SmallMaps(Config):
-   '''A smaller config modeled off of v1.4 and below featuring 128x128 maps
-   with up to 256 agents and 128 NPCs. It is suitable to time horizons of 1024+
-   steps. For larger experiments, consider the default config.'''
-
-   PATH_MAPS               = 'maps/procedural-small' 
-   '''Generated map directory'''
-
-   #Scale
-   TERRAIN_CENTER          = 128
-   NENT                    = 256
-   NMOB                    = 128
-
-   #Players spawned per tick
-   PLAYER_SPAWN_ATTEMPTS   = 2
-
-   #NPC parameters
-   NPC_LEVEL_MAX           = 30
-   NPC_LEVEL_SPREAD        = 5
 
 
 ############################################################################
@@ -490,10 +466,10 @@ class NPC(Combat):
    NPC_LEVEL_MIN                       = 1
    '''Minimum NPC level'''
 
-   NPC_LEVEL_MAX                       = 99
+   NPC_LEVEL_MAX                       = None
    '''Maximum NPC level'''
 
-   NPC_LEVEL_SPREAD                    = 10 
+   NPC_LEVEL_SPREAD                    = None
    '''Level range for NPC spawns'''
 
 class Achievement:
@@ -520,3 +496,49 @@ class Achievement:
    FORAGING_HARD           = 50
 
 class AllGameSystems(Resource, Progression, NPC): pass
+
+############################################################################
+### Config presets
+class Small(Config):
+   '''A small config for debugging and experiments with an expensive outer loop'''
+
+   PATH_MAPS               = 'maps/small' 
+
+   TERRAIN_CENTER          = 32
+   NENT                    = 64
+   NMOB                    = 32
+
+   PLAYER_SPAWN_ATTEMPTS   = 1
+
+   NPC_LEVEL_MAX           = 10
+   NPC_LEVEL_SPREAD        = 1
+
+class Medium(Config):
+   '''A medium config suitable for most academic-scale research'''
+
+   PATH_MAPS               = 'maps/medium' 
+   '''Generated map directory'''
+
+   TERRAIN_CENTER          = 128
+   NENT                    = 256
+   NMOB                    = 128
+
+   PLAYER_SPAWN_ATTEMPTS   = 2
+
+   NPC_LEVEL_MAX           = 30
+   NPC_LEVEL_SPREAD        = 5
+
+class Large(Config):
+   '''A large config suitable for large-scale research or fast models'''
+
+   PATH_MAPS               = 'maps/large' 
+   '''Generated map directory'''
+
+   TERRAIN_CENTER          = 1024
+   NENT                    = 2048
+   NMOB                    = 1024
+
+   PLAYER_SPAWN_ATTEMPTS   = 16
+
+   NPC_LEVEL_MAX           = 99
+   NPC_LEVEL_SPREAD        = 10

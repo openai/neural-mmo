@@ -71,10 +71,13 @@ class Meta(type):
       return mtl in self.indices
 
 class All(metaclass=Meta):
+   '''List of all materials'''
    materials = {Lava, Water, Grass, Scrub, Forest, Stone, Orerock}
 
 class Impassible(metaclass=Meta):
+   '''Materials that agents cannot walk through'''
    materials = {Lava, Stone, Orerock}
 
 class Habitable(metaclass=Meta):
+   '''Materials that agents cannot walk on'''
    materials = {Grass, Scrub, Forest}

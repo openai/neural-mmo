@@ -1,8 +1,8 @@
 from pdb import set_trace as T
 import numpy as np
 
+import nmmo
 from nmmo.lib import material
-from nmmo.io.stimulus import Static
 
 class Tile:
    def __init__(self, config, realm, r, c):
@@ -11,12 +11,12 @@ class Tile:
 
       self.serialized = 'R{}-C{}'.format(r, c)
 
-      self.r     = Static.Tile.R(realm.dataframe, self.serial, r)
-      self.c     = Static.Tile.C(realm.dataframe, self.serial, c)
-      self.nEnts = Static.Tile.NEnts(realm.dataframe, self.serial)
-      self.index = Static.Tile.Index(realm.dataframe, self.serial, 0)
+      self.r     = nmmo.Serialized.Tile.R(realm.dataframe, self.serial, r)
+      self.c     = nmmo.Serialized.Tile.C(realm.dataframe, self.serial, c)
+      self.nEnts = nmmo.Serialized.Tile.NEnts(realm.dataframe, self.serial)
+      self.index = nmmo.Serialized.Tile.Index(realm.dataframe, self.serial, 0)
 
-      realm.dataframe.init(Static.Tile, self.serial, (r, c))
+      realm.dataframe.init(nmmo.Serialized.Tile, self.serial, (r, c))
 
    @property
    def serial(self):

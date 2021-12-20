@@ -1,20 +1,17 @@
 import numpy as np
 from pdb import set_trace as T
 
+import nmmo
 from nmmo.systems import ai, equipment
 from nmmo.lib import material
-from nmmo.lib import enums
 
 from nmmo.systems.skill import Skills
 from nmmo.systems.achievement import Diary
 from nmmo.entity import entity
-from nmmo.io.stimulus import Static
 
 class Player(entity.Entity):
-   def __init__(self, realm, pos, agent, pop):
-      super().__init__(realm, pos,
-            agent.iden, agent.name,
-            enums.Color16.colors[pop], pop)
+   def __init__(self, realm, pos, agent, color, pop):
+      super().__init__(realm, pos, agent.iden, agent.name, color, pop)
 
       self.agent  = agent
       self.pop    = pop
@@ -29,7 +26,7 @@ class Player(entity.Entity):
       self.skills       = Skills(self)
       self.achievements = Diary(realm.config)
 
-      self.dataframe.init(Static.Entity, self.entID, self.pos)
+      self.dataframe.init(nmmo.Serialized.Entity, self.entID, self.pos)
 
    @property
    def serial(self):

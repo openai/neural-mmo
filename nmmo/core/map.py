@@ -40,7 +40,7 @@ class Map:
 
       path_maps = os.path.join(self.config.PATH_CWD, self.config.PATH_MAPS)
       os.makedirs(path_maps, exist_ok=True)
-      if not os.listdir(path_maps):
+      if self.config.GENERATE_MAPS and not os.listdir(path_maps):
          terrain.MapGenerator(self.config).generate()
 
       self.updateList = set()
@@ -48,7 +48,13 @@ class Map:
 
       path_map_suffix = self.config.PATH_MAP_SUFFIX.format(idx)
       fPath  = os.path.join(path_maps, path_map_suffix)
-      for r, row in enumerate(np.load(fPath)):
+
+      try:
+         map_file = np.load(fPath)
+      except FileNotFoundError:
+         print('Map not found (did you disable GENERATE_TERRAIN?)')
+
+      for r, row in enumerate(map_file):
          for c, idx in enumerate(row):
             mat  = materials[idx]
             tile = self.tiles[r, c]

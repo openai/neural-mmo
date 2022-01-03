@@ -223,16 +223,18 @@ class Config(Template):
 
    ############################################################################
    ### Terrain Generation Parameters
-   TERRAIN_TRAIN_MAPS            = 256
+   GENERATE_MAPS              = True
+
+   TERRAIN_TRAIN_MAPS         = 256
    '''Number of training maps to generate'''
 
-   TERRAIN_EVAL_MAPS             = 64
+   TERRAIN_EVAL_MAPS          = 64
    '''Number of evaluation maps to generate'''
 
    TERRAIN_RENDER             = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 
-   #TERRAIN_CENTER             = None
+   TERRAIN_CENTER             = None
    '''Size of each map (number of tiles along each side)'''
 
    TERRAIN_BORDER             = 16

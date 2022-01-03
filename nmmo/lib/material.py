@@ -44,18 +44,6 @@ class Stone(Material):
    tex   = 'stone'
    index = 5
 
-class Orerock(Material):
-   tex   = 'iron_ore'
-   index = 6
-
-   harvestable = True
-   degen       = Stone
-
-   def __init__(self, config):
-      if config.game_system_enabled('Resource'):
-         self.capacity = config.RESOURCE_OREROCK_CAPACITY
-         self.respawn  = config.RESOURCE_OREROCK_RESPAWN
-
 class Meta(type):
    def __init__(self, name, bases, dict):
       self.indices = {mtl.index for mtl in self.materials}
@@ -72,11 +60,11 @@ class Meta(type):
 
 class All(metaclass=Meta):
    '''List of all materials'''
-   materials = {Lava, Water, Grass, Scrub, Forest, Stone, Orerock}
+   materials = {Lava, Water, Grass, Scrub, Forest, Stone}
 
 class Impassible(metaclass=Meta):
    '''Materials that agents cannot walk through'''
-   materials = {Lava, Stone, Orerock}
+   materials = {Lava, Stone}
 
 class Habitable(metaclass=Meta):
    '''Materials that agents cannot walk on'''

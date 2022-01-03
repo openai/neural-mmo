@@ -51,7 +51,7 @@ class MapGenerator:
       for mat in material.All:
          key = mat.tex
          tex = imread(path.format(key))
-         lookup[mat.index] = tex[:, :, :3][::4, ::4].reshape(-1, 3).mean(0).astype(np.uint8).reshape(1,1,3)
+         lookup[mat.index] = tex[:, :, :3][::4, ::4]#.reshape(-1, 3).mean(0).astype(np.uint8).reshape(1,1,3)
          setattr(Terrain, key.upper(), mat.index)
       self.textures = lookup
 
@@ -94,6 +94,8 @@ class MapGenerator:
 
          Save.np(tiles, path)
          if config.TERRAIN_RENDER:
+            b = config.TERRAIN_BORDER
+            tiles = [e[b:-b+1] for e in tiles][b:-b+1]
             Save.fractal(terrain, path+'/fractal.png')
             Save.render(tiles, self.textures, path+'/map.png')
 

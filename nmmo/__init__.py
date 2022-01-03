@@ -1,8 +1,7 @@
+from .version import __version__
+
 import os
-
-version = '1.5.3.1'
-motd = open(os.path.dirname(__file__) + '/resource/ascii.txt').read().format(version)
-
+motd = open(os.path.dirname(__file__) + '/resource/ascii.txt').read().format(__version__)
 
 from . import scripting
 from .lib import material

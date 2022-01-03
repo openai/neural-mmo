@@ -1,5 +1,4 @@
 from setuptools import find_packages, setup
-from nmmo import version
 
 REPO_URL = "https://github.com/neuralmmo/environment"
 
@@ -9,7 +8,7 @@ setup(
     "Massively Multiplayer Online (MMO) role-playing games. Documentation hosted at neuralmmo.github.io.",
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    version=version,
+    version=open('nmmo/version.py').read().split()[-1].strip("'"),
     install_requires=[
         'pytest-benchmark',
         'fire==0.4.0',
@@ -20,6 +19,8 @@ setup(
         'vec-noise==1.1.4',
         'imageio==2.8.0',
         'tqdm==4.61.1',
+        'pettingzoo==1.14.0',
+        'numpy',
     ],
     extras_require={
         'docs': [
@@ -28,8 +29,13 @@ setup(
         'rllib': [
             'ray==1.5.2',
             'tensorflow==2.4.1',
+            'grpcio==1.32.0',
+            'six==1.15.0',
             'dm-tree==0.1.5',
-            'torch'
+            'pandas',
+            'wandb',
+            'trueskill',
+            'torch',
         ],
     },
     python_requires=">=3.8",

@@ -1,5 +1,4 @@
 from pdb import set_trace as T
-from matplotlib import colors
 import numpy as np
 from scipy import signal
 

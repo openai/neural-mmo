@@ -1,7 +1,6 @@
 from pdb import set_trace as T
 
 import scipy.stats as stats
-from matplotlib import pyplot as plt
 import numpy as np
 
 import os
@@ -36,7 +35,7 @@ class Save:
        and height of the map, and 2D numpy array specifiying enums for the array'''
       mkdir(path)
       path = os.path.join(path, 'map.npy')
-      np.save(path, mats.astype(np.int))
+      np.save(path, mats.astype(int))
 
 class Terrain:
    pass
@@ -52,10 +51,7 @@ class MapGenerator:
       for mat in material.All:
          key = mat.tex
          tex = imread(path.format(key))
-         mat.tex = tex[:, :, :3][::4, ::4]
-         mat.tex = mat.tex.reshape(-1, 3).mean(0).astype(np.uint8)
-         lookup[mat.index] = mat.tex.reshape(1, 1, 3)
-         #lookup[mat.index] = mat.tex
+         lookup[mat.index] = tex[:, :, :3][::4, ::4].reshape(-1, 3).mean(0).astype(np.uint8).reshape(1,1,3)
          setattr(Terrain, key.upper(), mat.index)
       self.textures = lookup
 
@@ -142,11 +138,12 @@ class MapGenerator:
          freq, mag = 1 / 2**octave, 1 / 2**idx
          noise    += mag * vec_noise.snoise2(seed*size + freq*X, idx*size + freq*Y) 
 
+      #from matplotlib import pyplot as plt
       #plt.imshow(noise)
       #plt.show()
       noise -= np.min(noise)
       noise = octaves * noise / np.max(noise) - 1e-12
-      noise = noise.astype(np.int)
+      noise = noise.astype(int)
       #plt.imshow(noise)
       #plt.show()
 

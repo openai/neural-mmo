@@ -1,2 +1,1 @@
-include versioneer.py
-include neural_mmo/_version.py
+include nmmo/resource/*

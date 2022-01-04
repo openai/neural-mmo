@@ -1,3 +1,4 @@
+from pdb import set_trace as T
 from setuptools import find_packages, setup
 
 REPO_URL = "https://github.com/neuralmmo/environment"
@@ -7,8 +8,9 @@ setup(
     description="Neural MMO is a platform for multiagent intelligence research inspired by "
     "Massively Multiplayer Online (MMO) role-playing games. Documentation hosted at neuralmmo.github.io.",
     long_description_content_type="text/markdown",
-    packages=find_packages(),
     version=open('nmmo/version.py').read().split()[-1].strip("'"),
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'pytest-benchmark',
         'fire==0.4.0',
@@ -54,6 +56,5 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    include_package_data=True,
 )
 

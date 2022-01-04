@@ -12,7 +12,8 @@ from .io.action import Action
 from .core import config, agent
 from .core.agent import Agent
 from .core.env import Env
+from .systems import achievement
 
 __all__ = ['Env', 'config', 'scripting', 'agent', 'Agent',
         'Serialized', 'action', 'Action', 'scripting', 'material',
-        'Overlay', 'OverlayRegistry']
+        'achievement', 'Overlay', 'OverlayRegistry']

@@ -1,1 +1,1 @@
-from nmmo.systems.skill import Skill
+from .skill import Skill

@@ -12,8 +12,8 @@ from .io.action import Action
 from .core import config, agent
 from .core.agent import Agent
 from .core.env import Env
-from .systems import achievement
+from .systems.achievement import Task
 
 __all__ = ['Env', 'config', 'scripting', 'agent', 'Agent',
         'Serialized', 'action', 'Action', 'scripting', 'material',
-        'achievement', 'Overlay', 'OverlayRegistry']
+        'Task', 'Overlay', 'OverlayRegistry']

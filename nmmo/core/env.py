@@ -8,7 +8,7 @@ from pettingzoo import ParallelEnv
 
 import nmmo
 from nmmo import entity, core
-
+from nmmo.core import terrain
 from nmmo.lib import log
 from nmmo.infrastructure import DataType
 
@@ -31,13 +31,16 @@ class Env(ParallelEnv):
       if config is None:
           config = nmmo.config.Small()
 
+      if __debug__:
+         err = 'Config {} is not a config instance (did you pass the class?)'
+         assert isinstance(config, nmmo.config.Config), err.format(config)
+
       if not config.AGENTS:
           from nmmo import agent
           config.AGENTS = [agent.Random]
 
-      if __debug__:
-         err = 'Config {} is not a config instance (did you pass the class?)'
-         assert isinstance(config, nmmo.config.Config), err.format(config)
+      if not config.MAP_GENERATOR:
+          config.MAP_GENERATOR = terrain.MapGenerator
 
       self.realm      = core.Realm(config)
       self.registry   = nmmo.OverlayRegistry(config, self)
@@ -143,12 +146,8 @@ class Env(ParallelEnv):
 
       self.quill = log.Quill()
       
-      if idx is not None:
-         pass
-      elif self.config.EVALUATE and self.config.GENERALIZE:
-         idx = -np.random.randint(self.config.TERRAIN_EVAL_MAPS) - 1
-      else:
-         idx = np.random.randint(self.config.TERRAIN_TRAIN_MAPS) + 1
+      if idx is None:
+         idx = np.random.randint(self.config.NMAPS)
 
       self.worldIdx = idx
       self.realm.reset(idx)
@@ -276,6 +275,7 @@ class Env(ParallelEnv):
       self.dead    = self.realm.step(self.actions)
       self.actions = {}
       self.obs     = {}
+      infos        = {}
 
       obs, rewards, dones, self.raw = {}, {}, {}, {}
       for entID, ent in self.realm.players.items():
@@ -292,7 +292,7 @@ class Env(ParallelEnv):
             obs[entID]     = ob
             self.dummy_ob  = ob
 
-            rewards[entID] = self.reward(ent)
+            rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
 
       for entID, ent in self.dead.items():
@@ -301,16 +301,12 @@ class Env(ParallelEnv):
       for entID, ent in self.dead.items():
          if ent.agent.scripted:
             continue
-         rewards[ent.entID] = self.reward(ent)
+         rewards[ent.entID], infos[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())
-
-      infos = {}
-      for agent in obs:
-         infos[agent] = {}
 
       self.obs = obs
       return obs, rewards, dones, infos
@@ -355,12 +351,10 @@ class Env(ParallelEnv):
       quill.stat('Lifetime',  ent.history.timeAlive.val)
 
       if self.config.game_system_enabled('Achievement'):
-         quill.stat('Achievement', ent.achievements.score())
-         for name, stat in ent.achievements.stats:
-            quill.stat(name, stat)
-
-      if not self.config.EVALUATE:
-         return
+         quill.stat('Achievements_Completed', ent.diary.completed)
+         quill.stat('Achievement_Reward', ent.diary.cumulative_reward)
+         for achievement in ent.diary.achievements:
+            quill.stat(achievement.name, float(achievement.completed))
 
       quill.stat('PolicyID', ent.agent.policyID)
 
@@ -387,7 +381,7 @@ class Env(ParallelEnv):
 
    ############################################################################
    ### Override hooks
-   def reward(self, entID):
+   def reward(self, player):
       '''Computes the reward for the specified agent
 
       Override this method to create custom reward functions. You have full
@@ -395,16 +389,27 @@ class Env(ParallelEnv):
       modify this method; specify any changes when comparing to baselines
 
       Args:
-         entID: Agent ID
+         player: player object
 
       Returns:
          reward:
             The reward for the actions on the previous timestep of the
             entity identified by entID.
       '''
-      if entID not in self.realm.players:
-         return -1
-      return 0
+      info = {'population': player.pop}
+
+      if player.entID not in self.realm.players:
+         return -1, info
+
+      if not self.config.game_system_enabled('Achievement'):
+         return 0, info
+
+      achievement_rewards = player.diary.update(self.realm, player)
+      reward = sum(achievement_rewards.values())
+
+      info = {**info, **achievement_rewards}
+      return reward, info
+      
 
    ############################################################################
    ### Client data

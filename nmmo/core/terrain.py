@@ -9,103 +9,117 @@ import vec_noise
 from imageio import imread, imsave
 from tqdm import tqdm
 
-from nmmo.lib import material
-
-def mkdir(path):
-   try:
-      os.mkdir(path)
-   except:
-      pass
+from nmmo import material
 
 def sharp(self, noise):
+   '''Exponential noise sharpener for perlin ridges'''
    return 2 * (0.5 - abs(0.5 - noise));
 
 class Save:
+   '''Save utility for map files'''
    def render(mats, lookup, path):
+      '''Render tiles to png'''
       images = [[lookup[e] for e in l] for l in mats]
       image = np.vstack([np.hstack(e) for e in images])
       imsave(path, image)
 
    def fractal(terrain, path):
+      '''Render raw noise fractal to png'''
       frac = (256*terrain).astype(np.uint8)
       imsave(path, frac)
 
    def np(mats, path):
-      '''Saves a map into into a tiled compatiable file given a save_path, width
-       and height of the map, and 2D numpy array specifiying enums for the array'''
-      mkdir(path)
+      '''Save map to .npy'''
       path = os.path.join(path, 'map.npy')
       np.save(path, mats.astype(int))
 
 class Terrain:
+   '''Terrain material class; populated at runtime'''
    pass
 
 class MapGenerator:
+   '''Procedural map generation'''
    def __init__(self, config):
       self.config = config
       self.loadTextures()
 
    def loadTextures(self):
+      '''Called during setup; loads and resizes tile pngs'''
       lookup = {}
-      path = self.config.PATH_TILE
+      path   = self.config.PATH_TILE
+      scale  = self.config.MAP_PREVIEW_DOWNSCALE
       for mat in material.All:
          key = mat.tex
          tex = imread(path.format(key))
-         lookup[mat.index] = tex[:, :, :3][::4, ::4]#.reshape(-1, 3).mean(0).astype(np.uint8).reshape(1,1,3)
+         lookup[mat.index] = tex[:, :, :3][::scale, ::scale]
          setattr(Terrain, key.upper(), mat.index)
       self.textures = lookup
 
-   def material(self, config, val):
-      if val <= config.TERRAIN_WATER:
-         return Terrain.WATER
-      if val <= config.TERRAIN_GRASS:
-         return Terrain.GRASS
-      if val <= config.TERRAIN_FOREST:
-         return Terrain.FOREST
-      return Terrain.STONE
+   def generate_all_maps(self):
+      '''Generates NMAPS maps according to generate_map
 
-   def generate(self):
+      Provides additional utilities for saving to .npy and rendering png previews'''
+
       config = self.config
-      if config.__class__.__name__ == 'SmallMaps':
-         prefix = config.PATH_MAPS_SMALL
-      elif config.__class__.__name__ == 'LargeMaps':
-         prefix = config.PATH_MAPS_LARGE
-      else:
-         prefix = config.PATH_MAPS
 
-      #Train and eval map indices
-      msg    = 'Generating {} training and {} evaluation maps:'
-      evalMaps  = range(-config.TERRAIN_EVAL_MAPS, 0)
-      trainMaps = range(1, config.TERRAIN_TRAIN_MAPS+1)
-      print(msg.format(config.TERRAIN_TRAIN_MAPS, config.TERRAIN_EVAL_MAPS))
+      #Only generate if maps are not cached
+      path_maps = os.path.join(config.PATH_CWD, config.PATH_MAPS)
+      os.makedirs(path_maps, exist_ok=True)
+      if os.listdir(path_maps):
+          return
 
-      llen = config.TERRAIN_EVAL_MAPS + config.TERRAIN_TRAIN_MAPS
-      perm = np.random.RandomState(seed=0).permutation(llen)
-      interpolaters = np.logspace(config.TERRAIN_LOG_INTERPOLATE_MIN,
-                                  config.TERRAIN_LOG_INTERPOLATE_MAX,
-                                  llen)[perm]
+      if __debug__:
+          print('Generating {} maps'.format(config.NMAPS))
 
-      for idx, seed in enumerate(tqdm([*evalMaps, *trainMaps])):
-         path = prefix + '/map' + str(seed)
-         mkdir(prefix)
-         mkdir(path)
+      for idx in tqdm(range(config.NMAPS)):
+         path = path_maps + '/map' + str(idx)
+         os.mkdir(path)
 
-         terrain, tiles = self.grid(config, seed, interpolaters[idx])
+         terrain, tiles = self.generate_map(idx)
 
+         #Save/render
          Save.np(tiles, path)
-         if config.TERRAIN_RENDER:
+         if config.GENERATE_MAP_PREVIEWS:
             b = config.TERRAIN_BORDER
             tiles = [e[b:-b+1] for e in tiles][b:-b+1]
             Save.fractal(terrain, path+'/fractal.png')
             Save.render(tiles, self.textures, path+'/map.png')
 
-   def grid(self, config, seed, interpolate):
+   def generate_map(self, idx):
+      '''Generate a single map
+
+      The default method is a relatively complex multiscale perlin noise method.
+      This is not just standard multioctave noise -- we are seeding multioctave noise
+      itself with perlin noise to create localized deviations in scale, plus additional
+      biasing to decrease terrain frequency towards the center of the map
+
+      We found that this creates more visually interesting terrain and more deviation in
+      required planning horizon across different parts of the map. This is by no means a
+      gold-standard: you are free to override this method and create customized terrain
+      generation more suitable for your application. Simply pass MAP_GENERATOR=YourMapGenClass
+      as a config argument.'''
+
+      config      = self.config
       center      = config.TERRAIN_CENTER
       border      = config.TERRAIN_BORDER
       size        = config.TERRAIN_SIZE
       frequency   = config.TERRAIN_FREQUENCY
       offset      = config.TERRAIN_FREQUENCY_OFFSET
       octaves     = center // config.TERRAIN_TILES_PER_OCTAVE
+
+      #Compute a unique seed based on map index
+      #Flip seed used to ensure train/eval maps are different
+      seed = idx + 1
+      if config.TERRAIN_FLIP_SEED:
+          seed = -seed
+
+      #Log interpolation factor
+      if not hasattr(self, 'interpolaters'):
+         self.interpolaters = np.logspace(config.TERRAIN_LOG_INTERPOLATE_MIN,
+               config.TERRAIN_LOG_INTERPOLATE_MAX, config.NMAPS)
+
+      interpolate = self.interpolaters[idx]
+
 
       #Data buffers
       val   = np.zeros((size, size, octaves))
@@ -140,14 +154,9 @@ class MapGenerator:
          freq, mag = 1 / 2**octave, 1 / 2**idx
          noise    += mag * vec_noise.snoise2(seed*size + freq*X, idx*size + freq*Y) 
 
-      #from matplotlib import pyplot as plt
-      #plt.imshow(noise)
-      #plt.show()
       noise -= np.min(noise)
       noise = octaves * noise / np.max(noise) - 1e-12
       noise = noise.astype(int)
-      #plt.imshow(noise)
-      #plt.show()
 
       #Compute L1 and Perlin scale factor
       for i in range(octaves):
@@ -174,7 +183,16 @@ class MapGenerator:
       matl = np.zeros((size, size), dtype=object)
       for y in range(size):
          for x in range(size):
-            matl[y, x] = self.material(config, val[y, x])
+            v = val[y, x]
+            if v <= config.TERRAIN_WATER:
+               mat = Terrain.WATER
+            elif v <= config.TERRAIN_GRASS:
+               mat = Terrain.GRASS
+            elif v <= config.TERRAIN_FOREST:
+               mat = Terrain.FOREST
+            else:
+               mat = Terrain.STONE
+            matl[y, x] = mat
 
       #Lava and grass border
       matl[l1 > size/2 - border]       = Terrain.LAVA

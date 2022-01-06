@@ -23,8 +23,8 @@ class Player(entity.Entity):
       self.vision = 7
 
       #Submodules
-      self.skills       = Skills(self)
-      self.achievements = Diary(realm.config)
+      self.skills = Skills(self)
+      self.diary  = Diary(realm.config)
 
       self.dataframe.init(nmmo.Serialized.Entity, self.entID, self.pos)
 
@@ -82,5 +82,5 @@ class Player(entity.Entity):
 
       self.resources.update(realm, self, actions)
       self.skills.update(realm, self, actions)
-      self.achievements.update(realm, self)
+      self.diary.update(realm, self)
       #self.inventory.update(world, actions)

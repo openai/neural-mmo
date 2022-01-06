@@ -102,12 +102,17 @@ class Config(Template):
 
    ############################################################################
    ### Meta-Parameters
+   RENDER                 = False
+   '''Flag used by render mode'''
 
-   NAME_PREFIX             = 'Neural_'
-   '''Prefix used in agent names displayed by the client'''
+   MAP_GENERATOR          = None
+   '''Specifies a user map generator. Uses default generator if unspecified.'''
 
-   v                       = False
-   '''Verbose mode'''
+   GENERATE_MAP_PREVIEWS  = False
+   '''Whether map generation should also save .png previews (slow + large file size)'''
+
+   MAP_PREVIEW_DOWNSCALE  = 1
+   '''Downscaling factor for png previews'''
 
    def game_system_enabled(self, name) -> bool:
       return hasattr(self, name)
@@ -117,6 +122,9 @@ class Config(Template):
    AGENTS = []
 
    AGENT_LOADER            = SequentialLoader
+
+   NMAPS                   = 64
+   '''Number of maps to generate'''
 
    NTILE                   = 6
    #TODO: Find a way to auto-compute this
@@ -136,9 +144,6 @@ class Config(Template):
 
    N_AGENT_OBS             = 100
    '''Number of distinct agent observations'''
-
-   COOPERATIVE             = False
-   '''Whether to treat populations as teams'''
 
    @property
    def TEAM_SIZE(self):
@@ -211,29 +216,7 @@ class Config(Template):
       return self.SPAWN_CONTINUOUS
 
    ############################################################################
-   ### Evaluation Parameters
-   EVALUATE             = False
-   '''Flag used by evaluation mode'''
-
-   GENERALIZE           = True
-   '''Evaluate on maps not seen during training'''
-
-   RENDER               = False
-   '''Flag used by render mode'''
-
-   ############################################################################
    ### Terrain Generation Parameters
-   GENERATE_MAPS              = True
-
-   TERRAIN_TRAIN_MAPS         = 256
-   '''Number of training maps to generate'''
-
-   TERRAIN_EVAL_MAPS          = 64
-   '''Number of evaluation maps to generate'''
-
-   TERRAIN_RENDER             = False
-   '''Whether map generation should also save .png previews (slow + large file size)'''
-
    TERRAIN_CENTER             = None
    '''Size of each map (number of tiles along each side)'''
 
@@ -243,6 +226,9 @@ class Config(Template):
    @property
    def TERRAIN_SIZE(self):
       return int(self.TERRAIN_CENTER + 2*self.TERRAIN_BORDER)
+
+   TERRAIN_FLIP_SEED          = False
+   '''Whether to negate the seed used for generation (useful for unique heldout maps)'''
 
    TERRAIN_FREQUENCY          = -3
    '''Base noise frequency range (log2 space)'''
@@ -273,39 +259,6 @@ class Config(Template):
 
 
    ############################################################################
-   ### Visualization Parameters
-   VIS_THEME            = 'web'
-   '''Visualizer theme: web or publication'''
-
-   VIS_WIDTH            = 1920
-   '''Visualizer figure width (pixels)'''
-
-   VIS_HEIGHT           = 314
-   '''Visualizer per-plot height (pixels)'''
-
-   VIS_BORDER_WIDTH     = 20
-   '''Horizontal padding per figure side (pixels)'''
-
-   VIS_BORDER_HEIGHT    = 60
-   '''Vertical padding per figure side (pixels)'''
-
-   VIS_LEGEND_WIDTH     = 109
-   '''Width of legend label before offset'''
-   
-   VIS_LEGEND_OFFSET    = 71 
-   '''Width of legend label offset'''
-
-   VIS_TITLE_OFFSET     = 60
-   '''Width of left title offset'''
-
-   VIS_PORT             = 5006
-   '''Visualizer local Bokeh server port'''
-
-   VIS_TOOLS            = False
-   '''Visualizer display plot tools'''
-
-
-   ############################################################################
    ### Path Parameters
    PATH_ROOT            = os.path.dirname(nmmo.__file__)
    '''Global repository directory'''
@@ -326,45 +279,6 @@ class Config(Template):
    '''Map file name'''
 
 
-   #Baselines and Checkpoints
-   PATH_CHECKPOINTS          = 'checkpoints'
-   '''Checkpoints path'''
-
-   PATH_BASELINES            = 'baselines'
-   '''Model and evaluation directory'''
-  
-   PATH_ALL_MODELS           = os.path.join(PATH_BASELINES, 'models')
-   '''All models directory'''
-
-   @property
-   def PATH_MODEL(self):
-      '''Model path'''
-      return os.path.join(self.PATH_ALL_MODELS, self.MODEL)
-
-   @property
-   def PATH_TRAINING_DATA(self):
-      '''Model training data'''
-      return os.path.join(self.PATH_MODEL, 'training.npy')
-
-   PATH_ALL_EVALUATIONS      = os.path.join(PATH_BASELINES, 'evaluations')
-   '''All evaluations directory'''
-
-   @property
-   def PATH_EVALUATION(self):
-      '''Evaluation path'''
-      return os.path.join(self.PATH_ALL_EVALUATIONS, self.MODEL + '.npy')
-
-   #Themes
-   PATH_THEMES          = os.path.join('nmmo', 'forge', 'blade', 'systems', 'visualizer') 
-   '''Theme directory'''
-
-   PATH_THEME_WEB       = os.path.join(PATH_THEMES, 'index_web.html')
-   '''Web theme file'''
-
-   PATH_THEME_PUB       = os.path.join(PATH_THEMES, 'index_publication.html')
-   '''Publication theme file'''
-
-
 ############################################################################
 ### Game Systems (Static Mixins)
 class Resource:
@@ -382,12 +296,6 @@ class Resource:
 
    RESOURCE_FOREST_RESPAWN             = 0.025
    '''Probability that a harvested forest tile will regenerate each tick'''
-
-   RESOURCE_OREROCK_CAPACITY           = 1
-   '''Maximum number of harvests before an orerock tile decays'''
-
-   RESOURCE_OREROCK_RESPAWN            = 0.05
-   '''Probability that a harvested orerock tile will regenerate each tick'''
 
    RESOURCE_HARVEST_RESTORE_FRACTION   = 1.0
    '''Fraction of maximum capacity restored upon collecting a resource'''
@@ -483,21 +391,6 @@ class Achievement:
    def Achievement(self):
       return True
 
-   PLAYER_KILLS_EASY       = 1
-   PLAYER_KILLS_NORMAL     = 3
-   PLAYER_KILLS_HARD       = 6
-
-   EQUIPMENT_EASY          = 1
-   EQUIPMENT_NORMAL        = 10
-   EQUIPMENT_HARD          = 20
-
-   EXPLORATION_EASY        = 32
-   EXPLORATION_NORMAL      = 64
-   EXPLORATION_HARD        = 127
-
-   FORAGING_EASY           = 20
-   FORAGING_NORMAL         = 35
-   FORAGING_HARD           = 50
 
 class AllGameSystems(Resource, Progression, NPC): pass
 
@@ -507,6 +400,7 @@ class Small(Config):
    '''A small config for debugging and experiments with an expensive outer loop'''
 
    PATH_MAPS               = 'maps/small' 
+   MAP_PREVIEW_DOWNSCALE   = 4
 
    TERRAIN_CENTER          = 32
    NENT                    = 64
@@ -521,7 +415,7 @@ class Medium(Config):
    '''A medium config suitable for most academic-scale research'''
 
    PATH_MAPS               = 'maps/medium' 
-   '''Generated map directory'''
+   MAP_PREVIEW_DOWNSCALE   = 16
 
    TERRAIN_CENTER          = 128
    NENT                    = 256
@@ -536,7 +430,7 @@ class Large(Config):
    '''A large config suitable for large-scale research or fast models'''
 
    PATH_MAPS               = 'maps/large' 
-   '''Generated map directory'''
+   MAP_PREVIEW_DOWNSCALE   = 64
 
    TERRAIN_CENTER          = 1024
    NENT                    = 2048

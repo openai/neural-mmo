@@ -2,7 +2,6 @@ from pdb import set_trace as T
 import numpy as np
 
 from nmmo import core
-from nmmo.core import terrain
 from nmmo.lib import material
 
 import os
@@ -37,28 +36,24 @@ class Map:
 
    def reset(self, realm, idx):
       '''Reuse the current tile objects to load a new map'''
-
-      path_maps = os.path.join(self.config.PATH_CWD, self.config.PATH_MAPS)
-      os.makedirs(path_maps, exist_ok=True)
-      if self.config.GENERATE_MAPS and not os.listdir(path_maps):
-         terrain.MapGenerator(self.config).generate()
-
+      config = self.config
       self.updateList = set()
-      materials = {mat.index: mat for mat in material.All}
 
-      path_map_suffix = self.config.PATH_MAP_SUFFIX.format(idx)
-      fPath  = os.path.join(path_maps, path_map_suffix)
+      path_map_suffix = config.PATH_MAP_SUFFIX.format(idx)
+      fPath = os.path.join(config.PATH_CWD, config.PATH_MAPS, path_map_suffix)
 
       try:
          map_file = np.load(fPath)
       except FileNotFoundError:
-         print('Map not found (did you disable GENERATE_TERRAIN?)')
+         print('Maps not found')
+         raise
 
+      materials = {mat.index: mat for mat in material.All}
       for r, row in enumerate(map_file):
          for c, idx in enumerate(row):
             mat  = materials[idx]
             tile = self.tiles[r, c]
-            tile.reset(mat, self.config)
+            tile.reset(mat, config)
 
    def step(self):
       '''Evaluate updatable tiles'''

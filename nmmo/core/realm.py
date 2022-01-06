@@ -175,6 +175,9 @@ class Realm:
    def __init__(self, config):
       self.config   = config
 
+      #Generate maps if they do not exist
+      config.MAP_GENERATOR(config).generate_all_maps()
+
       #Load the world file
       self.dataframe = infrastructure.Dataframe(config)
       self.map       = core.Map(config, self)

@@ -350,7 +350,7 @@ class Env(ParallelEnv):
 
       quill.stat('Lifetime',  ent.history.timeAlive.val)
 
-      if self.config.game_system_enabled('Achievement'):
+      if ent.diary:
          quill.stat('Achievements_Completed', ent.diary.completed)
          quill.stat('Achievement_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
@@ -401,7 +401,7 @@ class Env(ParallelEnv):
       if player.entID not in self.realm.players:
          return -1, info
 
-      if not self.config.game_system_enabled('Achievement'):
+      if not self.diary:
          return 0, info
 
       achievement_rewards = player.diary.update(self.realm, player)
@@ -419,10 +419,6 @@ class Env(ParallelEnv):
       Returns:
          packet: A packet of data for the client
       '''
-      #RLlib likes rendering for no reason
-      if not self.config.RENDER:
-         return 
-
       packet = {
             'config': self.config,
             'pos': self.overlayPos,

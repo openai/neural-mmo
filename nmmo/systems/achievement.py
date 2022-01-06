@@ -12,14 +12,9 @@ class Task:
 
 
 class Diary:
-   def __init__(self, config):
+   def __init__(self, tasks):
       self.achievements = []
-
-
-      if not config.game_system_enabled('Achievement'):
-         return
-
-      for task in config.TASKS:
+      for task in tasks:
          self.achievements.append(Achievement(task.condition, task.target, task.reward))
 
    @property

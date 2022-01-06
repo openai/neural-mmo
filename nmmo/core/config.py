@@ -384,13 +384,6 @@ class NPC(Combat):
    NPC_LEVEL_SPREAD                    = None
    '''Level range for NPC spawns'''
 
-class Achievement:
-   '''Achievement Reward System'''
-
-   @property #Reserved flag
-   def Achievement(self):
-      return True
-
 
 class AllGameSystems(Resource, Progression, NPC): pass
 

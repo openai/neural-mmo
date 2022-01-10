@@ -17,7 +17,7 @@ setup(
         'setproctitle==1.1.10',
         'autobahn==19.3.3',
         'Twisted==19.2.0',
-        'gym==0.17.2',
+        'gym==0.21.0',
         'vec-noise==1.1.4',
         'imageio==2.8.0',
         'tqdm==4.61.1',

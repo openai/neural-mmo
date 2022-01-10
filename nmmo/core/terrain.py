@@ -65,7 +65,7 @@ class MapGenerator:
       #Only generate if maps are not cached
       path_maps = os.path.join(config.PATH_CWD, config.PATH_MAPS)
       os.makedirs(path_maps, exist_ok=True)
-      if os.listdir(path_maps):
+      if not config.FORCE_MAP_GENERATION and os.listdir(path_maps):
           return
 
       if __debug__:

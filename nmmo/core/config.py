@@ -108,6 +108,9 @@ class Config(Template):
    MAP_GENERATOR          = None
    '''Specifies a user map generator. Uses default generator if unspecified.'''
 
+   FORCE_MAP_GENERATION   = False
+   '''Whether to regenerate and overwrite existing maps'''
+
    GENERATE_MAP_PREVIEWS  = False
    '''Whether map generation should also save .png previews (slow + large file size)'''
 

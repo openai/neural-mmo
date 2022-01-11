@@ -361,6 +361,8 @@ class Env(ParallelEnv):
          quill.stat('Achievement_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
             quill.stat(achievement.name, float(achievement.completed))
+      else:
+         quill.stat('Achievement_Reward', ent.history.timeAlive.val)
 
       quill.stat('PolicyID', ent.agent.policyID)
 

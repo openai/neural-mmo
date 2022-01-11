@@ -36,7 +36,6 @@ class Achievement:
       self.condition = condition
       self.target    = target
       self.reward    = reward
-      self.progress  = 0
 
    @property
    def name(self):

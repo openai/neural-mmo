@@ -85,5 +85,6 @@ class Player(entity.Entity):
 
       self.resources.update(realm, self, actions)
       self.skills.update(realm, self, actions)
-      self.diary.update(realm, self)
-      #self.inventory.update(world, actions)
+
+      if self.diary:
+         self.diary.update(realm, self)

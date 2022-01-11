@@ -105,28 +105,21 @@ class Config(Template):
    RENDER                 = False
    '''Flag used by render mode'''
 
-   MAP_GENERATOR          = None
-   '''Specifies a user map generator. Uses default generator if unspecified.'''
-
-   FORCE_MAP_GENERATION   = False
-   '''Whether to regenerate and overwrite existing maps'''
-
-   GENERATE_MAP_PREVIEWS  = False
-   '''Whether map generation should also save .png previews (slow + large file size)'''
-
-   MAP_PREVIEW_DOWNSCALE  = 1
-   '''Downscaling factor for png previews'''
-
    def game_system_enabled(self, name) -> bool:
       return hasattr(self, name)
 
    ############################################################################
    ### Population Parameters                                                   
-   AGENTS = []
-
    AGENT_LOADER            = SequentialLoader
+   '''Agent loader class specifying spawn sampling'''
 
-   NMAPS                   = 64
+   AGENTS = []
+   '''Agent classes from which to spawn'''
+
+   TASKS = []
+   '''Tasks for which to compute rewards'''
+
+   NMAPS                   = 1
    '''Number of maps to generate'''
 
    NTILE                   = 6
@@ -220,6 +213,18 @@ class Config(Template):
 
    ############################################################################
    ### Terrain Generation Parameters
+   MAP_GENERATOR          = None
+   '''Specifies a user map generator. Uses default generator if unspecified.'''
+
+   FORCE_MAP_GENERATION   = False
+   '''Whether to regenerate and overwrite existing maps'''
+
+   GENERATE_MAP_PREVIEWS  = False
+   '''Whether map generation should also save .png previews (slow + large file size)'''
+
+   MAP_PREVIEW_DOWNSCALE  = 1
+   '''Downscaling factor for png previews'''
+
    TERRAIN_CENTER             = None
    '''Size of each map (number of tiles along each side)'''
 
@@ -436,3 +441,5 @@ class Large(Config):
 
    NPC_LEVEL_MAX           = 99
    NPC_LEVEL_SPREAD        = 10
+
+class Default(Medium, AllGameSystems): pass

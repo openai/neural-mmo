@@ -72,7 +72,7 @@ class MapGenerator:
           print('Generating {} maps'.format(config.NMAPS))
 
       for idx in tqdm(range(config.NMAPS)):
-         path = path_maps + '/map' + str(idx)
+         path = path_maps + '/map' + str(idx+1)
          os.mkdir(path)
 
          terrain, tiles = self.generate_map(idx)

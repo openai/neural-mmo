@@ -29,7 +29,7 @@ class Env(ParallelEnv):
       super().__init__()
 
       if config is None:
-          config = nmmo.config.Small()
+          config = nmmo.config.Default()
 
       if __debug__:
          err = 'Config {} is not a config instance (did you pass the class?)'
@@ -50,6 +50,8 @@ class Env(ParallelEnv):
       self.overlayPos = [256, 256]
       self.client     = None
       self.obs        = None
+
+      self.has_reset  = False
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):
@@ -141,13 +143,15 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
+      self.has_reset = True
+
       self.actions = {}
       self.dead    = []
 
       self.quill = log.Quill()
       
       if idx is None:
-         idx = np.random.randint(self.config.NMAPS)
+         idx = np.random.randint(self.config.NMAPS) + 1
 
       self.worldIdx = idx
       self.realm.reset(idx)
@@ -253,6 +257,8 @@ class Env(ParallelEnv):
 
             Provided for conformity with PettingZoo
       '''
+      assert self.has_reset, 'step before reset'
+
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
          ent = self.realm.players[entID]
@@ -401,7 +407,7 @@ class Env(ParallelEnv):
       if player.entID not in self.realm.players:
          return -1, info
 
-      if not self.diary:
+      if not player.diary:
          return 0, info
 
       achievement_rewards = player.diary.update(self.realm, player)
@@ -419,6 +425,9 @@ class Env(ParallelEnv):
       Returns:
          packet: A packet of data for the client
       '''
+
+      assert self.has_reset, 'render before reset'
+
       packet = {
             'config': self.config,
             'pos': self.overlayPos,

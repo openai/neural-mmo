@@ -139,6 +139,6 @@ class Palette:
       if idx in self.colors:
            return self.colors[idx]
 
-      color = makeColor(h=np.random.rand(), s=1, v=1)
+      color = makeColor(idx, h=np.random.rand(), s=1, v=1)
       self.colors[idx] = color
       return color

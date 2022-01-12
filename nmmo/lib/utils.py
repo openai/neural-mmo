@@ -43,7 +43,10 @@ class NameComparable(type):
       return hash(self.__name__)
 
    def __eq__(self, other):
-      return self.__name__ == other.__name__
+      try:
+         return self.__name__ == other.__name__
+      except:
+         print('Some sphinx bug makes this block doc calls. You should not see this in normal NMMO usage')
 
    def __ne__(self, other):
       return self.__name__ != other.__name__

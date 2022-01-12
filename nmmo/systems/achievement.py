@@ -1,115 +1,54 @@
 from pdb import set_trace as T
 
-class Tier:
-   EASY   = 4
-   NORMAL = 10
-   HARD   = 25
+from typing import Callable
+from dataclasses import dataclass
+
+
+@dataclass
+class Task:
+    condition: Callable
+    target: float = None
+    reward: float = 0
+
 
 class Diary:
-   def __init__(self, config):
+   def __init__(self, tasks):
       self.achievements = []
-
-      if config.game_system_enabled('Achievement'):
-         self.achievements = config.ACHIEVEMENTS
-
-      self.achievements = [a(config) for a in self.achievements]
+      for task in tasks:
+         self.achievements.append(Achievement(task.condition, task.target, task.reward))
 
    @property
-   def stats(self):
-      return [a.stats for a in self.achievements]
+   def completed(self):
+      return sum(a.completed for a in self.achievements)
 
-   def score(self, aggregate=True):
-      score = [a.score() for a in self.achievements]
-      if score and aggregate:
-         return sum(score)
-      return score
+   @property
+   def cumulative_reward(self, aggregate=True):
+      return sum(a.reward * a.completed for a in self.achievements)
 
-   def update(self, realm, entity, aggregate=True, dry=False):
-      scores = [a.update(realm, entity, dry) for a in self.achievements]
-      if scores and aggregate:
-         return sum(scores)
-      return scores
+   def update(self, realm, entity):
+      return {a.name: a.update(realm, entity) for a in self.achievements}
 
 
 class Achievement:
-   def __init__(self, easy=None, normal=None, hard=None):
-      self.progress = 0
+   def __init__(self, condition, target, reward):
+      self.completed = False
 
-      self.easy     = easy
-      self.normal   = normal
-      self.hard     = hard
+      self.condition = condition
+      self.target    = target
+      self.reward    = reward
 
    @property
-   def stats(self):
-      return self.__class__.__name__, self.progress
+   def name(self):
+      return '{}_{}'.format(self.condition.__name__, self.target)
 
-   def score(self, progress=None):
-      if not progress:
-         progress = self.progress
-      if self.hard and progress >= self.hard:
-         return Tier.HARD
-      elif self.normal and progress >= self.normal:
-         return Tier.NORMAL
-      elif self.easy and progress >= self.easy:
-         return Tier.EASY
-      return 0
-
-   def update(self, value, dry):
-      if value <= self.progress:
+   def update(self, realm, entity):
+      if self.completed:
          return 0
 
-      #Progress to score conversion
-      old = self.score(self.progress)
-      new = self.score(value)
+      metric = self.condition(realm, entity)
 
-      if not dry:
-         self.progress = value
+      if metric >= self.target:
+         self.completed = True
+         return self.reward
 
-      return new - old
-
-class Lifetime(Achievement):
-   def score(self, progress=None):
-      if not progress:
-         progress = self.progress
-      return progress
-
-   def update(self, realm, entity, dry):
-      return super().update(entity.history.timeAlive.val, dry)
-     
-class PlayerKills(Achievement):
-   def __init__(self, config):
-      super().__init__(easy   = config.PLAYER_KILLS_EASY,
-                       normal = config.PLAYER_KILLS_NORMAL,
-                       hard   = config.PLAYER_KILLS_HARD)
-
-   def update(self, realm, entity, dry):
-      return super().update(entity.history.playerKills, dry)
-
-class Equipment(Achievement):
-   def __init__(self, config):
-      super().__init__(easy   = config.EQUIPMENT_EASY,
-                       normal = config.EQUIPMENT_NORMAL,
-                       hard   = config.EQUIPMENT_HARD)
-
-   def update(self, realm, entity, dry):
-      return super().update(entity.loadout.defense, dry)
-
-class Exploration(Achievement):
-   def __init__(self, config):
-      super().__init__(easy   = config.EXPLORATION_EASY,
-                       normal = config.EXPLORATION_NORMAL,
-                       hard   = config.EXPLORATION_HARD)
-
-   def update(self, realm, entity, dry):
-      return super().update(entity.history.exploration, dry)
-
-class Foraging(Achievement):
-   def __init__(self, config):
-      super().__init__(easy   = config.FORAGING_EASY,
-                       normal = config.FORAGING_NORMAL,
-                       hard   = config.FORAGING_HARD)
-
-   def update(self, realm, entity, dry):
-      lvl = (entity.skills.fishing.level + entity.skills.hunting.level)/2.0
-      return super().update(lvl, dry)
-
+      return 0

@@ -15,6 +15,7 @@ setup(
         'pytest-benchmark',
         'fire==0.4.0',
         'setproctitle==1.1.10',
+        'service-identity==21.1.0',
         'autobahn==19.3.3',
         'Twisted==19.2.0',
         'vec-noise==1.1.4',
@@ -25,6 +26,7 @@ setup(
     extras_require={
         'docs': [
             'sphinx-rtd-theme==0.5.1',
+            'sphinxcontrib-youtube==1.0.1',
         ],
         'rllib': [
             'ray[all]==1.5.2',

@@ -207,7 +207,7 @@ class Env(ParallelEnv):
                   agent_1: obs_1,
                   agent_2: obs_2,
                   ...
-               ]
+               }
 
             Where agent_i is the integer index of the i\'th agent and
             obs_i is specified by the observation_space function.
@@ -219,7 +219,7 @@ class Env(ParallelEnv):
                   agent_1: reward_1,
                   agent_2: reward_2,
                   ...
-               ]
+               }
 
             Where agent_i is the integer index of the i\'th agent and
             reward_i is the reward of the i\'th' agent.
@@ -235,7 +235,7 @@ class Env(ParallelEnv):
                   agent_1: done_1,
                   agent_2: done_2,
                   ...
-               ]
+               }
 
             Where agent_i is the integer index of the i\'th agent and
             done_i is a boolean denoting whether the i\'th agent has died.
@@ -253,7 +253,7 @@ class Env(ParallelEnv):
                   agent_1: None,
                   agent_2: None,
                   ...
-               ]
+               }
 
             Provided for conformity with PettingZoo
       '''

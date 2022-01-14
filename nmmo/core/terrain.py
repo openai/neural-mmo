@@ -120,7 +120,6 @@ class MapGenerator:
 
       interpolate = self.interpolaters[idx]
 
-
       #Data buffers
       val   = np.zeros((size, size, octaves))
       scale = np.zeros((size, size, octaves))

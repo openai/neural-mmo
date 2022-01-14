@@ -156,10 +156,6 @@ class Config(Template):
    BASE_HEALTH                = 10
    '''Initial Constitution level and agent health'''
 
-   BASE_RESOURCE              = 20
-   '''Initial level and capacity for Hunting + Fishing resource skills'''
-
-
    PLAYER_SPAWN_ATTEMPTS      = None
    '''Number of player spawn attempts per tick
 
@@ -296,7 +292,7 @@ class Resource:
    def Resource(self):
       return True
 
-   RESOURCE_BASE_RESOURCE              = 25
+   RESOURCE_BASE_RESOURCE              = 10
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
    RESOURCE_FOREST_CAPACITY            = 1
@@ -402,6 +398,8 @@ class Small(Config):
 
    PATH_MAPS               = 'maps/small' 
    MAP_PREVIEW_DOWNSCALE   = 4
+
+   TERRAIN_LOG_INTERPOLATE_MIN = 0
 
    TERRAIN_CENTER          = 32
    NENT                    = 64

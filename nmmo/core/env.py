@@ -357,12 +357,12 @@ class Env(ParallelEnv):
       quill.stat('Lifetime',  ent.history.timeAlive.val)
 
       if ent.diary:
-         quill.stat('Achievements_Completed', ent.diary.completed)
-         quill.stat('Achievement_Reward', ent.diary.cumulative_reward)
+         quill.stat('Task_Completed', ent.diary.completed)
+         quill.stat('Task_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
             quill.stat(achievement.name, float(achievement.completed))
       else:
-         quill.stat('Achievement_Reward', ent.history.timeAlive.val)
+         quill.stat('Task_Reward', ent.history.timeAlive.val)
 
       quill.stat('PolicyID', ent.agent.policyID)
 
@@ -405,7 +405,7 @@ class Env(ParallelEnv):
             entity identified by entID.
       '''
       info = {'population': player.pop}
-
+ 
       if player.entID not in self.realm.players:
          return -1, info
 

@@ -448,8 +448,7 @@ class Env(ParallelEnv):
          self.client = Application(self) 
 
       pos, cmd = self.client.update(packet)
-      if self.obs:
-         self.registry.step(self.obs, pos, cmd)
+      self.registry.step(self.obs, pos, cmd)
 
    def register(self, overlay) -> None:
       '''Register an overlay to be sent to the client

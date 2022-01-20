@@ -5,6 +5,7 @@ motd = open(os.path.dirname(__file__) + '/resource/ascii.txt').read().format(__v
 
 from . import scripting
 from .lib import material
+from .lib.rating import OpenSkillRating
 from .overlay import Overlay, OverlayRegistry
 from .io import action
 from .io.stimulus import Serialized

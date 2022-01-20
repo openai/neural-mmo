@@ -14,6 +14,8 @@ class OverlayRegistry:
           config: A Config object
           realm: An environment
       '''
+      self.initialized = False
+
       self.config = config
       self.realm  = realm
 
@@ -22,6 +24,8 @@ class OverlayRegistry:
               'skills':     Skills,
               'wilderness': Wilderness}
 
+
+   def init(self):
       for cmd, overlay in self.overlays.items():
          self.overlays[cmd] = overlay(self.config, self.realm)
 
@@ -33,6 +37,10 @@ class OverlayRegistry:
           pos: Client camera focus position
           cmd: User command returned by the client
       '''
+      if not self.initialized:
+          self.initialized = True
+          self.init()
+
       self.realm.overlayPos = pos
       for overlay in self.overlays.values():
           overlay.update(obs)

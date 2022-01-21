@@ -23,19 +23,19 @@ class OpenSkillRating:
 
     Provides a simple method for updating skill estimates from raw
     per-agent scores as are typically returned by the environment.'''
-    def __init__(self, agents, mu=1e-9, sigma=100/3, anchor='Meander'):
+    def __init__(self, agents, anchor, mu=1e-9, sigma=100/3):
         '''
         Args:
             agents: List of agent classes to rank
+            anchor: Baseline policy name to anchor to mu
             mu: Anchor point for the baseline policy (cannot be exactly 0)
-            sigma: 68/95/99.7 win rate against 1/2/3 sigma lower SR
-            anchor: Baseline policy name to anchor to mu'''
+            sigma: 68/95/99.7 win rate against 1/2/3 sigma lower SR'''
 
         if __debug__:
             err = 'Agents must be ordered (e.g. list, not set)'
             assert type(agents) != set, err
 
-        self.ratings = {agent.__name__:
+        self.ratings = {agent:
                 openskill.Rating(mu=mu, sigma=sigma)
                 for agent in agents}
 
@@ -69,8 +69,8 @@ class OpenSkillRating:
         teams = [[e] for e in list(self.ratings.values())]
         ratings = openskill.rate(teams, rank=ranks)
         ratings = [openskill.create_rating(team[0]) for team in ratings]
-        for agent_name, rating in zip(self.ratings, ratings):
-            self.ratings[agent_name] = rating
+        for agent, rating in zip(self.ratings, ratings):
+            self.ratings[agent] = rating
 
         self.anchor_baseline()
 
@@ -78,8 +78,8 @@ class OpenSkillRating:
 
     def anchor_baseline(self):
         '''Resets the anchor point policy to mu SR'''
-        for agent_name, rating in self.ratings.items():
+        for agent, rating in self.ratings.items():
             rating.sigma = self.sigma
-            if agent_name == self.anchor:
+            if agent == self.anchor:
                 rating.mu = self.mu
                 rating.sigma = self.sigma

@@ -23,7 +23,7 @@ class OpenSkillRating:
 
     Provides a simple method for updating skill estimates from raw
     per-agent scores as are typically returned by the environment.'''
-    def __init__(self, agents, anchor, mu=1e-9, sigma=100/3):
+    def __init__(self, agents, anchor, mu=1000, sigma=100/3, anchor_mu=1500):
         '''
         Args:
             agents: List of agent classes to rank
@@ -39,9 +39,10 @@ class OpenSkillRating:
                 openskill.Rating(mu=mu, sigma=sigma)
                 for agent in agents}
 
-        self.mu     = mu
-        self.sigma  = sigma
-        self.anchor = anchor
+        self.mu        = mu
+        self.sigma     = sigma
+        self.anchor    = anchor
+        self.anchor_mu = anchor_mu
 
         self.anchor_baseline()
 
@@ -81,5 +82,5 @@ class OpenSkillRating:
         for agent, rating in self.ratings.items():
             rating.sigma = self.sigma
             if agent == self.anchor:
-                rating.mu = self.mu
+                rating.mu    = self.anchor_mu
                 rating.sigma = self.sigma

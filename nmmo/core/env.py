@@ -357,7 +357,7 @@ class Env(ParallelEnv):
       quill.stat('Lifetime',  ent.history.timeAlive.val)
 
       if ent.diary:
-         quill.stat('Task_Completed', ent.diary.completed)
+         quill.stat('Tasks_Completed', ent.diary.completed)
          quill.stat('Task_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
             quill.stat(achievement.name, float(achievement.completed))

@@ -14,7 +14,7 @@ from .core import config, agent
 from .core.agent import Agent
 from .core.env import Env
 from .systems.achievement import Task
-from .core.terrain import MapGenerator
+from .core.terrain import MapGenerator, Terrain
 
 __all__ = ['Env', 'config', 'scripting', 'agent', 'Agent', 'MapGenerator',
         'Serialized', 'action', 'Action', 'scripting', 'material',

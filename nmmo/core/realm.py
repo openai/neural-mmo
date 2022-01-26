@@ -7,6 +7,7 @@ from typing import Dict, Callable
 
 import nmmo
 from nmmo import core, infrastructure
+from nmmo.systems.exchange import Exchange
 from nmmo.entity.npc import NPC
 from nmmo.entity import Player
 from nmmo.lib import colors
@@ -94,21 +95,30 @@ class NPCManager(EntityGroup):
       super().__init__(config, realm)
       self.realm   = realm
 
+      self.spawn_dangers = []
+
    def reset(self):
       super().reset()
       self.idx     = -1
 
    def spawn(self):
-      if not self.config.game_system_enabled('NPC'):
+      config = self.config
+
+      if not config.game_system_enabled('NPC'):
          return
 
-      for _ in range(self.config.NPC_SPAWN_ATTEMPTS):
-         if len(self.entities) >= self.config.NMOB:
+      for _ in range(config.NPC_SPAWN_ATTEMPTS):
+         if len(self.entities) >= config.NMOB:
             break
 
-         center = self.config.TERRAIN_CENTER
-         border = self.config.TERRAIN_BORDER
-         r, c   = np.random.randint(border, center+border, 2).tolist()
+         if self.spawn_dangers:
+            danger = self.spawn_dangers[-1]
+            r, c   = combat.spawn(config, danger)
+         else:
+            center = config.TERRAIN_CENTER
+            border = self.config.TERRAIN_BORDER
+            r, c   = np.random.randint(border, center+border, 2).tolist()
+
          if self.realm.map.tiles[r, c].occupied:
             continue
 
@@ -116,6 +126,13 @@ class NPCManager(EntityGroup):
          if npc: 
             super().spawn(npc)
             self.idx -= 1
+
+         if self.spawn_dangers:
+            self.spawn_dangers.pop()
+
+   def cull(self):
+       for entity in super().cull().values():
+           self.spawn_dangers.append(entity.spawn_danger)
 
    def actions(self, realm):
       actions = {}
@@ -127,8 +144,8 @@ class PlayerManager(EntityGroup):
    def __init__(self, config, realm):
       super().__init__(config, realm)
 
-      self.loader  = config.AGENT_LOADER
       self.palette = colors.Palette()
+      self.loader  = config.AGENT_LOADER
       self.realm   = realm
 
    def reset(self):
@@ -175,16 +192,22 @@ class Realm:
    def __init__(self, config):
       self.config   = config
 
-      #Generate maps if they do not exist
+      # Generate maps if they do not exist
       config.MAP_GENERATOR(config).generate_all_maps()
 
-      #Load the world file
-      self.dataframe = infrastructure.Dataframe(config)
+      # Load the world file
+      self.dataframe = infrastructure.Dataframe(self)
       self.map       = core.Map(config, self)
 
-      #Entity handlers
+      # Entity handlers
       self.players  = PlayerManager(config, self)
       self.npcs     = NPCManager(config, self)
+
+      # Global item exchange
+      self.exchange = Exchange()
+
+      # Global item registry
+      self.items    = {}
 
    def reset(self, idx):
       '''Reset the environment and load the specified map

@@ -114,6 +114,11 @@ class Serialized(metaclass=utils.IterableNameComparable):
          def init(self, config):
             self.scale = 0.05
 
+      class ItemLevel(Continuous):
+         def init(self, config):
+            self.scale = 0.025
+            self.max   = 5 * config.NPC_LEVEL_MAX
+
       class Population(Discrete):
          def init(self, config):
             self.min = -3 #NPC index
@@ -132,7 +137,7 @@ class Serialized(metaclass=utils.IterableNameComparable):
             self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
 
-      #Historical stats
+      # Historical stats
       class Damage(Continuous):
          def init(self, config):
             #This scale may eventually be too high
@@ -144,48 +149,103 @@ class Serialized(metaclass=utils.IterableNameComparable):
             self.val = 0
             self.scale = 0.01
 
-      #Resources -- Redo the max/min scaling. You can't change these
-      #after init without messing up the embeddings
-      class Food(Continuous):
+      # Status effects
+      class Freeze(Continuous):
          def init(self, config):
-            if config.game_system_enabled('Progression'):
-               self.val = config.PROGRESSION_BASE_RESOURCE
-               self.max = config.PROGRESSION_BASE_RESOURCE
-            elif config.game_system_enabled('Resource'):
-               self.val = config.RESOURCE_BASE_RESOURCE
-               self.max = config.RESOURCE_BASE_RESOURCE
-            else:
-               self.val = 1
-               self.max = 1
-    
-            self.scale = 0.1
+            self.val = 0
+            self.max = 3
+            self.scale = 0.3
 
-      class Water(Continuous):
+      class Gold(Continuous):
          def init(self, config):
-            if config.game_system_enabled('Progression'):
-               self.val = config.PROGRESSION_BASE_RESOURCE
-               self.max = config.PROGRESSION_BASE_RESOURCE
-            elif config.game_system_enabled('Resource'):
-               self.val = config.RESOURCE_BASE_RESOURCE
-               self.max = config.RESOURCE_BASE_RESOURCE
-            else:
-               self.val = 1
-               self.max = 1
- 
-            self.scale = 0.1
+            self.val = 0
+            self.scale = 0.01
 
+      # Resources -- Redo the max/min scaling. You can't change these
+      # after init without messing up the embeddings
       class Health(Continuous):
          def init(self, config):
             self.val = config.BASE_HEALTH
             self.max = config.BASE_HEALTH
             self.scale = 0.1
 
-      #Status effects
-      class Freeze(Continuous):
+      class Food(Continuous):
          def init(self, config):
-            self.val = 0
-            self.max = 3
-            self.scale = 0.3
+            if config.game_system_enabled('Resource'):
+               self.val = config.RESOURCE_BASE
+               self.max = config.RESOURCE_BASE
+            else:
+               self.val = 1
+               self.max = 1
+    
+            self.scale = 0.01
+
+      class Water(Continuous):
+         def init(self, config):
+            if config.game_system_enabled('Resource'):
+               self.val = config.RESOURCE_BASE
+               self.max = config.RESOURCE_BASE
+            else:
+               self.val = 1
+               self.max = 1
+ 
+            self.scale = 0.01
+
+      class Melee(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Range(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Mage(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Fishing(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Herbalism(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Prospecting(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Carving(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
+
+      class Alchemy(Continuous):
+         def init(self, config):
+            self.val = 1
+            self.max = 1
+            if config.game_system_enabled('Progression'):
+                self.max = config.PROGRESSION_LEVEL_MAX
 
    class Tile(metaclass=utils.IterableNameComparable):
       @staticmethod
@@ -213,8 +273,172 @@ class Serialized(metaclass=utils.IterableNameComparable):
             self.max = config.TERRAIN_SIZE - 1
             self.scale = 0.15
 
+   class Item(metaclass=utils.IterableNameComparable):
+      @staticmethod
+      def N(config):
+         return config.N_INVENTORY
+
+      class ID(Continuous):
+         def init(self, config):
+            self.scale = 0.001
+
+      class Index(Discrete):
+         def init(self, config):
+            self.max   = config.N_ITEM + 1
+            self.scale = 1.0 / self.max
+
+      class Level(Continuous):
+         def init(self, config):
+            self.max   = 99
+            self.scale = 1.0 / self.max
+
+      class Capacity(Continuous):
+         def init(self, config):
+            self.max   = 99
+            self.scale = 1.0 / self.max
+
+      class Quantity(Continuous):
+         def init(self, config):
+            self.max   = 99
+            self.scale = 1.0 / self.max
+
+      class Tradable(Discrete):
+         def init(self, config):
+            self.max   = 1
+            self.scale = 1.0
+
+      class MeleeAttack(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class RangeAttack(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class MageAttack(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class MeleeDefense(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class RangeDefense(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class MageDefense(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class HealthRestore(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class ResourceRestore(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class Price(Continuous):
+         def init(self, config):
+            self.scale = 0.01
+
+      class Equipped(Discrete):
+         def init(self, config):
+            self.scale = 1.0
+
+   # TODO: Figure out how to autogen this from Items
+   class Market(metaclass=utils.IterableNameComparable):
+      @staticmethod
+      def N(config):
+         return config.N_INVENTORY
+
+      class ID(Continuous):
+         def init(self, config):
+            self.scale = 0.001
+
+      class Index(Discrete):
+         def init(self, config):
+            self.max   = config.N_ITEM + 1
+            self.scale = 1.0 / self.max
+
+      class Level(Continuous):
+         def init(self, config):
+            self.max   = 99
+            self.scale = 1.0 / self.max
+
+      class Capacity(Continuous):
+         def init(self, config):
+            self.max   = 99
+            self.scale = 1.0 / self.max
+
+      class Quantity(Continuous):
+         def init(self, config):
+            self.max   = 99
+            self.scale = 1.0 / self.max
+
+      class Tradable(Discrete):
+         def init(self, config):
+            self.max   = 1
+            self.scale = 1.0
+
+      class MeleeAttack(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class RangeAttack(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class MageAttack(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class MeleeDefense(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class RangeDefense(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class MageDefense(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class HealthRestore(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class ResourceRestore(Continuous):
+         def init(self, config):
+            self.max   = 100
+            self.scale = 1.0 / self.max
+
+      class Price(Continuous):
+         def init(self, config):
+            self.scale = 0.01
+
+      class Equipped(Discrete):
+         def init(self, config):
+            self.scale = 1.0
+
+
 for objName, obj in Serialized:
    for idx, (attrName, attr) in enumerate(obj):
       attr.index = idx 
-
-

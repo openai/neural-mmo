@@ -37,6 +37,58 @@ class Terrain:
    '''Terrain material class; populated at runtime'''
    pass
 
+def fish(config, tiles, mat, mmin, mmax):
+    r = random.randint(mmin, mmax)
+    c = random.randint(mmin, mmax)
+
+    allow = {Terrain.GRASS}
+    if (tiles[r, c] not in {Terrain.WATER} or
+            (tiles[r-1, c] not in allow and tiles[r+1, c] not in allow and
+            tiles[r, c-1] not in allow and tiles[r, c+1] not in allow)):
+        fish(config, tiles, mat, mmin, mmax)
+    else:
+        tiles[r, c] = mat
+
+def uniform(config, tiles, mat, mmin, mmax):
+    r = random.randint(mmin, mmax)
+    c = random.randint(mmin, mmax)
+    
+    if tiles[r, c] not in {Terrain.GRASS}:
+        uniform(config, tiles, mat, mmin, mmax)
+    else:
+        tiles[r, c] = mat
+
+def cluster(config, tiles, mat, mmin, mmax):
+    r = random.randint(mmin, mmax)
+    c = random.randint(mmin, mmax)
+
+    matls = {Terrain.GRASS}
+    if tiles[r, c] not in matls:
+        return cluster(config, tiles, mat, mmin, mmax)
+
+    tiles[r, c] = mat
+    if tiles[r-1, c] in matls:
+        tiles[r-1, c] = mat
+    if tiles[r+1, c] in matls:
+        tiles[r+1, c] = mat
+    if tiles[r, c-1] in matls:
+        tiles[r, c-1] = mat
+    if tiles[r, c+1] in matls:
+        tiles[r, c+1] = mat
+
+def spawnResources(config, tiles):
+    mmin = config.TERRAIN_BORDER
+    mmax = config.TERRAIN_SIZE - config.TERRAIN_BORDER
+
+    for _ in range(config.SPAWN_CLUSTERS):
+        cluster(config, tiles, Terrain.ORE, mmin, mmax)
+        cluster(config, tiles, Terrain.TREE, mmin, mmax)
+        cluster(config, tiles, Terrain.CRYSTAL, mmin, mmax)
+
+    for _ in range(config.SPAWN_UNIFORMS):
+        uniform(config, tiles, Terrain.HERB, mmin, mmax)
+        fish(config, tiles, Terrain.FISH, mmin, mmax)
+
 class MapGenerator:
    '''Procedural map generation'''
    def __init__(self, config):
@@ -76,6 +128,7 @@ class MapGenerator:
          os.makedirs(path, exist_ok=True)
 
          terrain, tiles = self.generate_map(idx)
+         spawnResources(config, tiles)
 
          #Save/render
          Save.np(tiles, path)

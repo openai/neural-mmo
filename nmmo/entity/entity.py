@@ -2,7 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 import nmmo
-from nmmo.systems import skill, droptable, combat, equipment
+from nmmo.systems import skill, droptable, combat, equipment, inventory
 from nmmo.lib import material, utils
 
 class Resources:
@@ -12,9 +12,26 @@ class Resources:
       self.food   = nmmo.Serialized.Entity.Food(  ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
-      self.health.max = entity.skills.constitution.level
-      self.water.max  = entity.skills.fishing.level
-      self.food.max   = entity.skills.hunting.level
+      config = realm.config
+
+      self.water.max = config.RESOURCE_BASE
+      self.food.max  = config.RESOURCE_BASE
+
+      regen  = config.RESOURCE_HEALTH_RESTORE_FRACTION
+      thresh = config.RESOURCE_HEALTH_REGEN_THRESHOLD
+
+      food_thresh  = self.food  > thresh * config.RESOURCE_BASE
+      water_thresh = self.water > thresh * config.RESOURCE_BASE
+
+      if food_thresh and water_thresh:
+          restore = np.floor(self.health.max * regen)
+          self.health.increment(restore)
+
+      if self.food.empty:
+          self.health.decrement(config.RESOURCE_STARVATION_RATE)
+
+      if self.water.empty:
+          self.health.decrement(config.RESOURCE_DEHYDRATION_RATE)
 
    def packet(self):
       data = {}
@@ -26,14 +43,14 @@ class Resources:
 class Status:
    def __init__(self, ent):
       self.config = ent.config
-      self.freeze     = nmmo.Serialized.Entity.Freeze(ent.dataframe, ent.entID)
+      self.freeze = nmmo.Serialized.Entity.Freeze(ent.dataframe, ent.entID)
 
    def update(self, realm, entity, actions):
       self.freeze.decrement()
 
    def packet(self):
       data = {}
-      data['freeze']     = self.freeze.val
+      data['freeze'] = self.freeze.val
       return data
 
 class History:
@@ -83,11 +100,15 @@ class Base:
       self.self       = nmmo.Serialized.Entity.Self(      ent.dataframe, ent.entID, 1)
       self.identity   = nmmo.Serialized.Entity.ID(        ent.dataframe, ent.entID, ent.entID)
       self.level      = nmmo.Serialized.Entity.Level(     ent.dataframe, ent.entID, 3)
+      self.item_level = nmmo.Serialized.Entity.ItemLevel( ent.dataframe, ent.entID, 0)
+      self.gold       = nmmo.Serialized.Entity.Gold(      ent.dataframe, ent.entID, 0)
 
       ent.dataframe.init(nmmo.Serialized.Entity, ent.entID, (r, c))
 
    def update(self, realm, entity, actions):
       self.level.update(combat.level(entity.skills))
+      self.item_level.update(entity.equipment.total(lambda e: e.level))
+      self.gold.update(entity.inventory.gold.quantity.val)
 
    @property
    def pos(self):
@@ -99,6 +120,8 @@ class Base:
       data['r']          = self.r.val
       data['c']          = self.c.val
       data['name']       = self.name
+      data['level']      = self.level.val
+      data['item_level'] = self.item_level.val
       data['color']      = self.color.packet()
       data['population'] = self.population.val
       data['self']       = self.self.val
@@ -109,8 +132,9 @@ class Entity:
    def __init__(self, realm, pos, iden, name, color, pop):
       self.dataframe    = realm.dataframe
       self.config       = realm.config
-      self.entID        = iden
 
+      self.policy       = name
+      self.entID        = iden
       self.repr         = None
       self.vision       = 5
 
@@ -126,15 +150,15 @@ class Entity:
       self.status    = Status(self)
       self.history   = History(self)
       self.resources = Resources(self)
-      self.loadout   = equipment.Loadout()
+      self.inventory = inventory.Inventory(realm, self)
 
    def packet(self):
       data = {}
 
-      data['status']  = self.status.packet()
-      data['history'] = self.history.packet()
-      data['loadout'] = self.loadout.packet()
-      data['alive']   = self.alive
+      data['status']    = self.status.packet()
+      data['history']   = self.history.packet()
+      data['inventory'] = self.inventory.packet()
+      data['alive']     = self.alive
 
       return data
 
@@ -152,14 +176,14 @@ class Entity:
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
 
-      if not self.alive and source:
-         source.receiveLoot(self.loadout)
+      if not self.alive and source is not None:
+         for item in list(self.inventory._items):
+             self.inventory.remove(item)
+             if source.inventory.space:
+                 source.inventory.receive(item)
          return False
 
       return True
-
-   def receiveLoot(self, loadout):
-      pass
 
    def applyDamage(self, dmg, style):
       pass
@@ -182,3 +206,15 @@ class Entity:
    @property
    def isNPC(self) -> bool:
       return False
+
+   @property
+   def level(self) -> int:
+       melee  = self.skills.melee.level.val
+       ranged = self.skills.range.level.val
+       mage   = self.skills.mage.level.val
+
+       return int(max(melee, ranged, mage))
+
+   @property
+   def equipment(self):
+       return self.inventory.equipment

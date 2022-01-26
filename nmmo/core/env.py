@@ -293,6 +293,14 @@ class Env(ParallelEnv):
                atn  = atns[nmmo.action.Attack]
                targ = atn[nmmo.action.Target]
                atn[nmmo.action.Target] = self.realm.entity(targ)
+            if Action.Exchange in atns:
+               atn     = atns[Action.Exchange]
+               item_id = atn[Action.Item]
+               atn[Action.Item] = self.realm.items[item_id]
+            if Action.Inventory in atns:
+               atn     = atns[Action.Inventory]
+               item_id = atn[Action.Item]
+               atn[Action.Item] = self.realm.items[item_id]
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
@@ -303,6 +311,8 @@ class Env(ParallelEnv):
 
       for entID, ent in self.dead.items():
          self.log(ent)
+
+      self.realm.exchange.step()
 
       for entID, ent in self.dead.items():
          if ent.agent.scripted:
@@ -330,32 +340,13 @@ class Env(ParallelEnv):
          ent: An agent
       '''
 
-      quill = self.quill
+      quill  = self.quill
+      policy = ent.policy
 
-      blob = quill.register('Population', self.realm.tick)
-      blob.log(self.realm.population)
-
-      blob = quill.register('Lifetime', self.realm.tick)
-      blob.log(ent.history.timeAlive.val)
-
-      blob = quill.register('Skill Level', self.realm.tick)
-      blob.log(ent.skills.range.level,        'Range')
-      blob.log(ent.skills.mage.level,         'Mage')
-      blob.log(ent.skills.melee.level,        'Melee')
-      blob.log(ent.skills.constitution.level, 'Constitution')
-      blob.log(ent.skills.defense.level,      'Defense')
-      blob.log(ent.skills.fishing.level,      'Fishing')
-      blob.log(ent.skills.hunting.level,      'Hunting')
-
-      blob = quill.register('Equipment', self.realm.tick)
-      blob.log(ent.loadout.chestplate.level, 'Chestplate')
-      blob.log(ent.loadout.platelegs.level,  'Platelegs')
-
-      blob = quill.register('Exploration', self.realm.tick)
-      blob.log(ent.history.exploration)
-
+      # Basic stats
       quill.stat('Lifetime',  ent.history.timeAlive.val)
 
+      # Tasks
       if ent.diary:
          quill.stat('Tasks_Completed', ent.diary.completed)
          quill.stat('Task_Reward', ent.diary.cumulative_reward)
@@ -364,6 +355,47 @@ class Env(ParallelEnv):
       else:
          quill.stat('Task_Reward', ent.history.timeAlive.val)
 
+      # Skills
+      quill.stat('{}_Fishing'.format(policy), ent.skills.fishing.level)
+      quill.stat('{}_Herbalism'.format(policy), ent.skills.herbalism.level)
+      quill.stat('{}_Prospecting'.format(policy), ent.skills.prospecting.level)
+      quill.stat('{}_Carving'.format(policy), ent.skills.carving.level)
+      quill.stat('{}_Alchemy'.format(policy), ent.skills.alchemy.level)
+
+      # Market
+      wealth = [p.inventory.gold.quantity.val for _, p in self.realm.players.items()]
+      quill.stat('{}_Wealth'.format(policy), ent.inventory.gold.quantity.val)
+      quill.stat('{}_Market_Sells'.format(policy), ent.sells)
+      quill.stat('{}_Market_Buys'.format(policy), ent.buys)
+
+      quill.stat('{}_Item_Level'.format(policy), ent.equipment.total(lambda e: e.level))
+
+      held_item = ent.inventory.equipment.held
+      if isinstance(held_item, Item.Weapon):
+          quill.stat('{}_Weapon_Level'.format(policy), held_item.level.val)
+          quill.stat('{}_Tool_Level'.format(policy), 0)
+      elif isinstance(held_item, Item.Tool):
+          quill.stat('{}_Weapon_Level'.format(policy), 0)
+          quill.stat('{}_Tool_Level'.format(policy), held_item.level.val)
+      else:
+          quill.stat('{}_Weapon_Level'.format(policy), 0)
+          quill.stat('{}_Tool_Level'.format(policy), 0)
+
+      quill.stat('{}_Mage_Level'.format(policy), ent.skills.mage.level)
+      quill.stat('{}_Range_Level'.format(policy), ent.skills.range.level)
+      quill.stat('{}_Melee_Level'.format(policy), ent.skills.melee.level)
+
+      '''
+      key = '{}_Market_{}_{}'
+      for item, listing in self.realm.exchange.items.items():
+          quill.stat(key.format(policy, 'Price', item.__name__), listing.price())
+          quill.stat(key.format(policy, 'Level', item.__name__), listing.level())
+          quill.stat(key.format(policy, 'Volume', item.__name__), listing.volume)
+          quill.stat(key.format(policy, 'Supply', item.__name__), listing.supply())
+          quill.stat(key.format(policy, 'Value', item.__name__), listing.value())
+      '''
+
+      # Used for SR
       quill.stat('PolicyID', ent.agent.policyID)
 
    def terminal(self):

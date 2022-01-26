@@ -2,7 +2,7 @@ import numpy as np
 from pdb import set_trace as T
 
 import nmmo
-from nmmo.systems import ai, equipment
+from nmmo.systems import ai, equipment, inventory
 from nmmo.lib import material
 
 from nmmo.systems.skill import Skills
@@ -16,14 +16,19 @@ class Player(entity.Entity):
       self.agent  = agent
       self.pop    = pop
 
-      #Scripted hooks
+      # Scripted hooks
       self.target = None
       self.food   = None
       self.water  = None
       self.vision = 7
 
-      #Submodules
-      self.skills = Skills(self)
+      # Logs
+      self.buys  = 0
+      self.sells = 0 
+
+      # Submodules
+      self.skills    = Skills(self)
+      self.inventory = inventory.Inventory(realm, self)
 
       self.diary  = None
       if tasks := realm.config.TASKS:
@@ -58,21 +63,16 @@ class Player(entity.Entity):
       self.resources.water.decrement(dmg)
       self.skills.receiveDamage(dmg)
 
-   def receiveLoot(self, loadout):
-      if loadout.chestplate.level > self.loadout.chestplate.level:
-         self.loadout.chestplate = loadout.chestplate
-      if loadout.platelegs.level > self.loadout.platelegs.level:
-         self.loadout.platelegs = loadout.platelegs
-
    def packet(self):
       data = super().packet()
 
-      data['entID']    = self.entID
-      data['annID']    = self.population
+      data['entID']     = self.entID
+      data['annID']     = self.population
 
-      data['base']     = self.base.packet()
-      data['resource'] = self.resources.packet()
-      data['skills']   = self.skills.packet()
+      data['base']      = self.base.packet()
+      data['resource']  = self.resources.packet()
+      data['skills']    = self.skills.packet()
+      data['inventory'] = self.inventory.packet()
 
       return data
   

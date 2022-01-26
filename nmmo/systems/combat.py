@@ -6,57 +6,55 @@ import numpy as np
 from nmmo.systems import skill as Skill
 
 def level(skills):
-   hp = skills.constitution.level
-   defense = skills.defense.level
-   melee = skills.melee.level
-   ranged = skills.range.level
-   mage   = skills.mage.level
-   
-   base = 0.25*(defense + hp)
-   final = np.floor(base + 0.5*max(melee, ranged, mage))
-   return final
+    melee = skills.melee.level.val
+    ranged = skills.range.level.val
+    mage   = skills.mage.level.val
+
+    return max(melee, ranged, mage)
+
+def damage_multiplier(config, skill, targ):
+    skills = [targ.skills.melee, targ.skills.range, targ.skills.mage]
+    idx    = np.argmax([s.level for s in skills])
+    targ   = skills[idx]
+
+    if type(targ) == skill.weakness:
+        return config.DAMAGE_MULTIPLIER
+
+    return 1.0
 
 def attack(entity, targ, skillFn):
-   config      = entity.config
-   entitySkill = skillFn(entity)
-   targetSkill = skillFn(targ)
+    config     = entity.config
+    skill      = skillFn(entity)
+    skill_type = type(skill)
 
-   targetDefense = targ.skills.defense.level + targ.loadout.defense
+    # Note: the below damage calculation only holds for ammo
+    # granting a bonus to a single combat style
+    ammunition = entity.equipment.ammunition
+    if skill_type == Skill.Melee:
+        offense = entity.equipment.total(lambda e: e.melee_attack)
+        defense = entity.equipment.total(lambda e: e.melee_defense)
+        #if type(ammunition) == Item.Scrap:
+        #    ammunition.fire(entity)
+    elif skill_type == Skill.Range:
+        offense = entity.equipment.total(lambda e: e.range_attack)
+        defense = entity.equipment.total(lambda e: e.range_defense)
+        #if type(ammunition) == Item.Shaving:
+        #    ammunition.fire(entity)
+    elif skill_type == Skill.Mage:
+        offense = entity.equipment.total(lambda e: e.mage_attack)
+        defense = entity.equipment.total(lambda e: e.mage_defense)
+        #if type(ammunition) == Item.Shard:
+        #    ammunition.fire(entity)
+    elif __debug__:
+        assert False, 'Attack skill must be Melee, Range, or Mage'
 
-   die  = config.COMBAT_DICE_SIDES
-   roll = np.random.randint(1, die+1)
-   dc   = accuracy(config, entitySkill.level, targetSkill.level, targetDefense)
-   crit = roll == die
+    #Total damage calculation
+    damage = config.DAMAGE_BASE + offense - defense
 
-   dmg = 1 #Chip dmg on a miss
-   if roll >= dc or crit:
-      dmg = damage(entitySkill.__class__, entitySkill.level)
-      
-   dmg = min(dmg, entity.resources.health.val)
-   entity.applyDamage(dmg, entitySkill.__class__.__name__.lower())
-   targ.receiveDamage(entity, dmg)
-   return dmg
+    entity.applyDamage(damage, skill.__class__.__name__.lower())
+    targ.receiveDamage(entity, damage)
 
-#Compute maximum damage roll
-def damage(skill, level):
-   if skill == Skill.Melee:
-      return np.floor(7 + level * 63 / 99)
-   if skill == Skill.Range:
-      return np.floor(3 + level * 32 / 99)
-   if skill == Skill.Mage:
-      return np.floor(1 + level * 24 / 99)
-
-#Compute maximum attack or defense roll (same formula)
-#Max attack 198 - min def 1 = 197. Max 198 - max 198 = 0
-#REMOVE FACTOR OF 2 FROM ATTACK AFTER IMPLEMENTING WEAPONS
-def accuracy(config, entAtk, targAtk, targDef):
-   alpha   = config.COMBAT_DEFENSE_WEIGHT
-
-   attack  = entAtk
-   defense = alpha*targDef + (1-alpha)*targAtk
-   dc      = defense - attack + config.COMBAT_DICE_SIDES//2
-
-   return dc
+    return damage
 
 def danger(config, pos, full=False):
    border = config.TERRAIN_BORDER
@@ -73,3 +71,34 @@ def danger(config, pos, full=False):
       return norm, mag
 
    return norm
+
+def spawn(config, dnger):
+    border = config.TERRAIN_BORDER
+    center = config.TERRAIN_CENTER
+    mid    = center // 2
+
+    dist       = dnger * center / 2
+    max_offset = mid - dist
+    offset     = mid + border + np.random.randint(-max_offset, max_offset)
+
+    rng = np.random.rand()
+    if rng < 0.25:
+        r = border + dist
+        c = offset
+    elif rng < 0.5:
+        r = border + center - dist - 1
+        c = offset
+    elif rng < 0.75:
+        c = border + dist
+        r = offset
+    else:
+        c = border + center - dist - 1
+        r = offset
+
+    if __debug__:
+        assert dnger == danger(config, (r,c)), 'Agent spawned at incorrect radius'
+
+    r = int(r)
+    c = int(c)
+
+    return r, c

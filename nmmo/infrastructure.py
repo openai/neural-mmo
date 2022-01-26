@@ -185,6 +185,12 @@ class GridTables:
 
       return values
 
+   def getFlat(self, keys):
+      rows = [self.index.get(key) for key in keys]
+      values = {'Continuous': self.continuous.get(rows, self.pad),
+                'Discrete':   self.discrete.get(rows, self.pad)}
+      return values
+
    def update(self, obj, val):
       key, attr = obj.key, obj.attr
       if self.index.full():
@@ -206,6 +212,9 @@ class GridTables:
       self.grid.move(pos, nxt, row)
 
    def init(self, key, pos):
+      if pos is None:
+          return
+
       row = self.index.get(key)
       self.grid.set(pos, row)
 
@@ -215,10 +224,15 @@ class GridTables:
 
 class Dataframe:
    '''Infrastructure wrapper class'''
-   def __init__(self, config):
-      self.config, self.data = config, defaultdict(dict)
+   def __init__(self, realm):
+      config      = realm.config
+      self.config = config
+      self.data   = defaultdict(dict)
+
       for (objKey,), obj in nmmo.Serialized:
          self.data[objKey] = GridTables(config, obj, pad=obj.N(config))
+
+      self.realm = realm
 
    def update(self, node, val):
       self.data[node.obj].update(node, val)
@@ -240,5 +254,13 @@ class Dataframe:
 
       ent.targets          = ents
       stim['Tile']         = self.data['Tile'].get(ent)
+
+      items                = ent.inventory.dataframeKeys
+      stim['Item']         = self.data['Item'].getFlat(items)
+      stim['Item']['N']    = np.array([len(items)], dtype=np.int32)
+
+      market               = self.realm.exchange.dataframeKeys
+      stim['Market']       = self.data['Item'].getFlat(market)
+      stim['Market']['N']  = np.array([len(market)], dtype=np.int32)
 
       return stim

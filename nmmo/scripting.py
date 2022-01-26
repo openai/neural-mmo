@@ -1,3 +1,5 @@
+from pdb import set_trace as T
+
 class Observation:
    '''Unwraps observation tensors for use with scripted agents'''
    def __init__(self, config, obs):
@@ -10,8 +12,16 @@ class Observation:
       self.obs    = obs
       self.delta  = config.NSTIM
       self.tiles  = self.obs['Tile']['Continuous']
-      self.agents = self.obs['Entity']['Continuous']
-      self.n      = int(self.obs['Entity']['N'])
+
+      n = int(self.obs['Entity']['N'])
+      self.agents  = self.obs['Entity']['Continuous'][:n]
+      self.n = n
+
+      n = int(self.obs['Item']['N'])
+      self.items   = self.obs['Item']['Continuous'][:n]
+
+      n = int(self.obs['Market']['N'])
+      self.market = self.obs['Market']['Continuous'][:n]
 
    def tile(self, rDelta, cDelta):
       '''Return the array object corresponding to a nearby tile

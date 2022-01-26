@@ -138,8 +138,63 @@ class Config(Template):
    NPOP                    = 1
    '''Number of distinct populations spawnable in the environment'''
 
+   INVENTORY_CAPACITY      = 12
+   '''Maximum number of inventory items'''
+
+   N_ITEM                  = 17
+   '''Number of unique items'''
+
    N_AGENT_OBS             = 100
    '''Number of distinct agent observations'''
+
+   N_INVENTORY             = 200
+   '''Number of distinct item observations'''
+
+   ORE_RESPAWN       = 0.01
+   '''Probability that a harvested ore tile will regenerate each tick'''
+
+   TREE_RESPAWN      = 0.01
+   '''Probability that a harvested tree tile will regenerate each tick'''
+
+   CRYSTAL_RESPAWN   = 0.01
+   '''Probability that a harvested crystal tile will regenerate each tick'''
+
+   HERB_RESPAWN      = 0.01
+   '''Probability that a harvested herb tile will regenerate each tick'''
+
+   FISH_RESPAWN      = 0.01
+   '''Probability that a harvested fish tile will regenerate each tick'''
+
+   INVENTORY_CAPACITY = 12
+   '''Number of inventory spaces'''
+
+   SPAWN_CLUSTERS          = 15
+   SPAWN_UNIFORMS          = 50
+
+   DEV_COMBAT = True
+
+   @staticmethod
+   def TOOL_DEFENSE(level):
+       return 15 * level
+
+   @staticmethod
+   def EQUIPMENT_DEFENSE(level):
+       return 5 * level
+
+   @staticmethod
+   def EQUIPMENT_OFFENSE(level):
+       return 15 * level
+
+   DAMAGE_BASE       = 30
+   DAMAGE_MULTIPLIER = 1.5
+
+   @staticmethod
+   def DAMAGE_AMMUNITION(level):
+       return 5 * level
+
+   @staticmethod
+   def RESTORE(level):
+       return 50 + 5*level
 
    @property
    def TEAM_SIZE(self):
@@ -292,14 +347,53 @@ class Resource:
    def Resource(self):
       return True
 
-   RESOURCE_BASE_RESOURCE              = 10
+   RESOURCE_BASE                       = 10
    '''Initial level and capacity for Hunting + Fishing resource skills'''
+
+   RESOURCE_DEPLETION_RATE             = 5
+   '''Depletion rate for food and water'''
+
+   RESOURCE_STARVATION_RATE            = 10
+   '''Damage per tick without food'''
+
+   RESOURCE_DEHYDRATION_RATE           = 10
+   '''Damage per tick without water'''
 
    RESOURCE_FOREST_CAPACITY            = 1
    '''Maximum number of harvests before a forest tile decays'''
 
    RESOURCE_FOREST_RESPAWN             = 0.025
    '''Probability that a harvested forest tile will regenerate each tick'''
+
+   RESOURCE_TREE_CAPACITY              = 1
+   '''Maximum number of harvests before a tree tile decays'''
+
+   RESOURCE_TREE_RESPAWN               = 0.025
+   '''Probability that a harvested tree tile will regenerate each tick'''
+
+   RESOURCE_OREROCK_CAPACITY           = 1
+   '''Maximum number of harvests before an orerock tile decays'''
+
+   RESOURCE_OREROCK_RESPAWN            = 0.05
+   '''Probability that a harvested orerock tile will regenerate each tick'''
+
+   RESOURCE_CRYSTAL_CAPACITY           = 1
+   '''Maximum number of harvests before a crystal tile decays'''
+
+   RESOURCE_CRYSTAL_RESPAWN            = 0.05
+   '''Probability that a harvested crystal tile will regenerate each tick'''
+
+   RESOURCE_HERB_CAPACITY              = 1
+   '''Maximum number of harvests before an herb tile decays'''
+
+   RESOURCE_HERB_RESPAWN               = 0.05
+   '''Probability that a harvested herb tile will regenerate each tick'''
+
+   RESOURCE_FISH_CAPACITY              = 1
+   '''Maximum number of harvests before a fish tile decays'''
+
+   RESOURCE_FISH_RESPAWN               = 0.05
+   '''Probability that a harvested fish tile will regenerate each tick'''
 
    RESOURCE_HARVEST_RESTORE_FRACTION   = 1.0
    '''Fraction of maximum capacity restored upon collecting a resource'''
@@ -327,16 +421,16 @@ class Combat:
    COMBAT_DEFENSE_WEIGHT               = 0.3 
    '''Fraction of defense that comes from the Defense skill'''   
 
-   COMBAT_MELEE_REACH                  = 1
+   COMBAT_MELEE_REACH                  = 3
    '''Reach of attacks using the Melee skill'''
 
    COMBAT_RANGE_REACH                  = 3
    '''Reach of attacks using the Range skill'''
 
-   COMBAT_MAGE_REACH                   = 4
+   COMBAT_MAGE_REACH                   = 3
    '''Reach of attacks using the Mage skill'''
 
-   COMBAT_FREEZE_TIME                  = 3
+   COMBAT_FREEZE_TIME                  = 0
    '''Number of ticks successful Mage attacks freeze a target'''
 
 
@@ -350,14 +444,17 @@ class Progression:
    PROGRESSION_BASE_RESOURCE           = 10
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
-   PROGRESSION_BASE_XP_SCALE           = 10
+   PROGRESSION_BASE_XP_SCALE           = 1
    '''Skill level progression speed as a multiplier of typical MMOs'''
 
-   PROGRESSION_CONSTITUTION_XP_SCALE   = 2
-   '''Multiplier on top of XP_SCALE for the Constitution skill'''
-
-   PROGRESSION_COMBAT_XP_SCALE         = 4
+   PROGRESSION_COMBAT_XP_SCALE         = 0.25
    '''Multiplier on top of XP_SCALE for Combat skills'''
+
+   PROGRESSION_HARVEST_XP_SCALE        = 10
+   '''Multiplier on top of XP_SCALE for harvesting skills'''
+
+   PROGRESSION_LEVEL_MAX               = 10
+   '''Max skill level'''
 
 
 class NPC(Combat):
@@ -382,11 +479,8 @@ class NPC(Combat):
    NPC_LEVEL_MIN                       = 1
    '''Minimum NPC level'''
 
-   NPC_LEVEL_MAX                       = None
+   NPC_LEVEL_MAX                       = 20
    '''Maximum NPC level'''
-
-   NPC_LEVEL_SPREAD                    = None
-   '''Level range for NPC spawns'''
 
 
 class AllGameSystems(Resource, Progression, NPC): pass

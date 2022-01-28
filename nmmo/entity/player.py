@@ -11,7 +11,7 @@ from nmmo.entity import entity
 
 class Player(entity.Entity):
    def __init__(self, realm, pos, agent, color, pop):
-      super().__init__(realm, pos, agent.iden, agent.name, color, pop)
+      super().__init__(realm, pos, agent.iden, agent.policy, color, pop)
 
       self.agent  = agent
       self.pop    = pop

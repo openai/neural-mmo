@@ -332,15 +332,15 @@ class Exchange(Node):
 
         return env.exchange.sell(env, entity, item, quantity, price)
 
-    class ExchangeAction(Node):
-        argType = Fixed
+class ExchangeAction(Node):
+    argType = Fixed
 
-        @staticproperty
-        def edges():
-            return [Buy, Sell]
+    @staticproperty
+    def edges():
+        return [Buy, Sell]
 
-        def args(stim, entity, config):
-            return ExchangeAction.edges
+    def args(stim, entity, config):
+        return ExchangeAction.edges
 
 class Buy(Node): pass
 class Sell(Node): pass

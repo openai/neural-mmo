@@ -92,7 +92,7 @@ class Skills(Overlay):
       for entID, agent in self.realm.realm.players.items():
          r, c = agent.base.pos
 
-         skillLvl  = (agent.skills.fishing.level + agent.skills.hunting.level)/2.0
+         skillLvl  = (agent.skills.food.level.val + agent.skills.water.level.val)/2.0
          combatLvl = combat.level(agent.skills)
 
          if skillLvl == 10 and combatLvl == 3:

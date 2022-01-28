@@ -122,7 +122,7 @@ class Config(Template):
    NMAPS                   = 1
    '''Number of maps to generate'''
 
-   NTILE                   = 6
+   NTILE                   = 16
    #TODO: Find a way to auto-compute this
    '''Number of distinct terrain tile types'''
 
@@ -208,7 +208,7 @@ class Config(Template):
 
    ############################################################################
    ### Agent Parameters                                                   
-   BASE_HEALTH                = 10
+   BASE_HEALTH                = 100
    '''Initial Constitution level and agent health'''
 
    PLAYER_SPAWN_ATTEMPTS      = None
@@ -347,7 +347,7 @@ class Resource:
    def Resource(self):
       return True
 
-   RESOURCE_BASE                       = 10
+   RESOURCE_BASE                       = 100
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
    RESOURCE_DEPLETION_RATE             = 5
@@ -444,7 +444,7 @@ class Progression:
    PROGRESSION_BASE_RESOURCE           = 10
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
-   PROGRESSION_BASE_XP_SCALE           = 1
+   PROGRESSION_BASE_XP_SCALE           = 10
    '''Skill level progression speed as a multiplier of typical MMOs'''
 
    PROGRESSION_COMBAT_XP_SCALE         = 0.25

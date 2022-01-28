@@ -11,6 +11,7 @@ from nmmo import entity, core
 from nmmo.core import terrain
 from nmmo.lib import log
 from nmmo.infrastructure import DataType
+from nmmo.systems import item as Item
 
 class Env(ParallelEnv):
    '''Environment wrapper for Neural MMO using the Parallel PettingZoo API
@@ -293,14 +294,14 @@ class Env(ParallelEnv):
                atn  = atns[nmmo.action.Attack]
                targ = atn[nmmo.action.Target]
                atn[nmmo.action.Target] = self.realm.entity(targ)
-            if Action.Exchange in atns:
-               atn     = atns[Action.Exchange]
-               item_id = atn[Action.Item]
-               atn[Action.Item] = self.realm.items[item_id]
-            if Action.Inventory in atns:
-               atn     = atns[Action.Inventory]
-               item_id = atn[Action.Item]
-               atn[Action.Item] = self.realm.items[item_id]
+            if nmmo.action.Exchange in atns:
+               atn     = atns[nmmo.action.Exchange]
+               item_id = atn[nmmo.action.Item]
+               atn[nmmo.action.Item] = self.realm.items[item_id]
+            if nmmo.action.Inventory in atns:
+               atn     = atns[nmmo.action.Inventory]
+               item_id = atn[nmmo.action.Item]
+               atn[nmmo.action.Item] = self.realm.items[item_id]
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
@@ -356,11 +357,14 @@ class Env(ParallelEnv):
          quill.stat('Task_Reward', ent.history.timeAlive.val)
 
       # Skills
-      quill.stat('{}_Fishing'.format(policy), ent.skills.fishing.level)
-      quill.stat('{}_Herbalism'.format(policy), ent.skills.herbalism.level)
-      quill.stat('{}_Prospecting'.format(policy), ent.skills.prospecting.level)
-      quill.stat('{}_Carving'.format(policy), ent.skills.carving.level)
-      quill.stat('{}_Alchemy'.format(policy), ent.skills.alchemy.level)
+      quill.stat('{}_Mage_Level'.format(policy), ent.skills.mage.level.val)
+      quill.stat('{}_Range_Level'.format(policy), ent.skills.range.level.val)
+      quill.stat('{}_Melee_Level'.format(policy), ent.skills.melee.level.val)
+      quill.stat('{}_Fishing'.format(policy), ent.skills.fishing.level.val)
+      quill.stat('{}_Herbalism'.format(policy), ent.skills.herbalism.level.val)
+      quill.stat('{}_Prospecting'.format(policy), ent.skills.prospecting.level.val)
+      quill.stat('{}_Carving'.format(policy), ent.skills.carving.level.val)
+      quill.stat('{}_Alchemy'.format(policy), ent.skills.alchemy.level.val)
 
       # Market
       wealth = [p.inventory.gold.quantity.val for _, p in self.realm.players.items()]
@@ -380,10 +384,6 @@ class Env(ParallelEnv):
       else:
           quill.stat('{}_Weapon_Level'.format(policy), 0)
           quill.stat('{}_Tool_Level'.format(policy), 0)
-
-      quill.stat('{}_Mage_Level'.format(policy), ent.skills.mage.level)
-      quill.stat('{}_Range_Level'.format(policy), ent.skills.range.level)
-      quill.stat('{}_Melee_Level'.format(policy), ent.skills.melee.level)
 
       '''
       key = '{}_Market_{}_{}'

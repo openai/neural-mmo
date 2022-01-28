@@ -8,6 +8,7 @@ from typing import Dict, Callable
 import nmmo
 from nmmo import core, infrastructure
 from nmmo.systems.exchange import Exchange
+from nmmo.systems import combat
 from nmmo.entity.npc import NPC
 from nmmo.entity import Player
 from nmmo.lib import colors

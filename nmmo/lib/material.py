@@ -1,10 +1,10 @@
 from pdb import set_trace as T
 
-from nmmo.systems import item
+from nmmo.systems import item, droptable
 
 class Material:
-   harvestable = False
-   capacity    = 1
+   capacity    = 0
+   tool        = None
    def __init__(self, config):
       pass
 

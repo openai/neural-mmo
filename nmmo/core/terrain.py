@@ -60,6 +60,9 @@ def uniform(config, tiles, mat, mmin, mmax):
         tiles[r, c] = mat
 
 def cluster(config, tiles, mat, mmin, mmax):
+    mmin = mmin + 1
+    mmax = mmax - 1
+
     r = random.randint(mmin, mmax)
     c = random.randint(mmin, mmax)
 
@@ -78,8 +81,8 @@ def cluster(config, tiles, mat, mmin, mmax):
         tiles[r, c+1] = mat
 
 def spawnResources(config, tiles):
-    mmin = config.TERRAIN_BORDER
-    mmax = config.TERRAIN_SIZE - config.TERRAIN_BORDER
+    mmin = config.TERRAIN_BORDER + 1
+    mmax = config.TERRAIN_SIZE - config.TERRAIN_BORDER - 1
 
     for _ in range(config.SPAWN_CLUSTERS):
         cluster(config, tiles, Terrain.ORE, mmin, mmax)

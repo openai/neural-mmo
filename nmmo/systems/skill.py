@@ -13,9 +13,9 @@ class SkillGroup:
       self.config  = realm.dataframe.config
       self.skills  = set()
 
-   def update(self, realm, entity, actions):
-      for skill in self.skills:
-         skill.update(realm, entity)
+   def update(self, realm, entity):
+       for skill in self.skills:
+           skill.update(realm, entity)
 
    def packet(self):
       data = {}
@@ -42,9 +42,12 @@ class Skill:
 
       return data
 
-   def update(self, realm, entity):
-      scale     = self.config.XP_SCALE
-      self.exp += scale * xp
+   def add_xp(self, xp):
+      level     = self.expCalc.levelAtExp(self.exp)
+      self.exp += xp * self.config.PROGRESSION_BASE_XP_SCALE
+
+      level = self.expCalc.levelAtExp(self.exp)
+      self.level.update(int(level))
 
    def setExpByLevel(self, level):
       self.exp = self.expCalc.expAtLevel(level)
@@ -52,33 +55,11 @@ class Skill:
 
 ### Skill Bases ###
 class CombatSkill(Skill):
-    def update(self, realm, entity):
-        pass
+  def update(self, realm, entity):
+     pass
 
-class NonCombatSkill(Skill):
-    def success(self, levelReq):
-        level = self.level
-        if level < levelReq:
-            return False
-        chance = 0.5 + 0.05*(level-levelReq)
-        if chance >= 1.0:
-            return True
-        return np.random.rand() < chance
+class NonCombatSkill(Skill): pass
 
-    def attempt(self, inv, item):
-        if (item.createSkill != self.__class__ or
-                self.level < item.createLevel):
-            return
-
-        if item.recipe is not None:
-            # Check that everything is available
-            if not inv.satisfies(item.recipe): return
-            inv.removeRecipe(item.recipe)
-
-        if item.alwaysSucceeds or self.success(item.createLevel):
-            inv.add(item, item.amtMade)
-            self.exp += item.exp
-            return True
 
 class HarvestSkill(NonCombatSkill):
     def processDrops(self, realm, entity, matl, dropTable):
@@ -91,11 +72,8 @@ class HarvestSkill(NonCombatSkill):
             if entity.inventory.space:
                 entity.inventory.receive(drop)
 
-        self.exp += (self.config.PROGRESSION_BASE_XP_SCALE
-                  * self.config.PROGRESSION_HARVEST_XP_SCALE)
-
-        level = self.expCalc.levelAtExp(self.exp)
-        self.level.update(int(level))
+        if type(self) != Food and type(self) != Water:
+            self.add_xp(self.config.PROGRESSION_HARVEST_XP_SCALE)
 
     def harvest(self, realm, entity, matl, deplete=True):
         r, c = entity.pos
@@ -178,15 +156,9 @@ class Combat(SkillGroup):
       if not self.config.game_system_enabled('Progression'):
          return
 
-      config    = self.config
-      scale     = (config.PROGRESSION_BASE_XP_SCALE
-                 * config.PROGRESSION_COMBAT_XP_SCALE)
-
-      skill      = self.__dict__[style]
-      skill.exp += scale * dmg
-
-      level = self.expCalc.levelAtExp(skill.exp)
-      skill.level.update(int(level))
+      config = self.config
+      skill  = self.__dict__[style]
+      skill.add_xp(config.PROGRESSION_COMBAT_XP_SCALE)
 
    def receiveDamage(self, dmg):
       pass

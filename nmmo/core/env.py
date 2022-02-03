@@ -85,8 +85,13 @@ class Env(ParallelEnv):
                'Continuous': gym.spaces.Box(low=-2**20, high=2**20, shape=(rows, continuous), dtype=DataType.CONTINUOUS),
                'Discrete'  : gym.spaces.Box(low=0, high=4096, shape=(rows, discrete), dtype=DataType.DISCRETE)}
 
+         #TODO: Find a way to automate this
          if name == 'Entity':
             observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.N_AGENT_OBS, shape=(1,), dtype=DataType.DISCRETE)
+         elif name == 'Item':
+            observation['Item']['N']   = gym.spaces.Box(low=0, high=self.config.N_ITEM_OBS, shape=(1,), dtype=DataType.DISCRETE)
+         elif name == 'Market':
+            observation['Market']['N'] = gym.spaces.Box(low=0, high=self.config.N_MARKET_OBS, shape=(1,), dtype=DataType.DISCRETE)
 
          observation[name] = gym.spaces.Dict(observation[name])
 

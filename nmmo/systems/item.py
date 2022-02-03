@@ -84,21 +84,6 @@ class Item:
    def use(self, entity):
       return
 
-'''
-class Stack(Item):
-   def __init__(self, realm, level, quantity=0, **kwargs):
-       super().__init__(realm, level, quantity=quantity, **kwargs)
-
-   def use(self, entity):
-      assert self.quantity > 0
-
-      self.quantity -= 1
-      if self.quantity > 0:
-         return
-
-      entity.inventory.remove(self)
-'''
-
 class Gold(Item):
    ITEM_ID = 1
    def __init__(self, realm, **kwargs):
@@ -329,7 +314,7 @@ class Consumable(Item):
 class Ration(Consumable):
    ITEM_ID = 16
    def __init__(self, realm, level, **kwargs):
-      restore = realm.config.RESTORE(level)
+      restore = realm.config.CONSUMABLE_RESTORE(level)
       super().__init__(realm, level, resource_restore=restore, **kwargs)
 
    def use(self, entity):
@@ -340,7 +325,7 @@ class Poultice(Consumable):
    ITEM_ID = 17
 
    def __init__(self, realm, level, **kwargs):
-      restore = realm.config.RESTORE(level)
+      restore = realm.config.CONSUMABLE_RESTORE(level)
       super().__init__(realm, level, health_restore=restore, **kwargs)
 
    def use(self, entity):

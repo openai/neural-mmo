@@ -144,9 +144,6 @@ class Exchange:
          #print('{} Bought {} for {}.'.format(buyer.base.name, item.__name__, price))
          buyer.inventory.receive(listings.placeholder)
 
-         #if item.__name__ == 'Tool':
-         #   print('Buy Tool Lvl: {}'.format(level))
-
          #Update placeholder
          listings.placeholder = None
          if listings.supply:
@@ -156,13 +153,11 @@ class Exchange:
       if __debug__:
          assert isinstance(item, object)
          assert item in seller.inventory
+         assert item.quantity.val > 0
 
       quantity = item.quantity.val
       level    = item.level.val
 
-      #if item.__class__.__name__ == 'Tool':
-      #   print('Sell Tool Lvl: {}'.format(level))
- 
       #Unequip from seller
       seller.inventory.remove(item)
       item = type(item)

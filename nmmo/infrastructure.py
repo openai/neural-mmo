@@ -164,7 +164,9 @@ class GridTables:
 
       r, c = ent.pos
       cent = self.grid.data[r, c]
-      assert cent != 0
+
+      if __debug__:
+          assert cent != 0
 
       rows = self.grid.window(
             r-radius, r+radius+1,
@@ -180,13 +182,18 @@ class GridTables:
 
       if entity:
          ents = [self.index.teg(e) for e in rows]
-         assert ents[0] == ent.entID
+         if __debug__:
+             assert ents[0] == ent.entID
          return values, ents
 
       return values
 
    def getFlat(self, keys):
-      rows = [self.index.get(key) for key in keys]
+      if __debug__:
+          err = f'Dataframe got {len(keys)} keys with pad {self.pad}'
+          assert len(keys) <= self.pad, err
+
+      rows = [self.index.get(key) for key in keys[:self.pad]]
       values = {'Continuous': self.continuous.get(rows, self.pad),
                 'Discrete':   self.discrete.get(rows, self.pad)}
       return values
@@ -255,6 +262,7 @@ class Dataframe:
       ent.targets          = ents
       stim['Tile']         = self.data['Tile'].get(ent)
 
+      #Current must have the same pad
       items                = ent.inventory.dataframeKeys
       stim['Item']         = self.data['Item'].getFlat(items)
       stim['Item']['N']    = np.array([len(items)], dtype=np.int32)

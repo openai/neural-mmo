@@ -276,7 +276,7 @@ class Serialized(metaclass=utils.IterableNameComparable):
    class Item(metaclass=utils.IterableNameComparable):
       @staticmethod
       def N(config):
-         return config.N_INVENTORY
+         return config.N_ITEM_OBS
 
       class ID(Continuous):
          def init(self, config):
@@ -359,7 +359,7 @@ class Serialized(metaclass=utils.IterableNameComparable):
    class Market(metaclass=utils.IterableNameComparable):
       @staticmethod
       def N(config):
-         return config.N_INVENTORY
+         return config.N_MARKET_OBS
 
       class ID(Continuous):
          def init(self, config):

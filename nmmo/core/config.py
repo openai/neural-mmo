@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 import nmmo
-from nmmo.lib import utils
+from nmmo.lib import utils, material
 
 class SequentialLoader:
     '''config.AGENT_LOADER that spreads out agent populations'''
@@ -141,22 +141,30 @@ class Config(Template):
    INVENTORY_CAPACITY      = 12
    '''Maximum number of inventory items'''
 
-   N_ITEM                  = 17
+   N_ITEM                  = len(material.All.materials)
    '''Number of unique items'''
 
    N_AGENT_OBS             = 100
    '''Number of distinct agent observations'''
 
-   N_INVENTORY             = 200
-   '''Number of distinct item observations'''
+   @property
+   def N_ITEM_OBS(self):
+       '''Number of distinct item observations'''
+       return self.N_ITEM * self.NPC_LEVEL_MAX
+       #return self.INVENTORY_CAPACITY
 
-   ORE_RESPAWN       = 0.01
+   @property
+   def N_MARKET_OBS(self):
+       '''Number of distinct item observations'''
+       return self.N_ITEM * self.NPC_LEVEL_MAX
+
+   ORE_RESPAWN       = 0.10
    '''Probability that a harvested ore tile will regenerate each tick'''
 
-   TREE_RESPAWN      = 0.01
+   TREE_RESPAWN      = 0.10
    '''Probability that a harvested tree tile will regenerate each tick'''
 
-   CRYSTAL_RESPAWN   = 0.01
+   CRYSTAL_RESPAWN   = 0.10
    '''Probability that a harvested crystal tile will regenerate each tick'''
 
    HERB_RESPAWN      = 0.01
@@ -167,9 +175,6 @@ class Config(Template):
 
    INVENTORY_CAPACITY = 12
    '''Number of inventory spaces'''
-
-   SPAWN_CLUSTERS          = 15
-   SPAWN_UNIFORMS          = 50
 
    DEV_COMBAT = True
 
@@ -193,7 +198,7 @@ class Config(Template):
        return 5 * level
 
    @staticmethod
-   def RESTORE(level):
+   def CONSUMABLE_RESTORE(level):
        return 50 + 5*level
 
    @property
@@ -444,13 +449,13 @@ class Progression:
    PROGRESSION_BASE_RESOURCE           = 10
    '''Initial level and capacity for Hunting + Fishing resource skills'''
 
-   PROGRESSION_BASE_XP_SCALE           = 10
-   '''Skill level progression speed as a multiplier of typical MMOs'''
+   PROGRESSION_BASE_XP_SCALE           = 100
+   '''Base XP awarded for each skill usage -- multiplied by skill level'''
 
-   PROGRESSION_COMBAT_XP_SCALE         = 0.25
+   PROGRESSION_COMBAT_XP_SCALE         = 1
    '''Multiplier on top of XP_SCALE for Combat skills'''
 
-   PROGRESSION_HARVEST_XP_SCALE        = 10
+   PROGRESSION_HARVEST_XP_SCALE        = 2
    '''Multiplier on top of XP_SCALE for harvesting skills'''
 
    PROGRESSION_LEVEL_MAX               = 10
@@ -479,7 +484,7 @@ class NPC(Combat):
    NPC_LEVEL_MIN                       = 1
    '''Minimum NPC level'''
 
-   NPC_LEVEL_MAX                       = 20
+   NPC_LEVEL_MAX                       = 10
    '''Maximum NPC level'''
 
 
@@ -501,8 +506,12 @@ class Small(Config):
 
    PLAYER_SPAWN_ATTEMPTS   = 1
 
-   NPC_LEVEL_MAX           = 10
+   NPC_LEVEL_MAX           = 5
    NPC_LEVEL_SPREAD        = 1
+
+   SPAWN_CLUSTERS          = 4
+   SPAWN_UNIFORMS          = 16
+
 
 class Medium(Config):
    '''A medium config suitable for most academic-scale research'''
@@ -516,8 +525,12 @@ class Medium(Config):
 
    PLAYER_SPAWN_ATTEMPTS   = 2
 
-   NPC_LEVEL_MAX           = 30
-   NPC_LEVEL_SPREAD        = 5
+   NPC_LEVEL_MAX           = 10
+   NPC_LEVEL_SPREAD        = 2
+
+   SPAWN_CLUSTERS          = 64
+   SPAWN_UNIFORMS          = 256
+
 
 class Large(Config):
    '''A large config suitable for large-scale research or fast models'''
@@ -531,7 +544,11 @@ class Large(Config):
 
    PLAYER_SPAWN_ATTEMPTS   = 16
 
-   NPC_LEVEL_MAX           = 99
-   NPC_LEVEL_SPREAD        = 10
+   NPC_LEVEL_MAX           = 15
+   NPC_LEVEL_SPREAD        = 3
+
+   SPAWN_CLUSTERS          = 1024
+   SPAWN_UNIFORMS          = 4096
+
 
 class Default(Medium, AllGameSystems): pass

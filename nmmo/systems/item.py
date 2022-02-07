@@ -318,8 +318,9 @@ class Ration(Consumable):
       super().__init__(realm, level, resource_restore=restore, **kwargs)
 
    def use(self, entity):
-      entity.resources.food.increment(self.restore.val)
-      entity.resources.water.increment(self.restore.val)
+      entity.resources.food.increment(self.resource_restore.val)
+      entity.resources.water.increment(self.resource_restore.val)
+      entity.ration_consumed += 1
 
 class Poultice(Consumable):
    ITEM_ID = 17
@@ -329,5 +330,6 @@ class Poultice(Consumable):
       super().__init__(realm, level, health_restore=restore, **kwargs)
 
    def use(self, entity):
-      entity.resources.health.increment(self.restore.val)
+      entity.resources.health.increment(self.health_restore.val)
+      entity.poultice_consumed += 1
  

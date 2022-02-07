@@ -274,14 +274,28 @@ class Env(ParallelEnv):
          self.actions[entID] = {}
          for atn, args in actions[entID].items():
             self.actions[entID][atn] = {}
+            drop = False
             for arg, val in args.items():
-               if len(arg.edges) > 0:
+               if arg.argType == nmmo.action.Fixed:
                   self.actions[entID][atn][arg] = arg.edges[val]
-               elif val < len(ent.targets):
-                  targ                     = ent.targets[val]
+               elif arg == nmmo.action.Target:
+                  if val >= len(ent.targets):
+                      drop = True
+                      continue
+                  targ = ent.targets[val]
                   self.actions[entID][atn][arg] = self.realm.entity(targ)
-               else: #Need to fix -inf in classifier before removing this
-                  self.actions[entID][atn][arg] = ent
+               elif arg == nmmo.action.Item:
+                  if val >= len(ent.inventory.dataframeKeys):
+                      drop = True
+                      continue
+                  itm = [e for e in ent.inventory._items][val]
+                  self.actions[entID][atn][arg] = itm
+               elif __debug__: #Fix -inf in classifier and assert err on bad atns
+                  assert False, f'{arg} invalid'
+
+            # Cull actions with bad args
+            if drop and atn in self.actions[entID]:
+                del self.actions[entID][atn]
 
       #Step: Realm, Observations, Logs
       self.dead    = self.realm.step(self.actions)
@@ -295,19 +309,28 @@ class Env(ParallelEnv):
          self.obs[entID] = ob
          if ent.agent.scripted:
             atns = ent.agent(ob)
+            for atn, args in atns.items():
+               for arg, val in args.items():
+                  atns[atn][arg] = arg.deserialize(self.realm, ent, val)
+
+            '''
             if nmmo.action.Attack in atns:
                atn  = atns[nmmo.action.Attack]
                targ = atn[nmmo.action.Target]
                atn[nmmo.action.Target] = self.realm.entity(targ)
-            if nmmo.action.Exchange in atns:
-               atn     = atns[nmmo.action.Exchange]
+            if nmmo.action.Use in atns:
+               atn     = atns[nmmo.action.Use]
                item_id = atn[nmmo.action.Item]
                atn[nmmo.action.Item] = self.realm.items[item_id]
-            if nmmo.action.Inventory in atns:
-               atn     = atns[nmmo.action.Inventory]
+            if nmmo.action.Buy in atns:
+               atn     = atns[nmmo.action.Buy]
                item_id = atn[nmmo.action.Item]
                atn[nmmo.action.Item] = self.realm.items[item_id]
-            self.actions[entID] = atns
+            if nmmo.action.Sell in atns:
+               atn     = atns[nmmo.action.Sell]
+               item_id = atn[nmmo.action.Item]
+               atn[nmmo.action.Item] = self.realm.items[item_id]
+            '''
          else:
             obs[entID]     = ob
             self.dummy_ob  = ob
@@ -350,45 +373,48 @@ class Env(ParallelEnv):
       policy = ent.policy
 
       # Basic stats
-      quill.stat('Lifetime',  ent.history.timeAlive.val)
+      quill.stat(f'{policy}_Lifetime',  ent.history.timeAlive.val)
 
       # Tasks
       if ent.diary:
-         quill.stat('Tasks_Completed', ent.diary.completed)
-         quill.stat('Task_Reward', ent.diary.cumulative_reward)
+         quill.stat(f'{policy}_Tasks_Completed', ent.diary.completed)
+         quill.stat(f'{policy}_Task_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
             quill.stat(achievement.name, float(achievement.completed))
       else:
-         quill.stat('Task_Reward', ent.history.timeAlive.val)
+         quill.stat(f'{policy}_Task_Reward', ent.history.timeAlive.val)
 
       # Skills
-      quill.stat('{}_Mage_Level'.format(policy), ent.skills.mage.level.val)
-      quill.stat('{}_Range_Level'.format(policy), ent.skills.range.level.val)
-      quill.stat('{}_Melee_Level'.format(policy), ent.skills.melee.level.val)
-      quill.stat('{}_Fishing'.format(policy), ent.skills.fishing.level.val)
-      quill.stat('{}_Herbalism'.format(policy), ent.skills.herbalism.level.val)
-      quill.stat('{}_Prospecting'.format(policy), ent.skills.prospecting.level.val)
-      quill.stat('{}_Carving'.format(policy), ent.skills.carving.level.val)
-      quill.stat('{}_Alchemy'.format(policy), ent.skills.alchemy.level.val)
+      quill.stat(f'{policy}_Mage_Level',  ent.skills.mage.level.val)
+      quill.stat(f'{policy}_Range_Level', ent.skills.range.level.val)
+      quill.stat(f'{policy}_Melee_Level', ent.skills.melee.level.val)
+      quill.stat(f'{policy}_Fishing',     ent.skills.fishing.level.val)
+      quill.stat(f'{policy}_Herbalism',   ent.skills.herbalism.level.val)
+      quill.stat(f'{policy}_Prospecting', ent.skills.prospecting.level.val)
+      quill.stat(f'{policy}_Carving',     ent.skills.carving.level.val)
+      quill.stat(f'{policy}_Alchemy',     ent.skills.alchemy.level.val)
+
+      # Item usage
+      quill.stat(f'{policy}_Ration_Consumed',   ent.ration_consumed)
+      quill.stat(f'{policy}_Poultice_Consumed', ent.poultice_consumed)
 
       # Market
       wealth = [p.inventory.gold.quantity.val for _, p in self.realm.players.items()]
-      quill.stat('{}_Wealth'.format(policy), ent.inventory.gold.quantity.val)
-      quill.stat('{}_Market_Sells'.format(policy), ent.sells)
-      quill.stat('{}_Market_Buys'.format(policy), ent.buys)
-
-      quill.stat('{}_Item_Level'.format(policy), ent.equipment.total(lambda e: e.level))
+      quill.stat(f'{policy}_Wealth',       ent.inventory.gold.quantity.val)
+      quill.stat(f'{policy}_Market_Sells', ent.sells)
+      quill.stat(f'{policy}_Market_Buys',  ent.buys)
+      quill.stat(f'{policy}_Item_Level',   ent.equipment.total(lambda e: e.level))
 
       held_item = ent.inventory.equipment.held
       if isinstance(held_item, Item.Weapon):
-          quill.stat('{}_Weapon_Level'.format(policy), held_item.level.val)
-          quill.stat('{}_Tool_Level'.format(policy), 0)
+          quill.stat(f'{policy}_Weapon_Level', held_item.level.val)
+          quill.stat(f'{policy}_Tool_Level', 0)
       elif isinstance(held_item, Item.Tool):
-          quill.stat('{}_Weapon_Level'.format(policy), 0)
-          quill.stat('{}_Tool_Level'.format(policy), held_item.level.val)
+          quill.stat(f'{policy}_Weapon_Level', 0)
+          quill.stat(f'{policy}_Tool_Level', held_item.level.val)
       else:
-          quill.stat('{}_Weapon_Level'.format(policy), 0)
-          quill.stat('{}_Tool_Level'.format(policy), 0)
+          quill.stat(f'{policy}_Weapon_Level', 0)
+          quill.stat(f'{policy}_Tool_Level', 0)
 
       '''
       key = '{}_Market_{}_{}'

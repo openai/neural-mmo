@@ -11,7 +11,7 @@ from nmmo.entity import entity
 
 class Player(entity.Entity):
    def __init__(self, realm, pos, agent, color, pop):
-      super().__init__(realm, pos, agent.iden, agent.name, color, pop)
+      super().__init__(realm, pos, agent.iden, agent.policy, color, pop)
 
       self.agent  = agent
       self.pop    = pop
@@ -23,8 +23,10 @@ class Player(entity.Entity):
       self.vision = 7
 
       # Logs
-      self.buys  = 0
-      self.sells = 0 
+      self.buys              = 0
+      self.sells             = 0 
+      self.ration_consumed   = 0
+      self.poultice_consumed = 0
 
       # Submodules
       self.skills    = Skills(self)

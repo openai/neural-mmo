@@ -4,7 +4,7 @@ from nmmo.lib import colors
 
 class Agent:
     scripted = False
-    name     = 'Neural'
+    policy   = 'Neural'
 
     color    = colors.Neon.CYAN
     pop      = 0

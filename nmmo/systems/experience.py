@@ -2,7 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 class ExperienceCalculator:
-   def __init__(self, num_levels=10):
+   def __init__(self, num_levels=15):
       self.exp = np.array([0] + [1000*2**i for i in range(num_levels)])
 
    def expAtLevel(self, level):

@@ -88,9 +88,6 @@ class NPC(entity.Entity):
       ent.inventory.gold.quantity.update(level)
       return ent 
 
-   def yieldDrops(self):
-      self.lastAttacker.receiveDrops(self.drops.roll())
-
    @staticmethod
    def gearLevel(lvl, offset=10):
       proposed = random.gauss(lvl-offset, offset)

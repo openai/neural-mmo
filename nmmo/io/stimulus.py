@@ -92,8 +92,12 @@ class Serialized(metaclass=utils.IterableNameComparable):
 
    class Entity(metaclass=utils.IterableNameComparable):
       @staticmethod
+      def enabled(config):
+         return True
+
+      @staticmethod
       def N(config):
-         return config.N_AGENT_OBS
+         return config.PLAYER_N_OBS
 
       class Self(Discrete):
          def init(self, config):
@@ -122,19 +126,19 @@ class Serialized(metaclass=utils.IterableNameComparable):
       class Population(Discrete):
          def init(self, config):
             self.min = -3 #NPC index
-            self.max = config.NPOP - 1
+            self.max = config.PLAYER_POLICIES - 1
             self.scale = 1.0
 
       class R(Discrete):
          def init(self, config):
             self.min = 0
-            self.max = config.TERRAIN_SIZE - 1
+            self.max = config.MAP_SIZE - 1
             self.scale = 0.15
 
       class C(Discrete):
          def init(self, config):
             self.min = 0
-            self.max = config.TERRAIN_SIZE - 1
+            self.max = config.MAP_SIZE - 1
             self.scale = 0.15
 
       # Historical stats
@@ -165,13 +169,13 @@ class Serialized(metaclass=utils.IterableNameComparable):
       # after init without messing up the embeddings
       class Health(Continuous):
          def init(self, config):
-            self.val = config.BASE_HEALTH
-            self.max = config.BASE_HEALTH
+            self.val = config.PLAYER_BASE_HEALTH
+            self.max = config.PLAYER_BASE_HEALTH
             self.scale = 0.1
 
       class Food(Continuous):
          def init(self, config):
-            if config.game_system_enabled('Resource'):
+            if config.RESOURCE_SYSTEM_ENABLED:
                self.val = config.RESOURCE_BASE
                self.max = config.RESOURCE_BASE
             else:
@@ -182,7 +186,7 @@ class Serialized(metaclass=utils.IterableNameComparable):
 
       class Water(Continuous):
          def init(self, config):
-            if config.game_system_enabled('Resource'):
+            if config.RESOURCE_SYSTEM_ENABLED:
                self.val = config.RESOURCE_BASE
                self.max = config.RESOURCE_BASE
             else:
@@ -195,88 +199,96 @@ class Serialized(metaclass=utils.IterableNameComparable):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Range(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Mage(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Fishing(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Herbalism(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Prospecting(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Carving(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
       class Alchemy(Continuous):
          def init(self, config):
             self.val = 1
             self.max = 1
-            if config.game_system_enabled('Progression'):
+            if config.PROGRESSION_SYSTEM_ENABLED:
                 self.max = config.PROGRESSION_LEVEL_MAX
 
    class Tile(metaclass=utils.IterableNameComparable):
       @staticmethod
+      def enabled(config):
+         return True
+
+      @staticmethod
       def N(config):
-         return config.WINDOW**2
+         return config.MAP_N_OBS
 
       class NEnts(Continuous):
          def init(self, config):
-            self.max = config.NENT
+            self.max = config.PLAYER_N
             self.val = 0
             self.scale = 1.0
 
       class Index(Discrete):
          def init(self, config):
-            self.max = config.NTILE
+            self.max = config.MAP_N_TILE
             self.scale = 0.15
 
       class R(Discrete):
          def init(self, config):
-            self.max = config.TERRAIN_SIZE - 1
+            self.max = config.MAP_SIZE - 1
             self.scale = 0.15
  
       class C(Discrete):
          def init(self, config):
-            self.max = config.TERRAIN_SIZE - 1
+            self.max = config.MAP_SIZE - 1
             self.scale = 0.15
 
    class Item(metaclass=utils.IterableNameComparable):
       @staticmethod
+      def enabled(config):
+         return config.ITEM_SYSTEM_ENABLED
+
+      @staticmethod
       def N(config):
-         return config.N_ITEM_OBS
+         return config.ITEM_N_OBS
 
       class ID(Continuous):
          def init(self, config):
@@ -284,7 +296,7 @@ class Serialized(metaclass=utils.IterableNameComparable):
 
       class Index(Discrete):
          def init(self, config):
-            self.max   = config.N_ITEM + 1
+            self.max   = config.ITEM_N + 1
             self.scale = 1.0 / self.max
 
       class Level(Continuous):
@@ -358,8 +370,12 @@ class Serialized(metaclass=utils.IterableNameComparable):
    # TODO: Figure out how to autogen this from Items
    class Market(metaclass=utils.IterableNameComparable):
       @staticmethod
+      def enabled(config):
+         return config.EXCHANGE_SYSTEM_ENABLED
+
+      @staticmethod
       def N(config):
-         return config.N_MARKET_OBS
+         return config.EXCHANGE_N_OBS
 
       class ID(Continuous):
          def init(self, config):
@@ -367,7 +383,7 @@ class Serialized(metaclass=utils.IterableNameComparable):
 
       class Index(Discrete):
          def init(self, config):
-            self.max   = config.N_ITEM + 1
+            self.max   = config.ITEM_N + 1
             self.scale = 1.0 / self.max
 
       class Level(Continuous):

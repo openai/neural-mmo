@@ -43,7 +43,7 @@ class Forest(Material):
 
    deplete = Scrub
    def __init__(self, config):
-      if config.game_system_enabled('Resource'):
+      if config.RESOURCE_SYSTEM_ENABLED:
          self.capacity = config.RESOURCE_FOREST_CAPACITY
          self.respawn  = config.RESOURCE_FOREST_RESPAWN
 
@@ -66,7 +66,8 @@ class Ore(Material):
    deplete = Slag
 
    def __init__(self, config):
-       self.respawn = config.ORE_RESPAWN
+       self.capacity = config.PROFESSION_ORE_CAPACITY
+       self.respawn  = config.PROFESSION_ORE_RESPAWN
 
    def harvest(self):
        return droptable.Ammunition(item.Scrap)
@@ -83,9 +84,9 @@ class Tree(Material):
    deplete = Stump
 
    def __init__(self, config):
-      if config.game_system_enabled('Resource'):
-         self.capacity = config.RESOURCE_TREE_CAPACITY
-         self.respawn  = config.RESOURCE_TREE_RESPAWN
+      if config.RESOURCE_SYSTEM_ENABLED:
+         self.capacity = config.PROFESSION_TREE_CAPACITY
+         self.respawn  = config.PROFESSION_TREE_RESPAWN
 
    def harvest(self):
        return droptable.Ammunition(item.Shaving)
@@ -102,9 +103,9 @@ class Crystal(Material):
    deplete = Fragment
 
    def __init__(self, config):
-      if config.game_system_enabled('Resource'):
-         self.capacity = config.RESOURCE_CRYSTAL_CAPACITY
-         self.respawn  = config.RESOURCE_CRYSTAL_RESPAWN
+      if config.RESOURCE_SYSTEM_ENABLED:
+         self.capacity = config.PROFESSION_CRYSTAL_CAPACITY
+         self.respawn  = config.PROFESSION_CRYSTAL_RESPAWN
 
    def harvest(self):
        return droptable.Ammunition(item.Shard)
@@ -121,9 +122,9 @@ class Herb(Material):
    deplete = Weeds
 
    def __init__(self, config):
-      if config.game_system_enabled('Resource'):
-         self.capacity = config.RESOURCE_HERB_CAPACITY
-         self.respawn  = config.RESOURCE_HERB_RESPAWN
+      if config.RESOURCE_SYSTEM_ENABLED:
+         self.capacity = config.PROFESSION_HERB_CAPACITY
+         self.respawn  = config.PROFESSION_HERB_RESPAWN
 
    def harvest(self):
        return droptable.Ammunition(item.Poultice)
@@ -140,9 +141,9 @@ class Fish(Material):
    deplete = Ocean
 
    def __init__(self, config):
-      if config.game_system_enabled('Resource'):
-         self.capacity = config.RESOURCE_FISH_CAPACITY
-         self.respawn  = config.RESOURCE_FISH_RESPAWN
+      if config.RESOURCE_SYSTEM_ENABLED:
+         self.capacity = config.PROFESSION_FISH_CAPACITY
+         self.respawn  = config.PROFESSION_FISH_RESPAWN
 
    def harvest(self):
        return droptable.Ammunition(item.Ration)

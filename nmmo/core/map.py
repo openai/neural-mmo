@@ -14,7 +14,7 @@ class Map:
    def __init__(self, config, realm):
       self.config = config
 
-      sz          = config.TERRAIN_SIZE
+      sz          = config.MAP_SIZE
       self.tiles  = np.zeros((sz, sz), dtype=object)
 
       for r in range(sz):

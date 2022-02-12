@@ -148,14 +148,14 @@ class GridTables:
    flat tensor representation of an entire class of observations,
    such as agents or tiles'''
    def __init__(self, config, obj, pad, prealloc=1000, expansion=2):
-      self.grid       = Grid(config.TERRAIN_SIZE, config.TERRAIN_SIZE)
+      self.grid       = Grid(config.MAP_SIZE, config.MAP_SIZE)
       self.continuous = ContinuousTable(config, obj, prealloc)
       self.discrete   = DiscreteTable(config, obj, prealloc)
       self.index      = Index(prealloc)
 
       self.nRows      = prealloc
       self.expansion  = expansion
-      self.radius     = config.NSTIM
+      self.radius     = config.PLAYER_VISION_RADIUS
       self.pad        = pad
 
    def get(self, ent, radius=None, entity=False):
@@ -237,6 +237,8 @@ class Dataframe:
       self.data   = defaultdict(dict)
 
       for (objKey,), obj in nmmo.Serialized:
+         if not obj.enabled(config):
+             continue
          self.data[objKey] = GridTables(config, obj, pad=obj.N(config))
 
       self.realm = realm
@@ -263,12 +265,14 @@ class Dataframe:
       stim['Tile']         = self.data['Tile'].get(ent)
 
       #Current must have the same pad
-      items                = ent.inventory.dataframeKeys
-      stim['Item']         = self.data['Item'].getFlat(items)
-      stim['Item']['N']    = np.array([len(items)], dtype=np.int32)
+      if self.config.ITEM_SYSTEM_ENABLED:
+         items                = ent.inventory.dataframeKeys
+         stim['Item']         = self.data['Item'].getFlat(items)
+         stim['Item']['N']    = np.array([len(items)], dtype=np.int32)
 
-      market               = self.realm.exchange.dataframeKeys
-      stim['Market']       = self.data['Item'].getFlat(market)
-      stim['Market']['N']  = np.array([len(market)], dtype=np.int32)
+      if self.config.EXCHANGE_SYSTEM_ENABLED:
+         market               = self.realm.exchange.dataframeKeys
+         stim['Market']       = self.data['Item'].getFlat(market)
+         stim['Market']['N']  = np.array([len(market)], dtype=np.int32)
 
       return stim

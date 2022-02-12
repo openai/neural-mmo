@@ -63,7 +63,7 @@ class Overlay:
       self.config     = config
       self.realm      = realm
 
-      self.size       = config.TERRAIN_SIZE
+      self.size       = config.MAP_SIZE
       self.values     = np.zeros((self.size, self.size))
 
    def update(self, obs):
@@ -127,7 +127,7 @@ class Skills(Overlay):
 class Counts(Overlay):
    def __init__(self, config, realm, *args):
       super().__init__(config, realm)
-      self.values = np.zeros((self.size, self.size, config.NPOP))
+      self.values = np.zeros((self.size, self.size, config.PLAYER_POLICIES))
 
    def update(self, obs):
       '''Computes a count-based exploration map by painting
@@ -140,7 +140,7 @@ class Counts(Overlay):
    def register(self, obs):
       colors    = self.realm.realm.players.palette.colors
       colors    = np.array([colors[pop].rgb
-            for pop in range(self.config.NPOP)])
+            for pop in range(self.config.PLAYER_POLICIES)])
 
       colorized = self.values[:, :, :, None] * colors / 255
       colorized = np.sum(colorized, -2)

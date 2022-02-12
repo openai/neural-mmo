@@ -111,6 +111,7 @@ class Exchange:
       for listings in self.item_listings.values():
          if listings.placeholder:
             keys.append(listings.placeholder.instanceID)
+
       return keys
 
    def step(self):
@@ -121,8 +122,8 @@ class Exchange:
       return self.item_listings[item].available()
 
    def buy(self, realm, buyer, item, quantity):
-      if __debug__:
-         assert isinstance(item, object)
+      assert isinstance(item, object), f'{item} purchase is not an Item instance'
+      assert item.quantity.val > 0, f'{item} purchase has quantity {item.quantity.val}'
 
       #TODO: Handle ammo stacks
       if not buyer.inventory.space:
@@ -150,16 +151,18 @@ class Exchange:
             listings.placeholder = item(realm, level, price=listings.price)
             
    def sell(self, realm, seller, item, quantity, price):
-      if __debug__:
-         assert isinstance(item, object)
-         assert item in seller.inventory
-         assert item.quantity.val > 0
+      assert isinstance(item, object), f'{item} for sale is not an Item instance'
+      assert item in seller.inventory, f'{item} for sale is not in {seller} inventory'
+      assert item.quantity.val > 0, f'{item} for sale has quantity {item.quantity.val}'
+
+      if not item.tradable.val:
+         return
 
       quantity = item.quantity.val
       level    = item.level.val
 
       #Unequip from seller
-      seller.inventory.remove(item)
+      seller.inventory.remove(item, quantity)
       item = type(item)
 
       listings_key  = (item, level)

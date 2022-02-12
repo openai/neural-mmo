@@ -51,11 +51,22 @@ class Fixed:
 #ActionRoot
 class Action(Node):
    nodeType = NodeType.SELECTION
+   hooked   = False
 
-   @staticproperty
-   def edges():
+   @classmethod
+   def edges(cls, config):
       '''List of valid actions'''
-      return [Move, Attack, Buy, Sell, Use]
+      Action.hook(config)
+
+      edges = [Move]
+      if config.COMBAT_SYSTEM_ENABLED:
+          edges.append(Attack)
+      if config.ITEM_SYSTEM_ENABLED:
+          edges.append(Use)
+      if config.EXCHANGE_SYSTEM_ENABLED:
+          edges += [Buy, Sell]
+
+      return edges
 
    @staticproperty
    def n():
@@ -66,10 +77,15 @@ class Action(Node):
 
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
-   def hook():
+   def hook(config):
+      if Action.hooked:
+          return
+
+      Action.hooked = True
+
       idx = 0
       arguments = []
-      for action in Action.edges:
+      for action in Action.edges(config):
          for args in action.edges:
             if not 'edges' in args.__dict__:
                continue
@@ -173,7 +189,7 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(env, entity, style, targ):
-      if entity.isPlayer and not env.config.game_system_enabled('Combat'):
+      if entity.isPlayer and not env.config.COMBAT_SYSTEM_ENABLED:
          return 
 
       #Check if self targeted
@@ -225,7 +241,7 @@ class Target(Node):
    @classmethod
    def N(cls, config):
       #return config.WINDOW ** 2
-      return config.N_AGENT_OBS
+      return config.PLAYER_N_OBS
 
    def deserialize(realm, entity, index):
       return realm.entity(index)
@@ -256,7 +272,7 @@ class Range(Node):
 
 class Mage(Node):
    nodeType = NodeType.ACTION
-   freeze=True
+   freeze=False
 
    def attackRange(config):
       return config.COMBAT_MAGE_REACH
@@ -271,9 +287,6 @@ class Use(Node):
     def edges():
         return [Item]
 
-    def deserialize(realm, entity, index):
-        return realm.items(index)
-
     def call(env, entity, item):
         if item not in entity.inventory:
             return
@@ -285,14 +298,13 @@ class Item(Node):
 
     @classmethod
     def N(cls, config):
-        return config.N_ITEM_OBS
+        return config.ITEM_N_OBS
 
     def args(stim, entity, config):
         return stim.exchange.items()
 
-    @classmethod
-    def gameObjects(cls, realm, entity, val):
-        return [realm.entity(targ) for targ in entity.targets]
+    def deserialize(realm, entity, index):
+        return realm.items[index]
 
 class Buy(Node):
     priority = 4
@@ -366,5 +378,3 @@ class Message:
 #TODO: Solve AGI
 class BecomeSkynet:
    pass
-
-Action.hook()

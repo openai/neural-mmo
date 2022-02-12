@@ -11,9 +11,9 @@ class ItemID:
    def register(cls, item_id):
       if __debug__:
          if cls in ItemID.item_ids:
-            assert ItemID.item_ids[cls] == item_id, 'Missmatched item_id assignment for class {}'.format(cls)
+            assert ItemID.item_ids[cls] == item_id, f'Missmatched item_id assignment for class {cls}'
          if item_id in ItemID.id_items:
-            assert ItemID.id_items[item_id] == cls, 'Missmatched class assignment for item_id {}'.format(item_id)
+            assert ItemID.id_items[item_id] == cls, f'Missmatched class assignment for item_id {item_id}'
 
       ItemID.item_ids[cls] = item_id
       ItemID.id_items[item_id] = cls
@@ -83,8 +83,13 @@ class Item:
  
    def use(self, entity):
       return
+      #TODO: Warning?
+      #assert False, f'Use {type(self)} not defined'
 
-class Gold(Item):
+class Stack():
+    pass
+
+class Gold(Item, Stack):
    ITEM_ID = 1
    def __init__(self, realm, **kwargs):
       super().__init__(realm, level=0, tradable=False, **kwargs)
@@ -122,7 +127,7 @@ class Equipment(Item):
 
 class Armor(Equipment):
    def __init__(self, realm, level, **kwargs):
-      defense = realm.config.EQUIPMENT_DEFENSE(level)
+      defense = realm.config.EQUIPMENT_ARMOR_DEFENSE(level)
       super().__init__(realm, level,
               melee_defense=defense,
               range_defense=defense,
@@ -180,7 +185,7 @@ class Weapon(Equipment):
 class Sword(Weapon):
    ITEM_ID = 5
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_ARMOR_OFFENSE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.melee.level.val >= self.level.val:
@@ -189,7 +194,7 @@ class Sword(Weapon):
 class Bow(Weapon):
    ITEM_ID = 6
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_ARMOR_OFFENSE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.range.level.val >= self.level.val:
@@ -198,7 +203,7 @@ class Bow(Weapon):
 class Wand(Weapon):
    ITEM_ID = 7
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_ARMOR_OFFENSE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.mage.level.val >= self.level.val:
@@ -206,7 +211,7 @@ class Wand(Weapon):
  
 class Tool(Equipment):
    def __init__(self, realm, level, **kwargs):
-      defense = realm.config.TOOL_DEFENSE(level)
+      defense = realm.config.EQUIPMENT_TOOL_DEFENSE(level)
       super().__init__(realm, level,
               melee_defense=defense,
               range_defense=defense,
@@ -251,11 +256,14 @@ class Arcane(Tool):
        if entity.skills.alchemy.level >= self.level.val:
           super().equip(entity)
 
-class Ammunition(Item):
+class Ammunition(Equipment, Stack):
    def equip(self, entity):
       if entity.inventory.equipment.ammunition:
           entity.inventory.equipment.ammunition.use(entity)
       entity.inventory.equipment.ammunition = self
+
+   def unequip(self, entity):
+      entity.inventory.equipment.ammunition = None
 
    def fire(self, entity):
       if __debug__:
@@ -272,7 +280,7 @@ class Ammunition(Item):
 class Scrap(Ammunition):
    ITEM_ID = 13
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, melee_attack=realm.config.DAMAGE_AMMUNITION(level), **kwargs)
+      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_AMMUNITION_DAMAGE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.melee.level >= self.level.val:
@@ -285,7 +293,7 @@ class Scrap(Ammunition):
 class Shaving(Ammunition):
    ITEM_ID = 14
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, range_attack=realm.config.DAMAGE_AMMUNITION(level), **kwargs)
+      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_AMMUNITION_DAMAGE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.range.level >= self.level.val:
@@ -298,7 +306,7 @@ class Shaving(Ammunition):
 class Shard(Ammunition):
    ITEM_ID = 15
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, mage_attack=realm.config.DAMAGE_AMMUNITION(level), **kwargs)
+      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_AMMUNITION_DAMAGE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.mage.level >= self.level.val:
@@ -314,7 +322,7 @@ class Consumable(Item):
 class Ration(Consumable):
    ITEM_ID = 16
    def __init__(self, realm, level, **kwargs):
-      restore = realm.config.CONSUMABLE_RESTORE(level)
+      restore = realm.config.PROFESSION_CONSUMABLE_RESTORE(level)
       super().__init__(realm, level, resource_restore=restore, **kwargs)
 
    def use(self, entity):
@@ -326,7 +334,7 @@ class Poultice(Consumable):
    ITEM_ID = 17
 
    def __init__(self, realm, level, **kwargs):
-      restore = realm.config.CONSUMABLE_RESTORE(level)
+      restore = realm.config.PROFESSION_CONSUMABLE_RESTORE(level)
       super().__init__(realm, level, health_restore=restore, **kwargs)
 
    def use(self, entity):

@@ -36,9 +36,9 @@ class Env(ParallelEnv):
          err = 'Config {} is not a config instance (did you pass the class?)'
          assert isinstance(config, nmmo.config.Config), err.format(config)
 
-      if not config.AGENTS:
+      if not config.PLAYERS:
           from nmmo import agent
-          config.AGENTS = [agent.Random]
+          config.PLAYERS = [agent.Random]
 
       if not config.MAP_GENERATOR:
           config.MAP_GENERATOR = terrain.MapGenerator
@@ -70,6 +70,9 @@ class Env(ParallelEnv):
 
       observation = {}
       for entity in sorted(nmmo.Serialized.values()):
+         if not entity.enabled(self.config):
+            continue
+
          rows       = entity.N(self.config)
          continuous = 0
          discrete   = 0
@@ -87,11 +90,11 @@ class Env(ParallelEnv):
 
          #TODO: Find a way to automate this
          if name == 'Entity':
-            observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.N_AGENT_OBS, shape=(1,), dtype=DataType.DISCRETE)
+            observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.PLAYER_N_OBS, shape=(1,), dtype=DataType.DISCRETE)
          elif name == 'Item':
-            observation['Item']['N']   = gym.spaces.Box(low=0, high=self.config.N_ITEM_OBS, shape=(1,), dtype=DataType.DISCRETE)
+            observation['Item']['N']   = gym.spaces.Box(low=0, high=self.config.ITEM_N_OBS, shape=(1,), dtype=DataType.DISCRETE)
          elif name == 'Market':
-            observation['Market']['N'] = gym.spaces.Box(low=0, high=self.config.N_MARKET_OBS, shape=(1,), dtype=DataType.DISCRETE)
+            observation['Market']['N'] = gym.spaces.Box(low=0, high=self.config.EXCHANGE_N_OBS, shape=(1,), dtype=DataType.DISCRETE)
 
          observation[name] = gym.spaces.Dict(observation[name])
 
@@ -112,7 +115,7 @@ class Env(ParallelEnv):
          observation space (such as targeting)'''
 
       actions = {}
-      for atn in sorted(nmmo.Action.edges):
+      for atn in sorted(nmmo.Action.edges(self.config)):
          actions[atn] = {}
          for arg in sorted(atn.edges):
             n                       = arg.N(self.config)
@@ -157,7 +160,7 @@ class Env(ParallelEnv):
       self.quill = log.Quill()
       
       if idx is None:
-         idx = np.random.randint(self.config.NMAPS) + 1
+         idx = np.random.randint(self.config.MAP_N) + 1
 
       self.worldIdx = idx
       self.realm.reset(idx)
@@ -288,7 +291,7 @@ class Env(ParallelEnv):
                   if val >= len(ent.inventory.dataframeKeys):
                       drop = True
                       continue
-                  itm = [e for e in ent.inventory._items][val]
+                  itm = [e for e in ent.inventory._item_references][val]
                   self.actions[entID][atn][arg] = itm
                elif __debug__: #Fix -inf in classifier and assert err on bad atns
                   assert False, f'{arg} invalid'
@@ -312,25 +315,7 @@ class Env(ParallelEnv):
             for atn, args in atns.items():
                for arg, val in args.items():
                   atns[atn][arg] = arg.deserialize(self.realm, ent, val)
-
-            '''
-            if nmmo.action.Attack in atns:
-               atn  = atns[nmmo.action.Attack]
-               targ = atn[nmmo.action.Target]
-               atn[nmmo.action.Target] = self.realm.entity(targ)
-            if nmmo.action.Use in atns:
-               atn     = atns[nmmo.action.Use]
-               item_id = atn[nmmo.action.Item]
-               atn[nmmo.action.Item] = self.realm.items[item_id]
-            if nmmo.action.Buy in atns:
-               atn     = atns[nmmo.action.Buy]
-               item_id = atn[nmmo.action.Item]
-               atn[nmmo.action.Item] = self.realm.items[item_id]
-            if nmmo.action.Sell in atns:
-               atn     = atns[nmmo.action.Sell]
-               item_id = atn[nmmo.action.Item]
-               atn[nmmo.action.Item] = self.realm.items[item_id]
-            '''
+            self.actions[entID] = atns
          else:
             obs[entID]     = ob
             self.dummy_ob  = ob
@@ -369,6 +354,7 @@ class Env(ParallelEnv):
          ent: An agent
       '''
 
+      config = self.config
       quill  = self.quill
       policy = ent.policy
 
@@ -377,6 +363,9 @@ class Env(ParallelEnv):
 
       # Tasks
       if ent.diary:
+         if ent.agent.scripted:
+            ent.diary.update(self.realm, ent)
+
          quill.stat(f'{policy}_Tasks_Completed', ent.diary.completed)
          quill.stat(f'{policy}_Task_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
@@ -385,36 +374,29 @@ class Env(ParallelEnv):
          quill.stat(f'{policy}_Task_Reward', ent.history.timeAlive.val)
 
       # Skills
-      quill.stat(f'{policy}_Mage_Level',  ent.skills.mage.level.val)
-      quill.stat(f'{policy}_Range_Level', ent.skills.range.level.val)
-      quill.stat(f'{policy}_Melee_Level', ent.skills.melee.level.val)
-      quill.stat(f'{policy}_Fishing',     ent.skills.fishing.level.val)
-      quill.stat(f'{policy}_Herbalism',   ent.skills.herbalism.level.val)
-      quill.stat(f'{policy}_Prospecting', ent.skills.prospecting.level.val)
-      quill.stat(f'{policy}_Carving',     ent.skills.carving.level.val)
-      quill.stat(f'{policy}_Alchemy',     ent.skills.alchemy.level.val)
-
-      # Item usage
-      quill.stat(f'{policy}_Ration_Consumed',   ent.ration_consumed)
-      quill.stat(f'{policy}_Poultice_Consumed', ent.poultice_consumed)
-
-      # Market
-      wealth = [p.inventory.gold.quantity.val for _, p in self.realm.players.items()]
-      quill.stat(f'{policy}_Wealth',       ent.inventory.gold.quantity.val)
-      quill.stat(f'{policy}_Market_Sells', ent.sells)
-      quill.stat(f'{policy}_Market_Buys',  ent.buys)
-      quill.stat(f'{policy}_Item_Level',   ent.equipment.total(lambda e: e.level))
-
-      held_item = ent.inventory.equipment.held
-      if isinstance(held_item, Item.Weapon):
-          quill.stat(f'{policy}_Weapon_Level', held_item.level.val)
-          quill.stat(f'{policy}_Tool_Level', 0)
-      elif isinstance(held_item, Item.Tool):
-          quill.stat(f'{policy}_Weapon_Level', 0)
-          quill.stat(f'{policy}_Tool_Level', held_item.level.val)
-      else:
-          quill.stat(f'{policy}_Weapon_Level', 0)
-          quill.stat(f'{policy}_Tool_Level', 0)
+      if config.PROGRESSION_SYSTEM_ENABLED:
+         if config.COMBAT_SYSTEM_ENABLED:
+            quill.stat(f'{policy}_Mage_Level',  ent.skills.mage.level.val)
+            quill.stat(f'{policy}_Range_Level', ent.skills.range.level.val)
+            quill.stat(f'{policy}_Melee_Level', ent.skills.melee.level.val)
+         if config.PROFESSION_SYSTEM_ENABLED:
+            quill.stat(f'{policy}_Fishing',     ent.skills.fishing.level.val)
+            quill.stat(f'{policy}_Herbalism',   ent.skills.herbalism.level.val)
+            quill.stat(f'{policy}_Prospecting', ent.skills.prospecting.level.val)
+            quill.stat(f'{policy}_Carving',     ent.skills.carving.level.val)
+            quill.stat(f'{policy}_Alchemy',     ent.skills.alchemy.level.val)
+         if config.EQUIPMENT_SYSTEM_ENABLED:
+            held_item = ent.inventory.equipment.held
+            if isinstance(held_item, Item.Weapon):
+               quill.stat(f'{policy}_Weapon_Level', held_item.level.val)
+               quill.stat(f'{policy}_Tool_Level', 0)
+            elif isinstance(held_item, Item.Tool):
+               quill.stat(f'{policy}_Weapon_Level', 0)
+               quill.stat(f'{policy}_Tool_Level', held_item.level.val)
+            else:
+               quill.stat(f'{policy}_Weapon_Level', 0)
+               quill.stat(f'{policy}_Tool_Level', 0)
+            quill.stat(f'{policy}_Item_Level',   ent.equipment.total(lambda e: e.level))
 
       '''
       key = '{}_Market_{}_{}'
@@ -425,6 +407,18 @@ class Env(ParallelEnv):
           quill.stat(key.format(policy, 'Supply', item.__name__), listing.supply())
           quill.stat(key.format(policy, 'Value', item.__name__), listing.value())
       '''
+
+      # Item usage
+      if config.PROFESSION_SYSTEM_ENABLED:
+         quill.stat(f'{policy}_Ration_Consumed',   ent.ration_consumed)
+         quill.stat(f'{policy}_Poultice_Consumed', ent.poultice_consumed)
+
+      # Market
+      if config.EXCHANGE_SYSTEM_ENABLED:
+         wealth = [p.inventory.gold.quantity.val for _, p in self.realm.players.items()]
+         quill.stat(f'{policy}_Wealth',       ent.inventory.gold.quantity.val)
+         quill.stat(f'{policy}_Market_Sells', ent.sells)
+         quill.stat(f'{policy}_Market_Buys',  ent.buys)
 
       # Used for SR
       quill.stat('PolicyID', ent.agent.policyID)

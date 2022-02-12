@@ -12,7 +12,6 @@ from nmmo.entity import entity
 class Player(entity.Entity):
    def __init__(self, realm, pos, agent, color, pop):
       super().__init__(realm, pos, agent.iden, agent.policy, color, pop)
-
       self.agent  = agent
       self.pop    = pop
 
@@ -29,8 +28,7 @@ class Player(entity.Entity):
       self.poultice_consumed = 0
 
       # Submodules
-      self.skills    = Skills(self)
-      self.inventory = inventory.Inventory(realm, self)
+      self.skills = Skills(self)
 
       self.diary  = None
       if tasks := realm.config.TASKS:
@@ -48,6 +46,8 @@ class Player(entity.Entity):
 
    @property
    def population(self):
+      if __debug__:
+          assert self.base.population.val == self.pop
       return self.pop
 
    def applyDamage(self, dmg, style):

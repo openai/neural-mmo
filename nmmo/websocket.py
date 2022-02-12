@@ -82,8 +82,8 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         print('Is Connected? : {}'.format(self.isConnected))
         if not self.sent_environment:
             packet['map']    = data['environment']
-            packet['border'] = config.TERRAIN_BORDER
-            packet['size']   = config.TERRAIN_SIZE
+            packet['border'] = config.MAP_BORDER
+            packet['size']   = config.MAP_SIZE
 
         if 'overlay' in data:
            packet['overlay'] = data['overlay']

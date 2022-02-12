@@ -4,7 +4,7 @@ import os
 motd = open(os.path.dirname(__file__) + '/resource/ascii.txt').read().format(__version__)
 
 from . import scripting
-from .lib import material
+from .lib import material, spawn
 from .lib.rating import OpenSkillRating
 from .overlay import Overlay, OverlayRegistry
 from .io import action
@@ -17,5 +17,5 @@ from .systems.achievement import Task
 from .core.terrain import MapGenerator, Terrain
 
 __all__ = ['Env', 'config', 'scripting', 'agent', 'Agent', 'MapGenerator', 'Terrain',
-        'Serialized', 'action', 'Action', 'scripting', 'material',
+        'Serialized', 'action', 'Action', 'scripting', 'material', 'spawn',
         'Task', 'Overlay', 'OverlayRegistry']

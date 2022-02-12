@@ -2,6 +2,7 @@ from pdb import set_trace as T
 import numpy as np
 
 import inspect
+from multiset import Multiset
 
 from nmmo.systems import item as Item
 from nmmo.systems import skill as Skill
@@ -14,9 +15,6 @@ class Equipment:
 
       self.held        = None
       self.ammunition  = None
-
-      #Placeholder item for render
-      self.itm         = Item.Hat(realm, 0)
 
    def total(self, lambda_getter):
       items = [lambda_getter(e).val for e in self]
@@ -62,70 +60,80 @@ class Inventory:
       self.entity      = entity
       self.config      = config
 
-      self._items      = set()
-      self.capacity    = config.INVENTORY_CAPACITY
-
-      self.gold        = Item.Gold(realm)
       self.equipment   = Equipment(realm)
+
+      if not config.ITEM_SYSTEM_ENABLED:
+          return
+
+      self.capacity         = config.ITEM_INVENTORY_CAPACITY
+      self.gold             = Item.Gold(realm)
+
+      self._item_stacks     = {self.gold.signature: self.gold}
+      self._item_references = {self.gold}
 
    @property
    def space(self):
-      return self.capacity - len(self._items)
+      return self.capacity - len(self._item_references)
 
    @property
    def dataframeKeys(self):
-      return [e.instanceID for e in self._items]
-
-   def __contains__(self, item):
-      if item in self._items:
-         return True
-      return False
+      return [e.instanceID for e in self._item_references]
 
    def packet(self):
+      item_packet = []
+      if self.config.ITEM_SYSTEM_ENABLED:
+          item_packet = [e.packet for e in self._item_references]
+
       return {
-            'items':     [self.gold.packet] + [e.packet for e in self._items],
+            'items':     item_packet,
             'equipment': self.equipment.packet}
 
    def __iter__(self):
-      for item in self._items:
+      for item in self._item_references:
          yield item
 
    def receive(self, item):
-      if __debug__:
-         assert not item.equipped.val, 'Received equipped item {}'.format(item)
-         assert self.space, 'Out of space for {}'.format(item)
+      assert isinstance(item, Item.Item), f'{item} received is not an Item instance'
+      assert item not in self._item_references, f'{item} object received already in inventory'
+      assert not item.equipped.val, f'Received equipped item {item}'
+      assert self.space, f'Out of space for {item}'
+      assert item.quantity.val, f'Received empty item {item}'
 
-      if not self.space:
-         return
+      if isinstance(item, Item.Stack):
+          signature = item.signature
+          if signature in self._item_stacks:
+              stack = self._item_stacks[signature]
+              assert item.level.val == stack.level.val, f'{item} stack level mismatch'
+              stack.quantity += item.quantity.val
+              return
 
-      if isinstance(item, Item.Gold):
-         self.gold.quantity += item.quantity.val
-         return
+          self._item_stacks[signature] = item
 
-      if __debug__:
-         assert item.quantity.val, 'Received empty item {}'.format(item)
+      self._item_references.add(item)
 
-      #TODO: reduce complexity
-      if isinstance(item, Item.Ammunition):
-         for itm in self._items:
-            if type(itm) != type(item):
-                continue
-            if itm.level != item.level:
-                continue
-            itm.quantity += item.quantity.val
-            return
-
-      self._items.add(item)
-
-   def remove(self, item, level=None):
-      if __debug__:
-         assert item in self._items, 'No item {} to remove'.format(item)
+   def remove(self, item, quantity=None):
+      assert isinstance(item, Item.Item), f'{item} received is not an Item instance'
+      assert item in self._item_references, f'No item {item} to remove'
 
       if item.equipped.val:
           item.use(self.entity)
 
-      if __debug__:
-         assert not item.equipped.val, 'Removing item {} while equipped'.format(item)
+      assert not item.equipped.val, f'Removing {item} while equipped'
 
-      self._items.remove(item)
-      return item
+      if isinstance(item, Item.Stack):
+         signature = item.signature 
+
+         assert item.signature in self._item_stacks, f'{item} stack to remove not in inventory'
+         stack = self._item_stacks[signature]
+
+         if quantity is None or stack.quantity.val == quantity:
+            self._item_references.remove(stack)
+            del self._item_stacks[signature]
+            return
+
+         assert 0 < quantity <= stack.quantity.val, f'Invalid remove {quantity} x {item} ({stack.quantity.val} available)'
+         stack.quantity.val -= quantity
+
+         return
+
+      self._item_references.remove(item)

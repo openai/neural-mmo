@@ -6,7 +6,7 @@ class ExperienceCalculator:
       self.exp = np.array([0] + [1000*2**i for i in range(num_levels)])
 
    def expAtLevel(self, level):
-      return self.exp[level - 1]
+      return int(self.exp[level - 1])
 
    def levelAtExp(self, exp):
       if exp >= self.exp[-1]:

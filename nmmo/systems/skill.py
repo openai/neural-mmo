@@ -153,7 +153,7 @@ class Combat(SkillGroup):
                  self.mage.level)
 
    def applyDamage(self, dmg, style):
-      if not self.config.game_system_enabled('Progression'):
+      if not self.config.PROGRESSION_SYSTEM_ENABLED:
          return
 
       config = self.config
@@ -204,7 +204,7 @@ class Water(HarvestSkill):
 
     def update(self, realm, entity):
         config = self.config
-        if not config.game_system_enabled('Resource'):
+        if not config.RESOURCE_SYSTEM_ENABLED:
             return
 
         depletion = config.RESOURCE_DEPLETION_RATE
@@ -226,7 +226,7 @@ class Food(HarvestSkill):
 
     def update(self, realm, entity):
         config = self.config
-        if not config.game_system_enabled('Resource'):
+        if not config.RESOURCE_SYSTEM_ENABLED:
             return
 
         depletion = config.RESOURCE_DEPLETION_RATE

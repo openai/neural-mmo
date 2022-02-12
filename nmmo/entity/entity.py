@@ -14,6 +14,9 @@ class Resources:
    def update(self, realm, entity, actions):
       config = realm.config
 
+      if not config.RESOURCE_SYSTEM_ENABLED:
+         return
+
       self.water.max = config.RESOURCE_BASE
       self.food.max  = config.RESOURCE_BASE
 
@@ -107,8 +110,12 @@ class Base:
 
    def update(self, realm, entity, actions):
       self.level.update(combat.level(entity.skills))
-      self.item_level.update(entity.equipment.total(lambda e: e.level))
-      self.gold.update(entity.inventory.gold.quantity.val)
+
+      if realm.config.EQUIPMENT_SYSTEM_ENABLED:
+         self.item_level.update(entity.equipment.total(lambda e: e.level))
+
+      if realm.config.EXCHANGE_SYSTEM_ENABLED:
+         self.gold.update(entity.inventory.gold.quantity.val)
 
    @property
    def pos(self):
@@ -150,6 +157,7 @@ class Entity:
       self.status    = Status(self)
       self.history   = History(self)
       self.resources = Resources(self)
+
       self.inventory = inventory.Inventory(realm, self)
 
    def packet(self):
@@ -177,10 +185,18 @@ class Entity:
       self.resources.health.decrement(dmg)
 
       if not self.alive and source is not None:
-         for item in list(self.inventory._items):
+         if not self.config.ITEM_SYSTEM_ENABLED:
+             return False
+
+         for item in list(self.inventory._item_references):
+             if not item.quantity.val:
+                 continue
+
              self.inventory.remove(item)
+
              if source.inventory.space:
                  source.inventory.receive(item)
+
          return False
 
       return True

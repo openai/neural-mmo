@@ -74,7 +74,7 @@ class ItemListings:
    def empty(self):
       return self.listings.empty()
 
-   def buy(self, buyer, quantity, max_price):
+   def buy(self, buyer, max_price):
       if not self.supply:
          return
 
@@ -92,7 +92,7 @@ class ItemListings:
       self.volume  += 1
       return price
          
-   def sell(self, seller, quantity, price):
+   def sell(self, seller, price):
       if price == 1 and not self.empty:
          seller.inventory.gold.quantity += 1
       else:
@@ -121,9 +121,9 @@ class Exchange:
    def available(self, item):
       return self.item_listings[item].available()
 
-   def buy(self, realm, buyer, item, quantity):
+   def buy(self, realm, buyer, item):
       assert isinstance(item, object), f'{item} purchase is not an Item instance'
-      assert item.quantity.val > 0, f'{item} purchase has quantity {item.quantity.val}'
+      assert item.quantity.val == 1, f'{item} purchase has quantity {item.quantity.val}'
 
       #TODO: Handle ammo stacks
       if not buyer.inventory.space:
@@ -140,7 +140,7 @@ class Exchange:
       listings_key = (item, level)
       listings     = self.item_listings[listings_key]
 
-      price = listings.buy(buyer, quantity, max_price)
+      price = listings.buy(buyer, max_price)
       if price:
          #print('{} Bought {} for {}.'.format(buyer.base.name, item.__name__, price))
          buyer.inventory.receive(listings.placeholder)
@@ -150,7 +150,7 @@ class Exchange:
          if listings.supply:
             listings.placeholder = item(realm, level, price=listings.price)
             
-   def sell(self, realm, seller, item, quantity, price):
+   def sell(self, realm, seller, item, price):
       assert isinstance(item, object), f'{item} for sale is not an Item instance'
       assert item in seller.inventory, f'{item} for sale is not in {seller} inventory'
       assert item.quantity.val > 0, f'{item} for sale has quantity {item.quantity.val}'
@@ -158,11 +158,10 @@ class Exchange:
       if not item.tradable.val:
          return
 
-      quantity = item.quantity.val
       level    = item.level.val
 
-      #Unequip from seller
-      seller.inventory.remove(item, quantity)
+      #Remove from seller
+      seller.inventory.remove(item, quantity=1)
       item = type(item)
 
       listings_key  = (item, level)
@@ -171,7 +170,7 @@ class Exchange:
 
       #Update obs placeholder item
       if listings.placeholder is None or (current_price is not None and price < current_price):
-         listings.placeholder = item(realm, level, price=price, quantity=quantity)
+         listings.placeholder = item(realm, level, price=price)
 
       #print('{} Sold {} x {} for {} ea.'.format(seller.base.name, quantity, item.__name__, price))
-      listings.sell(seller, quantity, price)
+      listings.sell(seller, price)

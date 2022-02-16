@@ -41,34 +41,43 @@ class NPC(entity.Entity):
 
       ent.spawn_danger = danger
 
-      # Compute level
-      level_min = config.NPC_LEVEL_MIN
-      level_max = config.NPC_LEVEL_MAX
-      level     = int(danger * (level_max - level_min) + level_min)
-
       # Select combat focus
-      style = random.choice(
-              (Action.Melee, Action.Range, Action.Mage))
+      style = random.choice((Action.Melee, Action.Range, Action.Mage))
+      ent.skills.style = style
+
+      # Compute level
+      level = 0
+      if config.PROGRESSION_SYSTEM_ENABLED:
+          level_min = config.NPC_LEVEL_MIN
+          level_max = config.NPC_LEVEL_MAX
+          level     = int(danger * (level_max - level_min) + level_min)
+
+          # Set skill levels
+          if style == Action.Melee:
+              ent.skills.melee.setExpByLevel(level)
+          elif style == Action.Range:
+              ent.skills.range.setExpByLevel(level)
+          elif style == Action.Mage:
+              ent.skills.mage.setExpByLevel(level)
+
+      # Gold
+      if config.EXCHANGE_SYSTEM_ENABLED:
+          ent.inventory.gold.quantity.update(level)
 
       # Equipment to instantiate
-      equipment =  [Item.Hat, Item.Top, Item.Bottom]
-      tools     =  [Item.Rod, Item.Gloves, Item.Pickaxe, Item.Chisel, Item.Arcane]
-      equipment.append(random.choice(tools))
+      equipment = []
+      if config.EQUIPMENT_SYSTEM_ENABLED:
+          equipment =  [Item.Hat, Item.Top, Item.Bottom]
+          if style == Action.Melee:
+              equipment.append(Item.Sword)
+          elif style == Action.Range:
+              equipment.append(Item.Bow)
+          elif style == Action.Mage:
+              equipment.append(Item.Wand)
 
-      # Set skills
-      ent.skills.style = style
-      if style == Action.Melee:
-          ent.skills.melee.setExpByLevel(level)
-          equipment.append(Item.Sword)
-      elif style == Action.Range:
-          ent.skills.range.setExpByLevel(level)
-          equipment.append(Item.Bow)
-      elif style == Action.Mage:
-          ent.skills.mage.setExpByLevel(level)
-          equipment.append(Item.Wand)
-
-      ent.resources.health.max = level
-      ent.resources.health.update(level)
+      if config.PROFESSION_SYSTEM_ENABLED:
+         tools =  [Item.Rod, Item.Gloves, Item.Pickaxe, Item.Chisel, Item.Arcane]
+         equipment.append(random.choice(tools))
 
       # Select one piece of equipment to match the agent's level
       # The rest will be one tier lower
@@ -85,33 +94,8 @@ class NPC(entity.Entity):
           if not isinstance(itm, Item.Tool):
               itm.use(ent)
 
-      ent.inventory.gold.quantity.update(level)
       return ent 
 
-   @staticmethod
-   def gearLevel(lvl, offset=10):
-      proposed = random.gauss(lvl-offset, offset)
-      lvl      = np.clip(proposed, 0, lvl)
-      return int(lvl)
-
-   @staticmethod
-   def clippedLevels(config, danger, n=1):
-      lmin    = config.NPC_LEVEL_MIN
-      lmax    = config.NPC_LEVEL_MAX
-
-      lbase   = danger*(lmax-lmin) + lmin
-      lspread = config.NPC_LEVEL_SPREAD
-
-      lvlMin  = int(max(lmin, lbase - lspread))
-      lvlMax  = int(min(lmax, lbase + lspread))
-
-      lvls = [random.randint(lvlMin, lvlMax) for _ in range(n)]
-
-      if n == 1:
-         return lvls[0]
-
-      return lvls
- 
    def packet(self):
       data = super().packet()
 

@@ -7,59 +7,67 @@ from nmmo.systems import skill as Skill
 from nmmo.systems import item as Item
 
 def level(skills):
-    melee = skills.melee.level.val
-    ranged = skills.range.level.val
-    mage   = skills.mage.level.val
-
-    return max(melee, ranged, mage)
+    return max(e.level.val for e in skills.skills)
 
 def damage_multiplier(config, skill, targ):
     skills = [targ.skills.melee, targ.skills.range, targ.skills.mage]
-    levels = [s.level for s in skills]
+    exp    = [s.exp for s in skills]
 
-    if max(levels) == min(levels):
+    if max(exp) == min(exp):
         return 1.0
 
-    idx    = np.argmax([levels])
+    idx    = np.argmax([exp])
     targ   = skills[idx]
 
-    if type(targ) == skill.weakness:
-        return config.COMBAT_DAMAGE_MULTIPLIER
+    if type(skill) == targ.weakness:
+        return config.COMBAT_WEAKNESS_MULTIPLIER
 
     return 1.0
 
-def attack(entity, targ, skillFn):
-    config     = entity.config
-    skill      = skillFn(entity)
+def attack(player, target, skillFn):
+    config     = player.config
+    skill      = skillFn(player)
     skill_type = type(skill)
 
-    # Note: the below damage calculation only holds for ammo
-    # granting a bonus to a single combat style
-    ammunition = entity.equipment.ammunition
+    # Ammunition usage
+    ammunition = player.equipment.ammunition
+    if ammunition is not None:
+        ammunition.fire(player)
+
+    # Per-style offense/defense
     if skill_type == Skill.Melee:
-        offense = entity.equipment.total(lambda e: e.melee_attack)
-        defense = entity.equipment.total(lambda e: e.melee_defense)
-        if type(ammunition) == Item.Scrap:
-            ammunition.fire(entity)
+        base_damage  = config.COMBAT_MELEE_BASE_DAMAGE
+        level_damage = config.PROGRESSION_MELEE_DAMAGE
+        offense_fn   = lambda e: e.melee_attack
+        defense_fn   = lambda e: e.melee_defense
     elif skill_type == Skill.Range:
-        offense = entity.equipment.total(lambda e: e.range_attack)
-        defense = entity.equipment.total(lambda e: e.range_defense)
-        if type(ammunition) == Item.Shaving:
-            ammunition.fire(entity)
+        base_damage  = config.COMBAT_RANGE_BASE_DAMAGE
+        level_damage = config.PROGRESSION_RANGE_DAMAGE
+        offense_fn   = lambda e: e.range_attack
+        defense_fn   = lambda e: e.range_defense
     elif skill_type == Skill.Mage:
-        offense = entity.equipment.total(lambda e: e.mage_attack)
-        defense = entity.equipment.total(lambda e: e.mage_defense)
-        if type(ammunition) == Item.Shard:
-            ammunition.fire(entity)
+        base_damage  = config.COMBAT_MAGE_BASE_DAMAGE
+        level_damage = config.PROGRESSION_MAGE_DAMAGE
+        offense_fn   = lambda e: e.mage_attack
+        defense_fn   = lambda e: e.mage_defense
     elif __debug__:
         assert False, 'Attack skill must be Melee, Range, or Mage'
 
-    #Total damage calculation
-    damage = config.COMBAT_DAMAGE_BASE + offense - defense
-    damage = int(damage * damage_multiplier(config, skill, targ))
+    # Compute modifiers
+    multiplier        = damage_multiplier(config, skill, target)
+    skill_offense     = base_damage + level_damage * skill.level.val
+    skill_defense     = config.PROGRESSION_DEFENSE * level(target.skills)
+    equipment_offense = player.equipment.total(offense_fn)
+    equipment_defense = target.equipment.total(defense_fn)
 
-    entity.applyDamage(damage, skill.__class__.__name__.lower())
-    targ.receiveDamage(entity, damage)
+    # Total damage calculation
+    offense = skill_offense + equipment_offense
+    defense = skill_defense + equipment_defense
+    damage  = multiplier * (offense - defense)
+    damage  = max(int(damage), 0)
+
+    player.applyDamage(damage, skill.__class__.__name__.lower())
+    target.receiveDamage(player, damage)
 
     return damage
 

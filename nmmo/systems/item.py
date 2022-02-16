@@ -3,6 +3,7 @@ import random
 
 from nmmo.io.stimulus import Serialized
 from nmmo.lib.colors import Tier
+from nmmo.systems import combat
 
 class ItemID:
    item_ids = {} 
@@ -185,7 +186,7 @@ class Weapon(Equipment):
 class Sword(Weapon):
    ITEM_ID = 5
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_ARMOR_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_WEAPON_OFFENSE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.melee.level.val >= self.level.val:
@@ -194,7 +195,7 @@ class Sword(Weapon):
 class Bow(Weapon):
    ITEM_ID = 6
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_ARMOR_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_WEAPON_OFFENSE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.range.level.val >= self.level.val:
@@ -203,7 +204,7 @@ class Bow(Weapon):
 class Wand(Weapon):
    ITEM_ID = 7
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_ARMOR_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_WEAPON_OFFENSE(level), **kwargs)
 
    def equip(self, entity):
       if entity.skills.mage.level.val >= self.level.val:
@@ -316,7 +317,7 @@ class Shard(Ammunition):
    def damage(self):
       return self.mage_attack.val
 
-class Consumable(Item):
+class Consumable(Item, Stack):
     pass
 
 class Ration(Consumable):
@@ -326,8 +327,13 @@ class Ration(Consumable):
       super().__init__(realm, level, resource_restore=restore, **kwargs)
 
    def use(self, entity):
+      if entity.level < self.level.val:
+          return
+
       entity.resources.food.increment(self.resource_restore.val)
       entity.resources.water.increment(self.resource_restore.val)
+
+      entity.ration_level_consumed = max(entity.ration_level_consumed, self.level.val)
       entity.ration_consumed += 1
 
 class Poultice(Consumable):
@@ -338,6 +344,11 @@ class Poultice(Consumable):
       super().__init__(realm, level, health_restore=restore, **kwargs)
 
    def use(self, entity):
+      if entity.level < self.level.val:
+          return
+
       entity.resources.health.increment(self.health_restore.val)
-      entity.poultice_consumed += 1
+
+      entity.poultice_level_consumed = max(entity.poultice_level_consumed, self.level.val)
+      entity.poultice_consumed       += 1
  

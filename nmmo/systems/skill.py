@@ -63,12 +63,13 @@ class NonCombatSkill(Skill): pass
 
 class HarvestSkill(NonCombatSkill):
     def processDrops(self, realm, entity, matl, dropTable):
-        level = 0
+        level = 1
         tool  = entity.equipment.held
         if type(tool) == matl.tool:
             level = tool.level.val
 
-        for drop in dropTable.roll(realm, self.level.val):
+        #TODO: double-check drop table quantity
+        for drop in dropTable.roll(realm, level):
             if entity.inventory.space:
                 entity.inventory.receive(drop)
 

@@ -45,7 +45,7 @@ class Ammunition(DropTable):
         self.item = item
 
     def roll(self, realm, level):
-        return [self.item(realm, 1, quantity=level)]
+        return [self.item(realm, level)]
 
 class Consumable(DropTable):
     def __init__(self, item):

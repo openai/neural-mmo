@@ -22,10 +22,12 @@ class Player(entity.Entity):
       self.vision = 7
 
       # Logs
-      self.buys              = 0
-      self.sells             = 0 
-      self.ration_consumed   = 0
-      self.poultice_consumed = 0
+      self.buys                     = 0
+      self.sells                    = 0 
+      self.ration_consumed          = 0
+      self.poultice_consumed        = 0
+      self.ration_level_consumed    = 0
+      self.poultice_level_consumed = 0
 
       # Submodules
       self.skills = Skills(self)

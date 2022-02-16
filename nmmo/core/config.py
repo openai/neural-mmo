@@ -303,22 +303,28 @@ class Resource:
 class Combat:
    '''Combat Game System'''
 
-   COMBAT_SYSTEM_ENABLED               = True
+   COMBAT_SYSTEM_ENABLED              = True
    '''Game system flag'''
 
-   COMBAT_DAMAGE_BASE                  = 30
-   '''Base attack damage'''
+   COMBAT_WEAKNESS_MULTIPLIER         = 1.5
+   '''Multiplier for super-effective attacks'''
 
-   COMBAT_DAMAGE_MULTIPLIER            = 1.5
-   '''Super effective damage multiplier'''
+   COMBAT_MELEE_BASE_DAMAGE           = 30
+   '''Base Melee attack damage'''
 
-   COMBAT_MELEE_REACH                  = 3
+   COMBAT_MELEE_REACH                 = 3
    '''Reach of attacks using the Melee skill'''
 
-   COMBAT_RANGE_REACH                  = 3
+   COMBAT_RANGE_BASE_DAMAGE           = 30
+   '''Base Range attack damage'''
+
+   COMBAT_RANGE_REACH                 = 3
    '''Reach of attacks using the Range skill'''
 
-   COMBAT_MAGE_REACH                   = 3
+   COMBAT_MAGE_BASE_DAMAGE            = 30
+   '''Base Mage attack damage'''
+
+   COMBAT_MAGE_REACH                  = 3
    '''Reach of attacks using the Mage skill'''
 
 
@@ -339,6 +345,18 @@ class Progression:
 
    PROGRESSION_LEVEL_MAX               = 10
    '''Max skill level'''
+
+   PROGRESSION_MELEE_DAMAGE          = 5
+   '''Bonus Melee attack damage per level'''
+
+   PROGRESSION_RANGE_DAMAGE          = 5
+   '''Bonus Range attack damage per level'''
+
+   PROGRESSION_MAGE_DAMAGE           = 5
+   '''Bonus Mage attack damage per level'''
+
+   PROGRESSION_DEFENSE               = 5
+   '''Bonus defense per level'''
 
 
 class NPC:
@@ -399,15 +417,15 @@ class Equipment:
        return 5 * level
 
    @staticmethod
-   def EQUIPMENT_TOOL_DEFENSE(level):
-       return 15 * level
-
-   @staticmethod
    def EQUIPMENT_ARMOR_DEFENSE(level):
        return 5 * level
 
    @staticmethod
-   def EQUIPMENT_ARMOR_OFFENSE(level):
+   def EQUIPMENT_WEAPON_OFFENSE(level):
+       return 15 * level
+
+   @staticmethod
+   def EQUIPMENT_TOOL_DEFENSE(level):
        return 15 * level
 
 

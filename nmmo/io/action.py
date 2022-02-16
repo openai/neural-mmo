@@ -312,9 +312,9 @@ class Buy(Node):
 
     @staticproperty
     def edges():
-        return [Item, Quantity]
+        return [Item]
 
-    def call(env, entity, item, quantity):
+    def call(env, entity, item):
         #Do not process exchange actions on death tick
         if not entity.alive:
             return
@@ -322,7 +322,7 @@ class Buy(Node):
         if not entity.inventory.space:
             return
 
-        return env.exchange.buy(env, entity, item, quantity.val)
+        return env.exchange.buy(env, entity, item)
 
 class Sell(Node):
     priority = 3
@@ -330,9 +330,9 @@ class Sell(Node):
 
     @staticproperty
     def edges():
-        return [Item, Quantity, Price]
+        return [Item, Price]
 
-    def call(env, entity, item, quantity, price):
+    def call(env, entity, item, price):
         #Do not process exchange actions on death tick
         if not entity.alive:
             return
@@ -343,7 +343,7 @@ class Sell(Node):
         if item not in entity.inventory:
             return
 
-        return env.exchange.sell(env, entity, item, quantity.val, price.val)
+        return env.exchange.sell(env, entity, item, price.val)
 
 class Discrete(Node):
     argType = Fixed
@@ -353,14 +353,6 @@ class Discrete(Node):
         name = f'Discrete_{i}'
         cls  = type(name, (object,), {'val': i})
         classes.append(cls)
-
-class Quantity(Discrete):
-    @staticproperty
-    def edges():
-        return Discrete.classes
-
-    def args(stim, entity, config):
-        return Discrete.edges
 
 class Price(Discrete):
     @staticproperty

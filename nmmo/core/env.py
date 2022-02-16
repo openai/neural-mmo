@@ -412,6 +412,9 @@ class Env(ParallelEnv):
       if config.PROFESSION_SYSTEM_ENABLED:
          quill.stat(f'{policy}_Ration_Consumed',   ent.ration_consumed)
          quill.stat(f'{policy}_Poultice_Consumed', ent.poultice_consumed)
+         quill.stat(f'{policy}_Ration_Level',      ent.ration_level_consumed)
+         quill.stat(f'{policy}_Poultice_Level',    ent.poultice_level_consumed)
+
 
       # Market
       if config.EXCHANGE_SYSTEM_ENABLED:

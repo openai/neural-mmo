@@ -12,8 +12,7 @@ extra = {
         'sphinxcontrib-youtube==1.0.1',
         ],
     'rllib': [
-        'ray[all]==1.5.2',
-        'tensorflow==2.7.0',
+        'ray[all]==1.10.0',
         'grpcio==1.32.0',
         'six==1.15.0',
         'dm-tree==0.1.6',

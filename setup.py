@@ -13,7 +13,7 @@ extra = {
         ],
     'rllib': [
         'ray[all]==1.10.0',
-        'grpcio==1.32.0',
+        'grpcio==1.44.0',
         'six==1.15.0',
         'dm-tree==0.1.6',
         'aiohttp==3.7',

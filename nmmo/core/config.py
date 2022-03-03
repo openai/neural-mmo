@@ -201,7 +201,9 @@ class Config(Template):
       s3     = list(zip(rrange, highs))
       s4     = list(zip(highs, rrange))
 
-      return s1 + s2 + s3 + s4
+      ret = s1 + s2 + s3 + s4
+      n = int(self.NENT * len(self.AGENTS))
+      return ret[:n]
 
    @property
    def SPAWN(self):

@@ -20,6 +20,7 @@ from .overlay import Overlay, OverlayRegistry
 from .io import action
 from .io.stimulus import Serialized
 from .io.action import Action
+from .io.serial import pack, unpack, batch
 from .core import config, agent
 from .core.agent import Agent
 from .core.env import Env
@@ -27,6 +28,6 @@ from .systems.achievement import Task
 from .core.terrain import MapGenerator, Terrain
 
 __all__ = ['Env', 'config', 'scripting', 'agent', 'Agent', 'MapGenerator', 'Terrain',
-        'Serialized', 'action', 'Action', 'scripting', 'material',
+        'Serialized', 'action', 'Action', 'pack', 'unpack', 'batch', 'scripting', 'material',
         'Task', 'Overlay', 'OverlayRegistry']
 

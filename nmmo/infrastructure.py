@@ -240,5 +240,6 @@ class Dataframe:
 
       ent.targets          = ents
       stim['Tile']         = self.data['Tile'].get(ent)
+      stim['Tile']['N']    = np.array([int(self.config.WINDOW**2)], dtype=np.int32)
 
       return stim

@@ -2,6 +2,8 @@ from pdb import set_trace as T
 import numpy as np
 
 import functools
+from itertools import product
+from collections import defaultdict
 
 import gym
 from pettingzoo import ParallelEnv
@@ -53,6 +55,23 @@ class Env(ParallelEnv):
 
       self.has_reset  = False
 
+      # Flat index actions
+      if not self.config.FLAT_ATN:
+         return
+
+      actions = defaultdict(dict)
+      for atn in sorted(nmmo.Action.edges):
+         for arg in sorted(atn.edges):
+            actions[atn][arg] = arg.N(self.config)
+
+      n = 0
+      self.flat_actions = {}
+      for atn, args in actions.items():
+          ranges = [range(e) for e in args.values()]
+          for vals in product(*ranges):
+             self.flat_actions[n] = {atn: {arg: val for arg, val in zip(args, vals)}}
+             n += 1
+
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):
       '''Neural MMO Observation Space
@@ -86,10 +105,22 @@ class Env(ParallelEnv):
 
          if name == 'Entity':
             observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.N_AGENT_OBS, shape=(1,), dtype=DataType.DISCRETE)
+         if name == 'Tile':
+            observation['Tile']['N'] = gym.spaces.Box(low=0, high=self.config.WINDOW**2, shape=(1,), dtype=DataType.DISCRETE)
 
          observation[name] = gym.spaces.Dict(observation[name])
 
-      return gym.spaces.Dict(observation)
+      observation = gym.spaces.Dict(observation)
+
+      if not self.config.FLAT_OBS:
+         return observation
+
+      n = 0
+      for entity, obs in observation.items():
+         for attr_name, attr_box in obs.items():
+            n += np.prod(observation[entity][attr_name].shape)
+
+      return gym.spaces.Box(low=-2**20, high=2**20, shape=(int(n),), dtype=DataType.CONTINUOUS)
 
    @functools.lru_cache(maxsize=None)
    def action_space(self, agent):
@@ -105,17 +136,20 @@ class Env(ParallelEnv):
          choices (such as movement direction) and selections from the
          observation space (such as targeting)'''
 
+      if self.config.FLAT_ATN:
+         return gym.spaces.Discrete(len(self.flat_actions))
+
       actions = {}
       for atn in sorted(nmmo.Action.edges):
          actions[atn] = {}
          for arg in sorted(atn.edges):
-            n                       = arg.N(self.config)
+            n                 = arg.N(self.config)
             actions[atn][arg] = gym.spaces.Discrete(n)
 
          actions[atn] = gym.spaces.Dict(actions[atn])
 
       return gym.spaces.Dict(actions)
- 
+
    ############################################################################
    ### Core API
    def reset(self, idx=None, step=True):
@@ -261,18 +295,27 @@ class Env(ParallelEnv):
 
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
+         #TODO: Should this silently fail? Warning level options?
+         if entID not in self.realm.players:
+            continue
+
          ent = self.realm.players[entID]
+
          if not ent.alive:
             continue
+
+         if self.config.FLAT_ATN:
+            actions[entID] = self.flat_actions[actions[entID]]
 
          self.actions[entID] = {}
          for atn, args in actions[entID].items():
             self.actions[entID][atn] = {}
+            args.items()
             for arg, val in args.items():
                if len(arg.edges) > 0:
                   self.actions[entID][atn][arg] = arg.edges[val]
                elif val < len(ent.targets):
-                  targ                     = ent.targets[val]
+                  targ                          = ent.targets[val]
                   self.actions[entID][atn][arg] = self.realm.entity(targ)
                else: #Need to fix -inf in classifier before removing this
                   self.actions[entID][atn][arg] = ent
@@ -304,12 +347,22 @@ class Env(ParallelEnv):
       for entID, ent in self.dead.items():
          self.log(ent)
 
-      for entID, ent in self.dead.items():
+      #dummy_ob = self.observation_space(1).sample()
+      for entID,ent in self.dead.items():
          if ent.agent.scripted:
             continue
          rewards[ent.entID], infos[ent.entID] = self.reward(ent)
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
+
+      
+      if self.config.FIXED_N_OBS:
+         for i in range(1, self.config.NENT+1):
+            dones[i] = False #No partial agent episodes
+            if i not in obs:
+               obs[i] = self.dummy_ob
+               rewards[i] = 0
+               infos[i] = {}
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())

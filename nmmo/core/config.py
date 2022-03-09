@@ -105,6 +105,10 @@ class Config(Template):
    RENDER                 = False
    '''Flag used by render mode'''
 
+   FLAT_OBS               = True
+   FLAT_ATN               = True
+   FIXED_N_OBS            = True
+
    def game_system_enabled(self, name) -> bool:
       return hasattr(self, name)
 

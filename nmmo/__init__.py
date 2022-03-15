@@ -13,21 +13,20 @@ motd = '''      ___           ___           ___           ___
     \  \:\        \  \:\        \  \:\        \  \::/     maintained at MIT in
      \__\/         \__\/         \__\/         \__\/      Phillip Isola's lab '''.format(__version__)
 
-from . import scripting
+from . import scripting, emulation
 from .lib import material
 from .lib.rating import OpenSkillRating
 from .overlay import Overlay, OverlayRegistry
 from .io import action
 from .io.stimulus import Serialized
 from .io.action import Action
-from .io.serial import pack, unpack, batch
 from .core import config, agent
 from .core.agent import Agent
 from .core.env import Env
 from .systems.achievement import Task
 from .core.terrain import MapGenerator, Terrain
 
-__all__ = ['Env', 'config', 'scripting', 'agent', 'Agent', 'MapGenerator', 'Terrain',
+__all__ = ['Env', 'config', 'scripting', 'emulation', 'agent', 'Agent', 'MapGenerator', 'Terrain',
         'Serialized', 'action', 'Action', 'pack', 'unpack', 'batch', 'scripting', 'material',
         'Task', 'Overlay', 'OverlayRegistry']
 

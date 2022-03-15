@@ -105,12 +105,25 @@ class Config(Template):
    RENDER                 = False
    '''Flag used by render mode'''
 
-   FLAT_OBS               = True
-   FLAT_ATN               = True
-   FIXED_N_OBS            = True
-
    def game_system_enabled(self, name) -> bool:
       return hasattr(self, name)
+
+
+   ############################################################################
+   ### Emulation Parameters
+ 
+   EMULATE_FLAT_OBS       = False
+   '''Emulate a flat observation space'''
+
+   EMULATE_FLAT_ATN       = False
+   '''Emulate a flat action space'''
+
+   EMULATE_CONST_POP      = False
+   '''Emulate a constant population size'''
+
+   EMULATE_CONST_HORIZON  = False
+   '''Emulate a constant simulation horizon'''
+
 
    ############################################################################
    ### Population Parameters                                                   
@@ -154,6 +167,7 @@ class Config(Template):
    def WINDOW(self):
       '''Size of the square tile crop visible to an agent'''
       return 2*self.NSTIM + 1
+
 
    ############################################################################
    ### Agent Parameters                                                   
@@ -212,6 +226,7 @@ class Config(Template):
    @property
    def SPAWN(self):
       return self.SPAWN_CONTINUOUS
+
 
    ############################################################################
    ### Terrain Generation Parameters

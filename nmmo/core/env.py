@@ -2,14 +2,13 @@ from pdb import set_trace as T
 import numpy as np
 
 import functools
-from itertools import product
 from collections import defaultdict
 
 import gym
 from pettingzoo import ParallelEnv
 
 import nmmo
-from nmmo import entity, core
+from nmmo import entity, core, emulation
 from nmmo.core import terrain
 from nmmo.lib import log
 from nmmo.infrastructure import DataType
@@ -56,21 +55,10 @@ class Env(ParallelEnv):
       self.has_reset  = False
 
       # Flat index actions
-      if not self.config.FLAT_ATN:
+      if not self.config.EMULATE_FLAT_ATN:
          return
 
-      actions = defaultdict(dict)
-      for atn in sorted(nmmo.Action.edges):
-         for arg in sorted(atn.edges):
-            actions[atn][arg] = arg.N(self.config)
-
-      n = 0
-      self.flat_actions = {}
-      for atn, args in actions.items():
-          ranges = [range(e) for e in args.values()]
-          for vals in product(*ranges):
-             self.flat_actions[n] = {atn: {arg: val for arg, val in zip(args, vals)}}
-             n += 1
+      self.flat_actions = emulation.pack_atn_space(config)
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):
@@ -112,15 +100,10 @@ class Env(ParallelEnv):
 
       observation = gym.spaces.Dict(observation)
 
-      if not self.config.FLAT_OBS:
+      if not self.config.EMULATE_FLAT_OBS:
          return observation
 
-      n = 0
-      for entity, obs in observation.items():
-         for attr_name, attr_box in obs.items():
-            n += np.prod(observation[entity][attr_name].shape)
-
-      return gym.spaces.Box(low=-2**20, high=2**20, shape=(int(n),), dtype=DataType.CONTINUOUS)
+      return emulation.pack_obs_space(observation)
 
    @functools.lru_cache(maxsize=None)
    def action_space(self, agent):
@@ -136,7 +119,7 @@ class Env(ParallelEnv):
          choices (such as movement direction) and selections from the
          observation space (such as targeting)'''
 
-      if self.config.FLAT_ATN:
+      if self.config.EMULATE_FLAT_ATN:
          return gym.spaces.Discrete(len(self.flat_actions))
 
       actions = {}
@@ -304,7 +287,7 @@ class Env(ParallelEnv):
          if not ent.alive:
             continue
 
-         if self.config.FLAT_ATN:
+         if self.config.EMULATE_FLAT_ATN:
             actions[entID] = self.flat_actions[actions[entID]]
 
          self.actions[entID] = {}
@@ -355,14 +338,14 @@ class Env(ParallelEnv):
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
-      
-      if self.config.FIXED_N_OBS:
-         for i in range(1, self.config.NENT+1):
-            dones[i] = False #No partial agent episodes
-            if i not in obs:
-               obs[i] = self.dummy_ob
-               rewards[i] = 0
-               infos[i] = {}
+      if self.config.EMULATE_CONST_POP:
+         emulation.pad_const_pop(self.config, self.dummy_ob, obs, rewards, dones, infos)
+
+      if self.config.EMULATE_FLAT_OBS:
+         obs = nmmo.emulation.pack_obs(obs)
+
+      if horizon := self.config.EMULATE_CONST_HORIZON:
+         dones['__all__'] = self.realm.tick >= horizon
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())

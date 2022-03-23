@@ -13,6 +13,36 @@ from nmmo.core import terrain
 from nmmo.lib import log
 from nmmo.infrastructure import DataType
 
+class Replay:
+    def __init__(self, config):
+        self.packets = []
+        self.map     = None
+
+        self.path    = config.SAVE_REPLAY + '.json'
+
+    def update(self, packet):
+        data = {}
+        for key, val in packet.items():
+            if key == 'environment':
+                self.map = val
+                continue
+            if key == 'config':
+                continue
+
+            data[key] = val
+
+        self.packets.append(data)
+
+    def save(self):
+        data = {
+            'map': self.map,
+            'packets': self.packets}
+
+        import json
+        with open(self.path, 'w') as out:
+            replay = json.dump(data, out)
+
+
 class Env(ParallelEnv):
    '''Environment wrapper for Neural MMO using the Parallel PettingZoo API
 
@@ -46,12 +76,14 @@ class Env(ParallelEnv):
       self.realm      = core.Realm(config)
       self.registry   = nmmo.OverlayRegistry(config, self)
 
+    
       self.config     = config
       self.overlay    = None
       self.overlayPos = [256, 256]
       self.client     = None
       self.obs        = None
 
+      self.replay     = Replay(config)
       self.has_reset  = False
 
       # Flat index actions
@@ -276,6 +308,26 @@ class Env(ParallelEnv):
       '''
       assert self.has_reset, 'step before reset'
 
+      if self.config.RENDER or self.config.SAVE_REPLAY:
+          packet = {
+                'config': self.config,
+                'pos': self.overlayPos,
+                'wilderness': 0
+                }
+
+          packet = {**self.realm.packet(), **packet}
+
+          if self.overlay is not None:
+             print('Overlay data: ', len(self.overlay))
+             packet['overlay'] = self.overlay
+             self.overlay      = None
+
+          self.packet = packet
+
+          if self.config.SAVE_REPLAY:
+              self.replay.update(packet)
+
+
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
          #TODO: Should this silently fail? Warning level options?
@@ -421,6 +473,9 @@ class Env(ParallelEnv):
       for entID, ent in self.realm.players.entities.items():
          self.log(ent)
 
+      if self.config.SAVE_REPLAY:
+         self.replay.save()
+
       return self.quill.packet
 
    ############################################################################
@@ -465,19 +520,7 @@ class Env(ParallelEnv):
       '''
 
       assert self.has_reset, 'render before reset'
-
-      packet = {
-            'config': self.config,
-            'pos': self.overlayPos,
-            'wilderness': 0
-            }
-
-      packet = {**self.realm.packet(), **packet}
-
-      if self.overlay is not None:
-         print('Overlay data: ', len(self.overlay))
-         packet['overlay'] = self.overlay
-         self.overlay      = None
+      packet = self.packet
 
       if not self.client:
          from nmmo.websocket import Application

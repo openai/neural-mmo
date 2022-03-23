@@ -105,6 +105,9 @@ class Config(Template):
    RENDER                 = False
    '''Flag used by render mode'''
 
+   SAVE_REPLAY            = False
+   '''Flag used to save replays'''
+
    def game_system_enabled(self, name) -> bool:
       return hasattr(self, name)
 

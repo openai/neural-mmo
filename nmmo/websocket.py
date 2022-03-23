@@ -77,13 +77,11 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         packet['pos']        = data['pos']
         packet['wilderness'] = data['wilderness']
 
-        config = data['config']
-
         print('Is Connected? : {}'.format(self.isConnected))
         if not self.sent_environment:
             packet['map']    = data['environment']
-            packet['border'] = config.TERRAIN_BORDER
-            packet['size']   = config.TERRAIN_SIZE
+            packet['border'] = data['border']
+            packet['size']   = data['size']
 
         if 'overlay' in data:
            packet['overlay'] = data['overlay']

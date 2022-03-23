@@ -13,6 +13,7 @@ class Map:
    '''
    def __init__(self, config, realm):
       self.config = config
+      self._repr  = None
 
       sz          = config.TERRAIN_SIZE
       self.tiles  = np.zeros((sz, sz), dtype=object)
@@ -32,7 +33,10 @@ class Map:
    @property
    def repr(self):
       '''Flat matrix of tile material indices'''
-      return [[t.mat.index for t in row] for row in self.tiles]
+      if not self._repr:
+          self._repr = [[t.mat.index for t in row] for row in self.tiles]
+
+      return self._repr
 
    def reset(self, realm, idx):
       '''Reuse the current tile objects to load a new map'''

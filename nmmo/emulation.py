@@ -9,6 +9,34 @@ import gym
 import nmmo
 from nmmo.infrastructure import DataType
 
+class SingleAgentEnv:
+    def __init__(self, env, idx, max_idx):
+        self.config = env.config
+        self.env    = env
+        self.idx    = idx
+        self.last   = idx == max_idx 
+
+    def reset(self):
+        if not self.env.has_reset:
+            self.obs = self.env.reset()
+
+        return self.obs[self.idx]            
+
+    def step(self, actions):
+        if self.last:
+            self.obs, self.rewards, self.dones, self.infos = self.env.step(actions)
+
+        i = self.idx
+        return self.obs[i], self.rewards[i], self.dones[i], self.infos[i]
+
+def multiagent_to_singleagent(config):
+    assert config.EMULATE_CONST_NENT, "Wrapper requires constant num agents"
+
+    base_env = nmmo.Env(config)
+    n = config.NENT
+
+    return [SingleAgentEnv(base_env, i, n) for i in range(1, n+1)]
+        
 def pad_const_nent(config, dummy_ob, obs, rewards, dones, infos):
     for i in range(1, config.NENT+1):                               
         dones[i] = False #No partial agent episodes                       
@@ -35,8 +63,12 @@ def pack_atn_space(config):
 
 def pack_obs_space(observation):
    n = 0                                                                   
-   for entity, obs in observation.items():                                 
-      for attr_name, attr_box in obs.items():                              
+   #for entity, obs in observation.items():                                 
+   for entity in observation:                                 
+      obs = observation[entity]
+      #for attr_name, attr_box in obs.items():                              
+      for attr_name in obs:                              
+         attr_box = obs[attr_name]
          n += np.prod(observation[entity][attr_name].shape)                
                                                                            
    return gym.spaces.Box(

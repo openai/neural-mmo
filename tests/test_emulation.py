@@ -34,6 +34,18 @@ def test_all_emulation():
    
     init_env(Config)
 
+def test_emulate_single_agent():
+    class Config(nmmo.config.Small):
+        EMULATE_CONST_NENT = True
+
+    config = Config()
+    envs   = nmmo.emulation.multiagent_to_singleagent(config)  
+
+    for e in envs:
+        ob = e.reset()
+        for i in range(32):
+            ob, reward, done, info = e.step({})
+
 def equals(batch1, batch2):
    entity_keys = [e[0][0] for e in nmmo.io.stimulus.Serialized]
    assert list(batch1.keys()) == list(batch2.keys()) == entity_keys

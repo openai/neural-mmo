@@ -46,6 +46,7 @@ setup(
         'tqdm==4.61.1',
         'pettingzoo==1.14.0',
         'gym==0.21.0',
+        'lz4==4.0.0',
     ],
     extras_require=extra,
     python_requires=">=3.9",

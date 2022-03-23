@@ -21,8 +21,7 @@ class Replay:
         self.packets = []
         self.map     = None
 
-        if config.SAVE_REPLAY:
-            self.path    = config.SAVE_REPLAY + '.replay'
+        self.path    = config.SAVE_REPLAY + '.replay'
 
         self._i = 0
 
@@ -112,12 +111,14 @@ class Env(ParallelEnv):
       self.client     = None
       self.obs        = None
 
-      self.replay     = Replay(config)
       self.has_reset  = False
 
       # Flat index actions
       if not self.config.EMULATE_FLAT_ATN:
          return
+
+      if self.config.SAVE_REPLAY:
+         self.replay = Replay(config)
 
       self.flat_actions = emulation.pack_atn_space(config)
 
@@ -149,13 +150,23 @@ class Env(ParallelEnv):
 
          name = entity.__name__
          observation[name] = {
-               'Continuous': gym.spaces.Box(low=-2**20, high=2**20, shape=(rows, continuous), dtype=DataType.CONTINUOUS),
-               'Discrete'  : gym.spaces.Box(low=0, high=4096, shape=(rows, discrete), dtype=DataType.DISCRETE)}
+               'Continuous': gym.spaces.Box(
+                        low=-2**20, high=2**20,
+                        shape=(rows, continuous),
+                        dtype=DataType.CONTINUOUS),
+               'Discrete'  : gym.spaces.Box(
+                        low=0, high=4096,
+                        shape=(rows, discrete),
+                        dtype=DataType.DISCRETE)}
 
          if name == 'Entity':
-            observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.N_AGENT_OBS, shape=(1,), dtype=DataType.DISCRETE)
+            observation['Entity']['N'] = gym.spaces.Box(
+                    low=0, high=self.config.N_AGENT_OBS,
+                    shape=(1,), dtype=DataType.DISCRETE)
          if name == 'Tile':
-            observation['Tile']['N'] = gym.spaces.Box(low=0, high=self.config.WINDOW**2, shape=(1,), dtype=DataType.DISCRETE)
+            observation['Tile']['N'] = gym.spaces.Box(
+                    low=0, high=self.config.WINDOW**2,
+                    shape=(1,), dtype=DataType.DISCRETE)
 
          observation[name] = gym.spaces.Dict(observation[name])
 
@@ -369,6 +380,7 @@ class Env(ParallelEnv):
             continue
 
          if self.config.EMULATE_FLAT_ATN:
+            assert actions[entID] in self.flat_actions, f'Invalid action {actions[entID]}'
             actions[entID] = self.flat_actions[actions[entID]]
 
          self.actions[entID] = {}
@@ -419,14 +431,11 @@ class Env(ParallelEnv):
          dones[ent.entID]   = True
          obs[ent.entID]     = self.dummy_ob
 
-      if self.config.EMULATE_CONST_POP:
-         emulation.pad_const_pop(self.config, self.dummy_ob, obs, rewards, dones, infos)
+      if self.config.EMULATE_CONST_NENT:
+         emulation.pad_const_nent(self.config, self.dummy_ob, obs, rewards, dones, infos)
 
       if self.config.EMULATE_FLAT_OBS:
          obs = nmmo.emulation.pack_obs(obs)
-
-      if horizon := self.config.EMULATE_CONST_HORIZON:
-         dones['__all__'] = self.realm.tick >= horizon
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())

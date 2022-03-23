@@ -9,7 +9,7 @@ import gym
 import nmmo
 from nmmo.infrastructure import DataType
 
-def pad_const_pop(config, dummy_ob, obs, rewards, dones, infos):
+def pad_const_nent(config, dummy_ob, obs, rewards, dones, infos):
     for i in range(1, config.NENT+1):                               
         dones[i] = False #No partial agent episodes                       
         if i not in obs:                                                  
@@ -39,7 +39,9 @@ def pack_obs_space(observation):
       for attr_name, attr_box in obs.items():                              
          n += np.prod(observation[entity][attr_name].shape)                
                                                                            
-   return gym.spaces.Box(low=-2**20, high=2**20, shape=(int(n),), dtype=DataType.CONTINUOUS)
+   return gym.spaces.Box(
+           low=-2**20, high=2**20,
+           shape=(int(n),), dtype=DataType.CONTINUOUS)
 
 
 def batch_obs(obs):
@@ -56,6 +58,7 @@ def pack_obs(obs):
     packed = {}
     for key in obs:
         ary = []
+        obs[key].items()
         for ent_name, ent_attrs in obs[key].items():
             for attr_name, attr in ent_attrs.items():
                 ary.append(attr.ravel())

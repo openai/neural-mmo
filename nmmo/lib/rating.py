@@ -62,7 +62,7 @@ class OpenSkillRating:
 
         if __debug__:
             err = 'Specify either ranks or policy_ids and scores'
-            assert ranks is None  != (policy_ids is None and scores is None), err
+            assert (ranks is None) != (policy_ids is None and scores is None), err
 
         if ranks is None:
             ranks = rank(policy_ids, scores)

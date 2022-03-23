@@ -121,11 +121,8 @@ class Config(Template):
    EMULATE_FLAT_ATN       = False
    '''Emulate a flat action space'''
 
-   EMULATE_CONST_POP      = False
-   '''Emulate a constant population size'''
-
-   EMULATE_CONST_HORIZON  = False
-   '''Emulate a constant simulation horizon'''
+   EMULATE_CONST_NENT     = False
+   '''Emulate a constant number of agents'''
 
 
    ############################################################################

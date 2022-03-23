@@ -4,7 +4,6 @@ import numpy as np
 from signal import signal, SIGINT
 import sys, os, json, pickle, time
 import threading
-import ray
 
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall

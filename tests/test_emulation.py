@@ -3,33 +3,33 @@ import numpy as np
 
 import nmmo
 
-def init_env(config_cls):
+def init_env(config_cls=nmmo.config.Small):
     env = nmmo.Env(config_cls())                                                  
     obs = env.reset()                                                         
     return env, obs
 
-def test_flat_obs():
-    class Config(nmmo.config.Medium):
+def test_emulate_flat_obs():
+    class Config(nmmo.config.Small):
         EMULATE_FLAT_OBS = True
    
     init_env(Config)
 
-def test_flat_atn():
-    class Config(nmmo.config.Medium):
+def test_emulate_flat_atn():
+    class Config(nmmo.config.Small):
         EMULATE_FLAT_ATN = True
    
     init_env(Config)
 
-def test_const_pop():
-    class Config(nmmo.config.Medium):
-        EMULATE_CONST_POP = True
+def test_emulate_const_nent():
+    class Config(nmmo.config.Small):
+        EMULATE_CONST_NENT = True
    
     init_env(Config)
 
 def test_all_emulation():
-    class Config(nmmo.config.Medium):
-        EMULATE_FLAT_OBS = True
-        EMULATE_FLAT_ATN = True
+    class Config(nmmo.config.Small):
+        EMULATE_FLAT_OBS  = True
+        EMULATE_FLAT_ATN  = True
         EMULATE_CONST_POP = True
    
     init_env(Config)
@@ -48,10 +48,7 @@ def equals(batch1, batch2):
             assert np.array_equal(batch1_attrs[key], batch2_attrs[key])
 
 def test_pack_unpack_obs():
-    class Config(nmmo.config.Medium):
-        EMULATE_FLAT_OBS = True
- 
-    env, obs = init_env(Config)
+    env, obs = init_env()
     packed   = nmmo.emulation.pack_obs(obs)
     packed   = np.vstack(list(packed.values()))
     unpacked = nmmo.emulation.unpack_obs(env.config, packed)
@@ -60,17 +57,11 @@ def test_pack_unpack_obs():
     equals(unpacked, batched)
 
 def test_obs_pack_speed(benchmark):
-    class Config(nmmo.config.Medium):
-        EMULATE_FLAT_OBS = True
- 
-    env, obs = init_env(Config)
+    env, obs = init_env()
     benchmark(lambda: nmmo.emulation.pack_obs(obs))
 
 def test_obs_unpack_speed(benchmark):
-    class Config(nmmo.config.Medium):
-        EMULATE_FLAT_OBS = True
- 
-    env, obs = init_env(Config)
+    env, obs = init_env()
     packed   = nmmo.emulation.pack_obs(obs)
     packed   = np.vstack(list(packed.values()))
 

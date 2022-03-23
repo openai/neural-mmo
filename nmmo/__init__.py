@@ -22,11 +22,11 @@ from .io.stimulus import Serialized
 from .io.action import Action
 from .core import config, agent
 from .core.agent import Agent
-from .core.env import Env
+from .core.env import Env, Replay
 from .systems.achievement import Task
 from .core.terrain import MapGenerator, Terrain
 
 __all__ = ['Env', 'config', 'scripting', 'emulation', 'agent', 'Agent', 'MapGenerator', 'Terrain',
         'Serialized', 'action', 'Action', 'pack', 'unpack', 'batch', 'scripting', 'material',
-        'Task', 'Overlay', 'OverlayRegistry']
+        'Task', 'Overlay', 'OverlayRegistry', 'Replay']
 

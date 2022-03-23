@@ -7,6 +7,9 @@ from collections import defaultdict
 import gym
 from pettingzoo import ParallelEnv
 
+import pickle
+import lz4.block
+
 import nmmo
 from nmmo import entity, core, emulation
 from nmmo.core import terrain
@@ -18,7 +21,10 @@ class Replay:
         self.packets = []
         self.map     = None
 
-        self.path    = config.SAVE_REPLAY + '.json'
+        if config.SAVE_REPLAY:
+            self.path    = config.SAVE_REPLAY + '.replay'
+
+        self._i = 0
 
     def update(self, packet):
         data = {}
@@ -38,9 +44,32 @@ class Replay:
             'map': self.map,
             'packets': self.packets}
 
-        import json
-        with open(self.path, 'w') as out:
-            replay = json.dump(data, out)
+        data = lz4.block.compress(pickle.dumps(data))
+        with open(self.path, 'wb') as out:
+            out.write(data)
+
+    @classmethod
+    def load(cls, config, path):
+        with open(path, 'rb') as fp:
+            data = fp.read()
+
+        data = pickle.loads(lz4.block.decompress(data))
+        replay = Replay(config)
+        replay.map = data['map']
+        replay.packets = data['packets']
+        return replay
+
+    def __iter__(self):
+        self._i = 0
+        return self
+
+    def __next__(self):
+        if self._i >= len(self.packets):
+            raise StopIteration
+        packet = self.packets[self._i]
+        packet['environment'] = self.map
+        self._i += 1
+        return packet
 
 
 class Env(ParallelEnv):

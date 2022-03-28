@@ -114,8 +114,11 @@ class Env(ParallelEnv):
       self.has_reset  = False
 
       # Flat index actions
-      if not self.config.EMULATE_FLAT_ATN:
+      if not config.EMULATE_FLAT_ATN:
          return
+
+      if config.EMULATE_CONST_NENT:
+         self.possible_agents = [i for i in range(1, config.NENT + 1)]
 
       if self.config.SAVE_REPLAY:
          self.replay = Replay(config)
@@ -437,9 +440,10 @@ class Env(ParallelEnv):
       if self.config.EMULATE_FLAT_OBS:
          obs = nmmo.emulation.pack_obs(obs)
 
-      assert self.realm.tick <= self.config.EMULATE_CONST_HORIZON
-      if self.config.EMULATE_CONST_HORIZON == self.realm.tick:
-         nmmo.emulation.const_horizon(dones)
+      if self.config.EMULATE_CONST_HORIZON:
+         assert self.realm.tick <= self.config.HORIZON
+         if self.realm.tick == self.config.HORIZON:
+            nmmo.emulation.const_horizon(dones)
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())

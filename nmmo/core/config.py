@@ -414,13 +414,6 @@ class NPC(Combat):
 
 class AllGameSystems(Resource, Progression, NPC): pass
 
-class CompatibilityMixin:
-    '''Enables emulation features for compatibility with most RL APIs'''
-    EMULATE_FLAT_OBS      = True
-    EMULATE_FLAT_ATN      = True
-    EMULATE_CONST_NENT    = True
-    EMULATE_CONST_HORIZON = True
-
 ############################################################################
 ### Config presets
 class Small(Config):

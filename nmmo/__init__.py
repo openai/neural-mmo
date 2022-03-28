@@ -13,7 +13,6 @@ motd = r'''      ___           ___           ___           ___
     \  \:\        \  \:\        \  \:\        \  \::/     maintained at MIT in
      \__\/         \__\/         \__\/         \__\/      Phillip Isola's lab '''.format(__version__)
 
-from . import scripting, emulation
 from .lib import material
 from .lib.rating import OpenSkillRating
 from .overlay import Overlay, OverlayRegistry
@@ -23,10 +22,11 @@ from .io.action import Action
 from .core import config, agent
 from .core.agent import Agent
 from .core.env import Env, Replay
+from . import scripting, emulation, integrations
 from .systems.achievement import Task
 from .core.terrain import MapGenerator, Terrain
 
-__all__ = ['Env', 'config', 'scripting', 'emulation', 'agent', 'Agent', 'MapGenerator', 'Terrain',
+__all__ = ['Env', 'config', 'scripting', 'emulation', 'integrations', 'agent', 'Agent', 'MapGenerator', 'Terrain',
         'Serialized', 'action', 'Action', 'scripting', 'material',
         'Task', 'Overlay', 'OverlayRegistry', 'Replay']
 

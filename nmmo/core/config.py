@@ -124,6 +124,8 @@ class Config(Template):
    EMULATE_CONST_NENT     = False
    '''Emulate a constant number of agents'''
 
+   EMULATE_CONST_HORIZON  = False
+   '''Emulate a constant HORIZON simulations steps'''
 
    ############################################################################
    ### Population Parameters                                                   
@@ -412,6 +414,13 @@ class NPC(Combat):
 
 class AllGameSystems(Resource, Progression, NPC): pass
 
+class CompatibilityMixin:
+    '''Enables emulation features for compatibility with most RL APIs'''
+    EMULATE_FLAT_OBS      = True
+    EMULATE_FLAT_ATN      = True
+    EMULATE_CONST_NENT    = True
+    EMULATE_CONST_HORIZON = True
+
 ############################################################################
 ### Config presets
 class Small(Config):
@@ -430,6 +439,8 @@ class Small(Config):
 
    NPC_LEVEL_MAX           = 10
    NPC_LEVEL_SPREAD        = 1
+   
+   HORIZON                 = 128
 
 class Medium(Config):
    '''A medium config suitable for most academic-scale research'''
@@ -446,6 +457,9 @@ class Medium(Config):
    NPC_LEVEL_MAX           = 30
    NPC_LEVEL_SPREAD        = 5
 
+   HORIZON                 = 1024
+
+
 class Large(Config):
    '''A large config suitable for large-scale research or fast models'''
 
@@ -460,5 +474,7 @@ class Large(Config):
 
    NPC_LEVEL_MAX           = 99
    NPC_LEVEL_SPREAD        = 10
+
+   HORIZON                 = 8192
 
 class Default(Medium, AllGameSystems): pass

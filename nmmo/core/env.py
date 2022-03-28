@@ -437,6 +437,10 @@ class Env(ParallelEnv):
       if self.config.EMULATE_FLAT_OBS:
          obs = nmmo.emulation.pack_obs(obs)
 
+      assert self.realm.tick <= self.config.EMULATE_CONST_HORIZON
+      if self.config.EMULATE_CONST_HORIZON == self.realm.tick:
+         nmmo.emulation.const_horizon(dones)
+
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())
 

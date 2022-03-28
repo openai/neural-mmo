@@ -45,6 +45,10 @@ def pad_const_nent(config, dummy_ob, obs, rewards, dones, infos):
             rewards[i] = 0                                                 
             infos[i] = {}
 
+def const_horizon(dones):
+    for agent in dones:
+        dones[agent] = True
+
 def pack_atn_space(config):
    actions = defaultdict(dict)                                             
    for atn in sorted(nmmo.Action.edges):                                   

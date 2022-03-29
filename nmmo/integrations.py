@@ -59,9 +59,6 @@ class SB3Env(Env):
             # Cheat logs into infos
             infos[1]['logs'] = self.terminal()['Stats']
 
-        # PZ Bug workaround
-        self.agents = self.possible_agents
-
         return obs, rewards, dones, infos 
 
 class CleanRLEnv(SB3Env):
@@ -73,6 +70,7 @@ def sb3_vec_envs(config_cls, num_envs, num_cpus):
     env    = SB3Env(config)
 
     env = ss.pettingzoo_env_to_vec_env_v1(env)
+    env.black_death = True #We provide our own black_death emulation
     env = ss.concat_vec_envs_v1(env, num_envs, num_cpus,
             base_class='stable_baselines3')
 
@@ -83,6 +81,8 @@ def cleanrl_vec_envs(config_cls, num_envs, num_cpus):
     env    = CleanRLEnv(config)
 
     env = ss.pettingzoo_env_to_vec_env_v1(env)
+    env.black_death = True #We provide our own black_death emulation
+
     env = ss.concat_vec_envs_v1(env, num_envs, num_cpus,
             base_class='gym')
 

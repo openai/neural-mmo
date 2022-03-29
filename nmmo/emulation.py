@@ -39,11 +39,12 @@ def multiagent_to_singleagent(config):
         
 def pad_const_nent(config, dummy_ob, obs, rewards, dones, infos):
     for i in range(1, config.NENT+1):                               
-        dones[i] = False #No partial agent episodes                       
+        #dones[i] = False #No partial agent episodes                       
         if i not in obs:                                                  
             obs[i] = dummy_ob                                         
             rewards[i] = 0                                                 
             infos[i] = {}
+            dones[i] = True#False #No partial agent episodes                       
 
 def const_horizon(dones):
     for agent in dones:

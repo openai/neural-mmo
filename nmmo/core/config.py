@@ -111,6 +111,8 @@ class Config(Template):
    def game_system_enabled(self, name) -> bool:
       return hasattr(self, name)
 
+   def population_mapping_fn(self, idx) -> int:
+      return idx % self.NPOP
 
    ############################################################################
    ### Emulation Parameters
@@ -154,8 +156,10 @@ class Config(Template):
    NENT                    = None
    '''Maximum number of agents spawnable in the environment'''
 
-   NPOP                    = 1
-   '''Number of distinct populations spawnable in the environment'''
+   @property
+   def NPOP(self):
+       '''Number of distinct populations spawnable in the environment'''
+       return len(self.AGENTS)
 
    N_AGENT_OBS             = 100
    '''Number of distinct agent observations'''

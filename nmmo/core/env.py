@@ -103,7 +103,6 @@ class Env(ParallelEnv):
 
       self.realm      = core.Realm(config)
       self.registry   = nmmo.OverlayRegistry(config, self)
-
     
       self.config     = config
       self.overlay    = None
@@ -112,6 +111,10 @@ class Env(ParallelEnv):
       self.obs        = None
 
       self.has_reset  = False
+      
+      # Populate dummy ob
+      self.dummy_ob   = None
+      self.observation_space(0)
 
       # Flat index actions
       if not config.EMULATE_FLAT_ATN:
@@ -173,7 +176,14 @@ class Env(ParallelEnv):
 
          observation[name] = gym.spaces.Dict(observation[name])
 
-      observation = gym.spaces.Dict(observation)
+      observation   = gym.spaces.Dict(observation)
+
+      if not self.dummy_ob:
+         self.dummy_ob = observation.sample()
+         for ent_key, ent_val in self.dummy_ob.items():
+             for attr_key, attr_val in ent_val.items():
+                 self.dummy_ob[ent_key][attr_key] *= 0                
+
 
       if not self.config.EMULATE_FLAT_OBS:
          return observation
@@ -418,7 +428,6 @@ class Env(ParallelEnv):
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
-            self.dummy_ob  = ob
 
             rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
@@ -426,7 +435,6 @@ class Env(ParallelEnv):
       for entID, ent in self.dead.items():
          self.log(ent)
 
-      #dummy_ob = self.observation_space(1).sample()
       for entID,ent in self.dead.items():
          if ent.agent.scripted:
             continue

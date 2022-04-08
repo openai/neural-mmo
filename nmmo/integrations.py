@@ -2,11 +2,6 @@ from pdb import set_trace as T
 
 from nmmo import Env
 
-try:
-    import supersuit as ss
-except ImportError:
-    raise ImportError('Integrations depend on supersuit. Install and then retry')
-
 
 def rllib_env_cls():
     try:
@@ -14,12 +9,11 @@ def rllib_env_cls():
     except ImportError:
         raise ImportError('Integrations depend on rllib. Install ray[rllib] and then retry')
 
-    import rllib
     class RLlibEnv(Env, rllib.MultiAgentEnv):
         def __init__(self, config):
             self.config = config['config']
             self.config.EMULATE_CONST_HORIZON = True
-            super.__init__(self.config)
+            super().__init__(self.config)
 
         def render(self):
             #Patrch of RLlib dupe rendering bug
@@ -39,6 +33,8 @@ def rllib_env_cls():
                 dones['__all__'] = True
 
             return obs, rewards, dones, infos
+
+    return RLlibEnv
         
 
 class SB3Env(Env):
@@ -66,6 +62,11 @@ class CleanRLEnv(SB3Env):
         super().__init__(config)
 
 def sb3_vec_envs(config_cls, num_envs, num_cpus):
+    try:
+        import supersuit as ss
+    except ImportError:
+        raise ImportError('Integrations depend on supersuit. Install and then retry')
+
     config = config_cls()
     env    = SB3Env(config)
 
@@ -77,6 +78,12 @@ def sb3_vec_envs(config_cls, num_envs, num_cpus):
     return env
 
 def cleanrl_vec_envs(config_cls, num_envs, num_cpus):
+    try:
+        import supersuit as ss
+    except ImportError:
+        raise ImportError('Integrations depend on supersuit. Install and then retry')
+
+
     config = config_cls()
     env    = CleanRLEnv(config)
 

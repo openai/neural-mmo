@@ -377,7 +377,6 @@ class Env(ParallelEnv):
           if self.config.SAVE_REPLAY:
               self.replay.update(packet)
 
-
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
          #TODO: Should this silently fail? Warning level options?

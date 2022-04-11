@@ -245,6 +245,9 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
+      if self.has_reset:
+         print('Resetting env')
+
       self.has_reset = True
 
       self.actions = {}
@@ -428,7 +431,6 @@ class Env(ParallelEnv):
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
-
             rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
 
@@ -439,7 +441,11 @@ class Env(ParallelEnv):
          if ent.agent.scripted:
             continue
          rewards[ent.entID], infos[ent.entID] = self.reward(ent)
-         dones[ent.entID]   = True
+
+         dones[ent.entID] = False #TODO: Is this correct behavior?
+         if not self.config.EMULATE_CONST_HORIZON:
+            dones[ent.entID] = True
+
          obs[ent.entID]     = self.dummy_ob
 
       if self.config.EMULATE_CONST_NENT:
@@ -451,7 +457,10 @@ class Env(ParallelEnv):
       if self.config.EMULATE_CONST_HORIZON:
          assert self.realm.tick <= self.config.HORIZON
          if self.realm.tick == self.config.HORIZON:
-            nmmo.emulation.const_horizon(dones)
+            emulation.const_horizon(dones)
+
+      if not len(self.realm.players.items()):
+         emulation.const_horizon(dones)
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())

@@ -120,17 +120,15 @@ class Env(ParallelEnv):
 
       self.has_reset  = False
 
-      # Flat index actions
-      if not config.EMULATE_FLAT_ATN:
-         return
+      if self.config.SAVE_REPLAY:
+         self.replay = Replay(config)
 
       if config.EMULATE_CONST_NENT:
          self.possible_agents = [i for i in range(1, config.NENT + 1)]
 
-      if self.config.SAVE_REPLAY:
-         self.replay = Replay(config)
-
-      self.flat_actions = emulation.pack_atn_space(config)
+      # Flat index actions
+      if config.EMULATE_FLAT_ATN:
+         self.flat_actions = emulation.pack_atn_space(config)
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):

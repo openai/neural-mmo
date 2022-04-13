@@ -178,7 +178,7 @@ class Attack(Node):
          return
 
       #ADDED: POPULATION IMMUNITY
-      if entity.population == targ.population:
+      if entity.base.population.val == targ.base.population.val:
          return
 
       #Check attack range

@@ -2,13 +2,11 @@ from pdb import set_trace as T
 
 from nmmo import Env
 
-
 def rllib_env_cls():
     try:
         from ray import rllib
     except ImportError:
         raise ImportError('Integrations depend on rllib. Install ray[rllib] and then retry')
-
     class RLlibEnv(Env, rllib.MultiAgentEnv):
         def __init__(self, config):
             self.config = config['config']
@@ -35,7 +33,6 @@ def rllib_env_cls():
             return obs, rewards, dones, infos
 
     return RLlibEnv
-        
 
 class SB3Env(Env):
     def __init__(self, config):
@@ -65,7 +62,7 @@ def sb3_vec_envs(config_cls, num_envs, num_cpus):
     try:
         import supersuit as ss
     except ImportError:
-        raise ImportError('Integrations depend on supersuit. Install and then retry')
+        raise ImportError('SB3 integration depend on supersuit. Install and then retry')
 
     config = config_cls()
     env    = SB3Env(config)
@@ -81,8 +78,7 @@ def cleanrl_vec_envs(config_cls, num_envs, num_cpus):
     try:
         import supersuit as ss
     except ImportError:
-        raise ImportError('Integrations depend on supersuit. Install and then retry')
-
+        raise ImportError('CleanRL integration depend on supersuit. Install and then retry')
 
     config = config_cls()
     env    = CleanRLEnv(config)

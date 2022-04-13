@@ -110,7 +110,6 @@ class Env(ParallelEnv):
 
       self.realm      = core.Realm(config)
       self.registry   = nmmo.OverlayRegistry(config, self)
-
     
       self.config     = config
       self.overlay    = None
@@ -119,6 +118,10 @@ class Env(ParallelEnv):
       self.obs        = None
 
       self.has_reset  = False
+      
+      # Populate dummy ob
+      self.dummy_ob   = None
+      self.observation_space(0)
 
       if self.config.SAVE_REPLAY:
          self.replay = Replay(config)
@@ -178,7 +181,14 @@ class Env(ParallelEnv):
 
          observation[name] = gym.spaces.Dict(observation[name])
 
-      observation = gym.spaces.Dict(observation)
+      observation   = gym.spaces.Dict(observation)
+
+      if not self.dummy_ob:
+         self.dummy_ob = observation.sample()
+         for ent_key, ent_val in self.dummy_ob.items():
+             for attr_key, attr_val in ent_val.items():
+                 self.dummy_ob[ent_key][attr_key] *= 0                
+
 
       if not self.config.EMULATE_FLAT_OBS:
          return observation
@@ -240,6 +250,9 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
+      if self.has_reset:
+         print('Resetting env')
+
       self.has_reset = True
 
       self.actions = {}
@@ -422,20 +435,21 @@ class Env(ParallelEnv):
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
-            self.dummy_ob  = ob
-
             rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
 
       for entID, ent in self.dead.items():
          self.log(ent)
 
-      #dummy_ob = self.observation_space(1).sample()
       for entID,ent in self.dead.items():
          if ent.agent.scripted:
             continue
          rewards[ent.entID], infos[ent.entID] = self.reward(ent)
-         dones[ent.entID]   = True
+
+         dones[ent.entID] = False #TODO: Is this correct behavior?
+         if not self.config.EMULATE_CONST_HORIZON:
+            dones[ent.entID] = True
+
          obs[ent.entID]     = self.dummy_ob
 
       if self.config.EMULATE_CONST_NENT:
@@ -447,7 +461,10 @@ class Env(ParallelEnv):
       if self.config.EMULATE_CONST_HORIZON:
          assert self.realm.tick <= self.config.HORIZON
          if self.realm.tick == self.config.HORIZON:
-            nmmo.emulation.const_horizon(dones)
+            emulation.const_horizon(dones)
+
+      if not len(self.realm.players.items()):
+         emulation.const_horizon(dones)
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())

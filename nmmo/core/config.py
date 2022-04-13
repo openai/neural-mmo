@@ -209,7 +209,7 @@ class Config(Template):
           r, c = c, r 
       return (r, c)
 
-   def SPAWN_CONCURRENT(self):
+   def SPAWN_CONCURRENT(self, shuffle=True):
       left   = self.TERRAIN_BORDER
       right  = self.TERRAIN_CENTER + self.TERRAIN_BORDER
       rrange = np.arange(left+2, right, 4).tolist()
@@ -226,9 +226,14 @@ class Config(Template):
       s4     = list(zip(highs, rrange))
 
       ret = s1 + s2 + s3 + s4
+      if shuffle:
+        assert not len(ret) % self.NPOP
+        ret = np.array_split(ret, self.NPOP)
+        np.random.shuffle(ret)
+        ret = np.concatenate(ret, axis=0).tolist()
       n = int(self.NENT * len(self.AGENTS))
       return ret[:n]
-
+    
    @property
    def SPAWN(self):
       return self.SPAWN_CONTINUOUS

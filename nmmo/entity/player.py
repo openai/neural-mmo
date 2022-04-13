@@ -26,7 +26,8 @@ class Player(entity.Entity):
       self.skills = Skills(self)
 
       self.diary  = None
-      if tasks := realm.config.TASKS:
+      tasks = realm.config.TASKS
+      if tasks:
           self.diary = Diary(tasks)
 
       self.dataframe.init(nmmo.Serialized.Entity, self.entID, self.pos)

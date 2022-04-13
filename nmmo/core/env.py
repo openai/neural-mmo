@@ -21,7 +21,8 @@ class Replay:
         self.packets = []
         self.map     = None
 
-        self.path    = config.SAVE_REPLAY + '.replay'
+        if config is not None:
+            self.path = config.SAVE_REPLAY + '.replay'
 
         self._i = 0
 
@@ -48,15 +49,21 @@ class Replay:
             out.write(data)
 
     @classmethod
-    def load(cls, config, path):
+    def load(cls, path):
         with open(path, 'rb') as fp:
             data = fp.read()
 
         data = pickle.loads(lz4.block.decompress(data))
-        replay = Replay(config)
+        replay = Replay(None)
         replay.map = data['map']
         replay.packets = data['packets']
         return replay
+
+    def render(self):
+        from nmmo.websocket import Application
+        client = Application(realm=None)
+        for packet in self:
+            client.update(packet)
 
     def __iter__(self):
         self._i = 0
@@ -116,17 +123,15 @@ class Env(ParallelEnv):
       self.dummy_ob   = None
       self.observation_space(0)
 
-      # Flat index actions
-      if not config.EMULATE_FLAT_ATN:
-         return
+      if self.config.SAVE_REPLAY:
+         self.replay = Replay(config)
 
       if config.EMULATE_CONST_NENT:
          self.possible_agents = [i for i in range(1, config.NENT + 1)]
 
-      if self.config.SAVE_REPLAY:
-         self.replay = Replay(config)
-
-      self.flat_actions = emulation.pack_atn_space(config)
+      # Flat index actions
+      if config.EMULATE_FLAT_ATN:
+         self.flat_actions = emulation.pack_atn_space(config)
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):
@@ -382,7 +387,6 @@ class Env(ParallelEnv):
 
           if self.config.SAVE_REPLAY:
               self.replay.update(packet)
-
 
       #Preprocess actions for neural models
       for entID in list(actions.keys()):

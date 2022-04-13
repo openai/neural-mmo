@@ -7,8 +7,6 @@ def rllib_env_cls():
         from ray import rllib
     except ImportError:
         raise ImportError('Integrations depend on rllib. Install ray[rllib] and then retry')
-
-    from ray import rllib
     class RLlibEnv(Env, rllib.MultiAgentEnv):
         def __init__(self, config):
             self.config = config['config']
@@ -35,7 +33,6 @@ def rllib_env_cls():
             return obs, rewards, dones, infos
 
     return RLlibEnv
-
 
 class SB3Env(Env):
     def __init__(self, config):

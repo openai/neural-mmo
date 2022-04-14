@@ -210,7 +210,12 @@ class Env(ParallelEnv):
          observation space (such as targeting)'''
 
       if self.config.EMULATE_FLAT_ATN:
-         return gym.spaces.Discrete(len(self.flat_actions))
+         lens = []
+         for atn in nmmo.Action.edges:
+             for arg in atn.edges:
+                 lens.append(arg.N(self.config))
+         return gym.spaces.MultiDiscrete(lens)
+         #return gym.spaces.Discrete(len(self.flat_actions))
 
       actions = {}
       for atn in sorted(nmmo.Action.edges):
@@ -400,8 +405,16 @@ class Env(ParallelEnv):
             continue
 
          if self.config.EMULATE_FLAT_ATN:
-            assert actions[entID] in self.flat_actions, f'Invalid action {actions[entID]}'
-            actions[entID] = self.flat_actions[actions[entID]]
+            ent_action = {}
+            idx = 0
+            for atn in nmmo.Action.edges:
+                ent_action[atn] = {}
+                for arg in atn.edges:
+                    ent_action[atn][arg] = actions[entID][idx]
+                    idx += 1
+            actions[entID] = ent_action
+            #assert actions[entID] in self.flat_actions, f'Invalid action {actions[entID]}'
+            #actions[entID] = self.flat_actions[actions[entID]]
 
          self.actions[entID] = {}
          for atn, args in actions[entID].items():

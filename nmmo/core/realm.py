@@ -211,6 +211,9 @@ class Realm:
       # Global item registry
       self.items    = {}
 
+      # Initialize actions
+      nmmo.Action.init(config)
+
    def reset(self, idx):
       '''Reset the environment and load the specified map
 

@@ -105,6 +105,7 @@ class Base:
       self.level      = nmmo.Serialized.Entity.Level(     ent.dataframe, ent.entID, 3)
       self.item_level = nmmo.Serialized.Entity.ItemLevel( ent.dataframe, ent.entID, 0)
       self.gold       = nmmo.Serialized.Entity.Gold(      ent.dataframe, ent.entID, 0)
+      self.comm       = nmmo.Serialized.Entity.Comm(      ent.dataframe, ent.entID, 0)
 
       ent.dataframe.init(nmmo.Serialized.Entity, ent.entID, (r, c))
 

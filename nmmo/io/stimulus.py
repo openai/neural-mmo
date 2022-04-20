@@ -123,6 +123,11 @@ class Serialized(metaclass=utils.IterableNameComparable):
             self.scale = 0.025
             self.max   = 5 * config.NPC_LEVEL_MAX
 
+      class Comm(Discrete):
+         def init(self, config):
+            self.scale = 0.025
+            self.max   = config.COMMUNICATION_NUM_TOKENS
+
       class Population(Discrete):
          def init(self, config):
             self.min = -3 #NPC index

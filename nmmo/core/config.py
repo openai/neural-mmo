@@ -481,8 +481,19 @@ class Exchange:
        '''Number of distinct item observations'''
        return self.ITEM_N * self.NPC_LEVEL_MAX
 
+class Communication:
+   '''Exchange Game System'''
 
-class AllGameSystems(Terrain, Resource, Combat, NPC, Progression, Item, Equipment, Profession, Exchange): pass
+   COMMUNICATION_SYSTEM_ENABLED             = True
+   '''Game system flag'''
+
+   @property
+   def COMMUNICATION_NUM_TOKENS(self):
+       '''Number of distinct item observations'''
+       return self.ITEM_N * self.NPC_LEVEL_MAX
+
+
+class AllGameSystems(Terrain, Resource, Combat, NPC, Progression, Item, Equipment, Profession, Exchange, Communication): pass
 
 
 ############################################################################

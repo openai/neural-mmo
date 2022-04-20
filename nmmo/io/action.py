@@ -18,6 +18,10 @@ class NodeType(Enum):
    VARIABLE  = auto() #Variable argument
 
 class Node(metaclass=utils.IterableNameComparable):
+   @classmethod
+   def init(cls, config):
+       pass
+
    @staticproperty
    def edges():
       return []
@@ -54,30 +58,8 @@ class Action(Node):
    hooked   = False
 
    @classmethod
-   def edges(cls, config):
-      '''List of valid actions'''
-      Action.hook(config)
-
-      edges = [Move]
-      if config.COMBAT_SYSTEM_ENABLED:
-          edges.append(Attack)
-      if config.ITEM_SYSTEM_ENABLED:
-          edges.append(Use)
-      if config.EXCHANGE_SYSTEM_ENABLED:
-          edges += [Buy, Sell]
-
-      return edges
-
-   @staticproperty
-   def n():
-      return len(Action.arguments)
-
-   def args(stim, entity, config):
-      return nmmo.Serialized.edges 
-
-   #Called upon module import (see bottom of file)
-   #Sets up serialization domain
-   def hook(config):
+   def init(cls, config):
+      # Sets up serialization domain
       if Action.hooked:
           return
 
@@ -86,7 +68,9 @@ class Action(Node):
       idx = 0
       arguments = []
       for action in Action.edges(config):
+         action.init(config)
          for args in action.edges:
+            args.init(config)
             if not 'edges' in args.__dict__:
                continue
             for arg in args.edges: 
@@ -95,6 +79,27 @@ class Action(Node):
                arg.idx = idx 
                idx += 1
       Action.arguments = arguments
+
+   @classmethod
+   def edges(cls, config):
+      '''List of valid actions'''
+      edges = [Move]
+      if config.COMBAT_SYSTEM_ENABLED:
+          edges.append(Attack)
+      if config.ITEM_SYSTEM_ENABLED:
+          edges.append(Use)
+      if config.EXCHANGE_SYSTEM_ENABLED:
+          edges += [Buy, Sell]
+      if config.COMMUNICATION_SYSTEM_ENABLED:
+          edges.append(Comm)
+      return edges
+
+   @staticproperty
+   def n():
+      return len(Action.arguments)
+
+   def args(stim, entity, config):
+      return nmmo.Serialized.edges 
 
 class Move(Node):
    priority = 1
@@ -345,27 +350,49 @@ class Sell(Node):
 
         return env.exchange.sell(env, entity, item, price.val)
 
-class Discrete(Node):
-    argType = Fixed
-
+def init_discrete(values):
     classes = []
-    for i in range(1, 101):
+    for i in values:
         name = f'Discrete_{i}'
         cls  = type(name, (object,), {'val': i})
         classes.append(cls)
+    return classes
 
-class Price(Discrete):
+class Price(Node):
+    argType  = Fixed
+
+    @classmethod
+    def init(cls, config):
+        Price.classes = init_discrete(range(1, 101))
+
     @staticproperty
     def edges():
-        return Discrete.classes
+        return Price.classes
 
     def args(stim, entity, config):
-        return Discrete.edges
+        return Price.edges
 
+class Token(Node):
+    @classmethod
+    def init(cls, config):
+        Comm.classes = init_discrete(range(config.COMMUNICATION_NUM_TOKENS))
 
-#TODO: Add communication
-class Message:
-   pass
+    @staticproperty
+    def edges():
+        return Comm.classes
+
+    def args(stim, entity, config):
+        return Comm.edges
+
+class Comm(Node):
+    priority = 0
+
+    @staticproperty
+    def edges():
+        return [Token]
+
+    def call(env, entity, token):
+        entity.base.comm.update(token)
 
 #TODO: Solve AGI
 class BecomeSkynet:

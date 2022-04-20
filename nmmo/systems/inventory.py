@@ -2,7 +2,6 @@ from pdb import set_trace as T
 import numpy as np
 
 import inspect
-from multiset import Multiset
 
 from nmmo.systems import item as Item
 from nmmo.systems import skill as Skill

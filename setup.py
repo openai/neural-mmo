@@ -16,6 +16,7 @@ extra = {
         'supersuit==3.3.5',
         'pettingzoo==1.15.0',
         'gym==0.23.0',
+        'tensorboard',
         'torch',
         ],
     'rllib': [

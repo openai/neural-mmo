@@ -29,3 +29,9 @@ __all__ = ['Env', 'config', 'scripting', 'emulation', 'integrations', 'agent', '
         'Serialized', 'action', 'Action', 'scripting', 'material',
         'Task', 'Overlay', 'OverlayRegistry', 'Replay']
 
+try:
+    import openskill
+    from .lib.rating import OpenSkillRating
+    __all__.append('OpenSkillRating')
+except:
+    pass

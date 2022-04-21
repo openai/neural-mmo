@@ -209,7 +209,7 @@ class Config(Template):
           r, c = c, r 
       return (r, c)
 
-   def SPAWN_CONCURRENT(self, shuffle=True):
+   def SPAWN_CONCURRENT(self, shuffle=False):
       left   = self.TERRAIN_BORDER
       right  = self.TERRAIN_CENTER + self.TERRAIN_BORDER
       rrange = np.arange(left+2, right, 4).tolist()

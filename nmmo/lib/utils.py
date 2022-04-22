@@ -31,7 +31,8 @@ class Iterable(type):
 class StaticIterable(type):
     def __iter__(cls):
         stack = list(cls.__dict__.items())
-        for name, attr in cls.__dict__.items():
+        stack.reverse()
+        for name, attr in stack:
             if name == '__module__':
                 continue
             if name.startswith('__'):

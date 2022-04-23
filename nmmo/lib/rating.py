@@ -46,6 +46,13 @@ class OpenSkillRating:
 
         self.anchor_baseline()
 
+    def __str__(self):
+        return ', '.join(f'{p.__name__}: {int(r.mu)}' for p, r in self.ratings.items())
+
+    @property
+    def stats(self):
+        return {p.__name__: int(r.mu) for p, r in self.ratings.items()}
+
     def update(self, ranks=None, policy_ids=None, scores=None):
         '''Updates internal skill rating estimates for each policy
 

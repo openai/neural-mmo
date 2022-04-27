@@ -97,9 +97,7 @@ class Env(ParallelEnv):
       if config is None:
           config = nmmo.config.Default()
 
-      if __debug__:
-         err = 'Config {} is not a config instance (did you pass the class?)'
-         assert isinstance(config, nmmo.config.Config), err.format(config)
+      assert isinstance(config, nmmo.config.Config), f'Config {config} is not a config instance (did you pass the class?)'
 
       if not config.AGENTS:
           from nmmo import agent

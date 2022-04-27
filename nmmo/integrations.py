@@ -74,23 +74,64 @@ def sb3_vec_envs(config_cls, num_envs, num_cpus):
 
     return env
 
-def cleanrl_vec_envs(config_cls, num_envs, num_cpus):
+def cleanrl_vec_envs(config_cls, eval_config_cls=None, verbose=True):
     try:
         import supersuit as ss
     except ImportError:
         raise ImportError('CleanRL integration depend on supersuit. Install and then retry')
 
-    config = config_cls()
-    env    = CleanRLEnv(config)
+    def make_env_fn(config_cls):
+        '''Wraps the make_env fn to add a a config argument'''
+        def make_env():
+            config = config_cls()
+            env    = CleanRLEnv(config)
 
-    env = ss.pettingzoo_env_to_vec_env_v1(env)
-    env.black_death = True #We provide our own black_death emulation
+            env = ss.pettingzoo_env_to_vec_env_v1(env)
+            env.black_death = True #We provide our own black_death emulation
 
-    env = ss.concat_vec_envs_v1(env, num_envs, num_cpus,
-            base_class='gym')
+            env = ss.concat_vec_envs_v1(env,
+                    config.NUM_ENVS // config.NENT,
+                    config.NUM_CPUS,
+                    base_class='gym')
 
-    env.single_observation_space = env.observation_space
-    env.single_action_space      = env.action_space
-    env.is_vector_env            = True
+            env.single_observation_space = env.observation_space
+            env.single_action_space      = env.action_space
+            env.is_vector_env            = True
 
-    return env
+            return env
+        return make_env
+
+    # Sanity check config cls
+    assert isinstance(config_cls, type), 'config_cls must be a type (did ytou pass an instance?)'
+    assert hasattr(config_cls, 'NUM_ENVS'), 'config_cls must define NUM_ENVS'
+    assert hasattr(config_cls, 'NUM_CPUS'), 'config_cls must define NUM_CPUS'
+
+
+    envs      = make_env_fn(config_cls)
+
+    config    = config_cls()
+    dummy_env = CleanRLEnv(config)
+    if eval_config_cls is not None:
+        assert hasattr(config_cls, 'NUM_ENVS'), 'eval_config_cls must define NUM_ENVS'
+        assert hasattr(eval_config_cls, 'NUM_CPUS'), 'eval_config_cls must define NUM_CPUS'
+        assert isinstance(eval_config_cls, type), 'eval_config_cls must be a type (did ytou pass an instance?)'
+        envs        = [make_env_fn(config_cls), make_env_fn(eval_config_cls)]
+
+        eval_config = eval_config_cls()
+        num_cpus    = config.NUM_CPUS + eval_config.NUM_CPUS
+        num_envs    = config.NUM_ENVS // config.NENT + eval_config.NUM_ENVS // eval_config.NENT
+    else:
+        envs     = [make_env_fn(config_cls)]
+
+        num_cpus = config.NUM_CPUS
+        num_envs = config.NUM_ENVS // config.NENT
+
+    envs = ss.vector.MakeCPUAsyncConstructor(num_cpus)(envs,
+            obs_space=dummy_env.observation_space(1),
+            act_space=dummy_env.action_space(1))
+    envs.is_vector_env = True
+
+    if verbose:
+        print(f'Created {num_envs} envs across {num_cpus} cores')
+
+    return envs

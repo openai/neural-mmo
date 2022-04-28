@@ -253,9 +253,6 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
-      if self.has_reset:
-         print('Resetting env')
-
       self.has_reset = True
 
       self.actions = {}
@@ -382,7 +379,6 @@ class Env(ParallelEnv):
           packet = {**self.realm.packet(), **packet}
 
           if self.overlay is not None:
-             print('Overlay data: ', len(self.overlay))
              packet['overlay'] = self.overlay
              self.overlay      = None
 

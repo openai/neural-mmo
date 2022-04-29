@@ -10,11 +10,11 @@ def rank(policy_ids, scores):
     '''Compute policy rankings from per-agent scores'''
     agents = defaultdict(list)
     for policy_id, score in zip(policy_ids, scores):
-        agents[policy_id].append(score + 1e-8*np.random.normal())
+        agents[policy_id].append(score)
 
     # Double argsort returns ranks
     return np.argsort(np.argsort(
-        [-np.mean(vals) for policy, vals in 
+        [-np.mean(vals) + 1e-8 * np.random.normal() for policy, vals in 
         sorted(agents.items())])).tolist()
 
 

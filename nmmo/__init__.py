@@ -34,4 +34,4 @@ try:
     from .lib.rating import OpenSkillRating
     __all__.append('OpenSkillRating')
 except:
-    pass
+    print('Warning: OpenSkill not installed. Ignore if you do not need this feature')

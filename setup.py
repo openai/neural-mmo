@@ -18,18 +18,7 @@ extra = {
         'gym==0.23.0',
         'tensorboard',
         'torch',
-        ],
-    'rllib': [
-        'ray[all]==1.10.0',
-        'grpcio==1.44.0',
-        'six==1.15.0',
-        'dm-tree==0.1.6',
-        'aiohttp==3.7',
-        'pandas==1.3.4',
-        'wandb==0.12.9',
-        'pettingzoo==1.14.0',
-        'gym==0.21.0',
-        'torch',
+        'openskill',
         ],
     }
 

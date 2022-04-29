@@ -395,6 +395,10 @@ class Env(ParallelEnv):
 
          ent = self.realm.players[entID]
 
+         # Fix later -- don't allow action inputs for scripted agents
+         if ent.agent.scripted:
+             continue
+
          if not ent.alive:
             continue
 
@@ -407,8 +411,6 @@ class Env(ParallelEnv):
                     ent_action[atn][arg] = actions[entID][idx]
                     idx += 1
             actions[entID] = ent_action
-            #assert actions[entID] in self.flat_actions, f'Invalid action {actions[entID]}'
-            #actions[entID] = self.flat_actions[actions[entID]]
 
          self.actions[entID] = {}
          for atn, args in actions[entID].items():

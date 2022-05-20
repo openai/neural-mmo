@@ -193,6 +193,8 @@ class Config(Template):
    BASE_HEALTH                = 10
    '''Initial Constitution level and agent health'''
 
+   RESPAWN = False
+
    PLAYER_SPAWN_ATTEMPTS      = None
    '''Number of player spawn attempts per tick
 
@@ -249,7 +251,7 @@ class Config(Template):
     
    @property
    def SPAWN(self):
-      return self.SPAWN_CONTINUOUS
+      return self.SPAWN_CONCURRENT
 
 
    ############################################################################

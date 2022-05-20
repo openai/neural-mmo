@@ -456,7 +456,7 @@ class Env(ParallelEnv):
          rewards[ent.entID], infos[ent.entID] = self.reward(ent)
 
          dones[ent.entID] = False #TODO: Is this correct behavior?
-         if not self.config.EMULATE_CONST_HORIZON:
+         if not self.config.EMULATE_CONST_HORIZON and not self.config.RESPAWN:
             dones[ent.entID] = True
 
          obs[ent.entID]     = self.dummy_ob

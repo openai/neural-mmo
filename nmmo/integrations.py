@@ -120,15 +120,18 @@ def cleanrl_vec_envs(config_cls, eval_config_cls=None, verbose=True):
         eval_config = eval_config_cls()
         num_cpus    = config.NUM_CPUS + eval_config.NUM_CPUS
         num_envs    = config.NUM_ENVS // config.NENT + eval_config.NUM_ENVS // eval_config.NENT
+        num_agents  = config.NUM_ENVS + eval_config.NUM_ENVS
     else:
-        envs     = [make_env_fn(config_cls)]
+        envs        = [make_env_fn(config_cls)]
+        num_cpus    = config.NUM_CPUS
+        num_envs    = config.NUM_ENVS // config.NENT
+        num_agents  = config.NUM_ENVS
 
-        num_cpus = config.NUM_CPUS
-        num_envs = config.NUM_ENVS // config.NENT
-
-    envs = ss.vector.MakeCPUAsyncConstructor(num_cpus)(envs,
-            obs_space=dummy_env.observation_space(1),
-            act_space=dummy_env.action_space(1))
+    envs = ss.vector.ProcConcatVec(envs,
+            dummy_env.observation_space(1),
+            dummy_env.action_space(1),
+            num_agents,
+            dummy_env.metadata)
     envs.is_vector_env = True
 
     if verbose:

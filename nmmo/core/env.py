@@ -495,37 +495,41 @@ class Env(ParallelEnv):
       '''
 
       quill = self.quill
+      name = ent.agent.name
 
       blob = quill.register('Population', self.realm.tick)
       blob.log(self.realm.population)
 
       blob = quill.register('Lifetime', self.realm.tick)
-      blob.log(ent.history.timeAlive.val)
+      blob.log(ent.history.timeAlive.val, name + 'Lifetime')
 
       blob = quill.register('Skill Level', self.realm.tick)
-      blob.log(ent.skills.range.level,        'Range')
-      blob.log(ent.skills.mage.level,         'Mage')
-      blob.log(ent.skills.melee.level,        'Melee')
-      blob.log(ent.skills.constitution.level, 'Constitution')
-      blob.log(ent.skills.defense.level,      'Defense')
-      blob.log(ent.skills.fishing.level,      'Fishing')
-      blob.log(ent.skills.hunting.level,      'Hunting')
+      blob.log(ent.skills.range.level,        name + 'Range')
+      blob.log(ent.skills.mage.level,         name + 'Mage')
+      blob.log(ent.skills.melee.level,        name + 'Melee')
+      blob.log(ent.skills.constitution.level, name + 'Constitution')
+      blob.log(ent.skills.defense.level,      name + 'Defense')
+      blob.log(ent.skills.fishing.level,      name + 'Fishing')
+      blob.log(ent.skills.hunting.level,      name + 'Hunting')
 
       blob = quill.register('Equipment', self.realm.tick)
-      blob.log(ent.loadout.chestplate.level, 'Chestplate')
-      blob.log(ent.loadout.platelegs.level,  'Platelegs')
+      blob.log(ent.loadout.chestplate.level, name + 'Chestplate')
+      blob.log(ent.loadout.platelegs.level,  name + 'Platelegs')
 
       blob = quill.register('Exploration', self.realm.tick)
-      blob.log(ent.history.exploration)
+      blob.log(ent.history.exploration, name + 'Exploration')
 
-      quill.stat('Lifetime',  ent.history.timeAlive.val)
+      quill.stat(name + 'Lifetime',  ent.history.timeAlive.val)
 
+      # Duplicated task reward with/without name
       if ent.diary:
-         quill.stat('Tasks_Completed', ent.diary.completed)
+         quill.stat(name + 'Tasks_Completed', ent.diary.completed)
+         quill.stat(name + 'Task_Reward', ent.diary.cumulative_reward)
          quill.stat('Task_Reward', ent.diary.cumulative_reward)
          for achievement in ent.diary.achievements:
-            quill.stat(achievement.name, float(achievement.completed))
+            quill.stat(name + achievement.name, float(achievement.completed))
       else:
+         quill.stat(name + 'Task_Reward', ent.history.timeAlive.val)
          quill.stat('Task_Reward', ent.history.timeAlive.val)
 
       quill.stat('PolicyID', ent.agent.policyID)

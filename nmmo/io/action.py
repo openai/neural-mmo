@@ -173,6 +173,10 @@ class Attack(Node):
       if entity.isPlayer and not env.config.game_system_enabled('Combat'):
          return 
 
+      # Testing a spawn immunity against old agents to avoid spawn camping
+      if entity.isPlayer and targ.isPlayer and entity.history.timeAlive.val > 20 and targ.history.timeAlive < 20:
+         return
+
       #Check if self targeted
       if entity.entID == targ.entID:
          return

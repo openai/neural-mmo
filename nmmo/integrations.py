@@ -75,6 +75,12 @@ def sb3_vec_envs(config_cls, num_envs, num_cpus):
     return env
 
 def cleanrl_vec_envs(config_classes, verbose=True):
+    '''Creates a vector environment object from a list of configs.
+
+    Each subenv points to a single agent, but many agents can share the same env.
+    All envs must have the same observation and action space, but they can have
+    different numbers of agents'''
+
     try:
         import supersuit as ss
     except ImportError:
@@ -121,35 +127,14 @@ def cleanrl_vec_envs(config_classes, verbose=True):
             config    = cls()
             dummy_env = CleanRLEnv(config)
 
-        if idx == 0:
-            for cpu in range(cls.NUM_CPUS):
-                class Foo(cls):
-                    NUM_CPUS = 1
-                    NENT = 4*(cpu+1)
-                    NUM_ENVS =  NENT
+        envs = make_env_fn(cls)
+        all_envs.append(envs)
 
-                envs = make_env_fn(Foo)
-                all_envs.append(envs)
-
-                class Foo(cls):
-                    NUM_CPUS = 1
-                    NENT = 4*(32-cpu)
-                    NUM_ENVS =  NENT
-
-                envs = make_env_fn(Foo)
-                all_envs.append(envs)
-
-                num_cpus    += 1
-                num_envs    += 2
-                num_agents  += 132
-        else:
-            envs = make_env_fn(cls)
-            all_envs.append(envs)
-
-            cls = cls()
-            num_cpus    += cls.NUM_CPUS
-            num_envs    += cls.NUM_ENVS // cls.NENT
-            num_agents  += cls.NUM_ENVS
+        # TODO: Find a cleaner way to specify env scale that enables multiple envs per CPU
+        # without having to pass multiple configs
+        num_cpus    += cls.NUM_CPUS
+        num_envs    += cls.NUM_CPUS
+        num_agents  += cls.NUM_CPUS * cls.NENT
 
     envs = ss.vector.ProcConcatVec(all_envs,
             dummy_env.observation_space(1),
@@ -159,6 +144,6 @@ def cleanrl_vec_envs(config_classes, verbose=True):
     envs.is_vector_env = True
 
     if verbose:
-        print(f'Created {num_envs} envs across {num_cpus} cores')
+        print(f'nmmo.integrations.cleanrl_vec_envs created {num_envs} envs across {num_cpus} cores')
 
     return envs

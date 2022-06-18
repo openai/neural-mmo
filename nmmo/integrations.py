@@ -74,7 +74,7 @@ def sb3_vec_envs(config_cls, num_envs, num_cpus):
 
     return env
 
-def cleanrl_vec_envs(config_cls, eval_config_cls=None, verbose=True):
+def cleanrl_vec_envs(config_classes, verbose=True):
     try:
         import supersuit as ss
     except ImportError:
@@ -101,33 +101,57 @@ def cleanrl_vec_envs(config_cls, eval_config_cls=None, verbose=True):
             return env
         return make_env
 
-    # Sanity check config cls
-    assert isinstance(config_cls, type), 'config_cls must be a type (did ytou pass an instance?)'
-    assert hasattr(config_cls, 'NUM_ENVS'), 'config_cls must define NUM_ENVS'
-    assert hasattr(config_cls, 'NUM_CPUS'), 'config_cls must define NUM_CPUS'
+    dummy_env = None
+    all_envs = [] 
 
+    num_cpus   = 0
+    num_envs   = 0
+    num_agents = 0
 
-    envs      = make_env_fn(config_cls)
+    if type(config_classes) != list:
+        config_classes = [config_classes]
 
-    config    = config_cls()
-    dummy_env = CleanRLEnv(config)
-    if eval_config_cls is not None:
-        assert hasattr(config_cls, 'NUM_ENVS'), 'eval_config_cls must define NUM_ENVS'
-        assert hasattr(eval_config_cls, 'NUM_CPUS'), 'eval_config_cls must define NUM_CPUS'
-        assert isinstance(eval_config_cls, type), 'eval_config_cls must be a type (did ytou pass an instance?)'
-        envs        = [make_env_fn(config_cls), make_env_fn(eval_config_cls)]
+    for idx, cls in enumerate(config_classes):
+        assert isinstance(cls, type), 'config_cls must be a type (did ytou pass an instance?)'
+        assert hasattr(cls, 'NUM_ENVS'), f'config class {cls} must define NUM_ENVS'
+        assert hasattr(cls, 'NUM_CPUS'), f'config class {cls} must define NUM_CPUS'
+        assert isinstance(cls, type), f'config class {cls} must be a type (did you pass an instance?)'
 
-        eval_config = eval_config_cls()
-        num_cpus    = config.NUM_CPUS + eval_config.NUM_CPUS
-        num_envs    = config.NUM_ENVS // config.NENT + eval_config.NUM_ENVS // eval_config.NENT
-        num_agents  = config.NUM_ENVS + eval_config.NUM_ENVS
-    else:
-        envs        = [make_env_fn(config_cls)]
-        num_cpus    = config.NUM_CPUS
-        num_envs    = config.NUM_ENVS // config.NENT
-        num_agents  = config.NUM_ENVS
+        if dummy_env is None:
+            config    = cls()
+            dummy_env = CleanRLEnv(config)
 
-    envs = ss.vector.ProcConcatVec(envs,
+        if idx == 0:
+            for cpu in range(cls.NUM_CPUS):
+                class Foo(cls):
+                    NUM_CPUS = 1
+                    NENT = 4*(cpu+1)
+                    NUM_ENVS =  NENT
+
+                envs = make_env_fn(Foo)
+                all_envs.append(envs)
+
+                class Foo(cls):
+                    NUM_CPUS = 1
+                    NENT = 4*(32-cpu)
+                    NUM_ENVS =  NENT
+
+                envs = make_env_fn(Foo)
+                all_envs.append(envs)
+
+                num_cpus    += 1
+                num_envs    += 2
+                num_agents  += 132
+        else:
+            envs = make_env_fn(cls)
+            all_envs.append(envs)
+
+            cls = cls()
+            num_cpus    += cls.NUM_CPUS
+            num_envs    += cls.NUM_ENVS // cls.NENT
+            num_agents  += cls.NUM_ENVS
+
+    envs = ss.vector.ProcConcatVec(all_envs,
             dummy_env.observation_space(1),
             dummy_env.action_space(1),
             num_agents,

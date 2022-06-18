@@ -10,6 +10,7 @@ from nmmo import core, infrastructure
 from nmmo.entity.npc import NPC
 from nmmo.entity import Player
 from nmmo.lib import colors
+from nmmo.io.action import Action
 
 def prioritized(entities: Dict, merged: Dict):
    '''Sort actions into merged according to priority'''
@@ -180,6 +181,7 @@ class Realm:
    '''Top-level world object'''
    def __init__(self, config):
       self.config   = config
+      Action.hook(config)
 
       #Generate maps if they do not exist
       config.MAP_GENERATOR(config).generate_all_maps()

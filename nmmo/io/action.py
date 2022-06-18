@@ -49,8 +49,8 @@ class Fixed:
 class Action(Node):
    nodeType = NodeType.SELECTION
 
-   @staticproperty
-   def edges():
+   @staticmethod
+   def edges(config):
       '''List of valid actions'''
       return [Move, Attack]
 
@@ -63,10 +63,10 @@ class Action(Node):
 
    #Called upon module import (see bottom of file)
    #Sets up serialization domain
-   def hook():
+   def hook(config):
       idx = 0
       arguments = []
-      for action in Action.edges:
+      for action in Action.edges(config):
          for args in action.edges:
             if not 'edges' in args.__dict__:
                continue
@@ -170,6 +170,9 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(env, entity, style, targ):
+      if not env.config.COMBAT:
+         return
+
       if entity.isPlayer and not env.config.game_system_enabled('Combat'):
          return 
 
@@ -277,5 +280,3 @@ class Exchange:
 #TODO: Solve AGI
 class BecomeSkynet:
    pass
-
-Action.hook()

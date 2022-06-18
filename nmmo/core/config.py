@@ -246,6 +246,10 @@ class Config(Template):
         ret = np.array_split(ret, self.NPOP)
         np.random.shuffle(ret)
         ret = np.concatenate(ret, axis=0).tolist()
+
+      # TEMP HACK FOR EXPERIMENT -- IMPLEMENT PROPERLY
+      np.random.shuffle(ret)
+
       n = int(self.NENT * len(self.AGENTS))
       return ret[:n]
     

@@ -209,14 +209,14 @@ class Env(ParallelEnv):
 
       if self.config.EMULATE_FLAT_ATN:
          lens = []
-         for atn in nmmo.Action.edges:
+         for atn in nmmo.Action.edges(self.config):
              for arg in atn.edges:
                  lens.append(arg.N(self.config))
          return gym.spaces.MultiDiscrete(lens)
          #return gym.spaces.Discrete(len(self.flat_actions))
 
       actions = {}
-      for atn in sorted(nmmo.Action.edges):
+      for atn in sorted(nmmo.Action.edges(self.config)):
          actions[atn] = {}
          for arg in sorted(atn.edges):
             n                 = arg.N(self.config)
@@ -405,7 +405,7 @@ class Env(ParallelEnv):
          if self.config.EMULATE_FLAT_ATN:
             ent_action = {}
             idx = 0
-            for atn in nmmo.Action.edges:
+            for atn in nmmo.Action.edges(self.config):
                 ent_action[atn] = {}
                 for arg in atn.edges:
                     ent_action[atn][arg] = actions[entID][idx]

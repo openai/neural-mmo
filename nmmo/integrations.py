@@ -50,7 +50,13 @@ class SB3Env(Env):
 
         if self.realm.tick >= self.config.HORIZON or len(self.realm.players) == 0:
             # Cheat logs into infos
-            infos[1]['logs'] = self.terminal()['Stats']
+            stats = self.terminal()
+            if self.config.LOG_EVENTS:
+                stats = {**stats['Env'], **stats['Player'], **stats['Event']}
+            else:
+                stats = {**stats['Env'], **stats['Player']} 
+
+            infos[1]['logs'] = stats
 
         return obs, rewards, dones, infos 
 
@@ -96,7 +102,7 @@ def cleanrl_vec_envs(config_classes, verbose=True):
             env.black_death = True #We provide our own black_death emulation
 
             env = ss.concat_vec_envs_v1(env,
-                    config.NUM_ENVS // config.NENT,
+                    config.NUM_ENVS // config.PLAYER_N,
                     config.NUM_CPUS,
                     base_class='gym')
 

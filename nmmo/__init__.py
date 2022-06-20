@@ -13,7 +13,8 @@ motd = r'''      ___           ___           ___           ___
     \  \:\        \  \:\        \  \:\        \  \::/     maintained at MIT in
      \__\/         \__\/         \__\/         \__\/      Phillip Isola's lab '''.format(__version__)
 
-from .lib import material
+from . import scripting
+from .lib import material, spawn
 from .overlay import Overlay, OverlayRegistry
 from .io import action
 from .io.stimulus import Serialized
@@ -26,7 +27,7 @@ from .systems.achievement import Task
 from .core.terrain import MapGenerator, Terrain
 
 __all__ = ['Env', 'config', 'scripting', 'emulation', 'integrations', 'agent', 'Agent', 'MapGenerator', 'Terrain',
-        'Serialized', 'action', 'Action', 'scripting', 'material',
+        'Serialized', 'action', 'Action', 'scripting', 'material', 'spawn',
         'Task', 'Overlay', 'OverlayRegistry', 'Replay']
 
 try:

@@ -2,19 +2,11 @@ from pdb import set_trace as T
 import numpy as np
 
 class ExperienceCalculator:
-   def __init__(self):
-      self.exp = [0]
-      self.tabulateExp()
-
-   def tabulateExp(self, numLevels=99):
-      for i in range(2, numLevels+1):
-         increment = np.floor(i-1 + 300*(2**((i-1)/7.0)))/4.0
-         self.exp += [self.exp[-1] + increment]
-
-      self.exp = np.floor(np.array(self.exp))
+   def __init__(self, num_levels=15):
+      self.exp = np.array([0] + [1000*2**i for i in range(num_levels)])
 
    def expAtLevel(self, level):
-      return self.exp[level - 1]
+      return int(self.exp[level - 1])
 
    def levelAtExp(self, exp):
       if exp >= self.exp[-1]:

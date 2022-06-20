@@ -4,60 +4,66 @@ from nmmo.lib import material
 from copy import deepcopy
 import os
 
+import logging
 import numpy as np
 import json, pickle
 import time
 
 from nmmo.lib import utils
 
+class Logger:
+    def __init__(self):
+        self.stats = defaultdict(list)
+
+    def log(self, key, val):
+        self.stats[key].append(val)
+
+class EventLogger(Logger):
+    def __init__(self, log_file):
+        super().__init__()
+        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO, filename=log_file, filemode='w')
+
+    def log_min(self, key, val):
+        if key in self.stats and val >= self.stats[key][-1]:
+            return False
+
+        self.log(key, val)
+        return True
+
+    def log_max(self, key, val):
+        if key in self.stats and val <= self.stats[key][-1]:
+            return False
+
+        self.log(key, val)
+        return True
+
 class Quill:
-   def __init__(self):
-      self.blobs = defaultdict(Blob)
-      self.stats = defaultdict(list)
+   def __init__(self, config):
+      self.config = config
 
-   def stat(self, key, val):
-      self.stats[key].append(val)
+      self.env    = Logger()
+      self.player = Logger()
 
-   def register(self, key, tick, *plots):
-      if key in self.blobs:
-         blob = self.blobs[key]
+      if config.LOG_EVENTS:
+          self.event  = EventLogger(config.LOG_FILE)
+
+   def log_env(self, key, val):
+      self.env.log(key, val)
+
+   def log_player(self, key, val):
+      self.player.log(key, val)
+
+   @property
+   def packet(self):
+      packet = {'Env':    self.env.stats,
+              'Player': self.player.stats}
+
+      if self.config.LOG_EVENTS:
+          packet['Event'] = self.event.stats
       else:
-         blob = Blob()
-         self.blobs[key] = blob
+          packet['Event'] = 'Unavailable: config.LOG_EVENTS = False'
 
-      blob.tick = tick
-      return blob
-
-   @property
-   def packet(self):
-      logs = {key: blob.packet for key, blob in self.blobs.items()}
-      return {'Log': logs, 'Stats': self.stats}
-
-class Blob:
-   def __init__(self):
-      self.tracks = defaultdict(Track)
- 
-   def log(self, value, key=None):
-      self.tracks[key].update(self.tick, value)
-
-   @property
-   def packet(self):
-      return {key: track.packet for key, track in self.tracks.items()}
-
-#Static blob analytics
-class Track:
-   def __init__(self):
-      self.data = defaultdict(list)
-
-   def update(self, tick, value):
-      if type(value) != list:
-         value = [value]
-
-      self.data[tick] += value
-
-   @property
-   def packet(self):
-      return self.data
+      return packet
 
 #Log wrapper and benchmarker
 class Benchmarker:

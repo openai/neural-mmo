@@ -148,14 +148,14 @@ class GridTables:
    flat tensor representation of an entire class of observations,
    such as agents or tiles'''
    def __init__(self, config, obj, pad, prealloc=1000, expansion=2):
-      self.grid       = Grid(config.TERRAIN_SIZE, config.TERRAIN_SIZE)
+      self.grid       = Grid(config.MAP_SIZE, config.MAP_SIZE)
       self.continuous = ContinuousTable(config, obj, prealloc)
       self.discrete   = DiscreteTable(config, obj, prealloc)
       self.index      = Index(prealloc)
 
       self.nRows      = prealloc
       self.expansion  = expansion
-      self.radius     = config.NSTIM
+      self.radius     = config.PLAYER_VISION_RADIUS
       self.pad        = pad
 
    def get(self, ent, radius=None, entity=False):
@@ -164,7 +164,9 @@ class GridTables:
 
       r, c = ent.pos
       cent = self.grid.data[r, c]
-      assert cent != 0
+
+      if __debug__:
+          assert cent != 0
 
       rows = self.grid.window(
             r-radius, r+radius+1,
@@ -180,9 +182,20 @@ class GridTables:
 
       if entity:
          ents = [self.index.teg(e) for e in rows]
-         assert ents[0] == ent.entID
+         if __debug__:
+             assert ents[0] == ent.entID
          return values, ents
 
+      return values
+
+   def getFlat(self, keys):
+      if __debug__:
+          err = f'Dataframe got {len(keys)} keys with pad {self.pad}'
+          assert len(keys) <= self.pad, err
+
+      rows = [self.index.get(key) for key in keys[:self.pad]]
+      values = {'Continuous': self.continuous.get(rows, self.pad),
+                'Discrete':   self.discrete.get(rows, self.pad)}
       return values
 
    def update(self, obj, val):
@@ -206,6 +219,9 @@ class GridTables:
       self.grid.move(pos, nxt, row)
 
    def init(self, key, pos):
+      if pos is None:
+          return
+
       row = self.index.get(key)
       self.grid.set(pos, row)
 
@@ -215,10 +231,17 @@ class GridTables:
 
 class Dataframe:
    '''Infrastructure wrapper class'''
-   def __init__(self, config):
-      self.config, self.data = config, defaultdict(dict)
+   def __init__(self, realm):
+      config      = realm.config
+      self.config = config
+      self.data   = defaultdict(dict)
+
       for (objKey,), obj in nmmo.Serialized:
+         if not obj.enabled(config):
+             continue
          self.data[objKey] = GridTables(config, obj, pad=obj.N(config))
+
+      self.realm = realm
 
    def update(self, node, val):
       self.data[node.obj].update(node, val)
@@ -240,6 +263,17 @@ class Dataframe:
 
       ent.targets          = ents
       stim['Tile']         = self.data['Tile'].get(ent)
-      stim['Tile']['N']    = np.array([int(self.config.WINDOW**2)], dtype=np.int32)
+      stim['Tile']['N']    = np.array([self.config.PLAYER_VISION_DIAMETER], dtype=np.int32)
+
+      #Current must have the same pad
+      if self.config.ITEM_SYSTEM_ENABLED:
+         items                = ent.inventory.dataframeKeys
+         stim['Item']         = self.data['Item'].getFlat(items)
+         stim['Item']['N']    = np.array([len(items)], dtype=np.int32)
+
+      if self.config.EXCHANGE_SYSTEM_ENABLED:
+         market               = self.realm.exchange.dataframeKeys
+         stim['Market']       = self.data['Item'].getFlat(market)
+         stim['Market']['N']  = np.array([len(market)], dtype=np.int32)
 
       return stim

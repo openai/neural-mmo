@@ -2,7 +2,7 @@ import numpy as np
 from pdb import set_trace as T
 
 import nmmo
-from nmmo.systems import ai, equipment
+from nmmo.systems import ai, equipment, inventory
 from nmmo.lib import material
 
 from nmmo.systems.skill import Skills
@@ -11,19 +11,26 @@ from nmmo.entity import entity
 
 class Player(entity.Entity):
    def __init__(self, realm, pos, agent, color, pop):
-      super().__init__(realm, pos, agent.iden, agent.name, color, pop)
-
+      super().__init__(realm, pos, agent.iden, agent.policy, color, pop)
       self.agent  = agent
       self.pop    = pop
 
-      #Scripted hooks
+      # Scripted hooks
       self.target = None
       self.food   = None
       self.water  = None
       self.vision = 7
 
-      #Submodules
-      self.skills = Skills(self)
+      # Logs
+      self.buys                     = 0
+      self.sells                    = 0 
+      self.ration_consumed          = 0
+      self.poultice_consumed        = 0
+      self.ration_level_consumed    = 0
+      self.poultice_level_consumed = 0
+
+      # Submodules
+      self.skills = Skills(realm, self)
 
       self.diary  = None
       tasks = realm.config.TASKS
@@ -42,6 +49,8 @@ class Player(entity.Entity):
 
    @property
    def population(self):
+      if __debug__:
+          assert self.base.population.val == self.pop
       return self.pop
 
    def applyDamage(self, dmg, style):
@@ -59,21 +68,16 @@ class Player(entity.Entity):
       self.resources.water.decrement(dmg)
       self.skills.receiveDamage(dmg)
 
-   def receiveLoot(self, loadout):
-      if loadout.chestplate.level > self.loadout.chestplate.level:
-         self.loadout.chestplate = loadout.chestplate
-      if loadout.platelegs.level > self.loadout.platelegs.level:
-         self.loadout.platelegs = loadout.platelegs
-
    def packet(self):
       data = super().packet()
 
-      data['entID']    = self.entID
-      data['annID']    = self.population
+      data['entID']     = self.entID
+      data['annID']     = self.population
 
-      data['base']     = self.base.packet()
-      data['resource'] = self.resources.packet()
-      data['skills']   = self.skills.packet()
+      data['base']      = self.base.packet()
+      data['resource']  = self.resources.packet()
+      data['skills']    = self.skills.packet()
+      data['inventory'] = self.inventory.packet()
 
       return data
   
@@ -85,7 +89,7 @@ class Player(entity.Entity):
          return
 
       self.resources.update(realm, self, actions)
-      self.skills.update(realm, self, actions)
+      self.skills.update(realm, self)
 
       if self.diary:
          self.diary.update(realm, self)

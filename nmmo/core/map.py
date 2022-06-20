@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
+import logging
 
 from nmmo import core
 from nmmo.lib import material
@@ -14,8 +15,9 @@ class Map:
    def __init__(self, config, realm):
       self.config = config
       self._repr  = None
+      self.realm  = realm
 
-      sz          = config.TERRAIN_SIZE
+      sz          = config.MAP_SIZE
       self.tiles  = np.zeros((sz, sz), dtype=object)
 
       for r in range(sz):
@@ -61,12 +63,18 @@ class Map:
 
    def step(self):
       '''Evaluate updatable tiles'''
+      if self.config.LOG_EVENTS and self.realm.quill.event.log_max(f'Resource_Depleted', len(self.updateList)) and self.config.LOG_VERBOSE:
+         logging.info(f'RESOURCE: Depleted {len(self.updateList)} resource tiles')                           
+
+
       for e in self.updateList.copy():
-         if e.static:
+         if not e.depleted:
             self.updateList.remove(e)
          e.step()
 
-   def harvest(self, r, c):
+   def harvest(self, r, c, deplete=True):
       '''Called by actions that harvest a resource tile'''
-      self.updateList.add(self.tiles[r, c])
-      return self.tiles[r, c].harvest()
+      if deplete:
+          self.updateList.add(self.tiles[r, c])
+
+      return self.tiles[r, c].harvest(deplete)

@@ -1,3 +1,5 @@
+from pdb import set_trace as T
+
 class Observation:
    '''Unwraps observation tensors for use with scripted agents'''
    def __init__(self, config, obs):
@@ -8,10 +10,20 @@ class Observation:
       '''
       self.config = config
       self.obs    = obs
-      self.delta  = config.NSTIM
+      self.delta  = config.PLAYER_VISION_RADIUS
       self.tiles  = self.obs['Tile']['Continuous']
-      self.agents = self.obs['Entity']['Continuous']
-      self.n      = int(self.obs['Entity']['N'])
+
+      n = int(self.obs['Entity']['N'])
+      self.agents  = self.obs['Entity']['Continuous'][:n]
+      self.n = n
+
+      if config.ITEM_SYSTEM_ENABLED:
+          n = int(self.obs['Item']['N'])
+          self.items   = self.obs['Item']['Continuous'][:n]
+
+      if config.EXCHANGE_SYSTEM_ENABLED:
+          n = int(self.obs['Market']['N'])
+          self.market = self.obs['Market']['Continuous'][:n]
 
    def tile(self, rDelta, cDelta):
       '''Return the array object corresponding to a nearby tile
@@ -23,7 +35,7 @@ class Observation:
       Returns:
          Vector corresponding to the specified tile
       '''
-      return self.tiles[self.config.WINDOW * (self.delta + rDelta) + self.delta + cDelta]
+      return self.tiles[self.config.PLAYER_VISION_DIAMETER * (self.delta + rDelta) + self.delta + cDelta]
 
    @property
    def agent(self):

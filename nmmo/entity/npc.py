@@ -7,11 +7,13 @@ import nmmo
 from nmmo.entity import entity
 from nmmo.systems import combat, equipment, ai, combat, skill
 from nmmo.lib.colors import Neon
+from nmmo.systems import item as Item
+from nmmo.io import action as Action
 
 class NPC(entity.Entity):
    def __init__(self, realm, pos, iden, name, color, pop):
       super().__init__(realm, pos, iden, name, color, pop)
-      self.skills = skill.Combat(self)
+      self.skills = skill.Combat(realm, self)
 
    def update(self, realm, actions):
       super().update(realm, actions)
@@ -26,7 +28,7 @@ class NPC(entity.Entity):
    def spawn(realm, pos, iden):
       config = realm.config
 
-      #Select AI Policy
+      # Select AI Policy
       danger = combat.danger(config, pos)
       if danger >= config.NPC_SPAWN_AGGRESSIVE:
          ent = Aggressive(realm, pos, iden)
@@ -37,55 +39,63 @@ class NPC(entity.Entity):
       else:
          return
 
-      #Set levels
-      levels = NPC.clippedLevels(config, danger, n=5)
-      constitution, defense, melee, ranged, mage = levels
+      ent.spawn_danger = danger
 
-      ent.resources.health.max = constitution
-      ent.resources.health.update(constitution)
+      # Select combat focus
+      style = random.choice((Action.Melee, Action.Range, Action.Mage))
+      ent.skills.style = style
 
-      ent.skills.constitution.setExpByLevel(constitution)
-      ent.skills.defense.setExpByLevel(defense)
-      ent.skills.melee.setExpByLevel(melee)
-      ent.skills.range.setExpByLevel(ranged)
-      ent.skills.mage.setExpByLevel(mage)
+      # Compute level
+      level = 0
+      if config.PROGRESSION_SYSTEM_ENABLED:
+          level_min = config.NPC_LEVEL_MIN
+          level_max = config.NPC_LEVEL_MAX
+          level     = int(danger * (level_max - level_min) + level_min)
 
-      ent.skills.style = random.choice(
-         (nmmo.action.Melee, nmmo.action.Range, nmmo.action.Mage))
+          # Set skill levels
+          if style == Action.Melee:
+              ent.skills.melee.setExpByLevel(level)
+          elif style == Action.Range:
+              ent.skills.range.setExpByLevel(level)
+          elif style == Action.Mage:
+              ent.skills.mage.setExpByLevel(level)
 
-      #Set equipment levels
-      ent.loadout.chestplate.level = NPC.gearLevel(defense)
-      ent.loadout.platelegs.level  = NPC.gearLevel(defense)
+      # Gold
+      if config.EXCHANGE_SYSTEM_ENABLED:
+          ent.inventory.gold.quantity.update(level)
 
-      return ent
+      # Equipment to instantiate
+      equipment = []
+      if config.EQUIPMENT_SYSTEM_ENABLED:
+          equipment =  [Item.Hat, Item.Top, Item.Bottom]
+          if style == Action.Melee:
+              equipment.append(Item.Sword)
+          elif style == Action.Range:
+              equipment.append(Item.Bow)
+          elif style == Action.Mage:
+              equipment.append(Item.Wand)
 
-   def yieldDrops(self):
-      self.lastAttacker.receiveDrops(self.drops.roll())
+      if config.PROFESSION_SYSTEM_ENABLED:
+         tools =  [Item.Rod, Item.Gloves, Item.Pickaxe, Item.Chisel, Item.Arcane]
+         equipment.append(random.choice(tools))
 
-   @staticmethod
-   def gearLevel(lvl, offset=10):
-      proposed = random.gauss(lvl-offset, offset)
-      lvl      = np.clip(proposed, 0, lvl)
-      return int(lvl)
+      # Select one piece of equipment to match the agent's level
+      # The rest will be one tier lower
+      upgrade = random.choice(equipment)
+      for equip in equipment:
+          if equip is upgrade:
+              itm = equip(realm, level)
+          elif level == 1:
+              continue
+          else:
+              itm = equip(realm, level - 1)
 
-   @staticmethod
-   def clippedLevels(config, danger, n=1):
-      lmin    = config.NPC_LEVEL_MIN
-      lmax    = config.NPC_LEVEL_MAX
+          ent.inventory.receive(itm)
+          if not isinstance(itm, Item.Tool):
+              itm.use(ent)
 
-      lbase   = danger*(lmax-lmin) + lmin
-      lspread = config.NPC_LEVEL_SPREAD
+      return ent 
 
-      lvlMin  = int(max(lmin, lbase - lspread))
-      lvlMax  = int(min(lmax, lbase + lspread))
-
-      lvls = [random.randint(lvlMin, lvlMax) for _ in range(n)]
-
-      if n == 1:
-         return lvls[0]
-
-      return lvls
- 
    def packet(self):
       data = super().packet()
 

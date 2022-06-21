@@ -2,7 +2,7 @@ autobahn==19.2.1
 cloudpickle==0.5.2
 matplotlib==2.1.2
 noise==1.2.2
-numpy==1.16.0
+numpy==1.22.0
 opensimplex==0.2
 psutil==5.6.0
 PyTMX==3.21.5

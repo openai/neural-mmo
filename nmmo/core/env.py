@@ -125,7 +125,7 @@ class Env(ParallelEnv):
       if self.config.SAVE_REPLAY:
          self.replay = Replay(config)
 
-      if config.EMULATE_CONST_NENT:
+      if config.EMULATE_CONST_PLAYER_N:
          self.possible_agents = [i for i in range(1, config.PLAYER_N + 1)]
 
       # Flat index actions
@@ -492,7 +492,7 @@ class Env(ParallelEnv):
 
          obs[ent.entID]     = self.dummy_ob
 
-      if self.config.EMULATE_CONST_NENT:
+      if self.config.EMULATE_CONST_PLAYER_N:
          emulation.pad_const_nent(self.config, self.dummy_ob, obs, rewards, dones, infos)
 
       if self.config.EMULATE_FLAT_OBS:
@@ -534,8 +534,7 @@ class Env(ParallelEnv):
          player: An agent
       '''
 
-      name = player.agent.name
-
+      name = player.agent.policy
       config = self.config
       quill  = self.realm.quill
       policy = player.policy
@@ -543,50 +542,20 @@ class Env(ParallelEnv):
       # Basic stats
       quill.log_player(f'{policy}_Lifetime',  player.history.timeAlive.val)
 
-      blob = quill.register('Lifetime', self.realm.tick)
-      blob.log(ent.history.timeAlive.val, name + 'Lifetime')
-
-      blob = quill.register('Skill Level', self.realm.tick)
-      blob.log(ent.skills.range.level,        name + 'Range')
-      blob.log(ent.skills.mage.level,         name + 'Mage')
-      blob.log(ent.skills.melee.level,        name + 'Melee')
-      blob.log(ent.skills.constitution.level, name + 'Constitution')
-      blob.log(ent.skills.defense.level,      name + 'Defense')
-      blob.log(ent.skills.fishing.level,      name + 'Fishing')
-      blob.log(ent.skills.hunting.level,      name + 'Hunting')
-
-      blob = quill.register('Equipment', self.realm.tick)
-      blob.log(ent.loadout.chestplate.level, name + 'Chestplate')
-      blob.log(ent.loadout.platelegs.level,  name + 'Platelegs')
-
-      blob = quill.register('Exploration', self.realm.tick)
-      blob.log(ent.history.exploration, name + 'Exploration')
-
-      quill.stat(name + 'Lifetime',  ent.history.timeAlive.val)
-
-      # Duplicated task reward with/without name
-      if ent.diary:
-         quill.stat(name + 'Tasks_Completed', ent.diary.completed)
-         quill.stat(name + 'Task_Reward', ent.diary.cumulative_reward)
-         quill.stat('Task_Reward', ent.diary.cumulative_reward)
-         for achievement in ent.diary.achievements:
-            quill.stat(name + achievement.name, float(achievement.completed))
-      else:
-         quill.stat(name + 'Task_Reward', ent.history.timeAlive.val)
-         quill.stat('Task_Reward', ent.history.timeAlive.val)
-=======
-      # Tasks
+      # Duplicated task reward with/without name for SR calc
       if player.diary:
          if player.agent.scripted:
             player.diary.update(self.realm, player)
 
          quill.log_player(f'{policy}_Tasks_Completed', player.diary.completed)
          quill.log_player(f'{policy}_Task_Reward',     player.diary.cumulative_reward)
+         quill.log_player(f'Task_Reward',     player.diary.cumulative_reward)
 
          for achievement in player.diary.achievements:
             quill.log_player(achievement.name, float(achievement.completed))
       else:
          quill.log_player(f'{policy}_Task_Reward', player.history.timeAlive.val)
+         quill.log_player(f'Task_Reward', player.history.timeAlive.val)
 
       # Skills
       if config.PROGRESSION_SYSTEM_ENABLED:
@@ -629,8 +598,6 @@ class Env(ParallelEnv):
          quill.log_player(f'{policy}_Poultice_Consumed', player.poultice_consumed)
          quill.log_player(f'{policy}_Ration_Level',      player.ration_level_consumed)
          quill.log_player(f'{policy}_Poultice_Level',    player.poultice_level_consumed)
-
->>>>>>> 619701c58ec2ffe5c3c7c38872eaac380c528cc9
 
       # Market
       if config.EXCHANGE_SYSTEM_ENABLED:

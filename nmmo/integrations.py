@@ -38,7 +38,7 @@ class SB3Env(Env):
     def __init__(self, config):
         config.EMULATE_FLAT_OBS      = True
         config.EMULATE_FLAT_ATN      = True
-        config.EMULATE_CONST_NENT    = True
+        config.EMULATE_CONST_PLAYER_N = True
         config.EMULATE_CONST_HORIZON = True
 
         super().__init__(config)
@@ -140,7 +140,7 @@ def cleanrl_vec_envs(config_classes, verbose=True):
         # without having to pass multiple configs
         num_cpus    += cls.NUM_CPUS
         num_envs    += cls.NUM_CPUS
-        num_agents  += cls.NUM_CPUS * cls.NENT
+        num_agents  += cls.NUM_CPUS * cls.PLAYER_N
 
     envs = ss.vector.ProcConcatVec(all_envs,
             dummy_env.observation_space(1),

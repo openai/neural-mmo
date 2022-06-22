@@ -91,4 +91,9 @@ def spawn_concurrent(config):
     s3     = list(zip(rrange, highs))
     s4     = list(zip(highs, rrange))
 
-    return s1 + s2 + s3 + s4
+    ret = s1 + s2 + s3 + s4
+
+    # Shuffle needs porting to competition version
+    np.random.shuffle(ret)
+
+    return ret

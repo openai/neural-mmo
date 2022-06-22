@@ -127,8 +127,8 @@ class Inventory:
       assert item.quantity.val, f'Received empty item {item}'
 
       config = self.config
-      if config.LOG_EVENTS and self.realm.quill.event.log_max(f'Receive_{item.__class__.__name__}', item.level) and config.LOG_VERBOSE:
-          logging.info(f'INVENTORY: Received level {item.level} {item.__name__}')
+      if config.LOG_EVENTS and self.realm.quill.event.log_max(f'Receive_{item.__class__.__name__}', item.level.val) and config.LOG_VERBOSE:
+          logging.info(f'INVENTORY: Received level {item.leve.vall} {item.__name__}')
 
       if isinstance(item, Item.Stack):
           signature = item.signature

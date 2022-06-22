@@ -163,10 +163,6 @@ class PlayerManager(EntityGroup):
    def spawn(self):
       #TODO: remove hard check against fixed function
       if self.config.PLAYER_SPAWN_FUNCTION == spawn.spawn_concurrent:
-         if self.spawned:
-            return 
-
-         self.spawned = True
          idx = 0
          for r, c in self.config.PLAYER_SPAWN_FUNCTION(self.config):
             idx += 1

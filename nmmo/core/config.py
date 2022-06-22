@@ -153,7 +153,7 @@ class Config(Template):
    EMULATE_FLAT_ATN       = False
    '''Emulate a flat action space'''
 
-   EMULATE_CONST_NENT     = False
+   EMULATE_CONST_PLAYER_N = False
    '''Emulate a constant number of agents'''
 
    EMULATE_CONST_HORIZON  = False
@@ -216,66 +216,10 @@ class Config(Template):
 
    Note that the env will attempt to spawn agents until success
    if the current population size is zero.'''
-
-   def SPAWN_CONTINUOUS(self):
-      '''Generates spawn positions for new agents
-
-      Default behavior randomly selects a tile position
-      along the borders of the square game map
-
-      Returns:
-         tuple(int, int):
-
-         position:
-            The position (row, col) to spawn the given agent
-      '''
-      #Spawn at edges
-      mmax = self.TERRAIN_CENTER + self.TERRAIN_BORDER
-      mmin = self.TERRAIN_BORDER
-
-      var  = np.random.randint(mmin, mmax)
-      fixed = np.random.choice([mmin, mmax])
-      r, c = int(var), int(fixed)
-      if np.random.rand() > 0.5:
-          r, c = c, r 
-      return (r, c)
-
-   def SPAWN_CONCURRENT(self, shuffle=False):
-      left   = self.TERRAIN_BORDER
-      right  = self.TERRAIN_CENTER + self.TERRAIN_BORDER
-      rrange = np.arange(left+2, right, 4).tolist()
-
-      assert not self.TERRAIN_CENTER % 4
-      per_side = self.TERRAIN_CENTER // 4
-      
-      lows   = (left+np.zeros(per_side, dtype=np.int)).tolist()
-      highs  = (right+np.zeros(per_side, dtype=np.int)).tolist()
-
-      s1     = list(zip(rrange, lows))
-      s2     = list(zip(lows, rrange))
-      s3     = list(zip(rrange, highs))
-      s4     = list(zip(highs, rrange))
-
-      ret = s1 + s2 + s3 + s4
-      if shuffle:
-        assert not len(ret) % self.NPOP
-        ret = np.array_split(ret, self.NPOP)
-        np.random.shuffle(ret)
-        ret = np.concatenate(ret, axis=0).tolist()
-
-      # TEMP HACK FOR EXPERIMENT -- IMPLEMENT PROPERLY
-      np.random.shuffle(ret)
-
-      n = int(self.NENT * len(self.AGENTS))
-      return ret[:n]
-    
-   @property
-   def SPAWN(self):
-      return self.SPAWN_CONCURRENT
-=======
+   
    @property
    def PLAYER_SPAWN_FUNCTION(self):
-      return spawn.spawn_continuous
+      return spawn.spawn_concurrent
 
    @property
    def PLAYER_TEAM_SIZE(self):
@@ -306,7 +250,6 @@ class Config(Template):
    @property
    def MAP_SIZE(self):
       return int(self.MAP_CENTER + 2*self.MAP_BORDER)
->>>>>>> 619701c58ec2ffe5c3c7c38872eaac380c528cc9
 
 
    ############################################################################

@@ -30,7 +30,7 @@ class SingleAgentEnv:
         return self.obs[i], self.rewards[i], self.dones[i], self.infos[i]
 
 def multiagent_to_singleagent(config):
-    assert config.EMULATE_CONST_NENT, "Wrapper requires constant num agents"
+    assert config.EMULATE_CONST_PLAYER_N, "Wrapper requires constant num agents"
 
     base_env = nmmo.Env(config)
     n = config.PLAYER_N

@@ -16,6 +16,11 @@ class Logger:
         self.stats = defaultdict(list)
 
     def log(self, key, val):
+        try:
+            int_val = int(val)
+        except error as e:
+            print(f'{val} must be int or float')
+            raise e
         self.stats[key].append(val)
 
 class EventLogger(Logger):

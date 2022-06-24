@@ -57,15 +57,6 @@ class Action(Node):
    nodeType = NodeType.SELECTION
    hooked   = False
 
-   @staticmethod
-   def edges(config):
-      '''List of valid actions'''
-      return [Move, Attack]
-
-   @staticproperty
-   def n():
-      return len(Action.arguments)
-
    @classmethod
    def init(cls, config):
       # Sets up serialization domain
@@ -92,6 +83,10 @@ class Action(Node):
                idx += 1
       Action.arguments = arguments
 
+   @staticproperty
+   def n():
+      return len(Action.arguments)
+
    @classmethod
    def edges(cls, config):
       '''List of valid actions'''
@@ -105,10 +100,6 @@ class Action(Node):
       if config.COMMUNICATION_SYSTEM_ENABLED:
           edges.append(Comm)
       return edges
-
-   @staticproperty
-   def n():
-      return len(Action.arguments)
 
    def args(stim, entity, config):
       return nmmo.Serialized.edges 

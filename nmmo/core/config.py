@@ -392,19 +392,22 @@ class Combat:
 class Progression:
    '''Progression Game System'''
 
-   PROGRESSION_SYSTEM_ENABLED          = True
+   PROGRESSION_SYSTEM_ENABLED        = True
    '''Game system flag'''
 
-   PROGRESSION_BASE_XP_SCALE           = 100
+   PROGRESSION_BASE_XP_SCALE         = 1
    '''Base XP awarded for each skill usage -- multiplied by skill level'''
 
-   PROGRESSION_COMBAT_XP_SCALE         = 1
-   '''Multiplier on top of XP_SCALE for Combat skills'''
+   PROGRESSION_COMBAT_XP_SCALE       = 3
+   '''Multiplier on top of XP_SCALE for Melee, Range, and Mage'''
 
-   PROGRESSION_HARVEST_XP_SCALE        = 2
-   '''Multiplier on top of XP_SCALE for harvesting skills'''
+   PROGRESSION_AMMUNITION_XP_SCALE   = 1
+   '''Multiplier on top of XP_SCALE for Prospecting, Carving, and Alchemy'''
 
-   PROGRESSION_LEVEL_MAX               = 10
+   PROGRESSION_CONSUMABLE_XP_SCALE   = 5
+   '''Multiplier on top of XP_SCALE for Fishing and Herbalism'''
+
+   PROGRESSION_LEVEL_MAX             = 10
    '''Max skill level'''
 
    PROGRESSION_MELEE_DAMAGE          = 5
@@ -599,14 +602,12 @@ class Medium(Config):
 
    NPC_N                        = 128
    NPC_LEVEL_MAX                = 10
-   NPC_LEVEL_SPREAD             = 2
+   NPC_LEVEL_SPREAD             = 1
 
    PROGRESSION_SPAWN_CLUSTERS   = 64
    PROGRESSION_SPAWN_UNIFORMS   = 256
 
-
-
-   HORIZON                 = 1024
+   HORIZON                      = 1024
 
 
 class Large(Config):

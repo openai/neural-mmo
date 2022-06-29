@@ -355,7 +355,10 @@ class Sell(Node):
         if item not in entity.inventory:
             return
 
-        return env.exchange.sell(env, entity, item, price.val)
+        if type(price) != int:
+            price = price.val
+
+        return env.exchange.sell(env, entity, item, price)
 
 def init_discrete(values):
     classes = []

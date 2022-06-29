@@ -89,9 +89,6 @@ class HarvestSkill(NonCombatSkill):
         if not self.config.PROGRESSION_SYSTEM_ENABLED:
             return
 
-        if type(self) != Food and type(self) != Water:
-            self.add_xp(self.config.PROGRESSION_HARVEST_XP_SCALE)
-
     def harvest(self, realm, entity, matl, deplete=True):
         r, c = entity.pos
         if realm.map.tiles[r, c].state != matl:
@@ -117,6 +114,21 @@ class HarvestSkill(NonCombatSkill):
         if dropTable:
             self.processDrops(realm, entity, matl, dropTable)
             return True
+
+
+class AmmunitionSkill(HarvestSkill):
+    def processDrops(self, realm, entity, matl, dropTable):
+        super().processDrops(realm, entity, matl, dropTable)
+
+        self.add_xp(self.config.PROGRESSION_AMMUNITION_XP_SCALE)
+
+
+class ConsumableSkill(HarvestSkill):
+    def processDrops(self, realm, entity, matl, dropTable):
+        super().processDrops(realm, entity, matl, dropTable)
+
+        self.add_xp(self.config.PROGRESSION_CONSUMABLE_XP_SCALE)
+
 
 ### Skill groups ###
 class Basic(SkillGroup):
@@ -257,7 +269,7 @@ class Food(HarvestSkill):
                          * config.RESOURCE_HARVEST_RESTORE_FRACTION)
         food.increment(restore)
 
-class Fishing(HarvestSkill):
+class Fishing(ConsumableSkill):
     def __init__(self, realm, ent, skillGroup):
         self.level = Serialized.Entity.Fishing(ent.dataframe, ent.entID)
         super().__init__(realm, ent, skillGroup)
@@ -265,7 +277,7 @@ class Fishing(HarvestSkill):
     def update(self, realm, entity):
         self.harvestAdjacent(realm, entity, material.Fish)
 
-class Herbalism(HarvestSkill):
+class Herbalism(ConsumableSkill):
     def __init__(self, realm, ent, skillGroup):
         self.level = Serialized.Entity.Herbalism(ent.dataframe, ent.entID)
         super().__init__(realm, ent, skillGroup)
@@ -273,7 +285,7 @@ class Herbalism(HarvestSkill):
     def update(self, realm, entity):
         self.harvest(realm, entity, material.Herb)
 
-class Prospecting(HarvestSkill):
+class Prospecting(AmmunitionSkill):
     def __init__(self, realm, ent, skillGroup):
         self.level = Serialized.Entity.Prospecting(ent.dataframe, ent.entID)
         super().__init__(realm, ent, skillGroup)
@@ -281,7 +293,7 @@ class Prospecting(HarvestSkill):
     def update(self, realm, entity):
         self.harvest(realm, entity, material.Ore)
 
-class Carving(HarvestSkill):
+class Carving(AmmunitionSkill):
     def __init__(self, realm, ent, skillGroup):
         self.level = Serialized.Entity.Carving(ent.dataframe, ent.entID)
         super().__init__(realm, ent, skillGroup)
@@ -289,7 +301,7 @@ class Carving(HarvestSkill):
     def update(self, realm, entity):
         self.harvest(realm, entity, material.Tree)
 
-class Alchemy(HarvestSkill):
+class Alchemy(AmmunitionSkill):
     def __init__(self, realm, ent, skillGroup):
         self.level = Serialized.Entity.Alchemy(ent.dataframe, ent.entID)
         super().__init__(realm, ent, skillGroup)

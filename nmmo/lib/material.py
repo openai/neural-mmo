@@ -5,6 +5,7 @@ from nmmo.systems import item, droptable
 class Material:
    capacity    = 0
    tool        = None
+   table       = None
    def __init__(self, config):
       pass
 
@@ -14,6 +15,9 @@ class Material:
    def __equals__(self, mtl):
       return self == mtl
 
+   def harvest(self):
+      return self.__class__.table
+
 class Lava(Material):
    tex   = 'lava'
    index = 0
@@ -22,19 +26,18 @@ class Water(Material):
    tex   = 'water'
    index = 1
 
+   table = droptable.Empty()
+
    def __init__(self, config):
        self.deplete = __class__
        self.respawn  = 1.0
-
-   def harvest(self):
-       return droptable.Empty()
 
 class Grass(Material):
    tex   = 'grass'
    index = 2
 
 class Scrub(Material):
-   tex = 'scrub'
+   tex   = 'scrub'
    index = 3
 
 class Forest(Material):
@@ -42,13 +45,12 @@ class Forest(Material):
    index = 4
 
    deplete = Scrub
+   table = droptable.Empty()
+
    def __init__(self, config):
       if config.RESOURCE_SYSTEM_ENABLED:
          self.capacity = config.RESOURCE_FOREST_CAPACITY
          self.respawn  = config.RESOURCE_FOREST_RESPAWN
-
-   def harvest(self):
-       return droptable.Empty()
 
 class Stone(Material):
    tex   = 'stone'
@@ -62,15 +64,20 @@ class Ore(Material):
    tex   = 'ore'
    index = 7
 
-   tool    = item.Pickaxe
    deplete = Slag
+   tool    = item.Pickaxe
 
    def __init__(self, config):
+       cls = self.__class__
+       if cls.table is None:
+           cls.table = droptable.Standard()
+           cls.table.add(item.Scrap)
+
+           if config.EQUIPMENT_SYSTEM_ENABLED:
+               cls.table.add(item.Wand, prob=config.WEAPON_DROP_PROB)
+
        self.capacity = config.PROFESSION_ORE_CAPACITY
        self.respawn  = config.PROFESSION_ORE_RESPAWN
-
-   def harvest(self):
-       return droptable.Ammunition(item.Scrap)
 
 class Stump(Material):
    tex   = 'stump'
@@ -80,16 +87,19 @@ class Tree(Material):
    tex   = 'tree'
    index = 9
 
-   tool    = item.Chisel
    deplete = Stump
+   tool    = item.Chisel
 
    def __init__(self, config):
-      if config.RESOURCE_SYSTEM_ENABLED:
-         self.capacity = config.PROFESSION_TREE_CAPACITY
-         self.respawn  = config.PROFESSION_TREE_RESPAWN
+      cls = self.__class__
+      if cls.table is None:
+           cls.table = droptable.Standard()
+           cls.table.add(item.Shaving)
+           if config.EQUIPMENT_SYSTEM_ENABLED:
+               cls.table.add(item.Sword, prob=config.WEAPON_DROP_PROB)
 
-   def harvest(self):
-       return droptable.Ammunition(item.Shaving)
+      self.capacity = config.PROFESSION_TREE_CAPACITY
+      self.respawn  = config.PROFESSION_TREE_RESPAWN
 
 class Fragment(Material):
    tex   = 'fragment'
@@ -99,16 +109,20 @@ class Crystal(Material):
    tex   = 'crystal'
    index = 11
 
-   tool    = item.Arcane
    deplete = Fragment
+   tool    = item.Arcane
 
    def __init__(self, config):
-      if config.RESOURCE_SYSTEM_ENABLED:
-         self.capacity = config.PROFESSION_CRYSTAL_CAPACITY
-         self.respawn  = config.PROFESSION_CRYSTAL_RESPAWN
+      cls = self.__class__
+      if cls.table is None:
+          cls.table = droptable.Standard()
+          cls.table.add(item.Shard)
+          if config.EQUIPMENT_SYSTEM_ENABLED:
+              cls.table.add(item.Bow, prob=config.WEAPON_DROP_PROB)
 
-   def harvest(self):
-       return droptable.Ammunition(item.Shard)
+      if config.RESOURCE_SYSTEM_ENABLED:
+          self.capacity = config.PROFESSION_CRYSTAL_CAPACITY
+          self.respawn  = config.PROFESSION_CRYSTAL_RESPAWN
 
 class Weeds(Material):
    tex   = 'weeds'
@@ -118,16 +132,16 @@ class Herb(Material):
    tex   = 'herb'
    index = 13
 
-   tool    = item.Gloves
    deplete = Weeds
+   tool    = item.Gloves
+
+   table   = droptable.Standard()
+   table.add(item.Poultice)
 
    def __init__(self, config):
       if config.RESOURCE_SYSTEM_ENABLED:
          self.capacity = config.PROFESSION_HERB_CAPACITY
          self.respawn  = config.PROFESSION_HERB_RESPAWN
-
-   def harvest(self):
-       return droptable.Ammunition(item.Poultice)
 
 class Ocean(Material):
    tex   = 'ocean'
@@ -137,16 +151,16 @@ class Fish(Material):
    tex   = 'fish'
    index = 15
 
-   tool    = item.Rod
    deplete = Ocean
+   tool    = item.Rod
+
+   table   = droptable.Standard()
+   table.add(item.Ration)
 
    def __init__(self, config):
       if config.RESOURCE_SYSTEM_ENABLED:
          self.capacity = config.PROFESSION_FISH_CAPACITY
          self.respawn  = config.PROFESSION_FISH_RESPAWN
-
-   def harvest(self):
-       return droptable.Ammunition(item.Ration)
 
 class Meta(type):
    def __init__(self, name, bases, dict):

@@ -7,6 +7,7 @@ from nmmo.lib import material
 
 from nmmo.systems.skill import Skills
 from nmmo.systems.achievement import Diary
+from nmmo.systems import combat
 from nmmo.entity import entity
 
 class Player(entity.Entity):
@@ -27,7 +28,7 @@ class Player(entity.Entity):
       self.ration_consumed          = 0
       self.poultice_consumed        = 0
       self.ration_level_consumed    = 0
-      self.poultice_level_consumed = 0
+      self.poultice_level_consumed  = 0
 
       # Submodules
       self.skills = Skills(realm, self)
@@ -53,20 +54,39 @@ class Player(entity.Entity):
           assert self.base.population.val == self.pop
       return self.pop
 
+   @property
+   def level(self) -> int:
+       return combat.level(self.skills)
+
    def applyDamage(self, dmg, style):
-      self.resources.food.increment(dmg)
-      self.resources.water.increment(dmg)
       self.skills.applyDamage(dmg, style)
       
    def receiveDamage(self, source, dmg):
+      if super().receiveDamage(source, dmg):
+          return True
+     
+      if not self.config.ITEM_SYSTEM_ENABLED:
+          return False
+
+      for item in list(self.inventory._item_references):
+          if not item.quantity.val:
+              continue
+
+          self.inventory.remove(item)
+
+          if source.inventory.space:
+              source.inventory.receive(item)
+
       if not super().receiveDamage(source, dmg):
          if source:
             source.history.playerKills += 1
          return 
 
-      self.resources.food.decrement(dmg)
-      self.resources.water.decrement(dmg)
       self.skills.receiveDamage(dmg)
+
+   @property
+   def equipment(self):
+       return self.inventory.equipment
 
    def packet(self):
       data = super().packet()
@@ -84,6 +104,26 @@ class Player(entity.Entity):
    def update(self, realm, actions):
       '''Post-action update. Do not include history'''
       super().update(realm, actions)
+
+      # Spawsn battle royale style death fog
+      # Starts at 0 damage on the specified config tick
+      # Moves in from the edges by 1 damage per tile per tick
+      # So after 10 ticks, you take 10 damage at the edge and 1 damage
+      # 10 tiles in, 0 damage in farther
+      # This means all agents will be force killed around 
+      # MAP_CENTER / 2 + 100 ticks after spawning
+      fog = self.config.PLAYER_DEATH_FOG
+      if fog is not None and self.realm.tick >= fog:
+          r, c = self.pos
+          cent = (self.config.MAP_BORDER + self.config.MAP_CENTER) // 2
+
+          # Distance from center of the map
+          dist = max(abs(r - cent), abs(c - cent))
+
+          time_dmg = self.realm.tick - fog
+          dist_dmg = dist - self.config.MAP_CENTER // 2
+          dmg = max(0, dist_dmg + time_dmg)
+          self.receiveDamage(None, dmg)
 
       if not self.alive:
          return

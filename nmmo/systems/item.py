@@ -95,7 +95,7 @@ class Stack():
 class Gold(Item, Stack):
    ITEM_ID = 1
    def __init__(self, realm, **kwargs):
-      super().__init__(realm, level=0, tradable=False, **kwargs)
+      super().__init__(realm, level=0, quantity=0, tradable=False, **kwargs)
 
 class Equipment(Item):
    @property

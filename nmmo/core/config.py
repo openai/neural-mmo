@@ -200,6 +200,8 @@ class Config(Template):
       '''Size of the square tile crop visible to an agent'''
       return 2*self.PLAYER_VISION_RADIUS + 1
 
+   PLAYER_DEATH_FOG             = None
+   '''How long before spawning death fog. None for no death fog'''
 
    ############################################################################
    ### Agent Parameters                                                   
@@ -370,19 +372,19 @@ class Combat:
    COMBAT_WEAKNESS_MULTIPLIER         = 1.5
    '''Multiplier for super-effective attacks'''
 
-   COMBAT_MELEE_BASE_DAMAGE           = 30
+   COMBAT_MELEE_BASE_DAMAGE           = 0
    '''Base Melee attack damage'''
 
    COMBAT_MELEE_REACH                 = 3
    '''Reach of attacks using the Melee skill'''
 
-   COMBAT_RANGE_BASE_DAMAGE           = 30
+   COMBAT_RANGE_BASE_DAMAGE           = 0
    '''Base Range attack damage'''
 
    COMBAT_RANGE_REACH                 = 3
    '''Reach of attacks using the Range skill'''
 
-   COMBAT_MAGE_BASE_DAMAGE            = 30
+   COMBAT_MAGE_BASE_DAMAGE            = 0
    '''Base Mage attack damage'''
 
    COMBAT_MAGE_REACH                  = 3
@@ -398,7 +400,7 @@ class Progression:
    PROGRESSION_BASE_XP_SCALE         = 1
    '''Base XP awarded for each skill usage -- multiplied by skill level'''
 
-   PROGRESSION_COMBAT_XP_SCALE       = 3
+   PROGRESSION_COMBAT_XP_SCALE       = 1
    '''Multiplier on top of XP_SCALE for Melee, Range, and Mage'''
 
    PROGRESSION_AMMUNITION_XP_SCALE   = 1
@@ -476,21 +478,24 @@ class Equipment:
    EQUIPMENT_SYSTEM_ENABLED            = True
    '''Game system flag'''
 
+   WEAPON_DROP_PROB = 0.1
+   '''Chance of getting a weapon while harvesting ammunition'''
+
    @staticmethod
    def EQUIPMENT_AMMUNITION_DAMAGE(level):
-       return 5 * level
+       return 15 * level
 
    @staticmethod
    def EQUIPMENT_ARMOR_DEFENSE(level):
-       return 5 * level
+       return 10 * level
 
    @staticmethod
    def EQUIPMENT_WEAPON_OFFENSE(level):
-       return 15 * level
+       return 15 + 15 * level
 
    @staticmethod
    def EQUIPMENT_TOOL_DEFENSE(level):
-       return 15 * level
+       return 30
 
 
 class Profession:

@@ -2,16 +2,83 @@ from pdb import set_trace as T
 import numpy as np
 
 import functools
+from collections import defaultdict
 
 import gym
 from pettingzoo import ParallelEnv
 
+import pickle
+import lz4.block
+
 import nmmo
-from nmmo import entity, core
+from nmmo import entity, core, emulation
 from nmmo.core import terrain
 from nmmo.lib import log
 from nmmo.infrastructure import DataType
 from nmmo.systems import item as Item
+
+
+class Replay:
+    def __init__(self, config):
+        self.packets = []
+        self.map     = None
+
+        if config is not None:
+            self.path = config.SAVE_REPLAY + '.replay'
+
+        self._i = 0
+
+    def update(self, packet):
+        data = {}
+        for key, val in packet.items():
+            if key == 'environment':
+                self.map = val
+                continue
+            if key == 'config':
+                continue
+
+            data[key] = val
+
+        self.packets.append(data)
+
+    def save(self):
+        data = {
+            'map': self.map,
+            'packets': self.packets}
+
+        data = lz4.block.compress(pickle.dumps(data))
+        with open(self.path, 'wb') as out:
+            out.write(data)
+
+    @classmethod
+    def load(cls, path):
+        with open(path, 'rb') as fp:
+            data = fp.read()
+
+        data = pickle.loads(lz4.block.decompress(data))
+        replay = Replay(None)
+        replay.map = data['map']
+        replay.packets = data['packets']
+        return replay
+
+    def render(self):
+        from nmmo.websocket import Application
+        client = Application(realm=None)
+        for packet in self:
+            client.update(packet)
+
+    def __iter__(self):
+        self._i = 0
+        return self
+
+    def __next__(self):
+        if self._i >= len(self.packets):
+            raise StopIteration
+        packet = self.packets[self._i]
+        packet['environment'] = self.map
+        self._i += 1
+        return packet
+
 
 class Env(ParallelEnv):
    '''Environment wrapper for Neural MMO using the Parallel PettingZoo API
@@ -32,9 +99,7 @@ class Env(ParallelEnv):
       if config is None:
           config = nmmo.config.Default()
 
-      if __debug__:
-         err = 'Config {} is not a config instance (did you pass the class?)'
-         assert isinstance(config, nmmo.config.Config), err.format(config)
+      assert isinstance(config, nmmo.config.Config), f'Config {config} is not a config instance (did you pass the class?)'
 
       if not config.PLAYERS:
           from nmmo import agent
@@ -45,7 +110,7 @@ class Env(ParallelEnv):
 
       self.realm      = core.Realm(config)
       self.registry   = nmmo.OverlayRegistry(config, self)
-
+    
       self.config     = config
       self.overlay    = None
       self.overlayPos = [256, 256]
@@ -53,6 +118,20 @@ class Env(ParallelEnv):
       self.obs        = None
 
       self.has_reset  = False
+      
+      # Populate dummy ob
+      self.dummy_ob   = None
+      self.observation_space(0)
+
+      if self.config.SAVE_REPLAY:
+         self.replay = Replay(config)
+
+      if config.EMULATE_CONST_PLAYER_N:
+         self.possible_agents = [i for i in range(1, config.PLAYER_N + 1)]
+
+      # Flat index actions
+      if config.EMULATE_FLAT_ATN:
+         self.flat_actions = emulation.pack_atn_space(config)
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):
@@ -85,12 +164,24 @@ class Env(ParallelEnv):
 
          name = entity.__name__
          observation[name] = {
-               'Continuous': gym.spaces.Box(low=-2**20, high=2**20, shape=(rows, continuous), dtype=DataType.CONTINUOUS),
-               'Discrete'  : gym.spaces.Box(low=0, high=4096, shape=(rows, discrete), dtype=DataType.DISCRETE)}
+               'Continuous': gym.spaces.Box(
+                        low=-2**20, high=2**20,
+                        shape=(rows, continuous),
+                        dtype=DataType.CONTINUOUS),
+               'Discrete'  : gym.spaces.Box(
+                        low=0, high=4096,
+                        shape=(rows, discrete),
+                        dtype=DataType.DISCRETE)}
 
          #TODO: Find a way to automate this
          if name == 'Entity':
-            observation['Entity']['N'] = gym.spaces.Box(low=0, high=self.config.PLAYER_N_OBS, shape=(1,), dtype=DataType.DISCRETE)
+            observation['Entity']['N'] = gym.spaces.Box(
+                    low=0, high=self.config.PLAYER_N_OBS,
+                    shape=(1,), dtype=DataType.DISCRETE)
+         elif name == 'Tile':
+            observation['Tile']['N'] = gym.spaces.Box(
+                    low=0, high=self.config.PLAYER_VISION_DIAMETER,
+                    shape=(1,), dtype=DataType.DISCRETE)
          elif name == 'Item':
             observation['Item']['N']   = gym.spaces.Box(low=0, high=self.config.ITEM_N_OBS, shape=(1,), dtype=DataType.DISCRETE)
          elif name == 'Market':
@@ -98,7 +189,19 @@ class Env(ParallelEnv):
 
          observation[name] = gym.spaces.Dict(observation[name])
 
-      return gym.spaces.Dict(observation)
+      observation   = gym.spaces.Dict(observation)
+
+      if not self.dummy_ob:
+         self.dummy_ob = observation.sample()
+         for ent_key, ent_val in self.dummy_ob.items():
+             for attr_key, attr_val in ent_val.items():
+                 self.dummy_ob[ent_key][attr_key] *= 0                
+
+
+      if not self.config.EMULATE_FLAT_OBS:
+         return observation
+
+      return emulation.pack_obs_space(observation)
 
    @functools.lru_cache(maxsize=None)
    def action_space(self, agent):
@@ -114,17 +217,25 @@ class Env(ParallelEnv):
          choices (such as movement direction) and selections from the
          observation space (such as targeting)'''
 
+      if self.config.EMULATE_FLAT_ATN:
+         lens = []
+         for atn in nmmo.Action.edges(self.config):
+             for arg in atn.edges:
+                 lens.append(arg.N(self.config))
+         return gym.spaces.MultiDiscrete(lens)
+         #return gym.spaces.Discrete(len(self.flat_actions))
+
       actions = {}
       for atn in sorted(nmmo.Action.edges(self.config)):
          actions[atn] = {}
          for arg in sorted(atn.edges):
-            n                       = arg.N(self.config)
+            n                 = arg.N(self.config)
             actions[atn][arg] = gym.spaces.Discrete(n)
 
          actions[atn] = gym.spaces.Dict(actions[atn])
 
       return gym.spaces.Dict(actions)
- 
+
    ############################################################################
    ### Core API
    def reset(self, idx=None, step=True):
@@ -157,8 +268,6 @@ class Env(ParallelEnv):
       self.actions = {}
       self.dead    = []
 
-      self.quill = log.Quill()
-      
       if idx is None:
          idx = np.random.randint(self.config.MAP_N) + 1
 
@@ -268,11 +377,48 @@ class Env(ParallelEnv):
       '''
       assert self.has_reset, 'step before reset'
 
+      if self.config.RENDER or self.config.SAVE_REPLAY:
+          packet = {
+                'config': self.config,
+                'pos': self.overlayPos,
+                'wilderness': 0
+                }
+
+          packet = {**self.realm.packet(), **packet}
+
+          if self.overlay is not None:
+             packet['overlay'] = self.overlay
+             self.overlay      = None
+
+          self.packet = packet
+
+          if self.config.SAVE_REPLAY:
+              self.replay.update(packet)
+
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
+         #TODO: Should this silently fail? Warning level options?
+         if entID not in self.realm.players:
+            continue
+
          ent = self.realm.players[entID]
+
+         # Fix later -- don't allow action inputs for scripted agents
+         if ent.agent.scripted:
+             continue
+
          if not ent.alive:
             continue
+
+         if self.config.EMULATE_FLAT_ATN:
+            ent_action = {}
+            idx = 0
+            for atn in nmmo.Action.edges(self.config):
+                ent_action[atn] = {}
+                for arg in atn.edges:
+                    ent_action[atn][arg] = actions[entID][idx]
+                    idx += 1
+            actions[entID] = ent_action
 
          self.actions[entID] = {}
          for atn, args in actions[entID].items():
@@ -287,11 +433,20 @@ class Env(ParallelEnv):
                       continue
                   targ = ent.targets[val]
                   self.actions[entID][atn][arg] = self.realm.entity(targ)
-               elif arg == nmmo.action.Item:
+               elif atn in (nmmo.action.Sell, nmmo.action.Use) and arg == nmmo.action.Item:
                   if val >= len(ent.inventory.dataframeKeys):
                       drop = True
                       continue
                   itm = [e for e in ent.inventory._item_references][val]
+                  if type(itm) == Item.Gold:
+                      drop = True
+                      continue
+                  self.actions[entID][atn][arg] = itm
+               elif atn == nmmo.action.Buy and arg == nmmo.action.Item:
+                  if val >= len(self.realm.exchange.dataframeKeys):
+                      drop = True
+                      continue
+                  itm = self.realm.exchange.dataframeVals[val]
                   self.actions[entID][atn][arg] = itm
                elif __debug__: #Fix -inf in classifier and assert err on bad atns
                   assert False, f'{arg} invalid'
@@ -318,13 +473,12 @@ class Env(ParallelEnv):
             self.actions[entID] = atns
          else:
             obs[entID]     = ob
-            self.dummy_ob  = ob
-
             rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
 
+      self.log_env()
       for entID, ent in self.dead.items():
-         self.log(ent)
+         self.log_player(ent)
 
       self.realm.exchange.step()
 
@@ -332,8 +486,26 @@ class Env(ParallelEnv):
          if ent.agent.scripted:
             continue
          rewards[ent.entID], infos[ent.entID] = self.reward(ent)
-         dones[ent.entID]   = True
+
+         dones[ent.entID] = False #TODO: Is this correct behavior?
+         if not self.config.EMULATE_CONST_HORIZON and not self.config.RESPAWN:
+            dones[ent.entID] = True
+
          obs[ent.entID]     = self.dummy_ob
+
+      if self.config.EMULATE_CONST_PLAYER_N:
+         emulation.pad_const_nent(self.config, self.dummy_ob, obs, rewards, dones, infos)
+
+      if self.config.EMULATE_FLAT_OBS:
+         obs = nmmo.emulation.pack_obs(obs)
+
+      if self.config.EMULATE_CONST_HORIZON:
+         assert self.realm.tick <= self.config.HORIZON
+         if self.realm.tick == self.config.HORIZON:
+            emulation.const_horizon(dones)
+
+      if not len(self.realm.players.items()):
+         emulation.const_horizon(dones)
 
       #Pettingzoo API
       self.agents = list(self.realm.players.keys())
@@ -343,60 +515,73 @@ class Env(ParallelEnv):
 
    ############################################################################
    ### Logging
-   def log(self, ent) -> None:
-      '''Logs agent data upon death
+   def log_env(self) -> None:
+      '''Logs player data upon death
 
-      This function is called automatically when an agent dies. Logs are used
-      to compute summary stats and populate the dashboard. You should not
-      call it manually. Instead, override this method to customize logging.
+      This function is called automatically once per environment step
+      to compute summary stats. You should not call it manually.
+      Instead, override this method to customize logging.
+      '''
+      pass
+
+   def log_player(self, player) -> None:
+      '''Logs player data upon death
+
+      This function is called automatically when an agent dies
+      to compute summary stats. You should not call it manually.
+      Instead, override this method to customize logging.
 
       Args:
-         ent: An agent
+         player: An agent
       '''
 
+      name = player.agent.policy
       config = self.config
-      quill  = self.quill
-      policy = ent.policy
+      quill  = self.realm.quill
+      policy = player.policy
 
       # Basic stats
-      quill.stat(f'{policy}_Lifetime',  ent.history.timeAlive.val)
+      quill.log_player(f'{policy}_Lifetime',  player.history.timeAlive.val)
 
-      # Tasks
-      if ent.diary:
-         if ent.agent.scripted:
-            ent.diary.update(self.realm, ent)
+      # Duplicated task reward with/without name for SR calc
+      if player.diary:
+         if player.agent.scripted:
+            player.diary.update(self.realm, player)
 
-         quill.stat(f'{policy}_Tasks_Completed', ent.diary.completed)
-         quill.stat(f'{policy}_Task_Reward', ent.diary.cumulative_reward)
-         for achievement in ent.diary.achievements:
-            quill.stat(achievement.name, float(achievement.completed))
+         quill.log_player(f'{policy}_Tasks_Completed', player.diary.completed)
+         quill.log_player(f'{policy}_Task_Reward',     player.diary.cumulative_reward)
+         quill.log_player(f'Task_Reward',     player.diary.cumulative_reward)
+
+         for achievement in player.diary.achievements:
+            quill.log_player(achievement.name, float(achievement.completed))
       else:
-         quill.stat(f'{policy}_Task_Reward', ent.history.timeAlive.val)
+         quill.log_player(f'{policy}_Task_Reward', player.history.timeAlive.val)
+         quill.log_player(f'Task_Reward', player.history.timeAlive.val)
 
       # Skills
       if config.PROGRESSION_SYSTEM_ENABLED:
          if config.COMBAT_SYSTEM_ENABLED:
-            quill.stat(f'{policy}_Mage_Level',  ent.skills.mage.level.val)
-            quill.stat(f'{policy}_Range_Level', ent.skills.range.level.val)
-            quill.stat(f'{policy}_Melee_Level', ent.skills.melee.level.val)
+            quill.log_player(f'{policy}_Mage_Level',  player.skills.mage.level.val)
+            quill.log_player(f'{policy}_Range_Level', player.skills.range.level.val)
+            quill.log_player(f'{policy}_Melee_Level', player.skills.melee.level.val)
          if config.PROFESSION_SYSTEM_ENABLED:
-            quill.stat(f'{policy}_Fishing',     ent.skills.fishing.level.val)
-            quill.stat(f'{policy}_Herbalism',   ent.skills.herbalism.level.val)
-            quill.stat(f'{policy}_Prospecting', ent.skills.prospecting.level.val)
-            quill.stat(f'{policy}_Carving',     ent.skills.carving.level.val)
-            quill.stat(f'{policy}_Alchemy',     ent.skills.alchemy.level.val)
+            quill.log_player(f'{policy}_Fishing',     player.skills.fishing.level.val)
+            quill.log_player(f'{policy}_Herbalism',   player.skills.herbalism.level.val)
+            quill.log_player(f'{policy}_Prospecting', player.skills.prospecting.level.val)
+            quill.log_player(f'{policy}_Carving',     player.skills.carving.level.val)
+            quill.log_player(f'{policy}_Alchemy',     player.skills.alchemy.level.val)
          if config.EQUIPMENT_SYSTEM_ENABLED:
-            held_item = ent.inventory.equipment.held
+            held_item = player.inventory.equipment.held
             if isinstance(held_item, Item.Weapon):
-               quill.stat(f'{policy}_Weapon_Level', held_item.level.val)
-               quill.stat(f'{policy}_Tool_Level', 0)
+               quill.log_player(f'{policy}_Weapon_Level', held_item.level.val)
+               quill.log_player(f'{policy}_Tool_Level', 0)
             elif isinstance(held_item, Item.Tool):
-               quill.stat(f'{policy}_Weapon_Level', 0)
-               quill.stat(f'{policy}_Tool_Level', held_item.level.val)
+               quill.log_player(f'{policy}_Weapon_Level', 0)
+               quill.log_player(f'{policy}_Tool_Level', held_item.level.val)
             else:
-               quill.stat(f'{policy}_Weapon_Level', 0)
-               quill.stat(f'{policy}_Tool_Level', 0)
-            quill.stat(f'{policy}_Item_Level',   ent.equipment.total(lambda e: e.level))
+               quill.log_player(f'{policy}_Weapon_Level', 0)
+               quill.log_player(f'{policy}_Tool_Level', 0)
+            quill.log_player(f'{policy}_Item_Level',   player.equipment.total(lambda e: e.level))
 
       '''
       key = '{}_Market_{}_{}'
@@ -410,21 +595,22 @@ class Env(ParallelEnv):
 
       # Item usage
       if config.PROFESSION_SYSTEM_ENABLED:
-         quill.stat(f'{policy}_Ration_Consumed',   ent.ration_consumed)
-         quill.stat(f'{policy}_Poultice_Consumed', ent.poultice_consumed)
-         quill.stat(f'{policy}_Ration_Level',      ent.ration_level_consumed)
-         quill.stat(f'{policy}_Poultice_Level',    ent.poultice_level_consumed)
-
+         quill.log_player(f'{policy}_Ration_Consumed',   player.ration_consumed)
+         quill.log_player(f'{policy}_Poultice_Consumed', player.poultice_consumed)
+         quill.log_player(f'{policy}_Ration_Level',      player.ration_level_consumed)
+         quill.log_player(f'{policy}_Poultice_Level',    player.poultice_level_consumed)
 
       # Market
       if config.EXCHANGE_SYSTEM_ENABLED:
          wealth = [p.inventory.gold.quantity.val for _, p in self.realm.players.items()]
-         quill.stat(f'{policy}_Wealth',       ent.inventory.gold.quantity.val)
-         quill.stat(f'{policy}_Market_Sells', ent.sells)
-         quill.stat(f'{policy}_Market_Buys',  ent.buys)
+         quill.log_player(f'{policy}_Wealth',       player.inventory.gold.quantity.val)
+         quill.log_player(f'{policy}_Market_Sells', player.sells)
+         quill.log_player(f'{policy}_Market_Buys',  player.buys)
 
       # Used for SR
-      quill.stat('PolicyID', ent.agent.policyID)
+      quill.log_player('PolicyID', player.agent.policyID)
+      if player.diary:
+         quill.log_player(f'Task_Reward', player.diary.cumulative_reward)
 
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs
@@ -443,9 +629,12 @@ class Env(ParallelEnv):
       '''
 
       for entID, ent in self.realm.players.entities.items():
-         self.log(ent)
+         self.log_player(ent)
 
-      return self.quill.packet
+      if self.config.SAVE_REPLAY:
+         self.replay.save()
+
+      return self.realm.quill.packet
 
    ############################################################################
    ### Override hooks
@@ -489,19 +678,7 @@ class Env(ParallelEnv):
       '''
 
       assert self.has_reset, 'render before reset'
-
-      packet = {
-            'config': self.config,
-            'pos': self.overlayPos,
-            'wilderness': 0
-            }
-
-      packet = {**self.realm.packet(), **packet}
-
-      if self.overlay is not None:
-         print('Overlay data: ', len(self.overlay))
-         packet['overlay'] = self.overlay
-         self.overlay      = None
+      packet = self.packet
 
       if not self.client:
          from nmmo.websocket import Application

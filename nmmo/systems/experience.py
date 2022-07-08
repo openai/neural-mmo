@@ -3,7 +3,7 @@ import numpy as np
 
 class ExperienceCalculator:
    def __init__(self, num_levels=15):
-      self.exp = np.array([0] + [1000*2**i for i in range(num_levels)])
+      self.exp = np.array([0] + [10*2**i for i in range(num_levels)])
 
    def expAtLevel(self, level):
       return int(self.exp[level - 1])

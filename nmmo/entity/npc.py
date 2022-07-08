@@ -8,12 +8,33 @@ from nmmo.entity import entity
 from nmmo.systems import combat, equipment, ai, combat, skill
 from nmmo.lib.colors import Neon
 from nmmo.systems import item as Item
+from nmmo.systems import droptable
 from nmmo.io import action as Action
+
+
+class Equipment:
+   def __init__(self, total,
+           melee_attack, range_attack, mage_attack,
+           melee_defense, range_defense, mage_defense):
+
+      # TODO: This only works for ilvl
+      self.total         = lambda e: total
+      self.ammunition    = None
+
+      self.melee_attack  = melee_attack
+      self.range_attack  = range_attack
+      self.mage_attack   = mage_attack
+      self.melee_defense = melee_defense
+      self.range_defense = range_defense
+      self.mage_defense  = mage_defense
+
 
 class NPC(entity.Entity):
    def __init__(self, realm, pos, iden, name, color, pop):
       super().__init__(realm, pos, iden, name, color, pop)
-      self.skills = skill.Combat(self)
+      self.skills = skill.Combat(realm, self)
+      self.realm = realm
+      
 
    def update(self, realm, actions):
       super().update(realm, actions)
@@ -23,6 +44,14 @@ class NPC(entity.Entity):
 
       self.resources.health.increment(1)
       self.lastAction = actions
+
+   def receiveDamage(self, source, dmg):
+       if super().receiveDamage(source, dmg):
+           return True
+
+       for item in self.droptable.roll(self.realm, self.level):
+           if source.inventory.space:
+               source.inventory.receive(item)
 
    @staticmethod
    def spawn(realm, pos, iden):
@@ -64,35 +93,23 @@ class NPC(entity.Entity):
       if config.EXCHANGE_SYSTEM_ENABLED:
           ent.inventory.gold.quantity.update(level)
 
+      ent.droptable = droptable.Standard()
+
       # Equipment to instantiate
-      equipment = []
       if config.EQUIPMENT_SYSTEM_ENABLED:
-          equipment =  [Item.Hat, Item.Top, Item.Bottom]
-          if style == Action.Melee:
-              equipment.append(Item.Sword)
-          elif style == Action.Range:
-              equipment.append(Item.Bow)
-          elif style == Action.Mage:
-              equipment.append(Item.Wand)
+          lvl     = level - random.random()
+          ilvl    = int(5 * lvl)
+          offense = config.EQUIPMENT_AMMUNITION_DAMAGE(lvl) + config.EQUIPMENT_WEAPON_OFFENSE(lvl)
+          defense = 3*config.EQUIPMENT_ARMOR_DEFENSE(lvl)
+
+          ent.equipment = Equipment(ilvl, offense, offense, offense, defense, defense, defense)
+
+          armor =  [Item.Hat, Item.Top, Item.Bottom]
+          ent.droptable.add(random.choice(armor))
 
       if config.PROFESSION_SYSTEM_ENABLED:
          tools =  [Item.Rod, Item.Gloves, Item.Pickaxe, Item.Chisel, Item.Arcane]
-         equipment.append(random.choice(tools))
-
-      # Select one piece of equipment to match the agent's level
-      # The rest will be one tier lower
-      upgrade = random.choice(equipment)
-      for equip in equipment:
-          if equip is upgrade:
-              itm = equip(realm, level)
-          elif level == 1:
-              continue
-          else:
-              itm = equip(realm, level - 1)
-
-          ent.inventory.receive(itm)
-          if not isinstance(itm, Item.Tool):
-              itm.use(ent)
+         ent.droptable.add(random.choice(tools))
 
       return ent 
 

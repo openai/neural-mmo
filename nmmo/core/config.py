@@ -39,6 +39,18 @@ class Template(metaclass=utils.StaticIterable):
       for k, v in self.data.items():
          print('   {:{}s}: {}'.format(k, keyLen, v))
 
+   def items(self):
+       return self.data.items()
+
+   def __iter__(self):
+       for k in self.data:
+           yield k
+
+   def keys(self):
+       return self.data.keys()
+
+   def values(self):
+       return self.data.values()
 
 def validate(config):
     err = 'config.Config is a base class. Use config.{Small, Medium Large}'''
@@ -108,15 +120,67 @@ class Config(Template):
 
       if not hasattr(self, 'EXCHANGE_SYSTEM_ENABLED'):
           self.EXCHANGE_SYSTEM_ENABLED = False
+
+      if not hasattr(self, 'COMMUNICATION_SYSTEM_ENABLED'):  
+          self.COMMUNICATION_SYSTEM_ENABLED = False
  
       if __debug__:
          validate(self)
 
+      deprecated_attrs = [
+            'NENT', 'NPOP', 'AGENTS', 'NMAPS', 'FORCE_MAP_GENERATION', 'SPAWN']
+
+      for attr in deprecated_attrs:
+          assert not hasattr(self, attr), f'{attr} has been deprecated or renamed'
+
 
    ############################################################################
    ### Meta-Parameters
+   def game_system_enabled(self, name) -> bool:
+      return hasattr(self, name)
+
+   def population_mapping_fn(self, idx) -> int:
+      return idx % self.NPOP
+
    RENDER                       = False
    '''Flag used by render mode'''
+
+   SAVE_REPLAY            = False
+   '''Flag used to save replays'''
+
+   PLAYERS                      = []
+   '''Player classes from which to spawn'''
+
+   TASKS                        = []
+   '''Tasks for which to compute rewards'''
+
+
+   ############################################################################
+   ### Emulation Parameters
+ 
+   EMULATE_FLAT_OBS       = False
+   '''Emulate a flat observation space'''
+
+   EMULATE_FLAT_ATN       = False
+   '''Emulate a flat action space'''
+
+   EMULATE_CONST_PLAYER_N = False
+   '''Emulate a constant number of agents'''
+
+   EMULATE_CONST_HORIZON  = False
+   '''Emulate a constant HORIZON simulations steps'''
+
+
+   ############################################################################
+   ### Population Parameters                                                   
+   LOG_VERBOSE                  = False
+   '''Whether to log server messages or just stats'''
+
+   LOG_EVENTS                   = True
+   '''Whether to log events (semi-expensive)'''
+
+   LOG_FILE                     = None
+   '''Where to write logs (defaults to console)'''
 
    PLAYERS                      = []
    '''Player classes from which to spawn'''
@@ -149,6 +213,16 @@ class Config(Template):
       '''Size of the square tile crop visible to an agent'''
       return 2*self.PLAYER_VISION_RADIUS + 1
 
+   PLAYER_DEATH_FOG             = None
+   '''How long before spawning death fog. None for no death fog'''
+
+   PLAYER_DEATH_FOG_SPEED       = 1
+   '''Number of tiles per tick that the fog moves in'''
+
+   PLAYER_DEATH_FOG_FINAL_SIZE  = 8
+   '''Number of tiles from the center that the fog stops'''
+
+   RESPAWN = False
 
    PLAYER_LOADER                = spawn.SequentialLoader
    '''Agent loader class specifying spawn sampling'''
@@ -158,10 +232,17 @@ class Config(Template):
 
    Note that the env will attempt to spawn agents until success
    if the current population size is zero.'''
-
+   
    @property
    def PLAYER_SPAWN_FUNCTION(self):
-      return spawn.spawn_continuous
+      return spawn.spawn_concurrent
+
+   @property
+
+   def PLAYER_TEAM_SIZE(self):
+      if __debug__:
+         assert not self.PLAYER_N % self.NPOP
+      return self.PLAYER_N // self.NPOP
 
    @property
    def PLAYER_TEAM_SIZE(self):
@@ -222,6 +303,9 @@ class Config(Template):
 
    PATH_MAPS                = None
    '''Generated map directory'''
+
+   PATH_MAP_SUFFIX          = 'map{}/map.npy'
+   '''Map file name'''
 
    PATH_MAP_SUFFIX          = 'map{}/map.npy'
    '''Map file name'''
@@ -309,19 +393,19 @@ class Combat:
    COMBAT_WEAKNESS_MULTIPLIER         = 1.5
    '''Multiplier for super-effective attacks'''
 
-   COMBAT_MELEE_BASE_DAMAGE           = 30
+   COMBAT_MELEE_BASE_DAMAGE           = 0
    '''Base Melee attack damage'''
 
    COMBAT_MELEE_REACH                 = 3
    '''Reach of attacks using the Melee skill'''
 
-   COMBAT_RANGE_BASE_DAMAGE           = 30
+   COMBAT_RANGE_BASE_DAMAGE           = 0
    '''Base Range attack damage'''
 
    COMBAT_RANGE_REACH                 = 3
    '''Reach of attacks using the Range skill'''
 
-   COMBAT_MAGE_BASE_DAMAGE            = 30
+   COMBAT_MAGE_BASE_DAMAGE            = 0
    '''Base Mage attack damage'''
 
    COMBAT_MAGE_REACH                  = 3
@@ -331,19 +415,22 @@ class Combat:
 class Progression:
    '''Progression Game System'''
 
-   PROGRESSION_SYSTEM_ENABLED          = True
+   PROGRESSION_SYSTEM_ENABLED        = True
    '''Game system flag'''
 
-   PROGRESSION_BASE_XP_SCALE           = 100
+   PROGRESSION_BASE_XP_SCALE         = 1
    '''Base XP awarded for each skill usage -- multiplied by skill level'''
 
-   PROGRESSION_COMBAT_XP_SCALE         = 1
-   '''Multiplier on top of XP_SCALE for Combat skills'''
+   PROGRESSION_COMBAT_XP_SCALE       = 1
+   '''Multiplier on top of XP_SCALE for Melee, Range, and Mage'''
 
-   PROGRESSION_HARVEST_XP_SCALE        = 2
-   '''Multiplier on top of XP_SCALE for harvesting skills'''
+   PROGRESSION_AMMUNITION_XP_SCALE   = 1
+   '''Multiplier on top of XP_SCALE for Prospecting, Carving, and Alchemy'''
 
-   PROGRESSION_LEVEL_MAX               = 10
+   PROGRESSION_CONSUMABLE_XP_SCALE   = 5
+   '''Multiplier on top of XP_SCALE for Fishing and Herbalism'''
+
+   PROGRESSION_LEVEL_MAX             = 10
    '''Max skill level'''
 
    PROGRESSION_MELEE_DAMAGE          = 5
@@ -412,21 +499,24 @@ class Equipment:
    EQUIPMENT_SYSTEM_ENABLED            = True
    '''Game system flag'''
 
+   WEAPON_DROP_PROB = 0.1
+   '''Chance of getting a weapon while harvesting ammunition'''
+
    @staticmethod
    def EQUIPMENT_AMMUNITION_DAMAGE(level):
-       return 5 * level
+       return 15 * level
 
    @staticmethod
    def EQUIPMENT_ARMOR_DEFENSE(level):
-       return 5 * level
+       return 10 * level
 
    @staticmethod
    def EQUIPMENT_WEAPON_OFFENSE(level):
-       return 15 * level
+       return 15 + 15 * level
 
    @staticmethod
    def EQUIPMENT_TOOL_DEFENSE(level):
-       return 15 * level
+       return 30
 
 
 class Profession:
@@ -518,6 +608,7 @@ class Small(Config):
    PROGRESSION_SPAWN_CLUSTERS   = 4
    PROGRESSION_SPAWN_UNIFORMS   = 16
 
+   HORIZON                      = 128
 
 
 class Medium(Config):
@@ -533,11 +624,12 @@ class Medium(Config):
 
    NPC_N                        = 128
    NPC_LEVEL_MAX                = 10
-   NPC_LEVEL_SPREAD             = 2
+   NPC_LEVEL_SPREAD             = 1
 
    PROGRESSION_SPAWN_CLUSTERS   = 64
    PROGRESSION_SPAWN_UNIFORMS   = 256
 
+   HORIZON                      = 1024
 
 
 class Large(Config):
@@ -557,6 +649,8 @@ class Large(Config):
 
    PROGRESSION_SPAWN_CLUSTERS   = 1024
    PROGRESSION_SPAWN_UNIFORMS   = 4096
+
+   HORIZON                 = 8192
 
 
 class Default(Medium, AllGameSystems): pass

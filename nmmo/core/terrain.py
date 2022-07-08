@@ -242,7 +242,7 @@ class MapGenerator:
          #Save/render
          Save.np(tiles, path)
          if config.MAP_GENERATE_PREVIEWS:
-            b = config.TERRAIN_BORDER
+            b = config.MAP_BORDER
             tiles = [e[b:-b+1] for e in tiles][b:-b+1]
             Save.fractal(terrain, path+'/fractal.png')
             Save.render(tiles, self.textures, path+'/map.png')

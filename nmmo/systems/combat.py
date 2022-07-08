@@ -3,6 +3,8 @@
 from pdb import set_trace as T
 
 import numpy as np
+import logging
+
 from nmmo.systems import skill as Skill
 from nmmo.systems import item as Item
 
@@ -24,10 +26,11 @@ def damage_multiplier(config, skill, targ):
 
     return 1.0
 
-def attack(player, target, skillFn):
-    config     = player.config
-    skill      = skillFn(player)
-    skill_type = type(skill)
+def attack(realm, player, target, skillFn):
+    config       = player.config
+    skill        = skillFn(player)
+    skill_type   = type(skill)
+    skill_name   = skill_type.__name__
 
     # Ammunition usage
     ammunition = player.equipment.ammunition
@@ -53,6 +56,9 @@ def attack(player, target, skillFn):
     elif __debug__:
         assert False, 'Attack skill must be Melee, Range, or Mage'
 
+    player_level = skill.level.val
+    target_level = level(target.skills)
+
     # Compute modifiers
     multiplier        = damage_multiplier(config, skill, target)
     skill_offense     = base_damage + level_damage * skill.level.val
@@ -65,6 +71,12 @@ def attack(player, target, skillFn):
     defense = skill_defense + equipment_defense
     damage  = multiplier * (offense - defense)
     damage  = max(int(damage), 0)
+
+    if config.LOG_EVENTS and player.isPlayer and realm.quill.event.log_max(f'Damage_{skill_name}', damage) and config.LOG_VERBOSE:
+        player_ilvl = player.equipment.total(lambda e: e.level)
+        target_ilvl = target.equipment.total(lambda e: e.level)
+
+        logging.info(f'COMBAT: Inflicted {damage} {skill_name} damage (lvl {player_level} i{player_ilvl} vs lvl {target_level} i{target_ilvl})')
 
     player.applyDamage(damage, skill.__class__.__name__.lower())
     target.receiveDamage(player, damage)

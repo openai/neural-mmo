@@ -65,6 +65,9 @@ class Action(Node):
 
       Action.hooked = True
 
+   #Called upon module import (see bottom of file)
+   #Sets up serialization domain
+   def hook(config):
       idx = 0
       arguments = []
       for action in Action.edges(config):
@@ -80,6 +83,10 @@ class Action(Node):
                idx += 1
       Action.arguments = arguments
 
+   @staticproperty
+   def n():
+      return len(Action.arguments)
+
    @classmethod
    def edges(cls, config):
       '''List of valid actions'''
@@ -93,10 +100,6 @@ class Action(Node):
       if config.COMMUNICATION_SYSTEM_ENABLED:
           edges.append(Comm)
       return edges
-
-   @staticproperty
-   def n():
-      return len(Action.arguments)
 
    def args(stim, entity, config):
       return nmmo.Serialized.edges 
@@ -197,12 +200,16 @@ class Attack(Node):
       if entity.isPlayer and not env.config.COMBAT_SYSTEM_ENABLED:
          return 
 
+      # Testing a spawn immunity against old agents to avoid spawn camping
+      if entity.isPlayer and targ.isPlayer and entity.history.timeAlive.val > 20 and targ.history.timeAlive < 20:
+         return
+
       #Check if self targeted
       if entity.entID == targ.entID:
          return
 
       #ADDED: POPULATION IMMUNITY
-      #if entity.population == targ.population:
+      #if entity.base.population.val == targ.base.population.val:
       #   return
 
       #Check attack range
@@ -223,7 +230,7 @@ class Attack(Node):
       targ.attackerID.update(entity.entID)
 
       from nmmo.systems import combat
-      dmg = combat.attack(entity, targ, style.skill)
+      dmg = combat.attack(env, entity, targ, style.skill)
 
       if style.freeze and dmg > 0:
          targ.status.freeze.update(env.config.COMBAT_FREEZE_TIME)
@@ -348,7 +355,10 @@ class Sell(Node):
         if item not in entity.inventory:
             return
 
-        return env.exchange.sell(env, entity, item, price.val)
+        if type(price) != int:
+            price = price.val
+
+        return env.exchange.sell(env, entity, item, price)
 
 def init_discrete(values):
     classes = []
@@ -363,7 +373,7 @@ class Price(Node):
 
     @classmethod
     def init(cls, config):
-        Price.classes = init_discrete(range(1, 101))
+        Price.classes = init_discrete([1, 3, 5, 10, 20])
 
     @staticproperty
     def edges():
@@ -373,6 +383,8 @@ class Price(Node):
         return Price.edges
 
 class Token(Node):
+    argType  = Fixed
+
     @classmethod
     def init(cls, config):
         Comm.classes = init_discrete(range(config.COMMUNICATION_NUM_TOKENS))
@@ -385,6 +397,7 @@ class Token(Node):
         return Comm.edges
 
 class Comm(Node):
+    argType  = Fixed
     priority = 0
 
     @staticproperty

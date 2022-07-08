@@ -138,6 +138,7 @@ class Base:
 
 class Entity:
    def __init__(self, realm, pos, iden, name, color, pop):
+      self.realm        = realm
       self.dataframe    = realm.dataframe
       self.config       = realm.config
 
@@ -185,22 +186,16 @@ class Entity:
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
 
-      if not self.alive and source is not None:
-         if not self.config.ITEM_SYSTEM_ENABLED:
-             return False
+      if self.alive:
+          return True
 
-         for item in list(self.inventory._item_references):
-             if not item.quantity.val:
-                 continue
+      if source is None:
+          return True 
 
-             self.inventory.remove(item)
+      if not source.isPlayer:
+          return True 
 
-             if source.inventory.space:
-                 source.inventory.receive(item)
-
-         return False
-
-      return True
+      return False
 
    def applyDamage(self, dmg, style):
       pass
@@ -231,7 +226,3 @@ class Entity:
        mage   = self.skills.mage.level.val
 
        return int(max(melee, ranged, mage))
-
-   @property
-   def equipment(self):
-       return self.inventory.equipment

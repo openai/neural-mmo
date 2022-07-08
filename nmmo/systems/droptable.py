@@ -1,13 +1,16 @@
 import numpy as np
 
-class Range():
-   def __init__(self, mmin, mmax):
-      self.mmin = mmin
-      self.mmax = mmax
+class Empty():
+    def roll(self, realm, level):
+        return []
 
-   @property
-   def value(self):
-      return np.random.randint(self.mmin, self.mmax+1)
+class Fixed():
+    def __init__(self, item, amount=1):
+        self.item = item
+        self.amount = amount
+
+    def roll(self, realm, level):
+        return [self.item(realm, level, amount=amount)]
 
 class Drop:
    def __init__(self, item, amount, prob):
@@ -15,39 +18,37 @@ class Drop:
       self.amount = amount
       self.prob = prob
 
-   def roll(self):
+   def roll(self, realm, level):
       if np.random.rand() < self.prob:
-         if type(self.amount) == int:
-            return (self.item(), self.amount)
-         return (self.item(), self.amount.value)
+         return self.item(realm, level, quantity=self.amount)
 
-class DropTable:
+class Standard:
    def __init__(self):
       self.drops = []
 
-   def add(self, item, quant, prob=1.0):
+   def add(self, item, quant=1, prob=1.0):
       self.drops += [Drop(item, quant, prob)]
 
-   def roll(self):
+   def roll(self, realm, level):
       ret = []
       for e in self.drops:
-         drop = e.roll()
+         drop = e.roll(realm, level)
          if drop is not None:
             ret += [drop]
       return ret
 
-class Empty(DropTable):
+class Empty(Standard):
     def roll(self, realm, level):
         return []
 
-class Ammunition(DropTable):
+class Ammunition(Standard):
     def __init__(self, item):
         self.item = item
 
     def roll(self, realm, level):
         return [self.item(realm, level)]
 
-class Consumable(DropTable):
+class Consumable(Standard):
     def __init__(self, item):
         self.item = item
 

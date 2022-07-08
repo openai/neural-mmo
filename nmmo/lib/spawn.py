@@ -23,7 +23,7 @@ class TeamLoader:
     '''config.PLAYER_LOADER that loads agent populations adjacent'''
     def __init__(self, config):
         items = config.PLAYERS
-        self.team_size = config.NENT // config.NPOP
+        self.team_size = config.PLAYER_N // config.NPOP
 
         for idx, itm in enumerate(items):
            itm.policyID = idx 
@@ -91,4 +91,9 @@ def spawn_concurrent(config):
     s3     = list(zip(rrange, highs))
     s4     = list(zip(highs, rrange))
 
-    return s1 + s2 + s3 + s4
+    ret = s1 + s2 + s3 + s4
+
+    # Shuffle needs porting to competition version
+    np.random.shuffle(ret)
+
+    return ret

@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
+import logging
 
 from nmmo import core
 from nmmo.lib import material
@@ -13,6 +14,8 @@ class Map:
    '''
    def __init__(self, config, realm):
       self.config = config
+      self._repr  = None
+      self.realm  = realm
 
       sz          = config.MAP_SIZE
       self.tiles  = np.zeros((sz, sz), dtype=object)
@@ -32,7 +35,10 @@ class Map:
    @property
    def repr(self):
       '''Flat matrix of tile material indices'''
-      return [[t.mat.index for t in row] for row in self.tiles]
+      if not self._repr:
+          self._repr = [[t.mat.index for t in row] for row in self.tiles]
+
+      return self._repr
 
    def reset(self, realm, idx):
       '''Reuse the current tile objects to load a new map'''
@@ -57,6 +63,10 @@ class Map:
 
    def step(self):
       '''Evaluate updatable tiles'''
+      if self.config.LOG_EVENTS and self.realm.quill.event.log_max(f'Resource_Depleted', len(self.updateList)) and self.config.LOG_VERBOSE:
+         logging.info(f'RESOURCE: Depleted {len(self.updateList)} resource tiles')                           
+
+
       for e in self.updateList.copy():
          if not e.depleted:
             self.updateList.remove(e)
@@ -66,4 +76,5 @@ class Map:
       '''Called by actions that harvest a resource tile'''
       if deplete:
           self.updateList.add(self.tiles[r, c])
+
       return self.tiles[r, c].harvest(deplete)

@@ -10,11 +10,11 @@ def rank(policy_ids, scores):
     '''Compute policy rankings from per-agent scores'''
     agents = defaultdict(list)
     for policy_id, score in zip(policy_ids, scores):
-        agents[policy_id].append(score + 1e-8*np.random.normal())
+        agents[policy_id].append(score)
 
     # Double argsort returns ranks
     return np.argsort(np.argsort(
-        [-np.mean(vals) for policy, vals in 
+        [-np.mean(vals) + 1e-8 * np.random.normal() for policy, vals in 
         sorted(agents.items())])).tolist()
 
 
@@ -46,6 +46,13 @@ class OpenSkillRating:
 
         self.anchor_baseline()
 
+    def __str__(self):
+        return ', '.join(f'{p.__name__}: {int(r.mu)}' for p, r in self.ratings.items())
+
+    @property
+    def stats(self):
+        return {p.__name__: int(r.mu) for p, r in self.ratings.items()}
+
     def update(self, ranks=None, policy_ids=None, scores=None):
         '''Updates internal skill rating estimates for each policy
 
@@ -62,7 +69,7 @@ class OpenSkillRating:
 
         if __debug__:
             err = 'Specify either ranks or policy_ids and scores'
-            assert ranks is None  != (policy_ids is None and scores is None), err
+            assert (ranks is None) != (policy_ids is None and scores is None), err
 
         if ranks is None:
             ranks = rank(policy_ids, scores)

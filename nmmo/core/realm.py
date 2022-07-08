@@ -11,7 +11,10 @@ from nmmo.systems.exchange import Exchange
 from nmmo.systems import combat
 from nmmo.entity.npc import NPC
 from nmmo.entity import Player
-from nmmo.lib import colors, spawn
+
+from nmmo.io.action import Action
+from nmmo.lib import colors, spawn, log
+
 
 def prioritized(entities: Dict, merged: Dict):
    '''Sort actions into merged according to priority'''
@@ -19,6 +22,7 @@ def prioritized(entities: Dict, merged: Dict):
       for atn, args in actions.items():
          merged[atn.priority].append((idx, (atn, args.values())))
    return merged
+
 
 class EntityGroup(Mapping):
    def __init__(self, config, realm):
@@ -55,7 +59,6 @@ class EntityGroup(Mapping):
       for entID, ent in self.entities.items():
          self.dataframe.remove(nmmo.Serialized.Entity, entID, ent.pos)
 
-      self.spawned  = False
       self.entities = {}
       self.dead     = {}
 
@@ -90,6 +93,7 @@ class EntityGroup(Mapping):
    def update(self, actions):
       for entID, entity in self.entities.items():
          entity.update(self.realm, actions)
+
 
 class NPCManager(EntityGroup):
    def __init__(self, config, realm):
@@ -144,7 +148,6 @@ class NPCManager(EntityGroup):
 class PlayerManager(EntityGroup):
    def __init__(self, config, realm):
       super().__init__(config, realm)
-
       self.palette = colors.Palette()
       self.loader  = config.PLAYER_LOADER
       self.realm   = realm
@@ -152,27 +155,34 @@ class PlayerManager(EntityGroup):
    def reset(self):
       super().reset()
       self.agents  = self.loader(self.config)
-      self.idx     = 1
+      self.spawned = set()
 
-   def spawnIndividual(self, r, c):
+   def spawnIndividual(self, r, c, idx):
       pop, agent = next(self.agents)
-      agent      = agent(self.config, self.idx)
+      agent      = agent(self.config, idx)
       player     = Player(self.realm, (r, c), agent, self.palette.color(pop), pop)
       super().spawn(player)
-      self.idx   += 1
 
    def spawn(self):
       #TODO: remove hard check against fixed function
       if self.config.PLAYER_SPAWN_FUNCTION == spawn.spawn_concurrent:
-         if self.spawned:
-            return 
-
-         self.spawned = True
          idx = 0
          for r, c in self.config.PLAYER_SPAWN_FUNCTION(self.config):
             idx += 1
-            assert not self.realm.map.tiles[r, c].occupied
-            self.spawnIndividual(r, c)
+
+            if idx in self.entities:
+                continue
+
+            if idx in self.spawned and not self.config.RESPAWN:
+                continue
+
+            self.spawned.add(idx)
+            
+            if self.realm.map.tiles[r, c].occupied:
+                continue
+
+            self.spawnIndividual(r, c, idx)
+
          return
           
       #MMO-style spawning
@@ -193,6 +203,7 @@ class Realm:
    '''Top-level world object'''
    def __init__(self, config):
       self.config   = config
+      Action.hook(config)
 
       # Generate maps if they do not exist
       config.MAP_GENERATOR(config).generate_all_maps()
@@ -220,14 +231,23 @@ class Realm:
       Args:
          idx: Map index to load
       ''' 
+      self.quill = log.Quill(self.config)
       self.map.reset(self, idx)
       self.players.reset()
       self.npcs.reset()
       self.tick = 0
- 
+
+      # Global item exchange
+      self.exchange = Exchange()
+
+      # Global item registry
+      self.items    = {}
+
    def packet(self):
       '''Client packet'''
       return {'environment': self.map.repr,
+              'border': self.config.MAP_BORDER,
+              'size': self.config.MAP_SIZE,
               'resource': self.map.packet,
               'player': self.players.packet,
               'npc': self.npcs.packet}

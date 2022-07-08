@@ -25,9 +25,11 @@ class OverlayRegistry:
               'wilderness': Wilderness}
 
 
-   def init(self):
+   def init(self, *args):
+      self.initialized = True
       for cmd, overlay in self.overlays.items():
-         self.overlays[cmd] = overlay(self.config, self.realm)
+         self.overlays[cmd] = overlay(self.config, self.realm, *args)
+      return self
 
    def step(self, obs, pos, cmd):
       '''Per-tick overlay updates
@@ -38,7 +40,6 @@ class OverlayRegistry:
           cmd: User command returned by the client
       '''
       if not self.initialized:
-          self.initialized = True
           self.init()
 
       self.realm.overlayPos = pos

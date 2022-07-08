@@ -2,6 +2,9 @@ from pdb import set_trace as T
 
 from collections import defaultdict, deque
 from queue import PriorityQueue
+
+import inspect
+import logging
 import inspect
 
 import math
@@ -114,6 +117,15 @@ class Exchange:
 
       return keys
 
+   @property
+   def dataframeVals(self):
+      vals = []
+      for listings in self.item_listings.values():
+         if listings.placeholder:
+            vals.append(listings.placeholder)
+
+      return vals
+
    def step(self):
       for item, listings in self.item_listings.items():
          listings.step()
@@ -129,6 +141,7 @@ class Exchange:
       if not buyer.inventory.space:
          return
 
+      config       = realm.config
       level        = item.level.val
 
       #Agents may try to buy an item at the same time
@@ -142,8 +155,13 @@ class Exchange:
 
       price = listings.buy(buyer, max_price)
       if price:
-         #print('{} Bought {} for {}.'.format(buyer.base.name, item.__name__, price))
          buyer.inventory.receive(listings.placeholder)
+
+         if config.LOG_EVENTS:
+            if realm.quill.event.log_max(f'Buy_{item.__name__}', level) and config.LOG_VERBOSE:
+               logging.info(f'EXCHANGE: Bought level {level} {item.__name__} for {price} gold')
+            if realm.quill.event.log_max(f'Transaction_Amount', price) and config.LOG_VERBOSE:
+               logging.info(f'EXCHANGE: Transaction of {price} gold (level {level} {item.__name__})')
 
          #Update placeholder
          listings.placeholder = None
@@ -158,11 +176,15 @@ class Exchange:
       if not item.tradable.val:
          return
 
+      config   = realm.config
       level    = item.level.val
 
       #Remove from seller
       seller.inventory.remove(item, quantity=1)
       item = type(item)
+
+      if config.LOG_EVENTS and realm.quill.event.log_max(f'Sell_{item.__name__}', level) and config.LOG_VERBOSE:
+         logging.info(f'EXCHANGE: Offered level {level} {item.__name__} for {price} gold')
 
       listings_key  = (item, level)
       listings      = self.item_listings[listings_key]

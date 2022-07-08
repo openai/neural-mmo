@@ -203,6 +203,12 @@ class Config(Template):
    PLAYER_DEATH_FOG             = None
    '''How long before spawning death fog. None for no death fog'''
 
+   PLAYER_DEATH_FOG_SPEED       = 1
+   '''Number of tiles per tick that the fog moves in'''
+
+   PLAYER_DEATH_FOG_FINAL_SIZE  = 8
+   '''Number of tiles from the center that the fog stops'''
+
    ############################################################################
    ### Agent Parameters                                                   
    BASE_HEALTH                = 10

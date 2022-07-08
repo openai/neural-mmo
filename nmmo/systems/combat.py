@@ -61,8 +61,8 @@ def attack(realm, player, target, skillFn):
 
     # Compute modifiers
     multiplier        = damage_multiplier(config, skill, target)
-    skill_offense     = base_damage + level_damage * player_level
-    skill_defense     = config.PROGRESSION_DEFENSE * target_level
+    skill_offense     = base_damage + level_damage * skill.level.val
+    skill_defense     = config.PROGRESSION_DEFENSE * level(target.skills)
     equipment_offense = player.equipment.total(offense_fn)
     equipment_defense = target.equipment.total(defense_fn)
 

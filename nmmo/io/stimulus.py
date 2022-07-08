@@ -126,7 +126,9 @@ class Serialized(metaclass=utils.IterableNameComparable):
       class Comm(Discrete):
          def init(self, config):
             self.scale = 0.025
-            self.max   = config.COMMUNICATION_NUM_TOKENS
+            self.max = 1
+            if config.COMMUNICATION_SYSTEM_ENABLED:
+                self.max   = config.COMMUNICATION_NUM_TOKENS
 
       class Population(Discrete):
          def init(self, config):

@@ -63,7 +63,6 @@ def test_pack_unpack_obs():
     env, obs = init_env()
     packed   = nmmo.emulation.pack_obs(obs)
     packed   = np.vstack(list(packed.values()))
-    T()
     unpacked = nmmo.emulation.unpack_obs(env.config, packed)
     batched  = nmmo.emulation.batch_obs(obs)
 

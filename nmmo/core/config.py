@@ -71,6 +71,7 @@ def validate(config):
         assert not config.PROFESSION_SYSTEM_ENABLED, err.format('Profession')
         assert not config.EXCHANGE_SYSTEM_ENABLED, err.format('Exchange')
 
+
 class Config(Template):
    '''An environment configuration object
 
@@ -119,12 +120,15 @@ class Config(Template):
 
       if not hasattr(self, 'EXCHANGE_SYSTEM_ENABLED'):
           self.EXCHANGE_SYSTEM_ENABLED = False
+
+      if not hasattr(self, 'COMMUNICATION_SYSTEM_ENABLED'):  
+          self.COMMUNICATION_SYSTEM_ENABLED = False
  
       if __debug__:
          validate(self)
 
       deprecated_attrs = [
-            'NENT', 'NPOP', 'AGENTS', 'NMAPS', 'FORCE_MAP_GENERATION']
+            'NENT', 'NPOP', 'AGENTS', 'NMAPS', 'FORCE_MAP_GENERATION', 'SPAWN']
 
       for attr in deprecated_attrs:
           assert not hasattr(self, attr), f'{attr} has been deprecated or renamed'
@@ -132,17 +136,24 @@ class Config(Template):
 
    ############################################################################
    ### Meta-Parameters
+   def game_system_enabled(self, name) -> bool:
+      return hasattr(self, name)
+
+   def population_mapping_fn(self, idx) -> int:
+      return idx % self.NPOP
+
    RENDER                       = False
    '''Flag used by render mode'''
 
    SAVE_REPLAY            = False
    '''Flag used to save replays'''
 
-   def game_system_enabled(self, name) -> bool:
-      return hasattr(self, name)
+   PLAYERS                      = []
+   '''Player classes from which to spawn'''
 
-   def population_mapping_fn(self, idx) -> int:
-      return idx % self.NPOP
+   TASKS                        = []
+   '''Tasks for which to compute rewards'''
+
 
    ############################################################################
    ### Emulation Parameters
@@ -158,6 +169,7 @@ class Config(Template):
 
    EMULATE_CONST_HORIZON  = False
    '''Emulate a constant HORIZON simulations steps'''
+
 
    ############################################################################
    ### Population Parameters                                                   
@@ -175,6 +187,7 @@ class Config(Template):
 
    TASKS                        = []
    '''Tasks for which to compute rewards'''
+
 
    ############################################################################
    ### Player Parameters                                                   
@@ -209,11 +222,6 @@ class Config(Template):
    PLAYER_DEATH_FOG_FINAL_SIZE  = 8
    '''Number of tiles from the center that the fog stops'''
 
-   ############################################################################
-   ### Agent Parameters                                                   
-   BASE_HEALTH                = 10
-   '''Initial Constitution level and agent health'''
-
    RESPAWN = False
 
    PLAYER_LOADER                = spawn.SequentialLoader
@@ -230,10 +238,17 @@ class Config(Template):
       return spawn.spawn_concurrent
 
    @property
+
    def PLAYER_TEAM_SIZE(self):
       if __debug__:
          assert not self.PLAYER_N % self.NPOP
       return self.PLAYER_N // self.NPOP
+
+   @property
+   def PLAYER_TEAM_SIZE(self):
+      if __debug__:
+         assert not self.NENT % self.NPOP
+      return self.NENT // self.NPOP
 
 
    ############################################################################
@@ -259,9 +274,6 @@ class Config(Template):
    def MAP_SIZE(self):
       return int(self.MAP_CENTER + 2*self.MAP_BORDER)
 
-
-   ############################################################################
-   ### Terrain Generation Parameters
    MAP_GENERATOR                = None
    '''Specifies a user map generator. Uses default generator if unspecified.'''
 
@@ -291,6 +303,9 @@ class Config(Template):
 
    PATH_MAPS                = None
    '''Generated map directory'''
+
+   PATH_MAP_SUFFIX          = 'map{}/map.npy'
+   '''Map file name'''
 
    PATH_MAP_SUFFIX          = 'map{}/map.npy'
    '''Map file name'''
@@ -593,10 +608,6 @@ class Small(Config):
    PROGRESSION_SPAWN_CLUSTERS   = 4
    PROGRESSION_SPAWN_UNIFORMS   = 16
 
-
-   NPC_LEVEL_MAX                = 10
-   NPC_LEVEL_SPREAD             = 1
-   
    HORIZON                      = 128
 
 
@@ -639,7 +650,7 @@ class Large(Config):
    PROGRESSION_SPAWN_CLUSTERS   = 1024
    PROGRESSION_SPAWN_UNIFORMS   = 4096
 
-
    HORIZON                 = 8192
+
 
 class Default(Medium, AllGameSystems): pass

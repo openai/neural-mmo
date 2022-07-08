@@ -276,4 +276,15 @@ class Dataframe:
          stim['Market']       = self.data['Item'].getFlat(market)
          stim['Market']['N']  = np.array([len(market)], dtype=np.int32)
 
+      #Current must have the same pad
+      if self.config.ITEM_SYSTEM_ENABLED:
+         items                = ent.inventory.dataframeKeys
+         stim['Item']         = self.data['Item'].getFlat(items)
+         stim['Item']['N']    = np.array([len(items)], dtype=np.int32)
+
+      if self.config.EXCHANGE_SYSTEM_ENABLED:
+         market               = self.realm.exchange.dataframeKeys
+         stim['Market']       = self.data['Item'].getFlat(market)
+         stim['Market']['N']  = np.array([len(market)], dtype=np.int32)
+
       return stim

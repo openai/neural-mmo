@@ -17,6 +17,7 @@ from nmmo.lib import log
 from nmmo.infrastructure import DataType
 from nmmo.systems import item as Item
 
+
 class Replay:
     def __init__(self, config):
         self.packets = []
@@ -177,7 +178,7 @@ class Env(ParallelEnv):
             observation['Entity']['N'] = gym.spaces.Box(
                     low=0, high=self.config.PLAYER_N_OBS,
                     shape=(1,), dtype=DataType.DISCRETE)
-         if name == 'Tile':
+         elif name == 'Tile':
             observation['Tile']['N'] = gym.spaces.Box(
                     low=0, high=self.config.PLAYER_VISION_DIAMETER,
                     shape=(1,), dtype=DataType.DISCRETE)
@@ -481,7 +482,7 @@ class Env(ParallelEnv):
 
       self.realm.exchange.step()
 
-      for entID,ent in self.dead.items():
+      for entID, ent in self.dead.items():
          if ent.agent.scripted:
             continue
          rewards[ent.entID], infos[ent.entID] = self.reward(ent)

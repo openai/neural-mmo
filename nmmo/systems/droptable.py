@@ -36,3 +36,21 @@ class Standard:
          if drop is not None:
             ret += [drop]
       return ret
+
+class Empty(Standard):
+    def roll(self, realm, level):
+        return []
+
+class Ammunition(Standard):
+    def __init__(self, item):
+        self.item = item
+
+    def roll(self, realm, level):
+        return [self.item(realm, level)]
+
+class Consumable(Standard):
+    def __init__(self, item):
+        self.item = item
+
+    def roll(self, realm, level):
+        return [self.item(realm, level)]

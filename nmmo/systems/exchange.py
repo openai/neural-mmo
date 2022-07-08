@@ -5,6 +5,8 @@ from queue import PriorityQueue
 
 import inspect
 import logging
+import inspect
+
 import math
 
 class Offer:
@@ -171,7 +173,6 @@ class Exchange:
       assert item in seller.inventory, f'{item} for sale is not in {seller} inventory'
       assert item.quantity.val > 0, f'{item} for sale has quantity {item.quantity.val}'
 
-
       if not item.tradable.val:
          return
 
@@ -193,4 +194,5 @@ class Exchange:
       if listings.placeholder is None or (current_price is not None and price < current_price):
          listings.placeholder = item(realm, level, price=price)
 
+      #print('{} Sold {} x {} for {} ea.'.format(seller.base.name, quantity, item.__name__, price))
       listings.sell(seller, price)

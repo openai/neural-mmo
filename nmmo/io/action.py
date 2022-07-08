@@ -405,7 +405,7 @@ class Comm(Node):
         return [Token]
 
     def call(env, entity, token):
-        entity.base.comm.update(token.val)
+        entity.base.comm.update(token)
 
 #TODO: Solve AGI
 class BecomeSkynet:

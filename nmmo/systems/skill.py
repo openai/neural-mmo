@@ -9,7 +9,7 @@ from nmmo.lib import material
 
 ### Infrastructure ###
 class SkillGroup:
-   def __init__(self, realm):
+   def __init__(self, realm, entity):
       self.config  = realm.config
       self.realm   = realm
 
@@ -86,9 +86,6 @@ class HarvestSkill(NonCombatSkill):
             if entity.inventory.space:
                 entity.inventory.receive(drop)
 
-        if not self.config.PROGRESSION_SYSTEM_ENABLED:
-            return
-
     def harvest(self, realm, entity, matl, deplete=True):
         r, c = entity.pos
         if realm.map.tiles[r, c].state != matl:
@@ -114,7 +111,6 @@ class HarvestSkill(NonCombatSkill):
         if dropTable:
             self.processDrops(realm, entity, matl, dropTable)
             return True
-
 
 class AmmunitionSkill(HarvestSkill):
     def processDrops(self, realm, entity, matl, dropTable):
@@ -163,11 +159,11 @@ class Harvest(SkillGroup):
 
 class Combat(SkillGroup):
    def __init__(self, realm, entity):
-      super().__init__(entity)
+      super().__init__(realm, entity)
 
       self.melee = Melee(realm, entity, self)
       self.range = Range(realm, entity, self)
-      self.mage  = Mage(realm,  entity, self)
+      self.mage  = Mage(realm, entity, self)
 
    def packet(self):
       data          = super().packet() 

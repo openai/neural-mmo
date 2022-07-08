@@ -6,6 +6,7 @@ class Material:
    capacity    = 0
    tool        = None
    table       = None
+
    def __init__(self, config):
       pass
 
@@ -78,6 +79,9 @@ class Ore(Material):
 
        self.capacity = config.PROFESSION_ORE_CAPACITY
        self.respawn  = config.PROFESSION_ORE_RESPAWN
+
+   tool    = item.Pickaxe
+   deplete = Slag
 
 class Stump(Material):
    tex   = 'stump'

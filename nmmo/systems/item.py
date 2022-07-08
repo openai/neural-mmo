@@ -95,7 +95,7 @@ class Stack():
 class Gold(Item, Stack):
    ITEM_ID = 1
    def __init__(self, realm, **kwargs):
-      super().__init__(realm, level=0, quantity=0, tradable=False, **kwargs)
+      super().__init__(realm, level=0, tradable=False, **kwargs)
 
 class Equipment(Item):
    @property
@@ -385,7 +385,7 @@ class Ration(Consumable):
 
       if self.config.LOG_EVENTS and self.realm.quill.event.log_max(f'Consumed_Ration', self.level.val) and self.config.LOG_VERBOSE:
          logging.info(f'PROFESSION: Consumed level {self.level.val} ration')
- 
+
       entity.resources.food.increment(self.resource_restore.val)
       entity.resources.water.increment(self.resource_restore.val)
 
@@ -407,7 +407,7 @@ class Poultice(Consumable):
 
       if self.config.LOG_EVENTS and self.realm.quill.event.log_max(f'Consumed_Poultice', self.level.val) and self.config.LOG_VERBOSE:
          logging.info(f'PROFESSION: Consumed level {self.level.val} poultice')
- 
+
       entity.resources.health.increment(self.health_restore.val)
 
       entity.poultice_level_consumed = max(entity.poultice_level_consumed, self.level.val)

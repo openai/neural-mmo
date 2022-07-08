@@ -15,12 +15,14 @@ from nmmo.entity import Player
 from nmmo.io.action import Action
 from nmmo.lib import colors, spawn, log
 
+
 def prioritized(entities: Dict, merged: Dict):
    '''Sort actions into merged according to priority'''
    for idx, actions in entities.items():
       for atn, args in actions.items():
          merged[atn.priority].append((idx, (atn, args.values())))
    return merged
+
 
 class EntityGroup(Mapping):
    def __init__(self, config, realm):
@@ -91,6 +93,7 @@ class EntityGroup(Mapping):
    def update(self, actions):
       for entID, entity in self.entities.items():
          entity.update(self.realm, actions)
+
 
 class NPCManager(EntityGroup):
    def __init__(self, config, realm):
@@ -212,6 +215,12 @@ class Realm:
       # Entity handlers
       self.players  = PlayerManager(config, self)
       self.npcs     = NPCManager(config, self)
+
+      # Global item exchange
+      self.exchange = Exchange()
+
+      # Global item registry
+      self.items    = {}
 
       # Initialize actions
       nmmo.Action.init(config)

@@ -3,6 +3,7 @@ import numpy as np
 
 import inspect
 import logging
+
 from nmmo.systems import item as Item
 from nmmo.systems import skill as Skill
 
@@ -76,8 +77,6 @@ class Equipment:
       packet['melee_defense'] = self.melee_defense
       packet['range_defense'] = self.range_defense
       packet['mage_defense']  = self.mage_defense
-
-      return packet
 
 
 class Inventory:

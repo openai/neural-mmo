@@ -46,10 +46,12 @@ def test_emulate_single_agent():
         for i in range(32):
             ob, reward, done, info = e.step({})
 
-def equals(batch1, batch2):
-   entity_keys = [e[0][0] for e in nmmo.io.stimulus.Serialized]
-   assert list(batch1.keys()) == list(batch2.keys()) == entity_keys
+def equals(config, batch1, batch2):
+   assert list(batch1.keys()) == list(batch2.keys())
    for (entity_name,), entity in nmmo.io.stimulus.Serialized:
+        if not entity.enabled(config):
+            continue  
+
         batch1_attrs = batch1[entity_name]
         batch2_attrs = batch2[entity_name]
 
@@ -64,9 +66,9 @@ def test_pack_unpack_obs():
     packed   = nmmo.emulation.pack_obs(obs)
     packed   = np.vstack(list(packed.values()))
     unpacked = nmmo.emulation.unpack_obs(env.config, packed)
-    batched  = nmmo.emulation.batch_obs(obs)
+    batched  = nmmo.emulation.batch_obs(env.config, obs)
 
-    equals(unpacked, batched)
+    equals(env.config, unpacked, batched)
 
 def test_obs_pack_speed(benchmark):
     env, obs = init_env()
@@ -80,4 +82,4 @@ def test_obs_unpack_speed(benchmark):
     benchmark(lambda: nmmo.emulation.unpack_obs(env.config, packed))
 
 if __name__ == '__main__':
-   test_flat_obs()
+   test_pack_unpack_obs()

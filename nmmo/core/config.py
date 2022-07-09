@@ -154,7 +154,6 @@ class Config(Template):
    TASKS                        = []
    '''Tasks for which to compute rewards'''
 
-
    ############################################################################
    ### Emulation Parameters
  
@@ -483,7 +482,7 @@ class Item:
    ITEM_N                              = 17
    '''Number of unique base item classes'''
 
-   ITEM_INVENTORY_CAPACITY            = 12
+   ITEM_INVENTORY_CAPACITY             = 12
    '''Number of inventory spaces'''
 
    @property

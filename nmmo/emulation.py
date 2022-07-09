@@ -82,9 +82,12 @@ def pack_obs_space(observation):
            shape=(int(n),), dtype=DataType.CONTINUOUS)
 
 
-def batch_obs(obs):
+def batch_obs(config, obs):
     batched = {}
     for (entity_name,), entity in nmmo.io.stimulus.Serialized:
+        if not entity.enabled(config):
+            continue
+
         batched[entity_name] = {}
         for dtype in 'Continuous Discrete N'.split():
             attr_obs = [obs[k][entity_name][dtype] for k in obs]
@@ -108,6 +111,9 @@ def unpack_obs(config, packed_obs):
     obs, idx = {}, 0
     batch = len(packed_obs)
     for (entity_name,), entity in nmmo.io.stimulus.Serialized:
+        if not entity.enabled(config):
+            continue
+
         n_entity = entity.N(config)
         n_continuous, n_discrete = 0, 0
         obs[entity_name] = {}

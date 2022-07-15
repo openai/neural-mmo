@@ -521,6 +521,15 @@ class Env(ParallelEnv):
       This function is called automatically once per environment step
       to compute summary stats. You should not call it manually.
       Instead, override this method to customize logging.
+
+      if self.config.EXCHANGE_SYSTEM_ENABLED:
+          for item, listing in self.realm.exchange.items.items():
+              name = item.__name__
+              quill.log_env(f'Market_Price_{name}', listing.price())
+              quill.log_env(f'Market_Level_{name}', listing.level())
+              quill.log_env(f'Market_Volume_{name}', listing.volume)
+              quill.log_env(f'Market_Supply_{name}', listing.supply())
+              quill.log_env(f'Market_Supply_{value}', listing.value())
       '''
       pass
 
@@ -582,16 +591,6 @@ class Env(ParallelEnv):
                quill.log_player(f'{policy}_Weapon_Level', 0)
                quill.log_player(f'{policy}_Tool_Level', 0)
             quill.log_player(f'{policy}_Item_Level',   player.equipment.total(lambda e: e.level))
-
-      '''
-      key = '{}_Market_{}_{}'
-      for item, listing in self.realm.exchange.items.items():
-          quill.stat(key.format(policy, 'Price', item.__name__), listing.price())
-          quill.stat(key.format(policy, 'Level', item.__name__), listing.level())
-          quill.stat(key.format(policy, 'Volume', item.__name__), listing.volume)
-          quill.stat(key.format(policy, 'Supply', item.__name__), listing.supply())
-          quill.stat(key.format(policy, 'Value', item.__name__), listing.value())
-      '''
 
       # Item usage
       if config.PROFESSION_SYSTEM_ENABLED:

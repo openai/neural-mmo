@@ -18,7 +18,7 @@ class Logger:
     def log(self, key, val):
         try:
             int_val = int(val)
-        except error as e:
+        except TypeError as e:
             print(f'{val} must be int or float')
             raise e
         self.stats[key].append(val)
@@ -49,8 +49,14 @@ class Quill:
       self.env    = Logger()
       self.player = Logger()
 
+      self.shared = {}
+
       if config.LOG_EVENTS:
           self.event  = EventLogger(config.LOG_FILE)
+
+   def register(self, key, fn):
+       assert key not in self.shared, f'Log key {key} already exists'
+       self.shared[key] = fn
 
    def log_env(self, key, val):
       self.env.log(key, val)

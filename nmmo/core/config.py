@@ -175,6 +175,9 @@ class Config(Template):
    LOG_VERBOSE                  = False
    '''Whether to log server messages or just stats'''
 
+   LOG_ENV                      = False
+   '''Whether to log env steps (expensive)'''
+
    LOG_EVENTS                   = True
    '''Whether to log events (semi-expensive)'''
 

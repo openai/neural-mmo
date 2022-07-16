@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 
+import nmmo
 from nmmo import Env
 
 def rllib_env_cls():
@@ -133,7 +134,12 @@ def cleanrl_vec_envs(config_classes, verbose=True):
             config    = cls()
             dummy_env = CleanRLEnv(config)
 
-        envs = make_env_fn(cls)
+        #neural = [e == nmmo.Agent for e in cls.PLAYERS]
+        #n_neural = sum(neural) / len(neural) * config.NUM_ENVS
+        #assert int(n_neural) == n_neural, f'{sum(neural)} neural agents and {cls.PLAYER_N} classes'
+        #n_neural = int(n_neural)
+        
+        envs = make_env_fn(cls)#, n_neural)
         all_envs.append(envs)
 
         # TODO: Find a cleaner way to specify env scale that enables multiple envs per CPU
@@ -141,6 +147,8 @@ def cleanrl_vec_envs(config_classes, verbose=True):
         num_cpus    += cls.NUM_CPUS
         num_envs    += cls.NUM_CPUS
         num_agents  += cls.NUM_CPUS * cls.PLAYER_N
+
+
 
     envs = ss.vector.ProcConcatVec(all_envs,
             dummy_env.observation_space(1),

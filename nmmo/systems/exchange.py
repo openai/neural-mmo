@@ -54,11 +54,13 @@ class ItemListings:
       self.placeholder = None
       self.item_number = 0
       self.alpha       = 0.01
+      self.volume = 0
 
       self.step()
 
    def step(self):
-      self.volume = 0
+      #self.volume = 0
+      pass
 
    @property
    def price(self):
@@ -154,7 +156,7 @@ class Exchange:
       listings     = self.item_listings[listings_key]
 
       price = listings.buy(buyer, max_price)
-      if price:
+      if price is not None:
          buyer.inventory.receive(listings.placeholder)
 
          if config.LOG_EVENTS:

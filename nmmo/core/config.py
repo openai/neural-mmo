@@ -501,7 +501,7 @@ class Equipment:
    EQUIPMENT_SYSTEM_ENABLED            = True
    '''Game system flag'''
 
-   WEAPON_DROP_PROB = 0.1
+   WEAPON_DROP_PROB = 0.025
    '''Chance of getting a weapon while harvesting ammunition'''
 
    @staticmethod

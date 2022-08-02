@@ -78,6 +78,8 @@ class Equipment:
       packet['range_defense'] = self.range_defense
       packet['mage_defense']  = self.mage_defense
 
+      return packet
+
 
 class Inventory:
    def __init__(self, realm, entity):

@@ -392,6 +392,12 @@ class Combat:
    COMBAT_SYSTEM_ENABLED              = True
    '''Game system flag'''
 
+   COMBAT_FRIENDLY_FIRE               = True
+   '''Whether agents with the same population index can hit each other'''
+
+   COMBAT_SPAWN_IMMUNITY              = 20
+   '''Agents older than this many ticks cannot attack agents younger than this many ticks'''
+
    COMBAT_WEAKNESS_MULTIPLIER         = 1.5
    '''Multiplier for super-effective attacks'''
 

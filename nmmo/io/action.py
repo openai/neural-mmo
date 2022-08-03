@@ -197,11 +197,14 @@ class Attack(Node):
       return abs(r - rCent) + abs(c - cCent)
 
    def call(env, entity, style, targ):
-      if entity.isPlayer and not env.config.COMBAT_SYSTEM_ENABLED:
+      config = env.config
+
+      if entity.isPlayer and not config.COMBAT_SYSTEM_ENABLED:
          return 
 
       # Testing a spawn immunity against old agents to avoid spawn camping
-      if entity.isPlayer and targ.isPlayer and entity.history.timeAlive.val > 20 and targ.history.timeAlive < 20:
+      immunity = config.COMBAT_SPAWN_IMMUNITY
+      if entity.isPlayer and targ.isPlayer and entity.history.timeAlive.val > immunity and targ.history.timeAlive < immunity:
          return
 
       #Check if self targeted
@@ -209,11 +212,11 @@ class Attack(Node):
          return
 
       #ADDED: POPULATION IMMUNITY
-      #if entity.base.population.val == targ.base.population.val:
-      #   return
+      if config.COMBAT_FRIENDLY_FIRE and entity.base.population.val == targ.base.population.val:
+         return
 
       #Check attack range
-      rng     = style.attackRange(env.config)
+      rng     = style.attackRange(config)
       start   = np.array(entity.base.pos)
       end     = np.array(targ.base.pos)
       dif     = np.max(np.abs(start - end))
@@ -233,7 +236,7 @@ class Attack(Node):
       dmg = combat.attack(env, entity, targ, style.skill)
 
       if style.freeze and dmg > 0:
-         targ.status.freeze.update(env.config.COMBAT_FREEZE_TIME)
+         targ.status.freeze.update(config.COMBAT_FREEZE_TIME)
 
       return dmg
 

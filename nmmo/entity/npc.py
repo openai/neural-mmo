@@ -17,8 +17,7 @@ class Equipment:
            melee_attack, range_attack, mage_attack,
            melee_defense, range_defense, mage_defense):
 
-      # TODO: This only works for ilvl
-      self.total         = lambda e: total
+      self.level         = total
       self.ammunition    = None
 
       self.melee_attack  = melee_attack
@@ -27,7 +26,9 @@ class Equipment:
       self.melee_defense = melee_defense
       self.range_defense = range_defense
       self.mage_defense  = mage_defense
-      
+
+   def total(self, getter):
+      return getter(self)
 
    @property
    def packet(self):

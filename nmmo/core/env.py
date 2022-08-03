@@ -436,7 +436,7 @@ class Env(ParallelEnv):
                       continue
                   targ = ent.targets[val]
                   self.actions[entID][atn][arg] = self.realm.entity(targ)
-               elif atn in (nmmo.action.Sell, nmmo.action.Use) and arg == nmmo.action.Item:
+               elif atn in (nmmo.action.Sell, nmmo.action.Use, nmmo.action.Give) and arg == nmmo.action.Item:
                   if val >= len(ent.inventory.dataframeKeys):
                       drop = True
                       continue
@@ -452,7 +452,7 @@ class Env(ParallelEnv):
                   itm = self.realm.exchange.dataframeVals[val]
                   self.actions[entID][atn][arg] = itm
                elif __debug__: #Fix -inf in classifier and assert err on bad atns
-                  assert False, f'{arg} invalid'
+                  assert False, f'Argument {arg} invalid for action {atn}'
 
             # Cull actions with bad args
             if drop and atn in self.actions[entID]:

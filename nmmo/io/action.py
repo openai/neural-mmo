@@ -94,7 +94,7 @@ class Action(Node):
       if config.COMBAT_SYSTEM_ENABLED:
           edges.append(Attack)
       if config.ITEM_SYSTEM_ENABLED:
-          edges.append(Use)
+          edges += [Use, Give]
       if config.EXCHANGE_SYSTEM_ENABLED:
           edges += [Buy, Sell]
       if config.COMMUNICATION_SYSTEM_ENABLED:
@@ -296,7 +296,7 @@ class Mage(Node):
       return entity.skills.mage
 
 class Use(Node):
-    priority = 2
+    priority = 3
 
     @staticproperty
     def edges():
@@ -307,6 +307,30 @@ class Use(Node):
             return
 
         return item.use(entity)
+
+class Give(Node):
+    priority = 2
+
+    @staticproperty
+    def edges():
+        return [Item, Target]
+
+    def call(env, entity, item, target):
+        if item not in entity.inventory:
+            return
+
+        if not target.isPlayer:
+            return
+
+        if not target.inventory.space:
+            return
+
+        entity.inventory.remove(item, quantity=1)
+        item = type(item)(env, item.level.val)
+        target.inventory.receive(item)
+
+        return True
+
 
 class Item(Node):
     argType  = 'Entity'
@@ -322,7 +346,7 @@ class Item(Node):
         return realm.items[index]
 
 class Buy(Node):
-    priority = 4
+    priority = 5
     argType  = Fixed
 
     @staticproperty
@@ -340,7 +364,7 @@ class Buy(Node):
         return env.exchange.buy(env, entity, item)
 
 class Sell(Node):
-    priority = 3
+    priority = 4
     argType  = Fixed
 
     @staticproperty

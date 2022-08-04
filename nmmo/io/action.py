@@ -94,7 +94,7 @@ class Action(Node):
       if config.COMBAT_SYSTEM_ENABLED:
           edges.append(Attack)
       if config.ITEM_SYSTEM_ENABLED:
-          edges += [Use, Give]
+          edges += [Use]
       if config.EXCHANGE_SYSTEM_ENABLED:
           edges += [Buy, Sell]
       if config.COMMUNICATION_SYSTEM_ENABLED:
@@ -346,7 +346,7 @@ class Item(Node):
         return realm.items[index]
 
 class Buy(Node):
-    priority = 5
+    priority = 4
     argType  = Fixed
 
     @staticproperty

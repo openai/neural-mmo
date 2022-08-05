@@ -32,37 +32,51 @@ def attack(realm, player, target, skillFn):
     skill_type   = type(skill)
     skill_name   = skill_type.__name__
 
+    # Attacker and target levels
+    player_level = skill.level.val
+    target_level = level(target.skills)
+
     # Ammunition usage
     ammunition = player.equipment.ammunition
     if ammunition is not None:
         ammunition.fire(player)
 
     # Per-style offense/defense
+    level_damage = 0
     if skill_type == Skill.Melee:
-        base_damage  = config.COMBAT_MELEE_BASE_DAMAGE
-        level_damage = config.PROGRESSION_MELEE_DAMAGE
+        base_damage  = config.COMBAT_MELEE_DAMAGE
+
+        if config.PROGRESSION_SYSTEM_ENABLED:
+            base_damage  = config.PROGRESSION_MELEE_BASE_DAMAGE
+            level_damage = config.PROGRESSION_MELEE_LEVEL_DAMAGE
+
         offense_fn   = lambda e: e.melee_attack
         defense_fn   = lambda e: e.melee_defense
     elif skill_type == Skill.Range:
-        base_damage  = config.COMBAT_RANGE_BASE_DAMAGE
-        level_damage = config.PROGRESSION_RANGE_DAMAGE
+        base_damage  = config.COMBAT_RANGE_DAMAGE
+
+        if config.PROGRESSION_SYSTEM_ENABLED:
+            base_damage  = config.PROGRESSION_RANGE_BASE_DAMAGE
+            level_damage = config.PROGRESSION_RANGE_LEVEL_DAMAGE
+
         offense_fn   = lambda e: e.range_attack
         defense_fn   = lambda e: e.range_defense
     elif skill_type == Skill.Mage:
-        base_damage  = config.COMBAT_MAGE_BASE_DAMAGE
-        level_damage = config.PROGRESSION_MAGE_DAMAGE
+        base_damage  = config.COMBAT_MAGE_DAMAGE
+
+        if config.PROGRESSION_SYSTEM_ENABLED:
+            base_damage  = config.PROGRESSION_MAGE_BASE_DAMAGE
+            level_damage = config.PROGRESSION_MAGE_LEVEL_DAMAGE
+
         offense_fn   = lambda e: e.mage_attack
         defense_fn   = lambda e: e.mage_defense
     elif __debug__:
         assert False, 'Attack skill must be Melee, Range, or Mage'
 
-    player_level = skill.level.val
-    target_level = level(target.skills)
-
     # Compute modifiers
     multiplier        = damage_multiplier(config, skill, target)
     skill_offense     = base_damage + level_damage * skill.level.val
-    skill_defense     = config.PROGRESSION_DEFENSE * level(target.skills)
+    skill_defense     = config.PROGRESSION_BASE_DEFENSE  + config.PROGRESSION_LEVEL_DEFENSE*level(target.skills)
     equipment_offense = player.equipment.total(offense_fn)
     equipment_defense = target.equipment.total(defense_fn)
 

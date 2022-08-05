@@ -157,7 +157,7 @@ class Equipment(Item):
  
 class Armor(Equipment):
    def __init__(self, realm, level, **kwargs):
-      defense = realm.config.EQUIPMENT_ARMOR_DEFENSE(level)
+      defense = realm.config.EQUIPMENT_ARMOR_BASE_DEFENSE + level*realm.config.EQUIPMENT_ARMOR_LEVEL_DEFENSE
       super().__init__(realm, level,
               melee_defense=defense,
               range_defense=defense,
@@ -204,6 +204,10 @@ class Bottom(Armor):
       entity.inventory.equipment.bottom = None
 
 class Weapon(Equipment):
+   def __init__(self, realm, level, **kwargs):
+      super().__init__(realm, level, **kwargs)
+      self.attack = realm.config.EQUIPMENT_WEAPON_BASE_DAMAGE + level*realm.config.EQUIPMENT_WEAPON_LEVEL_DAMAGE
+
    def equip(self, entity):
       if entity.inventory.equipment.held:
           entity.inventory.equipment.held.use(entity)
@@ -215,7 +219,8 @@ class Weapon(Equipment):
 class Sword(Weapon):
    ITEM_ID = 5
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_WEAPON_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, **kwargs)
+      self.melee_attack.update(self.attack)
 
    def equip(self, entity):
       if entity.skills.melee.level.val >= self.level.val:
@@ -224,7 +229,8 @@ class Sword(Weapon):
 class Bow(Weapon):
    ITEM_ID = 6
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_WEAPON_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, **kwargs)
+      self.range_attack.update(self.attack)
 
    def equip(self, entity):
       if entity.skills.range.level.val >= self.level.val:
@@ -233,7 +239,8 @@ class Bow(Weapon):
 class Wand(Weapon):
    ITEM_ID = 7
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_WEAPON_OFFENSE(level), **kwargs)
+      super().__init__(realm, level, **kwargs)
+      self.mage_attack.update(self.attack)
 
    def equip(self, entity):
       if entity.skills.mage.level.val >= self.level.val:
@@ -241,7 +248,7 @@ class Wand(Weapon):
  
 class Tool(Equipment):
    def __init__(self, realm, level, **kwargs):
-      defense = realm.config.EQUIPMENT_TOOL_DEFENSE(level)
+      defense = realm.config.EQUIPMENT_TOOL_BASE_DEFENSE + level*realm.config.EQUIPMENT_TOOL_LEVEL_DEFENSE
       super().__init__(realm, level,
               melee_defense=defense,
               range_defense=defense,
@@ -302,6 +309,10 @@ class Arcane(Tool):
        return False
 
 class Ammunition(Equipment, Stack):
+   def __init__(self, realm, level, **kwargs):
+       super().__init__(realm, level, **kwargs)
+       self.attack = realm.config.EQUIPMENT_AMMUNITION_BASE_DAMAGE + level*realm.config.EQUIPMENT_AMMUNITION_LEVEL_DAMAGE
+
    def equip(self, entity):
       if entity.inventory.equipment.ammunition:
           entity.inventory.equipment.ammunition.use(entity)
@@ -325,7 +336,8 @@ class Ammunition(Equipment, Stack):
 class Scrap(Ammunition):
    ITEM_ID = 13
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, melee_attack=realm.config.EQUIPMENT_AMMUNITION_DAMAGE(level), **kwargs)
+      super().__init__(realm, level, **kwargs)
+      self.melee_attack.update(self.attack)
 
    def equip(self, entity):
       if entity.skills.melee.level >= self.level.val:
@@ -341,7 +353,8 @@ class Scrap(Ammunition):
 class Shaving(Ammunition):
    ITEM_ID = 14
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, range_attack=realm.config.EQUIPMENT_AMMUNITION_DAMAGE(level), **kwargs)
+      super().__init__(realm, level, **kwargs)
+      self.range_attack.update(self.attack)
 
    def equip(self, entity):
       if entity.skills.range.level >= self.level.val:
@@ -357,7 +370,8 @@ class Shaving(Ammunition):
 class Shard(Ammunition):
    ITEM_ID = 15
    def __init__(self, realm, level, **kwargs):
-      super().__init__(realm, level, mage_attack=realm.config.EQUIPMENT_AMMUNITION_DAMAGE(level), **kwargs)
+      super().__init__(realm, level, **kwargs)
+      self.mage_attack.update(self.attack)
 
    def equip(self, entity):
       if entity.skills.mage.level >= self.level.val:

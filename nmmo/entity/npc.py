@@ -116,8 +116,9 @@ class NPC(entity.Entity):
       if config.EQUIPMENT_SYSTEM_ENABLED:
           lvl     = level - random.random()
           ilvl    = int(5 * lvl)
-          offense = config.EQUIPMENT_AMMUNITION_DAMAGE(lvl) + config.EQUIPMENT_WEAPON_OFFENSE(lvl)
-          defense = 3*config.EQUIPMENT_ARMOR_DEFENSE(lvl)
+
+          offense = int(config.NPC_BASE_DAMAGE + lvl*config.NPC_LEVEL_DAMAGE)
+          defense = int(config.NPC_BASE_DEFENSE + lvl*config.NPC_LEVEL_DEFENSE)
 
           ent.equipment = Equipment(ilvl, offense, offense, offense, defense, defense, defense)
 

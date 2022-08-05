@@ -76,6 +76,11 @@ class Quill:
       else:
           packet['Event'] = 'Unavailable: config.LOG_EVENTS = False'
 
+      if self.config.LOG_MILESTONES:
+          packet['Milestone'] = self.event.stats
+      else:
+          packet['Milestone'] = 'Unavailable: config.LOG_MILESTONES = False'
+
       return packet
 
 #Log wrapper and benchmarker

@@ -404,20 +404,20 @@ class Combat:
    COMBAT_WEAKNESS_MULTIPLIER         = 1.5
    '''Multiplier for super-effective attacks'''
 
-   COMBAT_MELEE_BASE_DAMAGE           = 0
-   '''Base Melee attack damage'''
+   COMBAT_MELEE_DAMAGE                = 30
+   '''Melee attack damage'''
 
    COMBAT_MELEE_REACH                 = 3
    '''Reach of attacks using the Melee skill'''
 
-   COMBAT_RANGE_BASE_DAMAGE           = 0
-   '''Base Range attack damage'''
+   COMBAT_RANGE_DAMAGE                = 30
+   '''Range attack damage'''
 
    COMBAT_RANGE_REACH                 = 3
    '''Reach of attacks using the Range skill'''
 
-   COMBAT_MAGE_BASE_DAMAGE            = 0
-   '''Base Mage attack damage'''
+   COMBAT_MAGE_DAMAGE                 = 30
+   '''Mage attack damage'''
 
    COMBAT_MAGE_REACH                  = 3
    '''Reach of attacks using the Mage skill'''
@@ -444,16 +444,28 @@ class Progression:
    PROGRESSION_LEVEL_MAX             = 10
    '''Max skill level'''
 
-   PROGRESSION_MELEE_DAMAGE          = 5
+   PROGRESSION_MELEE_BASE_DAMAGE     = 0
+   '''Base Melee attack damage'''
+
+   PROGRESSION_MELEE_LEVEL_DAMAGE    = 5
    '''Bonus Melee attack damage per level'''
 
-   PROGRESSION_RANGE_DAMAGE          = 5
+   PROGRESSION_RANGE_BASE_DAMAGE     = 0
+   '''Base Range attack damage'''
+
+   PROGRESSION_RANGE_LEVEL_DAMAGE    = 5
    '''Bonus Range attack damage per level'''
 
-   PROGRESSION_MAGE_DAMAGE           = 5
+   PROGRESSION_MAGE_BASE_DAMAGE      = 0
+   '''Base Mage attack damage '''
+
+   PROGRESSION_MAGE_LEVEL_DAMAGE     = 5
    '''Bonus Mage attack damage per level'''
 
-   PROGRESSION_DEFENSE               = 5
+   PROGRESSION_BASE_DEFENSE          = 0
+   '''Base defense'''
+
+   PROGRESSION_LEVEL_DEFENSE         = 5
    '''Bonus defense per level'''
 
 
@@ -484,6 +496,18 @@ class NPC:
    NPC_LEVEL_MAX                       = 10
    '''Maximum NPC level'''
 
+   NPC_BASE_DEFENSE                    = 0
+   '''Base NPC defense'''
+
+   NPC_LEVEL_DEFENSE                   = 30
+   '''Bonus NPC defense per level'''
+
+   NPC_BASE_DAMAGE                     = 15
+   '''Base NPC damage'''
+
+   NPC_LEVEL_DAMAGE                    = 30
+   '''Bonus NPC damage per level'''
+
 
 class Item:
    '''Inventory Game System'''
@@ -507,27 +531,35 @@ class Item:
 class Equipment:
    '''Equipment Game System'''
 
-   EQUIPMENT_SYSTEM_ENABLED            = True
+   EQUIPMENT_SYSTEM_ENABLED             = True
    '''Game system flag'''
 
    WEAPON_DROP_PROB = 0.025
    '''Chance of getting a weapon while harvesting ammunition'''
 
-   @staticmethod
-   def EQUIPMENT_AMMUNITION_DAMAGE(level):
-       return 15 * level
+   EQUIPMENT_WEAPON_BASE_DAMAGE         = 15
+   '''Base weapon damage'''
 
-   @staticmethod
-   def EQUIPMENT_ARMOR_DEFENSE(level):
-       return 10 * level
+   EQUIPMENT_WEAPON_LEVEL_DAMAGE        = 15
+   '''Added weapon damage per level'''
 
-   @staticmethod
-   def EQUIPMENT_WEAPON_OFFENSE(level):
-       return 15 + 15 * level
+   EQUIPMENT_AMMUNITION_BASE_DAMAGE     = 15
+   '''Base ammunition damage'''
 
-   @staticmethod
-   def EQUIPMENT_TOOL_DEFENSE(level):
-       return 30
+   EQUIPMENT_AMMUNITION_LEVEL_DAMAGE    = 15
+   '''Added ammunition damage per level'''
+
+   EQUIPMENT_TOOL_BASE_DEFENSE          = 30
+   '''Base tool defense'''
+
+   EQUIPMENT_TOOL_LEVEL_DEFENSE         = 0
+   '''Added tool defense per level'''
+
+   EQUIPMENT_ARMOR_BASE_DEFENSE         = 0
+   '''Base armor defense'''
+
+   EQUIPMENT_ARMOR_LEVEL_DEFENSE        = 10
+   '''Base equipment defense'''
 
 
 class Profession:

@@ -72,7 +72,7 @@ def attack(realm, player, target, skillFn):
     damage  = multiplier * (offense - defense)
     damage  = max(int(damage), 0)
 
-    if config.LOG_EVENTS and player.isPlayer and realm.quill.event.log_max(f'Damage_{skill_name}', damage) and config.LOG_VERBOSE:
+    if config.LOG_MILESTONES and player.isPlayer and realm.quill.milestone.log_max(f'Damage_{skill_name}', damage) and config.LOG_VERBOSE:
         player_ilvl = player.equipment.total(lambda e: e.level)
         target_ilvl = target.equipment.total(lambda e: e.level)
 

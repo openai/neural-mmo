@@ -22,8 +22,9 @@ class Logger:
             print(f'{val} must be int or float')
             raise e
         self.stats[key].append(val)
+        return True
 
-class EventLogger(Logger):
+class MilestoneLogger(Logger):
     def __init__(self, log_file):
         super().__init__()
         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO, filename=log_file, filemode='w')
@@ -48,11 +49,12 @@ class Quill:
 
       self.env    = Logger()
       self.player = Logger()
+      self.event  = Logger()
 
       self.shared = {}
 
-      if config.LOG_EVENTS:
-          self.event  = EventLogger(config.LOG_FILE)
+      if config.LOG_MILESTONES:
+          self.milestone = MilestoneLogger(config.LOG_FILE)
 
    def register(self, key, fn):
        assert key not in self.shared, f'Log key {key} already exists'

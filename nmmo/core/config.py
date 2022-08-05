@@ -178,6 +178,9 @@ class Config(Template):
    LOG_ENV                      = False
    '''Whether to log env steps (expensive)'''
 
+   LOG_MILESTONES               = True
+   '''Whether to log server-firsts (semi-expensive)'''
+
    LOG_EVENTS                   = True
    '''Whether to log events (semi-expensive)'''
 

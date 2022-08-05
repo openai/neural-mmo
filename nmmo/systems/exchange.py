@@ -159,12 +159,13 @@ class Exchange:
       if price is not None:
          buyer.inventory.receive(listings.placeholder)
 
-         if config.LOG_EVENTS:
-            if realm.quill.event.log_max(f'Buy_{item.__name__}', level) and config.LOG_VERBOSE:
-               logging.info(f'EXCHANGE: Bought level {level} {item.__name__} for {price} gold')
-            if realm.quill.event.log_max(f'Transaction_Amount', price) and config.LOG_VERBOSE:
-               logging.info(f'EXCHANGE: Transaction of {price} gold (level {level} {item.__name__})')
-
+         if ((config.LOG_MILESTONES and realm.quill.milestone.log_max(f'Buy_{item.__name__}', level)) or 
+               (config.LOG_EVENTS and realm.quill.event.log(f'Buy_{item.__name__}', level))) and config.LOG_VERBOSE:
+            logging.info(f'EXCHANGE: Bought level {level} {item.__name__} for {price} gold')
+         if ((config.LOG_MILESTONES and realm.quill.milestone.log_max(f'Transaction_Amount', price)) or 
+               (config.LOG_EVENTS and realm.quill.event.log(f'Transaction_Amount', price))) and config.LOG_VERBOSE:
+            logging.info(f'EXCHANGE: Transaction of {price} gold (level {level} {item.__name__})')
+ 
          #Update placeholder
          listings.placeholder = None
          if listings.supply:
@@ -185,7 +186,8 @@ class Exchange:
       seller.inventory.remove(item, quantity=1)
       item = type(item)
 
-      if config.LOG_EVENTS and realm.quill.event.log_max(f'Sell_{item.__name__}', level) and config.LOG_VERBOSE:
+     
+      if ((config.LOG_MILESTONES and realm.quill.milestone.log_max(f'Sell_{item.__name__}', level)) or (config.LOG_EVENTS and realm.quill.event.log(f'Sell_{item.__name__}', level))) and config.LOG_VERBOSE:
          logging.info(f'EXCHANGE: Offered level {level} {item.__name__} for {price} gold')
 
       listings_key  = (item, level)

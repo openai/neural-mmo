@@ -128,7 +128,7 @@ class Inventory:
       assert item.quantity.val, f'Received empty item {item}'
 
       config = self.config
-      if config.LOG_EVENTS and self.realm.quill.event.log_max(f'Receive_{item.__class__.__name__}', item.level.val) and config.LOG_VERBOSE:
+      if config.LOG_MILESTONES and self.realm.quill.milestone.log_max(f'Receive_{item.__class__.__name__}', item.level.val) and config.LOG_VERBOSE:
           logging.info(f'INVENTORY: Received level {item.level.val} {item.__class__.__name__}')
 
       if isinstance(item, Item.Stack):
@@ -138,7 +138,7 @@ class Inventory:
               assert item.level.val == stack.level.val, f'{item} stack level mismatch'
               stack.quantity += item.quantity.val
 
-              if config.LOG_EVENTS and isinstance(item, Item.Gold) and self.realm.quill.event.log_max(f'Wealth', self.gold.quantity.val) and config.LOG_VERBOSE:
+              if config.LOG_MILESTONES and isinstance(item, Item.Gold) and self.realm.quill.milestone.log_max(f'Wealth', self.gold.quantity.val) and config.LOG_VERBOSE:
                   logging.info(f'EXCHANGE: Total wealth {self.gold.quantity.val} gold')
               
               return

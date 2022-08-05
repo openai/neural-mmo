@@ -54,7 +54,7 @@ class Skill:
       level = self.expCalc.levelAtExp(self.exp)
       self.level.update(int(level))
 
-      if self.config.LOG_EVENTS and self.realm.quill.event.log_max(f'Level_{self.__class__.__name__}', level) and self.config.LOG_VERBOSE:
+      if self.config.LOG_MILESTONES and self.realm.quill.milestone.log_max(f'Level_{self.__class__.__name__}', level) and self.config.LOG_VERBOSE:
          logging.info(f'PROGRESSION: Reached level {level} {self.__class__.__name__}')
 
    def setExpByLevel(self, level):
@@ -80,7 +80,7 @@ class HarvestSkill(NonCombatSkill):
         for drop in dropTable.roll(realm, level):
             assert drop.level.val == level, 'Drop level does not match roll specification'
 
-            if self.config.LOG_EVENTS and realm.quill.event.log_max(f'Gather_{drop.__class__.__name__}', level) and self.config.LOG_VERBOSE:
+            if self.config.LOG_MILESTONES and realm.quill.milestone.log_max(f'Gather_{drop.__class__.__name__}', level) and self.config.LOG_VERBOSE:
                 logging.info(f'PROFESSION: Gathered level {level} {drop.__class__.__name__} (level {self.level.val} {self.__class__.__name__})') 
 
             if entity.inventory.space:

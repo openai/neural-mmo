@@ -63,7 +63,7 @@ class Map:
 
    def step(self):
       '''Evaluate updatable tiles'''
-      if self.config.LOG_EVENTS and self.realm.quill.event.log_max(f'Resource_Depleted', len(self.updateList)) and self.config.LOG_VERBOSE:
+      if self.config.LOG_MILESTONES and self.realm.quill.milestone.log_max(f'Resource_Depleted', len(self.updateList)) and self.config.LOG_VERBOSE:
          logging.info(f'RESOURCE: Depleted {len(self.updateList)} resource tiles')                           
 
 

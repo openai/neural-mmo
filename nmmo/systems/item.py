@@ -392,6 +392,8 @@ class Ration(Consumable):
       entity.ration_level_consumed = max(entity.ration_level_consumed, self.level.val)
       entity.ration_consumed += 1
 
+      entity.inventory.remove(self)
+
       return True
 
 class Poultice(Consumable):
@@ -412,5 +414,7 @@ class Poultice(Consumable):
 
       entity.poultice_level_consumed = max(entity.poultice_level_consumed, self.level.val)
       entity.poultice_consumed       += 1
+
+      entity.inventory.remove(self)
 
       return True

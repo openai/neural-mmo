@@ -7,8 +7,8 @@ from collections import defaultdict
 import gym
 from pettingzoo import ParallelEnv
 
-import pickle
-import lz4.block
+import json
+import lzma
 
 import nmmo
 from nmmo import entity, core, emulation
@@ -24,7 +24,7 @@ class Replay:
         self.map     = None
 
         if config is not None:
-            self.path = config.SAVE_REPLAY + '.replay'
+            self.path = config.SAVE_REPLAY + '.lzma'
 
         self._i = 0
 
@@ -42,11 +42,14 @@ class Replay:
         self.packets.append(data)
 
     def save(self):
+        print(f'Saving replay to {self.path} ...')
+
         data = {
             'map': self.map,
             'packets': self.packets}
 
-        data = lz4.block.compress(pickle.dumps(data))
+        data = json.dumps(data).encode('utf8')
+        data = lzma.compress(data, format=lzma.FORMAT_ALONE)
         with open(self.path, 'wb') as out:
             out.write(data)
 
@@ -55,7 +58,9 @@ class Replay:
         with open(path, 'rb') as fp:
             data = fp.read()
 
-        data = pickle.loads(lz4.block.decompress(data))
+        data = lzma.decompress(data, format=lzma.FORMAT_ALONE)
+        data = json.loads(data.decode('utf-8'))
+
         replay = Replay(None)
         replay.map = data['map']
         replay.packets = data['packets']

@@ -384,7 +384,7 @@ class Shard(Ammunition):
    def damage(self):
       return self.mage_attack.val
 
-class Consumable(Item, Stack):
+class Consumable(Item):
     pass
 
 class Ration(Consumable):

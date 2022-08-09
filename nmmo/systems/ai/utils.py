@@ -165,7 +165,7 @@ def aStar(tiles, start, goal, cutoff=100):
       for nxt in adjacentPos(cur):
          if not inBounds(*nxt, tiles.shape):
             continue
-         if tiles[nxt].impassible:
+         if tiles[nxt].occupied:
             continue
 
          newCost = cost[cur] + 1

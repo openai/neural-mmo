@@ -193,7 +193,7 @@ class Impassible(metaclass=Meta):
 
 class Habitable(metaclass=Meta):
    '''Materials that agents cannot walk on'''
-   materials = {Grass, Scrub, Forest, Ore, Tree, Crystal, Weeds, Herb}
+   materials = {Grass, Scrub, Forest, Ore, Slag, Tree, Stump, Crystal, Fragment, Herb, Weeds}
 
 class Harvestable(metaclass=Meta):
    '''Materials that agents can harvest'''

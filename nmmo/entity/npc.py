@@ -164,8 +164,6 @@ class Aggressive(NPC):
    def __init__(self, realm, pos, iden):
       super().__init__(realm, pos, iden, 'Hostile', Neon.RED, -3)
       self.dataframe.init(nmmo.Serialized.Entity, iden, pos)
-      self.vision = int(max(self.vision, 1 + combat.level(self.skills) // 10))
-      self.dataframe.init(nmmo.Serialized.Entity, self.entID, self.pos)
 
    def decide(self, realm):
       return ai.policy.hostile(realm, self)

@@ -212,7 +212,7 @@ class Attack(Node):
          return
 
       #ADDED: POPULATION IMMUNITY
-      if not config.COMBAT_FRIENDLY_FIRE and entity.base.population.val == targ.base.population.val:
+      if not config.COMBAT_FRIENDLY_FIRE and entity.isPlayer and entity.base.population.val == targ.base.population.val:
          return
 
       #Check attack range

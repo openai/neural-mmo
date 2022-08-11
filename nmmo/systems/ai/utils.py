@@ -13,7 +13,7 @@ from nmmo.systems.ai.dynamic_programming import map_to_rewards, \
 def validTarget(ent, targ, rng):
    if targ is None or not targ.alive:
       return False
-   if lInf(ent, targ) > rng:
+   if lInfty(ent.pos, targ.pos) > rng:
       return False
    return True
 

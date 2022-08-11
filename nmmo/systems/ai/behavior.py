@@ -82,7 +82,7 @@ def hunt(realm, actions, entity):
    attack(realm, actions, entity)
 
 def attack(realm, actions, entity):
-   distance = utils.lInf(entity, entity.target)
+   distance = utils.lInfty(entity.pos, entity.target.pos)
    if distance > entity.skills.style.attackRange(realm.config):
       return
 

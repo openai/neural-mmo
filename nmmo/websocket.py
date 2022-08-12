@@ -76,7 +76,7 @@ class GodswordServerProtocol(WebSocketServerProtocol):
         packet['pos']        = data['pos']
         packet['wilderness'] = data['wilderness']
         packet['market']     = data['market']
-
+        
         print('Is Connected? : {}'.format(self.isConnected))
         if not self.sent_environment:
             packet['map']    = data['environment']

@@ -58,7 +58,7 @@ class Status:
 
 class History:
    def __init__(self, ent):
-      self.actions = None
+      self.actions = {}
       self.attack  = None
   
       self.origPos     = ent.pos
@@ -72,7 +72,7 @@ class History:
 
    def update(self, realm, entity, actions):
       self.attack  = None
-      self.actions = actions
+      self.actions = actions[entity.entID]
       self.damage.update(0)
 
       exploration      = utils.linf(entity.pos, self.origPos)
@@ -87,6 +87,22 @@ class History:
 
       if self.attack is not None:
          data['attack'] = self.attack
+
+      actions = {}
+      for atn, args in self.actions.items():
+         atn_packet = {}
+
+         #Avoid recursive player packet
+         if atn.__name__ == 'Attack':
+             continue
+
+         for key, val in args.items():
+            if hasattr(val, 'packet'):
+               atn_packet[key.__name__] = val.packet
+            else:
+               atn_packet[key.__name__] = val.__name__
+         actions[atn.__name__] = atn_packet
+      data['actions'] = actions
 
       return data
 

@@ -64,6 +64,7 @@ class History:
       self.origPos     = ent.pos
       self.exploration = 0
       self.playerKills = 0
+      self.total_damage = 0
 
       self.damage    = nmmo.Serialized.Entity.Damage(   ent.dataframe, ent.entID)
       self.timeAlive = nmmo.Serialized.Entity.TimeAlive(ent.dataframe, ent.entID)
@@ -214,7 +215,7 @@ class Entity:
       return False
 
    def applyDamage(self, dmg, style):
-      pass
+      self.history.total_damage += dmg
 
    @property
    def pos(self):

@@ -59,6 +59,7 @@ class Player(entity.Entity):
        return combat.level(self.skills)
 
    def applyDamage(self, dmg, style):
+      super().applyDamage(dmg, style)
       self.skills.applyDamage(dmg, style)
       
    def receiveDamage(self, source, dmg):

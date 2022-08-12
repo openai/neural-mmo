@@ -128,6 +128,22 @@ class Exchange:
 
       return vals
 
+   @property
+   def packet(self):
+      packet = {}
+      for (item_cls, level), listings in self.item_listings.items():
+          key = f'{item_cls.__name__}_{level}'
+
+          item = listings.placeholder
+          if item is None:
+              continue
+
+          packet[key] = {
+                  'price': listings.price,
+                  'supply': listings.supply}
+
+      return packet
+
    def step(self):
       for item, listings in self.item_listings.items():
          listings.step()

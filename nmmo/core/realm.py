@@ -250,7 +250,8 @@ class Realm:
               'size': self.config.MAP_SIZE,
               'resource': self.map.packet,
               'player': self.players.packet,
-              'npc': self.npcs.packet}
+              'npc': self.npcs.packet,
+              'market': self.exchange.packet}
 
    @property
    def population(self):

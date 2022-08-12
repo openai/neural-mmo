@@ -91,7 +91,8 @@ class HarvestSkill(NonCombatSkill):
         if realm.map.tiles[r, c].state != matl:
             return
 
-        if dropTable := realm.map.harvest(r, c, deplete):
+        dropTable = realm.map.harvest(r, c, deplete)
+        if dropTable:
             self.processDrops(realm, entity, matl, dropTable)
             return True
 

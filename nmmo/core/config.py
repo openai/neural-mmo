@@ -237,24 +237,19 @@ class Config(Template):
 
    Note that the env will attempt to spawn agents until success
    if the current population size is zero.'''
+
+   PLAYER_SPAWN_TEAMMATE_DISTANCE = 1
+   '''Buffer tiles between teammates at spawn'''
    
    @property
    def PLAYER_SPAWN_FUNCTION(self):
       return spawn.spawn_concurrent
 
    @property
-
    def PLAYER_TEAM_SIZE(self):
       if __debug__:
-         assert not self.PLAYER_N % self.NPOP
-      return self.PLAYER_N // self.NPOP
-
-   @property
-   def PLAYER_TEAM_SIZE(self):
-      if __debug__:
-         assert not self.NENT % self.NPOP
-      return self.NENT // self.NPOP
-
+         assert not self.PLAYER_N % len(self.PLAYERS)
+      return self.PLAYER_N // len(self.PLAYERS)
 
    ############################################################################
    ### Map Parameters

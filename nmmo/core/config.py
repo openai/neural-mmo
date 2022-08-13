@@ -404,6 +404,10 @@ class Combat:
    COMBAT_WEAKNESS_MULTIPLIER         = 1.5
    '''Multiplier for super-effective attacks'''
 
+   def COMBAT_DAMAGE_FORMULA(self, offense, defense, multiplier):
+       '''Damage formula'''
+       return int(multiplier * (offense * (15 / (15 + defense))))
+
    COMBAT_MELEE_DAMAGE                = 30
    '''Melee attack damage'''
 

@@ -83,7 +83,8 @@ def attack(realm, player, target, skillFn):
     # Total damage calculation
     offense = skill_offense + equipment_offense
     defense = skill_defense + equipment_defense
-    damage  = multiplier * (offense - defense)
+    damage  = config.COMBAT_DAMAGE_FORMULA(offense, defense, multiplier)
+    #damage  = multiplier * (offense - defense)
     damage  = max(int(damage), 0)
 
     if config.LOG_MILESTONES and player.isPlayer and realm.quill.milestone.log_max(f'Damage_{skill_name}', damage) and config.LOG_VERBOSE:

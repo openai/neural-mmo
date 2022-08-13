@@ -23,7 +23,7 @@ class TeamLoader:
     '''config.PLAYER_LOADER that loads agent populations adjacent'''
     def __init__(self, config):
         items = config.PLAYERS
-        self.team_size = config.PLAYER_N // config.NPOP
+        self.team_size = config.PLAYER_N // len(items)
 
         for idx, itm in enumerate(items):
            itm.policyID = idx 

@@ -64,7 +64,9 @@ class History:
       self.origPos     = ent.pos
       self.exploration = 0
       self.playerKills = 0
-      self.total_damage = 0
+
+      self.damage_received = 0
+      self.damage_inflicted = 0
 
       self.damage    = nmmo.Serialized.Entity.Damage(   ent.dataframe, ent.entID)
       self.timeAlive = nmmo.Serialized.Entity.TimeAlive(ent.dataframe, ent.entID)
@@ -88,6 +90,8 @@ class History:
       data = {}
       data['damage']    = self.damage.val
       data['timeAlive'] = self.timeAlive.val
+      data['damage_inflicted'] = self.damage_inflicted
+      data['damage_received'] = self.damage_received
 
       if self.attack is not None:
          data['attack'] = self.attack
@@ -203,6 +207,7 @@ class Entity:
       self.history.update(realm, self, actions)
 
    def receiveDamage(self, source, dmg):
+      self.history.damage_received += dmg
       self.history.damage.update(dmg)
       self.resources.health.decrement(dmg)
 
@@ -218,7 +223,7 @@ class Entity:
       return False
 
    def applyDamage(self, dmg, style):
-      self.history.total_damage += dmg
+      self.history.damage_inflicted += dmg
 
    @property
    def pos(self):

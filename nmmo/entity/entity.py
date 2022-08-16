@@ -73,9 +73,12 @@ class History:
 
    def update(self, realm, entity, actions):
       self.attack  = None
-      self.actions = actions[entity.entID]
       self.damage.update(0)
 
+      self.actions = {}
+      if entity.entID in actions:
+          self.actions = actions[entity.entID]
+ 
       exploration      = utils.linf(entity.pos, self.origPos)
       self.exploration = max(exploration, self.exploration)
 

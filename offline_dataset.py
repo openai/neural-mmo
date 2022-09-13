@@ -25,26 +25,35 @@ class OfflineDataset:
         self.dones = f.create_dataset('dones', (horizon, num_episodes, num_players), dtype=np.dtype('bool'))
         return self
 
-    def write(self, obs, atn, rewards, dones, t, episode):
+    def write(self, t, episode, obs=None, atn=None, rewards=None, dones=None):
         '''Write a single timestep of a single episode
 
         obs, rewards, dones are as returned from the env
         atn is the action dict submitted to the env
         t, episode are indices '''
-        self.obs[t, episode] = np.stack(list(obs.values()))
-        self.atn[t, episode] = np.stack(list(atn.values()))
-        self.rewards[t, episode] = np.stack(list(rewards.values()))
-        self.dones[t, episode] = np.stack(list(dones.values()))
+        if obs is not None:
+            self.obs[t, episode] = np.stack(list(obs.values()))
+        if atn is not None:
+            self.atn[t, episode] = np.stack(list(atn.values()))
+        if rewards is not None:
+            self.rewards[t, episode] = np.stack(list(rewards.values()))
+        if dones is not None:
+            self.dones[t, episode] = np.stack(list(dones.values()))
 
-    def write_vectorized(self, obs, atn, rewards, dones, t, episode_list):
-        self.obs[t, episode_list] = obs
-        self.atn[t, episode_list] = atn
-        self.rewards[t, episode_list] = rewards
-        self.dones[t, episode_list] = dones
+    def write_vectorized(self, t, episode, obs=None, atn=None, rewards=None, dones=None):
+        if obs is not None:
+            self.obs[t, episode_list] = obs
+        if atn is not None:
+            self.atn[t, episode_list] = atn
+        if rewards is not None:
+            self.rewards[t, episode_list] = rewards
+        if dones is not None:
+            self.dones[t, episode_list] = dones
 
-
-EPISODES = 4
-HORIZON = 16
+EPISODES = 2
+HORIZON = 10
+#EPISODES = 1000
+#HORIZON = 1023
 
 config = nmmo.config.Default()
 env = nmmo.integrations.CleanRLEnv(config)
@@ -58,21 +67,34 @@ dataset = OfflineDataset('nmmo').create(
     num_players=config.PLAYER_N
 )
 
-print('Collecting data')
+print('Collecting Actions')
 for episode in range(EPISODES):
     print(f'Reset {episode}')
     obs = env.reset(seed=episode)
     for t in range(HORIZON):
         # Compute actions from network
         atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}
+        dataset.write(t, episode, atn=atn)
 
         # Be sure to .copy() the atn dict -- nmmo modifies it in place
-        nxt_obs, rewards, dones, infos = env.step(atn.copy())
+        obs, rewards, dones, infos = env.step(atn)
 
-        dataset.write(obs, atn, rewards, dones, t, episode)
+print('Generating Dataset')
+for episode in range(EPISODES):
+    print(f'Reset {episode}')
+    obs = env.reset(seed=episode)
+    for t in range(HORIZON):
+        # Retrieve action from dataset
+        atn = {i+1: e for i, e in enumerate(dataset.atn[t, episode])}
+
+        # Be sure to .copy() the atn dict -- nmmo modifies it in place
+        nxt_obs, rewards, dones, infos = env.step(atn)
+
+        dataset.write(t, episode, obs=obs, rewards=rewards, dones=dones)
 
         # Currently discards the last obs -- not sure if this is needed
         obs = nxt_obs
+
 
 print('Loading h5 dataset')
 dataset = OfflineDataset('nmmo').load()

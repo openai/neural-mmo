@@ -61,7 +61,7 @@ dataset = OfflineDataset('nmmo').create(
 print('Collecting data')
 for episode in range(EPISODES):
     print(f'Reset {episode}')
-    obs = env.reset()
+    obs = env.reset(seed=episode)
     for t in range(HORIZON):
         # Compute actions from network
         atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}

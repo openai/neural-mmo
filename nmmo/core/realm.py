@@ -179,7 +179,6 @@ class PlayerManager(EntityGroup):
             self.spawned.add(idx)
             
             if self.realm.map.tiles[r, c].occupied:
-                T()
                 continue
 
             self.spawnIndividual(r, c, idx)

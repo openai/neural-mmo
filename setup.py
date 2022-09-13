@@ -44,6 +44,7 @@ setup(
         'imageio==2.8.0',
         'tqdm==4.61.1',
         'lz4==4.0.0',
+        'h5py==3.7.0',
         'pettingzoo',
     ],
     extras_require=extra,

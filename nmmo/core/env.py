@@ -1,5 +1,6 @@
 from pdb import set_trace as T
 import numpy as np
+import random
 
 import functools
 from collections import defaultdict
@@ -243,7 +244,7 @@ class Env(ParallelEnv):
 
    ############################################################################
    ### Core API
-   def reset(self, idx=None, step=True):
+   def reset(self, idx=None, step=True, seed=None):
       '''OpenAI Gym API reset function
 
       Loads a new game map and returns initial observations
@@ -268,6 +269,10 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
+      if seed is not None:
+          np.random.seed(seed)
+          random.seed(seed)
+
       self.has_reset = True
 
       self.actions = {}

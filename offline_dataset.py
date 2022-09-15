@@ -56,10 +56,11 @@ HORIZON = 10
 #HORIZON = 1023
 
 config = nmmo.config.Default()
-env = nmmo.integrations.CleanRLEnv(config)
+
+env = nmmo.integrations.CleanRLEnv(config, seed=42)
 
 print('Creating h5 dataset')
-dataset = OfflineDataset('nmmo').create(
+dataset = OfflineDataset('nmmo0').create(
     obs_dim=env.observation_space(0).shape[0],
     atn_dim = env.action_space(0).shape[0],
     horizon=HORIZON,
@@ -70,25 +71,64 @@ dataset = OfflineDataset('nmmo').create(
 print('Collecting Actions')
 for episode in range(EPISODES):
     print(f'Reset {episode}')
-    obs = env.reset(seed=episode)
+    obs = env.reset()
     for t in range(HORIZON):
         # Compute actions from network
         atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}
         dataset.write(t, episode, atn=atn)
 
         # Be sure to .copy() the atn dict -- nmmo modifies it in place
-        obs, rewards, dones, infos = env.step(atn)
+        obs, rewards, dones, infos = env.step({})
 
 print('Generating Dataset')
 for episode in range(EPISODES):
     print(f'Reset {episode}')
-    obs = env.reset(seed=episode)
+    obs = env.reset()
     for t in range(HORIZON):
         # Retrieve action from dataset
         atn = {i+1: e for i, e in enumerate(dataset.atn[t, episode])}
 
         # Be sure to .copy() the atn dict -- nmmo modifies it in place
-        nxt_obs, rewards, dones, infos = env.step(atn)
+        nxt_obs, rewards, dones, infos = env.step({})
+
+        dataset.write(t, episode, obs=obs, rewards=rewards, dones=dones)
+
+        # Currently discards the last obs -- not sure if this is needed
+        obs = nxt_obs
+
+env = nmmo.integrations.CleanRLEnv(config, seed=42)
+
+print('Creating h5 dataset')
+dataset = OfflineDataset('nmmo1').create(
+    obs_dim=env.observation_space(0).shape[0],
+    atn_dim = env.action_space(0).shape[0],
+    horizon=HORIZON,
+    num_episodes=EPISODES,
+    num_players=config.PLAYER_N
+)
+
+print('Collecting Actions')
+for episode in range(EPISODES):
+    print(f'Reset {episode}')
+    obs = env.reset()
+    for t in range(HORIZON):
+        # Compute actions from network
+        atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}
+        dataset.write(t, episode, atn=atn)
+
+        # Be sure to .copy() the atn dict -- nmmo modifies it in place
+        obs, rewards, dones, infos = env.step({})
+
+print('Generating Dataset')
+for episode in range(EPISODES):
+    print(f'Reset {episode}')
+    obs = env.reset()
+    for t in range(HORIZON):
+        # Retrieve action from dataset
+        atn = {i+1: e for i, e in enumerate(dataset.atn[t, episode])}
+
+        # Be sure to .copy() the atn dict -- nmmo modifies it in place
+        nxt_obs, rewards, dones, infos = env.step({})
 
         dataset.write(t, episode, obs=obs, rewards=rewards, dones=dones)
 
@@ -97,8 +137,14 @@ for episode in range(EPISODES):
 
 
 print('Loading h5 dataset')
-dataset = OfflineDataset('nmmo').load()
+dataset = OfflineDataset('nmmo0').load()
 print(dataset.obs)
 print(dataset.atn)
 print(dataset.rewards)
 print(dataset.dones)
+
+dataset1 = OfflineDataset('nmmo1').load()
+print(np.sum(dataset.obs[:] != dataset1.obs[:]))
+print(np.sum(dataset.atn[:] != dataset1.atn[:]))
+print(np.sum(dataset.rewards[:] != dataset1.rewards[:]))
+print(np.sum(dataset.dones[:] != dataset1.dones[:]))

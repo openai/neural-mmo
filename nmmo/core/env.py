@@ -95,11 +95,15 @@ class Env(ParallelEnv):
 
    metadata = {'render.modes': ['human'], 'name': 'neural-mmo'}
 
-   def __init__(self, config=None):
+   def __init__(self, config=None, seed=None):
       '''
       Args:
          config : A forge.blade.core.Config object or subclass object
       '''
+      if seed is not None:
+          np.random.seed(seed)
+          random.seed(seed)
+
       super().__init__()
 
       if config is None:
@@ -244,7 +248,7 @@ class Env(ParallelEnv):
 
    ############################################################################
    ### Core API
-   def reset(self, idx=None, step=True, seed=None):
+   def reset(self, idx=None, step=True):
       '''OpenAI Gym API reset function
 
       Loads a new game map and returns initial observations
@@ -269,10 +273,6 @@ class Env(ParallelEnv):
       Returns:
          observations, as documented by step()
       '''
-      if seed is not None:
-          np.random.seed(seed)
-          random.seed(seed)
-
       self.has_reset = True
 
       self.actions = {}

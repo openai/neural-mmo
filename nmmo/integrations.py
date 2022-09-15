@@ -36,13 +36,13 @@ def rllib_env_cls():
     return RLlibEnv
 
 class SB3Env(Env):
-    def __init__(self, config):
+    def __init__(self, config, seed=None):
         config.EMULATE_FLAT_OBS      = True
         config.EMULATE_FLAT_ATN      = True
         config.EMULATE_CONST_PLAYER_N = True
         config.EMULATE_CONST_HORIZON = True
 
-        super().__init__(config)
+        super().__init__(config, seed=seed)
 
     def step(self, actions):
         assert type(actions) == dict
@@ -59,8 +59,8 @@ class SB3Env(Env):
         return obs, rewards, dones, infos 
 
 class CleanRLEnv(SB3Env):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, seed=None):
+        super().__init__(config, seed=seed)
 
 def sb3_vec_envs(config_cls, num_envs, num_cpus):
     try:

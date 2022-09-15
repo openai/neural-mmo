@@ -11,6 +11,7 @@ from nmmo.systems.exchange import Exchange
 from nmmo.systems import combat
 from nmmo.entity.npc import NPC
 from nmmo.entity import Player
+from nmmo.systems.item import Item
 
 from nmmo.io.action import Action
 from nmmo.lib import colors, spawn, log
@@ -231,6 +232,7 @@ class Realm:
       Args:
          idx: Map index to load
       ''' 
+      Item.INSTANCE_ID = 0
       self.quill = log.Quill(self.config)
       self.map.reset(self, idx)
       self.players.reset()

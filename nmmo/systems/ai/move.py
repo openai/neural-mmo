@@ -1,12 +1,12 @@
 from pdb import set_trace as T
 import numpy as np
-import random as rand
+import random# as rand
 
 import nmmo
 from nmmo.systems.ai import utils
 
-def random():
-   return rand.choice(nmmo.action.Direction.edges)
+def rand():
+   return random.choice(nmmo.action.Direction.edges)
 
 def randomSafe(tiles, ent):
    r, c  = ent.base.pos
@@ -37,7 +37,7 @@ def habitable(tiles, ent):
    if len(cands) == 0:
       return nmmo.action.North
 
-   return rand.choice(cands)
+   return random.choice(cands)
 
 def towards(direction):
    if direction == (-1, 0):
@@ -49,7 +49,7 @@ def towards(direction):
    elif direction == (0, 1):
       return nmmo.action.East
    else:
-      return random()
+      return rand()
 
 def bullrush(ent, targ):
    direction = utils.directionTowards(ent, targ)

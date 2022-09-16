@@ -1,4 +1,5 @@
 from pdb import set_trace as T
+from ordered_set import OrderedSet
 import numpy as np
 
 from enum import Enum, auto
@@ -182,7 +183,7 @@ class Attack(Node):
       R, C = stim.shape
       R, C = R//2, C//2
 
-      rets = set([entity])
+      rets = OrderedSet([entity])
       for r in range(R-N, R+N+1):
          for c in range(C-N, C+N+1):
             for e in stim[r, c].ents.values():

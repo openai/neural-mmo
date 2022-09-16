@@ -2,6 +2,8 @@ from pdb import set_trace as T
 import numpy as np
 import logging
 
+from ordered_set import OrderedSet
+
 from nmmo import core
 from nmmo.lib import material
 
@@ -43,7 +45,7 @@ class Map:
    def reset(self, realm, idx):
       '''Reuse the current tile objects to load a new map'''
       config = self.config
-      self.updateList = set()
+      self.updateList = OrderedSet()
 
       path_map_suffix = config.PATH_MAP_SUFFIX.format(idx)
       fPath = os.path.join(config.PATH_CWD, config.PATH_MAPS, path_map_suffix)
@@ -74,6 +76,7 @@ class Map:
 
    def harvest(self, r, c, deplete=True):
       '''Called by actions that harvest a resource tile'''
+
       if deplete:
           self.updateList.add(self.tiles[r, c])
 

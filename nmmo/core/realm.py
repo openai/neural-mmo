@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
+from ordered_set import OrderedSet
 from collections import defaultdict
 from collections.abc import Mapping
 from typing import Dict, Callable
@@ -156,7 +157,7 @@ class PlayerManager(EntityGroup):
    def reset(self):
       super().reset()
       self.agents  = self.loader(self.config)
-      self.spawned = set()
+      self.spawned = OrderedSet()
 
    def spawnIndividual(self, r, c, idx):
       pop, agent = next(self.agents)

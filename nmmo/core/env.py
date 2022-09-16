@@ -484,11 +484,12 @@ class Env(ParallelEnv):
                for arg, val in args.items():
                   atns[atn][arg] = arg.deserialize(self.realm, ent, val)
             self.actions[entID] = atns
+
          else:
             obs[entID]     = ob
             rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
-
+      
       self.log_env()
       for entID, ent in self.dead.items():
          self.log_player(ent)

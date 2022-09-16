@@ -1,8 +1,10 @@
 from pdb import set_trace as T
+import numpy as np
+
+from ordered_set import OrderedSet
 import logging
 import abc
 
-import numpy as np
 from nmmo.io.stimulus import Serialized
 from nmmo.systems import experience, combat, ai
 from nmmo.lib import material
@@ -14,7 +16,7 @@ class SkillGroup:
       self.realm   = realm
 
       self.expCalc = experience.ExperienceCalculator()
-      self.skills  = set()
+      self.skills  = OrderedSet()
 
    def update(self, realm, entity):
        for skill in self.skills:

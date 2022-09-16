@@ -1,9 +1,11 @@
 import heapq, itertools
 import itertools
 
+from ordered_set import OrderedSet
+
 class PriorityQueue:
    def __init__(self, capacity, unique=False):
-      self.q, self.items = [], set()
+      self.q, self.items = [], OrderedSet()
       self.capacity = capacity
       self.count = itertools.count()
       self.unique = unique

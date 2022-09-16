@@ -1,6 +1,7 @@
 from pdb import set_trace as T
 import numpy as np
 
+from ordered_set import OrderedSet
 import inspect
 import logging
 
@@ -97,7 +98,7 @@ class Inventory:
       self.gold             = Item.Gold(realm)
 
       self._item_stacks     = {self.gold.signature: self.gold}
-      self._item_references = {self.gold}
+      self._item_references = OrderedSet([self.gold])
 
    @property
    def space(self):

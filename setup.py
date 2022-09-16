@@ -45,6 +45,7 @@ setup(
         'lz4==4.0.0',
         'h5py==3.7.0',
         'pettingzoo',
+        'ordered-set',
     ],
     extras_require=extra,
     python_requires=">=3.7",

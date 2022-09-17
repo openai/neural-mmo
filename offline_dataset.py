@@ -50,13 +50,14 @@ class OfflineDataset:
         if dones is not None:
             self.dones[t, episode_list] = dones
 
-EPISODES = 2
-HORIZON = 10
+EPISODES = 5
+HORIZON = 16
 #EPISODES = 1000
 #HORIZON = 1023
 
-config = nmmo.config.Default()
+actions = np.load('actions.npy', allow_pickle=True)
 
+config = nmmo.config.Default()
 env = nmmo.integrations.CleanRLEnv(config, seed=42)
 
 print('Creating h5 dataset')
@@ -74,8 +75,8 @@ for episode in range(EPISODES):
     obs = env.reset()
     for t in range(HORIZON):
         # Compute actions from network
-        atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}
-        dataset.write(t, episode, atn=atn)
+        #atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}
+        dataset.write(t, episode, atn=actions[t])
 
         # Be sure to .copy() the atn dict -- nmmo modifies it in place
         obs, rewards, dones, infos = env.step({})
@@ -114,7 +115,7 @@ for episode in range(EPISODES):
     for t in range(HORIZON):
         # Compute actions from network
         atn = {i+1: [0, 0, 0, 0, 0, 0, 0, 0] for i in range(config.PLAYER_N)}
-        dataset.write(t, episode, atn=atn)
+        dataset.write(t, episode, atn=actions[t])
 
         # Be sure to .copy() the atn dict -- nmmo modifies it in place
         obs, rewards, dones, infos = env.step({})

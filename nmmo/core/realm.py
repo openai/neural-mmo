@@ -290,7 +290,6 @@ class Realm:
          entID, (atn, args) = merged[priority][0]
          if atn in (nmmo.action.Buy, nmmo.action.Sell):
             merged[priority] = sorted(merged[priority], key=lambda x: x[0]) 
-
          for entID, (atn, args) in merged[priority]:
             ent = self.entity(entID)
             atn.call(self, ent, *args)

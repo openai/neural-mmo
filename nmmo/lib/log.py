@@ -49,6 +49,7 @@ class Quill:
 
       self.env    = Logger()
       self.player = Logger()
+      self.team = Logger()
       self.event  = Logger()
 
       self.shared = {}
@@ -65,6 +66,9 @@ class Quill:
 
    def log_player(self, key, val):
       self.player.log(key, val)
+   
+   def log_team(self, key, val):
+      self.team.log(key, val)
 
    @property
    def packet(self):

@@ -18,6 +18,11 @@ from nmmo.lib import log
 from nmmo.infrastructure import DataType
 from nmmo.systems import item as Item
 
+def list_chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
 
 class Replay:
     def __init__(self, config):
@@ -133,6 +138,8 @@ class Env(ParallelEnv):
       self.dummy_ob   = None
       self.observation_space(0)
 
+      self.team_members = 8
+
       if self.config.SAVE_REPLAY:
          self.replay = Replay(config)
 
@@ -142,6 +149,7 @@ class Env(ParallelEnv):
       # Flat index actions
       if config.EMULATE_FLAT_ATN:
          self.flat_actions = emulation.pack_atn_space(config)
+
 
    @functools.lru_cache(maxsize=None)
    def observation_space(self, agent: int):
@@ -408,14 +416,20 @@ class Env(ParallelEnv):
           if self.config.SAVE_REPLAY:
               self.replay.update(packet)
 
+      #NOTE: CREATING TEAMS
+      self.player_list = [i for i in range(1, self.config.PLAYER_N + 1)]
+      #self.teams = np.array_split(self.player_list,int(len(self.player_list)/self.team_members))
+      #self.teams = list_chunks(self.player_list,self.team_members)
+      self.teams = [self.player_list[i:i + self.team_members] for i in range(0, len(self.player_list), self.team_members)]
+
+      
       #Preprocess actions for neural models
       for entID in list(actions.keys()):
          #TODO: Should this silently fail? Warning level options?
          if entID not in self.realm.players:
             continue
-
+         
          ent = self.realm.players[entID]
-
          # Fix later -- don't allow action inputs for scripted agents
          if ent.agent.scripted:
              continue
@@ -475,6 +489,16 @@ class Env(ParallelEnv):
       infos        = {}
 
       obs, rewards, dones, self.raw = {}, {}, {}, {}
+
+      ###NOTE: INITIALIZING TEAMS
+      team_obs, team_rewards, team_dones, team_infos = {}, {}, {}, {}
+      for i,team in enumerate(self.teams):
+         team_obs[i] = []
+         team_rewards[i] = []
+         team_dones[i] = []
+         team_infos[i] = []
+
+      
       for entID, ent in self.realm.players.items():
          ob = self.realm.dataframe.get(ent)
          self.obs[entID] = ob
@@ -489,6 +513,24 @@ class Env(ParallelEnv):
             obs[entID]     = ob
             rewards[entID], infos[entID] = self.reward(ent)
             dones[entID]   = False
+
+            
+            ###NOTE: COLLECTING REWARDS FOR MEMBERS OF TEAMS DEAD
+            for i,team in enumerate(self.teams):
+               if isinstance(team,list):
+                  x = range(0,len(team))
+               elif isinstance(team,int):
+                  x = range(0,team)
+               for j in x:
+                  if j in [entID]:
+                     team_obs[i].append(self.obs[entID])
+                     team_rewards[i].append(rewards[entID]) 
+                     team_dones[i].append(dones[entID]) 
+                     team_infos[i].append(infos[entID]) 
+      
+      
+         
+            
       
       self.log_env()
       for entID, ent in self.dead.items():
@@ -504,6 +546,19 @@ class Env(ParallelEnv):
          dones[ent.entID] = False #TODO: Is this correct behavior?
          if not self.config.EMULATE_CONST_HORIZON and not self.config.RESPAWN:
             dones[ent.entID] = True
+         
+         ###NOTE: COLLECTING REWARDS FOR MEMBERS OF TEAMS ALIVE
+         for i,team in enumerate(self.teams):
+            if isinstance(team,list):
+               x = range(0,len(team))
+            elif isinstance(team,int):
+               x = range(0,team)
+            for j in x:
+               if j in [entID]:
+                  team_obs[i].append(self.obs[ent.entID])
+                  team_rewards[i].append(rewards[ent.entID]) 
+                  team_dones[i].append(dones[ent.entID]) 
+                  team_infos[i].append(infos[ent.entID]) 
 
          obs[ent.entID]     = self.dummy_ob
 
@@ -525,8 +580,8 @@ class Env(ParallelEnv):
       self.agents = list(self.realm.players.keys())
 
       self.obs = obs
-      return obs, rewards, dones, infos
 
+      return obs, rewards, dones, infos
    ############################################################################
    ### Logging
    def max(self, fn):
@@ -673,6 +728,13 @@ class Env(ParallelEnv):
       quill.log_player('PolicyID', player.agent.policyID)
       if player.diary:
          quill.log_player(f'Task_Reward', player.diary.cumulative_reward)
+
+   def log_team(self, list_of_players, team_id):
+
+      quill  = self.realm.quill
+      quill.log_team("Team_ID", team_id)
+      for player in list_of_players:
+         self.log_player(player)#TODO: log cummulative rewards and task related logs per team
 
    def terminal(self):
       '''Logs currently alive agents and returns all collected logs
